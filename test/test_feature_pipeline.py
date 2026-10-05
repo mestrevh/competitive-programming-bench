@@ -87,6 +87,19 @@ def test_prompt_builder():
     assert "data:image/png;base64," in payload_img[1]["image_url"]["url"]
     print("[PASS] Multimodal payload with Base64 passed.")
 
+    payload_with_limits = build_prompt_payload(
+        problem=problem,
+        problem_path=problem_path,
+        prompt_template=template_with_placeholder,
+        language="python",
+        modality="text",
+        include_limits=True
+    )
+    assert "Limites de Execução" in payload_with_limits
+    assert f"Tempo Limite: {problem.time_limit}" in payload_with_limits
+    assert f"Limite de Memória: {problem.memory_limit}" in payload_with_limits
+    print("[PASS] Payload with execution limits passed.")
+
 
 def test_llm_response_and_cost():
     print("\nTesting LLMResponse and cost calculations...")
@@ -179,23 +192,25 @@ def test_orchestrator_json_accumulation_and_judge_csv():
         orch._Orchestrator__LLM = MockLLM()
         orch._Orchestrator__output = tmp_path / "results" / "test_dataset"
 
-        # Call 1
+        # Call 1 (com include_limits=True)
         res1 = orch.execute(
             problem_path=problem_dir,
             oracle=False,
             prompt_name="zero_shot",
             prompt_template="Solve {problem}",
-            modality="text"
+            modality="text",
+            include_limits=True
         )
         assert res1 == True
 
-        # Call 2 (accumulate in the same JSON)
+        # Call 2 (com include_limits=False)
         res2 = orch.execute(
             problem_path=problem_dir,
             oracle=False,
             prompt_name="zero_shot",
             prompt_template="Solve {problem}",
-            modality="text"
+            modality="text",
+            include_limits=False
         )
         assert res2 == True
 
@@ -208,10 +223,15 @@ def test_orchestrator_json_accumulation_and_judge_csv():
         assert isinstance(records, list)
         assert len(records) == 2, f"Expected 2 accumulated records, got {len(records)}"
         assert records[0]["attempt"] == 1
+        assert records[0]["include_limits"] == True
+        assert records[0]["time_limit"] == 2.0
+        assert records[0]["memory_limit"] == 1024
+
         assert records[1]["attempt"] == 2
+        assert records[1]["include_limits"] == False
         assert records[0]["judge_result"]["judge_predict"] == "AC"
         assert records[1]["judge_result"]["judge_predict"] == "AC"
-        print(f"[PASS] JSON accumulated array properly verified with {len(records)} attempts.")
+        print(f"[PASS] JSON accumulated array properly verified with {len(records)} attempts and limit tracking.")
 
         # Verify Judge CSV
         csv_file = tmp_path / "results" / "test_dataset" / "judge" / "mock-model.csv"

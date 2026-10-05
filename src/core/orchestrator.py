@@ -105,7 +105,8 @@ class Orchestrator:
                 oracle: bool = False,
                 prompt_name: str = "zero_shot",
                 prompt_template: str = "",
-                modality: str = "text") -> bool:
+                modality: str = "text",
+                include_limits: bool = False) -> bool:
         
         if self.__output == Path('results/default/'):
             print("[Error]: Database is not selected")
@@ -177,7 +178,8 @@ class Orchestrator:
             problem_path=problem_path,
             prompt_template=prompt_template,
             language=self.__language,
-            modality=modality
+            modality=modality,
+            include_limits=include_limits
         )
 
         # 2. Requisição para o modelo
@@ -227,6 +229,9 @@ class Orchestrator:
             "prompt_name": prompt_name,
             "language": self.__language,
             "modality": modality,
+            "include_limits": include_limits,
+            "time_limit": problem.time_limit,
+            "memory_limit": problem.memory_limit,
             "tokens": {
                 "input_tokens": llm_res.prompt_tokens,
                 "output_tokens": llm_res.completion_tokens,

@@ -23,7 +23,7 @@ def get_image_mime_type(image_path: Path) -> str:
     return "image/png"
 
 
-def format_problem_str(problem: Problem) -> str:
+def format_problem_str(problem: Problem, include_limits: bool = False) -> str:
     """Monta a representação em texto do problema."""
     parts = [f"# {problem.title}\n", f"## Enunciado\n{problem.statement}\n"]
     
@@ -33,6 +33,14 @@ def format_problem_str(problem: Problem) -> str:
         parts.append(f"## Formato de Saída\n{problem.output}\n")
     if problem.constraints:
         parts.append(f"## Restrições\n{problem.constraints}\n")
+        
+    if include_limits:
+        parts.append(
+            f"## Limites de Execução\n"
+            f"- Tempo Limite: {problem.time_limit} segundo(s)\n"
+            f"- Limite de Memória: {problem.memory_limit} MB\n"
+        )
+        
     if problem.examples:
         parts.append("## Exemplos de Teste:")
         for idx, ex in enumerate(problem.examples, 1):
@@ -48,13 +56,15 @@ def build_prompt_payload(
     problem_path: Path,
     prompt_template: str,
     language: str = "python",
-    modality: str = "text"
+    modality: str = "text",
+    include_limits: bool = False
 ) -> Union[str, List[Dict[str, Any]]]:
     """
     Constrói a mensagem final para a LLM respeitando o template do prompt,
-    a linguagem e a modalidade (apenas texto ou multimodal com Base64).
+    a linguagem, a modalidade (apenas texto ou multimodal com Base64)
+    e a opção de informar os limites de tempo e memória.
     """
-    problem_str = format_problem_str(problem)
+    problem_str = format_problem_str(problem, include_limits=include_limits)
     
     # Se o template tiver a tag {problem}, faz a substituição.
     # Caso contrário, aplica a estratégia recomendada:
@@ -71,6 +81,10 @@ def build_prompt_payload(
             f"Retorne o código completo dentro de um bloco de código markdown (```{language} ... ```).\n"
             f"Não forneça explicações adicionais fora do bloco de código."
         )
+
+    # Substitui placeholders explícitos de limites se existirem no template
+    text_content = text_content.replace("{time_limit}", f"{problem.time_limit}s")
+    text_content = text_content.replace("{memory_limit}", f"{problem.memory_limit}MB")
 
     # Se a modalidade for apenas texto, retorna a string
     if modality != "img" or not problem.imgs:

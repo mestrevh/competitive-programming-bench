@@ -109,6 +109,20 @@ def choice_modality() -> str:
             print("[ERROR]: Opção inválida. Digite 0 ou 1.")
 
 
+def choice_include_limits() -> bool:
+    print("\nInformar limites de tempo e memória no prompt?")
+    print(" 0 - Não (padrão)")
+    print(" 1 - Sim (inclui time_limit e memory_limit)")
+    while True:
+        raw = input('Escolha um número [0]: ').strip()
+        if raw == "" or raw == "0":
+            return False
+        elif raw == "1":
+            return True
+        else:
+            print("[ERROR]: Opção inválida. Digite 0 ou 1.")
+
+
 def exit_system():
     print("-" * 20 + " END SYSTEM " + 20 * "-")
     exit(1)
@@ -132,6 +146,7 @@ def main():
     prompt_name = "oracle"
     prompt_template = ""
     modality = "text"
+    include_limits = False
     llm = None
     
     if not oracle:
@@ -145,6 +160,8 @@ def main():
         if prompt_name is None:
             exit_system()
 
+        include_limits = choice_include_limits()
+
     orch = Orchestrator(
         output=name_env,
         language=language,
@@ -157,7 +174,8 @@ def main():
             oracle=oracle,
             prompt_name=prompt_name,
             prompt_template=prompt_template,
-            modality=modality
+            modality=modality,
+            include_limits=include_limits
         )
         if success:
             print(f"--- Question {question.name} processed ---")
