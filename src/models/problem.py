@@ -12,8 +12,8 @@ class Problem(BaseModel):
     imgs: Optional[list] = None
     rating: Optional[list[int]] = None
     year: str
-    level: Optional[str]
-    period: Optional[str]
-    topics: Optional[list]
+    level: Optional[str] = None
+    period: Optional[str] = None
+    topics: Optional[list] = None
     time_limit: float
     memory_limit: int
