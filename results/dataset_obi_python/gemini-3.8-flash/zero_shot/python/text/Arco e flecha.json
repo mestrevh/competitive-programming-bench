@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:34:15.103046+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 763,
+            "output_tokens": 823,
+            "total_tokens": 4270
+        },
+        "cost_usd": {
+            "input_cost": 0.000572,
+            "output_cost": 0.003086,
+            "total_cost": 0.003658
+        },
+        "raw_response": "Para resolver este problema de forma eficiente em Python, precisamos processar os lançamentos online, pois as coordenadas reais da $K$-ésima flecha dependem da penalidade $P_{K-1}$ obtida na flecha anterior.\n\nComo $N \\le 10^5$ e a distância ao centro pode assumir valores da ordem de $2.5 \\times 10^{12}$, uma estrutura de decomposição em blocos (*bucket/chunked sorted list*) é ideal para manter as distâncias ordenadas dinamicamente. Utilizando blocos com tamanho balanceado e a biblioteca padrão `bisect` (que é implementada em C), conseguimos tanto contar quantas flechas têm distância menor ou igual a $D$ quanto inserir o novo valor de forma extremamente rápida.\n\nAbaixo está a solução completa e otimizada:\n\n```python\nimport sys\nfrom bisect import bisect_right\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    \n    # Parâmetro de tamanho do bloco para a Sorted List em blocos\n    BUCKET_SIZE = 700\n    \n    # chunks: lista de listas contendo as distâncias ordenadas\n    chunks = [[]]\n    # maxes: maior elemento de cada bloco (para busca binária entre blocos)\n    maxes = []\n    # sizes: tamanho de cada bloco\n    sizes = [0]\n    \n    total_penalty = 0\n    p_prev = 0\n    \n    idx = 1\n    for _ in range(n):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        idx += 2\n        \n        # Coordenadas reais com a penalidade da flecha anterior\n        xr = x + p_prev\n        yr = y + p_prev\n        \n        d = xr * xr + yr * yr\n        \n        # Contagem de elementos <= d\n        # Encontra o primeiro bloco cujo valor máximo é >= d\n        c_idx = bisect_right(maxes, d)\n        \n        # Elementos em todos os blocos anteriores são estritamente <= d\n        cnt = sum(sizes[:c_idx])\n        \n        if c_idx < len(chunks):\n            # Conta quantos elementos no bloco atual são <= d\n            cnt += bisect_right(chunks[c_idx], d)\n            insert_idx = c_idx\n        else:\n            insert_idx = len(chunks) - 1\n            \n        p_prev = cnt\n        total_penalty += cnt\n        \n        # Inserção de d na estrutura\n        chunk = chunks[insert_idx]\n        pos = bisect_right(chunk, d)\n        chunk.insert(pos, d)\n        sizes[insert_idx] += 1\n        \n        # Se o bloco ficar muito grande, dividimos ao meio\n        if len(chunk) > 2 * BUCKET_SIZE:\n            half = len(chunk) // 2\n            new_chunk = chunk[half:]\n            del chunk[half:]\n            \n            chunks.insert(insert_idx + 1, new_chunk)\n            sizes[insert_idx] = len(chunk)\n            sizes.insert(insert_idx + 1, len(new_chunk))\n        \n        # Atualiza o vetor de máximos\n        maxes = [c[-1] for c in chunks[:-1]]\n\n    print(total_penalty)\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom bisect import bisect_right\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    \n    # Parâmetro de tamanho do bloco para a Sorted List em blocos\n    BUCKET_SIZE = 700\n    \n    # chunks: lista de listas contendo as distâncias ordenadas\n    chunks = [[]]\n    # maxes: maior elemento de cada bloco (para busca binária entre blocos)\n    maxes = []\n    # sizes: tamanho de cada bloco\n    sizes = [0]\n    \n    total_penalty = 0\n    p_prev = 0\n    \n    idx = 1\n    for _ in range(n):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        idx += 2\n        \n        # Coordenadas reais com a penalidade da flecha anterior\n        xr = x + p_prev\n        yr = y + p_prev\n        \n        d = xr * xr + yr * yr\n        \n        # Contagem de elementos <= d\n        # Encontra o primeiro bloco cujo valor máximo é >= d\n        c_idx = bisect_right(maxes, d)\n        \n        # Elementos em todos os blocos anteriores são estritamente <= d\n        cnt = sum(sizes[:c_idx])\n        \n        if c_idx < len(chunks):\n            # Conta quantos elementos no bloco atual são <= d\n            cnt += bisect_right(chunks[c_idx], d)\n            insert_idx = c_idx\n        else:\n            insert_idx = len(chunks) - 1\n            \n        p_prev = cnt\n        total_penalty += cnt\n        \n        # Inserção de d na estrutura\n        chunk = chunks[insert_idx]\n        pos = bisect_right(chunk, d)\n        chunk.insert(pos, d)\n        sizes[insert_idx] += 1\n        \n        # Se o bloco ficar muito grande, dividimos ao meio\n        if len(chunk) > 2 * BUCKET_SIZE:\n            half = len(chunk) // 2\n            new_chunk = chunk[half:]\n            del chunk[half:]\n            \n            chunks.insert(insert_idx + 1, new_chunk)\n            sizes[insert_idx] = len(chunk)\n            sizes.insert(insert_idx + 1, len(new_chunk))\n        \n        # Atualiza o vetor de máximos\n        maxes = [c[-1] for c in chunks[:-1]]\n\n    print(total_penalty)\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.4339265000016894,
+            "counts": {
+                "AC": 11,
+                "WA": 28,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

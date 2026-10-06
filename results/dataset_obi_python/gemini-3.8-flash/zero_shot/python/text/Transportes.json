@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:29:11.857610+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1796,
+            "output_tokens": 726,
+            "total_tokens": 3659
+        },
+        "cost_usd": {
+            "input_cost": 0.001347,
+            "output_cost": 0.002723,
+            "total_cost": 0.00407
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    \n    N = int(next(iterator))\n    M = int(next(iterator))\n    K = int(next(iterator))\n    \n    P = [0] * (K + 1)\n    for i in range(1, K + 1):\n        P[i] = int(next(iterator))\n        \n    # We will map each unique (u, t) to an integer id > N\n    # Neutral station u has id u (1 <= u <= N)\n    edges = []\n    station_systems = dict()\n    next_id = N + 1\n    \n    for _ in range(M):\n        u = int(next(iterator))\n        v = int(next(iterator))\n        t = int(next(iterator))\n        \n        if (u, t) not in station_systems:\n            station_systems[(u, t)] = next_id\n            next_id += 1\n        uid = station_systems[(u, t)]\n        \n        if (v, t) not in station_systems:\n            station_systems[(v, t)] = next_id\n            next_id += 1\n        vid = station_systems[(v, t)]\n        \n        edges.append((uid, vid))\n        \n    A = int(next(iterator))\n    B = int(next(iterator))\n    \n    num_nodes = next_id\n    adj = [[] for _ in range(num_nodes)]\n    \n    # Connect neutral station u with (u, t)\n    for (u, t), uid in station_systems.items():\n        price = P[t]\n        # u -> (u, t) costs price\n        adj[u].append((uid, price))\n        # (u, t) -> u costs 0\n        adj[uid].append((u, 0))\n        \n    # Connect (u, t) <-> (v, t) with cost 0\n    for uid, vid in edges:\n        adj[uid].append((vid, 0))\n        adj[vid].append((uid, 0))\n        \n    # Dijkstra\n    dist = [float('inf')] * num_nodes\n    dist[A] = 0\n    pq = [(0, A)]\n    \n    while pq:\n        d, u = heapq.heappop(pq)\n        \n        if d > dist[u]:\n            continue\n            \n        if u == B:\n            print(d)\n            return\n            \n        for v, w in adj[u]:\n            if dist[u] + w < dist[v]:\n                dist[v] = dist[u] + w\n                heapq.heappush(pq, (dist[v], v))\n                \n    if dist[B] == float('inf'):\n        print(-1)\n    else:\n        print(dist[B])\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    \n    N = int(next(iterator))\n    M = int(next(iterator))\n    K = int(next(iterator))\n    \n    P = [0] * (K + 1)\n    for i in range(1, K + 1):\n        P[i] = int(next(iterator))\n        \n    # We will map each unique (u, t) to an integer id > N\n    # Neutral station u has id u (1 <= u <= N)\n    edges = []\n    station_systems = dict()\n    next_id = N + 1\n    \n    for _ in range(M):\n        u = int(next(iterator))\n        v = int(next(iterator))\n        t = int(next(iterator))\n        \n        if (u, t) not in station_systems:\n            station_systems[(u, t)] = next_id\n            next_id += 1\n        uid = station_systems[(u, t)]\n        \n        if (v, t) not in station_systems:\n            station_systems[(v, t)] = next_id\n            next_id += 1\n        vid = station_systems[(v, t)]\n        \n        edges.append((uid, vid))\n        \n    A = int(next(iterator))\n    B = int(next(iterator))\n    \n    num_nodes = next_id\n    adj = [[] for _ in range(num_nodes)]\n    \n    # Connect neutral station u with (u, t)\n    for (u, t), uid in station_systems.items():\n        price = P[t]\n        # u -> (u, t) costs price\n        adj[u].append((uid, price))\n        # (u, t) -> u costs 0\n        adj[uid].append((u, 0))\n        \n    # Connect (u, t) <-> (v, t) with cost 0\n    for uid, vid in edges:\n        adj[uid].append((vid, 0))\n        adj[vid].append((uid, 0))\n        \n    # Dijkstra\n    dist = [float('inf')] * num_nodes\n    dist[A] = 0\n    pq = [(0, A)]\n    \n    while pq:\n        d, u = heapq.heappop(pq)\n        \n        if d > dist[u]:\n            continue\n            \n        if u == B:\n            print(d)\n            return\n            \n        for v, w in adj[u]:\n            if dist[u] + w < dist[v]:\n                dist[v] = dist[u] + w\n                heapq.heappush(pq, (dist[v], v))\n                \n    if dist[B] == float('inf'):\n        print(-1)\n    else:\n        print(dist[B])\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.674069699998654,
+            "counts": {
+                "AC": 107,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

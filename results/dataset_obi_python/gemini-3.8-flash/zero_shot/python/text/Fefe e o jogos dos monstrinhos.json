@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:55:36.730293+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1059,
+            "output_tokens": 298,
+            "total_tokens": 4721
+        },
+        "cost_usd": {
+            "input_cost": 0.000794,
+            "output_cost": 0.001118,
+            "total_cost": 0.001912
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n\n    N = int(next(iterator))\n    F = int(next(iterator))\n\n    monsters = [int(next(iterator)) for _ in range(N)]\n    powers = [int(next(iterator)) for _ in range(F)]\n    bonuses = [int(next(iterator)) for _ in range(F)]\n\n    # Ordenar os monstros por poder crescente\n    monsters.sort()\n\n    # Cada fada tem (poder, bônus)\n    fairies = [[powers[i], bonuses[i]] for i in range(F)]\n    fairies.sort(key=lambda x: x[0])\n\n    defeated_count = 0\n\n    for monster_power in monsters:\n        # Encontrar a fada mais fraca com poder estritamente maior que o do monstrinho\n        for fairy in fairies:\n            if fairy[0] > monster_power and fairy[1] > 0:\n                fairy[1] -= 1\n                defeated_count += 1\n                break\n\n    print(defeated_count)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n\n    N = int(next(iterator))\n    F = int(next(iterator))\n\n    monsters = [int(next(iterator)) for _ in range(N)]\n    powers = [int(next(iterator)) for _ in range(F)]\n    bonuses = [int(next(iterator)) for _ in range(F)]\n\n    # Ordenar os monstros por poder crescente\n    monsters.sort()\n\n    # Cada fada tem (poder, bônus)\n    fairies = [[powers[i], bonuses[i]] for i in range(F)]\n    fairies.sort(key=lambda x: x[0])\n\n    defeated_count = 0\n\n    for monster_power in monsters:\n        # Encontrar a fada mais fraca com poder estritamente maior que o do monstrinho\n        for fairy in fairies:\n            if fairy[0] > monster_power and fairy[1] > 0:\n                fairy[1] -= 1\n                defeated_count += 1\n                break\n\n    print(defeated_count)\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0820707000020775,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:56:19.783031+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1264,
+            "output_tokens": 488,
+            "total_tokens": 3620
+        },
+        "cost_usd": {
+            "input_cost": 0.000948,
+            "output_cost": 0.00183,
+            "total_cost": 0.002778
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    \n    N = int(next(iterator))\n    types = [int(next(iterator)) for _ in range(N)]\n    prices = [int(next(iterator)) for _ in range(N)]\n    \n    C = int(next(iterator))\n    clients = [int(next(iterator)) for _ in range(C)]\n    \n    type1 = []\n    type2 = []\n    \n    for t, p in zip(types, prices):\n        if t == 1:\n            type1.append(p)\n        else:\n            type2.append(p)\n            \n    type1.sort()\n    type2.sort()\n    \n    ptr1 = 0\n    ptr2 = 0\n    len1 = len(type1)\n    len2 = len(type2)\n    \n    total_revenue = 0\n    \n    for u in clients:\n        if u == 1:\n            if ptr1 < len1:\n                total_revenue += type1[ptr1]\n                ptr1 += 1\n        elif u == 2:\n            if ptr2 < len2:\n                total_revenue += type2[ptr2]\n                ptr2 += 1\n        else:  # u == 0\n            if ptr1 < len1 and ptr2 < len2:\n                if type1[ptr1] <= type2[ptr2]:\n                    total_revenue += type1[ptr1]\n                    ptr1 += 1\n                else:\n                    total_revenue += type2[ptr2]\n                    ptr2 += 1\n            elif ptr1 < len1:\n                total_revenue += type1[ptr1]\n                ptr1 += 1\n            elif ptr2 < len2:\n                total_revenue += type2[ptr2]\n                ptr2 += 1\n\n    print(total_revenue)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    \n    N = int(next(iterator))\n    types = [int(next(iterator)) for _ in range(N)]\n    prices = [int(next(iterator)) for _ in range(N)]\n    \n    C = int(next(iterator))\n    clients = [int(next(iterator)) for _ in range(C)]\n    \n    type1 = []\n    type2 = []\n    \n    for t, p in zip(types, prices):\n        if t == 1:\n            type1.append(p)\n        else:\n            type2.append(p)\n            \n    type1.sort()\n    type2.sort()\n    \n    ptr1 = 0\n    ptr2 = 0\n    len1 = len(type1)\n    len2 = len(type2)\n    \n    total_revenue = 0\n    \n    for u in clients:\n        if u == 1:\n            if ptr1 < len1:\n                total_revenue += type1[ptr1]\n                ptr1 += 1\n        elif u == 2:\n            if ptr2 < len2:\n                total_revenue += type2[ptr2]\n                ptr2 += 1\n        else:  # u == 0\n            if ptr1 < len1 and ptr2 < len2:\n                if type1[ptr1] <= type2[ptr2]:\n                    total_revenue += type1[ptr1]\n                    ptr1 += 1\n                else:\n                    total_revenue += type2[ptr2]\n                    ptr2 += 1\n            elif ptr1 < len1:\n                total_revenue += type1[ptr1]\n                ptr1 += 1\n            elif ptr2 < len2:\n                total_revenue += type2[ptr2]\n                ptr2 += 1\n\n    print(total_revenue)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10113420000561746,
+            "counts": {
+                "AC": 44,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 44
+        }
+    }
+]

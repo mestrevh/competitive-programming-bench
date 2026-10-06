@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:33:16.487891+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1691,
+            "output_tokens": 538,
+            "total_tokens": 8684
+        },
+        "cost_usd": {
+            "input_cost": 0.001268,
+            "output_cost": 0.002017,
+            "total_cost": 0.003286
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    N = int(input_data[0])\n    K = int(input_data[1])\n    \n    idx = 2\n    A = []\n    for i in range(N):\n        if input_data[idx] == '1':\n            A.append(i + 1)\n        idx += 1\n        \n    B = []\n    for i in range(N):\n        if input_data[idx] == '1':\n            B.append(i + 1)\n        idx += 1\n\n    # L é max-heap (armazenamos com sinal invertido)\n    # R é min-heap\n    L = []\n    R = []\n    min_val = 0\n\n    def add_point(p):\n        nonlocal min_val\n        max_L = -L[0] if L else float('-inf')\n        min_R = R[0] if R else float('inf')\n\n        if p < max_L:\n            m = -heapq.heappop(L)\n            min_val += m - p\n            heapq.heappush(L, -p)\n            heapq.heappush(L, -p)\n            heapq.heappush(R, m)\n        elif p > min_R:\n            m = heapq.heappop(R)\n            min_val += p - m\n            heapq.heappush(R, p)\n            heapq.heappush(R, p)\n            heapq.heappush(L, -m)\n        else:\n            heapq.heappush(L, -p)\n            heapq.heappush(R, p)\n\n    for i in range(K):\n        u = A[i] - (i + 1)\n        v = B[i] - (i + 1)\n        \n        add_point(u)\n        add_point(v)\n        \n        # A transição min_{y <= x} descarta a inclinação positiva (R)\n        R.clear()\n\n    print(min_val)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    N = int(input_data[0])\n    K = int(input_data[1])\n    \n    idx = 2\n    A = []\n    for i in range(N):\n        if input_data[idx] == '1':\n            A.append(i + 1)\n        idx += 1\n        \n    B = []\n    for i in range(N):\n        if input_data[idx] == '1':\n            B.append(i + 1)\n        idx += 1\n\n    # L é max-heap (armazenamos com sinal invertido)\n    # R é min-heap\n    L = []\n    R = []\n    min_val = 0\n\n    def add_point(p):\n        nonlocal min_val\n        max_L = -L[0] if L else float('-inf')\n        min_R = R[0] if R else float('inf')\n\n        if p < max_L:\n            m = -heapq.heappop(L)\n            min_val += m - p\n            heapq.heappush(L, -p)\n            heapq.heappush(L, -p)\n            heapq.heappush(R, m)\n        elif p > min_R:\n            m = heapq.heappop(R)\n            min_val += p - m\n            heapq.heappush(R, p)\n            heapq.heappush(R, p)\n            heapq.heappush(L, -m)\n        else:\n            heapq.heappush(L, -p)\n            heapq.heappush(R, p)\n\n    for i in range(K):\n        u = A[i] - (i + 1)\n        v = B[i] - (i + 1)\n        \n        add_point(u)\n        add_point(v)\n        \n        # A transição min_{y <= x} descarta a inclinação positiva (R)\n        R.clear()\n\n    print(min_val)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18342929999926127,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

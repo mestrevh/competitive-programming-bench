@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:41:30.924312+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 6.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 684,
+            "output_tokens": 619,
+            "total_tokens": 1918
+        },
+        "cost_usd": {
+            "input_cost": 0.000513,
+            "output_cost": 0.002321,
+            "total_cost": 0.002834
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    v = [int(x) for x in input_data[1:n+1]]\n    \n    if n <= 1:\n        print(n)\n        return\n\n    # Mapear cada valor para suas posições de ocorrência\n    pos = {}\n    for i, val in enumerate(v):\n        if val not in pos:\n            pos[val] = []\n        pos[val].append(i)\n        \n    unique_vals = list(pos.keys())\n    \n    # Se só houver um valor único, a maior subsequência válida tem tamanho 1\n    if len(unique_vals) == 1:\n        print(1)\n        return\n        \n    max_len = 1\n    \n    # Testar todos os pares de valores distintos\n    num_unique = len(unique_vals)\n    for i in range(num_unique):\n        val_a = unique_vals[i]\n        pos_a = pos[val_a]\n        for j in range(i + 1, num_unique):\n            val_b = unique_vals[j]\n            pos_b = pos[val_b]\n            \n            # Mesclar as duas listas de índices e contar alternâncias\n            p1 = 0\n            p2 = 0\n            len_a = len(pos_a)\n            len_b = len(pos_b)\n            \n            last = None\n            current_count = 0\n            \n            while p1 < len_a and p2 < len_b:\n                if pos_a[p1] < pos_b[p2]:\n                    if last != val_a:\n                        current_count += 1\n                        last = val_a\n                    p1 += 1\n                else:\n                    if last != val_b:\n                        current_count += 1\n                        last = val_b\n                    p2 += 1\n                    \n            while p1 < len_a:\n                if last != val_a:\n                    current_count += 1\n                    last = val_a\n                p1 += 1\n                \n            while p2 < len_b:\n                if last != val_b:\n                    current_count += 1\n                    last = val_b\n                p2 += 1\n                \n            if current_count > max_len:\n                max_len = current_count\n                \n    print(max_len)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    v = [int(x) for x in input_data[1:n+1]]\n    \n    if n <= 1:\n        print(n)\n        return\n\n    # Mapear cada valor para suas posições de ocorrência\n    pos = {}\n    for i, val in enumerate(v):\n        if val not in pos:\n            pos[val] = []\n        pos[val].append(i)\n        \n    unique_vals = list(pos.keys())\n    \n    # Se só houver um valor único, a maior subsequência válida tem tamanho 1\n    if len(unique_vals) == 1:\n        print(1)\n        return\n        \n    max_len = 1\n    \n    # Testar todos os pares de valores distintos\n    num_unique = len(unique_vals)\n    for i in range(num_unique):\n        val_a = unique_vals[i]\n        pos_a = pos[val_a]\n        for j in range(i + 1, num_unique):\n            val_b = unique_vals[j]\n            pos_b = pos[val_b]\n            \n            # Mesclar as duas listas de índices e contar alternâncias\n            p1 = 0\n            p2 = 0\n            len_a = len(pos_a)\n            len_b = len(pos_b)\n            \n            last = None\n            current_count = 0\n            \n            while p1 < len_a and p2 < len_b:\n                if pos_a[p1] < pos_b[p2]:\n                    if last != val_a:\n                        current_count += 1\n                        last = val_a\n                    p1 += 1\n                else:\n                    if last != val_b:\n                        current_count += 1\n                        last = val_b\n                    p2 += 1\n                    \n            while p1 < len_a:\n                if last != val_a:\n                    current_count += 1\n                    last = val_a\n                p1 += 1\n                \n            while p2 < len_b:\n                if last != val_b:\n                    current_count += 1\n                    last = val_b\n                p2 += 1\n                \n            if current_count > max_len:\n                max_len = current_count\n                \n    print(max_len)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07022739999956684,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

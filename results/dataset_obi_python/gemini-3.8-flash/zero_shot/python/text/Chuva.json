@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:44:54.044030+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 978,
+            "output_tokens": 408,
+            "total_tokens": 2422
+        },
+        "cost_usd": {
+            "input_cost": 0.000733,
+            "output_cost": 0.00153,
+            "total_cost": 0.002263
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    m = int(data[1])\n    \n    grid = [list(row) for row in data[2:2 + n]]\n    \n    q = deque()\n    \n    # Encontra a posição inicial do 'o'\n    for c in range(m):\n        if grid[0][c] == 'o':\n            q.append((0, c))\n            break\n            \n    while q:\n        r, c = q.popleft()\n        \n        # Água tenta escorrer para baixo\n        if r + 1 < n:\n            if grid[r + 1][c] == '.':\n                grid[r + 1][c] = 'o'\n                q.append((r + 1, c))\n            elif grid[r + 1][c] == '#':\n                # Se há uma prateleira logo abaixo, a água escorre para os lados\n                if c - 1 >= 0 and grid[r][c - 1] == '.':\n                    grid[r][c - 1] = 'o'\n                    q.append((r, c - 1))\n                if c + 1 < m and grid[r][c + 1] == '.':\n                    grid[r][c + 1] = 'o'\n                    q.append((r, c + 1))\n\n    output = [''.join(row) for row in grid]\n    sys.stdout.write('\\n'.join(output) + '\\n')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    m = int(data[1])\n    \n    grid = [list(row) for row in data[2:2 + n]]\n    \n    q = deque()\n    \n    # Encontra a posição inicial do 'o'\n    for c in range(m):\n        if grid[0][c] == 'o':\n            q.append((0, c))\n            break\n            \n    while q:\n        r, c = q.popleft()\n        \n        # Água tenta escorrer para baixo\n        if r + 1 < n:\n            if grid[r + 1][c] == '.':\n                grid[r + 1][c] = 'o'\n                q.append((r + 1, c))\n            elif grid[r + 1][c] == '#':\n                # Se há uma prateleira logo abaixo, a água escorre para os lados\n                if c - 1 >= 0 and grid[r][c - 1] == '.':\n                    grid[r][c - 1] = 'o'\n                    q.append((r, c - 1))\n                if c + 1 < m and grid[r][c + 1] == '.':\n                    grid[r][c + 1] = 'o'\n                    q.append((r, c + 1))\n\n    output = [''.join(row) for row in grid]\n    sys.stdout.write('\\n'.join(output) + '\\n')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08552920000511222,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

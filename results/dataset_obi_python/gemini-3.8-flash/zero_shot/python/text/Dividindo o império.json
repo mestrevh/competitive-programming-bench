@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:48:32.386009+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 695,
+            "output_tokens": 347,
+            "total_tokens": 1838
+        },
+        "cost_usd": {
+            "input_cost": 0.000521,
+            "output_cost": 0.001301,
+            "total_cost": 0.001822
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    \n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n        \n    parent = [0] * (n + 1)\n    order = []\n    \n    queue = deque([1])\n    parent[1] = -1\n    \n    while queue:\n        u = queue.popleft()\n        order.append(u)\n        for v in adj[u]:\n            if parent[v] == 0:\n                parent[v] = u\n                queue.append(v)\n                \n    sz = [1] * (n + 1)\n    ans = n\n    \n    for u in reversed(order):\n        if u == 1:\n            continue\n        p = parent[u]\n        sz[p] += sz[u]\n        diff = abs(2 * sz[u] - n)\n        if diff < ans:\n            ans = diff\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    \n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n        \n    parent = [0] * (n + 1)\n    order = []\n    \n    queue = deque([1])\n    parent[1] = -1\n    \n    while queue:\n        u = queue.popleft()\n        order.append(u)\n        for v in adj[u]:\n            if parent[v] == 0:\n                parent[v] = u\n                queue.append(v)\n                \n    sz = [1] * (n + 1)\n    ans = n\n    \n    for u in reversed(order):\n        if u == 1:\n            continue\n        p = parent[u]\n        sz[p] += sz[u]\n        diff = abs(2 * sz[u] - n)\n        if diff < ans:\n            ans = diff\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1353705000001355,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

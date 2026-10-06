@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:45:32.472249+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1178,
+            "output_tokens": 256,
+            "total_tokens": 2212
+        },
+        "cost_usd": {
+            "input_cost": 0.000883,
+            "output_cost": 0.00096,
+            "total_cost": 0.001843
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    Q = int(data[1])\n\n    # data[2 : 2 + N] são os dígitos\n    pref = [0] * (N + 1)\n    for i in range(N):\n        pref[i + 1] = pref[i] + int(data[2 + i])\n\n    idx = 2 + N\n    out = []\n    for _ in range(Q):\n        L = int(data[idx])\n        R = int(data[idx + 1])\n        idx += 2\n\n        m_minus_1 = R - L\n        sum_digits = pref[R] - pref[L - 1]\n        ans = 11 * m_minus_1 * sum_digits\n        out.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    Q = int(data[1])\n\n    # data[2 : 2 + N] são os dígitos\n    pref = [0] * (N + 1)\n    for i in range(N):\n        pref[i + 1] = pref[i] + int(data[2 + i])\n\n    idx = 2 + N\n    out = []\n    for _ in range(Q):\n        L = int(data[idx])\n        R = int(data[idx + 1])\n        idx += 2\n\n        m_minus_1 = R - L\n        sum_digits = pref[R] - pref[L - 1]\n        ans = 11 * m_minus_1 * sum_digits\n        out.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12960490000114078,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

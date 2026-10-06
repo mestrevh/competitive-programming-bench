@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:50:07.279749+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 714,
+            "output_tokens": 876,
+            "total_tokens": 3227
+        },
+        "cost_usd": {
+            "input_cost": 0.000535,
+            "output_cost": 0.003285,
+            "total_cost": 0.003821
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx+1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n        \n    # BFS para encontrar o nó mais distante a partir do nó 1\n    def bfs_farthest(start):\n        dist = [-1] * (n + 1)\n        parent = [0] * (n + 1)\n        q = deque([start])\n        dist[start] = 0\n        farthest = start\n        while q:\n            u = q.popleft()\n            if dist[u] > dist[farthest]:\n                farthest = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    parent[v] = u\n                    q.append(v)\n        return farthest, dist, parent\n\n    # Encontrar uma extremidade do diâmetro\n    end1, _, _ = bfs_farthest(1)\n    \n    # Encontrar a outra extremidade e o caminho do diâmetro\n    end2, dist, parent = bfs_farthest(end1)\n    \n    diameter = dist[end2]\n    \n    # Reconstruir o caminho do diâmetro de end1 até end2\n    path = []\n    curr = end2\n    while curr != 0:\n        path.append(curr)\n        curr = parent[curr]\n    path.reverse()\n    \n    cycle_length = diameter + 1\n    \n    # Contar nós a uma profundidade exata em uma subárvore\n    def count_at_depth(start, forbidden, target_depth):\n        if target_depth == 0:\n            return 1\n        q = deque([(start, 0)])\n        visited = {start, forbidden}\n        count = 0\n        while q:\n            u, d = q.popleft()\n            if d == target_depth:\n                count += 1\n            elif d < target_depth:\n                for v in adj[u]:\n                    if v not in visited:\n                        visited.add(v)\n                        q.append((v, d + 1))\n        return count\n\n    if diameter % 2 == 0:\n        # Um único centro\n        k = diameter // 2\n        c = path[k]\n        \n        counts = []\n        for neighbor in adj[c]:\n            cnt = count_at_depth(neighbor, c, k - 1)\n            if cnt > 0:\n                counts.append(cnt)\n                \n        # Total de pares entre diferentes ramos\n        sum_cnt = sum(counts)\n        sum_sq = sum(x * x for x in counts)\n        ways = (sum_cnt * sum_cnt - sum_sq) // 2\n    else:\n        # Dois centros\n        k = diameter // 2\n        c1 = path[k]\n        c2 = path[k + 1]\n        \n        cnt1 = count_at_depth(c1, c2, k)\n        cnt2 = count_at_depth(c2, c1, k)\n        \n        ways = cnt1 * cnt2\n        \n    print(cycle_length)\n    print(ways)\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx+1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n        \n    # BFS para encontrar o nó mais distante a partir do nó 1\n    def bfs_farthest(start):\n        dist = [-1] * (n + 1)\n        parent = [0] * (n + 1)\n        q = deque([start])\n        dist[start] = 0\n        farthest = start\n        while q:\n            u = q.popleft()\n            if dist[u] > dist[farthest]:\n                farthest = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    parent[v] = u\n                    q.append(v)\n        return farthest, dist, parent\n\n    # Encontrar uma extremidade do diâmetro\n    end1, _, _ = bfs_farthest(1)\n    \n    # Encontrar a outra extremidade e o caminho do diâmetro\n    end2, dist, parent = bfs_farthest(end1)\n    \n    diameter = dist[end2]\n    \n    # Reconstruir o caminho do diâmetro de end1 até end2\n    path = []\n    curr = end2\n    while curr != 0:\n        path.append(curr)\n        curr = parent[curr]\n    path.reverse()\n    \n    cycle_length = diameter + 1\n    \n    # Contar nós a uma profundidade exata em uma subárvore\n    def count_at_depth(start, forbidden, target_depth):\n        if target_depth == 0:\n            return 1\n        q = deque([(start, 0)])\n        visited = {start, forbidden}\n        count = 0\n        while q:\n            u, d = q.popleft()\n            if d == target_depth:\n                count += 1\n            elif d < target_depth:\n                for v in adj[u]:\n                    if v not in visited:\n                        visited.add(v)\n                        q.append((v, d + 1))\n        return count\n\n    if diameter % 2 == 0:\n        # Um único centro\n        k = diameter // 2\n        c = path[k]\n        \n        counts = []\n        for neighbor in adj[c]:\n            cnt = count_at_depth(neighbor, c, k - 1)\n            if cnt > 0:\n                counts.append(cnt)\n                \n        # Total de pares entre diferentes ramos\n        sum_cnt = sum(counts)\n        sum_sq = sum(x * x for x in counts)\n        ways = (sum_cnt * sum_cnt - sum_sq) // 2\n    else:\n        # Dois centros\n        k = diameter // 2\n        c1 = path[k]\n        c2 = path[k + 1]\n        \n        cnt1 = count_at_depth(c1, c2, k)\n        cnt2 = count_at_depth(c2, c1, k)\n        \n        ways = cnt1 * cnt2\n        \n    print(cycle_length)\n    print(ways)\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11369250000279862,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

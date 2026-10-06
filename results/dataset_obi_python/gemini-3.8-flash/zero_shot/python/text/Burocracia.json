@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:40:30.883331+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1791,
+            "output_tokens": 1163,
+            "total_tokens": 19666
+        },
+        "cost_usd": {
+            "input_cost": 0.001343,
+            "output_cost": 0.004361,
+            "total_cost": 0.005704
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n\n    N = int(next(iterator))\n\n    p = [0] * (N + 1)\n    adj = [[] for _ in range(N + 1)]\n\n    for i in range(2, N + 1):\n        pi = int(next(iterator))\n        p[i] = pi\n        adj[pi].append(i)\n\n    # Depth e Binary Lifting\n    # Como p[i] < i, podemos processar em ordem crescente de i\n    LOGN = 18\n    up = [[0] * LOGN for _ in range(N + 1)]\n    depth = [0] * (N + 1)\n\n    for i in range(2, N + 1):\n        depth[i] = depth[p[i]] + 1\n        up[i][0] = p[i]\n\n    for j in range(1, LOGN):\n        for i in range(2, N + 1):\n            up[i][j] = up[up[i][j - 1]][j - 1]\n\n    def get_kth_ancestor(u, k):\n        for j in range(LOGN - 1, -1, -1):\n            if (k >> j) & 1:\n                u = up[u][j]\n        return u\n\n    # DFS Iterativa para calcular tin e tout\n    tin = [0] * (N + 1)\n    tout = [0] * (N + 1)\n\n    stack = [(1, 0)]\n    timer = 1\n    tin[1] = 1\n\n    while stack:\n        u, idx = stack[-1]\n        if idx < len(adj[u]):\n            v = adj[u][idx]\n            stack[-1] = (u, idx + 1)\n            timer += 1\n            tin[v] = timer\n            stack.append((v, 0))\n        else:\n            tout[u] = timer\n            stack.pop()\n\n    # Segment Tree (Dual Segment Tree com timestamps)\n    tree_val = [0] * (4 * N + 1)\n    tree_time = [0] * (4 * N + 1)\n\n    def update(node, l, r, ql, qr, val, t):\n        if ql <= l and r <= qr:\n            tree_val[node] = val\n            tree_time[node] = t\n            return\n        mid = (l + r) // 2\n        left = 2 * node\n        right = 2 * node + 1\n        if ql <= mid:\n            update(left, l, mid, ql, qr, val, t)\n        if qr > mid:\n            update(right, mid + 1, r, ql, qr, val, t)\n\n    def query(node, l, r, pos):\n        res_val = tree_val[node]\n        res_time = tree_time[node]\n        if l == r:\n            return res_val, res_time\n        mid = (l + r) // 2\n        if pos <= mid:\n            c_val, c_time = query(2 * node, l, mid, pos)\n        else:\n            c_val, c_time = query(2 * node + 1, mid + 1, r, pos)\n        if c_time > res_time:\n            return c_val, c_time\n        return res_val, res_time\n\n    Q = int(next(iterator))\n    output = []\n    current_time = 0\n\n    for _ in range(Q):\n        op = next(iterator)\n        if op == \"1\":\n            v = int(next(iterator))\n            k = int(next(iterator))\n\n            t_val, _ = query(1, 1, N, tin[v])\n            if t_val == 0:\n                ans = get_kth_ancestor(v, k)\n            else:\n                if k == 1:\n                    ans = t_val\n                else:\n                    ans = get_kth_ancestor(t_val, k - 1)\n            output.append(str(ans))\n\n        else:  # op == '2'\n            v = int(next(iterator))\n            current_time += 1\n\n            t_val, _ = query(1, 1, N, tin[v])\n            if t_val == 0:\n                L = tin[v] + 1\n                R = tout[v]\n                if L <= R:\n                    update(1, 1, N, L, R, v, current_time)\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n\n    N = int(next(iterator))\n\n    p = [0] * (N + 1)\n    adj = [[] for _ in range(N + 1)]\n\n    for i in range(2, N + 1):\n        pi = int(next(iterator))\n        p[i] = pi\n        adj[pi].append(i)\n\n    # Depth e Binary Lifting\n    # Como p[i] < i, podemos processar em ordem crescente de i\n    LOGN = 18\n    up = [[0] * LOGN for _ in range(N + 1)]\n    depth = [0] * (N + 1)\n\n    for i in range(2, N + 1):\n        depth[i] = depth[p[i]] + 1\n        up[i][0] = p[i]\n\n    for j in range(1, LOGN):\n        for i in range(2, N + 1):\n            up[i][j] = up[up[i][j - 1]][j - 1]\n\n    def get_kth_ancestor(u, k):\n        for j in range(LOGN - 1, -1, -1):\n            if (k >> j) & 1:\n                u = up[u][j]\n        return u\n\n    # DFS Iterativa para calcular tin e tout\n    tin = [0] * (N + 1)\n    tout = [0] * (N + 1)\n\n    stack = [(1, 0)]\n    timer = 1\n    tin[1] = 1\n\n    while stack:\n        u, idx = stack[-1]\n        if idx < len(adj[u]):\n            v = adj[u][idx]\n            stack[-1] = (u, idx + 1)\n            timer += 1\n            tin[v] = timer\n            stack.append((v, 0))\n        else:\n            tout[u] = timer\n            stack.pop()\n\n    # Segment Tree (Dual Segment Tree com timestamps)\n    tree_val = [0] * (4 * N + 1)\n    tree_time = [0] * (4 * N + 1)\n\n    def update(node, l, r, ql, qr, val, t):\n        if ql <= l and r <= qr:\n            tree_val[node] = val\n            tree_time[node] = t\n            return\n        mid = (l + r) // 2\n        left = 2 * node\n        right = 2 * node + 1\n        if ql <= mid:\n            update(left, l, mid, ql, qr, val, t)\n        if qr > mid:\n            update(right, mid + 1, r, ql, qr, val, t)\n\n    def query(node, l, r, pos):\n        res_val = tree_val[node]\n        res_time = tree_time[node]\n        if l == r:\n            return res_val, res_time\n        mid = (l + r) // 2\n        if pos <= mid:\n            c_val, c_time = query(2 * node, l, mid, pos)\n        else:\n            c_val, c_time = query(2 * node + 1, mid + 1, r, pos)\n        if c_time > res_time:\n            return c_val, c_time\n        return res_val, res_time\n\n    Q = int(next(iterator))\n    output = []\n    current_time = 0\n\n    for _ in range(Q):\n        op = next(iterator)\n        if op == \"1\":\n            v = int(next(iterator))\n            k = int(next(iterator))\n\n            t_val, _ = query(1, 1, N, tin[v])\n            if t_val == 0:\n                ans = get_kth_ancestor(v, k)\n            else:\n                if k == 1:\n                    ans = t_val\n                else:\n                    ans = get_kth_ancestor(t_val, k - 1)\n            output.append(str(ans))\n\n        else:  # op == '2'\n            v = int(next(iterator))\n            current_time += 1\n\n            t_val, _ = query(1, 1, N, tin[v])\n            if t_val == 0:\n                L = tin[v] + 1\n                R = tout[v]\n                if L <= R:\n                    update(1, 1, N, L, R, v, current_time)\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.5166926000019885,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

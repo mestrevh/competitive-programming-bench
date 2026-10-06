@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:42:32.511629+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1130,
+            "output_tokens": 544,
+            "total_tokens": 5341
+        },
+        "cost_usd": {
+            "input_cost": 0.000847,
+            "output_cost": 0.00204,
+            "total_cost": 0.002888
+        },
+        "raw_response": "Para resolver o problema, podemos analisar o que é necessário para que Layse fique feliz:\n\n1. **Condição de Vitória**: Layse vence uma jogadora se sua pontuação $X$ for estritamente maior que a pontuação da jogadora ($X > P_i$, ou seja, $P_i \\le X - 1$).\n2. **Formação dos Grupos**: Queremos particionar o array em $K$ grupos contíguos de modo que cada grupo contenha pelo menos $M$ jogadoras com pontuação $\\le X - 1$.\n3. Se existirem pelo menos $K \\times M$ jogadoras no total com pontuação $\\le X - 1$, é **sempre possível** fazer a partição: basta colocar os limites dos grupos logo após a $M$-ésima, $2M$-ésima, ..., até a $(K-1)M$-ésima jogadora com pontuação $\\le X - 1$. O último grupo conterá todas as restantes, que serão no mínimo $M$.\n4. Como cada grupo terá pelo menos $M \\ge 1$ jogadoras que Layse vence, todos os grupos terão pelo menos uma jogadora no total.\n5. Portanto, é necessário e suficiente que existam pelo menos $K \\times M$ jogadoras que Layse consiga vencer.\n\nAssim:\n- Se $K \\times M > N$, é impossível formar os grupos desejados, logo a resposta é `-1`.\n- Caso contrário, a pontuação mínima que Layse precisa ter é a $(K \\times M)$-ésima menor pontuação da lista mais 1.\n\n### Código em Python 3\n\n```python\nimport sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n\n    required = K * M\n    if required > N:\n        print(-1)\n        return\n\n    P = [int(x) for x in data[3 : 3 + N]]\n    P.sort()\n\n    # O elemento na posição (required - 1) no array ordenado (0-indexado)\n    # é a required-ésima menor pontuação.\n    ans = P[required - 1] + 1\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n\n    required = K * M\n    if required > N:\n        print(-1)\n        return\n\n    P = [int(x) for x in data[3 : 3 + N]]\n    P.sort()\n\n    # O elemento na posição (required - 1) no array ordenado (0-indexado)\n    # é a required-ésima menor pontuação.\n    ans = P[required - 1] + 1\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0813895000028424,
+            "counts": {
+                "AC": 24,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 24
+        }
+    }
+]

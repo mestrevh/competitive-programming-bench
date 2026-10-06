@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:20:05.634568+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1124,
+            "output_tokens": 313,
+            "total_tokens": 1880
+        },
+        "cost_usd": {
+            "input_cost": 0.000843,
+            "output_cost": 0.001174,
+            "total_cost": 0.002017
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    it = iter(input_data)\n    S = int(next(it))\n    T = int(next(it))\n    \n    # Criamos um conjunto de adjacências ou uma matriz de adjacência\n    # Uma lista de sets funciona muito bem e é rápida.\n    adj = [set() for _ in range(S + 1)]\n    for _ in range(T):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].add(v)\n        adj[v].add(u)\n        \n    P = int(next(it))\n    valid_tours = 0\n    \n    for _ in range(P):\n        N = int(next(it))\n        tour = [int(next(it)) for _ in range(N)]\n        \n        possible = True\n        for i in range(N - 1):\n            if tour[i + 1] not in adj[tour[i]]:\n                possible = False\n                break\n        \n        if possible:\n            valid_tours += 1\n            \n    print(valid_tours)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    it = iter(input_data)\n    S = int(next(it))\n    T = int(next(it))\n    \n    # Criamos um conjunto de adjacências ou uma matriz de adjacência\n    # Uma lista de sets funciona muito bem e é rápida.\n    adj = [set() for _ in range(S + 1)]\n    for _ in range(T):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].add(v)\n        adj[v].add(u)\n        \n    P = int(next(it))\n    valid_tours = 0\n    \n    for _ in range(P):\n        N = int(next(it))\n        tour = [int(next(it)) for _ in range(N)]\n        \n        possible = True\n        for i in range(N - 1):\n            if tour[i + 1] not in adj[tour[i]]:\n                possible = False\n                break\n        \n        if possible:\n            valid_tours += 1\n            \n    print(valid_tours)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4752100000041537,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

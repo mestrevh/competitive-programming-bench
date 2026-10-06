@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:13:41.753117+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 743,
+            "output_tokens": 234,
+            "total_tokens": 1664
+        },
+        "cost_usd": {
+            "input_cost": 0.000557,
+            "output_cost": 0.000878,
+            "total_cost": 0.001435
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    N = int(data[0])\n    M = int(data[1])\n    \n    parent = list(range(N + 1))\n    \n    def find(i):\n        path = []\n        while parent[i] != i:\n            path.append(i)\n            i = parent[i]\n        for node in path:\n            parent[node] = i\n        return i\n    \n    ans = 0\n    idx = 2\n    for _ in range(M):\n        v = int(data[idx])\n        idx += 1\n        \n        spot = find(v)\n        if spot == 0:\n            break\n        \n        parent[spot] = find(spot - 1)\n        ans += 1\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    N = int(data[0])\n    M = int(data[1])\n    \n    parent = list(range(N + 1))\n    \n    def find(i):\n        path = []\n        while parent[i] != i:\n            path.append(i)\n            i = parent[i]\n        for node in path:\n            parent[node] = i\n        return i\n    \n    ans = 0\n    idx = 2\n    for _ in range(M):\n        v = int(data[idx])\n        idx += 1\n        \n        spot = find(v)\n        if spot == 0:\n            break\n        \n        parent[spot] = find(spot - 1)\n        ans += 1\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09946200000558747,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

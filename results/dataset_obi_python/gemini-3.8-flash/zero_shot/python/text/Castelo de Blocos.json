@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:43:25.153516+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1060,
+            "output_tokens": 390,
+            "total_tokens": 2958
+        },
+        "cost_usd": {
+            "input_cost": 0.000795,
+            "output_cost": 0.001463,
+            "total_cost": 0.002257
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    adj = [[] for _ in range(N + 1)]\n    rem = [0] * (N + 1)\n\n    for _ in range(M):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].append(v)\n        rem[v] += 1\n\n    # Status:\n    # 0: INTACTO\n    # 1: RETIRADO\n    # 2: QUEBRADO\n    status = [0] * (N + 1)\n\n    broken_count = 0\n    q = deque()\n\n    for _ in range(K):\n        b = int(next(it))\n        if status[b] != 0:\n            continue\n        \n        status[b] = 1  # Bruno retira o bloco b com sucesso\n        q.append(b)\n\n        while q:\n            curr = q.popleft()\n            for nxt in adj[curr]:\n                if rem[nxt] > 0:\n                    rem[nxt] -= 1\n                    if rem[nxt] == 0 and status[nxt] == 0:\n                        status[nxt] = 2\n                        broken_count += 1\n                        q.append(nxt)\n\n    print(broken_count)\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    adj = [[] for _ in range(N + 1)]\n    rem = [0] * (N + 1)\n\n    for _ in range(M):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].append(v)\n        rem[v] += 1\n\n    # Status:\n    # 0: INTACTO\n    # 1: RETIRADO\n    # 2: QUEBRADO\n    status = [0] * (N + 1)\n\n    broken_count = 0\n    q = deque()\n\n    for _ in range(K):\n        b = int(next(it))\n        if status[b] != 0:\n            continue\n        \n        status[b] = 1  # Bruno retira o bloco b com sucesso\n        q.append(b)\n\n        while q:\n            curr = q.popleft()\n            for nxt in adj[curr]:\n                if rem[nxt] > 0:\n                    rem[nxt] -= 1\n                    if rem[nxt] == 0 and status[nxt] == 0:\n                        status[nxt] = 2\n                        broken_count += 1\n                        q.append(nxt)\n\n    print(broken_count)\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16936659999919357,
+            "counts": {
+                "AC": 15,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

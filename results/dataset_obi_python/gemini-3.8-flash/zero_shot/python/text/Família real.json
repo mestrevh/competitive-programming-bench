@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:54:29.132165+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 783,
+            "output_tokens": 504,
+            "total_tokens": 1666
+        },
+        "cost_usd": {
+            "input_cost": 0.000587,
+            "output_cost": 0.00189,
+            "total_cost": 0.002477
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    M = int(next(iterator))\n    \n    adj = [[] for _ in range(N + 1)]\n    for i in range(1, N + 1):\n        p = int(next(iterator))\n        adj[p].append(i)\n        \n    attended = [False] * (N + 1)\n    for _ in range(M):\n        p = int(next(iterator))\n        attended[p] = True\n        \n    # BFS para encontrar as gerações\n    generation = [-1] * (N + 1)\n    generation[0] = 0\n    \n    queue = deque([0])\n    max_gen = 0\n    \n    while queue:\n        u = queue.popleft()\n        g = generation[u]\n        for v in adj[u]:\n            generation[v] = g + 1\n            if g + 1 > max_gen:\n                max_gen = g + 1\n            queue.append(v)\n            \n    total_per_gen = [0] * (max_gen + 1)\n    attended_per_gen = [0] * (max_gen + 1)\n    \n    for i in range(1, N + 1):\n        g = generation[i]\n        if g > 0:\n            total_per_gen[g] += 1\n            if attended[i]:\n                attended_per_gen[g] += 1\n                \n    results = []\n    for g in range(1, max_gen + 1):\n        if total_per_gen[g] > 0:\n            pct = (attended_per_gen[g] / total_per_gen[g]) * 100.0\n            results.append(f\"{pct:.2f}\")\n            \n    print(\" \".join(results))\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    M = int(next(iterator))\n    \n    adj = [[] for _ in range(N + 1)]\n    for i in range(1, N + 1):\n        p = int(next(iterator))\n        adj[p].append(i)\n        \n    attended = [False] * (N + 1)\n    for _ in range(M):\n        p = int(next(iterator))\n        attended[p] = True\n        \n    # BFS para encontrar as gerações\n    generation = [-1] * (N + 1)\n    generation[0] = 0\n    \n    queue = deque([0])\n    max_gen = 0\n    \n    while queue:\n        u = queue.popleft()\n        g = generation[u]\n        for v in adj[u]:\n            generation[v] = g + 1\n            if g + 1 > max_gen:\n                max_gen = g + 1\n            queue.append(v)\n            \n    total_per_gen = [0] * (max_gen + 1)\n    attended_per_gen = [0] * (max_gen + 1)\n    \n    for i in range(1, N + 1):\n        g = generation[i]\n        if g > 0:\n            total_per_gen[g] += 1\n            if attended[i]:\n                attended_per_gen[g] += 1\n                \n    results = []\n    for g in range(1, max_gen + 1):\n        if total_per_gen[g] > 0:\n            pct = (attended_per_gen[g] / total_per_gen[g]) * 100.0\n            results.append(f\"{pct:.2f}\")\n            \n    print(\" \".join(results))\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08075790000293637,
+            "counts": {
+                "AC": 15,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

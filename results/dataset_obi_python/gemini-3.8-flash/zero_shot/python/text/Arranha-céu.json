@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:34:23.837737+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 816,
+            "output_tokens": 365,
+            "total_tokens": 1320
+        },
+        "cost_usd": {
+            "input_cost": 0.000612,
+            "output_cost": 0.001369,
+            "total_cost": 0.001981
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    n = int(next(iterator))\n    q = int(next(iterator))\n    \n    # Fenwick Tree (Binary Indexed Tree)\n    bit = [0] * (n + 1)\n    \n    def add(idx, val):\n        while idx <= n:\n            bit[idx] += val\n            idx += idx & (-idx)\n            \n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    a = [0] * (n + 1)\n    for i in range(1, n + 1):\n        val = int(next(iterator))\n        a[i] = val\n        add(i, val)\n        \n    out = []\n    for _ in range(q):\n        op = next(iterator)\n        if op == '0':\n            k = int(next(iterator))\n            p = int(next(iterator))\n            diff = p - a[k]\n            a[k] = p\n            add(k, diff)\n        else:\n            k = int(next(iterator))\n            out.append(str(query(k)))\n            \n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    n = int(next(iterator))\n    q = int(next(iterator))\n    \n    # Fenwick Tree (Binary Indexed Tree)\n    bit = [0] * (n + 1)\n    \n    def add(idx, val):\n        while idx <= n:\n            bit[idx] += val\n            idx += idx & (-idx)\n            \n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    a = [0] * (n + 1)\n    for i in range(1, n + 1):\n        val = int(next(iterator))\n        a[i] = val\n        add(i, val)\n        \n    out = []\n    for _ in range(q):\n        op = next(iterator)\n        if op == '0':\n            k = int(next(iterator))\n            p = int(next(iterator))\n            diff = p - a[k]\n            a[k] = p\n            add(k, diff)\n        else:\n            k = int(next(iterator))\n            out.append(str(query(k)))\n            \n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3083489999989979,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

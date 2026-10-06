@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:51:36.864736+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1585,
+            "output_tokens": 434,
+            "total_tokens": 4144
+        },
+        "cost_usd": {
+            "input_cost": 0.001189,
+            "output_cost": 0.001627,
+            "total_cost": 0.002816
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n    N = int(next(iterator))\n\n    # comp[i] armazenará o ID do componente do candidato i (1-indexado).\n    # Se o candidato não tiver nenhum amigo, comp[i] = 0.\n    comp = [0] * (N + 1)\n    comp_id = 1\n\n    for i in range(1, N + 1):\n        row = next(iterator)\n        if comp[i] == 0:\n            # Encontrar amigos de i\n            friends = []\n            for j in range(N):\n                if row[j] == '1':\n                    friends.append(j + 1)\n\n            if friends:\n                comp[i] = comp_id\n                for friend in friends:\n                    comp[friend] = comp_id\n                comp_id += 1\n\n    E = int(next(iterator))\n\n    visited_comp = [0] * comp_id\n    output = []\n\n    for t in range(1, E + 1):\n        k = int(next(iterator))\n        has_friends = False\n        for _ in range(k):\n            cand = int(next(iterator))\n            c_id = comp[cand]\n            if not has_friends and c_id > 0:\n                if visited_comp[c_id] == t:\n                    has_friends = True\n                else:\n                    visited_comp[c_id] = t\n\n        if has_friends:\n            output.append('S')\n        else:\n            output.append('N')\n\n    sys.stdout.write('\\n'.join(output) + '\\n')\n\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n    N = int(next(iterator))\n\n    # comp[i] armazenará o ID do componente do candidato i (1-indexado).\n    # Se o candidato não tiver nenhum amigo, comp[i] = 0.\n    comp = [0] * (N + 1)\n    comp_id = 1\n\n    for i in range(1, N + 1):\n        row = next(iterator)\n        if comp[i] == 0:\n            # Encontrar amigos de i\n            friends = []\n            for j in range(N):\n                if row[j] == '1':\n                    friends.append(j + 1)\n\n            if friends:\n                comp[i] = comp_id\n                for friend in friends:\n                    comp[friend] = comp_id\n                comp_id += 1\n\n    E = int(next(iterator))\n\n    visited_comp = [0] * comp_id\n    output = []\n\n    for t in range(1, E + 1):\n        k = int(next(iterator))\n        has_friends = False\n        for _ in range(k):\n            cand = int(next(iterator))\n            c_id = comp[cand]\n            if not has_friends and c_id > 0:\n                if visited_comp[c_id] == t:\n                    has_friends = True\n                else:\n                    visited_comp[c_id] = t\n\n        if has_friends:\n            output.append('S')\n        else:\n            output.append('N')\n\n    sys.stdout.write('\\n'.join(output) + '\\n')\n\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.5126792000010028,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

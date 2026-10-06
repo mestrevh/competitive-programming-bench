@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:43:34.509260+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 990,
+            "output_tokens": 409,
+            "total_tokens": 1672
+        },
+        "cost_usd": {
+            "input_cost": 0.000742,
+            "output_cost": 0.001534,
+            "total_cost": 0.002276
+        },
+        "raw_response": "```python\nimport sys\n\n# Aumentar o limite de recursão por segurança, embora N <= 100\nsys.setrecursionlimit(2000)\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n\n    for _ in range(N - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n\n    cores = [0] * (N + 1)\n\n    for _ in range(M):\n        p = int(data[idx])\n        q = int(data[idx + 1])\n        c = int(data[idx + 2])\n        idx += 3\n\n        # BFS para encontrar o caminho de p até q\n        parent = {p: None}\n        queue = [p]\n        head = 0\n\n        while head < len(queue):\n            curr = queue[head]\n            head += 1\n\n            if curr == q:\n                break\n\n            for neighbor in adj[curr]:\n                if neighbor not in parent:\n                    parent[neighbor] = curr\n                    queue.append(neighbor)\n\n        # Reconstrói o caminho de q até p e pinta os vértices\n        curr = q\n        while curr is not None:\n            cores[curr] = c\n            curr = parent[curr]\n\n    print(*(cores[1:N + 1]))\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\n# Aumentar o limite de recursão por segurança, embora N <= 100\nsys.setrecursionlimit(2000)\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n\n    for _ in range(N - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n\n    cores = [0] * (N + 1)\n\n    for _ in range(M):\n        p = int(data[idx])\n        q = int(data[idx + 1])\n        c = int(data[idx + 2])\n        idx += 3\n\n        # BFS para encontrar o caminho de p até q\n        parent = {p: None}\n        queue = [p]\n        head = 0\n\n        while head < len(queue):\n            curr = queue[head]\n            head += 1\n\n            if curr == q:\n                break\n\n            for neighbor in adj[curr]:\n                if neighbor not in parent:\n                    parent[neighbor] = curr\n                    queue.append(neighbor)\n\n        # Reconstrói o caminho de q até p e pinta os vértices\n        curr = q\n        while curr is not None:\n            cores[curr] = c\n            curr = parent[curr]\n\n    print(*(cores[1:N + 1]))\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06916539999656379,
+            "counts": {
+                "AC": 36,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 36
+        }
+    }
+]

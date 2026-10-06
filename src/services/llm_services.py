@@ -44,6 +44,7 @@ class LLM:
         self.__seed                 = seed
         self.__frequency_penalty    = frequency_penalty
         self.__presence_penalty     = presence_penalty
+        self.__base_url             = base_url
         self.__input_price          = input_price
         self.__output_price         = output_price
         
@@ -68,14 +69,17 @@ class LLM:
             "messages": messages,
             "temperature": self.__temperature,
             "top_p": self.__top_p,
-            "seed": self.__seed,
-            "frequency_penalty": self.__frequency_penalty,
-            "presence_penalty": self.__presence_penalty,
             "response_format": response_format
         }
         
-        if self.__seed is not None:
-            kwargs["seed"] = self.__seed
+        is_google = "googleapis.com" in (self.__base_url or "")
+        if not is_google:
+            if self.__seed is not None:
+                kwargs["seed"] = self.__seed
+            if self.__frequency_penalty != 0.0:
+                kwargs["frequency_penalty"] = self.__frequency_penalty
+            if self.__presence_penalty != 0.0:
+                kwargs["presence_penalty"] = self.__presence_penalty
         
         response = self.__client.chat.completions.create(**kwargs)
         content = response.choices[0].message.content or ""

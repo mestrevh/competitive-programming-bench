@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:52:01.396585+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 882,
+            "output_tokens": 325,
+            "total_tokens": 2325
+        },
+        "cost_usd": {
+            "input_cost": 0.000661,
+            "output_cost": 0.001219,
+            "total_cost": 0.00188
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    a = [int(x) for x in data[1 : n + 1]]\n\n    INF = float(\"inf\")\n\n    # Passagem da esquerda para a direita\n    left = [INF] * n\n    for i in range(n):\n        val = left[i - 1] + 1 if i > 0 else INF\n        if a[i] != -1:\n            val = min(val, a[i])\n        left[i] = val\n\n    # Passagem da direita para a esquerda\n    right = [INF] * n\n    for i in range(n - 1, -1, -1):\n        val = right[i + 1] + 1 if i < n - 1 else INF\n        if a[i] != -1:\n            val = min(val, a[i])\n        right[i] = val\n\n    # O resultado para cada degrau é o mínimo entre as restrições da esquerda e da direita\n    ans = [min(left[i], right[i]) for i in range(n)]\n\n    sys.stdout.write(\" \".join(map(str, ans)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    a = [int(x) for x in data[1 : n + 1]]\n\n    INF = float(\"inf\")\n\n    # Passagem da esquerda para a direita\n    left = [INF] * n\n    for i in range(n):\n        val = left[i - 1] + 1 if i > 0 else INF\n        if a[i] != -1:\n            val = min(val, a[i])\n        left[i] = val\n\n    # Passagem da direita para a esquerda\n    right = [INF] * n\n    for i in range(n - 1, -1, -1):\n        val = right[i + 1] + 1 if i < n - 1 else INF\n        if a[i] != -1:\n            val = min(val, a[i])\n        right[i] = val\n\n    # O resultado para cada degrau é o mínimo entre as restrições da esquerda e da direita\n    ans = [min(left[i], right[i]) for i in range(n)]\n\n    sys.stdout.write(\" \".join(map(str, ans)) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13929640000424115,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

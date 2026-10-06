@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:47:14.880054+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1410,
+            "output_tokens": 322,
+            "total_tokens": 2984
+        },
+        "cost_usd": {
+            "input_cost": 0.001058,
+            "output_cost": 0.001208,
+            "total_cost": 0.002265
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    M = int(next(iterator))\n    P = int(next(iterator))\n    \n    # 0-indexed arrays\n    row_orig = [(i * M) for i in range(N)]\n    col_orig = list(range(1, M + 1))\n    \n    for _ in range(P):\n        op = next(iterator)\n        a = int(next(iterator)) - 1\n        b = int(next(iterator)) - 1\n        if op == 'L':\n            row_orig[a], row_orig[b] = row_orig[b], row_orig[a]\n        else:\n            col_orig[a], col_orig[b] = col_orig[b], col_orig[a]\n            \n    out = []\n    # Para acelerar a impressão, podemos gerar as linhas\n    for r_base in row_orig:\n        out.append(\" \".join(str(r_base + c) for c in col_orig))\n        \n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    M = int(next(iterator))\n    P = int(next(iterator))\n    \n    # 0-indexed arrays\n    row_orig = [(i * M) for i in range(N)]\n    col_orig = list(range(1, M + 1))\n    \n    for _ in range(P):\n        op = next(iterator)\n        a = int(next(iterator)) - 1\n        b = int(next(iterator)) - 1\n        if op == 'L':\n            row_orig[a], row_orig[b] = row_orig[b], row_orig[a]\n        else:\n            col_orig[a], col_orig[b] = col_orig[b], col_orig[a]\n            \n    out = []\n    # Para acelerar a impressão, podemos gerar as linhas\n    for r_base in row_orig:\n        out.append(\" \".join(str(r_base + c) for c in col_orig))\n        \n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.794772200002626,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

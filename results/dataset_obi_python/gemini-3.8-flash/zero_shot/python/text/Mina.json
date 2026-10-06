@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:10:26.748309+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 591,
+            "output_tokens": 375,
+            "total_tokens": 1376
+        },
+        "cost_usd": {
+            "input_cost": 0.000443,
+            "output_cost": 0.001406,
+            "total_cost": 0.00185
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    grid = []\n    idx = 1\n    for _ in range(n):\n        grid.append([int(x) for x in data[idx:idx + n]])\n        idx += n\n        \n    dist = [[float('inf')] * n for _ in range(n)]\n    dist[0][0] = 0\n    \n    dq = deque([(0, 0)])\n    \n    dr = [-1, 1, 0, 0]\n    dc = [0, 0, -1, 1]\n    \n    while dq:\n        r, c = dq.popleft()\n        \n        if r == n - 1 and c == n - 1:\n            break\n            \n        d = dist[r][c]\n        \n        for i in range(4):\n            nr, nc = r + dr[i], c + dc[i]\n            if 0 <= nr < n and 0 <= nc < n:\n                weight = grid[nr][nc]\n                if d + weight < dist[nr][nc]:\n                    dist[nr][nc] = d + weight\n                    if weight == 0:\n                        dq.appendleft((nr, nc))\n                    else:\n                        dq.append((nr, nc))\n                        \n    print(dist[n - 1][n - 1])\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    grid = []\n    idx = 1\n    for _ in range(n):\n        grid.append([int(x) for x in data[idx:idx + n]])\n        idx += n\n        \n    dist = [[float('inf')] * n for _ in range(n)]\n    dist[0][0] = 0\n    \n    dq = deque([(0, 0)])\n    \n    dr = [-1, 1, 0, 0]\n    dc = [0, 0, -1, 1]\n    \n    while dq:\n        r, c = dq.popleft()\n        \n        if r == n - 1 and c == n - 1:\n            break\n            \n        d = dist[r][c]\n        \n        for i in range(4):\n            nr, nc = r + dr[i], c + dc[i]\n            if 0 <= nr < n and 0 <= nc < n:\n                weight = grid[nr][nc]\n                if d + weight < dist[nr][nc]:\n                    dist[nr][nc] = d + weight\n                    if weight == 0:\n                        dq.appendleft((nr, nc))\n                    else:\n                        dq.append((nr, nc))\n                        \n    print(dist[n - 1][n - 1])\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07034099999873433,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

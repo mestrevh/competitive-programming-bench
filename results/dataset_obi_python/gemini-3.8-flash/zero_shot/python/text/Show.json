@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:19:29.413996+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 791,
+            "output_tokens": 332,
+            "total_tokens": 1761
+        },
+        "cost_usd": {
+            "input_cost": 0.000593,
+            "output_cost": 0.001245,
+            "total_cost": 0.001838
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    A = int(data[0])\n    N = int(data[1])\n    M = int(data[2])\n    \n    idx = 3\n    # As filas são dadas de N até 1.\n    # Vamos guardar as filas e seus números.\n    rows = []\n    for i in range(N):\n        row_num = N - i\n        row_seats = [int(x) for x in data[idx : idx + M]]\n        idx += M\n        rows.append((row_num, row_seats))\n    \n    # Ordenar por número da fila crescente (mais próxima do palco primeiro)\n    rows.sort(key=lambda x: x[0])\n    \n    ans = -1\n    for row_num, seats in rows:\n        max_zeros = 0\n        current_zeros = 0\n        for seat in seats:\n            if seat == 0:\n                current_zeros += 1\n                if current_zeros > max_zeros:\n                    max_zeros = current_zeros\n            else:\n                current_zeros = 0\n        \n        if max_zeros >= A:\n            ans = row_num\n            break\n            \n    print(ans)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    A = int(data[0])\n    N = int(data[1])\n    M = int(data[2])\n    \n    idx = 3\n    # As filas são dadas de N até 1.\n    # Vamos guardar as filas e seus números.\n    rows = []\n    for i in range(N):\n        row_num = N - i\n        row_seats = [int(x) for x in data[idx : idx + M]]\n        idx += M\n        rows.append((row_num, row_seats))\n    \n    # Ordenar por número da fila crescente (mais próxima do palco primeiro)\n    rows.sort(key=lambda x: x[0])\n    \n    ans = -1\n    for row_num, seats in rows:\n        max_zeros = 0\n        current_zeros = 0\n        for seat in seats:\n            if seat == 0:\n                current_zeros += 1\n                if current_zeros > max_zeros:\n                    max_zeros = current_zeros\n            else:\n                current_zeros = 0\n        \n        if max_zeros >= A:\n            ans = row_num\n            break\n            \n    print(ans)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07320389999949839,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

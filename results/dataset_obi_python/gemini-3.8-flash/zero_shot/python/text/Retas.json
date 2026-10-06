@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:17:37.090487+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1093,
+            "output_tokens": 501,
+            "total_tokens": 4687
+        },
+        "cost_usd": {
+            "input_cost": 0.00082,
+            "output_cost": 0.001879,
+            "total_cost": 0.002699
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    points = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        y1 = A * X1 + B\n        y2 = A * X2 + B\n        points.append((y1, y2))\n\n    # Coordenadas discretizadas de Y2\n    unique_y2 = sorted(list(set(p[1] for p in points)))\n    y2_to_rank = {val: i + 1 for i, val in enumerate(unique_y2)}\n\n    # Ordenar por Y1 crescente, desempatando por Y2 decrescente\n    points.sort(key=lambda p: (p[0], -p[1]))\n\n    # BIT (Fenwick Tree) para contar Y2 menores\n    m = len(unique_y2)\n    bit = [0] * (m + 1)\n\n    def query(rank):\n        s = 0\n        while rank > 0:\n            s += bit[rank]\n            rank -= rank & -rank\n        return s\n\n    def add(rank, val):\n        while rank <= m:\n            bit[rank] += val\n            rank += rank & -rank\n\n    # Contar pares com Y1_i < Y1_j e Y2_i < Y2_j\n    S = 0\n    for _, y2 in points:\n        rank = y2_to_rank[y2]\n        # Queremos quantos elementos já inseridos têm rank_i < rank\n        S += query(rank - 1)\n        add(rank, 1)\n\n    total_pairs = N * (N - 1) // 2\n    ans = total_pairs - S\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    points = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        y1 = A * X1 + B\n        y2 = A * X2 + B\n        points.append((y1, y2))\n\n    # Coordenadas discretizadas de Y2\n    unique_y2 = sorted(list(set(p[1] for p in points)))\n    y2_to_rank = {val: i + 1 for i, val in enumerate(unique_y2)}\n\n    # Ordenar por Y1 crescente, desempatando por Y2 decrescente\n    points.sort(key=lambda p: (p[0], -p[1]))\n\n    # BIT (Fenwick Tree) para contar Y2 menores\n    m = len(unique_y2)\n    bit = [0] * (m + 1)\n\n    def query(rank):\n        s = 0\n        while rank > 0:\n            s += bit[rank]\n            rank -= rank & -rank\n        return s\n\n    def add(rank, val):\n        while rank <= m:\n            bit[rank] += val\n            rank += rank & -rank\n\n    # Contar pares com Y1_i < Y1_j e Y2_i < Y2_j\n    S = 0\n    for _, y2 in points:\n        rank = y2_to_rank[y2]\n        # Queremos quantos elementos já inseridos têm rank_i < rank\n        S += query(rank - 1)\n        add(rank, 1)\n\n    total_pairs = N * (N - 1) // 2\n    ans = total_pairs - S\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.34068009999464266,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:41:40.916818+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 693,
+            "output_tokens": 363,
+            "total_tokens": 1713
+        },
+        "cost_usd": {
+            "input_cost": 0.00052,
+            "output_cost": 0.001361,
+            "total_cost": 0.001881
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    p = [int(x) for x in input_data[1:n+1]]\n    \n    # Determinar se cada trecho é escuro\n    # trecho i conecta poste i e poste (i + 1) % n\n    dark = [0] * n\n    for i in range(n - 1):\n        if p[i] + p[i + 1] < 1000:\n            dark[i] = 1\n    if p[n - 1] + p[0] < 1000:\n        dark[n - 1] = 1\n\n    first_zero = -1\n    for i in range(n):\n        if dark[i] == 0:\n            first_zero = i\n            break\n            \n    if first_zero == -1:\n        print(n)\n        return\n\n    max_streak = 0\n    current_streak = 0\n    for i in range(n):\n        idx = (first_zero + 1 + i) % n\n        if dark[idx] == 1:\n            current_streak += 1\n            if current_streak > max_streak:\n                max_streak = current_streak\n        else:\n            current_streak = 0\n\n    print(max_streak)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    p = [int(x) for x in input_data[1:n+1]]\n    \n    # Determinar se cada trecho é escuro\n    # trecho i conecta poste i e poste (i + 1) % n\n    dark = [0] * n\n    for i in range(n - 1):\n        if p[i] + p[i + 1] < 1000:\n            dark[i] = 1\n    if p[n - 1] + p[0] < 1000:\n        dark[n - 1] = 1\n\n    first_zero = -1\n    for i in range(n):\n        if dark[i] == 0:\n            first_zero = i\n            break\n            \n    if first_zero == -1:\n        print(n)\n        return\n\n    max_streak = 0\n    current_streak = 0\n    for i in range(n):\n        idx = (first_zero + 1 + i) % n\n        if dark[idx] == 1:\n            current_streak += 1\n            if current_streak > max_streak:\n                max_streak = current_streak\n        else:\n            current_streak = 0\n\n    print(max_streak)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1749102000030689,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

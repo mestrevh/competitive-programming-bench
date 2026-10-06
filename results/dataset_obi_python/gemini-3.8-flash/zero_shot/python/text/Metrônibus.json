@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:10:16.728726+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1680,
+            "output_tokens": 601,
+            "total_tokens": 3806
+        },
+        "cost_usd": {
+            "input_cost": 0.00126,
+            "output_cost": 0.002254,
+            "total_cost": 0.003514
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    K1 = int(next(it))\n    K2 = int(next(it))\n    P = int(next(it))\n\n    # adj[u] will store tuples of (v, type)\n    # type 0 for metro, type 1 for bus\n    adj = [[] for _ in range(N + 1)]\n\n    for _ in range(K1):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].append((v, 0))\n        adj[v].append((u, 0))\n\n    for _ in range(K2):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].append((v, 1))\n        adj[v].append((u, 1))\n\n    A = int(next(it))\n    B = int(next(it))\n\n    if A == B:\n        print(0)\n        return\n\n    # dist array: size 2 * (N + 1), initialized to -1\n    # state is represented as (u << 1) | transport_type\n    dist = [-1] * (2 * (N + 1))\n    q = deque()\n\n    # From starting station A, entering any system costs 1 ticket\n    for v, t in adj[A]:\n        st = (v << 1) | t\n        if dist[st] == -1:\n            dist[st] = 1\n            q.append(st)\n\n    ans = -1\n    while q:\n        curr = q.popleft()\n        u = curr >> 1\n        t = curr & 1\n        d = dist[curr]\n\n        if u == B:\n            ans = d * P\n            break\n\n        for v, edge_t in adj[u]:\n            cost = 0 if edge_t == t else 1\n            nxt = (v << 1) | edge_t\n            new_d = d + cost\n            if dist[nxt] == -1 or new_d < dist[nxt]:\n                dist[nxt] = new_d\n                if cost == 0:\n                    q.appendleft(nxt)\n                else:\n                    q.append(nxt)\n\n    print(ans)\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    K1 = int(next(it))\n    K2 = int(next(it))\n    P = int(next(it))\n\n    # adj[u] will store tuples of (v, type)\n    # type 0 for metro, type 1 for bus\n    adj = [[] for _ in range(N + 1)]\n\n    for _ in range(K1):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].append((v, 0))\n        adj[v].append((u, 0))\n\n    for _ in range(K2):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].append((v, 1))\n        adj[v].append((u, 1))\n\n    A = int(next(it))\n    B = int(next(it))\n\n    if A == B:\n        print(0)\n        return\n\n    # dist array: size 2 * (N + 1), initialized to -1\n    # state is represented as (u << 1) | transport_type\n    dist = [-1] * (2 * (N + 1))\n    q = deque()\n\n    # From starting station A, entering any system costs 1 ticket\n    for v, t in adj[A]:\n        st = (v << 1) | t\n        if dist[st] == -1:\n            dist[st] = 1\n            q.append(st)\n\n    ans = -1\n    while q:\n        curr = q.popleft()\n        u = curr >> 1\n        t = curr & 1\n        d = dist[curr]\n\n        if u == B:\n            ans = d * P\n            break\n\n        for v, edge_t in adj[u]:\n            cost = 0 if edge_t == t else 1\n            nxt = (v << 1) | edge_t\n            new_d = d + cost\n            if dist[nxt] == -1 or new_d < dist[nxt]:\n                dist[nxt] = new_d\n                if cost == 0:\n                    q.appendleft(nxt)\n                else:\n                    q.append(nxt)\n\n    print(ans)\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.23266559999319725,
+            "counts": {
+                "AC": 82,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 82
+        }
+    }
+]

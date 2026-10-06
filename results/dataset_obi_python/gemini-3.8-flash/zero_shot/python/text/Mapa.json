@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:09:43.634705+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1017,
+            "output_tokens": 375,
+            "total_tokens": 2140
+        },
+        "cost_usd": {
+            "input_cost": 0.000763,
+            "output_cost": 0.001406,
+            "total_cost": 0.002169
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    L = int(data[0])\n    C = int(data[1])\n    grid = data[2:]\n    \n    start_r, start_c = -1, -1\n    for r in range(L):\n        for c in range(C):\n            if grid[r][c] == 'o':\n                start_r, start_c = r, c\n                break\n        if start_r != -1:\n            break\n            \n    visited = [[False] * C for _ in range(L)]\n    visited[start_r][start_c] = True\n    \n    curr_r, curr_c = start_r, start_c\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    \n    while True:\n        moved = False\n        for dr, dc in directions:\n            nr, nc = curr_r + dr, curr_c + dc\n            if 0 <= nr < L and 0 <= nc < C:\n                if not visited[nr][nc] and grid[nr][nc] == 'H':\n                    visited[nr][nc] = True\n                    curr_r, curr_c = nr, nc\n                    moved = True\n                    break\n        if not moved:\n            break\n            \n    print(f\"{curr_r + 1} {curr_c + 1}\")\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    L = int(data[0])\n    C = int(data[1])\n    grid = data[2:]\n    \n    start_r, start_c = -1, -1\n    for r in range(L):\n        for c in range(C):\n            if grid[r][c] == 'o':\n                start_r, start_c = r, c\n                break\n        if start_r != -1:\n            break\n            \n    visited = [[False] * C for _ in range(L)]\n    visited[start_r][start_c] = True\n    \n    curr_r, curr_c = start_r, start_c\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n    \n    while True:\n        moved = False\n        for dr, dc in directions:\n            nr, nc = curr_r + dr, curr_c + dc\n            if 0 <= nr < L and 0 <= nc < C:\n                if not visited[nr][nc] and grid[nr][nc] == 'H':\n                    visited[nr][nc] = True\n                    curr_r, curr_c = nr, nc\n                    moved = True\n                    break\n        if not moved:\n            break\n            \n    print(f\"{curr_r + 1} {curr_c + 1}\")\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07462269999814453,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

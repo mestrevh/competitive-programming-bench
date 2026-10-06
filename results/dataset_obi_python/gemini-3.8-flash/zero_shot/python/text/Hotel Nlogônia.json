@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:02:13.890063+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1511,
+            "output_tokens": 628,
+            "total_tokens": 3823
+        },
+        "cost_usd": {
+            "input_cost": 0.001133,
+            "output_cost": 0.002355,
+            "total_cost": 0.003488
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    D = int(data[1])\n    W = int(data[2])\n\n    p = [int(x) for x in data[3 : 3 + N]]\n\n    # Prefix sums of p\n    pref = [0] * (N + 1)\n    for i in range(N):\n        pref[i + 1] = pref[i] + p[i]\n\n    # Subarray sums of length D: S_D[j] = sum(p[j : j + D])\n    # There are N - D + 1 such subarrays, indexed j = 0 to N - D\n    num_D = N - D + 1\n    S_D = [pref[j + D] - pref[j] for j in range(num_D)]\n\n    # Check if a length K is feasible\n    # A length K in [D, N] has window size in S_D equal to K - D + 1\n    def check(K):\n        M = K - D + 1\n        dq = deque()\n\n        # Sliding window maximum of size M over S_D\n        # For a starting index i of length K in p (from 0 to N - K):\n        # The allowed j in S_D are i to i + K - D = i + M - 1.\n        for i in range(num_D):\n            # Maintain deque of indices in decreasing order of value\n            while dq and S_D[dq[-1]] <= S_D[i]:\n                dq.pop()\n            dq.append(i)\n\n            if dq[0] < i - M + 1:\n                dq.popleft()\n\n            # When i >= M - 1, we have a complete window of size M,\n            # which corresponds to the interval in p starting at L = i - M + 1\n            if i >= M - 1:\n                L = i - M + 1\n                max_d = S_D[dq[0]]\n                total_sum = pref[L + K] - pref[L]\n                if total_sum - max_d <= W:\n                    return True\n\n        return False\n\n    low = D\n    high = N\n    ans = D\n\n    while low <= high:\n        mid = (low + high) // 2\n        if check(mid):\n            ans = mid\n            low = mid + 1\n        else:\n            high = mid - 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    D = int(data[1])\n    W = int(data[2])\n\n    p = [int(x) for x in data[3 : 3 + N]]\n\n    # Prefix sums of p\n    pref = [0] * (N + 1)\n    for i in range(N):\n        pref[i + 1] = pref[i] + p[i]\n\n    # Subarray sums of length D: S_D[j] = sum(p[j : j + D])\n    # There are N - D + 1 such subarrays, indexed j = 0 to N - D\n    num_D = N - D + 1\n    S_D = [pref[j + D] - pref[j] for j in range(num_D)]\n\n    # Check if a length K is feasible\n    # A length K in [D, N] has window size in S_D equal to K - D + 1\n    def check(K):\n        M = K - D + 1\n        dq = deque()\n\n        # Sliding window maximum of size M over S_D\n        # For a starting index i of length K in p (from 0 to N - K):\n        # The allowed j in S_D are i to i + K - D = i + M - 1.\n        for i in range(num_D):\n            # Maintain deque of indices in decreasing order of value\n            while dq and S_D[dq[-1]] <= S_D[i]:\n                dq.pop()\n            dq.append(i)\n\n            if dq[0] < i - M + 1:\n                dq.popleft()\n\n            # When i >= M - 1, we have a complete window of size M,\n            # which corresponds to the interval in p starting at L = i - M + 1\n            if i >= M - 1:\n                L = i - M + 1\n                max_d = S_D[dq[0]]\n                total_sum = pref[L + K] - pref[L]\n                if total_sum - max_d <= W:\n                    return True\n\n        return False\n\n    low = D\n    high = N\n    ans = D\n\n    while low <= high:\n        mid = (low + high) // 2\n        if check(mid):\n            ans = mid\n            low = mid + 1\n        else:\n            high = mid - 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "TLE",
+            "execution_time": 1.0,
+            "counts": {
+                "AC": 59,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 1,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 60
+        }
+    }
+]

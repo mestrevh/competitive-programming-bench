@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:31:25.756757+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 7.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1509,
+            "output_tokens": 870,
+            "total_tokens": 4602
+        },
+        "cost_usd": {
+            "input_cost": 0.001132,
+            "output_cost": 0.003263,
+            "total_cost": 0.004394
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    K = int(next(it))\n\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(N - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].append(v)\n        adj[v].append(u)\n\n    mask = [0] * (N + 1)\n    for i in range(1, N + 1):\n        m = 0\n        for _ in range(K):\n            m = (m << 1) | int(next(it))\n        mask[i] = m\n\n    # DFS iterativa para construir o Euler Tour, depth e prefix_xor\n    tour = []\n    first = [-1] * (N + 1)\n    depth = [0] * (N + 1)\n    prefix_xor = [0] * (N + 1)\n\n    prefix_xor[1] = mask[1]\n    stack = [1]\n    edge_idx = [0] * (N + 1)\n    parent = [0] * (N + 1)\n\n    while stack:\n        u = stack[-1]\n        if first[u] == -1:\n            first[u] = len(tour)\n        tour.append(u)\n\n        p = parent[u]\n        while edge_idx[u] < len(adj[u]):\n            v = adj[u][edge_idx[u]]\n            edge_idx[u] += 1\n            if v != p:\n                parent[v] = u\n                depth[v] = depth[u] + 1\n                prefix_xor[v] = prefix_xor[u] ^ mask[v]\n                stack.append(v)\n                break\n        else:\n            stack.pop()\n\n    # Construção da Sparse Table para RMQ no Euler Tour\n    M = len(tour)\n    st = [tour]\n    k = 1\n    while (1 << k) <= M:\n        prev = st[k - 1]\n        half = 1 << (k - 1)\n        cur_len = M - (1 << k) + 1\n        curr = [0] * cur_len\n        for i in range(cur_len):\n            u1 = prev[i]\n            u2 = prev[i + half]\n            curr[i] = u1 if depth[u1] < depth[u2] else u2\n        st.append(curr)\n        k += 1\n\n    Q = int(next(it))\n    out = []\n    for _ in range(Q):\n        u = int(next(it))\n        v = int(next(it))\n\n        l = first[u]\n        r = first[v]\n        if l > r:\n            l, r = r, l\n\n        length = r - l + 1\n        p = length.bit_length() - 1\n        u1 = st[p][l]\n        u2 = st[p][r - (1 << p) + 1]\n        lca = u1 if depth[u1] < depth[u2] else u2\n\n        res_mask = prefix_xor[u] ^ prefix_xor[v] ^ mask[lca]\n        out.append(str(res_mask.bit_count()))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    K = int(next(it))\n\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(N - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj[u].append(v)\n        adj[v].append(u)\n\n    mask = [0] * (N + 1)\n    for i in range(1, N + 1):\n        m = 0\n        for _ in range(K):\n            m = (m << 1) | int(next(it))\n        mask[i] = m\n\n    # DFS iterativa para construir o Euler Tour, depth e prefix_xor\n    tour = []\n    first = [-1] * (N + 1)\n    depth = [0] * (N + 1)\n    prefix_xor = [0] * (N + 1)\n\n    prefix_xor[1] = mask[1]\n    stack = [1]\n    edge_idx = [0] * (N + 1)\n    parent = [0] * (N + 1)\n\n    while stack:\n        u = stack[-1]\n        if first[u] == -1:\n            first[u] = len(tour)\n        tour.append(u)\n\n        p = parent[u]\n        while edge_idx[u] < len(adj[u]):\n            v = adj[u][edge_idx[u]]\n            edge_idx[u] += 1\n            if v != p:\n                parent[v] = u\n                depth[v] = depth[u] + 1\n                prefix_xor[v] = prefix_xor[u] ^ mask[v]\n                stack.append(v)\n                break\n        else:\n            stack.pop()\n\n    # Construção da Sparse Table para RMQ no Euler Tour\n    M = len(tour)\n    st = [tour]\n    k = 1\n    while (1 << k) <= M:\n        prev = st[k - 1]\n        half = 1 << (k - 1)\n        cur_len = M - (1 << k) + 1\n        curr = [0] * cur_len\n        for i in range(cur_len):\n            u1 = prev[i]\n            u2 = prev[i + half]\n            curr[i] = u1 if depth[u1] < depth[u2] else u2\n        st.append(curr)\n        k += 1\n\n    Q = int(next(it))\n    out = []\n    for _ in range(Q):\n        u = int(next(it))\n        v = int(next(it))\n\n        l = first[u]\n        r = first[v]\n        if l > r:\n            l, r = r, l\n\n        length = r - l + 1\n        p = length.bit_length() - 1\n        u1 = st[p][l]\n        u2 = st[p][r - (1 << p) + 1]\n        lca = u1 if depth[u1] < depth[u2] else u2\n\n        res_mask = prefix_xor[u] ^ prefix_xor[v] ^ mask[lca]\n        out.append(str(res_mask.bit_count()))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.1983476000023074,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

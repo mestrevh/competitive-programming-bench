@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:57:18.819092+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 658,
+            "output_tokens": 310,
+            "total_tokens": 1172
+        },
+        "cost_usd": {
+            "input_cost": 0.000494,
+            "output_cost": 0.001162,
+            "total_cost": 0.001656
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    fita = [int(x) for x in data[1:n+1]]\n    \n    ans = [float('inf')] * n\n    \n    # Passada da esquerda para a direita\n    last_zero = -float('inf')\n    for i in range(n):\n        if fita[i] == 0:\n            last_zero = i\n        if last_zero != -float('inf'):\n            ans[i] = i - last_zero\n            \n    # Passada da direita para a esquerda\n    last_zero = float('inf')\n    for i in range(n - 1, -1, -1):\n        if fita[i] == 0:\n            last_zero = i\n        if last_zero != float('inf'):\n            ans[i] = min(ans[i], last_zero - i)\n            \n    # Limitar o valor máximo a 9\n    for i in range(n):\n        if ans[i] >= 9:\n            ans[i] = 9\n            \n    print(*(ans))\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    fita = [int(x) for x in data[1:n+1]]\n    \n    ans = [float('inf')] * n\n    \n    # Passada da esquerda para a direita\n    last_zero = -float('inf')\n    for i in range(n):\n        if fita[i] == 0:\n            last_zero = i\n        if last_zero != -float('inf'):\n            ans[i] = i - last_zero\n            \n    # Passada da direita para a esquerda\n    last_zero = float('inf')\n    for i in range(n - 1, -1, -1):\n        if fita[i] == 0:\n            last_zero = i\n        if last_zero != float('inf'):\n            ans[i] = min(ans[i], last_zero - i)\n            \n    # Limitar o valor máximo a 9\n    for i in range(n):\n        if ans[i] >= 9:\n            ans[i] = 9\n            \n    print(*(ans))\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08090559999982361,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

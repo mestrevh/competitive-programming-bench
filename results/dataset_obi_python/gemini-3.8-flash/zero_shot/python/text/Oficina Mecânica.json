@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:12:10.141089+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1363,
+            "output_tokens": 316,
+            "total_tokens": 4313
+        },
+        "cost_usd": {
+            "input_cost": 0.001022,
+            "output_cost": 0.001185,
+            "total_cost": 0.002207
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    T = [int(x) for x in data[2:2 + N]]\n    F = [int(x) for x in data[2 + N:2 + N + M]]\n\n    if N <= M:\n        print(0)\n        return\n\n    T.sort(reverse=True)\n\n    # Os primeiros M carros receberão peso 0 (um para cada mecânico)\n    # Os N - M carros restantes precisam dos N - M menores pesos positivos\n    remaining_cars = T[M:]\n\n    # Heap com os fatores de trabalho dos mecânicos\n    # Cada elemento da heap é uma tupla (peso_atual, fator)\n    heap = [(f, f) for f in F]\n    heapq.heapify(heap)\n\n    total_waiting_time = 0\n    for t in remaining_cars:\n        weight, f = heapq.heappop(heap)\n        total_waiting_time += weight * t\n        heapq.heappush(heap, (weight + f, f))\n\n    print(total_waiting_time)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    T = [int(x) for x in data[2:2 + N]]\n    F = [int(x) for x in data[2 + N:2 + N + M]]\n\n    if N <= M:\n        print(0)\n        return\n\n    T.sort(reverse=True)\n\n    # Os primeiros M carros receberão peso 0 (um para cada mecânico)\n    # Os N - M carros restantes precisam dos N - M menores pesos positivos\n    remaining_cars = T[M:]\n\n    # Heap com os fatores de trabalho dos mecânicos\n    # Cada elemento da heap é uma tupla (peso_atual, fator)\n    heap = [(f, f) for f in F]\n    heapq.heapify(heap)\n\n    total_waiting_time = 0\n    for t in remaining_cars:\n        weight, f = heapq.heappop(heap)\n        total_waiting_time += weight * t\n        heapq.heappush(heap, (weight + f, f))\n\n    print(total_waiting_time)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11942430000635795,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

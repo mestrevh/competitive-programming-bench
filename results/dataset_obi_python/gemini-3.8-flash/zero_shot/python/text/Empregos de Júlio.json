@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:51:06.305182+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1036,
+            "output_tokens": 572,
+            "total_tokens": 4400
+        },
+        "cost_usd": {
+            "input_cost": 0.000777,
+            "output_cost": 0.002145,
+            "total_cost": 0.002922
+        },
+        "raw_response": "```python\nimport heapq\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    k = int(data[1])\n\n    a = [int(x) for x in data[2 : 2 + n]]\n    b = [int(x) for x in data[2 + n : 2 + 2 * n]]\n\n    if k == 0:\n        ans = sum(max(a[i], 2 * b[i]) for i in range(n))\n        print(ans)\n        return\n\n    # Sufixos: suf[i] = soma de max(a[j], 2 * b[j]) para j de i até n-1\n    suf = [0] * (n + 1)\n    for i in range(n - 1, -1, -1):\n        suf[i] = suf[i + 1] + max(a[i], 2 * b[i])\n\n    # Caso 1: Júlio trabalha estritamente menos de K dias como segurança\n    # Ele ganha a_j para todos os dias, exceto até K - 1 dias onde b_j > a_j\n    diffs = [b[i] - a[i] for i in range(n) if b[i] > a[i]]\n    diffs.sort(reverse=True)\n    ans = sum(a) + sum(diffs[: k - 1])\n\n    # Caso 2: Júlio trabalha pelo menos K dias como segurança\n    # Mantemos os K maiores valores de (b[j] - a[j]) no prefixo\n    pref_a = 0\n    heap = []\n    sum_heap = 0\n\n    for i in range(n):\n        pref_a += a[i]\n        diff = b[i] - a[i]\n\n        if len(heap) < k:\n            heapq.heappush(heap, diff)\n            sum_heap += diff\n        elif diff > heap[0]:\n            sum_heap += diff - heap[0]\n            heapq.heapreplace(heap, diff)\n\n        if len(heap) == k:\n            total = pref_a + sum_heap + suf[i + 1]\n            if total > ans:\n                ans = total\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import heapq\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    k = int(data[1])\n\n    a = [int(x) for x in data[2 : 2 + n]]\n    b = [int(x) for x in data[2 + n : 2 + 2 * n]]\n\n    if k == 0:\n        ans = sum(max(a[i], 2 * b[i]) for i in range(n))\n        print(ans)\n        return\n\n    # Sufixos: suf[i] = soma de max(a[j], 2 * b[j]) para j de i até n-1\n    suf = [0] * (n + 1)\n    for i in range(n - 1, -1, -1):\n        suf[i] = suf[i + 1] + max(a[i], 2 * b[i])\n\n    # Caso 1: Júlio trabalha estritamente menos de K dias como segurança\n    # Ele ganha a_j para todos os dias, exceto até K - 1 dias onde b_j > a_j\n    diffs = [b[i] - a[i] for i in range(n) if b[i] > a[i]]\n    diffs.sort(reverse=True)\n    ans = sum(a) + sum(diffs[: k - 1])\n\n    # Caso 2: Júlio trabalha pelo menos K dias como segurança\n    # Mantemos os K maiores valores de (b[j] - a[j]) no prefixo\n    pref_a = 0\n    heap = []\n    sum_heap = 0\n\n    for i in range(n):\n        pref_a += a[i]\n        diff = b[i] - a[i]\n\n        if len(heap) < k:\n            heapq.heappush(heap, diff)\n            sum_heap += diff\n        elif diff > heap[0]:\n            sum_heap += diff - heap[0]\n            heapq.heapreplace(heap, diff)\n\n        if len(heap) == k:\n            total = pref_a + sum_heap + suf[i + 1]\n            if total > ans:\n                ans = total\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12648890000127722,
+            "counts": {
+                "AC": 66,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 66
+        }
+    }
+]

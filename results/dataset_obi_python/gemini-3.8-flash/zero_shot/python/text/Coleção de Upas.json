@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:45:20.574013+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 800,
+            "output_tokens": 256,
+            "total_tokens": 1586
+        },
+        "cost_usd": {
+            "input_cost": 0.0006,
+            "output_cost": 0.00096,
+            "total_cost": 0.00156
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    N = int(input_data[0])\n    M = int(input_data[1])\n    \n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n    for _ in range(M):\n        u = int(input_data[idx])\n        v = int(input_data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n        \n    blocked = [False] * (N + 1)\n    chosen = []\n    \n    for i in range(N, 0, -1):\n        if not blocked[i]:\n            chosen.append(i)\n            for neighbor in adj[i]:\n                blocked[neighbor] = True\n                \n    chosen.reverse()\n    \n    print(len(chosen))\n    print(*(chosen))\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    N = int(input_data[0])\n    M = int(input_data[1])\n    \n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n    for _ in range(M):\n        u = int(input_data[idx])\n        v = int(input_data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n        \n    blocked = [False] * (N + 1)\n    chosen = []\n    \n    for i in range(N, 0, -1):\n        if not blocked[i]:\n            chosen.append(i)\n            for neighbor in adj[i]:\n                blocked[neighbor] = True\n                \n    chosen.reverse()\n    \n    print(len(chosen))\n    print(*(chosen))\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16712579999875743,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

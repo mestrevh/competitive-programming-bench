@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:53:57.292515+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1337,
+            "output_tokens": 1265,
+            "total_tokens": 13041
+        },
+        "cost_usd": {
+            "input_cost": 0.001003,
+            "output_cost": 0.004744,
+            "total_cost": 0.005747
+        },
+        "raw_response": "Aqui está uma solução eficiente e correta em Python para o problema.\n\n### Método de Solução\n\nPelo enunciado, quando uma estrada é construída entre duas cidades $A$ e $B$, uma delas nunca mais terá outras estradas construídas no futuro. Como inicialmente cada cidade está isolada (1 cidade ativa por componente), e a cada união entre duas componentes exatamente uma das cidades envolvidas perde a capacidade de ter novas estradas, deduz-se por indução que **toda componente conexa possui exatamente uma cidade ativa** (a única que ainda pode se conectar a novas estradas). \n\nPortanto, em qualquer momento, ao unir duas componentes através de $A$ e $B$, $A$ e $B$ são obrigatoriamente as cidades ativas de suas respectivas componentes.\n\nPara cada componente, podemos manter:\n1. `size`: a quantidade de vértices na componente.\n2. `sum_dist`: a soma das distâncias de todos os vértices da componente até o seu vértice ativo.\n3. `total_pairs`: a soma das distâncias entre todos os pares de vértices da componente.\n\nQuando unimos a componente de $A$ com a de $B$ por uma estrada de tamanho $D$:\n- O novo `total_pairs` é dado por:\n  $$\\text{total\\_pairs}_{A} + \\text{total\\_pairs}_{B} + \\text{size}_{B} \\cdot \\text{sum\\_dist}_{A} + \\text{size}_{A} \\cdot \\text{sum\\_dist}_{B} + \\text{size}_{A} \\cdot \\text{size}_{B} \\cdot D$$\n- Para saber qual dos dois vértices ($A$ ou $B$) continuará ativo, pré-processamos a entrada: o vértice que ainda aparecer em arestas futuras será o novo nó ativo. Se nenhum aparecer no futuro, qualquer um pode ser escolhido.\n- Se o nó ativo escolhido for $B$, a nova soma de distâncias até $B$ é:\n  $$\\text{sum\\_dist}_{B} + \\text{sum\\_dist}_{A} + \\text{size}_{A} \\cdot D$$\n  (e analogamente se o nó ativo for $A$).\n\nUtilizamos uma estrutura *Disjoint Set Union* (DSU) com compressão de caminhos para obter complexidade de tempo quase linear $O(N + Q \\cdot \\alpha(N))$.\n\n### Código em Python\n\n```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n    N = int(next(iterator))\n    Q = int(next(iterator))\n\n    queries = []\n    last_edge = [0] * (N + 1)\n    edge_idx = 0\n\n    # Ler todas as operações e registrar a última aresta em que cada nó aparece\n    for _ in range(Q):\n        t = int(next(iterator))\n        if t == 1:\n            u = int(next(iterator))\n            v = int(next(iterator))\n            d = int(next(iterator))\n            edge_idx += 1\n            last_edge[u] = edge_idx\n            last_edge[v] = edge_idx\n            queries.append((1, u, v, d, edge_idx))\n        else:\n            c = int(next(iterator))\n            queries.append((2, c))\n\n    # Estruturas do DSU\n    parent = list(range(N + 1))\n    size = [1] * (N + 1)\n    sum_dist = [0] * (N + 1)\n    total_pairs = [0] * (N + 1)\n    active = list(range(N + 1))\n\n    def find(i):\n        path = []\n        while parent[i] != i:\n            path.append(i)\n            i = parent[i]\n        for node in path:\n            parent[node] = i\n        return i\n\n    output = []\n\n    for q in queries:\n        if q[0] == 1:\n            _, u, v, d, e_id = q\n            ru = find(u)\n            rv = find(v)\n\n            if ru != rv:\n                su, sv = size[ru], size[rv]\n                sdu, sdv = sum_dist[ru], sum_dist[rv]\n                tpu, tpv = total_pairs[ru], total_pairs[rv]\n\n                new_size = su + sv\n                new_total = tpu + tpv + sv * sdu + su * sdv + su * sv * d\n\n                # Descobre qual dos dois nós continua ativo\n                if last_edge[u] > e_id:\n                    new_active = u\n                    new_sum_dist = sdu + sdv + sv * d\n                else:\n                    new_active = v\n                    new_sum_dist = sdv + sdu + su * d\n\n                # Unir rv a ru\n                parent[rv] = ru\n                size[ru] = new_size\n                sum_dist[ru] = new_sum_dist\n                total_pairs[ru] = new_total\n                active[ru] = new_active\n        else:\n            c = q[1]\n            rc = find(c)\n            output.append(str(total_pairs[rc]))\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n    N = int(next(iterator))\n    Q = int(next(iterator))\n\n    queries = []\n    last_edge = [0] * (N + 1)\n    edge_idx = 0\n\n    # Ler todas as operações e registrar a última aresta em que cada nó aparece\n    for _ in range(Q):\n        t = int(next(iterator))\n        if t == 1:\n            u = int(next(iterator))\n            v = int(next(iterator))\n            d = int(next(iterator))\n            edge_idx += 1\n            last_edge[u] = edge_idx\n            last_edge[v] = edge_idx\n            queries.append((1, u, v, d, edge_idx))\n        else:\n            c = int(next(iterator))\n            queries.append((2, c))\n\n    # Estruturas do DSU\n    parent = list(range(N + 1))\n    size = [1] * (N + 1)\n    sum_dist = [0] * (N + 1)\n    total_pairs = [0] * (N + 1)\n    active = list(range(N + 1))\n\n    def find(i):\n        path = []\n        while parent[i] != i:\n            path.append(i)\n            i = parent[i]\n        for node in path:\n            parent[node] = i\n        return i\n\n    output = []\n\n    for q in queries:\n        if q[0] == 1:\n            _, u, v, d, e_id = q\n            ru = find(u)\n            rv = find(v)\n\n            if ru != rv:\n                su, sv = size[ru], size[rv]\n                sdu, sdv = sum_dist[ru], sum_dist[rv]\n                tpu, tpv = total_pairs[ru], total_pairs[rv]\n\n                new_size = su + sv\n                new_total = tpu + tpv + sv * sdu + su * sdv + su * sv * d\n\n                # Descobre qual dos dois nós continua ativo\n                if last_edge[u] > e_id:\n                    new_active = u\n                    new_sum_dist = sdu + sdv + sv * d\n                else:\n                    new_active = v\n                    new_sum_dist = sdv + sdu + su * d\n\n                # Unir rv a ru\n                parent[rv] = ru\n                size[ru] = new_size\n                sum_dist[ru] = new_sum_dist\n                total_pairs[ru] = new_total\n                active[ru] = new_active\n        else:\n            c = q[1]\n            rc = find(c)\n            output.append(str(total_pairs[rc]))\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07058259999757865,
+            "counts": {
+                "AC": 4,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 4
+        }
+    }
+]

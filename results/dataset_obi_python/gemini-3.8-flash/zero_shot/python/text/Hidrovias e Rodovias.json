@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:01:26.017533+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1285,
+            "output_tokens": 481,
+            "total_tokens": 5362
+        },
+        "cost_usd": {
+            "input_cost": 0.000964,
+            "output_cost": 0.001804,
+            "total_cost": 0.002767
+        },
+        "raw_response": "```python\nimport sys\n\n# Aumentar o limite de recursão se necessário, embora DSU iterativo não precise.\nsys.setrecursionlimit(200000)\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n\n    parent = list(range(N + 1))\n\n    def find(i):\n        path = []\n        while parent[i] != i:\n            path.append(i)\n            i = parent[i]\n        for node in path:\n            parent[node] = i\n        return i\n\n    def union(i, j):\n        root_i = find(i)\n        root_j = find(j)\n        if root_i != root_j:\n            parent[root_i] = root_j\n            return True\n        return False\n\n    hidrovias = []\n    rodovias = []\n\n    idx = 3\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        t = int(data[idx + 2])\n        idx += 3\n        if t == 1:\n            hidrovias.append((u, v))\n        else:\n            rodovias.append((u, v))\n\n    # Verifica ciclos nas hidrovias\n    for u, v in hidrovias:\n        if not union(u, v):\n            print(\"N\")\n            return\n\n    # Conta quantas rodovias podem ser adicionadas sem formar ciclos\n    r_max = 0\n    for u, v in rodovias:\n        if union(u, v):\n            r_max += 1\n\n    m2 = len(rodovias)\n    if m2 - r_max <= K:\n        print(\"S\")\n    else:\n        print(\"N\")\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\n# Aumentar o limite de recursão se necessário, embora DSU iterativo não precise.\nsys.setrecursionlimit(200000)\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n\n    parent = list(range(N + 1))\n\n    def find(i):\n        path = []\n        while parent[i] != i:\n            path.append(i)\n            i = parent[i]\n        for node in path:\n            parent[node] = i\n        return i\n\n    def union(i, j):\n        root_i = find(i)\n        root_j = find(j)\n        if root_i != root_j:\n            parent[root_i] = root_j\n            return True\n        return False\n\n    hidrovias = []\n    rodovias = []\n\n    idx = 3\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        t = int(data[idx + 2])\n        idx += 3\n        if t == 1:\n            hidrovias.append((u, v))\n        else:\n            rodovias.append((u, v))\n\n    # Verifica ciclos nas hidrovias\n    for u, v in hidrovias:\n        if not union(u, v):\n            print(\"N\")\n            return\n\n    # Conta quantas rodovias podem ser adicionadas sem formar ciclos\n    r_max = 0\n    for u, v in rodovias:\n        if union(u, v):\n            r_max += 1\n\n    m2 = len(rodovias)\n    if m2 - r_max <= K:\n        print(\"S\")\n    else:\n        print(\"N\")\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16876260000572074,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

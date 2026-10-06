@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:55:05.048737+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1160,
+            "output_tokens": 679,
+            "total_tokens": 5089
+        },
+        "cost_usd": {
+            "input_cost": 0.00087,
+            "output_cost": 0.002546,
+            "total_cost": 0.003416
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    if n <= 2:\n        print(0)\n        return\n\n    x = [int(val) for val in input_data[1 : n + 1]]\n    y = [int(val) for val in input_data[n + 1 : 2 * n + 1]]\n\n    # Transformação de Manhattan para Chebyshev\n    # u = x + y, v = x - y\n    u_vals = [xi + yi for xi, yi in zip(x, y)]\n    v_vals = [xi - yi for xi, yi in zip(x, y)]\n\n    u_min = min(u_vals)\n    u_max = max(u_vals)\n    v_min = min(v_vals)\n    v_max = max(v_vals)\n\n    pts = list(zip(u_vals, v_vals))\n\n    def check(D):\n        # Caso A:\n        # Q1 cobre canto inferior-esquerdo (u_min, v_min)\n        # Q2 cobre canto superior-direito (u_max, v_max)\n        u1_A = u_min + D\n        v1_A = v_min + D\n        u2_A = u_max - D\n        v2_A = v_max - D\n\n        possible_A = True\n        for u, v in pts:\n            if not ((u <= u1_A and v <= v1_A) or (u >= u2_A and v >= v2_A)):\n                possible_A = False\n                break\n        if possible_A:\n            return True\n\n        # Caso B:\n        # Q1 cobre canto superior-esquerdo (u_min, v_max)\n        # Q2 cobre canto inferior-direito (u_max, v_min)\n        u1_B = u_min + D\n        v1_B = v_max - D\n        u2_B = u_max - D\n        v2_B = v_min + D\n\n        possible_B = True\n        for u, v in pts:\n            if not ((u <= u1_B and v >= v1_B) or (u >= u2_B and v <= v2_B)):\n                possible_B = False\n                break\n        return possible_B\n\n    low = 0\n    high = max(u_max - u_min, v_max - v_min)\n    ans = high\n\n    while low <= high:\n        mid = (low + high) // 2\n        if check(mid):\n            ans = mid\n            high = mid - 1\n        else:\n            low = mid + 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    if n <= 2:\n        print(0)\n        return\n\n    x = [int(val) for val in input_data[1 : n + 1]]\n    y = [int(val) for val in input_data[n + 1 : 2 * n + 1]]\n\n    # Transformação de Manhattan para Chebyshev\n    # u = x + y, v = x - y\n    u_vals = [xi + yi for xi, yi in zip(x, y)]\n    v_vals = [xi - yi for xi, yi in zip(x, y)]\n\n    u_min = min(u_vals)\n    u_max = max(u_vals)\n    v_min = min(v_vals)\n    v_max = max(v_vals)\n\n    pts = list(zip(u_vals, v_vals))\n\n    def check(D):\n        # Caso A:\n        # Q1 cobre canto inferior-esquerdo (u_min, v_min)\n        # Q2 cobre canto superior-direito (u_max, v_max)\n        u1_A = u_min + D\n        v1_A = v_min + D\n        u2_A = u_max - D\n        v2_A = v_max - D\n\n        possible_A = True\n        for u, v in pts:\n            if not ((u <= u1_A and v <= v1_A) or (u >= u2_A and v >= v2_A)):\n                possible_A = False\n                break\n        if possible_A:\n            return True\n\n        # Caso B:\n        # Q1 cobre canto superior-esquerdo (u_min, v_max)\n        # Q2 cobre canto inferior-direito (u_max, v_min)\n        u1_B = u_min + D\n        v1_B = v_max - D\n        u2_B = u_max - D\n        v2_B = v_min + D\n\n        possible_B = True\n        for u, v in pts:\n            if not ((u <= u1_B and v >= v1_B) or (u >= u2_B and v <= v2_B)):\n                possible_B = False\n                break\n        return possible_B\n\n    low = 0\n    high = max(u_max - u_min, v_max - v_min)\n    ans = high\n\n    while low <= high:\n        mid = (low + high) // 2\n        if check(mid):\n            ans = mid\n            high = mid - 1\n        else:\n            low = mid + 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3825883000026806,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

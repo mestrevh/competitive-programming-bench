@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:15:51.227346+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 6.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 760,
+            "output_tokens": 1023,
+            "total_tokens": 3940
+        },
+        "cost_usd": {
+            "input_cost": 0.00057,
+            "output_cost": 0.003836,
+            "total_cost": 0.004406
+        },
+        "raw_response": "Para resolver este problema de forma eficiente, podemos modelar as visitas em ordem reversa: saindo da última tenda visitada até o Palácio Real (origem $(0, 0)$). No caminho reverso, as distâncias entre passos consecutivos devem ser **estritamente crescentes**.\n\n### Abordagem\n1. **Representação por Grafo / Programação Dinâmica**:\n   - Seja $dp[u]$ o número máximo de tendas visitadas em um caminho que termina na tenda $u$ (em ordem reversa).\n   - Inicialmente, $dp[u] = 1$ para toda tenda $u$, representando o caminho composto apenas pela própria tenda.\n   - Para toda aresta entre duas tendas $(u, v)$ com distância ao quadrado $d$, podemos transitar entre elas se a distância for estritamente maior que a da etapa anterior.\n   - A aresta entre a origem e uma tenda $u$ fecha o ciclo reverso (sendo o início do caminho original). O número de tendas ganhas ao conectar $u$ à origem é o próprio $dp[u]$, desde que a distância ao quadrado da origem até $u$ seja estritamente maior que a última distância percorrida até $u$.\n\n2. **Ordenação das Arestas**:\n   - Calculamos a distância ao quadrado entre todos os pares de tendas e também da origem para cada tenda.\n   - Agrupamos ou ordenamos as arestas por distância ao quadrado de forma crescente.\n   - Para respeitar a exigência de distâncias estritamente decrescentes (ou estritamente crescentes no caminho reverso), todas as arestas com o mesmo comprimento devem ser avaliadas usando os valores de $dp$ da rodada anterior, antes de atualizar o vetor $dp$.\n\n### Código em Python 3\n\n```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    points = []\n    idx = 1\n    for _ in range(n):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        points.append((x, y))\n        idx += 2\n\n    # edges guardará (dist_sq, u, v)\n    # Se u == 0, representa a aresta do Palácio (0, 0) para a tenda v (1-indexada).\n    # Se u > 0, representa a aresta entre a tenda u e a tenda v.\n    edges = []\n\n    for i in range(n):\n        xi, yi = points[i]\n        d_orig = xi * xi + yi * yi\n        edges.append((d_orig, 0, i + 1))\n\n    for i in range(n):\n        xi, yi = points[i]\n        u = i + 1\n        for j in range(i + 1, n):\n            xj, yj = points[j]\n            dx = xi - xj\n            dy = yi - yj\n            d = dx * dx + dy * dy\n            edges.append((d, u, j + 1))\n\n    # Ordenar arestas por distância ao quadrado\n    edges.sort(key=lambda e: e[0])\n\n    dp = [1] * (n + 1)\n    ans = 0\n\n    m = len(edges)\n    k = 0\n    while k < m:\n        cur_d = edges[k][0]\n        r = k\n        while r < m and edges[r][0] == cur_d:\n            r += 1\n\n        # Processa todas as arestas de mesmo comprimento\n        updates = []\n        for i in range(k, r):\n            _, u, v = edges[i]\n            if u == 0:\n                if dp[v] > ans:\n                    ans = dp[v]\n            else:\n                val_u = dp[u]\n                val_v = dp[v]\n                updates.append((u, val_v + 1))\n                updates.append((v, val_u + 1))\n\n        # Aplica as atualizações após avaliar todas as arestas de distância cur_d\n        for node, val in updates:\n            if val > dp[node]:\n                dp[node] = val\n\n        k = r\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    points = []\n    idx = 1\n    for _ in range(n):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        points.append((x, y))\n        idx += 2\n\n    # edges guardará (dist_sq, u, v)\n    # Se u == 0, representa a aresta do Palácio (0, 0) para a tenda v (1-indexada).\n    # Se u > 0, representa a aresta entre a tenda u e a tenda v.\n    edges = []\n\n    for i in range(n):\n        xi, yi = points[i]\n        d_orig = xi * xi + yi * yi\n        edges.append((d_orig, 0, i + 1))\n\n    for i in range(n):\n        xi, yi = points[i]\n        u = i + 1\n        for j in range(i + 1, n):\n            xj, yj = points[j]\n            dx = xi - xj\n            dy = yi - yj\n            d = dx * dx + dy * dy\n            edges.append((d, u, j + 1))\n\n    # Ordenar arestas por distância ao quadrado\n    edges.sort(key=lambda e: e[0])\n\n    dp = [1] * (n + 1)\n    ans = 0\n\n    m = len(edges)\n    k = 0\n    while k < m:\n        cur_d = edges[k][0]\n        r = k\n        while r < m and edges[r][0] == cur_d:\n            r += 1\n\n        # Processa todas as arestas de mesmo comprimento\n        updates = []\n        for i in range(k, r):\n            _, u, v = edges[i]\n            if u == 0:\n                if dp[v] > ans:\n                    ans = dp[v]\n            else:\n                val_u = dp[u]\n                val_v = dp[v]\n                updates.append((u, val_v + 1))\n                updates.append((v, val_u + 1))\n\n        # Aplica as atualizações após avaliar todas as arestas de distância cur_d\n        for node, val in updates:\n            if val > dp[node]:\n                dp[node] = val\n\n        k = r\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 2.3966752999986056,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

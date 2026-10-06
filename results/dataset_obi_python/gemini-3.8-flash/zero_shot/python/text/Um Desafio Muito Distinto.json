@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:30:20.078841+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1150,
+            "output_tokens": 329,
+            "total_tokens": 3862
+        },
+        "cost_usd": {
+            "input_cost": 0.000862,
+            "output_cost": 0.001234,
+            "total_cost": 0.002096
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    P = int(input_data[0])\n    idx = 1\n    out = []\n\n    for _ in range(P):\n        L = int(input_data[idx])\n        A = int(input_data[idx + 1])\n        B = int(input_data[idx + 2])\n        idx += 3\n\n        # Queremos o maior k in [1, B - A + 1] tal que:\n        # m = k - 1\n        # m * A + m * (m - 1) // 2 <= L - 1\n        low = 0\n        high = min(B - A, 2000000)\n        best_m = 0\n\n        target = L - 1\n        while low <= high:\n            mid = (low + high) // 2\n            val = mid * A + mid * (mid - 1) // 2\n            if val <= target:\n                best_m = mid\n                low = mid + 1\n            else:\n                high = mid - 1\n\n        out.append(str(best_m + 1))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    P = int(input_data[0])\n    idx = 1\n    out = []\n\n    for _ in range(P):\n        L = int(input_data[idx])\n        A = int(input_data[idx + 1])\n        B = int(input_data[idx + 2])\n        idx += 3\n\n        # Queremos o maior k in [1, B - A + 1] tal que:\n        # m = k - 1\n        # m * A + m * (m - 1) // 2 <= L - 1\n        low = 0\n        high = min(B - A, 2000000)\n        best_m = 0\n\n        target = L - 1\n        while low <= high:\n            mid = (low + high) // 2\n            val = mid * A + mid * (mid - 1) // 2\n            if val <= target:\n                best_m = mid\n                low = mid + 1\n            else:\n                high = mid - 1\n\n        out.append(str(best_m + 1))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2360465000019758,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

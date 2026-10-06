@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:31:35.407525+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 771,
+            "output_tokens": 302,
+            "total_tokens": 1831
+        },
+        "cost_usd": {
+            "input_cost": 0.000578,
+            "output_cost": 0.001133,
+            "total_cost": 0.001711
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    a = int(input_data[1])\n    b = int(input_data[2])\n\n    adj = [[] for _ in range(n + 1)]\n    idx = 3\n    for _ in range(n - 1):\n        u = int(input_data[idx])\n        v = int(input_data[idx + 1])\n        d = int(input_data[idx + 2])\n        idx += 3\n        adj[u].append((v, d))\n        adj[v].append((u, d))\n\n    dist = [-1] * (n + 1)\n    dist[a] = 0\n    queue = deque([a])\n\n    while queue:\n        u = queue.popleft()\n        if u == b:\n            break\n        for v, d in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + d\n                queue.append(v)\n\n    print(dist[b])\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    a = int(input_data[1])\n    b = int(input_data[2])\n\n    adj = [[] for _ in range(n + 1)]\n    idx = 3\n    for _ in range(n - 1):\n        u = int(input_data[idx])\n        v = int(input_data[idx + 1])\n        d = int(input_data[idx + 2])\n        idx += 3\n        adj[u].append((v, d))\n        adj[v].append((u, d))\n\n    dist = [-1] * (n + 1)\n    dist[a] = 0\n    queue = deque([a])\n\n    while queue:\n        u = queue.popleft()\n        if u == b:\n            break\n        for v, d in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + d\n                queue.append(v)\n\n    print(dist[b])\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08517920000304002,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

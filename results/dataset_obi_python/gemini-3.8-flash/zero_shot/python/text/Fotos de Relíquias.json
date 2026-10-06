@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:58:33.472898+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 801,
+            "output_tokens": 244,
+            "total_tokens": 1683
+        },
+        "cost_usd": {
+            "input_cost": 0.000601,
+            "output_cost": 0.000915,
+            "total_cost": 0.001516
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    a = [int(x) for x in data[1:]]\n    \n    ones_indices = [i + 1 for i, val in enumerate(a) if val == 1]\n    \n    if not ones_indices:\n        print(0)\n        return\n    \n    # Adicionamos as bordas virtuais 0 e n + 1\n    extended = [0] + ones_indices + [n + 1]\n    \n    total = 0\n    for i in range(1, len(extended) - 1):\n        left_choices = extended[i] - extended[i - 1]\n        right_choices = extended[i + 1] - extended[i]\n        total += left_choices * right_choices\n        \n    print(total)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    a = [int(x) for x in data[1:]]\n    \n    ones_indices = [i + 1 for i, val in enumerate(a) if val == 1]\n    \n    if not ones_indices:\n        print(0)\n        return\n    \n    # Adicionamos as bordas virtuais 0 e n + 1\n    extended = [0] + ones_indices + [n + 1]\n    \n    total = 0\n    for i in range(1, len(extended) - 1):\n        left_choices = extended[i] - extended[i - 1]\n        right_choices = extended[i + 1] - extended[i]\n        total += left_choices * right_choices\n        \n    print(total)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06755010000051698,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

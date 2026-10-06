@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:59:33.719689+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1178,
+            "output_tokens": 533,
+            "total_tokens": 3853
+        },
+        "cost_usd": {
+            "input_cost": 0.000883,
+            "output_cost": 0.001999,
+            "total_cost": 0.002882
+        },
+        "raw_response": "Abaixo está a solução completa e eficiente em Python para o problema dos Garrafões.\n\n```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    G = int(input_data[0])\n    M = int(input_data[1])\n\n    MOD = 1000000007\n\n    # Pré-calcula os tamanhos válidos de pirâmides (números piramidais quadrados)\n    P = []\n    h = 1\n    while True:\n        val = h * (h + 1) * (2 * h + 1) // 6\n        if val > G:\n            break\n        P.append(val)\n        h += 1\n\n    if M == 1:\n        dp = [0] * (G + 1)\n        dp[0] = 1\n\n        for i in range(1, G + 1):\n            s = 0\n            for p in P:\n                if p > i:\n                    break\n                s += dp[i - p]\n            dp[i] = s % MOD\n\n        print(dp[G])\n\n    else:  # M == 2\n        # min_c[i] guarda o número mínimo de pirâmides para formar i garrafões\n        # ways[i] guarda a quantidade de maneiras de formar i garrafões com min_c[i] pirâmides\n        min_c = [10**9] * (G + 1)\n        ways = [0] * (G + 1)\n        min_c[0] = 0\n        ways[0] = 1\n\n        for i in range(1, G + 1):\n            m = 10**9\n            w = 0\n            for p in P:\n                if p > i:\n                    break\n                c = min_c[i - p] + 1\n                if c < m:\n                    m = c\n                    w = ways[i - p]\n                elif c == m:\n                    w += ways[i - p]\n            min_c[i] = m\n            ways[i] = w % MOD\n\n        print(ways[G])\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    G = int(input_data[0])\n    M = int(input_data[1])\n\n    MOD = 1000000007\n\n    # Pré-calcula os tamanhos válidos de pirâmides (números piramidais quadrados)\n    P = []\n    h = 1\n    while True:\n        val = h * (h + 1) * (2 * h + 1) // 6\n        if val > G:\n            break\n        P.append(val)\n        h += 1\n\n    if M == 1:\n        dp = [0] * (G + 1)\n        dp[0] = 1\n\n        for i in range(1, G + 1):\n            s = 0\n            for p in P:\n                if p > i:\n                    break\n                s += dp[i - p]\n            dp[i] = s % MOD\n\n        print(dp[G])\n\n    else:  # M == 2\n        # min_c[i] guarda o número mínimo de pirâmides para formar i garrafões\n        # ways[i] guarda a quantidade de maneiras de formar i garrafões com min_c[i] pirâmides\n        min_c = [10**9] * (G + 1)\n        ways = [0] * (G + 1)\n        min_c[0] = 0\n        ways[0] = 1\n\n        for i in range(1, G + 1):\n            m = 10**9\n            w = 0\n            for p in P:\n                if p > i:\n                    break\n                c = min_c[i - p] + 1\n                if c < m:\n                    m = c\n                    w = ways[i - p]\n                elif c == m:\n                    w += ways[i - p]\n            min_c[i] = m\n            ways[i] = w % MOD\n\n        print(ways[G])\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3100629000036861,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

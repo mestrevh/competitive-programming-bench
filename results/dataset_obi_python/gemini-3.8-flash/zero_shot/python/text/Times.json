@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:28:30.024739+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 6.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 882,
+            "output_tokens": 376,
+            "total_tokens": 2055
+        },
+        "cost_usd": {
+            "input_cost": 0.000661,
+            "output_cost": 0.00141,
+            "total_cost": 0.002071
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    idx = 1\n    \n    adj = [[] for _ in range(n + 1)]\n    for i in range(1, n + 1):\n        m = int(input_data[idx])\n        idx += 1\n        for _ in range(m):\n            adj[i].append(int(input_data[idx]))\n            idx += 1\n            \n    color = [0] * (n + 1)\n    color[1] = 1\n    \n    q = deque([1])\n    while q:\n        u = q.popleft()\n        c = color[u]\n        next_c = 2 if c == 1 else 1\n        for v in adj[u]:\n            if color[v] == 0:\n                color[v] = next_c\n                q.append(v)\n                \n    team1 = []\n    team2 = []\n    for i in range(1, n + 1):\n        if color[i] == 1:\n            team1.append(str(i))\n        elif color[i] == 2:\n            team2.append(str(i))\n            \n    sys.stdout.write(\" \".join(team1) + \"\\n\")\n    sys.stdout.write(\" \".join(team2) + \"\\n\")\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    idx = 1\n    \n    adj = [[] for _ in range(n + 1)]\n    for i in range(1, n + 1):\n        m = int(input_data[idx])\n        idx += 1\n        for _ in range(m):\n            adj[i].append(int(input_data[idx]))\n            idx += 1\n            \n    color = [0] * (n + 1)\n    color[1] = 1\n    \n    q = deque([1])\n    while q:\n        u = q.popleft()\n        c = color[u]\n        next_c = 2 if c == 1 else 1\n        for v in adj[u]:\n            if color[v] == 0:\n                color[v] = next_c\n                q.append(v)\n                \n    team1 = []\n    team2 = []\n    for i in range(1, n + 1):\n        if color[i] == 1:\n            team1.append(str(i))\n        elif color[i] == 2:\n            team2.append(str(i))\n            \n    sys.stdout.write(\" \".join(team1) + \"\\n\")\n    sys.stdout.write(\" \".join(team2) + \"\\n\")\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.23056819999328582,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

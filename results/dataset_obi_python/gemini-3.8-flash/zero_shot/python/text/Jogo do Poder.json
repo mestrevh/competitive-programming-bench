@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:07:20.397273+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1353,
+            "output_tokens": 1023,
+            "total_tokens": 6226
+        },
+        "cost_usd": {
+            "input_cost": 0.001015,
+            "output_cost": 0.003836,
+            "total_cost": 0.004851
+        },
+        "raw_response": "```python\nimport sys\n\n# Aumentar o limite de recursão para DFS na Kruskal Reconstruction Tree\nsys.setrecursionlimit(300000)\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n\n    total_cells = N * M\n    P = [0] * total_cells\n\n    idx = 2\n    for i in range(total_cells):\n        P[i] = int(input_data[idx])\n        idx += 1\n\n    if total_cells == 1:\n        sys.stdout.write(f\"{P[0]}\\n\")\n        return\n\n    # Construir arestas da grade\n    edges = []\n    for r in range(N):\n        r_offset = r * M\n        for c in range(M):\n            u = r_offset + c\n            p_u = P[u]\n            if c + 1 < M:\n                v = u + 1\n                w = p_u if p_u > P[v] else P[v]\n                edges.append((w, u, v))\n            if r + 1 < N:\n                v = u + M\n                w = p_u if p_u > P[v] else P[v]\n                edges.append((w, u, v))\n\n    edges.sort(key=lambda e: e[0])\n\n    # Kruskal Reconstruction Tree\n    # Teremos até 2 * total_cells nós\n    max_nodes = 2 * total_cells\n    parent_dsu = list(range(max_nodes))\n\n    def find(i):\n        path = []\n        while parent_dsu[i] != i:\n            path.append(i)\n            i = parent_dsu[i]\n        for node in path:\n            parent_dsu[node] = i\n        return i\n\n    sum_val = [0] * max_nodes\n    for i in range(total_cells):\n        sum_val[i] = P[i]\n\n    left_child = [-1] * max_nodes\n    right_child = [-1] * max_nodes\n    edge_weight = [0] * max_nodes\n\n    curr_node = total_cells\n    for w, u, v in edges:\n        root_u = find(u)\n        root_v = find(v)\n        if root_u != root_v:\n            new_node = curr_node\n            curr_node += 1\n\n            left_child[new_node] = root_u\n            right_child[new_node] = root_v\n            edge_weight[new_node] = w\n            sum_val[new_node] = sum_val[root_u] + sum_val[root_v]\n\n            parent_dsu[root_u] = new_node\n            parent_dsu[root_v] = new_node\n            parent_dsu[new_node] = new_node\n\n    root = curr_node - 1\n\n    ans = [0] * max_nodes\n    ans[root] = sum_val[root]\n\n    # Propagação com DFS iterativa (usando pilha para evitar estouro de recursão)\n    stack = [root]\n    while stack:\n        u = stack.pop()\n        l = left_child[u]\n        r = right_child[u]\n        if l != -1:\n            w = edge_weight[u]\n\n            if sum_val[l] >= w:\n                ans[l] = ans[u]\n            else:\n                ans[l] = sum_val[l]\n\n            if sum_val[r] >= w:\n                ans[r] = ans[u]\n            else:\n                ans[r] = sum_val[r]\n\n            stack.append(l)\n            stack.append(r)\n\n    # Imprimir a resposta\n    out = []\n    for r in range(N):\n        row_ans = [str(ans[r * M + c]) for c in range(M)]\n        out.append(\" \".join(row_ans))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n# Aumentar o limite de recursão para DFS na Kruskal Reconstruction Tree\nsys.setrecursionlimit(300000)\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n\n    total_cells = N * M\n    P = [0] * total_cells\n\n    idx = 2\n    for i in range(total_cells):\n        P[i] = int(input_data[idx])\n        idx += 1\n\n    if total_cells == 1:\n        sys.stdout.write(f\"{P[0]}\\n\")\n        return\n\n    # Construir arestas da grade\n    edges = []\n    for r in range(N):\n        r_offset = r * M\n        for c in range(M):\n            u = r_offset + c\n            p_u = P[u]\n            if c + 1 < M:\n                v = u + 1\n                w = p_u if p_u > P[v] else P[v]\n                edges.append((w, u, v))\n            if r + 1 < N:\n                v = u + M\n                w = p_u if p_u > P[v] else P[v]\n                edges.append((w, u, v))\n\n    edges.sort(key=lambda e: e[0])\n\n    # Kruskal Reconstruction Tree\n    # Teremos até 2 * total_cells nós\n    max_nodes = 2 * total_cells\n    parent_dsu = list(range(max_nodes))\n\n    def find(i):\n        path = []\n        while parent_dsu[i] != i:\n            path.append(i)\n            i = parent_dsu[i]\n        for node in path:\n            parent_dsu[node] = i\n        return i\n\n    sum_val = [0] * max_nodes\n    for i in range(total_cells):\n        sum_val[i] = P[i]\n\n    left_child = [-1] * max_nodes\n    right_child = [-1] * max_nodes\n    edge_weight = [0] * max_nodes\n\n    curr_node = total_cells\n    for w, u, v in edges:\n        root_u = find(u)\n        root_v = find(v)\n        if root_u != root_v:\n            new_node = curr_node\n            curr_node += 1\n\n            left_child[new_node] = root_u\n            right_child[new_node] = root_v\n            edge_weight[new_node] = w\n            sum_val[new_node] = sum_val[root_u] + sum_val[root_v]\n\n            parent_dsu[root_u] = new_node\n            parent_dsu[root_v] = new_node\n            parent_dsu[new_node] = new_node\n\n    root = curr_node - 1\n\n    ans = [0] * max_nodes\n    ans[root] = sum_val[root]\n\n    # Propagação com DFS iterativa (usando pilha para evitar estouro de recursão)\n    stack = [root]\n    while stack:\n        u = stack.pop()\n        l = left_child[u]\n        r = right_child[u]\n        if l != -1:\n            w = edge_weight[u]\n\n            if sum_val[l] >= w:\n                ans[l] = ans[u]\n            else:\n                ans[l] = sum_val[l]\n\n            if sum_val[r] >= w:\n                ans[r] = ans[u]\n            else:\n                ans[r] = sum_val[r]\n\n            stack.append(l)\n            stack.append(r)\n\n    # Imprimir a resposta\n    out = []\n    for r in range(N):\n        row_ans = [str(ans[r * M + c]) for c in range(M)]\n        out.append(\" \".join(row_ans))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.39168499999505,
+            "counts": {
+                "AC": 150,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 150
+        }
+    }
+]

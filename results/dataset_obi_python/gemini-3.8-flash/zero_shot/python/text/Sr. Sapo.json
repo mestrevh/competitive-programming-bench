@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:19:56.151039+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 881,
+            "output_tokens": 470,
+            "total_tokens": 2454
+        },
+        "cost_usd": {
+            "input_cost": 0.000661,
+            "output_cost": 0.001762,
+            "total_cost": 0.002423
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    M = int(next(it))\n    P = int(next(it))\n\n    # Matriz para identificar pedras existentes\n    has_stone = [[False] * (M + 1) for _ in range(N + 1)]\n\n    for _ in range(P):\n        c = int(next(it))\n        l = int(next(it))\n        has_stone[c][l] = True\n\n    sc = int(next(it))\n    sl = int(next(it))\n    rc = int(next(it))\n    rl = int(next(it))\n\n    if sc == rc and sl == rl:\n        print('S')\n        return\n\n    # BFS para encontrar o caminho\n    visited = [[False] * (M + 1) for _ in range(N + 1)]\n    queue = deque([(sc, sl)])\n    visited[sc][sl] = True\n\n    found = False\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n\n    while queue:\n        c, l = queue.popleft()\n\n        if c == rc and l == rl:\n            found = True\n            break\n\n        for dc, dl in directions:\n            for dist in (1, 2, 3):\n                nc = c + dc * dist\n                nl = l + dl * dist\n\n                if 1 <= nc <= N and 1 <= nl <= M:\n                    if has_stone[nc][nl] and not visited[nc][nl]:\n                        visited[nc][nl] = True\n                        queue.append((nc, nl))\n\n    if found:\n        print('S')\n    else:\n        print('N')\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    M = int(next(it))\n    P = int(next(it))\n\n    # Matriz para identificar pedras existentes\n    has_stone = [[False] * (M + 1) for _ in range(N + 1)]\n\n    for _ in range(P):\n        c = int(next(it))\n        l = int(next(it))\n        has_stone[c][l] = True\n\n    sc = int(next(it))\n    sl = int(next(it))\n    rc = int(next(it))\n    rl = int(next(it))\n\n    if sc == rc and sl == rl:\n        print('S')\n        return\n\n    # BFS para encontrar o caminho\n    visited = [[False] * (M + 1) for _ in range(N + 1)]\n    queue = deque([(sc, sl)])\n    visited[sc][sl] = True\n\n    found = False\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n\n    while queue:\n        c, l = queue.popleft()\n\n        if c == rc and l == rl:\n            found = True\n            break\n\n        for dc, dl in directions:\n            for dist in (1, 2, 3):\n                nc = c + dc * dist\n                nl = l + dl * dist\n\n                if 1 <= nc <= N and 1 <= nl <= M:\n                    if has_stone[nc][nl] and not visited[nc][nl]:\n                        visited[nc][nl] = True\n                        queue.append((nc, nl))\n\n    if found:\n        print('S')\n    else:\n        print('N')\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07802860000083456,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:09:12.006608+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 801,
+            "output_tokens": 322,
+            "total_tokens": 4627
+        },
+        "cost_usd": {
+            "input_cost": 0.000601,
+            "output_cost": 0.001208,
+            "total_cost": 0.001808
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    trees = []\n    idx = 1\n    for _ in range(n):\n        x = int(input_data[idx])\n        h = int(input_data[idx + 1])\n        trees.append((x, h))\n        idx += 2\n        \n    trees.sort(key=lambda t: t[0])\n    \n    hull = []\n    for x, h in trees:\n        while len(hull) >= 2:\n            x1, y1 = hull[-2]\n            x2, y2 = hull[-1]\n            # Se a árvore do meio (x2, y2) estiver abaixo ou sobre a linha\n            # conectando (x1, y1) a (x, h), ela não bloqueia a visão de (x1, y1) até (x, h).\n            if (y2 - y1) * (x - x1) <= (h - y1) * (x2 - x1):\n                hull.pop()\n            else:\n                break\n        hull.append((x, h))\n        \n    print(len(hull) - 1)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    trees = []\n    idx = 1\n    for _ in range(n):\n        x = int(input_data[idx])\n        h = int(input_data[idx + 1])\n        trees.append((x, h))\n        idx += 2\n        \n    trees.sort(key=lambda t: t[0])\n    \n    hull = []\n    for x, h in trees:\n        while len(hull) >= 2:\n            x1, y1 = hull[-2]\n            x2, y2 = hull[-1]\n            # Se a árvore do meio (x2, y2) estiver abaixo ou sobre a linha\n            # conectando (x1, y1) a (x, h), ela não bloqueia a visão de (x1, y1) até (x, h).\n            if (y2 - y1) * (x - x1) <= (h - y1) * (x2 - x1):\n                hull.pop()\n            else:\n                break\n        hull.append((x, h))\n        \n    print(len(hull) - 1)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.35861140000633895,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

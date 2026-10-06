@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:17:50.482921+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 623,
+            "output_tokens": 488,
+            "total_tokens": 1725
+        },
+        "cost_usd": {
+            "input_cost": 0.000467,
+            "output_cost": 0.00183,
+            "total_cost": 0.002297
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    L = [int(x) for x in data[1:n+1]]\n    \n    total = sum(L)\n    if total % 2 != 0:\n        print('N')\n        return\n    \n    half = total // 2\n    \n    # Usando two pointers sobre a lista de comprimentos\n    # ponteiro i é o ponto inicial, ponteiro j é o ponto oposto\n    # Mantemos a soma do arco entre i e j\n    j = 0\n    current_dist = 0\n    diameter_count = 0\n    \n    for i in range(n):\n        while current_dist < half:\n            current_dist += L[j]\n            j = (j + 1) % n\n            \n        if current_dist == half:\n            diameter_count += 1\n            if diameter_count >= 2:\n                # Cada diâmetro é contado duas vezes se percorrermos todo o círculo,\n                # mas aqui contamos quando encontramos a primeira ou segunda vez.\n                # Note que se encontrarmos 2 diâmetros (que correspondem a 2 pares),\n                # já é suficiente. Mas cuidado: um par (A, B) é encontrado quando i=A e quando i=B.\n                # Precisamos de 2 pares distintos, o que significa 4 contagens se dermos a volta completa,\n                # ou pelo menos 2 pares encontrados antes de repetir?\n                # Vamos ser mais precisos:\n                pass\n        \n        current_dist -= L[i]\n\n    # diameter_count conta cada par duas vezes (uma vez de A para B, outra de B para A)\n    # Portanto, o número de pares distintos de pontos diametralmente opostos é diameter_count // 2\n    if diameter_count // 2 >= 2:\n        print('S')\n    else:\n        print('N')\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    L = [int(x) for x in data[1:n+1]]\n    \n    total = sum(L)\n    if total % 2 != 0:\n        print('N')\n        return\n    \n    half = total // 2\n    \n    # Usando two pointers sobre a lista de comprimentos\n    # ponteiro i é o ponto inicial, ponteiro j é o ponto oposto\n    # Mantemos a soma do arco entre i e j\n    j = 0\n    current_dist = 0\n    diameter_count = 0\n    \n    for i in range(n):\n        while current_dist < half:\n            current_dist += L[j]\n            j = (j + 1) % n\n            \n        if current_dist == half:\n            diameter_count += 1\n            if diameter_count >= 2:\n                # Cada diâmetro é contado duas vezes se percorrermos todo o círculo,\n                # mas aqui contamos quando encontramos a primeira ou segunda vez.\n                # Note que se encontrarmos 2 diâmetros (que correspondem a 2 pares),\n                # já é suficiente. Mas cuidado: um par (A, B) é encontrado quando i=A e quando i=B.\n                # Precisamos de 2 pares distintos, o que significa 4 contagens se dermos a volta completa,\n                # ou pelo menos 2 pares encontrados antes de repetir?\n                # Vamos ser mais precisos:\n                pass\n        \n        current_dist -= L[i]\n\n    # diameter_count conta cada par duas vezes (uma vez de A para B, outra de B para A)\n    # Portanto, o número de pares distintos de pontos diametralmente opostos é diameter_count // 2\n    if diameter_count // 2 >= 2:\n        print('S')\n    else:\n        print('N')\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07219089999853168,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

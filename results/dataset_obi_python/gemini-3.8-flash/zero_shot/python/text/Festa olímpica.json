@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:57:00.501614+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 9.5,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 986,
+            "output_tokens": 723,
+            "total_tokens": 3660
+        },
+        "cost_usd": {
+            "input_cost": 0.000739,
+            "output_cost": 0.002711,
+            "total_cost": 0.003451
+        },
+        "raw_response": "Para resolver este problema de forma eficiente dentro dos limites de tempo e memória, podemos trabalhar **de trás para frente**.\n\n### Abordagem\n\n1. **Rastreamento Reverso de Posições**:\n   Se após um turno com valor $T_i$, um súdito ficou na posição $q$ (1-indexada), podemos determinar qual era a sua posição $p$ antes desse turno.\n   Como os múltiplos de $T_i$ foram removidos, a nova posição $q$ satisfaz:\n   $$q = p - \\left\\lfloor \\frac{p}{T_i} \\right\\rfloor$$\n   Invertendo essa relação para posições não removidas:\n   $$p = q + \\left\\lfloor \\frac{q - 1}{T_i - 1} \\right\\rfloor$$\n   Observe que se $q < T_i$, então $\\lfloor (q - 1) / (T_i - 1) \\rfloor = 0$, logo a posição não se altera ($p = q$).\n\n2. **Otimizações**:\n   - Só precisamos dos primeiros $\\min(N, 10000)$ sobreviventes. Portanto, começamos com as posições finais candidatas $[1, 2, \\dots, \\min(N, 10000)]$.\n   - Percorremos os turnos na ordem inversa (do último para o primeiro).\n   - Apenas os elementos onde $q \\ge T_i$ precisam ser atualizados. Os elementos com $q < T_i$ mantêm o mesmo valor.\n   - Conforme as posições aumentam de trás para frente, qualquer elemento que ultrapasse $N$ pode ser imediatamente descartado (junto com todos os subsequentes, já que a lista é estritamente crescente).\n\n### Código em Python\n\n```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    T = [int(x) for x in data[2:2 + M]]\n\n    # Começamos com os primeiros até 10.000 sobreviventes\n    limit = min(N, 10000)\n    ans = list(range(1, limit + 1))\n\n    # Processamos os turnos na ordem inversa\n    for t in reversed(T):\n        t_minus_1 = t - 1\n        \n        # Elementos com q < t não mudam de posição\n        # Só precisamos atualizar a partir de q >= t\n        for i in range(len(ans)):\n            q = ans[i]\n            if q >= t:\n                ans[i] = q + (q - 1) // t_minus_1\n\n        # Removemos quaisquer posições que já ultrapassaram N\n        while ans and ans[-1] > N:\n            ans.pop()\n\n        if not ans:\n            break\n\n    # Imprime os sobreviventes\n    sys.stdout.write('\\n'.join(str(x) for x in ans) + ('\\n' if ans else ''))\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    T = [int(x) for x in data[2:2 + M]]\n\n    # Começamos com os primeiros até 10.000 sobreviventes\n    limit = min(N, 10000)\n    ans = list(range(1, limit + 1))\n\n    # Processamos os turnos na ordem inversa\n    for t in reversed(T):\n        t_minus_1 = t - 1\n        \n        # Elementos com q < t não mudam de posição\n        # Só precisamos atualizar a partir de q >= t\n        for i in range(len(ans)):\n            q = ans[i]\n            if q >= t:\n                ans[i] = q + (q - 1) // t_minus_1\n\n        # Removemos quaisquer posições que já ultrapassaram N\n        while ans and ans[-1] > N:\n            ans.pop()\n\n        if not ans:\n            break\n\n    # Imprime os sobreviventes\n    sys.stdout.write('\\n'.join(str(x) for x in ans) + ('\\n' if ans else ''))\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.8439569999973173,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

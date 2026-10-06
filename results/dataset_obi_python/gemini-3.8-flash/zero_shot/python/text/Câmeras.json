@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:46:33.535549+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 889,
+            "output_tokens": 622,
+            "total_tokens": 2018
+        },
+        "cost_usd": {
+            "input_cost": 0.000667,
+            "output_cost": 0.002333,
+            "total_cost": 0.002999
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n    \n    # Matriz para marcar células vigiadas: linhas 1..M, colunas 1..N\n    # Usaremos 1-indexado\n    blocked = [[False] * (N + 1) for _ in range(M + 1)]\n    \n    idx = 3\n    for _ in range(K):\n        c = int(data[idx])\n        r = int(data[idx+1])\n        d = data[idx+2]\n        idx += 3\n        \n        if d == 'N':\n            for row in range(1, r + 1):\n                blocked[row][c] = True\n        elif d == 'S':\n            for row in range(r, M + 1):\n                blocked[row][c] = True\n        elif d == 'L':\n            for col in range(c, N + 1):\n                blocked[r][col] = True\n        elif d == 'O':\n            for col in range(1, c + 1):\n                blocked[r][col] = True\n                \n    # Verifica se a entrada ou a saída estão bloqueadas\n    if blocked[1][1] or blocked[M][N]:\n        print('N')\n        return\n\n    # BFS para verificar caminho de (1, 1) até (M, N)\n    queue = deque([(1, 1)])\n    visited = [[False] * (N + 1) for _ in range(M + 1)]\n    visited[1][1] = True\n    \n    dr = [-1, 1, 0, 0]\n    dc = [0, 0, -1, 1]\n    \n    possible = False\n    while queue:\n        r, c = queue.popleft()\n        if r == M and c == N:\n            possible = True\n            break\n        \n        for i in range(4):\n            nr = r + dr[i]\n            nc = c + dc[i]\n            if 1 <= nr <= M and 1 <= nc <= N:\n                if not visited[nr][nc] and not blocked[nr][nc]:\n                    visited[nr][nc] = True\n                    queue.append((nr, nc))\n                    \n    if possible:\n        print('S')\n    else:\n        print('N')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n    \n    # Matriz para marcar células vigiadas: linhas 1..M, colunas 1..N\n    # Usaremos 1-indexado\n    blocked = [[False] * (N + 1) for _ in range(M + 1)]\n    \n    idx = 3\n    for _ in range(K):\n        c = int(data[idx])\n        r = int(data[idx+1])\n        d = data[idx+2]\n        idx += 3\n        \n        if d == 'N':\n            for row in range(1, r + 1):\n                blocked[row][c] = True\n        elif d == 'S':\n            for row in range(r, M + 1):\n                blocked[row][c] = True\n        elif d == 'L':\n            for col in range(c, N + 1):\n                blocked[r][col] = True\n        elif d == 'O':\n            for col in range(1, c + 1):\n                blocked[r][col] = True\n                \n    # Verifica se a entrada ou a saída estão bloqueadas\n    if blocked[1][1] or blocked[M][N]:\n        print('N')\n        return\n\n    # BFS para verificar caminho de (1, 1) até (M, N)\n    queue = deque([(1, 1)])\n    visited = [[False] * (N + 1) for _ in range(M + 1)]\n    visited[1][1] = True\n    \n    dr = [-1, 1, 0, 0]\n    dc = [0, 0, -1, 1]\n    \n    possible = False\n    while queue:\n        r, c = queue.popleft()\n        if r == M and c == N:\n            possible = True\n            break\n        \n        for i in range(4):\n            nr = r + dr[i]\n            nc = c + dc[i]\n            if 1 <= nr <= M and 1 <= nc <= N:\n                if not visited[nr][nc] and not blocked[nr][nc]:\n                    visited[nr][nc] = True\n                    queue.append((nr, nc))\n                    \n    if possible:\n        print('S')\n    else:\n        print('N')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08231670000532176,
+            "counts": {
+                "AC": 60,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 60
+        }
+    }
+]

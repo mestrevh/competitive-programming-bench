@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:28:04.515202+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1316,
+            "output_tokens": 312,
+            "total_tokens": 2204
+        },
+        "cost_usd": {
+            "input_cost": 0.000987,
+            "output_cost": 0.00117,
+            "total_cost": 0.002157
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    M = int(input_data[0])\n    grid = input_data[1:1 + M]\n    A = int(input_data[1 + M]) - 1\n    B = int(input_data[2 + M]) - 1\n\n    visited = bytearray(M * M)\n    \n    r, c = A, B\n    steps = 0\n    \n    while True:\n        # Check if out of bounds\n        if not (0 <= r < M and 0 <= c < M):\n            print(-1)\n            return\n        \n        cell = grid[r][c]\n        if cell == 'X':\n            print(steps)\n            return\n        \n        idx = r * M + c\n        if visited[idx]:\n            print(0)\n            return\n        \n        visited[idx] = 1\n        steps += 1\n        \n        if cell == 'N':\n            r -= 1\n        elif cell == 'S':\n            r += 1\n        elif cell == 'L':\n            c += 1\n        elif cell == 'O':\n            c -= 1\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    M = int(input_data[0])\n    grid = input_data[1:1 + M]\n    A = int(input_data[1 + M]) - 1\n    B = int(input_data[2 + M]) - 1\n\n    visited = bytearray(M * M)\n    \n    r, c = A, B\n    steps = 0\n    \n    while True:\n        # Check if out of bounds\n        if not (0 <= r < M and 0 <= c < M):\n            print(-1)\n            return\n        \n        cell = grid[r][c]\n        if cell == 'X':\n            print(steps)\n            return\n        \n        idx = r * M + c\n        if visited[idx]:\n            print(0)\n            return\n        \n        visited[idx] = 1\n        steps += 1\n        \n        if cell == 'N':\n            r -= 1\n        elif cell == 'S':\n            r += 1\n        elif cell == 'L':\n            c += 1\n        elif cell == 'O':\n            c -= 1\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2476846999998088,
+            "counts": {
+                "AC": 54,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 54
+        }
+    }
+]

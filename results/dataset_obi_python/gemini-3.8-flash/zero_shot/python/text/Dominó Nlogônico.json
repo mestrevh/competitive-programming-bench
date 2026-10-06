@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T11:49:37.507256+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1381,
+            "output_tokens": 272,
+            "total_tokens": 5369
+        },
+        "cost_usd": {
+            "input_cost": 0.001036,
+            "output_cost": 0.00102,
+            "total_cost": 0.002056
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    x = [int(v) for v in input_data[1 : n + 1]]\n    h = [int(v) for v in input_data[n + 1 : 2 * n + 1]]\n\n    r = [0] * n\n    stack = []\n\n    for i in range(n - 1, -1, -1):\n        reach_x = x[i] + h[i]\n        cur_r = i\n\n        while stack and x[stack[-1]] <= reach_x:\n            top = stack.pop()\n            if r[top] > cur_r:\n                cur_r = r[top]\n\n        r[i] = cur_r\n        stack.append(i)\n\n    ans = [str(r[i] - i + 1) for i in range(n)]\n    sys.stdout.write(\" \".join(ans) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    x = [int(v) for v in input_data[1 : n + 1]]\n    h = [int(v) for v in input_data[n + 1 : 2 * n + 1]]\n\n    r = [0] * n\n    stack = []\n\n    for i in range(n - 1, -1, -1):\n        reach_x = x[i] + h[i]\n        cur_r = i\n\n        while stack and x[stack[-1]] <= reach_x:\n            top = stack.pop()\n            if r[top] > cur_r:\n                cur_r = r[top]\n\n        r[i] = cur_r\n        stack.append(i)\n\n    ans = [str(r[i] - i + 1) for i in range(n)]\n    sys.stdout.write(\" \".join(ans) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2329230999966967,
+            "counts": {
+                "AC": 73,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 73
+        }
+    }
+]

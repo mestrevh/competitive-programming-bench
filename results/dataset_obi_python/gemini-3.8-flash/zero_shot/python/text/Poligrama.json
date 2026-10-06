@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:14:00.788712+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 573,
+            "output_tokens": 459,
+            "total_tokens": 1996
+        },
+        "cost_usd": {
+            "input_cost": 0.00043,
+            "output_cost": 0.001721,
+            "total_cost": 0.002151
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    n = int(input_data[0])\n    p = input_data[1]\n\n    # Contagem total de caracteres\n    total_counts = [0] * 26\n    for ch in p:\n        total_counts[ord(ch) - 97] += 1\n\n    # Encontrar todos os divisores de n menores que n\n    divisors = []\n    for d in range(1, int(n**0.5) + 1):\n        if n % d == 0:\n            divisors.append(d)\n            if d * d != n and d != 1:\n                divisors.append(n // d)\n    divisors.sort()\n\n    for L in divisors:\n        k = n // L  # número de blocos (k >= 2)\n        \n        # Condição necessária: total_counts de cada caractere deve ser divisível por k\n        possible = True\n        target = [0] * 26\n        for c in range(26):\n            if total_counts[c] % k != 0:\n                possible = False\n                break\n            target[c] = total_counts[c] // k\n        \n        if not possible:\n            continue\n\n        # Verificar se cada bloco de tamanho L possui exatamente as contagens de target\n        valid = True\n        for i in range(k):\n            block = p[i * L : (i + 1) * L]\n            block_counts = [0] * 26\n            for ch in block:\n                block_counts[ord(ch) - 97] += 1\n            if block_counts != target:\n                valid = False\n                break\n        \n        if valid:\n            print(p[:L])\n            return\n\n    print('*')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    n = int(input_data[0])\n    p = input_data[1]\n\n    # Contagem total de caracteres\n    total_counts = [0] * 26\n    for ch in p:\n        total_counts[ord(ch) - 97] += 1\n\n    # Encontrar todos os divisores de n menores que n\n    divisors = []\n    for d in range(1, int(n**0.5) + 1):\n        if n % d == 0:\n            divisors.append(d)\n            if d * d != n and d != 1:\n                divisors.append(n // d)\n    divisors.sort()\n\n    for L in divisors:\n        k = n // L  # número de blocos (k >= 2)\n        \n        # Condição necessária: total_counts de cada caractere deve ser divisível por k\n        possible = True\n        target = [0] * 26\n        for c in range(26):\n            if total_counts[c] % k != 0:\n                possible = False\n                break\n            target[c] = total_counts[c] // k\n        \n        if not possible:\n            continue\n\n        # Verificar se cada bloco de tamanho L possui exatamente as contagens de target\n        valid = True\n        for i in range(k):\n            block = p[i * L : (i + 1) * L]\n            block_counts = [0] * 26\n            for ch in block:\n                block_counts[ord(ch) - 97] += 1\n            if block_counts != target:\n                valid = False\n                break\n        \n        if valid:\n            print(p[:L])\n            return\n\n    print('*')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07358899999962887,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

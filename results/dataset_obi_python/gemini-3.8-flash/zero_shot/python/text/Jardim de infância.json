@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:03:11.112875+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1071,
+            "output_tokens": 1535,
+            "total_tokens": 4813
+        },
+        "cost_usd": {
+            "input_cost": 0.000803,
+            "output_cost": 0.005756,
+            "total_cost": 0.006559
+        },
+        "raw_response": "Para resolver o problema, basta verificar se todas as 8 condições listadas no enunciado são satisfeitas pelos sete pontos fornecidos:\n\n1. **Ângulo $\\angle P_2P_1P_3$ é agudo:** O produto escalar $\\vec{P_1P_2} \\cdot \\vec{P_1P_3} > 0$.\n2. **$|P_1P_2| = |P_1P_3|$:** A distância ao quadrado de $P_1$ a $P_2$ é igual à distância ao quadrado de $P_1$ a $P_3$.\n3. **$P_2, P_3, P_4, P_5$ são colineares:** O produto vetorial (cross product) de $\\vec{P_2P_3}$ com $\\vec{P_2P_4}$ e com $\\vec{P_2P_5}$ deve ser igual a $0$.\n4. **Pontos médios de $P_2P_3$ e $P_4P_5$ são coincidentes:** $P_2 + P_3 = P_4 + P_5$.\n5. **$|P_2P_3| > |P_4P_5|$:** A distância ao quadrado de $P_2$ a $P_3$ é estritamente maior que a de $P_4$ a $P_5$.\n6. **$P_4P_6 \\perp P_2P_3$ e $P_5P_7 \\perp P_2P_3$:** Os produtos escalares $\\vec{P_4P_6} \\cdot \\vec{P_2P_3} = 0$ e $\\vec{P_5P_7} \\cdot \\vec{P_2P_3} = 0$.\n7. **$|P_4P_6| = |P_5P_7|$:** A distância ao quadrado de $P_4$ a $P_6$ é igual à de $P_5$ a $P_7$.\n8. **$P_1$ e $P_6$ estão separados pela reta $P_2P_3$:** O segmento $P_1P_6$ cruza a reta que contém $P_2P_3$ em um único ponto, ou seja, $P_1$ e $P_6$ estão em lados estritamente opostos da reta (os produtos vetoriais de $\\vec{P_2P_3}$ com $\\vec{P_2P_1}$ e $\\vec{P_2P_6}$ têm sinais opostos).\n\nAbaixo está a solução completa em Python:\n\n```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    pts = []\n    for i in range(7):\n        pts.append((int(input_data[2 * i]), int(input_data[2 * i + 1])))\n    \n    # 1-indexed helper:\n    # P1 = pts[0], P2 = pts[1], ..., P7 = pts[6]\n    p = [None] + pts\n\n    def dist2(a, b):\n        return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2\n\n    def dot(v1, v2):\n        return v1[0] * v2[0] + v1[1] * v2[1]\n\n    def cross(v1, v2):\n        return v1[0] * v2[1] - v1[1] * v2[0]\n\n    def vec(a, b):\n        return (b[0] - a[0], b[1] - a[1])\n\n    # Condição 1: Ângulo P2-P1-P3 é agudo\n    v12 = vec(p[1], p[2])\n    v13 = vec(p[1], p[3])\n    if dot(v12, v13) <= 0:\n        print(\"N\")\n        return\n\n    # Condição 2: |P1P2| == |P1P3|\n    if dist2(p[1], p[2]) != dist2(p[1], p[3]):\n        print(\"N\")\n        return\n\n    # Condição 3: P2, P3, P4, P5 colineares\n    v23 = vec(p[2], p[3])\n    v24 = vec(p[2], p[4])\n    v25 = vec(p[2], p[5])\n    if cross(v23, v24) != 0 or cross(v23, v25) != 0:\n        print(\"N\")\n        return\n\n    # Condição 4: Pontos médios de P2P3 e P4P5 coincidem (P2 + P3 == P4 + P5)\n    if (p[2][0] + p[3][0] != p[4][0] + p[5][0]) or (p[2][1] + p[3][1] != p[4][1] + p[5][1]):\n        print(\"N\")\n        return\n\n    # Condição 5: |P2P3| > |P4P5|\n    if dist2(p[2], p[3]) <= dist2(p[4], p[5]):\n        print(\"N\")\n        return\n\n    # Condição 6: P4P6 e P5P7 perpendiculares a P2P3\n    v46 = vec(p[4], p[6])\n    v57 = vec(p[5], p[7])\n    if dot(v46, v23) != 0 or dot(v57, v23) != 0:\n        print(\"N\")\n        return\n\n    # Condição 7: |P4P6| == |P5P7|\n    if dist2(p[4], p[6]) != dist2(p[5], p[7]):\n        print(\"N\")\n        return\n\n    # Condição 8: P1 e P6 separados pela reta P2P3\n    cp1 = cross(v23, vec(p[2], p[1]))\n    cp6 = cross(v23, vec(p[2], p[6]))\n    if cp1 * cp6 >= 0:\n        print(\"N\")\n        return\n\n    print(\"S\")\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    pts = []\n    for i in range(7):\n        pts.append((int(input_data[2 * i]), int(input_data[2 * i + 1])))\n    \n    # 1-indexed helper:\n    # P1 = pts[0], P2 = pts[1], ..., P7 = pts[6]\n    p = [None] + pts\n\n    def dist2(a, b):\n        return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2\n\n    def dot(v1, v2):\n        return v1[0] * v2[0] + v1[1] * v2[1]\n\n    def cross(v1, v2):\n        return v1[0] * v2[1] - v1[1] * v2[0]\n\n    def vec(a, b):\n        return (b[0] - a[0], b[1] - a[1])\n\n    # Condição 1: Ângulo P2-P1-P3 é agudo\n    v12 = vec(p[1], p[2])\n    v13 = vec(p[1], p[3])\n    if dot(v12, v13) <= 0:\n        print(\"N\")\n        return\n\n    # Condição 2: |P1P2| == |P1P3|\n    if dist2(p[1], p[2]) != dist2(p[1], p[3]):\n        print(\"N\")\n        return\n\n    # Condição 3: P2, P3, P4, P5 colineares\n    v23 = vec(p[2], p[3])\n    v24 = vec(p[2], p[4])\n    v25 = vec(p[2], p[5])\n    if cross(v23, v24) != 0 or cross(v23, v25) != 0:\n        print(\"N\")\n        return\n\n    # Condição 4: Pontos médios de P2P3 e P4P5 coincidem (P2 + P3 == P4 + P5)\n    if (p[2][0] + p[3][0] != p[4][0] + p[5][0]) or (p[2][1] + p[3][1] != p[4][1] + p[5][1]):\n        print(\"N\")\n        return\n\n    # Condição 5: |P2P3| > |P4P5|\n    if dist2(p[2], p[3]) <= dist2(p[4], p[5]):\n        print(\"N\")\n        return\n\n    # Condição 6: P4P6 e P5P7 perpendiculares a P2P3\n    v46 = vec(p[4], p[6])\n    v57 = vec(p[5], p[7])\n    if dot(v46, v23) != 0 or dot(v57, v23) != 0:\n        print(\"N\")\n        return\n\n    # Condição 7: |P4P6| == |P5P7|\n    if dist2(p[4], p[6]) != dist2(p[5], p[7]):\n        print(\"N\")\n        return\n\n    # Condição 8: P1 e P6 separados pela reta P2P3\n    cp1 = cross(v23, vec(p[2], p[1]))\n    cp6 = cross(v23, vec(p[2], p[6]))\n    if cp1 * cp6 >= 0:\n        print(\"N\")\n        return\n\n    print(\"S\")\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06758260000060545,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:10:39.413827+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 745,
+            "output_tokens": 280,
+            "total_tokens": 1857
+        },
+        "cost_usd": {
+            "input_cost": 0.000559,
+            "output_cost": 0.00105,
+            "total_cost": 0.001609
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    k = int(data[1])\n    a = [int(x) for x in data[2:2 + n]]\n    \n    freq = [0] * (n + 1)\n    distinct_count = 0\n    ans = 0\n    \n    r = 0\n    for l in range(n):\n        while r < n and distinct_count < k:\n            val = a[r]\n            if freq[val] == 0:\n                distinct_count += 1\n            freq[val] += 1\n            r += 1\n        \n        if distinct_count >= k:\n            ans += n - r + 1\n        \n        # Remove a[l] para a próxima iteração\n        left_val = a[l]\n        freq[left_val] -= 1\n        if freq[left_val] == 0:\n            distinct_count -= 1\n            \n    print(ans)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    k = int(data[1])\n    a = [int(x) for x in data[2:2 + n]]\n    \n    freq = [0] * (n + 1)\n    distinct_count = 0\n    ans = 0\n    \n    r = 0\n    for l in range(n):\n        while r < n and distinct_count < k:\n            val = a[r]\n            if freq[val] == 0:\n                distinct_count += 1\n            freq[val] += 1\n            r += 1\n        \n        if distinct_count >= k:\n            ans += n - r + 1\n        \n        # Remove a[l] para a próxima iteração\n        left_val = a[l]\n        freq[left_val] -= 1\n        if freq[left_val] == 0:\n            distinct_count -= 1\n            \n    print(ans)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09254869999858784,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

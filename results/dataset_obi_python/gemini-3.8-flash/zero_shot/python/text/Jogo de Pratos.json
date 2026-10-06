@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:06:06.157106+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 2433,
+            "output_tokens": 1146,
+            "total_tokens": 21833
+        },
+        "cost_usd": {
+            "input_cost": 0.001825,
+            "output_cost": 0.004298,
+            "total_cost": 0.006122
+        },
+        "raw_response": "```python\nimport sys\nfrom bisect import bisect_right\n\n# Aumenta o limite de recursão se necessário, embora não usemos recursão profunda\nsys.setrecursionlimit(2000)\n\nclass Meal:\n    __slots__ = ('a', 'b')\n    def __init__(self, a, b):\n        self.a = a\n        self.b = b\n\n    def __lt__(self, other):\n        # Uma refeição vem antes de outra se seu ganho ao ser aplicada primeiro for maior\n        return self.b * (other.a - 1) > other.b * (self.a - 1)\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    spell_a = [int(next(it)) for _ in range(N)]\n    spell_b = [int(next(it)) for _ in range(N)]\n\n    meal_a = [int(next(it)) for _ in range(M)]\n    meal_b = [int(next(it)) for _ in range(M)]\n\n    Q = int(next(it))\n    queries = [int(next(it)) for _ in range(Q)]\n\n    MOD = 1000000007\n\n    # 1. Compor todas as refeições\n    meals = [Meal(meal_a[i], meal_b[i]) for i in range(M)]\n    meals.sort()\n\n    A_meal = 1\n    B_meal = 0\n    for meal in meals:\n        A_meal = (A_meal * meal.a) % MOD\n        B_meal = (B_meal * meal.a + meal.b) % MOD\n\n    # 2. Construir o Upper Convex Hull para os feitiços\n    best_b = {}\n    for a, b in zip(spell_a, spell_b):\n        if a not in best_b or b > best_b[a]:\n            best_b[a] = b\n\n    sorted_spells = sorted(best_b.items())\n\n    # Manter apenas as linhas onde b é estritamente maior que o máximo à direita\n    filtered = []\n    max_b = -1\n    for a, b in reversed(sorted_spells):\n        if b > max_b:\n            filtered.append((a, b))\n            max_b = b\n    filtered.reverse()\n\n    def get_T(l1, l2):\n        # Ponto inteiro a partir do qual l2 supera ou empata com l1\n        num = l1[1] - l2[1]\n        den = l2[0] - l1[0]\n        return (num + den - 1) // den\n\n    hull = []\n    for line in filtered:\n        while len(hull) >= 2 and get_T(hull[-1], line) <= get_T(hull[-2], hull[-1]):\n            hull.pop()\n        while len(hull) >= 1 and get_T(hull[-1], line) <= 1:\n            hull.pop()\n        hull.append(line)\n\n    T = []\n    for i in range(1, len(hull)):\n        T.append(get_T(hull[i - 1], hull[i]))\n\n    m = len(hull) - 1\n\n    def apply_power(a, b, k, x):\n        if k == 0:\n            return x % MOD\n        if a == 1:\n            return (x + k * b) % MOD\n        ak = pow(a, k, MOD)\n        geom = (ak - 1) * pow(a - 1, MOD - 2, MOD) % MOD\n        return (ak * (x % MOD) + (b % MOD) * geom) % MOD\n\n    # 3. Processar cada uma das perguntas\n    out = []\n    for x in queries:\n        cur_x = x\n        rem_k = K\n\n        while rem_k > 0:\n            idx = bisect_right(T, cur_x)\n            if idx == m:\n                cur_x = apply_power(hull[m][0], hull[m][1], rem_k, cur_x)\n                rem_k = 0\n                break\n            else:\n                a, b = hull[idx]\n                cur_x = a * cur_x + b\n                rem_k -= 1\n\n        ans = (A_meal * (cur_x % MOD) + B_meal) % MOD\n        out.append(ans)\n\n    sys.stdout.write('\\n'.join(map(str, out)) + '\\n')\n\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom bisect import bisect_right\n\n# Aumenta o limite de recursão se necessário, embora não usemos recursão profunda\nsys.setrecursionlimit(2000)\n\nclass Meal:\n    __slots__ = ('a', 'b')\n    def __init__(self, a, b):\n        self.a = a\n        self.b = b\n\n    def __lt__(self, other):\n        # Uma refeição vem antes de outra se seu ganho ao ser aplicada primeiro for maior\n        return self.b * (other.a - 1) > other.b * (self.a - 1)\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    spell_a = [int(next(it)) for _ in range(N)]\n    spell_b = [int(next(it)) for _ in range(N)]\n\n    meal_a = [int(next(it)) for _ in range(M)]\n    meal_b = [int(next(it)) for _ in range(M)]\n\n    Q = int(next(it))\n    queries = [int(next(it)) for _ in range(Q)]\n\n    MOD = 1000000007\n\n    # 1. Compor todas as refeições\n    meals = [Meal(meal_a[i], meal_b[i]) for i in range(M)]\n    meals.sort()\n\n    A_meal = 1\n    B_meal = 0\n    for meal in meals:\n        A_meal = (A_meal * meal.a) % MOD\n        B_meal = (B_meal * meal.a + meal.b) % MOD\n\n    # 2. Construir o Upper Convex Hull para os feitiços\n    best_b = {}\n    for a, b in zip(spell_a, spell_b):\n        if a not in best_b or b > best_b[a]:\n            best_b[a] = b\n\n    sorted_spells = sorted(best_b.items())\n\n    # Manter apenas as linhas onde b é estritamente maior que o máximo à direita\n    filtered = []\n    max_b = -1\n    for a, b in reversed(sorted_spells):\n        if b > max_b:\n            filtered.append((a, b))\n            max_b = b\n    filtered.reverse()\n\n    def get_T(l1, l2):\n        # Ponto inteiro a partir do qual l2 supera ou empata com l1\n        num = l1[1] - l2[1]\n        den = l2[0] - l1[0]\n        return (num + den - 1) // den\n\n    hull = []\n    for line in filtered:\n        while len(hull) >= 2 and get_T(hull[-1], line) <= get_T(hull[-2], hull[-1]):\n            hull.pop()\n        while len(hull) >= 1 and get_T(hull[-1], line) <= 1:\n            hull.pop()\n        hull.append(line)\n\n    T = []\n    for i in range(1, len(hull)):\n        T.append(get_T(hull[i - 1], hull[i]))\n\n    m = len(hull) - 1\n\n    def apply_power(a, b, k, x):\n        if k == 0:\n            return x % MOD\n        if a == 1:\n            return (x + k * b) % MOD\n        ak = pow(a, k, MOD)\n        geom = (ak - 1) * pow(a - 1, MOD - 2, MOD) % MOD\n        return (ak * (x % MOD) + (b % MOD) * geom) % MOD\n\n    # 3. Processar cada uma das perguntas\n    out = []\n    for x in queries:\n        cur_x = x\n        rem_k = K\n\n        while rem_k > 0:\n            idx = bisect_right(T, cur_x)\n            if idx == m:\n                cur_x = apply_power(hull[m][0], hull[m][1], rem_k, cur_x)\n                rem_k = 0\n                break\n            else:\n                a, b = hull[idx]\n                cur_x = a * cur_x + b\n                rem_k -= 1\n\n        ans = (A_meal * (cur_x % MOD) + B_meal) % MOD\n        out.append(ans)\n\n    sys.stdout.write('\\n'.join(map(str, out)) + '\\n')\n\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.6050027999954182,
+            "counts": {
+                "AC": 73,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 73
+        }
+    }
+]

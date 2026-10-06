@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T12:00:07.562127+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1258,
+            "output_tokens": 460,
+            "total_tokens": 2366
+        },
+        "cost_usd": {
+            "input_cost": 0.000944,
+            "output_cost": 0.001725,
+            "total_cost": 0.002668
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    E = int(input_data[0])\n    M = int(input_data[1])\n    D = int(input_data[2])\n\n    idx = 3\n\n    # Pares que querem estar juntos\n    together_start = idx\n    idx += 2 * M\n\n    # Pares que não querem estar juntos\n    separate_start = idx\n    idx += 2 * D\n\n    # Mapear cada estudante para o id do seu grupo\n    group_id = [0] * (E + 1)\n    g = 0\n    num_groups = E // 3\n    for _ in range(num_groups):\n        u = int(input_data[idx])\n        v = int(input_data[idx + 1])\n        w = int(input_data[idx + 2])\n        group_id[u] = g\n        group_id[v] = g\n        group_id[w] = g\n        idx += 3\n        g += 1\n\n    violations = 0\n\n    # Checar pares que gostariam de estar juntos\n    cur = together_start\n    for _ in range(M):\n        x = int(input_data[cur])\n        y = int(input_data[cur + 1])\n        cur += 2\n        if group_id[x] != group_id[y]:\n            violations += 1\n\n    # Checar pares que não gostariam de estar juntos\n    cur = separate_start\n    for _ in range(D):\n        u = int(input_data[cur])\n        v = int(input_data[cur + 1])\n        cur += 2\n        if group_id[u] == group_id[v]:\n            violations += 1\n\n    print(violations)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    E = int(input_data[0])\n    M = int(input_data[1])\n    D = int(input_data[2])\n\n    idx = 3\n\n    # Pares que querem estar juntos\n    together_start = idx\n    idx += 2 * M\n\n    # Pares que não querem estar juntos\n    separate_start = idx\n    idx += 2 * D\n\n    # Mapear cada estudante para o id do seu grupo\n    group_id = [0] * (E + 1)\n    g = 0\n    num_groups = E // 3\n    for _ in range(num_groups):\n        u = int(input_data[idx])\n        v = int(input_data[idx + 1])\n        w = int(input_data[idx + 2])\n        group_id[u] = g\n        group_id[v] = g\n        group_id[w] = g\n        idx += 3\n        g += 1\n\n    violations = 0\n\n    # Checar pares que gostariam de estar juntos\n    cur = together_start\n    for _ in range(M):\n        x = int(input_data[cur])\n        y = int(input_data[cur + 1])\n        cur += 2\n        if group_id[x] != group_id[y]:\n            violations += 1\n\n    # Checar pares que não gostariam de estar juntos\n    cur = separate_start\n    for _ in range(D):\n        u = int(input_data[cur])\n        v = int(input_data[cur + 1])\n        cur += 2\n        if group_id[u] == group_id[v]:\n            violations += 1\n\n    print(violations)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2228326999975252,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]
