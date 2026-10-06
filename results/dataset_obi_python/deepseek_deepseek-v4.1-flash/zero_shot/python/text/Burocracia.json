@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:17:59.286789+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1904,
+            "output_tokens": 38083,
+            "total_tokens": 39987
+        },
+        "cost_usd": {
+            "input_cost": 6e-06,
+            "output_cost": 0.091399,
+            "total_cost": 0.091405
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    it = iter(data)\n    N = int(next(it))\n    p = [0] * (N + 1)\n    for i in range(2, N + 1):\n        p[i] = int(next(it))\n    Q = int(next(it))\n    ops = []\n    for _ in range(Q):\n        t = int(next(it))\n        if t == 1:\n            v = int(next(it))\n            k = int(next(it))\n            ops.append((1, v, k))\n        else:\n            v = int(next(it))\n            ops.append((2, v, 0))\n\n    children = [[] for _ in range(N + 1)]\n    for i in range(2, N + 1):\n        children[p[i]].append(i)\n\n    depth = [0] * (N + 1)\n    tin = [0] * (N + 1)\n    tout = [0] * (N + 1)\n    LOG = 18\n    up = [[0] * (N + 1) for _ in range(LOG)]\n\n    for i in range(2, N + 1):\n        up[0][i] = p[i]\n\n    timer = 0\n    stack = [(1, 0)]\n    while stack:\n        u, state = stack.pop()\n        if state == 0:\n            timer += 1\n            tin[u] = timer\n            stack.append((u, 1))\n            for v in reversed(children[u]):\n                depth[v] = depth[u] + 1\n                stack.append((v, 0))\n        else:\n            tout[u] = timer\n\n    for j in range(1, LOG):\n        up_j = up[j]\n        up_jm1 = up[j - 1]\n        for i in range(1, N + 1):\n            up_j[i] = up_jm1[up_jm1[i]]\n\n    def kth_ancestor(u, k):\n        j = 0\n        while k:\n            if k & 1:\n                u = up[j][u]\n            k >>= 1\n            j += 1\n        return u\n\n    size = 4 * N + 5\n    tree_val = [0] * size\n    tree_time = [0] * size\n    cur_time = 0\n\n    def update(node, l, r, ql, qr, val, time):\n        if ql <= l and r <= qr:\n            tree_val[node] = val\n            tree_time[node] = time\n            return\n        mid = (l + r) // 2\n        if ql <= mid:\n            update(node * 2, l, mid, ql, qr, val, time)\n        if qr > mid:\n            update(node * 2 + 1, mid + 1, r, ql, qr, val, time)\n\n    def query(node, l, r, pos, best_val, best_time):\n        if tree_time[node] > best_time:\n            best_time = tree_time[node]\n            best_val = tree_val[node]\n        if l == r:\n            return best_val\n        mid = (l + r) // 2\n        if pos <= mid:\n            return query(node * 2, l, mid, pos, best_val, best_time)\n        else:\n            return query(node * 2 + 1, mid + 1, r, pos, best_val, best_time)\n\n    out = []\n    for op in ops:\n        if op[0] == 1:\n            _, u, k = op\n            M = query(1, 1, N, tin[u], 0, 0)\n            if M == 0:\n                ans = kth_ancestor(u, k)\n            else:\n                if k == 1:\n                    ans = M\n                else:\n                    ans = kth_ancestor(M, k - 1)\n            out.append(str(ans))\n        else:\n            _, v, _ = op\n            M = query(1, 1, N, tin[v], 0, 0)\n            if M == 0:\n                cur_time += 1\n                l = tin[v] + 1\n                r = tout[v]\n                if l <= r:\n                    update(1, 1, N, l, r, v, cur_time)\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    it = iter(data)\n    N = int(next(it))\n    p = [0] * (N + 1)\n    for i in range(2, N + 1):\n        p[i] = int(next(it))\n    Q = int(next(it))\n    ops = []\n    for _ in range(Q):\n        t = int(next(it))\n        if t == 1:\n            v = int(next(it))\n            k = int(next(it))\n            ops.append((1, v, k))\n        else:\n            v = int(next(it))\n            ops.append((2, v, 0))\n\n    children = [[] for _ in range(N + 1)]\n    for i in range(2, N + 1):\n        children[p[i]].append(i)\n\n    depth = [0] * (N + 1)\n    tin = [0] * (N + 1)\n    tout = [0] * (N + 1)\n    LOG = 18\n    up = [[0] * (N + 1) for _ in range(LOG)]\n\n    for i in range(2, N + 1):\n        up[0][i] = p[i]\n\n    timer = 0\n    stack = [(1, 0)]\n    while stack:\n        u, state = stack.pop()\n        if state == 0:\n            timer += 1\n            tin[u] = timer\n            stack.append((u, 1))\n            for v in reversed(children[u]):\n                depth[v] = depth[u] + 1\n                stack.append((v, 0))\n        else:\n            tout[u] = timer\n\n    for j in range(1, LOG):\n        up_j = up[j]\n        up_jm1 = up[j - 1]\n        for i in range(1, N + 1):\n            up_j[i] = up_jm1[up_jm1[i]]\n\n    def kth_ancestor(u, k):\n        j = 0\n        while k:\n            if k & 1:\n                u = up[j][u]\n            k >>= 1\n            j += 1\n        return u\n\n    size = 4 * N + 5\n    tree_val = [0] * size\n    tree_time = [0] * size\n    cur_time = 0\n\n    def update(node, l, r, ql, qr, val, time):\n        if ql <= l and r <= qr:\n            tree_val[node] = val\n            tree_time[node] = time\n            return\n        mid = (l + r) // 2\n        if ql <= mid:\n            update(node * 2, l, mid, ql, qr, val, time)\n        if qr > mid:\n            update(node * 2 + 1, mid + 1, r, ql, qr, val, time)\n\n    def query(node, l, r, pos, best_val, best_time):\n        if tree_time[node] > best_time:\n            best_time = tree_time[node]\n            best_val = tree_val[node]\n        if l == r:\n            return best_val\n        mid = (l + r) // 2\n        if pos <= mid:\n            return query(node * 2, l, mid, pos, best_val, best_time)\n        else:\n            return query(node * 2 + 1, mid + 1, r, pos, best_val, best_time)\n\n    out = []\n    for op in ops:\n        if op[0] == 1:\n            _, u, k = op\n            M = query(1, 1, N, tin[u], 0, 0)\n            if M == 0:\n                ans = kth_ancestor(u, k)\n            else:\n                if k == 1:\n                    ans = M\n                else:\n                    ans = kth_ancestor(M, k - 1)\n            out.append(str(ans))\n        else:\n            _, v, _ = op\n            M = query(1, 1, N, tin[v], 0, 0)\n            if M == 0:\n                cur_time += 1\n                l = tin[v] + 1\n                r = tout[v]\n                if l <= r:\n                    update(1, 1, N, l, r, v, cur_time)\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4258172999998351,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

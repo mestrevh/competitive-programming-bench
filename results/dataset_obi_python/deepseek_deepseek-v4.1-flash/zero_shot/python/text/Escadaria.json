@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T22:52:35.353686+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 908,
+            "output_tokens": 3594,
+            "total_tokens": 4502
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.008626,
+            "total_cost": 0.008628
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    A = data[1:1 + n]\n\n    INF = 10**18\n\n    left = [INF] * n\n    best = INF\n\n    for i, a in enumerate(A):\n        if a != -1:\n            val = a - i\n            if val < best:\n                best = val\n        if best != INF:\n            left[i] = i + best\n\n    ans = [0] * n\n    best = INF\n\n    for i in range(n - 1, -1, -1):\n        a = A[i]\n        if a != -1:\n            val = a + i\n            if val < best:\n                best = val\n\n        if best != INF:\n            right = best - i\n            ans[i] = right if right < left[i] else left[i]\n        else:\n            ans[i] = left[i]\n\n    sys.stdout.write(' '.join(map(str, ans)))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    A = data[1:1 + n]\n\n    INF = 10**18\n\n    left = [INF] * n\n    best = INF\n\n    for i, a in enumerate(A):\n        if a != -1:\n            val = a - i\n            if val < best:\n                best = val\n        if best != INF:\n            left[i] = i + best\n\n    ans = [0] * n\n    best = INF\n\n    for i in range(n - 1, -1, -1):\n        a = A[i]\n        if a != -1:\n            val = a + i\n            if val < best:\n                best = val\n\n        if best != INF:\n            right = best - i\n            ans[i] = right if right < left[i] else left[i]\n        else:\n            ans[i] = left[i]\n\n    sys.stdout.write(' '.join(map(str, ans)))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11205979999999727,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

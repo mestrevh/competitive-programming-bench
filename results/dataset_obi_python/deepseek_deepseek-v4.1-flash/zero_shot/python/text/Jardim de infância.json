@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:21:22.753475+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1114,
+            "output_tokens": 30152,
+            "total_tokens": 31266
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.072365,
+            "total_cost": 0.072368
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    coords = list(map(int, data))\n    pts = [(coords[i], coords[i+1]) for i in range(0, 14, 2)]\n    P1, P2, P3, P4, P5, P6, P7 = pts\n\n    def cross(ax, ay, bx, by):\n        return ax * by - ay * bx\n\n    def dot(ax, ay, bx, by):\n        return ax * bx + ay * by\n\n    def dist2(p, q):\n        return (p[0] - q[0])**2 + (p[1] - q[1])**2\n\n    # 1. Angle P2 P1 P3 is acute\n    v1x, v1y = P2[0] - P1[0], P2[1] - P1[1]\n    v2x, v2y = P3[0] - P1[0], P3[1] - P1[1]\n    if dot(v1x, v1y, v2x, v2y) <= 0 or cross(v1x, v1y, v2x, v2y) == 0:\n        print(\"N\")\n        return\n\n    # 2. |P1P2| == |P1P3|\n    if dist2(P1, P2) != dist2(P1, P3):\n        print(\"N\")\n        return\n\n    # 3. P2, P3, P4, P5 are collinear\n    Lx, Ly = P3[0] - P2[0], P3[1] - P2[1]\n    if cross(Lx, Ly, P4[0] - P2[0], P4[1] - P2[1]) != 0:\n        print(\"N\")\n        return\n    if cross(Lx, Ly, P5[0] - P2[0], P5[1] - P2[1]) != 0:\n        print(\"N\")\n        return\n\n    # 4. Midpoints of P2P3 and P4P5 coincide\n    if P2[0] + P3[0] != P4[0] + P5[0] or P2[1] + P3[1] != P4[1] + P5[1]:\n        print(\"N\")\n        return\n\n    # 5. |P2P3| > |P4P5|\n    if dist2(P2, P3) <= dist2(P4, P5):\n        print(\"N\")\n        return\n\n    # 6. P4P6 and P5P7 are perpendicular to P2P3\n    if dot(P6[0] - P4[0], P6[1] - P4[1], Lx, Ly) != 0:\n        print(\"N\")\n        return\n    if dot(P7[0] - P5[0], P7[1] - P5[1], Lx, Ly) != 0:\n        print(\"N\")\n        return\n\n    # 7. |P4P6| == |P5P7|\n    if dist2(P4, P6) != dist2(P5, P7):\n        print(\"N\")\n        return\n\n    # 8. P1 and P6 are on opposite sides of line P2P3\n    c1 = cross(Lx, Ly, P1[0] - P2[0], P1[1] - P2[1])\n    c6 = cross(Lx, Ly, P6[0] - P2[0], P6[1] - P2[1])\n    if c1 * c6 >= 0:\n        print(\"N\")\n        return\n\n    print(\"S\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    coords = list(map(int, data))\n    pts = [(coords[i], coords[i+1]) for i in range(0, 14, 2)]\n    P1, P2, P3, P4, P5, P6, P7 = pts\n\n    def cross(ax, ay, bx, by):\n        return ax * by - ay * bx\n\n    def dot(ax, ay, bx, by):\n        return ax * bx + ay * by\n\n    def dist2(p, q):\n        return (p[0] - q[0])**2 + (p[1] - q[1])**2\n\n    # 1. Angle P2 P1 P3 is acute\n    v1x, v1y = P2[0] - P1[0], P2[1] - P1[1]\n    v2x, v2y = P3[0] - P1[0], P3[1] - P1[1]\n    if dot(v1x, v1y, v2x, v2y) <= 0 or cross(v1x, v1y, v2x, v2y) == 0:\n        print(\"N\")\n        return\n\n    # 2. |P1P2| == |P1P3|\n    if dist2(P1, P2) != dist2(P1, P3):\n        print(\"N\")\n        return\n\n    # 3. P2, P3, P4, P5 are collinear\n    Lx, Ly = P3[0] - P2[0], P3[1] - P2[1]\n    if cross(Lx, Ly, P4[0] - P2[0], P4[1] - P2[1]) != 0:\n        print(\"N\")\n        return\n    if cross(Lx, Ly, P5[0] - P2[0], P5[1] - P2[1]) != 0:\n        print(\"N\")\n        return\n\n    # 4. Midpoints of P2P3 and P4P5 coincide\n    if P2[0] + P3[0] != P4[0] + P5[0] or P2[1] + P3[1] != P4[1] + P5[1]:\n        print(\"N\")\n        return\n\n    # 5. |P2P3| > |P4P5|\n    if dist2(P2, P3) <= dist2(P4, P5):\n        print(\"N\")\n        return\n\n    # 6. P4P6 and P5P7 are perpendicular to P2P3\n    if dot(P6[0] - P4[0], P6[1] - P4[1], Lx, Ly) != 0:\n        print(\"N\")\n        return\n    if dot(P7[0] - P5[0], P7[1] - P5[1], Lx, Ly) != 0:\n        print(\"N\")\n        return\n\n    # 7. |P4P6| == |P5P7|\n    if dist2(P4, P6) != dist2(P5, P7):\n        print(\"N\")\n        return\n\n    # 8. P1 and P6 are on opposite sides of line P2P3\n    c1 = cross(Lx, Ly, P1[0] - P2[0], P1[1] - P2[1])\n    c6 = cross(Lx, Ly, P6[0] - P2[0], P6[1] - P2[1])\n    if c1 * c6 >= 0:\n        print(\"N\")\n        return\n\n    print(\"S\")\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08114900000009584,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

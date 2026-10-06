@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T00:04:10.540246+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1888,
+            "output_tokens": 12702,
+            "total_tokens": 14590
+        },
+        "cost_usd": {
+            "input_cost": 6e-06,
+            "output_cost": 0.030485,
+            "total_cost": 0.03049
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    N = data[idx]\n    M = data[idx + 1]\n    K = data[idx + 2]\n    idx += 3\n\n    P = [0] * (K + 1)\n    for i in range(1, K + 1):\n        P[i] = data[idx]\n        idx += 1\n\n    edges_by = [[] for _ in range(K + 1)]\n    for _ in range(M):\n        v = data[idx] - 1\n        u = data[idx + 1] - 1\n        t = data[idx + 2]\n        idx += 3\n        edges_by[t].append((v, u))\n\n    A = data[idx] - 1\n    B = data[idx + 1] - 1\n    del data\n\n    station_edges = [[] for _ in range(N)]\n    comp_members = []\n    comp_price = []\n\n    for t in range(1, K + 1):\n        edges = edges_by[t]\n        if not edges:\n            continue\n\n        local = {}\n        for u, v in edges:\n            if u in local:\n                local[u].append(v)\n            else:\n                local[u] = [v]\n            if v in local:\n                local[v].append(u)\n            else:\n                local[v] = [u]\n\n        visited = set()\n        price = P[t]\n\n        for start in local:\n            if start in visited:\n                continue\n\n            stack = [start]\n            visited.add(start)\n            comp = []\n\n            while stack:\n                x = stack.pop()\n                comp.append(x)\n                for y in local[x]:\n                    if y not in visited:\n                        visited.add(y)\n                        stack.append(y)\n\n            cid = N + len(comp_members)\n            comp_members.append(comp)\n            comp_price.append(price)\n\n            for x in comp:\n                station_edges[x].append(cid)\n\n        edges_by[t] = None\n        del edges, local, visited\n\n    del edges_by, P\n\n    INF = 10**18\n    total_nodes = N + len(comp_members)\n    dist = [INF] * total_nodes\n    dist[A] = 0\n\n    pq = [(0, A)]\n\n    while pq:\n        d, u = heapq.heappop(pq)\n        if d != dist[u]:\n            continue\n        if u == B:\n            break\n\n        if u < N:\n            for cid in station_edges[u]:\n                nd = d + comp_price[cid - N]\n                if nd < dist[cid]:\n                    dist[cid] = nd\n                    heapq.heappush(pq, (nd, cid))\n        else:\n            comp_idx = u - N\n            for v in comp_members[comp_idx]:\n                if d < dist[v]:\n                    dist[v] = d\n                    heapq.heappush(pq, (d, v))\n\n    ans = dist[B]\n    print(-1 if ans == INF else ans)\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    N = data[idx]\n    M = data[idx + 1]\n    K = data[idx + 2]\n    idx += 3\n\n    P = [0] * (K + 1)\n    for i in range(1, K + 1):\n        P[i] = data[idx]\n        idx += 1\n\n    edges_by = [[] for _ in range(K + 1)]\n    for _ in range(M):\n        v = data[idx] - 1\n        u = data[idx + 1] - 1\n        t = data[idx + 2]\n        idx += 3\n        edges_by[t].append((v, u))\n\n    A = data[idx] - 1\n    B = data[idx + 1] - 1\n    del data\n\n    station_edges = [[] for _ in range(N)]\n    comp_members = []\n    comp_price = []\n\n    for t in range(1, K + 1):\n        edges = edges_by[t]\n        if not edges:\n            continue\n\n        local = {}\n        for u, v in edges:\n            if u in local:\n                local[u].append(v)\n            else:\n                local[u] = [v]\n            if v in local:\n                local[v].append(u)\n            else:\n                local[v] = [u]\n\n        visited = set()\n        price = P[t]\n\n        for start in local:\n            if start in visited:\n                continue\n\n            stack = [start]\n            visited.add(start)\n            comp = []\n\n            while stack:\n                x = stack.pop()\n                comp.append(x)\n                for y in local[x]:\n                    if y not in visited:\n                        visited.add(y)\n                        stack.append(y)\n\n            cid = N + len(comp_members)\n            comp_members.append(comp)\n            comp_price.append(price)\n\n            for x in comp:\n                station_edges[x].append(cid)\n\n        edges_by[t] = None\n        del edges, local, visited\n\n    del edges_by, P\n\n    INF = 10**18\n    total_nodes = N + len(comp_members)\n    dist = [INF] * total_nodes\n    dist[A] = 0\n\n    pq = [(0, A)]\n\n    while pq:\n        d, u = heapq.heappop(pq)\n        if d != dist[u]:\n            continue\n        if u == B:\n            break\n\n        if u < N:\n            for cid in station_edges[u]:\n                nd = d + comp_price[cid - N]\n                if nd < dist[cid]:\n                    dist[cid] = nd\n                    heapq.heappush(pq, (nd, cid))\n        else:\n            comp_idx = u - N\n            for v in comp_members[comp_idx]:\n                if d < dist[v]:\n                    dist[v] = d\n                    heapq.heappush(pq, (d, v))\n\n    ans = dist[B]\n    print(-1 if ans == INF else ans)\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.5015246000002662,
+            "counts": {
+                "AC": 107,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

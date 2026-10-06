@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:29:14.336270+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1339,
+            "output_tokens": 26542,
+            "total_tokens": 27881
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.063701,
+            "total_cost": 0.063705
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M = data[0], data[1]\n    K = N * M\n    P = data[2:2 + K]\n\n    order = list(range(K))\n    order.sort(key=P.__getitem__)\n\n    max_nodes = 2 * K + 5\n    T = [0] * max_nodes\n    S = [0] * max_nodes\n    parent = [-1] * max_nodes\n    left = [-1] * max_nodes\n    right = [-1] * max_nodes\n\n    for i in range(K):\n        T[i] = P[i]\n        S[i] = P[i]\n\n    dsu_parent = [-1] * K\n    dsu_size = [1] * K\n    comp_node = [0] * K\n\n    next_node = K\n\n    def find(x):\n        while dsu_parent[x] != x:\n            dsu_parent[x] = dsu_parent[dsu_parent[x]]\n            x = dsu_parent[x]\n        return x\n\n    def merge(v, u):\n        nonlocal next_node\n        rv = find(v)\n        ru = find(u)\n        if rv == ru:\n            return\n\n        node_v = comp_node[rv]\n        node_u = comp_node[ru]\n\n        new = next_node\n        next_node += 1\n\n        T[new] = P[v]\n        S[new] = S[node_v] + S[node_u]\n        left[new] = node_v\n        right[new] = node_u\n        parent[node_v] = new\n        parent[node_u] = new\n\n        if dsu_size[rv] < dsu_size[ru]:\n            rv, ru = ru, rv\n\n        dsu_parent[ru] = rv\n        dsu_size[rv] += dsu_size[ru]\n        comp_node[rv] = new\n\n    for v in order:\n        dsu_parent[v] = v\n        dsu_size[v] = 1\n        comp_node[v] = v\n\n        r = v // M\n        c = v - r * M\n\n        if r > 0:\n            u = v - M\n            if dsu_parent[u] != -1:\n                merge(v, u)\n\n        if r + 1 < N:\n            u = v + M\n            if dsu_parent[u] != -1:\n                merge(v, u)\n\n        if c > 0:\n            u = v - 1\n            if dsu_parent[u] != -1:\n                merge(v, u)\n\n        if c + 1 < M:\n            u = v + 1\n            if dsu_parent[u] != -1:\n                merge(v, u)\n\n    root = comp_node[find(0)]\n    ans = [0] * K\n\n    stack = [(root, -1)]\n    while stack:\n        u, last = stack.pop()\n\n        p = parent[u]\n        if p == -1 or T[p] > S[u]:\n            last = u\n\n        if u < K:\n            ans[u] = S[last]\n        else:\n            stack.append((left[u], last))\n            stack.append((right[u], last))\n\n    out = []\n    for i in range(N):\n        base = i * M\n        out.append(' '.join(str(ans[base + j]) for j in range(M)))\n\n    sys.stdout.write('\\n'.join(out))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M = data[0], data[1]\n    K = N * M\n    P = data[2:2 + K]\n\n    order = list(range(K))\n    order.sort(key=P.__getitem__)\n\n    max_nodes = 2 * K + 5\n    T = [0] * max_nodes\n    S = [0] * max_nodes\n    parent = [-1] * max_nodes\n    left = [-1] * max_nodes\n    right = [-1] * max_nodes\n\n    for i in range(K):\n        T[i] = P[i]\n        S[i] = P[i]\n\n    dsu_parent = [-1] * K\n    dsu_size = [1] * K\n    comp_node = [0] * K\n\n    next_node = K\n\n    def find(x):\n        while dsu_parent[x] != x:\n            dsu_parent[x] = dsu_parent[dsu_parent[x]]\n            x = dsu_parent[x]\n        return x\n\n    def merge(v, u):\n        nonlocal next_node\n        rv = find(v)\n        ru = find(u)\n        if rv == ru:\n            return\n\n        node_v = comp_node[rv]\n        node_u = comp_node[ru]\n\n        new = next_node\n        next_node += 1\n\n        T[new] = P[v]\n        S[new] = S[node_v] + S[node_u]\n        left[new] = node_v\n        right[new] = node_u\n        parent[node_v] = new\n        parent[node_u] = new\n\n        if dsu_size[rv] < dsu_size[ru]:\n            rv, ru = ru, rv\n\n        dsu_parent[ru] = rv\n        dsu_size[rv] += dsu_size[ru]\n        comp_node[rv] = new\n\n    for v in order:\n        dsu_parent[v] = v\n        dsu_size[v] = 1\n        comp_node[v] = v\n\n        r = v // M\n        c = v - r * M\n\n        if r > 0:\n            u = v - M\n            if dsu_parent[u] != -1:\n                merge(v, u)\n\n        if r + 1 < N:\n            u = v + M\n            if dsu_parent[u] != -1:\n                merge(v, u)\n\n        if c > 0:\n            u = v - 1\n            if dsu_parent[u] != -1:\n                merge(v, u)\n\n        if c + 1 < M:\n            u = v + 1\n            if dsu_parent[u] != -1:\n                merge(v, u)\n\n    root = comp_node[find(0)]\n    ans = [0] * K\n\n    stack = [(root, -1)]\n    while stack:\n        u, last = stack.pop()\n\n        p = parent[u]\n        if p == -1 or T[p] > S[u]:\n            last = u\n\n        if u < K:\n            ans[u] = S[last]\n        else:\n            stack.append((left[u], last))\n            stack.append((right[u], last))\n\n    out = []\n    for i in range(N):\n        base = i * M\n        out.append(' '.join(str(ans[base + j]) for j in range(M)))\n\n    sys.stdout.write('\\n'.join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.30544959999997445,
+            "counts": {
+                "AC": 150,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 150
+        }
+    }
+]

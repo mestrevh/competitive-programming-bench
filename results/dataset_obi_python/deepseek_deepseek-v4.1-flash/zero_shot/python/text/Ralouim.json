@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:43:28.535650+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 6.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 820,
+            "output_tokens": 13864,
+            "total_tokens": 14684
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.033274,
+            "total_cost": 0.033276
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    xs = [0] * n\n    ys = [0] * n\n    orig = []\n\n    p = 1\n    for i in range(n):\n        x = int(data[p])\n        y = int(data[p + 1])\n        p += 2\n        xs[i] = x\n        ys[i] = y\n        orig.append((x * x + y * y, i))\n\n    pairs = []\n    append = pairs.append\n\n    for i in range(n - 1):\n        xi = xs[i]\n        yi = ys[i]\n        base = i << 11\n        for j in range(i + 1, n):\n            dx = xi - xs[j]\n            dy = yi - ys[j]\n            d = dx * dx + dy * dy\n            append((d << 22) | base | j)\n\n    pairs.sort(reverse=True)\n    orig.sort(reverse=True)\n\n    best = [0] * n\n    new = [0] * n\n    touched = []\n    tappend = touched.append\n\n    ans = 1 if n > 0 else 0\n    op = 0\n    m = len(pairs)\n    idx = 0\n\n    while idx < m:\n        key = pairs[idx]\n        d = key >> 22\n\n        while op < n and orig[op][0] > d:\n            v = orig[op][1]\n            if best[v] < 1:\n                best[v] = 1\n            op += 1\n\n        while idx < m:\n            key = pairs[idx]\n            if (key >> 22) != d:\n                break\n\n            i = (key >> 11) & 2047\n            j = key & 2047\n\n            bi = best[i]\n            if bi:\n                cand = bi + 1\n                if cand > new[j]:\n                    if new[j] == 0:\n                        tappend(j)\n                    new[j] = cand\n                    if cand > ans:\n                        ans = cand\n\n            bj = best[j]\n            if bj:\n                cand = bj + 1\n                if cand > new[i]:\n                    if new[i] == 0:\n                        tappend(i)\n                    new[i] = cand\n                    if cand > ans:\n                        ans = cand\n\n            idx += 1\n\n        for v in touched:\n            nv = new[v]\n            if nv > best[v]:\n                best[v] = nv\n            new[v] = 0\n        touched.clear()\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    xs = [0] * n\n    ys = [0] * n\n    orig = []\n\n    p = 1\n    for i in range(n):\n        x = int(data[p])\n        y = int(data[p + 1])\n        p += 2\n        xs[i] = x\n        ys[i] = y\n        orig.append((x * x + y * y, i))\n\n    pairs = []\n    append = pairs.append\n\n    for i in range(n - 1):\n        xi = xs[i]\n        yi = ys[i]\n        base = i << 11\n        for j in range(i + 1, n):\n            dx = xi - xs[j]\n            dy = yi - ys[j]\n            d = dx * dx + dy * dy\n            append((d << 22) | base | j)\n\n    pairs.sort(reverse=True)\n    orig.sort(reverse=True)\n\n    best = [0] * n\n    new = [0] * n\n    touched = []\n    tappend = touched.append\n\n    ans = 1 if n > 0 else 0\n    op = 0\n    m = len(pairs)\n    idx = 0\n\n    while idx < m:\n        key = pairs[idx]\n        d = key >> 22\n\n        while op < n and orig[op][0] > d:\n            v = orig[op][1]\n            if best[v] < 1:\n                best[v] = 1\n            op += 1\n\n        while idx < m:\n            key = pairs[idx]\n            if (key >> 22) != d:\n                break\n\n            i = (key >> 11) & 2047\n            j = key & 2047\n\n            bi = best[i]\n            if bi:\n                cand = bi + 1\n                if cand > new[j]:\n                    if new[j] == 0:\n                        tappend(j)\n                    new[j] = cand\n                    if cand > ans:\n                        ans = cand\n\n            bj = best[j]\n            if bj:\n                cand = bj + 1\n                if cand > new[i]:\n                    if new[i] == 0:\n                        tappend(i)\n                    new[i] = cand\n                    if cand > ans:\n                        ans = cand\n\n            idx += 1\n\n        for v in touched:\n            nv = new[v]\n            if nv > best[v]:\n                best[v] = nv\n            new[v] = 0\n        touched.clear()\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 2.282723799999985,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

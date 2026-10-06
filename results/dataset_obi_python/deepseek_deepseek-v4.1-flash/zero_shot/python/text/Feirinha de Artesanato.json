@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:07:35.722262+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1351,
+            "output_tokens": 1504,
+            "total_tokens": 2855
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.00361,
+            "total_cost": 0.003614
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n\n    n = data[idx]\n    idx += 1\n\n    types = data[idx:idx + n]\n    idx += n\n\n    prices = data[idx:idx + n]\n    idx += n\n\n    c = data[idx]\n    idx += 1\n\n    customers = data[idx:idx + c]\n\n    h1 = []\n    h2 = []\n\n    for t, p in zip(types, prices):\n        if t == 1:\n            heapq.heappush(h1, p)\n        else:\n            heapq.heappush(h2, p)\n\n    total = 0\n\n    for u in customers:\n        if u == 0:\n            if not h1:\n                if h2:\n                    total += heapq.heappop(h2)\n            elif not h2:\n                total += heapq.heappop(h1)\n            else:\n                if h1[0] <= h2[0]:\n                    total += heapq.heappop(h1)\n                else:\n                    total += heapq.heappop(h2)\n        elif u == 1:\n            if h1:\n                total += heapq.heappop(h1)\n        else:\n            if h2:\n                total += heapq.heappop(h2)\n\n    print(total)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    idx = 0\n\n    n = data[idx]\n    idx += 1\n\n    types = data[idx:idx + n]\n    idx += n\n\n    prices = data[idx:idx + n]\n    idx += n\n\n    c = data[idx]\n    idx += 1\n\n    customers = data[idx:idx + c]\n\n    h1 = []\n    h2 = []\n\n    for t, p in zip(types, prices):\n        if t == 1:\n            heapq.heappush(h1, p)\n        else:\n            heapq.heappush(h2, p)\n\n    total = 0\n\n    for u in customers:\n        if u == 0:\n            if not h1:\n                if h2:\n                    total += heapq.heappop(h2)\n            elif not h2:\n                total += heapq.heappop(h1)\n            else:\n                if h1[0] <= h2[0]:\n                    total += heapq.heappop(h1)\n                else:\n                    total += heapq.heappop(h2)\n        elif u == 1:\n            if h1:\n                total += heapq.heappop(h1)\n        else:\n            if h2:\n                total += heapq.heappop(h2)\n\n    print(total)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09765670000001592,
+            "counts": {
+                "AC": 44,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 44
+        }
+    }
+]

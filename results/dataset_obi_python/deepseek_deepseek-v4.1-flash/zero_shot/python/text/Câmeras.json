@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:30:36.147612+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1005,
+            "output_tokens": 3866,
+            "total_tokens": 4871
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.009278,
+            "total_cost": 0.009281
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    blocked = [[False] * N for _ in range(M)]\n\n    for _ in range(K):\n        C = int(next(it))\n        L = int(next(it))\n        D = next(it)\n\n        c = C - 1\n        r = L - 1\n\n        if D == 'N':\n            for rr in range(0, r + 1):\n                blocked[rr][c] = True\n        elif D == 'S':\n            for rr in range(r, M):\n                blocked[rr][c] = True\n        elif D == 'L':\n            for cc in range(c, N):\n                blocked[r][cc] = True\n        else:  # D == 'O'\n            for cc in range(0, c + 1):\n                blocked[r][cc] = True\n\n    if blocked[0][0] or blocked[M - 1][N - 1]:\n        print(\"N\")\n        return\n\n    q = deque()\n    q.append((0, 0))\n    seen = [[False] * N for _ in range(M)]\n    seen[0][0] = True\n\n    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while q:\n        r, c = q.popleft()\n\n        if r == M - 1 and c == N - 1:\n            print(\"S\")\n            return\n\n        for dr, dc in directions:\n            nr = r + dr\n            nc = c + dc\n\n            if 0 <= nr < M and 0 <= nc < N:\n                if not seen[nr][nc] and not blocked[nr][nc]:\n                    seen[nr][nc] = True\n                    q.append((nr, nc))\n\n    print(\"N\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    blocked = [[False] * N for _ in range(M)]\n\n    for _ in range(K):\n        C = int(next(it))\n        L = int(next(it))\n        D = next(it)\n\n        c = C - 1\n        r = L - 1\n\n        if D == 'N':\n            for rr in range(0, r + 1):\n                blocked[rr][c] = True\n        elif D == 'S':\n            for rr in range(r, M):\n                blocked[rr][c] = True\n        elif D == 'L':\n            for cc in range(c, N):\n                blocked[r][cc] = True\n        else:  # D == 'O'\n            for cc in range(0, c + 1):\n                blocked[r][cc] = True\n\n    if blocked[0][0] or blocked[M - 1][N - 1]:\n        print(\"N\")\n        return\n\n    q = deque()\n    q.append((0, 0))\n    seen = [[False] * N for _ in range(M)]\n    seen[0][0] = True\n\n    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while q:\n        r, c = q.popleft()\n\n        if r == M - 1 and c == N - 1:\n            print(\"S\")\n            return\n\n        for dr, dc in directions:\n            nr = r + dr\n            nc = c + dc\n\n            if 0 <= nr < M and 0 <= nc < N:\n                if not seen[nr][nc] and not blocked[nr][nc]:\n                    seen[nr][nc] = True\n                    q.append((nr, nc))\n\n    print(\"N\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09331060000113212,
+            "counts": {
+                "AC": 60,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 60
+        }
+    }
+]

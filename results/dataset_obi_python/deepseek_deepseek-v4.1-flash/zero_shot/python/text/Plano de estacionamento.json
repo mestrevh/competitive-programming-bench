@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:39:52.720824+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 830,
+            "output_tokens": 4369,
+            "total_tokens": 5199
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.010486,
+            "total_cost": 0.010488
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N = data[0]\n    M = data[1]\n    vals = data[2:2 + M]\n\n    maxv = [0] * (4 * N + 5)\n    lazy = [0] * (4 * N + 5)\n\n    def build(node, l, r):\n        if l == r:\n            maxv[node] = -l\n            return\n        mid = (l + r) // 2\n        build(node * 2, l, mid)\n        build(node * 2 + 1, mid + 1, r)\n        maxv[node] = max(maxv[node * 2], maxv[node * 2 + 1])\n\n    def add(node, l, r, ql, qr):\n        if ql <= l and r <= qr:\n            maxv[node] += 1\n            lazy[node] += 1\n            return\n\n        left = node * 2\n        right = left + 1\n\n        if lazy[node]:\n            z = lazy[node]\n            maxv[left] += z\n            lazy[left] += z\n            maxv[right] += z\n            lazy[right] += z\n            lazy[node] = 0\n\n        mid = (l + r) // 2\n        if ql <= mid:\n            add(left, l, mid, ql, qr)\n        if qr > mid:\n            add(right, mid + 1, r, ql, qr)\n\n        maxv[node] = max(maxv[left], maxv[right])\n\n    build(1, 1, N)\n\n    ans = M\n    for i, v in enumerate(vals, 1):\n        add(1, 1, N, v, N)\n        if maxv[1] > 0:\n            ans = i - 1\n            break\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N = data[0]\n    M = data[1]\n    vals = data[2:2 + M]\n\n    maxv = [0] * (4 * N + 5)\n    lazy = [0] * (4 * N + 5)\n\n    def build(node, l, r):\n        if l == r:\n            maxv[node] = -l\n            return\n        mid = (l + r) // 2\n        build(node * 2, l, mid)\n        build(node * 2 + 1, mid + 1, r)\n        maxv[node] = max(maxv[node * 2], maxv[node * 2 + 1])\n\n    def add(node, l, r, ql, qr):\n        if ql <= l and r <= qr:\n            maxv[node] += 1\n            lazy[node] += 1\n            return\n\n        left = node * 2\n        right = left + 1\n\n        if lazy[node]:\n            z = lazy[node]\n            maxv[left] += z\n            lazy[left] += z\n            maxv[right] += z\n            lazy[right] += z\n            lazy[node] = 0\n\n        mid = (l + r) // 2\n        if ql <= mid:\n            add(left, l, mid, ql, qr)\n        if qr > mid:\n            add(right, mid + 1, r, ql, qr)\n\n        maxv[node] = max(maxv[left], maxv[right])\n\n    build(1, 1, N)\n\n    ans = M\n    for i, v in enumerate(vals, 1):\n        add(1, 1, N, v, N)\n        if maxv[1] > 0:\n            ans = i - 1\n            break\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.45180770000024495,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:31:50.913155+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1488,
+            "output_tokens": 5930,
+            "total_tokens": 7418
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.014232,
+            "total_cost": 0.014236
+        },
+        "raw_response": "```python\nimport sys\nfrom array import array\n\ndef main():\n    data = sys.stdin.buffer\n    first = data.readline().split()\n    if not first:\n        return\n\n    N = int(first[0])\n    M = int(first[1])\n    P = int(first[2])\n\n    rows = array('I', range(1, N + 1))\n    cols = array('I', range(1, M + 1))\n\n    for _ in range(P):\n        parts = data.readline().split()\n        op = parts[0]\n        a = int(parts[1]) - 1\n        b = int(parts[2]) - 1\n\n        if op == b'L':\n            rows[a], rows[b] = rows[b], rows[a]\n        else:\n            cols[a], cols[b] = cols[b], cols[a]\n\n    out = bytearray()\n    append = out.append\n    extend = out.extend\n\n    for r in rows:\n        base = (r - 1) * M\n        for j, c in enumerate(cols):\n            if j:\n                append(32)\n            extend(str(base + c).encode())\n        append(10)\n\n    sys.stdout.buffer.write(out)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom array import array\n\ndef main():\n    data = sys.stdin.buffer\n    first = data.readline().split()\n    if not first:\n        return\n\n    N = int(first[0])\n    M = int(first[1])\n    P = int(first[2])\n\n    rows = array('I', range(1, N + 1))\n    cols = array('I', range(1, M + 1))\n\n    for _ in range(P):\n        parts = data.readline().split()\n        op = parts[0]\n        a = int(parts[1]) - 1\n        b = int(parts[2]) - 1\n\n        if op == b'L':\n            rows[a], rows[b] = rows[b], rows[a]\n        else:\n            cols[a], cols[b] = cols[b], cols[a]\n\n    out = bytearray()\n    append = out.append\n    extend = out.extend\n\n    for r in rows:\n        base = (r - 1) * M\n        for j, c in enumerate(cols):\n            if j:\n                append(32)\n            extend(str(base + c).encode())\n        append(10)\n\n    sys.stdout.buffer.write(out)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4627364000007219,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:12:30.058854+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1498,
+            "output_tokens": 901,
+            "total_tokens": 2399
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.002162,
+            "total_cost": 0.002167
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    board = []\n    for _ in range(15):\n        board.append(list(map(int, sys.stdin.readline().split())))\n\n    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]\n\n    for i in range(15):\n        for j in range(15):\n            val = board[i][j]\n            if val == 0:\n                continue\n\n            for dr, dc in directions:\n                pi, pj = i - dr, j - dc\n                if 0 <= pi < 15 and 0 <= pj < 15 and board[pi][pj] == val:\n                    continue\n\n                ok = True\n                for k in range(1, 5):\n                    ni, nj = i + dr * k, j + dc * k\n                    if not (0 <= ni < 15 and 0 <= nj < 15) or board[ni][nj] != val:\n                        ok = False\n                        break\n\n                if ok:\n                    print(val)\n                    return\n\n    print(0)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    board = []\n    for _ in range(15):\n        board.append(list(map(int, sys.stdin.readline().split())))\n\n    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]\n\n    for i in range(15):\n        for j in range(15):\n            val = board[i][j]\n            if val == 0:\n                continue\n\n            for dr, dc in directions:\n                pi, pj = i - dr, j - dc\n                if 0 <= pi < 15 and 0 <= pj < 15 and board[pi][pj] == val:\n                    continue\n\n                ok = True\n                for k in range(1, 5):\n                    ni, nj = i + dr * k, j + dc * k\n                    if not (0 <= ni < 15 and 0 <= nj < 15) or board[ni][nj] != val:\n                        ok = False\n                        break\n\n                if ok:\n                    print(val)\n                    return\n\n    print(0)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06561739999983729,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

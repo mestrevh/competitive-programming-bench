@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:21:52.697946+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 700,
+            "output_tokens": 3552,
+            "total_tokens": 4252
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.008525,
+            "total_cost": 0.008527
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    p = data[1:1 + n]\n\n    edges = [False] * n\n    all_dark = True\n\n    for i in range(n):\n        if p[i] + p[(i + 1) % n] < 1000:\n            edges[i] = True\n        else:\n            all_dark = False\n\n    if all_dark:\n        print(n)\n        return\n\n    first_false = 0\n    while edges[first_false]:\n        first_false += 1\n\n    start = (first_false + 1) % n\n    cur = 0\n    ans = 0\n\n    for k in range(n - 1):\n        idx = (start + k) % n\n        if edges[idx]:\n            cur += 1\n            if cur > ans:\n                ans = cur\n        else:\n            cur = 0\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    p = data[1:1 + n]\n\n    edges = [False] * n\n    all_dark = True\n\n    for i in range(n):\n        if p[i] + p[(i + 1) % n] < 1000:\n            edges[i] = True\n        else:\n            all_dark = False\n\n    if all_dark:\n        print(n)\n        return\n\n    first_false = 0\n    while edges[first_false]:\n        first_false += 1\n\n    start = (first_false + 1) % n\n    cur = 0\n    ans = 0\n\n    for k in range(n - 1):\n        idx = (start + k) % n\n        if edges[idx]:\n            cur += 1\n            if cur > ans:\n                ans = cur\n        else:\n            cur = 0\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18999369999983173,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

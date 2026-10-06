@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:45:20.316128+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 695,
+            "output_tokens": 2635,
+            "total_tokens": 3330
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.006324,
+            "total_cost": 0.006326
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    lengths = data[1:1 + n]\n\n    total = sum(lengths)\n\n    if total % 2 != 0:\n        print(\"N\")\n        return\n\n    half = total // 2\n\n    positions = [0] * n\n    current = 0\n    for i in range(n - 1):\n        current += lengths[i]\n        positions[i + 1] = current\n\n    position_set = set(positions)\n\n    count = 0\n    for p in positions:\n        q = p + half\n        if q >= total:\n            q -= total\n        if q in position_set:\n            count += 1\n\n    if count // 2 >= 2:\n        print(\"S\")\n    else:\n        print(\"N\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    lengths = data[1:1 + n]\n\n    total = sum(lengths)\n\n    if total % 2 != 0:\n        print(\"N\")\n        return\n\n    half = total // 2\n\n    positions = [0] * n\n    current = 0\n    for i in range(n - 1):\n        current += lengths[i]\n        positions[i + 1] = current\n\n    position_set = set(positions)\n\n    count = 0\n    for p in positions:\n        q = p + half\n        if q >= total:\n            q -= total\n        if q in position_set:\n            count += 1\n\n    if count // 2 >= 2:\n        print(\"S\")\n    else:\n        print(\"N\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06605799999988449,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

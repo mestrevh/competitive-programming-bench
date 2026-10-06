@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:08:26.320344+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 9.5,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1022,
+            "output_tokens": 10659,
+            "total_tokens": 11681
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.025582,
+            "total_cost": 0.025585
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N = data[0]\n    M = data[1]\n    T = data[2:2 + M]\n\n    n = N\n    for t in T:\n        n -= n // t\n\n    S = n if n < 10000 else 10000\n\n    rev_d = [t - 1 for t in reversed(T)]\n\n    out = []\n    append = out.append\n\n    for k in range(1, S + 1):\n        p = k\n        for d in rev_d:\n            if d == 1:\n                p = (p << 1) - 1\n            elif d < p:\n                p += (p - 1) // d\n        append(str(p))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N = data[0]\n    M = data[1]\n    T = data[2:2 + M]\n\n    n = N\n    for t in T:\n        n -= n // t\n\n    S = n if n < 10000 else 10000\n\n    rev_d = [t - 1 for t in reversed(T)]\n\n    out = []\n    append = out.append\n\n    for k in range(1, S + 1):\n        p = k\n        for d in rev_d:\n            if d == 1:\n                p = (p << 1) - 1\n            elif d < p:\n                p += (p - 1) // d\n        append(str(p))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.5910542000001442,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

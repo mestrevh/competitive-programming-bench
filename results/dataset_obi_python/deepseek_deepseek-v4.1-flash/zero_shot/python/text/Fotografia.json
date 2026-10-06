@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:10:06.201786+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 841,
+            "output_tokens": 1041,
+            "total_tokens": 1882
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.002498,
+            "total_cost": 0.002501
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    A, L = data[0], data[1]\n    N = data[2]\n    area_photo = A * L\n\n    best_id = -1\n    best_waste = None\n\n    idx = 3\n    for i in range(1, N + 1):\n        X, Y = data[idx], data[idx + 1]\n        idx += 2\n\n        if (X >= A and Y >= L) or (X >= L and Y >= A):\n            waste = X * Y - area_photo\n            if best_waste is None or waste < best_waste or (waste == best_waste and i < best_id):\n                best_waste = waste\n                best_id = i\n\n    print(best_id)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    A, L = data[0], data[1]\n    N = data[2]\n    area_photo = A * L\n\n    best_id = -1\n    best_waste = None\n\n    idx = 3\n    for i in range(1, N + 1):\n        X, Y = data[idx], data[idx + 1]\n        idx += 2\n\n        if (X >= A and Y >= L) or (X >= L and Y >= A):\n            waste = X * Y - area_photo\n            if best_waste is None or waste < best_waste or (waste == best_waste and i < best_id):\n                best_waste = waste\n                best_id = i\n\n    print(best_id)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.060938299999861556,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

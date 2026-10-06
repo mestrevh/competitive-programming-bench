@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:17:47.188240+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1325,
+            "output_tokens": 8221,
+            "total_tokens": 9546
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.01973,
+            "total_cost": 0.019734
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m, k = data[0], data[1], data[2]\n    idx = 3\n    edges = []\n\n    for _ in range(m):\n        a, b, t = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n        edges.append((a, b, t))\n\n    parent = list(range(n + 1))\n    size = [1] * (n + 1)\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n        return True\n\n    components = n\n\n    for a, b, t in edges:\n        if t == 1:\n            if not union(a, b):\n                print(\"N\")\n                return\n            components -= 1\n\n    parent2 = list(range(n + 1))\n    size2 = [1] * (n + 1)\n\n    def find2(x):\n        while parent2[x] != x:\n            parent2[x] = parent2[parent2[x]]\n            x = parent2[x]\n        return x\n\n    def union2(a, b):\n        ra, rb = find2(a), find2(b)\n        if ra == rb:\n            return False\n        if size2[ra] < size2[rb]:\n            ra, rb = rb, ra\n        parent2[rb] = ra\n        size2[ra] += size2[rb]\n        return True\n\n    road_components = components\n    road_count = 0\n\n    for a, b, t in edges:\n        if t == 2:\n            road_count += 1\n            ra, rb = find(a), find(b)\n            if ra != rb and union2(ra, rb):\n                road_components -= 1\n\n    min_remove = road_count - components + road_components\n    print(\"S\" if min_remove <= k else \"N\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m, k = data[0], data[1], data[2]\n    idx = 3\n    edges = []\n\n    for _ in range(m):\n        a, b, t = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n        edges.append((a, b, t))\n\n    parent = list(range(n + 1))\n    size = [1] * (n + 1)\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n        return True\n\n    components = n\n\n    for a, b, t in edges:\n        if t == 1:\n            if not union(a, b):\n                print(\"N\")\n                return\n            components -= 1\n\n    parent2 = list(range(n + 1))\n    size2 = [1] * (n + 1)\n\n    def find2(x):\n        while parent2[x] != x:\n            parent2[x] = parent2[parent2[x]]\n            x = parent2[x]\n        return x\n\n    def union2(a, b):\n        ra, rb = find2(a), find2(b)\n        if ra == rb:\n            return False\n        if size2[ra] < size2[rb]:\n            ra, rb = rb, ra\n        parent2[rb] = ra\n        size2[ra] += size2[rb]\n        return True\n\n    road_components = components\n    road_count = 0\n\n    for a, b, t in edges:\n        if t == 2:\n            road_count += 1\n            ra, rb = find(a), find(b)\n            if ra != rb and union2(ra, rb):\n                road_components -= 1\n\n    min_remove = road_count - components + road_components\n    print(\"S\" if min_remove <= k else \"N\")\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14941379999982018,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

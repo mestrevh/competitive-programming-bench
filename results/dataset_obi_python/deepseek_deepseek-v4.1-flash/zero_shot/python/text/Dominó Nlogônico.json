@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:36:30.930948+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1449,
+            "output_tokens": 14182,
+            "total_tokens": 15631
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.034037,
+            "total_cost": 0.034041
+        },
+        "raw_response": "```python\nimport sys\nfrom bisect import bisect_right\n\ndef int_iter():\n    data = sys.stdin.buffer.read()\n    num = 0\n    in_num = False\n    for c in data:\n        if 48 <= c <= 57:\n            num = num * 10 + (c - 48)\n            in_num = True\n        else:\n            if in_num:\n                yield num\n                num = 0\n                in_num = False\n    if in_num:\n        yield num\n\ndef solve():\n    it = int_iter()\n    try:\n        n = next(it)\n    except StopIteration:\n        return\n\n    X = [0] * n\n    for i in range(n):\n        X[i] = next(it)\n\n    H = [0] * n\n    for i in range(n):\n        H[i] = next(it)\n    del it\n\n    ans = [0] * n\n    stack = []\n    br = bisect_right\n\n    for i in range(n - 1, -1, -1):\n        end = br(X, X[i] + H[i]) - 1\n        while stack and stack[-1][0] <= end:\n            if stack[-1][1] > end:\n                end = stack[-1][1]\n            stack.pop()\n        ans[i] = end - i + 1\n        stack.append((i, end))\n\n    sys.stdout.write(\" \".join(map(str, ans)))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\nfrom bisect import bisect_right\n\ndef int_iter():\n    data = sys.stdin.buffer.read()\n    num = 0\n    in_num = False\n    for c in data:\n        if 48 <= c <= 57:\n            num = num * 10 + (c - 48)\n            in_num = True\n        else:\n            if in_num:\n                yield num\n                num = 0\n                in_num = False\n    if in_num:\n        yield num\n\ndef solve():\n    it = int_iter()\n    try:\n        n = next(it)\n    except StopIteration:\n        return\n\n    X = [0] * n\n    for i in range(n):\n        X[i] = next(it)\n\n    H = [0] * n\n    for i in range(n):\n        H[i] = next(it)\n    del it\n\n    ans = [0] * n\n    stack = []\n    br = bisect_right\n\n    for i in range(n - 1, -1, -1):\n        end = br(X, X[i] + H[i]) - 1\n        while stack and stack[-1][0] <= end:\n            if stack[-1][1] > end:\n                end = stack[-1][1]\n            stack.pop()\n        ans[i] = end - i + 1\n        stack.append((i, end))\n\n    sys.stdout.write(\" \".join(map(str, ans)))\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.5609876999988046,
+            "counts": {
+                "AC": 73,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 73
+        }
+    }
+]

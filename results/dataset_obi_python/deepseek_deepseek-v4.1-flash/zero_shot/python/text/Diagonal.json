@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:34:04.739625+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1045,
+            "output_tokens": 5005,
+            "total_tokens": 6050
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.012012,
+            "total_cost": 0.012015
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    A = data[1:1 + n]\n\n    events = {}\n    for i, a in enumerate(A, start=1):\n        if a > 0:\n            left = i + 1\n            right = i + a\n            events[left] = events.get(left, 0) + 1\n            events[right + 1] = events.get(right + 1, 0) - 1\n\n    current = 0\n    answer = 0\n\n    for pos in sorted(events):\n        current += events[pos]\n        if current > answer:\n            answer = current\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    A = data[1:1 + n]\n\n    events = {}\n    for i, a in enumerate(A, start=1):\n        if a > 0:\n            left = i + 1\n            right = i + a\n            events[left] = events.get(left, 0) + 1\n            events[right + 1] = events.get(right + 1, 0) - 1\n\n    current = 0\n    answer = 0\n\n    for pos in sorted(events):\n        current += events[pos]\n        if current > answer:\n            answer = current\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3124095000021043,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

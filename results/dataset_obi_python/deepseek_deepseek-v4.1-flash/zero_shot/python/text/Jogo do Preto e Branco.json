@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:29:33.966316+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 833,
+            "output_tokens": 3378,
+            "total_tokens": 4211
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.008107,
+            "total_cost": 0.00811
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    L, C = data[0], data[1]\n    P = data[2]\n\n    black = [[False] * C for _ in range(L)]\n    idx = 3\n    for _ in range(P):\n        x = data[idx] - 1\n        y = data[idx + 1] - 1\n        idx += 2\n        black[x][y] = True\n\n    eligible_masks = [0] * L\n\n    for r in range(L):\n        mask = 0\n        for c in range(C):\n            if black[r][c]:\n                continue\n\n            ok = False\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < L and 0 <= nc < C and black[nr][nc]:\n                    ok = True\n                    break\n\n            if ok:\n                mask |= 1 << c\n\n        eligible_masks[r] = mask\n\n    popcount = [bin(i).count(\"1\") for i in range(1 << C)]\n    possible = [[] for _ in range(L)]\n\n    for r in range(L):\n        em = eligible_masks[r]\n        for m in range(1 << C):\n            if (m & ~em) == 0 and (m & (m << 1)) == 0:\n                possible[r].append(m)\n\n    dp = {0: 0}\n\n    for r in range(L):\n        ndp = {}\n        for prev, value in dp.items():\n            for m in possible[r]:\n                if m & prev == 0:\n                    new_value = value + popcount[m]\n                    if new_value > ndp.get(m, -1):\n                        ndp[m] = new_value\n        dp = ndp\n\n    print(max(dp.values()))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    L, C = data[0], data[1]\n    P = data[2]\n\n    black = [[False] * C for _ in range(L)]\n    idx = 3\n    for _ in range(P):\n        x = data[idx] - 1\n        y = data[idx + 1] - 1\n        idx += 2\n        black[x][y] = True\n\n    eligible_masks = [0] * L\n\n    for r in range(L):\n        mask = 0\n        for c in range(C):\n            if black[r][c]:\n                continue\n\n            ok = False\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < L and 0 <= nc < C and black[nr][nc]:\n                    ok = True\n                    break\n\n            if ok:\n                mask |= 1 << c\n\n        eligible_masks[r] = mask\n\n    popcount = [bin(i).count(\"1\") for i in range(1 << C)]\n    possible = [[] for _ in range(L)]\n\n    for r in range(L):\n        em = eligible_masks[r]\n        for m in range(1 << C):\n            if (m & ~em) == 0 and (m & (m << 1)) == 0:\n                possible[r].append(m)\n\n    dp = {0: 0}\n\n    for r in range(L):\n        ndp = {}\n        for prev, value in dp.items():\n            for m in possible[r]:\n                if m & prev == 0:\n                    new_value = value + popcount[m]\n                    if new_value > ndp.get(m, -1):\n                        ndp[m] = new_value\n        dp = ndp\n\n    print(max(dp.values()))\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07072169999992184,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

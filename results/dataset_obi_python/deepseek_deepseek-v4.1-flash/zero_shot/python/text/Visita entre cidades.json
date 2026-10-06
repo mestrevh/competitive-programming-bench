@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T00:08:32.912977+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 826,
+            "output_tokens": 1834,
+            "total_tokens": 2660
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.004402,
+            "total_cost": 0.004404
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, a, b = data[0], data[1], data[2]\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 3\n    for _ in range(n - 1):\n        p, q, d = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n        adj[p].append((q, d))\n        adj[q].append((p, d))\n\n    stack = [(a, 0, 0)]\n    while stack:\n        v, parent, dist = stack.pop()\n        if v == b:\n            print(dist)\n            return\n        for to, w in adj[v]:\n            if to != parent:\n                stack.append((to, v, dist + w))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, a, b = data[0], data[1], data[2]\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 3\n    for _ in range(n - 1):\n        p, q, d = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n        adj[p].append((q, d))\n        adj[q].append((p, d))\n\n    stack = [(a, 0, 0)]\n    while stack:\n        v, parent, dist = stack.pop()\n        if v == b:\n            print(dist)\n            return\n        for to, w in adj[v]:\n            if to != parent:\n                stack.append((to, v, dist + w))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0631628000001001,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:04:58.762049+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1140,
+            "output_tokens": 5881,
+            "total_tokens": 7021
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.014114,
+            "total_cost": 0.014118
+        },
+        "raw_response": "```python\nimport sys\nfrom bisect import bisect_left\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    F = next(it)\n\n    monsters = [next(it) for _ in range(N)]\n    powers = [next(it) for _ in range(F)]\n    bonuses = [next(it) for _ in range(F)]\n\n    fairies = sorted(zip(powers, bonuses), reverse=True)\n    monsters.sort()\n\n    defeated = 0\n\n    for power, bonus in fairies:\n        idx = bisect_left(monsters, power)\n        take = min(bonus, idx)\n        if take > 0:\n            del monsters[idx - take:idx]\n            defeated += take\n\n    print(defeated)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom bisect import bisect_left\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    F = next(it)\n\n    monsters = [next(it) for _ in range(N)]\n    powers = [next(it) for _ in range(F)]\n    bonuses = [next(it) for _ in range(F)]\n\n    fairies = sorted(zip(powers, bonuses), reverse=True)\n    monsters.sort()\n\n    defeated = 0\n\n    for power, bonus in fairies:\n        idx = bisect_left(monsters, power)\n        take = min(bonus, idx)\n        if take > 0:\n            del monsters[idx - take:idx]\n            defeated += take\n\n    print(defeated)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06887670000014623,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

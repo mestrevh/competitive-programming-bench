@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:33:24.261579+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 864,
+            "output_tokens": 823,
+            "total_tokens": 1687
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.001975,
+            "total_cost": 0.001978
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n\n    N = int(next(it))\n\n    word_to_topic = {}\n    topics = []\n\n    for _ in range(N):\n        topic = next(it)\n        topics.append(topic)\n\n        K = int(next(it))\n        for _ in range(K):\n            word = next(it)\n            word_to_topic[word] = topic\n\n    X = int(next(it))\n\n    counts = {topic: 0 for topic in topics}\n\n    for _ in range(X):\n        word = next(it)\n        topic = word_to_topic.get(word)\n        if topic is not None:\n            counts[topic] += 1\n\n    best_topic = None\n    best_count = -1\n\n    for topic in topics:\n        count = counts[topic]\n        if count > best_count or (count == best_count and (best_topic is None or topic < best_topic)):\n            best_count = count\n            best_topic = topic\n\n    sys.stdout.buffer.write(best_topic + b'\\n')\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n\n    N = int(next(it))\n\n    word_to_topic = {}\n    topics = []\n\n    for _ in range(N):\n        topic = next(it)\n        topics.append(topic)\n\n        K = int(next(it))\n        for _ in range(K):\n            word = next(it)\n            word_to_topic[word] = topic\n\n    X = int(next(it))\n\n    counts = {topic: 0 for topic in topics}\n\n    for _ in range(X):\n        word = next(it)\n        topic = word_to_topic.get(word)\n        if topic is not None:\n            counts[topic] += 1\n\n    best_topic = None\n    best_count = -1\n\n    for topic in topics:\n        count = counts[topic]\n        if count > best_count or (count == best_count and (best_topic is None or topic < best_topic)):\n            best_count = count\n            best_topic = topic\n\n    sys.stdout.buffer.write(best_topic + b'\\n')\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07516080000004877,
+            "counts": {
+                "AC": 51,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 51
+        }
+    }
+]

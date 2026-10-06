@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:00:58.580381+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 774,
+            "output_tokens": 1976,
+            "total_tokens": 2750
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.004742,
+            "total_cost": 0.004745
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    passwords = data[1:1 + n]\n\n    freq = Counter(passwords)\n    ans = 0\n\n    for s, c in freq.items():\n        subs = set()\n        L = len(s)\n        for i in range(L):\n            for j in range(i + 1, L + 1):\n                subs.add(s[i:j])\n\n        total = sum(freq.get(t, 0) for t in subs)\n        ans += c * (total - 1)\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    passwords = data[1:1 + n]\n\n    freq = Counter(passwords)\n    ans = 0\n\n    for s, c in freq.items():\n        subs = set()\n        L = len(s)\n        for i in range(L):\n            for j in range(i + 1, L + 1):\n                subs.add(s[i:j])\n\n        total = sum(freq.get(t, 0) for t in subs)\n        ans += c * (total - 1)\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1323251999999684,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

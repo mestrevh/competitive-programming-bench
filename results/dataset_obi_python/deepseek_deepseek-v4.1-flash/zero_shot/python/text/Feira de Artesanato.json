@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:07:22.238312+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1260,
+            "output_tokens": 3071,
+            "total_tokens": 4331
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.00737,
+            "total_cost": 0.007374
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    N = next(it)\n    T = next(it)\n\n    types = [next(it) for _ in range(N)]\n    prices = [next(it) for _ in range(N)]\n\n    C = next(it)\n    customers = [next(it) for _ in range(C)]\n\n    heaps = [[] for _ in range(T + 1)]\n\n    for t, p in zip(types, prices):\n        heaps[t].append(p)\n\n    global_heap = []\n\n    for t in range(1, T + 1):\n        if heaps[t]:\n            heapq.heapify(heaps[t])\n            global_heap.append((heaps[t][0], t))\n\n    heapq.heapify(global_heap)\n\n    ans = 0\n\n    for u in customers:\n        if u != 0:\n            if heaps[u]:\n                ans += heapq.heappop(heaps[u])\n                if heaps[u]:\n                    heapq.heappush(global_heap, (heaps[u][0], u))\n        else:\n            while global_heap:\n                price, t = global_heap[0]\n                if heaps[t] and heaps[t][0] == price:\n                    break\n                heapq.heappop(global_heap)\n\n            if global_heap:\n                price, t = heapq.heappop(global_heap)\n                heapq.heappop(heaps[t])\n                ans += price\n                if heaps[t]:\n                    heapq.heappush(global_heap, (heaps[t][0], t))\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    N = next(it)\n    T = next(it)\n\n    types = [next(it) for _ in range(N)]\n    prices = [next(it) for _ in range(N)]\n\n    C = next(it)\n    customers = [next(it) for _ in range(C)]\n\n    heaps = [[] for _ in range(T + 1)]\n\n    for t, p in zip(types, prices):\n        heaps[t].append(p)\n\n    global_heap = []\n\n    for t in range(1, T + 1):\n        if heaps[t]:\n            heapq.heapify(heaps[t])\n            global_heap.append((heaps[t][0], t))\n\n    heapq.heapify(global_heap)\n\n    ans = 0\n\n    for u in customers:\n        if u != 0:\n            if heaps[u]:\n                ans += heapq.heappop(heaps[u])\n                if heaps[u]:\n                    heapq.heappush(global_heap, (heaps[u][0], u))\n        else:\n            while global_heap:\n                price, t = global_heap[0]\n                if heaps[t] and heaps[t][0] == price:\n                    break\n                heapq.heappop(global_heap)\n\n            if global_heap:\n                price, t = heapq.heappop(global_heap)\n                heapq.heappop(heaps[t])\n                ans += price\n                if heaps[t]:\n                    heapq.heappush(global_heap, (heaps[t][0], t))\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19178420000002916,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

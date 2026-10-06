@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:23:56.175676+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 633,
+            "output_tokens": 4405,
+            "total_tokens": 5038
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.010572,
+            "total_cost": 0.010574
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if len(data) < 2:\n        return\n\n    a = data[0]\n    b = data[1]\n\n    length = max(len(a), len(b))\n    a = a.zfill(length)\n    b = b.zfill(length)\n\n    rem_a = []\n    rem_b = []\n\n    for i in range(length - 1, -1, -1):\n        da = a[i]\n        db = b[i]\n\n        if da < db:\n            rem_b.append(db)\n        elif db < da:\n            rem_a.append(da)\n        else:\n            rem_a.append(da)\n            rem_b.append(db)\n\n    def build(rem):\n        if not rem:\n            return -1\n        return int(''.join(reversed(rem)))\n\n    result = [build(rem_a), build(rem_b)]\n    result.sort()\n\n    print(result[0], result[1])\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if len(data) < 2:\n        return\n\n    a = data[0]\n    b = data[1]\n\n    length = max(len(a), len(b))\n    a = a.zfill(length)\n    b = b.zfill(length)\n\n    rem_a = []\n    rem_b = []\n\n    for i in range(length - 1, -1, -1):\n        da = a[i]\n        db = b[i]\n\n        if da < db:\n            rem_b.append(db)\n        elif db < da:\n            rem_a.append(da)\n        else:\n            rem_a.append(da)\n            rem_b.append(db)\n\n    def build(rem):\n        if not rem:\n            return -1\n        return int(''.join(reversed(rem)))\n\n    result = [build(rem_a), build(rem_b)]\n    result.sort()\n\n    print(result[0], result[1])\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11158599999907892,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

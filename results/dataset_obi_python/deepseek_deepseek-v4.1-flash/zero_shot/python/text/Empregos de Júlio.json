@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T22:51:20.948196+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1069,
+            "output_tokens": 17028,
+            "total_tokens": 18097
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.040867,
+            "total_cost": 0.04087
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n    b = data[2 + n:2 + 2 * n]\n\n    if k == 0:\n        ans = 0\n        for i in range(n):\n            ans += max(a[i], 2 * b[i])\n        print(ans)\n        return\n\n    base = sum(a)\n    c = [b[i] - a[i] for i in range(n)]\n\n    # Option 1: work less than k days as security, so no doubled pay.\n    pos = [x for x in c if x > 0]\n    pos.sort(reverse=True)\n    limit = k - 1\n    ans = base + sum(pos[:limit])\n\n    # Option 2: work at least k days as security.\n    d = [max(a[i], 2 * b[i]) for i in range(n)]\n    suffix = [0] * (n + 1)\n    for i in range(n - 1, -1, -1):\n        suffix[i] = suffix[i + 1] + d[i]\n\n    m = k - 1\n    heap = []\n    sum_top = 0\n    prefix_a = 0\n\n    for i in range(n):\n        # Consider day i as the k-th security day.\n        if i >= m:\n            val = prefix_a + sum_top + b[i] + suffix[i + 1]\n            if val > ans:\n                ans = val\n\n        # Add current day to the pool of possible normal security days before i.\n        if m > 0:\n            ci = c[i]\n            if len(heap) < m:\n                heapq.heappush(heap, ci)\n                sum_top += ci\n            elif ci > heap[0]:\n                sum_top += ci - heap[0]\n                heapq.heapreplace(heap, ci)\n\n        prefix_a += a[i]\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n    b = data[2 + n:2 + 2 * n]\n\n    if k == 0:\n        ans = 0\n        for i in range(n):\n            ans += max(a[i], 2 * b[i])\n        print(ans)\n        return\n\n    base = sum(a)\n    c = [b[i] - a[i] for i in range(n)]\n\n    # Option 1: work less than k days as security, so no doubled pay.\n    pos = [x for x in c if x > 0]\n    pos.sort(reverse=True)\n    limit = k - 1\n    ans = base + sum(pos[:limit])\n\n    # Option 2: work at least k days as security.\n    d = [max(a[i], 2 * b[i]) for i in range(n)]\n    suffix = [0] * (n + 1)\n    for i in range(n - 1, -1, -1):\n        suffix[i] = suffix[i + 1] + d[i]\n\n    m = k - 1\n    heap = []\n    sum_top = 0\n    prefix_a = 0\n\n    for i in range(n):\n        # Consider day i as the k-th security day.\n        if i >= m:\n            val = prefix_a + sum_top + b[i] + suffix[i + 1]\n            if val > ans:\n                ans = val\n\n        # Add current day to the pool of possible normal security days before i.\n        if m > 0:\n            ci = c[i]\n            if len(heap) < m:\n                heapq.heappush(heap, ci)\n                sum_top += ci\n            elif ci > heap[0]:\n                sum_top += ci - heap[0]\n                heapq.heapreplace(heap, ci)\n\n        prefix_a += a[i]\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10677979999996978,
+            "counts": {
+                "AC": 66,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 66
+        }
+    }
+]

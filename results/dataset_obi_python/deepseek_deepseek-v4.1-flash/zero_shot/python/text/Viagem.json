@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T00:08:20.047087+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 7.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1605,
+            "output_tokens": 9711,
+            "total_tokens": 11316
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.023306,
+            "total_cost": 0.023311
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read()\n    idx = 0\n    L = len(data)\n\n    def ni():\n        nonlocal idx\n        while idx < L and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < L and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    N = ni()\n    K = ni()\n\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(N - 1):\n        x = ni()\n        y = ni()\n        adj[x].append(y)\n        adj[y].append(x)\n\n    masks = [0] * (N + 1)\n    for i in range(1, N + 1):\n        m = 0\n        for j in range(K):\n            if ni() == 1:\n                m |= 1 << j\n        masks[i] = m\n\n    parent = [0] * (N + 1)\n    depth = [0] * (N + 1)\n    pref = [0] * (N + 1)\n\n    stack = [1]\n    pref[1] = masks[1]\n\n    while stack:\n        u = stack.pop()\n        for v in adj[u]:\n            if v != parent[u]:\n                parent[v] = u\n                depth[v] = depth[u] + 1\n                pref[v] = pref[u] ^ masks[v]\n                stack.append(v)\n\n    LOG = N.bit_length()\n    up = [parent]\n\n    for _ in range(1, LOG):\n        prev = up[-1]\n        curr = [0] * (N + 1)\n        for v in range(1, N + 1):\n            curr[v] = prev[prev[v]]\n        up.append(curr)\n\n    pc = [0] * 256\n    for i in range(1, 256):\n        pc[i] = pc[i >> 1] + (i & 1)\n\n    Q = ni()\n    out = []\n\n    for _ in range(Q):\n        x = ni()\n        y = ni()\n\n        u, v = x, y\n        if depth[u] < depth[v]:\n            u, v = v, u\n\n        diff = depth[u] - depth[v]\n        bit = 0\n        while diff:\n            if diff & 1:\n                u = up[bit][u]\n            diff >>= 1\n            bit += 1\n\n        if u != v:\n            for k in range(LOG - 1, -1, -1):\n                uk = up[k][u]\n                vk = up[k][v]\n                if uk != vk:\n                    u = uk\n                    v = vk\n            w = up[0][u]\n        else:\n            w = u\n\n        m = pref[x] ^ pref[y] ^ masks[w]\n        ans = (\n            pc[m & 255]\n            + pc[(m >> 8) & 255]\n            + pc[(m >> 16) & 255]\n            + pc[(m >> 24) & 255]\n            + pc[(m >> 32) & 255]\n            + pc[(m >> 40) & 255]\n            + pc[(m >> 48) & 255]\n            + pc[(m >> 56) & 255]\n        )\n        out.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read()\n    idx = 0\n    L = len(data)\n\n    def ni():\n        nonlocal idx\n        while idx < L and data[idx] <= 32:\n            idx += 1\n        num = 0\n        while idx < L and data[idx] > 32:\n            num = num * 10 + (data[idx] - 48)\n            idx += 1\n        return num\n\n    N = ni()\n    K = ni()\n\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(N - 1):\n        x = ni()\n        y = ni()\n        adj[x].append(y)\n        adj[y].append(x)\n\n    masks = [0] * (N + 1)\n    for i in range(1, N + 1):\n        m = 0\n        for j in range(K):\n            if ni() == 1:\n                m |= 1 << j\n        masks[i] = m\n\n    parent = [0] * (N + 1)\n    depth = [0] * (N + 1)\n    pref = [0] * (N + 1)\n\n    stack = [1]\n    pref[1] = masks[1]\n\n    while stack:\n        u = stack.pop()\n        for v in adj[u]:\n            if v != parent[u]:\n                parent[v] = u\n                depth[v] = depth[u] + 1\n                pref[v] = pref[u] ^ masks[v]\n                stack.append(v)\n\n    LOG = N.bit_length()\n    up = [parent]\n\n    for _ in range(1, LOG):\n        prev = up[-1]\n        curr = [0] * (N + 1)\n        for v in range(1, N + 1):\n            curr[v] = prev[prev[v]]\n        up.append(curr)\n\n    pc = [0] * 256\n    for i in range(1, 256):\n        pc[i] = pc[i >> 1] + (i & 1)\n\n    Q = ni()\n    out = []\n\n    for _ in range(Q):\n        x = ni()\n        y = ni()\n\n        u, v = x, y\n        if depth[u] < depth[v]:\n            u, v = v, u\n\n        diff = depth[u] - depth[v]\n        bit = 0\n        while diff:\n            if diff & 1:\n                u = up[bit][u]\n            diff >>= 1\n            bit += 1\n\n        if u != v:\n            for k in range(LOG - 1, -1, -1):\n                uk = up[k][u]\n                vk = up[k][v]\n                if uk != vk:\n                    u = uk\n                    v = vk\n            w = up[0][u]\n        else:\n            w = u\n\n        m = pref[x] ^ pref[y] ^ masks[w]\n        ans = (\n            pc[m & 255]\n            + pc[(m >> 8) & 255]\n            + pc[(m >> 16) & 255]\n            + pc[(m >> 24) & 255]\n            + pc[(m >> 32) & 255]\n            + pc[(m >> 40) & 255]\n            + pc[(m >> 48) & 255]\n            + pc[(m >> 56) & 255]\n        )\n        out.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 2.4760407000003397,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

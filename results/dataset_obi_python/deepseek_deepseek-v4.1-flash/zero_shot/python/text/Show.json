@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:52:43.504998+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 851,
+            "output_tokens": 1058,
+            "total_tokens": 1909
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.002539,
+            "total_cost": 0.002542
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    A, N, M = data[0], data[1], data[2]\n    rows = []\n    idx = 3\n\n    for _ in range(N):\n        rows.append(data[idx:idx + M])\n        idx += M\n\n    for i in range(N - 1, -1, -1):\n        count = 0\n        possible = False\n\n        for seat in rows[i]:\n            if seat == 0:\n                count += 1\n                if count >= A:\n                    possible = True\n                    break\n            else:\n                count = 0\n\n        if possible:\n            print(N - i)\n            return\n\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    A, N, M = data[0], data[1], data[2]\n    rows = []\n    idx = 3\n\n    for _ in range(N):\n        rows.append(data[idx:idx + M])\n        idx += M\n\n    for i in range(N - 1, -1, -1):\n        count = 0\n        possible = False\n\n        for seat in rows[i]:\n            if seat == 0:\n                count += 1\n                if count >= A:\n                    possible = True\n                    break\n            else:\n                count = 0\n\n        if possible:\n            print(N - i)\n            return\n\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07001529999979539,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

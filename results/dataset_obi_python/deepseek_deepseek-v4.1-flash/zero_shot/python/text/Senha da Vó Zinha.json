@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:52:32.508085+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1158,
+            "output_tokens": 9503,
+            "total_tokens": 10661
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.022807,
+            "total_cost": 0.022811
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n    password = data[3]\n    words = data[4:4 + M]\n    P = int(data[4 + M])\n\n    hash_positions = [i for i, ch in enumerate(password) if ch == '#']\n\n    choices = []\n    for w in words:\n        choices.append(sorted(set(w)))\n\n    CAP = 10**9 + 1\n    rem_prod = [1] * (M + 1)\n    for i in range(M - 1, -1, -1):\n        rem_prod[i] = min(CAP, rem_prod[i + 1] * len(choices[i]))\n\n    ans = list(password)\n\n    for i, pos in enumerate(hash_positions):\n        block = rem_prod[i + 1]\n        for ch in choices[i]:\n            if P > block:\n                P -= block\n            else:\n                ans[pos] = ch\n                break\n\n    sys.stdout.write(''.join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n    password = data[3]\n    words = data[4:4 + M]\n    P = int(data[4 + M])\n\n    hash_positions = [i for i, ch in enumerate(password) if ch == '#']\n\n    choices = []\n    for w in words:\n        choices.append(sorted(set(w)))\n\n    CAP = 10**9 + 1\n    rem_prod = [1] * (M + 1)\n    for i in range(M - 1, -1, -1):\n        rem_prod[i] = min(CAP, rem_prod[i + 1] * len(choices[i]))\n\n    ans = list(password)\n\n    for i, pos in enumerate(hash_positions):\n        block = rem_prod[i + 1]\n        for ch in choices[i]:\n            if P > block:\n                P -= block\n            else:\n                ans[pos] = ch\n                break\n\n    sys.stdout.write(''.join(ans))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0705190999997285,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

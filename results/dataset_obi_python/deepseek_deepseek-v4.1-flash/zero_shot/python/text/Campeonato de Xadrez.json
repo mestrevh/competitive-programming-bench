@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:22:30.844425+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1159,
+            "output_tokens": 3196,
+            "total_tokens": 4355
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.00767,
+            "total_cost": 0.007674
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M, K = data[0], data[1], data[2]\n    P = data[3:3 + N]\n\n    def possible(x):\n        wins = 0\n        groups = 0\n        for p in P:\n            if p < x:\n                wins += 1\n                if wins == M:\n                    groups += 1\n                    wins = 0\n                    if groups >= K:\n                        return True\n        return False\n\n    if not possible(100001):\n        print(-1)\n        return\n\n    lo, hi = 1, 100001\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if possible(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    print(lo)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M, K = data[0], data[1], data[2]\n    P = data[3:3 + N]\n\n    def possible(x):\n        wins = 0\n        groups = 0\n        for p in P:\n            if p < x:\n                wins += 1\n                if wins == M:\n                    groups += 1\n                    wins = 0\n                    if groups >= K:\n                        return True\n        return False\n\n    if not possible(100001):\n        print(-1)\n        return\n\n    lo, hi = 1, 100001\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if possible(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    print(lo)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11698369999976421,
+            "counts": {
+                "AC": 24,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 24
+        }
+    }
+]

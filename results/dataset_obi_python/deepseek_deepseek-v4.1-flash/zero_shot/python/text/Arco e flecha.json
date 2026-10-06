@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:11:03.974250+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 828,
+            "output_tokens": 5967,
+            "total_tokens": 6795
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.014321,
+            "total_cost": 0.014323
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    sys.setrecursionlimit(1_000_000)\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n\n    left = [0] * (n + 1)\n    right = [0] * (n + 1)\n    prio = [0] * (n + 1)\n    key = [0] * (n + 1)\n    cnt = [0] * (n + 1)\n    sz = [0] * (n + 1)\n\n    node_count = 0\n    seed = 123456789\n\n    def rnd():\n        nonlocal seed\n        seed = (seed * 1103515245 + 12345) & 0x7fffffff\n        return seed\n\n    def upd(t):\n        sz[t] = sz[left[t]] + sz[right[t]] + cnt[t]\n\n    def rotate_right(t):\n        l = left[t]\n        left[t] = right[l]\n        right[l] = t\n        upd(t)\n        upd(l)\n        return l\n\n    def rotate_left(t):\n        r = right[t]\n        right[t] = left[r]\n        left[r] = t\n        upd(t)\n        upd(r)\n        return r\n\n    def insert(t, k):\n        nonlocal node_count\n        if t == 0:\n            node_count += 1\n            key[node_count] = k\n            cnt[node_count] = 1\n            sz[node_count] = 1\n            prio[node_count] = rnd()\n            return node_count\n\n        if k == key[t]:\n            cnt[t] += 1\n            sz[t] += 1\n            return t\n\n        if k < key[t]:\n            left[t] = insert(left[t], k)\n            if prio[left[t]] < prio[t]:\n                t = rotate_right(t)\n        else:\n            right[t] = insert(right[t], k)\n            if prio[right[t]] < prio[t]:\n                t = rotate_left(t)\n\n        upd(t)\n        return t\n\n    def query(t, x):\n        res = 0\n        while t:\n            if key[t] <= x:\n                res += sz[left[t]] + cnt[t]\n                t = right[t]\n            else:\n                t = left[t]\n        return res\n\n    root = 0\n    total = 0\n    prev_penalty = 0\n    idx = 1\n\n    for _ in range(n):\n        x = int(data[idx])\n        y = int(data[idx + 1])\n        idx += 2\n\n        real_x = x + prev_penalty\n        real_y = y + prev_penalty\n        dist2 = real_x * real_x + real_y * real_y\n\n        penalty = query(root, dist2)\n        total += penalty\n        root = insert(root, dist2)\n        prev_penalty = penalty\n\n    sys.stdout.write(str(total))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    sys.setrecursionlimit(1_000_000)\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n\n    left = [0] * (n + 1)\n    right = [0] * (n + 1)\n    prio = [0] * (n + 1)\n    key = [0] * (n + 1)\n    cnt = [0] * (n + 1)\n    sz = [0] * (n + 1)\n\n    node_count = 0\n    seed = 123456789\n\n    def rnd():\n        nonlocal seed\n        seed = (seed * 1103515245 + 12345) & 0x7fffffff\n        return seed\n\n    def upd(t):\n        sz[t] = sz[left[t]] + sz[right[t]] + cnt[t]\n\n    def rotate_right(t):\n        l = left[t]\n        left[t] = right[l]\n        right[l] = t\n        upd(t)\n        upd(l)\n        return l\n\n    def rotate_left(t):\n        r = right[t]\n        right[t] = left[r]\n        left[r] = t\n        upd(t)\n        upd(r)\n        return r\n\n    def insert(t, k):\n        nonlocal node_count\n        if t == 0:\n            node_count += 1\n            key[node_count] = k\n            cnt[node_count] = 1\n            sz[node_count] = 1\n            prio[node_count] = rnd()\n            return node_count\n\n        if k == key[t]:\n            cnt[t] += 1\n            sz[t] += 1\n            return t\n\n        if k < key[t]:\n            left[t] = insert(left[t], k)\n            if prio[left[t]] < prio[t]:\n                t = rotate_right(t)\n        else:\n            right[t] = insert(right[t], k)\n            if prio[right[t]] < prio[t]:\n                t = rotate_left(t)\n\n        upd(t)\n        return t\n\n    def query(t, x):\n        res = 0\n        while t:\n            if key[t] <= x:\n                res += sz[left[t]] + cnt[t]\n                t = right[t]\n            else:\n                t = left[t]\n        return res\n\n    root = 0\n    total = 0\n    prev_penalty = 0\n    idx = 1\n\n    for _ in range(n):\n        x = int(data[idx])\n        y = int(data[idx + 1])\n        idx += 2\n\n        real_x = x + prev_penalty\n        real_y = y + prev_penalty\n        dist2 = real_x * real_x + real_y * real_y\n\n        penalty = query(root, dist2)\n        total += penalty\n        root = insert(root, dist2)\n        prev_penalty = penalty\n\n    sys.stdout.write(str(total))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 1.0,
+            "counts": {
+                "AC": 11,
+                "WA": 23,
+                "RE": 0,
+                "TLE": 5,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:11:57.556101+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1169,
+            "output_tokens": 2971,
+            "total_tokens": 4140
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.00713,
+            "total_cost": 0.007134
+        },
+        "raw_response": "```python\nimport sys\n\nMOD = 1000000007\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    G = int(data[0])\n    M = int(data[1])\n\n    parts = []\n    s = 0\n    h = 1\n    while True:\n        s += h * h\n        if s > G:\n            break\n        parts.append(s)\n        h += 1\n\n    if M == 1:\n        dp = [0] * (G + 1)\n        dp[0] = 1\n        for i in range(1, G + 1):\n            total = 0\n            for a in parts:\n                if a > i:\n                    break\n                total += dp[i - a]\n            dp[i] = total % MOD\n        print(dp[G] % MOD)\n    else:\n        INF = 10**9\n        min_parts = [INF] * (G + 1)\n        ways = [0] * (G + 1)\n        min_parts[0] = 0\n        ways[0] = 1\n\n        for i in range(1, G + 1):\n            best = INF\n            count = 0\n            for a in parts:\n                if a > i:\n                    break\n                prev = i - a\n                cand = min_parts[prev] + 1\n                if cand < best:\n                    best = cand\n                    count = ways[prev]\n                elif cand == best:\n                    count += ways[prev]\n            min_parts[i] = best\n            ways[i] = count % MOD\n\n        print(ways[G] % MOD)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\nMOD = 1000000007\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    G = int(data[0])\n    M = int(data[1])\n\n    parts = []\n    s = 0\n    h = 1\n    while True:\n        s += h * h\n        if s > G:\n            break\n        parts.append(s)\n        h += 1\n\n    if M == 1:\n        dp = [0] * (G + 1)\n        dp[0] = 1\n        for i in range(1, G + 1):\n            total = 0\n            for a in parts:\n                if a > i:\n                    break\n                total += dp[i - a]\n            dp[i] = total % MOD\n        print(dp[G] % MOD)\n    else:\n        INF = 10**9\n        min_parts = [INF] * (G + 1)\n        ways = [0] * (G + 1)\n        min_parts[0] = 0\n        ways[0] = 1\n\n        for i in range(1, G + 1):\n            best = INF\n            count = 0\n            for a in parts:\n                if a > i:\n                    break\n                prev = i - a\n                cand = min_parts[prev] + 1\n                if cand < best:\n                    best = cand\n                    count = ways[prev]\n                elif cand == best:\n                    count += ways[prev]\n            min_parts[i] = best\n            ways[i] = count % MOD\n\n        print(ways[G] % MOD)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.306350799999791,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

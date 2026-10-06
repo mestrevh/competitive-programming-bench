@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:35:34.075117+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 660,
+            "output_tokens": 888,
+            "total_tokens": 1548
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.002131,
+            "total_cost": 0.002133
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    vals = data[1:]\n    grid = [vals[i * n:(i + 1) * n] for i in range(n)]\n\n    INF = 10**9\n    dist = [[INF] * n for _ in range(n)]\n    dist[0][0] = 0\n\n    dq = deque()\n    dq.append((0, 0))\n\n    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while dq:\n        r, c = dq.popleft()\n        d = dist[r][c]\n\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < n and 0 <= nc < n:\n                cost = grid[nr][nc]\n                nd = d + cost\n\n                if nd < dist[nr][nc]:\n                    dist[nr][nc] = nd\n                    if cost == 0:\n                        dq.appendleft((nr, nc))\n                    else:\n                        dq.append((nr, nc))\n\n    print(dist[n - 1][n - 1])\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    vals = data[1:]\n    grid = [vals[i * n:(i + 1) * n] for i in range(n)]\n\n    INF = 10**9\n    dist = [[INF] * n for _ in range(n)]\n    dist[0][0] = 0\n\n    dq = deque()\n    dq.append((0, 0))\n\n    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while dq:\n        r, c = dq.popleft()\n        d = dist[r][c]\n\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < n and 0 <= nc < n:\n                cost = grid[nr][nc]\n                nd = d + cost\n\n                if nd < dist[nr][nc]:\n                    dist[nr][nc] = nd\n                    if cost == 0:\n                        dq.appendleft((nr, nc))\n                    else:\n                        dq.append((nr, nc))\n\n    print(dist[n - 1][n - 1])\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1385697999999138,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

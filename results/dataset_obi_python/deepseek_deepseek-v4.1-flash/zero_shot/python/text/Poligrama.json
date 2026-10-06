@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:40:15.580784+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 630,
+            "output_tokens": 3274,
+            "total_tokens": 3904
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.007858,
+            "total_cost": 0.007859
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    p = data[1]\n\n    for length in range(1, n):\n        if n % length != 0:\n            continue\n\n        base = [0] * 26\n        for ch in p[:length]:\n            base[ord(ch) - 97] += 1\n\n        ok = True\n        for start in range(length, n, length):\n            cnt = [0] * 26\n            for i in range(start, start + length):\n                cnt[ord(p[i]) - 97] += 1\n\n            if cnt != base:\n                ok = False\n                break\n\n        if ok:\n            print(p[:length])\n            return\n\n    print(\"*\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    p = data[1]\n\n    for length in range(1, n):\n        if n % length != 0:\n            continue\n\n        base = [0] * 26\n        for ch in p[:length]:\n            base[ord(ch) - 97] += 1\n\n        ok = True\n        for start in range(length, n, length):\n            cnt = [0] * 26\n            for i in range(start, start + length):\n                cnt[ord(p[i]) - 97] += 1\n\n            if cnt != base:\n                ok = False\n                break\n\n        if ok:\n            print(p[:length])\n            return\n\n    print(\"*\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06756309999991572,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

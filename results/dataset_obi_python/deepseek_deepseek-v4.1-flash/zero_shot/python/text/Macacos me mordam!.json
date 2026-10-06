@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:33:14.464424+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 873,
+            "output_tokens": 10425,
+            "total_tokens": 11298
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.02502,
+            "total_cost": 0.025023
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    pts = []\n    idx = 1\n    for _ in range(n):\n        x = int(data[idx])\n        h = int(data[idx + 1])\n        idx += 2\n        pts.append((x, h))\n\n    pts.sort()\n\n    hull = []\n    for p in pts:\n        while len(hull) >= 2:\n            a = hull[-2]\n            b = hull[-1]\n            c = p\n            cross = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])\n            if cross >= 0:\n                hull.pop()\n            else:\n                break\n        hull.append(p)\n\n    print(len(hull) - 1)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    pts = []\n    idx = 1\n    for _ in range(n):\n        x = int(data[idx])\n        h = int(data[idx + 1])\n        idx += 2\n        pts.append((x, h))\n\n    pts.sort()\n\n    hull = []\n    for p in pts:\n        while len(hull) >= 2:\n            a = hull[-2]\n            b = hull[-1]\n            c = p\n            cross = (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])\n            if cross >= 0:\n                hull.pop()\n            else:\n                break\n        hull.append(p)\n\n    print(len(hull) - 1)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.38275229999999283,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

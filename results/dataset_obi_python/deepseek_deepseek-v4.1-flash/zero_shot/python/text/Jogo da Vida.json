@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:21:42.218381+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1442,
+            "output_tokens": 745,
+            "total_tokens": 2187
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.001788,
+            "total_cost": 0.001792
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    q = int(data[1])\n    grid = [[1 if c == '1' else 0 for c in data[2 + i]] for i in range(n)]\n\n    for _ in range(q):\n        new_grid = [[0] * n for _ in range(n)]\n\n        for i in range(n):\n            for j in range(n):\n                alive = 0\n\n                for di in (-1, 0, 1):\n                    ni = i + di\n                    if 0 <= ni < n:\n                        for dj in (-1, 0, 1):\n                            if di == 0 and dj == 0:\n                                continue\n                            nj = j + dj\n                            if 0 <= nj < n:\n                                alive += grid[ni][nj]\n\n                if grid[i][j] == 1:\n                    new_grid[i][j] = 1 if alive == 2 or alive == 3 else 0\n                else:\n                    new_grid[i][j] = 1 if alive == 3 else 0\n\n        grid = new_grid\n\n    output = []\n    for row in grid:\n        output.append(''.join('1' if cell else '0' for cell in row))\n\n    sys.stdout.write('\\n'.join(output))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    q = int(data[1])\n    grid = [[1 if c == '1' else 0 for c in data[2 + i]] for i in range(n)]\n\n    for _ in range(q):\n        new_grid = [[0] * n for _ in range(n)]\n\n        for i in range(n):\n            for j in range(n):\n                alive = 0\n\n                for di in (-1, 0, 1):\n                    ni = i + di\n                    if 0 <= ni < n:\n                        for dj in (-1, 0, 1):\n                            if di == 0 and dj == 0:\n                                continue\n                            nj = j + dj\n                            if 0 <= nj < n:\n                                alive += grid[ni][nj]\n\n                if grid[i][j] == 1:\n                    new_grid[i][j] = 1 if alive == 2 or alive == 3 else 0\n                else:\n                    new_grid[i][j] = 1 if alive == 3 else 0\n\n        grid = new_grid\n\n    output = []\n    for row in grid:\n        output.append(''.join('1' if cell else '0' for cell in row))\n\n    sys.stdout.write('\\n'.join(output))\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19677099999989878,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

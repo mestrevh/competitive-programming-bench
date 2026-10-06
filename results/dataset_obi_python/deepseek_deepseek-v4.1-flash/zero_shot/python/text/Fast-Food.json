@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:04:05.483622+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1309,
+            "output_tokens": 26157,
+            "total_tokens": 27466
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.062777,
+            "total_cost": 0.062781
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    pts = []\n    INF = 10**30\n\n    minu = INF\n    maxu = -INF\n    minv = INF\n    maxv = -INF\n\n    ix = 1\n    iy = 1 + n\n\n    for i in range(n):\n        x = data[ix + i]\n        y = data[iy + i]\n        u = x + y\n        v = x - y\n        pts.append((u, v))\n\n        if u < minu:\n            minu = u\n        if u > maxu:\n            maxu = u\n        if v < minv:\n            minv = v\n        if v > maxv:\n            maxv = v\n\n    del data\n\n    def can(D):\n        pts_local = pts\n        u0 = minu + D\n        v0 = minv + D\n        u1 = maxu - D\n        v1 = minv + D\n        u2 = minu + D\n        v2 = maxv - D\n        u3 = maxu - D\n        v3 = maxv - D\n\n        # lower-left corner\n        rminu, rmaxu = INF, -INF\n        rminv, rmaxv = INF, -INF\n        for u, v in pts_local:\n            if u <= u0 and v <= v0:\n                continue\n            if u < rminu: rminu = u\n            if u > rmaxu: rmaxu = u\n            if v < rminv: rminv = v\n            if v > rmaxv: rmaxv = v\n            if rmaxu - rminu > D or rmaxv - rminv > D:\n                break\n        else:\n            return True\n\n        # lower-right corner\n        rminu, rmaxu = INF, -INF\n        rminv, rmaxv = INF, -INF\n        for u, v in pts_local:\n            if u >= u1 and v <= v1:\n                continue\n            if u < rminu: rminu = u\n            if u > rmaxu: rmaxu = u\n            if v < rminv: rminv = v\n            if v > rmaxv: rmaxv = v\n            if rmaxu - rminu > D or rmaxv - rminv > D:\n                break\n        else:\n            return True\n\n        # upper-left corner\n        rminu, rmaxu = INF, -INF\n        rminv, rmaxv = INF, -INF\n        for u, v in pts_local:\n            if u <= u2 and v >= v2:\n                continue\n            if u < rminu: rminu = u\n            if u > rmaxu: rmaxu = u\n            if v < rminv: rminv = v\n            if v > rmaxv: rmaxv = v\n            if rmaxu - rminu > D or rmaxv - rminv > D:\n                break\n        else:\n            return True\n\n        # upper-right corner\n        rminu, rmaxu = INF, -INF\n        rminv, rmaxv = INF, -INF\n        for u, v in pts_local:\n            if u >= u3 and v >= v3:\n                continue\n            if u < rminu: rminu = u\n            if u > rmaxu: rmaxu = u\n            if v < rminv: rminv = v\n            if v > rmaxv: rmaxv = v\n            if rmaxu - rminu > D or rmaxv - rminv > D:\n                break\n        else:\n            return True\n\n        return False\n\n    lo = 0\n    hi = max(maxu - minu, maxv - minv)\n\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    sys.stdout.write(str(lo))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    pts = []\n    INF = 10**30\n\n    minu = INF\n    maxu = -INF\n    minv = INF\n    maxv = -INF\n\n    ix = 1\n    iy = 1 + n\n\n    for i in range(n):\n        x = data[ix + i]\n        y = data[iy + i]\n        u = x + y\n        v = x - y\n        pts.append((u, v))\n\n        if u < minu:\n            minu = u\n        if u > maxu:\n            maxu = u\n        if v < minv:\n            minv = v\n        if v > maxv:\n            maxv = v\n\n    del data\n\n    def can(D):\n        pts_local = pts\n        u0 = minu + D\n        v0 = minv + D\n        u1 = maxu - D\n        v1 = minv + D\n        u2 = minu + D\n        v2 = maxv - D\n        u3 = maxu - D\n        v3 = maxv - D\n\n        # lower-left corner\n        rminu, rmaxu = INF, -INF\n        rminv, rmaxv = INF, -INF\n        for u, v in pts_local:\n            if u <= u0 and v <= v0:\n                continue\n            if u < rminu: rminu = u\n            if u > rmaxu: rmaxu = u\n            if v < rminv: rminv = v\n            if v > rmaxv: rmaxv = v\n            if rmaxu - rminu > D or rmaxv - rminv > D:\n                break\n        else:\n            return True\n\n        # lower-right corner\n        rminu, rmaxu = INF, -INF\n        rminv, rmaxv = INF, -INF\n        for u, v in pts_local:\n            if u >= u1 and v <= v1:\n                continue\n            if u < rminu: rminu = u\n            if u > rmaxu: rmaxu = u\n            if v < rminv: rminv = v\n            if v > rmaxv: rmaxv = v\n            if rmaxu - rminu > D or rmaxv - rminv > D:\n                break\n        else:\n            return True\n\n        # upper-left corner\n        rminu, rmaxu = INF, -INF\n        rminv, rmaxv = INF, -INF\n        for u, v in pts_local:\n            if u <= u2 and v >= v2:\n                continue\n            if u < rminu: rminu = u\n            if u > rmaxu: rmaxu = u\n            if v < rminv: rminv = v\n            if v > rmaxv: rmaxv = v\n            if rmaxu - rminu > D or rmaxv - rminv > D:\n                break\n        else:\n            return True\n\n        # upper-right corner\n        rminu, rmaxu = INF, -INF\n        rminv, rmaxv = INF, -INF\n        for u, v in pts_local:\n            if u >= u3 and v >= v3:\n                continue\n            if u < rminu: rminu = u\n            if u > rmaxu: rmaxu = u\n            if v < rminv: rminv = v\n            if v > rmaxv: rmaxv = v\n            if rmaxu - rminu > D or rmaxv - rminv > D:\n                break\n        else:\n            return True\n\n        return False\n\n    lo = 0\n    hi = max(maxu - minu, maxv - minv)\n\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    sys.stdout.write(str(lo))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.5767683000001398,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

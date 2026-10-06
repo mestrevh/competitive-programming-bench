@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:26:45.337104+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1395,
+            "output_tokens": 2562,
+            "total_tokens": 3957
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.006149,
+            "total_cost": 0.006153
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    L = next(it)\n    C = next(it)\n    D = next(it)\n\n    p = [[0] * C for _ in range(L)]\n    for i in range(L):\n        for j in range(C):\n            p[i][j] = next(it)\n\n    l1 = next(it) - 1\n    c1 = next(it) - 1\n    l2 = next(it) - 1\n    c2 = next(it) - 1\n\n    INF = 10**18\n    dist = [[INF] * C for _ in range(L)]\n\n    dist[l1][c1] = p[l1][c1]\n    heap = [(dist[l1][c1], l1, c1)]\n\n    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while heap:\n        d, r, c = heapq.heappop(heap)\n        if d != dist[r][c]:\n            continue\n\n        if r == l2 and c == c2:\n            break\n\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < L and 0 <= nc < C and p[nr][nc] != -1:\n                nd = d + p[nr][nc]\n                if nd < dist[nr][nc]:\n                    dist[nr][nc] = nd\n                    heapq.heappush(heap, (nd, nr, nc))\n\n    min_cost = dist[l2][c2] - p[l2][c2]\n    print(D // min_cost)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    L = next(it)\n    C = next(it)\n    D = next(it)\n\n    p = [[0] * C for _ in range(L)]\n    for i in range(L):\n        for j in range(C):\n            p[i][j] = next(it)\n\n    l1 = next(it) - 1\n    c1 = next(it) - 1\n    l2 = next(it) - 1\n    c2 = next(it) - 1\n\n    INF = 10**18\n    dist = [[INF] * C for _ in range(L)]\n\n    dist[l1][c1] = p[l1][c1]\n    heap = [(dist[l1][c1], l1, c1)]\n\n    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while heap:\n        d, r, c = heapq.heappop(heap)\n        if d != dist[r][c]:\n            continue\n\n        if r == l2 and c == c2:\n            break\n\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < L and 0 <= nc < C and p[nr][nc] != -1:\n                nd = d + p[nr][nc]\n                if nd < dist[nr][nc]:\n                    dist[nr][nc] = nd\n                    heapq.heappush(heap, (nd, nr, nc))\n\n    min_cost = dist[l2][c2] - p[l2][c2]\n    print(D // min_cost)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10926639999888721,
+            "counts": {
+                "AC": 51,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 51
+        }
+    }
+]

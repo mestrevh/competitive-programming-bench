@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:41:15.638443+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 777,
+            "output_tokens": 3122,
+            "total_tokens": 3899
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.007493,
+            "total_cost": 0.007495
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    nums = data[1:]\n    a = [nums[i * n:(i + 1) * n] for i in range(n)]\n\n    row_sums = [sum(row) for row in a]\n    col_sums = [sum(a[i][j] for i in range(n)) for j in range(n)]\n\n    m = Counter(row_sums).most_common(1)[0][0]\n\n    r = next(i for i, s in enumerate(row_sums) if s != m)\n    c = next(j for j, s in enumerate(col_sums) if s != m)\n\n    new_value = a[r][c]\n    original_value = m - row_sums[r] + new_value\n\n    print(original_value, new_value)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    nums = data[1:]\n    a = [nums[i * n:(i + 1) * n] for i in range(n)]\n\n    row_sums = [sum(row) for row in a]\n    col_sums = [sum(a[i][j] for i in range(n)) for j in range(n)]\n\n    m = Counter(row_sums).most_common(1)[0][0]\n\n    r = next(i for i, s in enumerate(row_sums) if s != m)\n    c = next(j for j, s in enumerate(col_sums) if s != m)\n\n    new_value = a[r][c]\n    original_value = m - row_sums[r] + new_value\n\n    print(original_value, new_value)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.075763299999835,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

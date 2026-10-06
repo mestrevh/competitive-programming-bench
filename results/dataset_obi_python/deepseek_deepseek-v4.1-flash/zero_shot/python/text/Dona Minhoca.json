@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T22:48:09.656818+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 785,
+            "output_tokens": 12040,
+            "total_tokens": 12825
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.028896,
+            "total_cost": 0.028898
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    adj = [[] for _ in range(n)]\n\n    idx = 1\n    for _ in range(n - 1):\n        x = data[idx] - 1\n        y = data[idx + 1] - 1\n        idx += 2\n        adj[x].append(y)\n        adj[y].append(x)\n\n    def farthest(start):\n        dist = [-1] * n\n        parent = [-1] * n\n        q = [start]\n        dist[start] = 0\n        far = start\n        maxd = 0\n        head = 0\n\n        while head < len(q):\n            v = q[head]\n            head += 1\n            dv = dist[v]\n\n            if dv > maxd:\n                maxd = dv\n                far = v\n\n            for u in adj[v]:\n                if dist[u] == -1:\n                    dist[u] = dv + 1\n                    parent[u] = v\n                    q.append(u)\n\n        return far, maxd, parent\n\n    A, _, _ = farthest(0)\n    B, D, parent = farthest(A)\n\n    path = []\n    cur = B\n    while True:\n        path.append(cur)\n        if cur == A:\n            break\n        cur = parent[cur]\n    path.reverse()\n\n    def count_depth(start, forbidden, depth):\n        if depth < 0:\n            return 0\n\n        cnt = 0\n        stack = [(start, forbidden, 0)]\n\n        while stack:\n            v, par, d = stack.pop()\n\n            if d == depth:\n                cnt += 1\n                continue\n\n            for u in adj[v]:\n                if u != par and u != forbidden:\n                    stack.append((u, v, d + 1))\n\n        return cnt\n\n    if D % 2 == 0:\n        R = D // 2\n        center = path[R]\n\n        total = 0\n        sum_sq = 0\n\n        for nb in adj[center]:\n            c = count_depth(nb, center, R - 1)\n            if c:\n                total += c\n                sum_sq += c * c\n\n        ans = (total * total - sum_sq) // 2\n        sys.stdout.write(f\"{D + 1}\\n{ans}\\n\")\n    else:\n        R = D // 2\n        c1 = path[R]\n        c2 = path[R + 1]\n\n        cnt1 = count_depth(c1, c2, R)\n        cnt2 = count_depth(c2, c1, R)\n\n        ans = cnt1 * cnt2\n        sys.stdout.write(f\"{D + 1}\\n{ans}\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    adj = [[] for _ in range(n)]\n\n    idx = 1\n    for _ in range(n - 1):\n        x = data[idx] - 1\n        y = data[idx + 1] - 1\n        idx += 2\n        adj[x].append(y)\n        adj[y].append(x)\n\n    def farthest(start):\n        dist = [-1] * n\n        parent = [-1] * n\n        q = [start]\n        dist[start] = 0\n        far = start\n        maxd = 0\n        head = 0\n\n        while head < len(q):\n            v = q[head]\n            head += 1\n            dv = dist[v]\n\n            if dv > maxd:\n                maxd = dv\n                far = v\n\n            for u in adj[v]:\n                if dist[u] == -1:\n                    dist[u] = dv + 1\n                    parent[u] = v\n                    q.append(u)\n\n        return far, maxd, parent\n\n    A, _, _ = farthest(0)\n    B, D, parent = farthest(A)\n\n    path = []\n    cur = B\n    while True:\n        path.append(cur)\n        if cur == A:\n            break\n        cur = parent[cur]\n    path.reverse()\n\n    def count_depth(start, forbidden, depth):\n        if depth < 0:\n            return 0\n\n        cnt = 0\n        stack = [(start, forbidden, 0)]\n\n        while stack:\n            v, par, d = stack.pop()\n\n            if d == depth:\n                cnt += 1\n                continue\n\n            for u in adj[v]:\n                if u != par and u != forbidden:\n                    stack.append((u, v, d + 1))\n\n        return cnt\n\n    if D % 2 == 0:\n        R = D // 2\n        center = path[R]\n\n        total = 0\n        sum_sq = 0\n\n        for nb in adj[center]:\n            c = count_depth(nb, center, R - 1)\n            if c:\n                total += c\n                sum_sq += c * c\n\n        ans = (total * total - sum_sq) // 2\n        sys.stdout.write(f\"{D + 1}\\n{ans}\\n\")\n    else:\n        R = D // 2\n        c1 = path[R]\n        c2 = path[R + 1]\n\n        cnt1 = count_depth(c1, c2, R)\n        cnt2 = count_depth(c2, c1, R)\n\n        ans = cnt1 * cnt2\n        sys.stdout.write(f\"{D + 1}\\n{ans}\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10038769999999886,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

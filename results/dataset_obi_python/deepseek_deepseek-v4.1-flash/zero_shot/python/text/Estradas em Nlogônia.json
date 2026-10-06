@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:00:27.284965+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1418,
+            "output_tokens": 38677,
+            "total_tokens": 40095
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.092825,
+            "total_cost": 0.092829
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n    N = int(next(it))\n    Q = int(next(it))\n\n    parent = list(range(N + 1))\n    size = [1] * (N + 1)\n    total = [0] * (N + 1)\n\n    # For each component, we store up to two possible active cities (endpoints)\n    # ep1_node[root], ep2_node[root] are the city indices.\n    # ep1_val[root], ep2_val[root] are the sum of distances from that city\n    # to all cities in the component.\n    ep1_node = list(range(N + 1))\n    ep1_val = [0] * (N + 1)\n    ep2_node = [0] * (N + 1)\n    ep2_val = [0] * (N + 1)\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    out = []\n    for _ in range(Q):\n        t = int(next(it))\n        if t == 1:\n            A = int(next(it))\n            B = int(next(it))\n            D = int(next(it))\n\n            ru = find(A)\n            rv = find(B)\n\n            # Get sum of distances from A to all cities in component ru\n            if ep1_node[ru] == A:\n                sumA = ep1_val[ru]\n            else:\n                sumA = ep2_val[ru]\n\n            # Get sum of distances from B to all cities in component rv\n            if ep1_node[rv] == B:\n                sumB = ep1_val[rv]\n            else:\n                sumB = ep2_val[rv]\n\n            sizeU = size[ru]\n            sizeV = size[rv]\n\n            cross = sizeV * sumA + sizeU * sumB + sizeU * sizeV * D\n            newS = total[ru] + total[rv] + cross\n            newSize = sizeU + sizeV\n\n            valA = sumA + sumB + sizeV * D\n            valB = sumA + sumB + sizeU * D\n\n            if sizeU >= sizeV:\n                newroot = ru\n                child = rv\n            else:\n                newroot = rv\n                child = ru\n\n            parent[child] = newroot\n            size[newroot] = newSize\n            total[newroot] = newS\n\n            ep1_node[newroot] = A\n            ep1_val[newroot] = valA\n            ep2_node[newroot] = B\n            ep2_val[newroot] = valB\n\n        else:\n            C = int(next(it))\n            root = find(C)\n            out.append(str(total[root]))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve() -> None:\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n    N = int(next(it))\n    Q = int(next(it))\n\n    parent = list(range(N + 1))\n    size = [1] * (N + 1)\n    total = [0] * (N + 1)\n\n    # For each component, we store up to two possible active cities (endpoints)\n    # ep1_node[root], ep2_node[root] are the city indices.\n    # ep1_val[root], ep2_val[root] are the sum of distances from that city\n    # to all cities in the component.\n    ep1_node = list(range(N + 1))\n    ep1_val = [0] * (N + 1)\n    ep2_node = [0] * (N + 1)\n    ep2_val = [0] * (N + 1)\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    out = []\n    for _ in range(Q):\n        t = int(next(it))\n        if t == 1:\n            A = int(next(it))\n            B = int(next(it))\n            D = int(next(it))\n\n            ru = find(A)\n            rv = find(B)\n\n            # Get sum of distances from A to all cities in component ru\n            if ep1_node[ru] == A:\n                sumA = ep1_val[ru]\n            else:\n                sumA = ep2_val[ru]\n\n            # Get sum of distances from B to all cities in component rv\n            if ep1_node[rv] == B:\n                sumB = ep1_val[rv]\n            else:\n                sumB = ep2_val[rv]\n\n            sizeU = size[ru]\n            sizeV = size[rv]\n\n            cross = sizeV * sumA + sizeU * sumB + sizeU * sizeV * D\n            newS = total[ru] + total[rv] + cross\n            newSize = sizeU + sizeV\n\n            valA = sumA + sumB + sizeV * D\n            valB = sumA + sumB + sizeU * D\n\n            if sizeU >= sizeV:\n                newroot = ru\n                child = rv\n            else:\n                newroot = rv\n                child = ru\n\n            parent[child] = newroot\n            size[newroot] = newSize\n            total[newroot] = newS\n\n            ep1_node[newroot] = A\n            ep1_val[newroot] = valA\n            ep2_node[newroot] = B\n            ep2_val[newroot] = valB\n\n        else:\n            C = int(next(it))\n            root = find(C)\n            out.append(str(total[root]))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4330343000000312,
+            "counts": {
+                "AC": 4,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 4
+        }
+    }
+]

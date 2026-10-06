@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:34:03.816543+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1081,
+            "output_tokens": 3921,
+            "total_tokens": 5002
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.00941,
+            "total_cost": 0.009414
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.readline\n    L, C = map(int, input().split())\n    grid = [input().strip() for _ in range(L)]\n\n    sr = sc = -1\n    for i in range(L):\n        j = grid[i].find('o')\n        if j != -1:\n            sr, sc = i, j\n            break\n\n    visited = [[False] * C for _ in range(L)]\n    q = deque([(sr, sc, 0)])\n    visited[sr][sc] = True\n\n    ans = (sr, sc, 0)\n    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while q:\n        r, c, d = q.popleft()\n        if d > ans[2]:\n            ans = (r, c, d)\n\n        for dr, dc in dirs:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < L and 0 <= nc < C:\n                if not visited[nr][nc] and grid[nr][nc] == 'H':\n                    visited[nr][nc] = True\n                    q.append((nr, nc, d + 1))\n\n    print(ans[0] + 1, ans[1] + 1)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.readline\n    L, C = map(int, input().split())\n    grid = [input().strip() for _ in range(L)]\n\n    sr = sc = -1\n    for i in range(L):\n        j = grid[i].find('o')\n        if j != -1:\n            sr, sc = i, j\n            break\n\n    visited = [[False] * C for _ in range(L)]\n    q = deque([(sr, sc, 0)])\n    visited[sr][sc] = True\n\n    ans = (sr, sc, 0)\n    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while q:\n        r, c, d = q.popleft()\n        if d > ans[2]:\n            ans = (r, c, d)\n\n        for dr, dc in dirs:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < L and 0 <= nc < C:\n                if not visited[nr][nc] and grid[nr][nc] == 'H':\n                    visited[nr][nc] = True\n                    q.append((nr, nc, d + 1))\n\n    print(ans[0] + 1, ans[1] + 1)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07298850000006496,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:45:07.036114+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1147,
+            "output_tokens": 5480,
+            "total_tokens": 6627
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.013152,
+            "total_cost": 0.013155
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    x1 = next(it)\n    x2 = next(it)\n\n    arr = []\n    for _ in range(n):\n        a = next(it)\n        b = next(it)\n        left = a * x1 + b\n        right = a * x2 + b\n        arr.append((left, -right, right))\n\n    arr.sort()\n\n    values = sorted(set(r for _, _, r in arr))\n    rank = {v: i + 1 for i, v in enumerate(values)}\n    m = len(values)\n\n    bit = [0] * (m + 1)\n    ans = 0\n    processed = 0\n\n    for _, _, r in arr:\n        idx = rank[r]\n\n        s = 0\n        j = idx - 1\n        while j > 0:\n            s += bit[j]\n            j -= j & -j\n\n        ans += processed - s\n\n        j = idx\n        while j <= m:\n            bit[j] += 1\n            j += j & -j\n\n        processed += 1\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    x1 = next(it)\n    x2 = next(it)\n\n    arr = []\n    for _ in range(n):\n        a = next(it)\n        b = next(it)\n        left = a * x1 + b\n        right = a * x2 + b\n        arr.append((left, -right, right))\n\n    arr.sort()\n\n    values = sorted(set(r for _, _, r in arr))\n    rank = {v: i + 1 for i, v in enumerate(values)}\n    m = len(values)\n\n    bit = [0] * (m + 1)\n    ans = 0\n    processed = 0\n\n    for _, _, r in arr:\n        idx = rank[r]\n\n        s = 0\n        j = idx - 1\n        while j > 0:\n            s += bit[j]\n            j -= j & -j\n\n        ans += processed - s\n\n        j = idx\n        while j <= m:\n            bit[j] += 1\n            j += j & -j\n\n        processed += 1\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.31586879999986195,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

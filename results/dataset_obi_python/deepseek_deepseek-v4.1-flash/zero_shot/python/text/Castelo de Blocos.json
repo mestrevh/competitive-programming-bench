@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:25:35.444914+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1167,
+            "output_tokens": 8599,
+            "total_tokens": 9766
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.020638,
+            "total_cost": 0.020641
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    M = next(it)\n    K = next(it)\n\n    out = [[] for _ in range(N + 1)]\n    indeg = [0] * (N + 1)\n\n    for _ in range(M):\n        u = next(it)\n        v = next(it)\n        out[u].append(v)\n        indeg[v] += 1\n\n    seq = [next(it) for _ in range(K)]\n\n    gone = [False] * (N + 1)\n    remaining = indeg[:]\n    ans = 0\n    q = deque()\n\n    for b in seq:\n        if gone[b]:\n            continue\n\n        gone[b] = True\n        q.append(b)\n\n        while q:\n            x = q.popleft()\n            for y in out[x]:\n                if gone[y]:\n                    continue\n\n                remaining[y] -= 1\n                if remaining[y] == 0 and indeg[y] > 0:\n                    gone[y] = True\n                    ans += 1\n                    q.append(y)\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    M = next(it)\n    K = next(it)\n\n    out = [[] for _ in range(N + 1)]\n    indeg = [0] * (N + 1)\n\n    for _ in range(M):\n        u = next(it)\n        v = next(it)\n        out[u].append(v)\n        indeg[v] += 1\n\n    seq = [next(it) for _ in range(K)]\n\n    gone = [False] * (N + 1)\n    remaining = indeg[:]\n    ans = 0\n    q = deque()\n\n    for b in seq:\n        if gone[b]:\n            continue\n\n        gone[b] = True\n        q.append(b)\n\n        while q:\n            x = q.popleft()\n            for y in out[x]:\n                if gone[y]:\n                    continue\n\n                remaining[y] -= 1\n                if remaining[y] == 0 and indeg[y] > 0:\n                    gone[y] = True\n                    ans += 1\n                    q.append(y)\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1942432000014378,
+            "counts": {
+                "AC": 15,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

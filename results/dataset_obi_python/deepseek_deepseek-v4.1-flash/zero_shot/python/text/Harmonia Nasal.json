@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:16:51.899669+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1034,
+            "output_tokens": 20732,
+            "total_tokens": 21766
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.049757,
+            "total_cost": 0.04976
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, K = data[0], data[1]\n    a = data[2:2 + N]\n    b = data[2 + N:2 + 2 * N]\n\n    base = 0\n    m = []\n\n    for i in range(N):\n        if b[i] <= a[i]:\n            base += a[i] - b[i]\n        m.append((min(a[i], b[i]), i))\n\n    m.sort(key=lambda x: x[0], reverse=True)\n\n    pref = [0] * (N + 1)\n    pos = [0] * N\n    mval = [0] * N\n\n    for idx, (val, original) in enumerate(m):\n        pref[idx + 1] = pref[idx] + val\n        pos[original] = idx\n        mval[original] = val\n\n    Kcap = min(K, N - 1)\n    ans = 0\n\n    for i in range(N):\n        g = a[i] - b[i] if b[i] <= a[i] else 0\n        base_excl = base - g\n\n        p = pos[i]\n        if p < Kcap:\n            top = pref[Kcap + 1] - mval[i]\n        else:\n            top = pref[Kcap]\n\n        val = a[i] + base_excl + top\n        if val > ans:\n            ans = val\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, K = data[0], data[1]\n    a = data[2:2 + N]\n    b = data[2 + N:2 + 2 * N]\n\n    base = 0\n    m = []\n\n    for i in range(N):\n        if b[i] <= a[i]:\n            base += a[i] - b[i]\n        m.append((min(a[i], b[i]), i))\n\n    m.sort(key=lambda x: x[0], reverse=True)\n\n    pref = [0] * (N + 1)\n    pos = [0] * N\n    mval = [0] * N\n\n    for idx, (val, original) in enumerate(m):\n        pref[idx + 1] = pref[idx] + val\n        pos[original] = idx\n        mval[original] = val\n\n    Kcap = min(K, N - 1)\n    ans = 0\n\n    for i in range(N):\n        g = a[i] - b[i] if b[i] <= a[i] else 0\n        base_excl = base - g\n\n        p = pos[i]\n        if p < Kcap:\n            top = pref[Kcap + 1] - mval[i]\n        else:\n            top = pref[Kcap]\n\n        val = a[i] + base_excl + top\n        if val > ans:\n            ans = val\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15122530000007828,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

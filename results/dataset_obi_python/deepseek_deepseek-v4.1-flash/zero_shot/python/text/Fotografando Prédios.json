@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:09:59.823668+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1176,
+            "output_tokens": 15491,
+            "total_tokens": 16667
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.037178,
+            "total_cost": 0.037182
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    n = data[0]\n    A = [0] + data[1:1 + n]\n    F = [0] + data[1 + n:1 + 2 * n]\n    del data\n\n    root = n + 1\n    nxt = [root] * (n + 2)\n    stack = []\n\n    for i in range(n, 0, -1):\n        ai = A[i]\n        while stack and A[stack[-1]] <= ai:\n            stack.pop()\n        if stack:\n            nxt[i] = stack[-1]\n        else:\n            nxt[i] = root\n        stack.append(i)\n\n    LOG = (n + 2).bit_length()\n    up = [[root] * (n + 2) for _ in range(LOG)]\n\n    for i in range(1, n + 1):\n        up[0][i] = nxt[i]\n    up[0][root] = root\n\n    for j in range(1, LOG):\n        prev = up[j - 1]\n        curr = up[j]\n        for i in range(1, n + 1):\n            curr[i] = prev[prev[i]]\n        curr[root] = root\n\n    depth = [0] * (n + 2)\n    prefA = [0] * (n + 2)\n    prefC = [0] * (n + 2)\n\n    for i in range(n, 0, -1):\n        p = nxt[i]\n        depth[i] = depth[p] + 1\n        prefA[i] = A[i] + prefA[p]\n        prefC[i] = depth[i] * A[i] + prefC[p]\n\n    ans = []\n\n    for i in range(1, n + 1):\n        f = F[i]\n        s = i + 1\n\n        if s > n or depth[s] < f:\n            ans.append(\"-1\")\n            continue\n\n        anc = s\n        d = f\n        bit = 0\n        while d:\n            if d & 1:\n                anc = up[bit][anc]\n            d >>= 1\n            bit += 1\n\n        t0 = prefA[s] - prefA[anc]\n        td = prefC[s] - prefC[anc]\n        res = (f - depth[s]) * t0 + td\n        ans.append(str(res))\n\n    sys.stdout.write(\" \".join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    n = data[0]\n    A = [0] + data[1:1 + n]\n    F = [0] + data[1 + n:1 + 2 * n]\n    del data\n\n    root = n + 1\n    nxt = [root] * (n + 2)\n    stack = []\n\n    for i in range(n, 0, -1):\n        ai = A[i]\n        while stack and A[stack[-1]] <= ai:\n            stack.pop()\n        if stack:\n            nxt[i] = stack[-1]\n        else:\n            nxt[i] = root\n        stack.append(i)\n\n    LOG = (n + 2).bit_length()\n    up = [[root] * (n + 2) for _ in range(LOG)]\n\n    for i in range(1, n + 1):\n        up[0][i] = nxt[i]\n    up[0][root] = root\n\n    for j in range(1, LOG):\n        prev = up[j - 1]\n        curr = up[j]\n        for i in range(1, n + 1):\n            curr[i] = prev[prev[i]]\n        curr[root] = root\n\n    depth = [0] * (n + 2)\n    prefA = [0] * (n + 2)\n    prefC = [0] * (n + 2)\n\n    for i in range(n, 0, -1):\n        p = nxt[i]\n        depth[i] = depth[p] + 1\n        prefA[i] = A[i] + prefA[p]\n        prefC[i] = depth[i] * A[i] + prefC[p]\n\n    ans = []\n\n    for i in range(1, n + 1):\n        f = F[i]\n        s = i + 1\n\n        if s > n or depth[s] < f:\n            ans.append(\"-1\")\n            continue\n\n        anc = s\n        d = f\n        bit = 0\n        while d:\n            if d & 1:\n                anc = up[bit][anc]\n            d >>= 1\n            bit += 1\n\n        t0 = prefA[s] - prefA[anc]\n        td = prefC[s] - prefC[anc]\n        res = (f - depth[s]) * t0 + td\n        ans.append(str(res))\n\n    sys.stdout.write(\" \".join(ans))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.23395219999997607,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

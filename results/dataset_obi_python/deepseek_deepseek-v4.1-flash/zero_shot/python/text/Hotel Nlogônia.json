@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:19:14.433462+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1583,
+            "output_tokens": 6423,
+            "total_tokens": 8006
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.015415,
+            "total_cost": 0.01542
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, d, w = data[0], data[1], data[2]\n    p = data[3:3 + n]\n\n    pref = [0] * (n + 1)\n    for i in range(n):\n        pref[i + 1] = pref[i] + p[i]\n\n    m = n - d + 1\n    q = [0] * m\n    for i in range(m):\n        q[i] = pref[i + d] - pref[i]\n\n    def possible(k):\n        dq = deque()\n        init_right = k - d\n\n        for i in range(init_right + 1):\n            v = q[i]\n            while dq and q[dq[-1]] <= v:\n                dq.pop()\n            dq.append(i)\n\n        for left in range(n - k + 1):\n            while dq[0] < left:\n                dq.popleft()\n\n            max_free = q[dq[0]]\n            total = pref[left + k] - pref[left]\n\n            if total - max_free <= w:\n                return True\n\n            nxt = left + k - d + 1\n            if nxt < m:\n                v = q[nxt]\n                while dq and q[dq[-1]] <= v:\n                    dq.pop()\n                dq.append(nxt)\n\n        return False\n\n    lo, hi = d, n\n    ans = d\n\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if possible(mid):\n            ans = mid\n            lo = mid + 1\n        else:\n            hi = mid - 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, d, w = data[0], data[1], data[2]\n    p = data[3:3 + n]\n\n    pref = [0] * (n + 1)\n    for i in range(n):\n        pref[i + 1] = pref[i] + p[i]\n\n    m = n - d + 1\n    q = [0] * m\n    for i in range(m):\n        q[i] = pref[i + d] - pref[i]\n\n    def possible(k):\n        dq = deque()\n        init_right = k - d\n\n        for i in range(init_right + 1):\n            v = q[i]\n            while dq and q[dq[-1]] <= v:\n                dq.pop()\n            dq.append(i)\n\n        for left in range(n - k + 1):\n            while dq[0] < left:\n                dq.popleft()\n\n            max_free = q[dq[0]]\n            total = pref[left + k] - pref[left]\n\n            if total - max_free <= w:\n                return True\n\n            nxt = left + k - d + 1\n            if nxt < m:\n                v = q[nxt]\n                while dq and q[dq[-1]] <= v:\n                    dq.pop()\n                dq.append(nxt)\n\n        return False\n\n    lo, hi = d, n\n    ans = d\n\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if possible(mid):\n            ans = mid\n            lo = mid + 1\n        else:\n            hi = mid - 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.9702342999999019,
+            "counts": {
+                "AC": 60,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 60
+        }
+    }
+]

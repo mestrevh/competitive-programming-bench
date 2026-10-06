@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:11:13.925857+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 870,
+            "output_tokens": 1115,
+            "total_tokens": 1985
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.002676,
+            "total_cost": 0.002679
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    q = next(it)\n\n    bit = [0] * (n + 1)\n    arr = [0] * (n + 1)\n\n    for i in range(1, n + 1):\n        v = next(it)\n        arr[i] = v\n        j = i\n        while j <= n:\n            bit[j] += v\n            j += j & -j\n\n    out = []\n\n    for _ in range(q):\n        t = next(it)\n        if t == 0:\n            k = next(it)\n            p = next(it)\n            delta = p - arr[k]\n            arr[k] = p\n            if delta:\n                j = k\n                while j <= n:\n                    bit[j] += delta\n                    j += j & -j\n        else:\n            k = next(it)\n            s = 0\n            j = k\n            while j > 0:\n                s += bit[j]\n                j -= j & -j\n            out.append(str(s))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    q = next(it)\n\n    bit = [0] * (n + 1)\n    arr = [0] * (n + 1)\n\n    for i in range(1, n + 1):\n        v = next(it)\n        arr[i] = v\n        j = i\n        while j <= n:\n            bit[j] += v\n            j += j & -j\n\n    out = []\n\n    for _ in range(q):\n        t = next(it)\n        if t == 0:\n            k = next(it)\n            p = next(it)\n            delta = p - arr[k]\n            arr[k] = p\n            if delta:\n                j = k\n                while j <= n:\n                    bit[j] += delta\n                    j += j & -j\n        else:\n            k = next(it)\n            s = 0\n            j = k\n            while j > 0:\n                s += bit[j]\n                j -= j & -j\n            out.append(str(s))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.269458200000372,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

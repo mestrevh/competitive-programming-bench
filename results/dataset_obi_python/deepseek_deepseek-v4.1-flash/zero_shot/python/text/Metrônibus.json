@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:35:25.497038+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1859,
+            "output_tokens": 8054,
+            "total_tokens": 9913
+        },
+        "cost_usd": {
+            "input_cost": 6e-06,
+            "output_cost": 0.01933,
+            "total_cost": 0.019335
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    K1 = next(it)\n    K2 = next(it)\n    P = next(it)\n\n    metro = [[] for _ in range(N)]\n    bus = [[] for _ in range(N)]\n\n    for _ in range(K1):\n        v = next(it) - 1\n        u = next(it) - 1\n        metro[v].append(u)\n        metro[u].append(v)\n\n    for _ in range(K2):\n        x = next(it) - 1\n        y = next(it) - 1\n        bus[x].append(y)\n        bus[y].append(x)\n\n    A = next(it) - 1\n    B = next(it) - 1\n\n    dist = [-1] * (2 * N)\n    dq = deque()\n\n    dist[A] = 1\n    dist[N + A] = 1\n    dq.append(A)\n    dq.append(N + A)\n\n    while dq:\n        s = dq.popleft()\n        d = dist[s]\n\n        if s < N:\n            for nb in metro[s]:\n                ns = nb\n                if dist[ns] == -1 or dist[ns] > d:\n                    dist[ns] = d\n                    dq.appendleft(ns)\n\n            ns = N + s\n            nd = d + 1\n            if dist[ns] == -1 or dist[ns] > nd:\n                dist[ns] = nd\n                dq.append(ns)\n        else:\n            node = s - N\n            for nb in bus[node]:\n                ns = N + nb\n                if dist[ns] == -1 or dist[ns] > d:\n                    dist[ns] = d\n                    dq.appendleft(ns)\n\n            ns = node\n            nd = d + 1\n            if dist[ns] == -1 or dist[ns] > nd:\n                dist[ns] = nd\n                dq.append(ns)\n\n    d1 = dist[B]\n    d2 = dist[N + B]\n\n    if d1 == -1 and d2 == -1:\n        print(-1)\n    elif d1 == -1:\n        print(d2 * P)\n    elif d2 == -1:\n        print(d1 * P)\n    else:\n        print(min(d1, d2) * P)\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    K1 = next(it)\n    K2 = next(it)\n    P = next(it)\n\n    metro = [[] for _ in range(N)]\n    bus = [[] for _ in range(N)]\n\n    for _ in range(K1):\n        v = next(it) - 1\n        u = next(it) - 1\n        metro[v].append(u)\n        metro[u].append(v)\n\n    for _ in range(K2):\n        x = next(it) - 1\n        y = next(it) - 1\n        bus[x].append(y)\n        bus[y].append(x)\n\n    A = next(it) - 1\n    B = next(it) - 1\n\n    dist = [-1] * (2 * N)\n    dq = deque()\n\n    dist[A] = 1\n    dist[N + A] = 1\n    dq.append(A)\n    dq.append(N + A)\n\n    while dq:\n        s = dq.popleft()\n        d = dist[s]\n\n        if s < N:\n            for nb in metro[s]:\n                ns = nb\n                if dist[ns] == -1 or dist[ns] > d:\n                    dist[ns] = d\n                    dq.appendleft(ns)\n\n            ns = N + s\n            nd = d + 1\n            if dist[ns] == -1 or dist[ns] > nd:\n                dist[ns] = nd\n                dq.append(ns)\n        else:\n            node = s - N\n            for nb in bus[node]:\n                ns = N + nb\n                if dist[ns] == -1 or dist[ns] > d:\n                    dist[ns] = d\n                    dq.appendleft(ns)\n\n            ns = node\n            nd = d + 1\n            if dist[ns] == -1 or dist[ns] > nd:\n                dist[ns] = nd\n                dq.append(ns)\n\n    d1 = dist[B]\n    d2 = dist[N + B]\n\n    if d1 == -1 and d2 == -1:\n        print(-1)\n    elif d1 == -1:\n        print(d2 * P)\n    elif d2 == -1:\n        print(d1 * P)\n    else:\n        print(min(d1, d2) * P)\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17260179999993852,
+            "counts": {
+                "AC": 82,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 82
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:12:46.449149+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1346,
+            "output_tokens": 3653,
+            "total_tokens": 4999
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.008767,
+            "total_cost": 0.008771
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    idx = 0\n    E = int(data[idx]); M = int(data[idx + 1]); D = int(data[idx + 2])\n    idx += 3\n\n    pos_start = idx\n    idx += 2 * M\n\n    neg_start = idx\n    idx += 2 * D\n\n    group = [0] * (E + 1)\n\n    for g in range(1, E // 3 + 1):\n        i = int(data[idx])\n        j = int(data[idx + 1])\n        k = int(data[idx + 2])\n        idx += 3\n        group[i] = g\n        group[j] = g\n        group[k] = g\n\n    ans = 0\n\n    for p in range(pos_start, pos_start + 2 * M, 2):\n        x = int(data[p])\n        y = int(data[p + 1])\n        if group[x] != group[y]:\n            ans += 1\n\n    for p in range(neg_start, neg_start + 2 * D, 2):\n        u = int(data[p])\n        v = int(data[p + 1])\n        if group[u] == group[v]:\n            ans += 1\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    idx = 0\n    E = int(data[idx]); M = int(data[idx + 1]); D = int(data[idx + 2])\n    idx += 3\n\n    pos_start = idx\n    idx += 2 * M\n\n    neg_start = idx\n    idx += 2 * D\n\n    group = [0] * (E + 1)\n\n    for g in range(1, E // 3 + 1):\n        i = int(data[idx])\n        j = int(data[idx + 1])\n        k = int(data[idx + 2])\n        idx += 3\n        group[i] = g\n        group[j] = g\n        group[k] = g\n\n    ans = 0\n\n    for p in range(pos_start, pos_start + 2 * M, 2):\n        x = int(data[p])\n        y = int(data[p + 1])\n        if group[x] != group[y]:\n            ans += 1\n\n    for p in range(neg_start, neg_start + 2 * D, 2):\n        u = int(data[p])\n        v = int(data[p + 1])\n        if group[u] == group[v]:\n            ans += 1\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1927603999999974,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

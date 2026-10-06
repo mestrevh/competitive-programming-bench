@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T22:53:05.923398+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 725,
+            "output_tokens": 1495,
+            "total_tokens": 2220
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.003588,
+            "total_cost": 0.00359
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    T = int(data[0])\n    N = int(data[1])\n    xs = list(map(int, data[2:2 + N]))\n    xs.sort()\n\n    ans = float(\"inf\")\n\n    for i in range(N):\n        if i == 0:\n            left = 0.0\n            right = (xs[0] + xs[1]) / 2.0\n        elif i == N - 1:\n            left = (xs[-2] + xs[-1]) / 2.0\n            right = float(T)\n        else:\n            left = (xs[i - 1] + xs[i]) / 2.0\n            right = (xs[i] + xs[i + 1]) / 2.0\n\n        ans = min(ans, right - left)\n\n    sys.stdout.write(f\"{ans:.2f}\\n\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    T = int(data[0])\n    N = int(data[1])\n    xs = list(map(int, data[2:2 + N]))\n    xs.sort()\n\n    ans = float(\"inf\")\n\n    for i in range(N):\n        if i == 0:\n            left = 0.0\n            right = (xs[0] + xs[1]) / 2.0\n        elif i == N - 1:\n            left = (xs[-2] + xs[-1]) / 2.0\n            right = float(T)\n        else:\n            left = (xs[i - 1] + xs[i]) / 2.0\n            right = (xs[i] + xs[i + 1]) / 2.0\n\n        ans = min(ans, right - left)\n\n    sys.stdout.write(f\"{ans:.2f}\\n\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07420970000009675,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

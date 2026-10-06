@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:54:23.944470+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 916,
+            "output_tokens": 1481,
+            "total_tokens": 2397
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003554,
+            "total_cost": 0.003557
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    vals = list(map(int, sys.stdin.read().split()))\n    unknown = [i for i, x in enumerate(vals) if x == -1]\n\n    limits = [\n        (1, 100),   # J\n        (0, 300),   # P\n        (0, 100),   # V\n        (0, 100),   # E\n        (0, 100),   # D\n    ]\n\n    ans = None\n\n    if len(unknown) == 1:\n        i = unknown[0]\n        for x in range(limits[i][0], limits[i][1] + 1):\n            cand = vals[:]\n            cand[i] = x\n            if cand[0] == cand[2] + cand[3] + cand[4] and cand[1] == 3 * cand[2] + cand[3]:\n                ans = cand\n                break\n    else:\n        i, j = unknown\n        for x in range(limits[i][0], limits[i][1] + 1):\n            for y in range(limits[j][0], limits[j][1] + 1):\n                cand = vals[:]\n                cand[i] = x\n                cand[j] = y\n                if cand[0] == cand[2] + cand[3] + cand[4] and cand[1] == 3 * cand[2] + cand[3]:\n                    ans = cand\n                    break\n            if ans is not None:\n                break\n\n    print(*ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    vals = list(map(int, sys.stdin.read().split()))\n    unknown = [i for i, x in enumerate(vals) if x == -1]\n\n    limits = [\n        (1, 100),   # J\n        (0, 300),   # P\n        (0, 100),   # V\n        (0, 100),   # E\n        (0, 100),   # D\n    ]\n\n    ans = None\n\n    if len(unknown) == 1:\n        i = unknown[0]\n        for x in range(limits[i][0], limits[i][1] + 1):\n            cand = vals[:]\n            cand[i] = x\n            if cand[0] == cand[2] + cand[3] + cand[4] and cand[1] == 3 * cand[2] + cand[3]:\n                ans = cand\n                break\n    else:\n        i, j = unknown\n        for x in range(limits[i][0], limits[i][1] + 1):\n            for y in range(limits[j][0], limits[j][1] + 1):\n                cand = vals[:]\n                cand[i] = x\n                cand[j] = y\n                if cand[0] == cand[2] + cand[3] + cand[4] and cand[1] == 3 * cand[2] + cand[3]:\n                    ans = cand\n                    break\n            if ans is not None:\n                break\n\n    print(*ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06310089999988122,
+            "counts": {
+                "AC": 124,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 124
+        }
+    }
+]

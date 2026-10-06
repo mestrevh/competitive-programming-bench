@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:31:11.014180+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 706,
+            "output_tokens": 7248,
+            "total_tokens": 7954
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.017395,
+            "total_cost": 0.017397
+        },
+        "raw_response": "```python\nimport sys\nfrom array import array\n\ndef ints_from_bytes(data):\n    num = 0\n    in_num = False\n    for b in data:\n        if 48 <= b <= 57:\n            num = num * 10 + (b - 48)\n            in_num = True\n        else:\n            if in_num:\n                yield num\n                num = 0\n                in_num = False\n    if in_num:\n        yield num\n\ndef main():\n    data = sys.stdin.buffer.read()\n    it = ints_from_bytes(data)\n\n    n = next(it)\n    arr = array('q', [0]) * n\n    for i in range(n):\n        arr[i] = next(it)\n\n    i = 0\n    j = n - 1\n    left = arr[i]\n    right = arr[j]\n    ops = 0\n\n    while i < j:\n        if left == right:\n            i += 1\n            j -= 1\n            if i <= j:\n                left = arr[i]\n                right = arr[j]\n        elif left < right:\n            i += 1\n            left += arr[i]\n            ops += 1\n        else:\n            j -= 1\n            right += arr[j]\n            ops += 1\n\n    sys.stdout.write(str(ops))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom array import array\n\ndef ints_from_bytes(data):\n    num = 0\n    in_num = False\n    for b in data:\n        if 48 <= b <= 57:\n            num = num * 10 + (b - 48)\n            in_num = True\n        else:\n            if in_num:\n                yield num\n                num = 0\n                in_num = False\n    if in_num:\n        yield num\n\ndef main():\n    data = sys.stdin.buffer.read()\n    it = ints_from_bytes(data)\n\n    n = next(it)\n    arr = array('q', [0]) * n\n    for i in range(n):\n        arr[i] = next(it)\n\n    i = 0\n    j = n - 1\n    left = arr[i]\n    right = arr[j]\n    ops = 0\n\n    while i < j:\n        if left == right:\n            i += 1\n            j -= 1\n            if i <= j:\n                left = arr[i]\n                right = arr[j]\n        elif left < right:\n            i += 1\n            left += arr[i]\n            ops += 1\n        else:\n            j -= 1\n            right += arr[j]\n            ops += 1\n\n    sys.stdout.write(str(ops))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2425309999998717,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

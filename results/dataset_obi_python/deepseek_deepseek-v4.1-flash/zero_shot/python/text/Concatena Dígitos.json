@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:28:42.547805+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1285,
+            "output_tokens": 875,
+            "total_tokens": 2160
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.0021,
+            "total_cost": 0.002104
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    q = next(it)\n\n    pref = [0] * (n + 1)\n    for i in range(1, n + 1):\n        pref[i] = pref[i - 1] + next(it)\n\n    out = []\n    for _ in range(q):\n        l = next(it)\n        r = next(it)\n        s = pref[r] - pref[l - 1]\n        ans = 11 * (r - l) * s\n        out.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    q = next(it)\n\n    pref = [0] * (n + 1)\n    for i in range(1, n + 1):\n        pref[i] = pref[i - 1] + next(it)\n\n    out = []\n    for _ in range(q):\n        l = next(it)\n        r = next(it)\n        s = pref[r] - pref[l - 1]\n        ans = 11 * (r - l) * s\n        out.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13230309999926249,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

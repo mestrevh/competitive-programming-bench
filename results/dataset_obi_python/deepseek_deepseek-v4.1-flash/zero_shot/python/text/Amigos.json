@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T21:10:07.615929+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1829,
+            "output_tokens": 49289,
+            "total_tokens": 51118
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.118294,
+            "total_cost": 0.118299
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    N, K = data[0], data[1]\n    top = data[2:2 + N]\n    bottom = data[2 + N:2 + 2 * N]\n\n    A = [i + 1 for i, x in enumerate(top) if x == 1]\n    B = [i + 1 for i, x in enumerate(bottom) if x == 1]\n\n    base = 0\n    l_arr = []\n    r_arr = []\n\n    for i in range(K):\n        a = A[i]\n        b = B[i]\n        if a < b:\n            L, R = a, b\n        else:\n            L, R = b, a\n\n        base += R - L\n        idx = i + 1\n        l_arr.append(L - idx)\n        r_arr.append(R - idx)\n\n    heappush = heapq.heappush\n    heappop = heapq.heappop\n\n    stack = []\n\n    for i in range(K):\n        l = l_arr[i]\n        r = r_arr[i]\n\n        # block = (size, lower_heap, upper_heap, low, high)\n        block = (1, [-l], [r], l, r)\n        stack.append(block)\n\n        while len(stack) >= 2 and stack[-2][4] >= stack[-1][3]:\n            B = stack.pop()\n            A = stack.pop()\n\n            if A[0] >= B[0]:\n                m = A[0] + B[0]\n                lower = A[1]\n                upper = A[2]\n                other = B\n            else:\n                m = A[0] + B[0]\n                lower = B[1]\n                upper = B[2]\n                other = A\n\n            for v in other[1]:\n                heappush(lower, v)\n            for v in other[2]:\n                heappush(lower, -v)\n\n            target = m\n\n            while len(lower) > target:\n                v = -heappop(lower)\n                heappush(upper, v)\n\n            while len(lower) < target:\n                v = heappop(upper)\n                heappush(lower, -v)\n\n            while lower and upper and -lower[0] > upper[0]:\n                max_l = -heappop(lower)\n                min_u = heappop(upper)\n                heappush(lower, -min_u)\n                heappush(upper, max_l)\n\n            low = -lower[0]\n            high = upper[0]\n            stack.append((m, lower, upper, low, high))\n\n    extra = 0\n    idx = 0\n\n    for m, lower, upper, low, high in stack:\n        y = low\n        for _ in range(m):\n            l = l_arr[idx]\n            r = r_arr[idx]\n            if y < l:\n                extra += l - y\n            elif y > r:\n                extra += y - r\n            idx += 1\n\n    ans = base + 2 * extra\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    N, K = data[0], data[1]\n    top = data[2:2 + N]\n    bottom = data[2 + N:2 + 2 * N]\n\n    A = [i + 1 for i, x in enumerate(top) if x == 1]\n    B = [i + 1 for i, x in enumerate(bottom) if x == 1]\n\n    base = 0\n    l_arr = []\n    r_arr = []\n\n    for i in range(K):\n        a = A[i]\n        b = B[i]\n        if a < b:\n            L, R = a, b\n        else:\n            L, R = b, a\n\n        base += R - L\n        idx = i + 1\n        l_arr.append(L - idx)\n        r_arr.append(R - idx)\n\n    heappush = heapq.heappush\n    heappop = heapq.heappop\n\n    stack = []\n\n    for i in range(K):\n        l = l_arr[i]\n        r = r_arr[i]\n\n        # block = (size, lower_heap, upper_heap, low, high)\n        block = (1, [-l], [r], l, r)\n        stack.append(block)\n\n        while len(stack) >= 2 and stack[-2][4] >= stack[-1][3]:\n            B = stack.pop()\n            A = stack.pop()\n\n            if A[0] >= B[0]:\n                m = A[0] + B[0]\n                lower = A[1]\n                upper = A[2]\n                other = B\n            else:\n                m = A[0] + B[0]\n                lower = B[1]\n                upper = B[2]\n                other = A\n\n            for v in other[1]:\n                heappush(lower, v)\n            for v in other[2]:\n                heappush(lower, -v)\n\n            target = m\n\n            while len(lower) > target:\n                v = -heappop(lower)\n                heappush(upper, v)\n\n            while len(lower) < target:\n                v = heappop(upper)\n                heappush(lower, -v)\n\n            while lower and upper and -lower[0] > upper[0]:\n                max_l = -heappop(lower)\n                min_u = heappop(upper)\n                heappush(lower, -min_u)\n                heappush(upper, max_l)\n\n            low = -lower[0]\n            high = upper[0]\n            stack.append((m, lower, upper, low, high))\n\n    extra = 0\n    idx = 0\n\n    for m, lower, upper, low, high in stack:\n        y = low\n        for _ in range(m):\n            l = l_arr[idx]\n            r = r_arr[idx]\n            if y < l:\n                extra += l - y\n            elif y > r:\n                extra += y - r\n            idx += 1\n\n    ans = base + 2 * extra\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2867140999987896,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

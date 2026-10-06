@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T22:52:11.153023+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1665,
+            "output_tokens": 3106,
+            "total_tokens": 4771
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.007454,
+            "total_cost": 0.007459
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.buffer.readline\n    N = int(input())\n    rows = [input().strip() for _ in range(N)]\n\n    labels = [-1] * N\n    comp = 0\n\n    for i in range(N):\n        if labels[i] == -1:\n            labels[i] = comp\n            row = rows[i]\n            for j in range(N):\n                if row[j] == 49:\n                    labels[j] = comp\n            comp += 1\n\n    E = int(input())\n    out = []\n\n    for _ in range(E):\n        parts = list(map(int, input().split()))\n        seen = set()\n        has_friend = False\n\n        for c in parts[1:]:\n            lab = labels[c - 1]\n            if lab in seen:\n                has_friend = True\n            else:\n                seen.add(lab)\n\n        out.append('S' if has_friend else 'N')\n\n    sys.stdout.write('\\n'.join(out))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.buffer.readline\n    N = int(input())\n    rows = [input().strip() for _ in range(N)]\n\n    labels = [-1] * N\n    comp = 0\n\n    for i in range(N):\n        if labels[i] == -1:\n            labels[i] = comp\n            row = rows[i]\n            for j in range(N):\n                if row[j] == 49:\n                    labels[j] = comp\n            comp += 1\n\n    E = int(input())\n    out = []\n\n    for _ in range(E):\n        parts = list(map(int, input().split()))\n        seen = set()\n        has_friend = False\n\n        for c in parts[1:]:\n            lab = labels[c - 1]\n            if lab in seen:\n                has_friend = True\n            else:\n                seen.add(lab)\n\n        out.append('S' if has_friend else 'N')\n\n    sys.stdout.write('\\n'.join(out))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4233486000000539,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

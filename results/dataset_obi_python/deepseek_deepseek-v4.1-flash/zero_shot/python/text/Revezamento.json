@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:46:23.657851+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1037,
+            "output_tokens": 5365,
+            "total_tokens": 6402
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.012876,
+            "total_cost": 0.012879
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    INF = 10**30\n\n    best1 = [[INF] * 4 for _ in range(2)]\n    best2 = [[INF] * 4 for _ in range(2)]\n    id1 = [[-1] * 4 for _ in range(2)]\n    id2 = [[-1] * 4 for _ in range(2)]\n    cnt = [0, 0]\n\n    idx = 1\n    pid = 0\n\n    for _ in range(n):\n        g = data[idx]\n        idx += 1\n        cnt[g] += 1\n\n        times = data[idx:idx + 4]\n        idx += 4\n\n        for s, val in enumerate(times):\n            if val < best1[g][s]:\n                best2[g][s] = best1[g][s]\n                id2[g][s] = id1[g][s]\n                best1[g][s] = val\n                id1[g][s] = pid\n            elif val < best2[g][s]:\n                best2[g][s] = val\n                id2[g][s] = pid\n\n        pid += 1\n\n    if cnt[0] < 2 or cnt[1] < 2:\n        print(-1)\n        return\n\n    def ordered_cost(g, a, b):\n        va = best1[g][a]\n        ia = id1[g][a]\n        vb = best1[g][b]\n        ib = id1[g][b]\n\n        if ia != ib:\n            return va + vb\n\n        return min(va + best2[g][b], best2[g][a] + vb)\n\n    def pair_cost(g, a, b):\n        return min(ordered_cost(g, a, b), ordered_cost(g, b, a))\n\n    cost_f = [INF] * 16\n    cost_m = [INF] * 16\n\n    for i in range(4):\n        for j in range(i + 1, 4):\n            mask = (1 << i) | (1 << j)\n            cost_f[mask] = pair_cost(0, i, j)\n            cost_m[mask] = pair_cost(1, i, j)\n\n    ans = INF\n    for mask in range(16):\n        if bin(mask).count(\"1\") == 2:\n            ans = min(ans, cost_f[mask] + cost_m[15 ^ mask])\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    INF = 10**30\n\n    best1 = [[INF] * 4 for _ in range(2)]\n    best2 = [[INF] * 4 for _ in range(2)]\n    id1 = [[-1] * 4 for _ in range(2)]\n    id2 = [[-1] * 4 for _ in range(2)]\n    cnt = [0, 0]\n\n    idx = 1\n    pid = 0\n\n    for _ in range(n):\n        g = data[idx]\n        idx += 1\n        cnt[g] += 1\n\n        times = data[idx:idx + 4]\n        idx += 4\n\n        for s, val in enumerate(times):\n            if val < best1[g][s]:\n                best2[g][s] = best1[g][s]\n                id2[g][s] = id1[g][s]\n                best1[g][s] = val\n                id1[g][s] = pid\n            elif val < best2[g][s]:\n                best2[g][s] = val\n                id2[g][s] = pid\n\n        pid += 1\n\n    if cnt[0] < 2 or cnt[1] < 2:\n        print(-1)\n        return\n\n    def ordered_cost(g, a, b):\n        va = best1[g][a]\n        ia = id1[g][a]\n        vb = best1[g][b]\n        ib = id1[g][b]\n\n        if ia != ib:\n            return va + vb\n\n        return min(va + best2[g][b], best2[g][a] + vb)\n\n    def pair_cost(g, a, b):\n        return min(ordered_cost(g, a, b), ordered_cost(g, b, a))\n\n    cost_f = [INF] * 16\n    cost_m = [INF] * 16\n\n    for i in range(4):\n        for j in range(i + 1, 4):\n            mask = (1 << i) | (1 << j)\n            cost_f[mask] = pair_cost(0, i, j)\n            cost_m[mask] = pair_cost(1, i, j)\n\n    ans = INF\n    for mask in range(16):\n        if bin(mask).count(\"1\") == 2:\n            ans = min(ans, cost_f[mask] + cost_m[15 ^ mask])\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12429280000014842,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

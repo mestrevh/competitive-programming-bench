@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-05T23:53:29.073507+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 952,
+            "output_tokens": 1466,
+            "total_tokens": 2418
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003518,
+            "total_cost": 0.003521
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    M = next(it)\n    P = next(it)\n\n    stones = set()\n    for _ in range(P):\n        c = next(it)\n        l = next(it)\n        stones.add((c, l))\n\n    SC = next(it)\n    SL = next(it)\n    RC = next(it)\n    RL = next(it)\n\n    start = (SC, SL)\n    target = (RC, RL)\n\n    q = deque([start])\n    visited = {start}\n\n    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while q:\n        c, l = q.popleft()\n\n        if (c, l) == target:\n            print(\"S\")\n            return\n\n        for dc, dl in directions:\n            for d in range(1, 4):\n                nc = c + dc * d\n                nl = l + dl * d\n                nxt = (nc, nl)\n                if nxt in stones and nxt not in visited:\n                    visited.add(nxt)\n                    q.append(nxt)\n\n    print(\"N\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    M = next(it)\n    P = next(it)\n\n    stones = set()\n    for _ in range(P):\n        c = next(it)\n        l = next(it)\n        stones.add((c, l))\n\n    SC = next(it)\n    SL = next(it)\n    RC = next(it)\n    RL = next(it)\n\n    start = (SC, SL)\n    target = (RC, RL)\n\n    q = deque([start])\n    visited = {start}\n\n    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    while q:\n        c, l = q.popleft()\n\n        if (c, l) == target:\n            print(\"S\")\n            return\n\n        for dc, dl in directions:\n            for d in range(1, 4):\n                nc = c + dc * d\n                nl = l + dl * d\n                nxt = (nc, nl)\n                if nxt in stones and nxt not in visited:\n                    visited.add(nxt)\n                    q.append(nxt)\n\n    print(\"N\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07617359999949258,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]
