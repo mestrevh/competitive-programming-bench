@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T17:58:12.791374+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 553,
+            "output_tokens": 2669,
+            "total_tokens": 3222
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.001334,
+            "total_cost": 0.001346
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    \n    fact = 1\n    for i in range(2, n + 1):\n        fact *= i\n    \n    # Em todas as N! permutações, cada valor aparece exatamente (N-1)! vezes\n    # em cada posição. Logo, a soma esperada em cada posição é:\n    #   (N-1)! * (1 + 2 + ... + N)\n    # O dígito faltante em cada posição é essa soma esperada menos a soma\n    # dos dígitos dados naquela posição.\n    expected = (fact // n) * (n * (n + 1) // 2)\n    \n    nums = list(map(int, data[1:1 + (fact - 1) * n]))\n    \n    out = []\n    for j in range(n):\n        s = expected - sum(nums[j::n])\n        out.append(str(s))\n    \n    sys.stdout.write(' '.join(out) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    \n    fact = 1\n    for i in range(2, n + 1):\n        fact *= i\n    \n    # Em todas as N! permutações, cada valor aparece exatamente (N-1)! vezes\n    # em cada posição. Logo, a soma esperada em cada posição é:\n    #   (N-1)! * (1 + 2 + ... + N)\n    # O dígito faltante em cada posição é essa soma esperada menos a soma\n    # dos dígitos dados naquela posição.\n    expected = (fact // n) * (n * (n + 1) // 2)\n    \n    nums = list(map(int, data[1:1 + (fact - 1) * n]))\n    \n    out = []\n    for j in range(n):\n        s = expected - sum(nums[j::n])\n        out.append(str(s))\n    \n    sys.stdout.write(' '.join(out) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07568679999531014,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

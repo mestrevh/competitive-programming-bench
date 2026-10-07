@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:40:44.631817+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1147,
+            "output_tokens": 7412,
+            "total_tokens": 8559
+        },
+        "cost_usd": {
+            "input_cost": 2.5e-05,
+            "output_cost": 0.003706,
+            "total_cost": 0.003731
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); m = int(data[1]); k = int(data[2])\n    children = [[] for _ in range(n + 1)]\n    indeg = [0] * (n + 1)\n    p = 3\n    for _ in range(m):\n        u = int(data[p]); v = int(data[p + 1])\n        p += 2\n        # u sustenta v (v se apoia em u)\n        children[u].append(v)\n        indeg[v] += 1  # número de apoios diretos de v\n    alive = [1] * (n + 1)\n    broken = 0\n    stack = []\n    for _ in range(k):\n        b = int(data[p]); p += 1\n        if alive[b]:\n            # remoção bem-sucedida (não conta como quebra)\n            alive[b] = 0\n            stack.append(b)\n            while stack:\n                u = stack.pop()\n                for c in children[u]:\n                    if alive[c]:\n                        indeg[c] -= 1\n                        if indeg[c] == 0:\n                            alive[c] = 0\n                            broken += 1\n                            stack.append(c)\n        # se b já quebrou antes, nada acontece\n    print(broken)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); m = int(data[1]); k = int(data[2])\n    children = [[] for _ in range(n + 1)]\n    indeg = [0] * (n + 1)\n    p = 3\n    for _ in range(m):\n        u = int(data[p]); v = int(data[p + 1])\n        p += 2\n        # u sustenta v (v se apoia em u)\n        children[u].append(v)\n        indeg[v] += 1  # número de apoios diretos de v\n    alive = [1] * (n + 1)\n    broken = 0\n    stack = []\n    for _ in range(k):\n        b = int(data[p]); p += 1\n        if alive[b]:\n            # remoção bem-sucedida (não conta como quebra)\n            alive[b] = 0\n            stack.append(b)\n            while stack:\n                u = stack.pop()\n                for c in children[u]:\n                    if alive[c]:\n                        indeg[c] -= 1\n                        if indeg[c] == 0:\n                            alive[c] = 0\n                            broken += 1\n                            stack.append(c)\n        # se b já quebrou antes, nada acontece\n    print(broken)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14145239999925252,
+            "counts": {
+                "AC": 15,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

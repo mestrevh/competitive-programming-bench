@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T17:23:07.019338+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 706,
+            "output_tokens": 1402,
+            "total_tokens": 2108
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.000701,
+            "total_cost": 0.000716
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    T = int(data[0])\n    n = int(data[1])\n    xs = sorted(int(data[2 + i]) for i in range(n))\n\n    # Trabalha com tamanhos dobrados (inteiros) para exatidão\n    # Cidade mais a oeste: vizinhança vai de 0 até o ponto médio com a próxima\n    best = xs[0] + xs[1]\n    # Cidade mais a leste: vizinhança vai do ponto médio com a anterior até T\n    cand = 2 * T - (xs[-2] + xs[-1])\n    if cand < best:\n        best = cand\n    # Cidades intermediárias: do ponto médio com a anterior ao ponto médio com a seguinte\n    for i in range(1, n - 1):\n        s = xs[i + 1] - xs[i - 1]\n        if s < best:\n            best = s\n\n    print(f\"{best / 2:.2f}\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    T = int(data[0])\n    n = int(data[1])\n    xs = sorted(int(data[2 + i]) for i in range(n))\n\n    # Trabalha com tamanhos dobrados (inteiros) para exatidão\n    # Cidade mais a oeste: vizinhança vai de 0 até o ponto médio com a próxima\n    best = xs[0] + xs[1]\n    # Cidade mais a leste: vizinhança vai do ponto médio com a anterior até T\n    cand = 2 * T - (xs[-2] + xs[-1])\n    if cand < best:\n        best = cand\n    # Cidades intermediárias: do ponto médio com a anterior ao ponto médio com a seguinte\n    for i in range(1, n - 1):\n        s = xs[i + 1] - xs[i - 1]\n        if s < best:\n            best = s\n\n    print(f\"{best / 2:.2f}\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08235470000363421,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

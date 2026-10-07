@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:31:05.905792+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 6.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 754,
+            "output_tokens": 35334,
+            "total_tokens": 36088
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.017667,
+            "total_cost": 0.017683
+        },
+        "raw_response": "```python\nimport sys\nfrom bisect import bisect_left\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    if n <= 0:\n        print(0)\n        return\n\n    # posicoes de cada valor\n    pos = {}\n    for i in range(n):\n        v = int(data[1 + i])\n        if v in pos:\n            pos[v].append(i)\n        else:\n            pos[v] = [i]\n\n    groups = list(pos.values())\n    k = len(groups)\n    ans = 1  # sempre temos pelo menos 1 (um unico numero marcado)\n    bl = bisect_left\n\n    for ai in range(k):\n        la = groups[ai]\n        ca = len(la)\n        fa = la[0]\n        for bi in range(ai + 1, k):\n            lb = groups[bi]\n            cb = len(lb)\n            # limitantes superiores do tamanho de uma subsequencia alternada\n            # usando apenas os valores a e b (alternancia obrigatoria)\n            if ca + cb <= ans:\n                continue\n            if 2 * (ca if ca < cb else cb) + 1 <= ans:\n                continue\n            # cadeia gulosa: comeca no primeiro elemento pertencente a {a,b}\n            # e depois alterna obrigatoriamente entre os dois valores\n            if fa <= lb[0]:\n                A, B = la, lb\n            else:\n                A, B = lb, la\n            An = len(A)\n            Bn = len(B)\n            p = A[0]\n            cnt = 1\n            while True:\n                j = bl(B, p + 1)          # proxima ocorrencia do outro valor\n                if j == Bn:\n                    break\n                p = B[j]\n                cnt += 1\n                j = bl(A, p + 1)          # proxima ocorrencia do valor inicial\n                if j == An:\n                    break\n                p = A[j]\n                cnt += 1\n            if cnt > ans:\n                ans = cnt\n\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom bisect import bisect_left\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    if n <= 0:\n        print(0)\n        return\n\n    # posicoes de cada valor\n    pos = {}\n    for i in range(n):\n        v = int(data[1 + i])\n        if v in pos:\n            pos[v].append(i)\n        else:\n            pos[v] = [i]\n\n    groups = list(pos.values())\n    k = len(groups)\n    ans = 1  # sempre temos pelo menos 1 (um unico numero marcado)\n    bl = bisect_left\n\n    for ai in range(k):\n        la = groups[ai]\n        ca = len(la)\n        fa = la[0]\n        for bi in range(ai + 1, k):\n            lb = groups[bi]\n            cb = len(lb)\n            # limitantes superiores do tamanho de uma subsequencia alternada\n            # usando apenas os valores a e b (alternancia obrigatoria)\n            if ca + cb <= ans:\n                continue\n            if 2 * (ca if ca < cb else cb) + 1 <= ans:\n                continue\n            # cadeia gulosa: comeca no primeiro elemento pertencente a {a,b}\n            # e depois alterna obrigatoriamente entre os dois valores\n            if fa <= lb[0]:\n                A, B = la, lb\n            else:\n                A, B = lb, la\n            An = len(A)\n            Bn = len(B)\n            p = A[0]\n            cnt = 1\n            while True:\n                j = bl(B, p + 1)          # proxima ocorrencia do outro valor\n                if j == Bn:\n                    break\n                p = B[j]\n                cnt += 1\n                j = bl(A, p + 1)          # proxima ocorrencia do valor inicial\n                if j == An:\n                    break\n                p = A[j]\n                cnt += 1\n            if cnt > ans:\n                ans = cnt\n\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0873931000023731,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

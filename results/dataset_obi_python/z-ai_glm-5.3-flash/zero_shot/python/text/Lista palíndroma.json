@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T20:54:21.664908+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 701,
+            "output_tokens": 23992,
+            "total_tokens": 24693
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.011996,
+            "total_cost": 0.012011
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    a = list(map(int, data[1:1 + n]))\n\n    i = 0\n    j = n - 1\n    ops = 0\n    left = a[0]\n    right = a[j]\n\n    while i < j:\n        if left < right:\n            # o bloco da esquerda eh menor: contrai o proximo elemento da esquerda\n            i += 1\n            left += a[i]\n            ops += 1\n        elif left > right:\n            # o bloco da direita eh menor: contrai o proximo elemento da direita\n            j -= 1\n            right += a[j]\n            ops += 1\n        else:\n            # blocos iguais: formam um par palindromo\n            i += 1\n            j -= 1\n            if i < j:\n                left = a[i]\n                right = a[j]\n\n    print(ops)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    a = list(map(int, data[1:1 + n]))\n\n    i = 0\n    j = n - 1\n    ops = 0\n    left = a[0]\n    right = a[j]\n\n    while i < j:\n        if left < right:\n            # o bloco da esquerda eh menor: contrai o proximo elemento da esquerda\n            i += 1\n            left += a[i]\n            ops += 1\n        elif left > right:\n            # o bloco da direita eh menor: contrai o proximo elemento da direita\n            j -= 1\n            right += a[j]\n            ops += 1\n        else:\n            # blocos iguais: formam um par palindromo\n            i += 1\n            j -= 1\n            if i < j:\n                left = a[i]\n                right = a[j]\n\n    print(ops)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21372699999483302,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

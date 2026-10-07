@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T14:52:38.583150+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 837,
+            "output_tokens": 3136,
+            "total_tokens": 3973
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.001568,
+            "total_cost": 0.001586
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    pos = 0\n    n = int(data[pos]); pos += 1\n    q = int(data[pos]); pos += 1\n\n    vals = list(map(int, data[pos:pos + n]))\n    pos += n\n\n    A = [0] + vals          # valores atuais por andar\n    tree = [0] + vals       # Fenwick (BIT)\n\n    # construção em O(N)\n    for i in range(1, n + 1):\n        j = i + (i & -i)\n        if j <= n:\n            tree[j] += tree[i]\n\n    out = []\n    ap = out.append\n    for _ in range(q):\n        t = data[pos]; pos += 1\n        if t == b'1':                     # Bombeiro: soma prefixo 1..K\n            k = int(data[pos]); pos += 1\n            s = 0\n            j = k\n            while j:\n                s += tree[j]\n                j &= j - 1\n            ap(str(s))\n        else:                             # Mudança: andar K vira P\n            k = int(data[pos]); p = int(data[pos + 1]); pos += 2\n            delta = p - A[k]\n            A[k] = p\n            if delta:\n                j = k\n                while j <= n:\n                    tree[j] += delta\n                    j += j & (-j)\n\n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    pos = 0\n    n = int(data[pos]); pos += 1\n    q = int(data[pos]); pos += 1\n\n    vals = list(map(int, data[pos:pos + n]))\n    pos += n\n\n    A = [0] + vals          # valores atuais por andar\n    tree = [0] + vals       # Fenwick (BIT)\n\n    # construção em O(N)\n    for i in range(1, n + 1):\n        j = i + (i & -i)\n        if j <= n:\n            tree[j] += tree[i]\n\n    out = []\n    ap = out.append\n    for _ in range(q):\n        t = data[pos]; pos += 1\n        if t == b'1':                     # Bombeiro: soma prefixo 1..K\n            k = int(data[pos]); pos += 1\n            s = 0\n            j = k\n            while j:\n                s += tree[j]\n                j &= j - 1\n            ap(str(s))\n        else:                             # Mudança: andar K vira P\n            k = int(data[pos]); p = int(data[pos + 1]); pos += 2\n            delta = p - A[k]\n            A[k] = p\n            if delta:\n                j = k\n                while j <= n:\n                    tree[j] += delta\n                    j += j & (-j)\n\n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18204580000019632,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

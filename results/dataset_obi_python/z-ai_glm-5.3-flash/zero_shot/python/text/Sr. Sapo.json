@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:42:08.025295+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 943,
+            "output_tokens": 1555,
+            "total_tokens": 2498
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.000777,
+            "total_cost": 0.000798
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    N = int(data[idx]); idx += 1\n    M = int(data[idx]); idx += 1\n    P = int(data[idx]); idx += 1\n\n    stones = set()\n    for _ in range(P):\n        c = int(data[idx]); idx += 1\n        l = int(data[idx]); idx += 1\n        stones.add((c, l))\n\n    SC = int(data[idx]); idx += 1\n    SL = int(data[idx]); idx += 1\n    RC = int(data[idx]); idx += 1\n    RL = int(data[idx]); idx += 1\n\n    start = (SC, SL)\n    goal = (RC, RL)\n\n    visited = {start}\n    q = deque([start])\n\n    while q:\n        c, l = q.popleft()\n        if (c, l) == goal:\n            print('S')\n            return\n        for dc, dl in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            for k in range(1, 4):\n                nc, nl = c + dc * k, l + dl * k\n                if 1 <= nc <= N and 1 <= nl <= M and (nc, nl) in stones and (nc, nl) not in visited:\n                    visited.add((nc, nl))\n                    q.append((nc, nl))\n\n    print('N')\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    N = int(data[idx]); idx += 1\n    M = int(data[idx]); idx += 1\n    P = int(data[idx]); idx += 1\n\n    stones = set()\n    for _ in range(P):\n        c = int(data[idx]); idx += 1\n        l = int(data[idx]); idx += 1\n        stones.add((c, l))\n\n    SC = int(data[idx]); idx += 1\n    SL = int(data[idx]); idx += 1\n    RC = int(data[idx]); idx += 1\n    RL = int(data[idx]); idx += 1\n\n    start = (SC, SL)\n    goal = (RC, RL)\n\n    visited = {start}\n    q = deque([start])\n\n    while q:\n        c, l = q.popleft()\n        if (c, l) == goal:\n            print('S')\n            return\n        for dc, dl in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            for k in range(1, 4):\n                nc, nl = c + dc * k, l + dl * k\n                if 1 <= nc <= N and 1 <= nl <= M and (nc, nl) in stones and (nc, nl) not in visited:\n                    visited.add((nc, nl))\n                    q.append((nc, nl))\n\n    print('N')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06941199999982928,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

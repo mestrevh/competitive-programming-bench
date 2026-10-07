@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T17:57:36.327773+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 734,
+            "output_tokens": 4097,
+            "total_tokens": 4831
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.002048,
+            "total_cost": 0.002064
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    passwords = data[1:1 + n]\n    cnt = Counter(passwords)\n    total = 0\n    # Para cada senha distinta S com cnt[S] usuarios:\n    # cada um desses usuarios consegue acessar todo usuario cuja senha\n    # seja uma sub-cadeia (distinta) de S, exceto ele mesmo -> subtrai 1 por usuario.\n    for s, c in cnt.items():\n        L = len(s)\n        subs = {s[i:j] for i in range(L) for j in range(i + 1, L + 1)}\n        inner = 0\n        for t in subs:\n            v = cnt.get(t)\n            if v:\n                inner += v\n        total += c * inner\n    print(total - n)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    passwords = data[1:1 + n]\n    cnt = Counter(passwords)\n    total = 0\n    # Para cada senha distinta S com cnt[S] usuarios:\n    # cada um desses usuarios consegue acessar todo usuario cuja senha\n    # seja uma sub-cadeia (distinta) de S, exceto ele mesmo -> subtrai 1 por usuario.\n    for s, c in cnt.items():\n        L = len(s)\n        subs = {s[i:j] for i in range(L) for j in range(i + 1, L + 1)}\n        inner = 0\n        for t in subs:\n            v = cnt.get(t)\n            if v:\n                inner += v\n        total += c * inner\n    print(total - n)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13042300000233809,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

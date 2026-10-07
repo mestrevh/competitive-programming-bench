@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T02:05:23.360371+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1206,
+            "output_tokens": 55153,
+            "total_tokens": 56359
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.027577,
+            "total_cost": 0.027602
+        },
+        "raw_response": "```python\nimport sys\nfrom math import isqrt\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    p = int(data[0])\n    out = []\n    idx = 1\n    for _ in range(p):\n        L = int(data[idx]); A = int(data[idx + 1]); B = int(data[idx + 2])\n        idx += 3\n        n = B - A + 1\n        total = (A + B) * n // 2  # soma de todos os valores em [A, B]\n        if total < L:\n            # Usa todos os valores; nenhuma soma parcial atinge L\n            out.append(n)\n            continue\n        # Existe conjunto T de k valores com soma(T) >= L e soma(T) - max(T) <= L-1\n        # <=> existe U de m = k-1 elementos em [A, B-1] com soma em [L-B, L-1]\n        # Melhor construção: U = menores m valores, v = B.\n        # Limite superior: m <= m1 (maior m com mA + m(m-1)/2 <= L-1) e m <= B-A\n        Lp = L - 1\n        two_lp = 2 * Lp\n        c = 2 * A - 1\n        # condição: m*(c+m) <= 2*(L-)  <=>  m^2 + c*m - 2*(L-1) <= 0\n        s = isqrt(c * c + 8 * Lp)\n        m = (s - c) // 2\n        if m < 0:\n            m = 0\n        while m > 0 and m * (c + m) > two_lp:\n            m -= 1\n        while (m + 1) * (c + m + 1) <= two_lp:\n            m += 1\n        ba = B - A\n        out.append(1 + (m if m < ba else ba))\n    sys.stdout.write('\\n'.join(map(str, out)) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom math import isqrt\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    p = int(data[0])\n    out = []\n    idx = 1\n    for _ in range(p):\n        L = int(data[idx]); A = int(data[idx + 1]); B = int(data[idx + 2])\n        idx += 3\n        n = B - A + 1\n        total = (A + B) * n // 2  # soma de todos os valores em [A, B]\n        if total < L:\n            # Usa todos os valores; nenhuma soma parcial atinge L\n            out.append(n)\n            continue\n        # Existe conjunto T de k valores com soma(T) >= L e soma(T) - max(T) <= L-1\n        # <=> existe U de m = k-1 elementos em [A, B-1] com soma em [L-B, L-1]\n        # Melhor construção: U = menores m valores, v = B.\n        # Limite superior: m <= m1 (maior m com mA + m(m-1)/2 <= L-1) e m <= B-A\n        Lp = L - 1\n        two_lp = 2 * Lp\n        c = 2 * A - 1\n        # condição: m*(c+m) <= 2*(L-)  <=>  m^2 + c*m - 2*(L-1) <= 0\n        s = isqrt(c * c + 8 * Lp)\n        m = (s - c) // 2\n        if m < 0:\n            m = 0\n        while m > 0 and m * (c + m) > two_lp:\n            m -= 1\n        while (m + 1) * (c + m + 1) <= two_lp:\n            m += 1\n        ba = B - A\n        out.append(1 + (m if m < ba else ba))\n    sys.stdout.write('\\n'.join(map(str, out)) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09902799999963463,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

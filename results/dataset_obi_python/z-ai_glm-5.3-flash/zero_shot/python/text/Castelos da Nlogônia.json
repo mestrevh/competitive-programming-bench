@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:41:29.761830+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1042,
+            "output_tokens": 1867,
+            "total_tokens": 2909
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.000933,
+            "total_cost": 0.000956
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n\n    adj = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        u = int(data[idx]); idx += 1\n        v = int(data[idx]); idx += 1\n        adj[u].append(v)\n        adj[v].append(u)\n\n    color = [0] * (n + 1)\n\n    for _ in range(m):\n        p = int(data[idx]); idx += 1\n        q = int(data[idx]); idx += 1\n        c = int(data[idx]); idx += 1\n\n        # BFS de p para encontrar o caminho até q (árvore: caminho único)\n        parent = [0] * (n + 1)\n        visited = [False] * (n + 1)\n        visited[p] = True\n        dq = deque([p])\n        while dq:\n            u = dq.popleft()\n            if u == q:\n                break\n            for v in adj[u]:\n                if not visited[v]:\n                    visited[v] = True\n                    parent[v] = u\n                    dq.append(v)\n\n        # Percorre do q de volta até p, pintando cada castelo do caminho\n        node = q\n        while True:\n            color[node] = c\n            if node == p:\n                break\n            node = parent[node]\n\n    print(' '.join(map(str, color[1:])))\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n\n    adj = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        u = int(data[idx]); idx += 1\n        v = int(data[idx]); idx += 1\n        adj[u].append(v)\n        adj[v].append(u)\n\n    color = [0] * (n + 1)\n\n    for _ in range(m):\n        p = int(data[idx]); idx += 1\n        q = int(data[idx]); idx += 1\n        c = int(data[idx]); idx += 1\n\n        # BFS de p para encontrar o caminho até q (árvore: caminho único)\n        parent = [0] * (n + 1)\n        visited = [False] * (n + 1)\n        visited[p] = True\n        dq = deque([p])\n        while dq:\n            u = dq.popleft()\n            if u == q:\n                break\n            for v in adj[u]:\n                if not visited[v]:\n                    visited[v] = True\n                    parent[v] = u\n                    dq.append(v)\n\n        # Percorre do q de volta até p, pintando cada castelo do caminho\n        node = q\n        while True:\n            color[node] = c\n            if node == p:\n                break\n            node = parent[node]\n\n    print(' '.join(map(str, color[1:])))\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08876160000363598,
+            "counts": {
+                "AC": 36,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 36
+        }
+    }
+]

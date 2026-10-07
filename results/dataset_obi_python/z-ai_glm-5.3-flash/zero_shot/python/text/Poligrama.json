@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:44:27.832598+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 618,
+            "output_tokens": 23603,
+            "total_tokens": 24221
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.011801,
+            "total_cost": 0.011815
+        },
+        "raw_response": "```python\nimport sys\nfrom itertools import accumulate\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        sys.stdout.write('*\\n')\n        return\n    n = int(data[0])\n    p = data[1] if len(data) > 1 else b''\n    if len(p) != n:\n        n = len(p)\n    if n < 2:\n        sys.stdout.write('*\\n')\n        return\n\n    # Codifica o multiset de letras de um bloco como um unico inteiro:\n    # 20 bits por letra (contagens <= 100000 < 2^20), 26 letras.\n    # A soma de prefixos permite obter o multiset de qualquer bloco em O(1),\n    # e a diferenca nunca tem \"emprestimo\" entre campos (contagens >= 0),\n    # portanto a comparacao de inteiros e exata (sem colisoes).\n    SHIFT = 20\n    trans = [0] * 256\n    for c in range(26):\n        trans[97 + c] = 1 << (SHIFT * c)\n\n    pref = [0]\n    pref.extend(accumulate(map(trans.__getitem__, p)))\n\n    ans = None\n    for d in range(1, n // 2 + 1):\n        if n % d:\n            continue\n        base = pref[d]  # multiset do primeiro bloco p[0:d]\n        ok = True\n        # blocos k = 0..n/d-1: multiset = pref[(k+1)d] - pref[kd]\n        for a, b in zip(pref[::d], pref[d::d]):\n            if b - a != base:\n                ok = False\n                break\n        if ok:\n            ans = p[:d].decode()\n            break\n\n    sys.stdout.write((ans if ans else '*') + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom itertools import accumulate\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        sys.stdout.write('*\\n')\n        return\n    n = int(data[0])\n    p = data[1] if len(data) > 1 else b''\n    if len(p) != n:\n        n = len(p)\n    if n < 2:\n        sys.stdout.write('*\\n')\n        return\n\n    # Codifica o multiset de letras de um bloco como um unico inteiro:\n    # 20 bits por letra (contagens <= 100000 < 2^20), 26 letras.\n    # A soma de prefixos permite obter o multiset de qualquer bloco em O(1),\n    # e a diferenca nunca tem \"emprestimo\" entre campos (contagens >= 0),\n    # portanto a comparacao de inteiros e exata (sem colisoes).\n    SHIFT = 20\n    trans = [0] * 256\n    for c in range(26):\n        trans[97 + c] = 1 << (SHIFT * c)\n\n    pref = [0]\n    pref.extend(accumulate(map(trans.__getitem__, p)))\n\n    ans = None\n    for d in range(1, n // 2 + 1):\n        if n % d:\n            continue\n        base = pref[d]  # multiset do primeiro bloco p[0:d]\n        ok = True\n        # blocos k = 0..n/d-1: multiset = pref[(k+1)d] - pref[kd]\n        for a, b in zip(pref[::d], pref[d::d]):\n            if b - a != base:\n                ok = False\n                break\n        if ok:\n            ans = p[:d].decode()\n            break\n\n    sys.stdout.write((ans if ans else '*') + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08391990000382066,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:50:26.689857+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 821,
+            "output_tokens": 2490,
+            "total_tokens": 3311
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.001245,
+            "total_cost": 0.001263
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    adj = [[] for _ in range(n + 1)]\n    idx = 2\n    for _ in range(m):\n        u = int(data[idx]); v = int(data[idx + 1]); idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    blocked = bytearray(n + 1)\n    chosen = []\n    for v in range(n, 0, -1):\n        if not blocked[v]:\n            chosen.append(v)\n            for u in adj[v]:\n                blocked[u] = 1\n\n    chosen.reverse()\n    sys.stdout.write(str(len(chosen)) + \"\\n\" + \" \".join(map(str, chosen)) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    adj = [[] for _ in range(n + 1)]\n    idx = 2\n    for _ in range(m):\n        u = int(data[idx]); v = int(data[idx + 1]); idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    blocked = bytearray(n + 1)\n    chosen = []\n    for v in range(n, 0, -1):\n        if not blocked[v]:\n            chosen.append(v)\n            for u in adj[v]:\n                blocked[u] = 1\n\n    chosen.reverse()\n    sys.stdout.write(str(len(chosen)) + \"\\n\" + \" \".join(map(str, chosen)) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11732879999908619,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

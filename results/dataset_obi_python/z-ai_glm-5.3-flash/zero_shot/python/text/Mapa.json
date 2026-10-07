@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:09:53.821154+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1030,
+            "output_tokens": 24241,
+            "total_tokens": 25271
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.01212,
+            "total_cost": 0.012143
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().splitlines()\n    i = 0\n    # pula linhas vazias iniciais\n    while i < len(data) and not data[i].strip():\n        i += 1\n    L, C = map(int, data[i].split())\n    i += 1\n\n    grid = []\n    while len(grid) < L and i < len(data):\n        s = data[i].rstrip()\n        i += 1\n        if s:\n            grid.append(s)\n\n    # localiza a posição inicial 'o'\n    r, c = 0, 0\n    for rr in range(L):\n        cc = grid[rr].find('o')\n        if cc != -1:\n            r, c = rr, cc\n            break\n\n    visited = [[False] * C for _ in range(L)]\n    visited[r][c] = True\n    cr, cc = r, c\n\n    # caminha pelo trajeto: em cada célula só existe um vizinho marcado\n    # ('H'/'o') ainda não visitado; quando não existe mais, é a posição atual\n    while True:\n        moved = False\n        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n            nr, nc = cr + dr, cc + dc\n            if 0 <= nr < L and 0 <= nc < C and not visited[nr][nc] and grid[nr][nc] != '.':\n                visited[nr][nc] = True\n                cr, cc = nr, nc\n                moved = True\n                break\n        if not moved:\n            break\n\n    print(cr + 1, cc + 1)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().splitlines()\n    i = 0\n    # pula linhas vazias iniciais\n    while i < len(data) and not data[i].strip():\n        i += 1\n    L, C = map(int, data[i].split())\n    i += 1\n\n    grid = []\n    while len(grid) < L and i < len(data):\n        s = data[i].rstrip()\n        i += 1\n        if s:\n            grid.append(s)\n\n    # localiza a posição inicial 'o'\n    r, c = 0, 0\n    for rr in range(L):\n        cc = grid[rr].find('o')\n        if cc != -1:\n            r, c = rr, cc\n            break\n\n    visited = [[False] * C for _ in range(L)]\n    visited[r][c] = True\n    cr, cc = r, c\n\n    # caminha pelo trajeto: em cada célula só existe um vizinho marcado\n    # ('H'/'o') ainda não visitado; quando não existe mais, é a posição atual\n    while True:\n        moved = False\n        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n            nr, nc = cr + dr, cc + dc\n            if 0 <= nr < L and 0 <= nc < C and not visited[nr][nc] and grid[nr][nc] != '.':\n                visited[nr][nc] = True\n                cr, cc = nr, nc\n                moved = True\n                break\n        if not moved:\n            break\n\n    print(cr + 1, cc + 1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06561320000037085,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

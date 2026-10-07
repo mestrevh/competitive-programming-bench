@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T01:54:23.291685+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1868,
+            "output_tokens": 41249,
+            "total_tokens": 43117
+        },
+        "cost_usd": {
+            "input_cost": 4e-05,
+            "output_cost": 0.020625,
+            "total_cost": 0.020664
+        },
+        "raw_response": "```python\nimport sys\nfrom heapq import heappush, heappop\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    vals = list(map(int, data))\n    del data\n\n    n, m, k = vals[0], vals[1], vals[2]\n    price = [0] + vals[3:3 + k]\n    off = 3 + k\n\n    # group edge positions (in vals) by transport system\n    ebs = [[] for _ in range(k + 1)]\n    for i in range(off, off + 3 * m, 3):\n        ebs[vals[i + 2]].append(i)\n\n    a = vals[off + 3 * m]\n    b = vals[off + 3 * m + 1]\n\n    shift = (n + m).bit_length()\n    mask = (1 << shift) - 1\n\n    # nodes: 0..n-1 = stations; n.. = one node per connected component of each system\n    adj = [[] for _ in range(n)]\n    comp_total = 0\n\n    for t in range(1, k + 1):\n        lst = ebs[t]\n        if not lst:\n            continue\n        p = {}  # union-find (path compression) over stations touched by system t\n        for i in lst:\n            u = vals[i]\n            v = vals[i + 1]\n            if u not in p:\n                p[u] = u\n            if v not in p:\n                p[v] = v\n            x = u\n            while p[x] != x:\n                x = p[x]\n            ru = x\n            x = u\n            while p[x] != ru:\n                p[x], x = ru, p[x]\n            x = v\n            while p[x] != x:\n                x = p[x]\n            rv = x\n            x = v\n            while p[x] != rv:\n                p[x], x = rv, p[x]\n            if ru != rv:\n                p[ru] = rv\n\n        w = price[t] << shift\n        root_comp = {}\n        for s in p:\n            x = s\n            while p[x] != x:\n                x = p[x]\n            r = x\n            x = s\n            while p[x] != r:\n                p[x], x = r, p[x]\n            c = root_comp.get(r, -1)\n            if c < 0:\n                c = n + comp_total\n                comp_total += 1\n                root_comp[r] = c\n                adj.append([])\n            adj[s - 1].append(w | c)  # enter system t at station s: pay P_t\n            adj[c].append(s - 1)      # leave system t: free\n\n    del vals, ebs\n\n    total = n + comp_total\n    INF = 1 << 60\n    dist = [INF] * total\n    src = a - 1\n    dst = b - 1\n    dist[src] = 0\n    heap = [src]\n    hpush = heappush\n    hpop = heappop\n\n    while heap:\n        x = hpop(heap)\n        node = x & mask\n        d = x >> shift\n        if d > dist[node]:\n            continue\n        if node == dst:\n            print(d)\n            return\n        for e in adj[node]:\n            v = e & mask\n            nd = d + (e >> shift)\n            if nd < dist[v]:\n                dist[v] = nd\n                hpush(heap, (nd << shift) | v)\n\n    print(-1)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom heapq import heappush, heappop\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    vals = list(map(int, data))\n    del data\n\n    n, m, k = vals[0], vals[1], vals[2]\n    price = [0] + vals[3:3 + k]\n    off = 3 + k\n\n    # group edge positions (in vals) by transport system\n    ebs = [[] for _ in range(k + 1)]\n    for i in range(off, off + 3 * m, 3):\n        ebs[vals[i + 2]].append(i)\n\n    a = vals[off + 3 * m]\n    b = vals[off + 3 * m + 1]\n\n    shift = (n + m).bit_length()\n    mask = (1 << shift) - 1\n\n    # nodes: 0..n-1 = stations; n.. = one node per connected component of each system\n    adj = [[] for _ in range(n)]\n    comp_total = 0\n\n    for t in range(1, k + 1):\n        lst = ebs[t]\n        if not lst:\n            continue\n        p = {}  # union-find (path compression) over stations touched by system t\n        for i in lst:\n            u = vals[i]\n            v = vals[i + 1]\n            if u not in p:\n                p[u] = u\n            if v not in p:\n                p[v] = v\n            x = u\n            while p[x] != x:\n                x = p[x]\n            ru = x\n            x = u\n            while p[x] != ru:\n                p[x], x = ru, p[x]\n            x = v\n            while p[x] != x:\n                x = p[x]\n            rv = x\n            x = v\n            while p[x] != rv:\n                p[x], x = rv, p[x]\n            if ru != rv:\n                p[ru] = rv\n\n        w = price[t] << shift\n        root_comp = {}\n        for s in p:\n            x = s\n            while p[x] != x:\n                x = p[x]\n            r = x\n            x = s\n            while p[x] != r:\n                p[x], x = r, p[x]\n            c = root_comp.get(r, -1)\n            if c < 0:\n                c = n + comp_total\n                comp_total += 1\n                root_comp[r] = c\n                adj.append([])\n            adj[s - 1].append(w | c)  # enter system t at station s: pay P_t\n            adj[c].append(s - 1)      # leave system t: free\n\n    del vals, ebs\n\n    total = n + comp_total\n    INF = 1 << 60\n    dist = [INF] * total\n    src = a - 1\n    dst = b - 1\n    dist[src] = 0\n    heap = [src]\n    hpush = heappush\n    hpop = heappop\n\n    while heap:\n        x = hpop(heap)\n        node = x & mask\n        d = x >> shift\n        if d > dist[node]:\n            continue\n        if node == dst:\n            print(d)\n            return\n        for e in adj[node]:\n            v = e & mask\n            nd = d + (e >> shift)\n            if nd < dist[v]:\n                dist[v] = nd\n                hpush(heap, (nd << shift) | v)\n\n    print(-1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4614203000000998,
+            "counts": {
+                "AC": 107,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

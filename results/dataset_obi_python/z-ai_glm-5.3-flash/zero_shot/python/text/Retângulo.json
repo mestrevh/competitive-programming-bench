@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:17:35.516715+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 667,
+            "output_tokens": 2944,
+            "total_tokens": 3611
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.001472,
+            "total_cost": 0.001486
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    lengths = list(map(int, data[1:1 + n]))\n\n    total = sum(lengths)\n\n    # Um retangulo inscrito em um circulo tem diagonais que sao diametros,\n    # logo seus vertices formam dois pares de pontos antipodais.\n    # Dois arvores sao antipodais se a distancia de arco entre eles e total/2.\n    # Precisamos de pelo menos 2 pares antipodais (4 arvores distintas).\n\n    if total % 2 != 0:\n        print(\"N\")\n        return\n\n    half = total // 2\n\n    # Posicoes acumuladas das arvores na circunferencia (arvores distintas,\n    # pois todos os arcos tem comprimento >= 1)\n    positions = {0}\n    acc = 0\n    for i in range(n - 1):\n        acc += lengths[i]\n        positions.add(acc)\n\n    hits = 0\n    for p in positions:\n        if (p + half) % total in positions:\n            hits += 1\n\n    # Cada par antipodal e contado duas vezes (A acha B e B acha A),\n    # entao precisamos de hits >= 4 para ter >= 2 pares.\n    print(\"S\" if hits >= 4 else \"N\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    lengths = list(map(int, data[1:1 + n]))\n\n    total = sum(lengths)\n\n    # Um retangulo inscrito em um circulo tem diagonais que sao diametros,\n    # logo seus vertices formam dois pares de pontos antipodais.\n    # Dois arvores sao antipodais se a distancia de arco entre eles e total/2.\n    # Precisamos de pelo menos 2 pares antipodais (4 arvores distintas).\n\n    if total % 2 != 0:\n        print(\"N\")\n        return\n\n    half = total // 2\n\n    # Posicoes acumuladas das arvores na circunferencia (arvores distintas,\n    # pois todos os arcos tem comprimento >= 1)\n    positions = {0}\n    acc = 0\n    for i in range(n - 1):\n        acc += lengths[i]\n        positions.add(acc)\n\n    hits = 0\n    for p in positions:\n        if (p + half) % total in positions:\n            hits += 1\n\n    # Cada par antipodal e contado duas vezes (A acha B e B acha A),\n    # entao precisamos de hits >= 4 para ter >= 2 pares.\n    print(\"S\" if hits >= 4 else \"N\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07232559999988553,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

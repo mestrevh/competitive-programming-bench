@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:29:53.585127+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1016,
+            "output_tokens": 18456,
+            "total_tokens": 19472
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.009228,
+            "total_cost": 0.00925
+        },
+        "raw_response": "```python\nimport sys\nfrom heapq import nsmallest\nfrom operator import itemgetter\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    vals = list(map(int, data[1:1 + 5 * n]))\n\n    it = iter(vals)\n    # cada row: (modalidade, costas, peito, borboleta, crawl)\n    rows = list(zip(it, it, it, it, it))\n\n    frows = [r for r in rows if r[0] == 0]\n    mrows = [r for r in rows if r[0] == 1]\n\n    EMPTY = ([], [], [], [])\n\n    def tops(rows_list):\n        # para cada estilo, os dois menores tempos com indices distintos\n        if len(rows_list) < 2:\n            return EMPTY\n        cols = list(zip(*rows_list))  # cols[1..4] = A, B, C, D\n        return [nsmallest(2, enumerate(cols[1 + s]), key=itemgetter(1)) for s in range(4)]\n\n    ftops = tops(frows)\n    mtops = tops(mrows)\n\n    def best2(t1, t2):\n        # melhor atribuicao 2x2: min v_i + w_j com i != j\n        # (a troca garante que basta olhar os 2 melhores de cada estilo)\n        best = -1\n        for i1, v1 in t1:\n            for i2, v2 in t2:\n                if i1 != i2:\n                    c = v1 + v2\n                    if best == -1 or c < best:\n                        best = c\n        return best\n\n    ans = -1\n    for f1 in range(4):\n        for f2 in range(f1 + 1, 4):\n            fb = best2(ftops[f1], ftops[f2])\n            if fb == -1:\n                continue\n            ms = [s for s in range(4) if s != f1 and s != f2]\n            mb = best2(mtops[ms[0]], mtops[ms[1]])\n            if mb == -1:\n                continue\n            tot = fb + mb\n            if ans == -1 or tot < ans:\n                ans = tot\n\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom heapq import nsmallest\nfrom operator import itemgetter\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    vals = list(map(int, data[1:1 + 5 * n]))\n\n    it = iter(vals)\n    # cada row: (modalidade, costas, peito, borboleta, crawl)\n    rows = list(zip(it, it, it, it, it))\n\n    frows = [r for r in rows if r[0] == 0]\n    mrows = [r for r in rows if r[0] == 1]\n\n    EMPTY = ([], [], [], [])\n\n    def tops(rows_list):\n        # para cada estilo, os dois menores tempos com indices distintos\n        if len(rows_list) < 2:\n            return EMPTY\n        cols = list(zip(*rows_list))  # cols[1..4] = A, B, C, D\n        return [nsmallest(2, enumerate(cols[1 + s]), key=itemgetter(1)) for s in range(4)]\n\n    ftops = tops(frows)\n    mtops = tops(mrows)\n\n    def best2(t1, t2):\n        # melhor atribuicao 2x2: min v_i + w_j com i != j\n        # (a troca garante que basta olhar os 2 melhores de cada estilo)\n        best = -1\n        for i1, v1 in t1:\n            for i2, v2 in t2:\n                if i1 != i2:\n                    c = v1 + v2\n                    if best == -1 or c < best:\n                        best = c\n        return best\n\n    ans = -1\n    for f1 in range(4):\n        for f2 in range(f1 + 1, 4):\n            fb = best2(ftops[f1], ftops[f2])\n            if fb == -1:\n                continue\n            ms = [s for s in range(4) if s != f1 and s != f2]\n            mb = best2(mtops[ms[0]], mtops[ms[1]])\n            if mb == -1:\n                continue\n            tot = fb + mb\n            if ans == -1 or tot < ans:\n                ans = tot\n\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1445118999999977,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

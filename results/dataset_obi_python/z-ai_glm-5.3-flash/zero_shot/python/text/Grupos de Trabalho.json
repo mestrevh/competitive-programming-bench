@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T19:33:47.487467+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1330,
+            "output_tokens": 2618,
+            "total_tokens": 3948
+        },
+        "cost_usd": {
+            "input_cost": 2.8e-05,
+            "output_cost": 0.001309,
+            "total_cost": 0.001337
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    E = int(data[0])\n    M = int(data[1])\n    D = int(data[2])\n\n    pos = 3\n    must = data[pos:pos + 2 * M]\n    pos += 2 * M\n    dont = data[pos:pos + 2 * D]\n    pos += 2 * D\n\n    group = [0] * (E + 1)\n    g = 0\n    for i in range(pos, pos + E, 3):\n        group[int(data[i])] = g\n        group[int(data[i + 1])] = g\n        group[int(data[i + 2])] = g\n        g += 1\n\n    violations = 0\n\n    for i in range(0, 2 * M, 2):\n        if group[int(must[i])] != group[int(must[i + 1])]:\n            violations += 1\n\n    for i in range(0, 2 * D, 2):\n        if group[int(dont[i])] == group[int(dont[i + 1])]:\n            violations += 1\n\n    sys.stdout.write(str(violations) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    E = int(data[0])\n    M = int(data[1])\n    D = int(data[2])\n\n    pos = 3\n    must = data[pos:pos + 2 * M]\n    pos += 2 * M\n    dont = data[pos:pos + 2 * D]\n    pos += 2 * D\n\n    group = [0] * (E + 1)\n    g = 0\n    for i in range(pos, pos + E, 3):\n        group[int(data[i])] = g\n        group[int(data[i + 1])] = g\n        group[int(data[i + 2])] = g\n        g += 1\n\n    violations = 0\n\n    for i in range(0, 2 * M, 2):\n        if group[int(must[i])] != group[int(must[i + 1])]:\n            violations += 1\n\n    for i in range(0, 2 * D, 2):\n        if group[int(dont[i])] == group[int(dont[i + 1])]:\n            violations += 1\n\n    sys.stdout.write(str(violations) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.31296719999954803,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

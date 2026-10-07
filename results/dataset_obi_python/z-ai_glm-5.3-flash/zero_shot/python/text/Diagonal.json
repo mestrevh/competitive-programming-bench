@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T16:04:21.431624+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1000,
+            "output_tokens": 14626,
+            "total_tokens": 15626
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.007313,
+            "total_cost": 0.007334
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import defaultdict\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    a = list(map(int, data[1:1 + n]))\n\n    # Um som no apartamento i do predio j (s = i + j) e ouvido em todo\n    # apartamento a = s - b existente em predio b < j. Logo, para cada\n    # diagonal s, a melhor resposta e a quantidade de predios b com\n    # apartamento s - b existente, ou seja: b + 1 <= s <= b + A_b.\n    # Isso e um problema de maxima cobertura de intervalos [b+1, b+A_b].\n    # Como os inicios sao exatamente 2..N+1 (um por predio), basta varrer\n    # s de 2 a N+1: para s > N+1 a cobertura so diminui (F(s) nao-crescente\n    # e F(N+1) = cobertura(N+1)).\n\n    ends = defaultdict(int)\n    for b in range(1, n + 1):\n        h = a[b - 1]\n        if h:\n            ends[b + h] += 1\n\n    cur = 0\n    best = 0\n    pop = ends.pop\n    for s in range(2, n + 2):\n        if a[s - 2]:          # predio s-1 comeca a cobrir em s (se tem aptos)\n            cur += 1\n        cur -= pop(s - 1, 0)  # intervalos que terminaram em s-1 nao cobrem s\n        if cur > best:\n            best = cur\n\n    print(best)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import defaultdict\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    a = list(map(int, data[1:1 + n]))\n\n    # Um som no apartamento i do predio j (s = i + j) e ouvido em todo\n    # apartamento a = s - b existente em predio b < j. Logo, para cada\n    # diagonal s, a melhor resposta e a quantidade de predios b com\n    # apartamento s - b existente, ou seja: b + 1 <= s <= b + A_b.\n    # Isso e um problema de maxima cobertura de intervalos [b+1, b+A_b].\n    # Como os inicios sao exatamente 2..N+1 (um por predio), basta varrer\n    # s de 2 a N+1: para s > N+1 a cobertura so diminui (F(s) nao-crescente\n    # e F(N+1) = cobertura(N+1)).\n\n    ends = defaultdict(int)\n    for b in range(1, n + 1):\n        h = a[b - 1]\n        if h:\n            ends[b + h] += 1\n\n    cur = 0\n    best = 0\n    pop = ends.pop\n    for s in range(2, n + 2):\n        if a[s - 2]:          # predio s-1 comeca a cobrir em s (se tem aptos)\n            cur += 1\n        cur -= pop(s - 1, 0)  # intervalos que terminaram em s-1 nao cobrem s\n        if cur > best:\n            best = cur\n\n    print(best)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.28135979999933625,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

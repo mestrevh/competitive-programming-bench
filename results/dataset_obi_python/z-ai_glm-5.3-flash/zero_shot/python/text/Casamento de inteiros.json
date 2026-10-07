@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:38:58.977333+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 642,
+            "output_tokens": 15671,
+            "total_tokens": 16313
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.007836,
+            "total_cost": 0.007849
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    a, b = data[0], data[1]\n\n    # Passo 1: igualar o numero de digitos com zeros a esquerda\n    n = max(len(a), len(b))\n    a = a.zfill(n)\n    b = b.zfill(n)\n\n    ra, rb = [], []\n\n    # Passo 2: comparar do digito menos significativo ao mais significativo\n    # (posicoes sao independentes: o digito de menor valor e eliminado)\n    for i in range(n - 1, -1, -1):\n        da, db = a[i], b[i]\n        if da < db:\n            # digito de A eliminado, digito de B permanece\n            rb.append(db)\n        elif db < da:\n            # digito de B eliminado, digito de A permanece\n            ra.append(da)\n        else:\n            # iguais: nenhum eliminado, ambos permanecem\n            ra.append(da)\n            rb.append(db)\n\n    # Passo 3: reconstruir os numeros (coleta foi do LSB ao MSB, entao inverte)\n    ra.reverse()\n    rb.reverse()\n\n    va = int(''.join(ra)) if ra else -1\n    vb = int(''.join(rb)) if rb else -1\n\n    # Passo 4: imprimir em ordem nao decrescente\n    if va <= vb:\n        print(va, vb)\n    else:\n        print(vb, va)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    a, b = data[0], data[1]\n\n    # Passo 1: igualar o numero de digitos com zeros a esquerda\n    n = max(len(a), len(b))\n    a = a.zfill(n)\n    b = b.zfill(n)\n\n    ra, rb = [], []\n\n    # Passo 2: comparar do digito menos significativo ao mais significativo\n    # (posicoes sao independentes: o digito de menor valor e eliminado)\n    for i in range(n - 1, -1, -1):\n        da, db = a[i], b[i]\n        if da < db:\n            # digito de A eliminado, digito de B permanece\n            rb.append(db)\n        elif db < da:\n            # digito de B eliminado, digito de A permanece\n            ra.append(da)\n        else:\n            # iguais: nenhum eliminado, ambos permanecem\n            ra.append(da)\n            rb.append(db)\n\n    # Passo 3: reconstruir os numeros (coleta foi do LSB ao MSB, entao inverte)\n    ra.reverse()\n    rb.reverse()\n\n    va = int(''.join(ra)) if ra else -1\n    vb = int(''.join(rb)) if rb else -1\n\n    # Passo 4: imprimir em ordem nao decrescente\n    if va <= vb:\n        print(va, vb)\n    else:\n        print(vb, va)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08947030000126688,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:59:29.313910+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1451,
+            "output_tokens": 14669,
+            "total_tokens": 16120
+        },
+        "cost_usd": {
+            "input_cost": 3.1e-05,
+            "output_cost": 0.007334,
+            "total_cost": 0.007366
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); m = int(data[1]); p = int(data[2])\n\n    # Representacao esparsa: basta rastrear qual linha original termina\n    # em cada posicao de linha, e qual coluna original termina em cada\n    # posicao de coluna. Trocas de linhas/colunas sao swaps O(1).\n    # Listas 1-indexadas (indice 0 = dummy).\n    row = list(range(n + 1))\n    col = list(range(m + 1))\n\n    if p:\n        ops = data[3::3]\n        a_tok = map(int, data[4::3])\n        b_tok = map(int, data[5::3])\n        for op, x, y in zip(ops, a_tok, b_tok):\n            if op == b'L':\n                row[x], row[y] = row[y], row[x]\n            else:\n                col[x], col[y] = col[y], col[x]\n\n    w = sys.stdout.write\n\n    # Caso especial: uma unica coluna (evita overhead de join por linha)\n    if m == 1:\n        w('\\n'.join([str(r) for r in row[1:]]))\n        w('\\n')\n        return\n\n    colv = col[1:]\n    out = []\n    ap = out.append\n    j = ' '.join\n    S = str\n    for r in row[1:]:\n        base = (r - 1) * m\n        ap(j([S(base + c) for c in colv]))\n\n    w('\\n'.join(out))\n    w('\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); m = int(data[1]); p = int(data[2])\n\n    # Representacao esparsa: basta rastrear qual linha original termina\n    # em cada posicao de linha, e qual coluna original termina em cada\n    # posicao de coluna. Trocas de linhas/colunas sao swaps O(1).\n    # Listas 1-indexadas (indice 0 = dummy).\n    row = list(range(n + 1))\n    col = list(range(m + 1))\n\n    if p:\n        ops = data[3::3]\n        a_tok = map(int, data[4::3])\n        b_tok = map(int, data[5::3])\n        for op, x, y in zip(ops, a_tok, b_tok):\n            if op == b'L':\n                row[x], row[y] = row[y], row[x]\n            else:\n                col[x], col[y] = col[y], col[x]\n\n    w = sys.stdout.write\n\n    # Caso especial: uma unica coluna (evita overhead de join por linha)\n    if m == 1:\n        w('\\n'.join([str(r) for r in row[1:]]))\n        w('\\n')\n        return\n\n    colv = col[1:]\n    out = []\n    ap = out.append\n    j = ' '.join\n    S = str\n    for r in row[1:]:\n        base = (r - 1) * m\n        ap(j([S(base + c) for c in colv]))\n\n    w('\\n'.join(out))\n    w('\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.43692729999747826,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T02:25:05.075767+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 795,
+            "output_tokens": 860,
+            "total_tokens": 1655
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.00043,
+            "total_cost": 0.000447
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    a = int(data[idx]); idx += 1\n    b = int(data[idx]); idx += 1\n\n    adj = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        p = int(data[idx]); idx += 1\n        q = int(data[idx]); idx += 1\n        d = int(data[idx]); idx += 1\n        adj[p].append((q, d))\n        adj[q].append((p, d))\n\n    dist = [-1] * (n + 1)\n    dist[a] = 0\n    queue = deque([a])\n\n    while queue:\n        u = queue.popleft()\n        if u == b:\n            break\n        for v, d in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + d\n                queue.append(v)\n\n    print(dist[b])\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    a = int(data[idx]); idx += 1\n    b = int(data[idx]); idx += 1\n\n    adj = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        p = int(data[idx]); idx += 1\n        q = int(data[idx]); idx += 1\n        d = int(data[idx]); idx += 1\n        adj[p].append((q, d))\n        adj[q].append((p, d))\n\n    dist = [-1] * (n + 1)\n    dist[a] = 0\n    queue = deque([a])\n\n    while queue:\n        u = queue.popleft()\n        if u == b:\n            break\n        for v, d in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + d\n                queue.append(v)\n\n    print(dist[b])\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0696752000003471,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

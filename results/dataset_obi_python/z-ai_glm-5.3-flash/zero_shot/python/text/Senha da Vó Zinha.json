@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:40:45.216413+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1103,
+            "output_tokens": 24503,
+            "total_tokens": 25606
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.012252,
+            "total_cost": 0.012275
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0]); m = int(data[1]); k = int(data[2])\n    s = data[3]\n    words = data[4:4 + m]\n    p = int(data[4 + m])\n\n    res = list(s)\n    pos = [i for i, ch in enumerate(s) if ch == '#']\n\n    # A lista ordenada de todas as K^M senhas possiveis e equivalente a\n    # ordenar os digitos (indice da letra escolhida em cada palavra ordenada)\n    # como um numero em base K com M digitos (o primeiro caractere borrado\n    # e o digito mais significativo).\n    r = p - 1                # ranking 0-indexado da senha procurada\n    block = k ** (m - 1)     # quantidade de senhas por escolha na posicao atual\n    for j in range(m):\n        letters = sorted(words[j])\n        idx = r // block\n        if idx >= k:         # protecao contra entrada invalida\n            idx = k - 1\n        res[pos[j]] = letters[idx]\n        r -= idx * block\n        block //= k\n\n    print(''.join(res))\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0]); m = int(data[1]); k = int(data[2])\n    s = data[3]\n    words = data[4:4 + m]\n    p = int(data[4 + m])\n\n    res = list(s)\n    pos = [i for i, ch in enumerate(s) if ch == '#']\n\n    # A lista ordenada de todas as K^M senhas possiveis e equivalente a\n    # ordenar os digitos (indice da letra escolhida em cada palavra ordenada)\n    # como um numero em base K com M digitos (o primeiro caractere borrado\n    # e o digito mais significativo).\n    r = p - 1                # ranking 0-indexado da senha procurada\n    block = k ** (m - 1)     # quantidade de senhas por escolha na posicao atual\n    for j in range(m):\n        letters = sorted(words[j])\n        idx = r // block\n        if idx >= k:         # protecao contra entrada invalida\n            idx = k - 1\n        res[pos[j]] = letters[idx]\n        r -= idx * block\n        block //= k\n\n    print(''.join(res))\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07409370000004856,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

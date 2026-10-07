@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:17:22.067565+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 791,
+            "output_tokens": 4013,
+            "total_tokens": 4804
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.002007,
+            "total_cost": 0.002023
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    k = int(data[1])\n    a = list(map(int, data[2:2 + n]))\n\n    # Cada forma de remover corresponde a um segmento [l..r] não vazio.\n    # Queremos contar segmentos com >= k tipos distintos.\n    # Mais fácil: contar segmentos com <= k-1 tipos distintos (\"ruins\")\n    # e subtrair do total de segmentos n*(n+1)/2.\n    total = n * (n + 1) // 2\n    limite = k - 1\n\n    cnt = [0] * (n + 1)\n    distinto = 0\n    left = 0\n    ruins = 0\n\n    for right in range(n):\n        x = a[right]\n        if cnt[x] == 0:\n            distinto += 1\n        cnt[x] += 1\n        while distinto > limite:\n            y = a[left]\n            cnt[y] -= 1\n            if cnt[y] == 0:\n                distinto -= 1\n            left += 1\n        ruins += right - left + 1\n\n    print(total - ruins)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    k = int(data[1])\n    a = list(map(int, data[2:2 + n]))\n\n    # Cada forma de remover corresponde a um segmento [l..r] não vazio.\n    # Queremos contar segmentos com >= k tipos distintos.\n    # Mais fácil: contar segmentos com <= k-1 tipos distintos (\"ruins\")\n    # e subtrair do total de segmentos n*(n+1)/2.\n    total = n * (n + 1) // 2\n    limite = k - 1\n\n    cnt = [0] * (n + 1)\n    distinto = 0\n    left = 0\n    ruins = 0\n\n    for right in range(n):\n        x = a[right]\n        if cnt[x] == 0:\n            distinto += 1\n        cnt[x] += 1\n        while distinto > limite:\n            y = a[left]\n            cnt[y] -= 1\n            if cnt[y] == 0:\n                distinto -= 1\n            left += 1\n        ruins += right - left + 1\n\n    print(total - ruins)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.090803799990681,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

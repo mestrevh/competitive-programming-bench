@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:33:03.536127+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1138,
+            "output_tokens": 835,
+            "total_tokens": 1973
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.000418,
+            "total_cost": 0.000442
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    P = int(data[idx]); idx += 1\n    p_goals = data[idx:idx + P]\n    idx += P\n    p_times = [int(x) for x in p_goals]\n    C = int(data[idx]); idx += 1\n    c_times = [int(x) for x in data[idx:idx + C]]\n    idx += C\n\n    events = [(m, 0) for m in p_times] + [(m, 1) for m in c_times]\n    events.sort()\n\n    out = [\"0 0\"]\n    pp = 0\n    cc = 0\n    for _, who in events:\n        if who == 0:\n            pp += 1\n        else:\n            cc += 1\n        out.append(f\"{pp} {cc}\")\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    P = int(data[idx]); idx += 1\n    p_goals = data[idx:idx + P]\n    idx += P\n    p_times = [int(x) for x in p_goals]\n    C = int(data[idx]); idx += 1\n    c_times = [int(x) for x in data[idx:idx + C]]\n    idx += C\n\n    events = [(m, 0) for m in p_times] + [(m, 1) for m in c_times]\n    events.sort()\n\n    out = [\"0 0\"]\n    pp = 0\n    cc = 0\n    for _, who in events:\n        if who == 0:\n            pp += 1\n        else:\n            cc += 1\n        out.append(f\"{pp} {cc}\")\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0804987000010442,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

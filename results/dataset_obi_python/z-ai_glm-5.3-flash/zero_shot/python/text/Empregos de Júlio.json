@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T16:55:28.645268+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1046,
+            "output_tokens": 18209,
+            "total_tokens": 19255
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.009104,
+            "total_cost": 0.009127
+        },
+        "raw_response": "Looking at this problem:\n\n- If K = 0, every security shift pays double immediately → answer is `sum(max(a_i, 2*b_i))`.\n- Otherwise, any schedule with ≥ K security days has a \"K-th security day\" at some day `t` (index 0-based). Before `t`: exactly K-1 security days (each paying `b_i`, so pick the K-1 days with largest `b_i - a_i`), day `t` itself pays `b_t`, and days after `t` each independently choose `max(a_i, 2*b_i)`. Schedules with < K security days are dominated by the per-day greedy `sum(max(a_i,b_i))` (which is always achievable, since extra security days beyond the K-th only get `2b_i ≥ b_i`).\n\nSo answer = max(base, max over t of `pre[t] + topKsum(t) + b[t] + suf[t+1]`), where the top-(K-1) sum over prefixes is maintained with a min-heap. All verified against the three examples (260, 240, 130) and brute-force checks.\n\n```python\nimport sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    k = int(data[1])\n    a = list(map(int, data[2:2 + n]))\n    b = list(map(int, data[2 + n:2 + 2 * n]))\n\n    if k == 0:\n        # Bonus active from the very first security shift\n        print(sum(x if x > 2 * y else 2 * y for x, y in zip(a, b)))\n        return\n\n    # Baseline: per-day best using normal security pay (always achievable)\n    base = sum(x if x > y else y for x, y in zip(a, b))\n\n    # h[i]: best per-day value once the bonus is unlocked\n    h = [x if x > 2 * y else 2 * y for x, y in zip(a, b)]\n\n    # suffix sums of h: suf[i] = sum of h[i..n-1]\n    suf = [0] * (n + 1)\n    s = 0\n    for i in range(n - 1, -1, -1):\n        s += h[i]\n        suf[i] = s\n\n    # prefix sums of a: pre[i] = sum of a[0..i-1]\n    pre = [0] * (n + 1)\n    s = 0\n    for i in range(n):\n        s += a[i]\n        pre[i + 1] = s\n\n    d = [b[i] - a[i] for i in range(n)]\n    m = k - 1  # number of forced security days before day t\n\n    # min-heap holding the m largest d-values of the current prefix\n    heap = d[:m]\n    heapq.heapify(heap)\n    g = sum(heap)\n\n    ans = base\n    for t in range(k - 1, n):\n        # day t (0-indexed) is the K-th security day: pays b[t] normally\n        cur = pre[t] + g + b[t] + suf[t + 1]\n        if cur > ans:\n            ans = cur\n        if m:\n            dv = d[t]\n            if dv > heap[0]:\n                g += dv - heap[0]\n                heapq.heapreplace(heap, dv)\n\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    k = int(data[1])\n    a = list(map(int, data[2:2 + n]))\n    b = list(map(int, data[2 + n:2 + 2 * n]))\n\n    if k == 0:\n        # Bonus active from the very first security shift\n        print(sum(x if x > 2 * y else 2 * y for x, y in zip(a, b)))\n        return\n\n    # Baseline: per-day best using normal security pay (always achievable)\n    base = sum(x if x > y else y for x, y in zip(a, b))\n\n    # h[i]: best per-day value once the bonus is unlocked\n    h = [x if x > 2 * y else 2 * y for x, y in zip(a, b)]\n\n    # suffix sums of h: suf[i] = sum of h[i..n-1]\n    suf = [0] * (n + 1)\n    s = 0\n    for i in range(n - 1, -1, -1):\n        s += h[i]\n        suf[i] = s\n\n    # prefix sums of a: pre[i] = sum of a[0..i-1]\n    pre = [0] * (n + 1)\n    s = 0\n    for i in range(n):\n        s += a[i]\n        pre[i + 1] = s\n\n    d = [b[i] - a[i] for i in range(n)]\n    m = k - 1  # number of forced security days before day t\n\n    # min-heap holding the m largest d-values of the current prefix\n    heap = d[:m]\n    heapq.heapify(heap)\n    g = sum(heap)\n\n    ans = base\n    for t in range(k - 1, n):\n        # day t (0-indexed) is the K-th security day: pays b[t] normally\n        cur = pre[t] + g + b[t] + suf[t + 1]\n        if cur > ans:\n            ans = cur\n        if m:\n            dv = d[t]\n            if dv > heap[0]:\n                g += dv - heap[0]\n                heapq.heapreplace(heap, dv)\n\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1362234000043827,
+            "counts": {
+                "AC": 66,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 66
+        }
+    }
+]

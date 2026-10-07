@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:48:10.875250+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 996,
+            "output_tokens": 16666,
+            "total_tokens": 17662
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.008333,
+            "total_cost": 0.008354
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n, m = int(data[0]), int(data[1])\n    g = [list(data[2 + i].decode()) for i in range(n)]\n\n    # Ponto de vazamento na primeira linha\n    q = deque()\n    for j, ch in enumerate(g[0]):\n        if ch == 'o':\n            q.append((0, j))\n\n    # BFS aplicando exatamente as regras do enunciado:\n    # - cai verticalmente se a célula abaixo é '.'\n    # - se a célula abaixo é '#', escorre para os lados na linha atual\n    #   (a regra do enunciado: (i,j) fica 'o' se (i,j-1) é 'o' e (i+1,j-1) é '#',\n    #    ou seja, a fonte molhada precisa ter '#' logo abaixo dela)\n    while q:\n        i, j = q.popleft()\n        if i + 1 < n:\n            c = g[i + 1][j]\n            if c == '.':\n                g[i + 1][j] = 'o'\n                q.append((i + 1, j))\n            elif c == '#':\n                if j > 0 and g[i][j - 1] == '.':\n                    g[i][j - 1] = 'o'\n                    q.append((i, j - 1))\n                if j + 1 < m and g[i][j + 1] == '.':\n                    g[i][j + 1] = 'o'\n                    q.append((i, j + 1))\n\n    sys.stdout.write('\\n'.join(''.join(row) for row in g) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n, m = int(data[0]), int(data[1])\n    g = [list(data[2 + i].decode()) for i in range(n)]\n\n    # Ponto de vazamento na primeira linha\n    q = deque()\n    for j, ch in enumerate(g[0]):\n        if ch == 'o':\n            q.append((0, j))\n\n    # BFS aplicando exatamente as regras do enunciado:\n    # - cai verticalmente se a célula abaixo é '.'\n    # - se a célula abaixo é '#', escorre para os lados na linha atual\n    #   (a regra do enunciado: (i,j) fica 'o' se (i,j-1) é 'o' e (i+1,j-1) é '#',\n    #    ou seja, a fonte molhada precisa ter '#' logo abaixo dela)\n    while q:\n        i, j = q.popleft()\n        if i + 1 < n:\n            c = g[i + 1][j]\n            if c == '.':\n                g[i + 1][j] = 'o'\n                q.append((i + 1, j))\n            elif c == '#':\n                if j > 0 and g[i][j - 1] == '.':\n                    g[i][j - 1] = 'o'\n                    q.append((i, j - 1))\n                if j + 1 < m and g[i][j + 1] == '.':\n                    g[i][j + 1] = 'o'\n                    q.append((i, j + 1))\n\n    sys.stdout.write('\\n'.join(''.join(row) for row in g) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07141450000199256,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

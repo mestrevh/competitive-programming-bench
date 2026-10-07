@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:33:49.393026+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1129,
+            "output_tokens": 7224,
+            "total_tokens": 8353
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.003612,
+            "total_cost": 0.003636
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n, m, k = int(data[0]), int(data[1]), int(data[2])\n    need = m * k\n\n    # Cada um dos K grupos precisa conter pelo menos M jogadoras com pontuação\n    # estritamente menor que a de Layse. Como os grupos são contíguos, disjuntos\n    # e não vazios, a soma sobre os grupos implica que o total de jogadoras\n    # vencidas deve ser >= M*K. Esse total é no máximo N, então:\n    if need > n:\n        print(-1)\n        return\n\n    # Suficiência: sejam b_1 < b_2 < ... < b_t as posições das jogadoras com\n    # pontuação < X (t >= M*K). Bastam os grupos:\n    #   Grupo 1: [1, b_M]              -> contém b_1..b_M  (M vencidas)\n    #   Grupo i (2..K-1): [b_{(i-1)M}+1, b_{iM}] -> contém M vencidas\n    #   Grupo K: [b_{(K-1)M}+1, N]     -> contém b_{(K-1)M+1}..b_{MK} (>= M vencidas)\n    # Todos os grupos são não vazios (M >= 1) e cobrem a lista inteira.\n    #\n    # Logo, X é viável <=> (quantidade de P_i < X) >= M*K.\n    # A menor X com essa propriedade é (M*K)-ésimo menor valor + 1.\n    vals = sorted(map(int, data[3:3 + n]))\n    print(vals[need - 1] + 1)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n, m, k = int(data[0]), int(data[1]), int(data[2])\n    need = m * k\n\n    # Cada um dos K grupos precisa conter pelo menos M jogadoras com pontuação\n    # estritamente menor que a de Layse. Como os grupos são contíguos, disjuntos\n    # e não vazios, a soma sobre os grupos implica que o total de jogadoras\n    # vencidas deve ser >= M*K. Esse total é no máximo N, então:\n    if need > n:\n        print(-1)\n        return\n\n    # Suficiência: sejam b_1 < b_2 < ... < b_t as posições das jogadoras com\n    # pontuação < X (t >= M*K). Bastam os grupos:\n    #   Grupo 1: [1, b_M]              -> contém b_1..b_M  (M vencidas)\n    #   Grupo i (2..K-1): [b_{(i-1)M}+1, b_{iM}] -> contém M vencidas\n    #   Grupo K: [b_{(K-1)M}+1, N]     -> contém b_{(K-1)M+1}..b_{MK} (>= M vencidas)\n    # Todos os grupos são não vazios (M >= 1) e cobrem a lista inteira.\n    #\n    # Logo, X é viável <=> (quantidade de P_i < X) >= M*K.\n    # A menor X com essa propriedade é (M*K)-ésimo menor valor + 1.\n    vals = sorted(map(int, data[3:3 + n]))\n    print(vals[need - 1] + 1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06326379999518394,
+            "counts": {
+                "AC": 24,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 24
+        }
+    }
+]

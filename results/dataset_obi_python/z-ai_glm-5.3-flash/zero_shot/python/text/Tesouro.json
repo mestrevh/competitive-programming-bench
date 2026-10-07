@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T01:31:07.576339+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1388,
+            "output_tokens": 5497,
+            "total_tokens": 6885
+        },
+        "cost_usd": {
+            "input_cost": 3e-05,
+            "output_cost": 0.002749,
+            "total_cost": 0.002778
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    m = int(data[0])\n    rows = data[1:1 + m]\n    a = int(data[1 + m])\n    b = int(data[2 + m])\n\n    # grade achatada em bytes (indexacao 0-based, linha*coluna)\n    grid = b\"\".join(rows)\n    visited = bytearray(m * m)\n\n    N, S_, L_, O_, X = 78, 83, 76, 79, 88  # codigos ASCII\n\n    ls = (a - 1) * m + (b - 1)  # posicao linear inicial\n    row = a - 1\n    col = b - 1\n    t = 0\n    last = m - 1\n\n    while True:\n        c = grid[ls]\n        if c == X:\n            print(t)\n            return\n        if visited[ls]:\n            # revisitou uma celula: ciclo eterno sem alcancar o tesouro\n            print(0)\n            return\n        visited[ls] = 1\n        if c == N:\n            if row == 0:\n                print(-1)\n                return\n            ls -= m\n            row -= 1\n        elif c == S_:\n            if row == last:\n                print(-1)\n                return\n            ls += m\n            row += 1\n        elif c == L_:\n            if col == last:\n                print(-1)\n                return\n            ls += 1\n            col += 1\n        else:  # O (oeste)\n            if col == 0:\n                print(-1)\n                return\n            ls -= 1\n            col -= 1\n        t += 1\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    m = int(data[0])\n    rows = data[1:1 + m]\n    a = int(data[1 + m])\n    b = int(data[2 + m])\n\n    # grade achatada em bytes (indexacao 0-based, linha*coluna)\n    grid = b\"\".join(rows)\n    visited = bytearray(m * m)\n\n    N, S_, L_, O_, X = 78, 83, 76, 79, 88  # codigos ASCII\n\n    ls = (a - 1) * m + (b - 1)  # posicao linear inicial\n    row = a - 1\n    col = b - 1\n    t = 0\n    last = m - 1\n\n    while True:\n        c = grid[ls]\n        if c == X:\n            print(t)\n            return\n        if visited[ls]:\n            # revisitou uma celula: ciclo eterno sem alcancar o tesouro\n            print(0)\n            return\n        visited[ls] = 1\n        if c == N:\n            if row == 0:\n                print(-1)\n                return\n            ls -= m\n            row -= 1\n        elif c == S_:\n            if row == last:\n                print(-1)\n                return\n            ls += m\n            row += 1\n        elif c == L_:\n            if col == last:\n                print(-1)\n                return\n            ls += 1\n            col += 1\n        else:  # O (oeste)\n            if col == 0:\n                print(-1)\n                return\n            ls -= 1\n            col -= 1\n        t += 1\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13614400000005844,
+            "counts": {
+                "AC": 54,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 54
+        }
+    }
+]

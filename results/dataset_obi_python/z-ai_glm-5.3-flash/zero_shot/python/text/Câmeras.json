@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:55:57.611886+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 956,
+            "output_tokens": 7037,
+            "total_tokens": 7993
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.003518,
+            "total_cost": 0.003539
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    it = iter(data)\n    n = int(next(it)); m = int(next(it)); k = int(next(it))\n\n    # blocked[coluna][linha]\n    blocked = [[False] * (m + 1) for _ in range(n + 1)]\n\n    for _ in range(k):\n        c = int(next(it)); l = int(next(it)); d = next(it)\n        if d == 'N':          # observa a coluna c, das linhas 1 até l\n            for y in range(1, l + 1):\n                blocked[c][y] = True\n        elif d == 'S':        # observa a coluna c, das linhas l até m\n            for y in range(l, m + 1):\n                blocked[c][y] = True\n        elif d == 'L':        # observa a linha l, das colunas c até n\n            for x in range(c, n + 1):\n                blocked[x][l] = True\n        else:                 # 'O' - observa a linha l, das colunas 1 até c\n            for x in range(1, c + 1):\n                blocked[x][l] = True\n\n    # Entrada (1,1) e saída (n,m) não podem ser observadas\n    if blocked[1][1] or blocked[n][m]:\n        print('N')\n        return\n\n    visited = [[False] * (m + 1) for _ in range(n + 1)]\n    visited[1][1] = True\n    q = deque([(1, 1)])\n    while q:\n        x, y = q.popleft()\n        if x == n and y == m:\n            print('S')\n            return\n        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):\n            if 1 <= nx <= n and 1 <= ny <= m and not blocked[nx][ny] and not visited[nx][ny]:\n                visited[nx][ny] = True\n                q.append((nx, ny))\n    print('N')\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    it = iter(data)\n    n = int(next(it)); m = int(next(it)); k = int(next(it))\n\n    # blocked[coluna][linha]\n    blocked = [[False] * (m + 1) for _ in range(n + 1)]\n\n    for _ in range(k):\n        c = int(next(it)); l = int(next(it)); d = next(it)\n        if d == 'N':          # observa a coluna c, das linhas 1 até l\n            for y in range(1, l + 1):\n                blocked[c][y] = True\n        elif d == 'S':        # observa a coluna c, das linhas l até m\n            for y in range(l, m + 1):\n                blocked[c][y] = True\n        elif d == 'L':        # observa a linha l, das colunas c até n\n            for x in range(c, n + 1):\n                blocked[x][l] = True\n        else:                 # 'O' - observa a linha l, das colunas 1 até c\n            for x in range(1, c + 1):\n                blocked[x][l] = True\n\n    # Entrada (1,1) e saída (n,m) não podem ser observadas\n    if blocked[1][1] or blocked[n][m]:\n        print('N')\n        return\n\n    visited = [[False] * (m + 1) for _ in range(n + 1)]\n    visited[1][1] = True\n    q = deque([(1, 1)])\n    while q:\n        x, y = q.popleft()\n        if x == n and y == m:\n            print('S')\n            return\n        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):\n            if 1 <= nx <= n and 1 <= ny <= m and not blocked[nx][ny] and not visited[nx][ny]:\n                visited[nx][ny] = True\n                q.append((nx, ny))\n    print('N')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07362679999641841,
+            "counts": {
+                "AC": 60,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 60
+        }
+    }
+]

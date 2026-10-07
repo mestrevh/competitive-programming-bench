@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:25:07.910497+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 665,
+            "output_tokens": 2730,
+            "total_tokens": 3395
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.001365,
+            "total_cost": 0.001379
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n, m = int(data[0]), int(data[1])\n    S = n - 3  # após subtrair 1 palito obrigatório de cada amigo\n\n    def f(t):\n        # nº de soluções não-negativas de x+y+z = t é C(t+2, 2); 0 se t < 0\n        if t < 0:\n            return 0\n        return (t + 2) * (t + 1) // 2\n\n    # inclusão-exclusão: cada amigo recebe entre 1 e M palitos\n    # => variáveis x,y,z >= 0 com x+y+z = S e x,y,z <= M-1 (K+1 = M)\n    ans = f(S) - 3 * f(S - m) + 3 * f(S - 2 * m) - f(S - 3 * m)\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n, m = int(data[0]), int(data[1])\n    S = n - 3  # após subtrair 1 palito obrigatório de cada amigo\n\n    def f(t):\n        # nº de soluções não-negativas de x+y+z = t é C(t+2, 2); 0 se t < 0\n        if t < 0:\n            return 0\n        return (t + 2) * (t + 1) // 2\n\n    # inclusão-exclusão: cada amigo recebe entre 1 e M palitos\n    # => variáveis x,y,z >= 0 com x+y+z = S e x,y,z <= M-1 (K+1 = M)\n    ans = f(S) - 3 * f(S - m) + 3 * f(S - 2 * m) - f(S - 3 * m)\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06832070000382373,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

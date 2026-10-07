@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T18:17:59.884579+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1200,
+            "output_tokens": 1179,
+            "total_tokens": 2379
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.000589,
+            "total_cost": 0.000615
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    t = int(data[idx]); idx += 1\n    types = data[idx:idx + n]\n    idx += n\n    prices = data[idx:idx + n]\n    idx += n\n\n    tipo = [0] * n\n    preco = [0] * n\n    th = [None] * (t + 1)\n    for i in range(n):\n        ti = int(types[i]); pi = int(prices[i])\n        tipo[i] = ti\n        preco[i] = pi\n        if th[ti] is None:\n            th[ti] = []\n        heapq.heappush(th[ti], pi)\n\n    g = []\n    for i in range(n):\n        g.append((preco[i], tipo[i]))\n    heapq.heapify(g)\n\n    c = int(data[idx]); idx += 1\n    total = 0\n    for _ in range(c):\n        u = int(data[idx]); idx += 1\n        if u == 0:\n            # cliente indeciso: menor preço, empate menor tipo\n            while g:\n                p0, t0 = g[0]\n                h = th[t0]\n                if h is not None and h and h[0] == p0:\n                    break\n                heapq.heappop(g)\n            if g:\n                p0, t0 = heapq.heappop(g)\n                heapq.heappop(th[t0])\n                total += p0\n        else:\n            h = th[u] if u <= t else None\n            if h is not None and h:\n                p0 = heapq.heappop(h)\n                total += p0\n\n    print(total)\n\nmain()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    t = int(data[idx]); idx += 1\n    types = data[idx:idx + n]\n    idx += n\n    prices = data[idx:idx + n]\n    idx += n\n\n    tipo = [0] * n\n    preco = [0] * n\n    th = [None] * (t + 1)\n    for i in range(n):\n        ti = int(types[i]); pi = int(prices[i])\n        tipo[i] = ti\n        preco[i] = pi\n        if th[ti] is None:\n            th[ti] = []\n        heapq.heappush(th[ti], pi)\n\n    g = []\n    for i in range(n):\n        g.append((preco[i], tipo[i]))\n    heapq.heapify(g)\n\n    c = int(data[idx]); idx += 1\n    total = 0\n    for _ in range(c):\n        u = int(data[idx]); idx += 1\n        if u == 0:\n            # cliente indeciso: menor preço, empate menor tipo\n            while g:\n                p0, t0 = g[0]\n                h = th[t0]\n                if h is not None and h and h[0] == p0:\n                    break\n                heapq.heappop(g)\n            if g:\n                p0, t0 = heapq.heappop(g)\n                heapq.heappop(th[t0])\n                total += p0\n        else:\n            h = th[u] if u <= t else None\n            if h is not None and h:\n                p0 = heapq.heappop(h)\n                total += p0\n\n    print(total)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.33297209999727784,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

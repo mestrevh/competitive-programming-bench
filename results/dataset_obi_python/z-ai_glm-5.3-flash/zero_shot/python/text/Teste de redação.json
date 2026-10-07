@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T01:31:41.087042+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 566,
+            "output_tokens": 3896,
+            "total_tokens": 4462
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.001948,
+            "total_cost": 0.00196
+        },
+        "raw_response": "```python\nimport sys\nimport random\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n\n    # Gera m palavras garantidamente distintas usando numeração bijectiva base 26:\n    # \"a\", \"b\", ..., \"z\", \"aa\", \"ab\", ...\n    # Com m <= 10000, o comprimento máximo da palavra é 3 (<= 10), atendendo ao limite.\n    words = []\n    for i in range(m):\n        k = i + 1\n        chars = []\n        while k > 0:\n            k -= 1\n            chars.append(chr(97 + (k % 26)))\n            k //= 26\n        chars.reverse()\n        words.append(''.join(chars))\n\n    # Embaralha para dar aspecto aleatório à redação\n    random.shuffle(words)\n\n    # Total de palavras = m (assume N <= m <= m, válido pois N <= M)\n    # Quantidade de palavras distintas = m >= M/2 (M é par)\n    sys.stdout.write(' '.join(words) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\nimport random\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n\n    # Gera m palavras garantidamente distintas usando numeração bijectiva base 26:\n    # \"a\", \"b\", ..., \"z\", \"aa\", \"ab\", ...\n    # Com m <= 10000, o comprimento máximo da palavra é 3 (<= 10), atendendo ao limite.\n    words = []\n    for i in range(m):\n        k = i + 1\n        chars = []\n        while k > 0:\n            k -= 1\n            chars.append(chr(97 + (k % 26)))\n            k //= 26\n        chars.reverse()\n        words.append(''.join(chars))\n\n    # Embaralha para dar aspecto aleatório à redação\n    random.shuffle(words)\n\n    # Total de palavras = m (assume N <= m <= m, válido pois N <= M)\n    # Quantidade de palavras distintas = m >= M/2 (M é par)\n    sys.stdout.write(' '.join(words) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.07217490000039106,
+            "counts": {
+                "AC": 0,
+                "WA": 5,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 5
+        }
+    }
+]

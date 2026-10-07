@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T18:19:41.286316+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1301,
+            "output_tokens": 3805,
+            "total_tokens": 5106
+        },
+        "cost_usd": {
+            "input_cost": 2.8e-05,
+            "output_cost": 0.001902,
+            "total_cost": 0.00193
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    tipos = data[1:1 + n]\n    precos = list(map(int, data[1 + n:1 + 2 * n]))\n    c = int(data[1 + 2 * n])\n    clientes = list(map(int, data[2 + 2 * n:2 + 2 * n + c]))\n\n    # Como toda compra remove o objeto mais barato de um tipo,\n    # basta ordenar os preços de cada tipo e avançar ponteiros.\n    a1 = sorted(p for tp, p in zip(tipos, precos) if tp == b'1')\n    a2 = sorted(p for tp, p in zip(tipos, precos) if tp == b'2')\n\n    i1 = i2 = 0\n    l1, l2 = len(a1), len(a2)\n    total = 0\n    for u in clientes:\n        if u == 0:  # indeciso: menor preço; empate -> tipo 1\n            if i1 < l1:\n                if i2 < l2 and a2[i2] < a1[i1]:\n                    total += a2[i2]\n                    i2 += 1\n                else:\n                    total += a1[i1]\n                    i1 += 1\n            elif i2 < l2:\n                total += a2[i2]\n                i2 += 1\n        elif u == 1:  # decidido pelo tipo 1\n            if i1 < l1:\n                total += a1[i1]\n                i1 += 1\n        else:  # decidido pelo tipo 2\n            if i2 < l2:\n                total += a2[i2]\n                i2 += 1\n\n    print(total)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    tipos = data[1:1 + n]\n    precos = list(map(int, data[1 + n:1 + 2 * n]))\n    c = int(data[1 + 2 * n])\n    clientes = list(map(int, data[2 + 2 * n:2 + 2 * n + c]))\n\n    # Como toda compra remove o objeto mais barato de um tipo,\n    # basta ordenar os preços de cada tipo e avançar ponteiros.\n    a1 = sorted(p for tp, p in zip(tipos, precos) if tp == b'1')\n    a2 = sorted(p for tp, p in zip(tipos, precos) if tp == b'2')\n\n    i1 = i2 = 0\n    l1, l2 = len(a1), len(a2)\n    total = 0\n    for u in clientes:\n        if u == 0:  # indeciso: menor preço; empate -> tipo 1\n            if i1 < l1:\n                if i2 < l2 and a2[i2] < a1[i1]:\n                    total += a2[i2]\n                    i2 += 1\n                else:\n                    total += a1[i1]\n                    i1 += 1\n            elif i2 < l2:\n                total += a2[i2]\n                i2 += 1\n        elif u == 1:  # decidido pelo tipo 1\n            if i1 < l1:\n                total += a1[i1]\n                i1 += 1\n        else:  # decidido pelo tipo 2\n            if i2 < l2:\n                total += a2[i2]\n                i2 += 1\n\n    print(total)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11629549999634037,
+            "counts": {
+                "AC": 44,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 44
+        }
+    }
+]

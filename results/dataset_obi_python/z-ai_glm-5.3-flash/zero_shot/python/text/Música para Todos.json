@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:21:17.211541+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 872,
+            "output_tokens": 3863,
+            "total_tokens": 4735
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.001932,
+            "total_cost": 0.00195
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    c = int(data[2])\n\n    # Para cada musica d, guarda a musica adorada do amigo mais antigo\n    # (primeiro na ordem de entrada) que detesta d. 0 significa que ninguem detesta d.\n    nxt = [0] * (m + 1)\n    pos = 3\n    for _ in range(n):\n        a = int(data[pos])\n        d = int(data[pos + 1])\n        pos += 2\n        if nxt[d] == 0:  # primeiro amigo (mais antigo) que detesta d\n            nxt[d] = a\n\n    # O processo e deterministico: dado a musica atual, o proximo valor\n    # e sempre o mesmo. Basta simular e detectar repeticao de musica (= laco infinito).\n    visited = [False] * (m + 1)\n    cur = c\n    visited[cur] = True\n    count = 0\n\n    while True:\n        t = nxt[cur]\n        if t == 0:\n            # ninguem detesta a musica atual: todos satisfeitos\n            sys.stdout.write(str(count) + \"\\n\")\n            return\n        count += 1\n        if visited[t]:\n            # musica ja visitada antes -> ciclo infinito\n            sys.stdout.write(\"-1\\n\")\n            return\n        visited[t] = True\n        cur = t\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    c = int(data[2])\n\n    # Para cada musica d, guarda a musica adorada do amigo mais antigo\n    # (primeiro na ordem de entrada) que detesta d. 0 significa que ninguem detesta d.\n    nxt = [0] * (m + 1)\n    pos = 3\n    for _ in range(n):\n        a = int(data[pos])\n        d = int(data[pos + 1])\n        pos += 2\n        if nxt[d] == 0:  # primeiro amigo (mais antigo) que detesta d\n            nxt[d] = a\n\n    # O processo e deterministico: dado a musica atual, o proximo valor\n    # e sempre o mesmo. Basta simular e detectar repeticao de musica (= laco infinito).\n    visited = [False] * (m + 1)\n    cur = c\n    visited[cur] = True\n    count = 0\n\n    while True:\n        t = nxt[cur]\n        if t == 0:\n            # ninguem detesta a musica atual: todos satisfeitos\n            sys.stdout.write(str(count) + \"\\n\")\n            return\n        count += 1\n        if visited[t]:\n            # musica ja visitada antes -> ciclo infinito\n            sys.stdout.write(\"-1\\n\")\n            return\n        visited[t] = True\n        cur = t\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07459910000034142,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

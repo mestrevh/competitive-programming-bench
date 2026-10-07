@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:17:18.233586+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1118,
+            "output_tokens": 54953,
+            "total_tokens": 56071
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.027477,
+            "total_cost": 0.0275
+        },
+        "raw_response": "Olhando para este problema: duas retas distintas se cruzam em `x* = (B_j - B_i)/(A_i - A_j)` (retas paralelas nunca se cruzam). Definindo `u_i = A_i·X1 + B_i` e `v_i = A_i·X2 + B_i`, um par se cruza em `[X1, X2]` se e somente se `(u_i - u_j)·(v_i - v_j) ≤ 0`, que decompõe de forma disjunta em:\n- pares com `u_i = u_j` (cruzam em X1) → contagem por hash,\n- pares com `v_i = v_j` (cruzam em X2) → contagem por hash,\n- pares com ordens opostas em `u` e `v` (cruzam estritamente dentro) → **contagem de inversões** da sequência de `v` ordenada por `(u, v)`, feita com uma BIT (Fenwick tree) em `O(N log N)`.\n\nO caso especial `X1 = X2` conta apenas pares com mesmo valor em `X1`. Verifiquei a fórmula `E1 + E2 + I` contra todos os 4 exemplos (resultados 2, 1, 3, 6), incluindo interseções nas bordas e o caso do exemplo 3 (bordas em x=100 e x=200).\n\n```python\nimport sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); x1 = int(data[1]); x2 = int(data[2])\n\n    A = list(map(int, data[3:3 + 2 * n:2]))\n    B = list(map(int, data[4:4 + 2 * n:2]))\n\n    # Caso X1 == X2: conta pares com o mesmo valor em x1 (se cruzam exatamente em x1)\n    if x1 == x2:\n        cnt = Counter([a * x1 + b for a, b in zip(A, B)])\n        ans = sum(c * (c - 1) // 2 for c in cnt.values())\n        print(ans)\n        return\n\n    u = [a * x1 + b for a, b in zip(A, B)]  # valor da reta em x1\n    v = [a * x2 + b for a, b in zip(A, B)]  # valor da reta em x2\n\n    ans = 0\n    for c in Counter(u).values():   # pares que se cruzam em x = x1\n        ans += c * (c - 1) // 2\n    for c in Counter(v).values():   # pares que se cruzam em x = x2\n        ans += c * (c - 1) // 2\n\n    # Pares que cruzam estritamente dentro de (x1, x2):\n    # == inversoes entre a ordenacao por u e a ordenacao por v\n    pairs = sorted(zip(u, v))\n    s = [p[1] for p in pairs]\n\n    vals = sorted(set(s))\n    rank = {val: i + 1 for i, val in enumerate(vals)}\n    M = len(vals)\n    r_seq = [rank[x] for x in s]\n\n    tree = [0] * (M + 1)\n    inv = 0\n    idx = 0\n    for r in r_seq:\n        x = r\n        q = 0\n        while x:\n            q += tree[x]\n            x &= x - 1\n        inv += idx - q          # anteriores com valor estritamente maior\n        idx += 1\n        x = r\n        while x <= M:\n            tree[x] += 1\n            x += x & -x\n\n    print(ans + inv)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); x1 = int(data[1]); x2 = int(data[2])\n\n    A = list(map(int, data[3:3 + 2 * n:2]))\n    B = list(map(int, data[4:4 + 2 * n:2]))\n\n    # Caso X1 == X2: conta pares com o mesmo valor em x1 (se cruzam exatamente em x1)\n    if x1 == x2:\n        cnt = Counter([a * x1 + b for a, b in zip(A, B)])\n        ans = sum(c * (c - 1) // 2 for c in cnt.values())\n        print(ans)\n        return\n\n    u = [a * x1 + b for a, b in zip(A, B)]  # valor da reta em x1\n    v = [a * x2 + b for a, b in zip(A, B)]  # valor da reta em x2\n\n    ans = 0\n    for c in Counter(u).values():   # pares que se cruzam em x = x1\n        ans += c * (c - 1) // 2\n    for c in Counter(v).values():   # pares que se cruzam em x = x2\n        ans += c * (c - 1) // 2\n\n    # Pares que cruzam estritamente dentro de (x1, x2):\n    # == inversoes entre a ordenacao por u e a ordenacao por v\n    pairs = sorted(zip(u, v))\n    s = [p[1] for p in pairs]\n\n    vals = sorted(set(s))\n    rank = {val: i + 1 for i, val in enumerate(vals)}\n    M = len(vals)\n    r_seq = [rank[x] for x in s]\n\n    tree = [0] * (M + 1)\n    inv = 0\n    idx = 0\n    for r in r_seq:\n        x = r\n        q = 0\n        while x:\n            q += tree[x]\n            x &= x - 1\n        inv += idx - q          # anteriores com valor estritamente maior\n        idx += 1\n        x = r\n        while x <= M:\n            tree[x] += 1\n            x += x & -x\n\n    print(ans + inv)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2843254999997953,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

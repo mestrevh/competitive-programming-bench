@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:43:26.200248+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1383,
+            "output_tokens": 5432,
+            "total_tokens": 6815
+        },
+        "cost_usd": {
+            "input_cost": 3e-05,
+            "output_cost": 0.002716,
+            "total_cost": 0.002746
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    pos = 0\n    L = int(data[pos]); C = int(data[pos + 1]); D = int(data[pos + 2])\n    pos += 3\n\n    grid = []\n    for i in range(L):\n        row = [int(x) for x in data[pos:pos + C]]\n        pos += C\n        grid.append(row)\n\n    L1 = int(data[pos]) - 1; C1 = int(data[pos + 1]) - 1\n    pos += 2\n    L2 = int(data[pos]) - 1; C2 = int(data[pos + 1]) - 1\n\n    # Custo do caminho = soma das dificuldades das cidades atravessadas.\n    # Christina atravessa A (paga p[A]) mas não atravessa B (não paga p[B]).\n    # Com W bombons, tempo total = W * soma. Queremos maximizar floor(D / soma),\n    # logo basta minimizar a soma com Dijkstra (custo do nó = p do nó ao entrar).\n\n    INF = float('inf')\n    dist = [[INF] * C for _ in range(L)]\n    dist[L1][C1] = grid[L1][C1]\n    heap = [(grid[L1][C1], L1, C1)]\n\n    while heap:\n        d, i, j = heapq.heappop(heap)\n        if d > dist[i][j]:\n            continue\n        if i == L2 and j == C2:\n            break\n        for ni, nj in ((i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)):\n            if 0 <= ni < L and 0 <= nj < C:\n                w = grid[ni][nj]\n                if w != -1:\n                    nd = d + w\n                    if nd < dist[ni][nj]:\n                        dist[ni][nj] = nd\n                        heapq.heappush(heap, (nd, ni, nj))\n\n    total = dist[L2][C2] - grid[L2][C2]  # remove a dificuldade de B\n    print(D // total)\n\nmain()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    pos = 0\n    L = int(data[pos]); C = int(data[pos + 1]); D = int(data[pos + 2])\n    pos += 3\n\n    grid = []\n    for i in range(L):\n        row = [int(x) for x in data[pos:pos + C]]\n        pos += C\n        grid.append(row)\n\n    L1 = int(data[pos]) - 1; C1 = int(data[pos + 1]) - 1\n    pos += 2\n    L2 = int(data[pos]) - 1; C2 = int(data[pos + 1]) - 1\n\n    # Custo do caminho = soma das dificuldades das cidades atravessadas.\n    # Christina atravessa A (paga p[A]) mas não atravessa B (não paga p[B]).\n    # Com W bombons, tempo total = W * soma. Queremos maximizar floor(D / soma),\n    # logo basta minimizar a soma com Dijkstra (custo do nó = p do nó ao entrar).\n\n    INF = float('inf')\n    dist = [[INF] * C for _ in range(L)]\n    dist[L1][C1] = grid[L1][C1]\n    heap = [(grid[L1][C1], L1, C1)]\n\n    while heap:\n        d, i, j = heapq.heappop(heap)\n        if d > dist[i][j]:\n            continue\n        if i == L2 and j == C2:\n            break\n        for ni, nj in ((i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)):\n            if 0 <= ni < L and 0 <= nj < C:\n                w = grid[ni][nj]\n                if w != -1:\n                    nd = d + w\n                    if nd < dist[ni][nj]:\n                        dist[ni][nj] = nd\n                        heapq.heappush(heap, (nd, ni, nj))\n\n    total = dist[L2][C2] - grid[L2][C2]  # remove a dificuldade de B\n    print(D // total)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06380269999499433,
+            "counts": {
+                "AC": 51,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 51
+        }
+    }
+]

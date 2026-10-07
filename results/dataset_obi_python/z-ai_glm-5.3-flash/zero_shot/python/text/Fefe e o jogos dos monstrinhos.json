@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T18:17:28.363382+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1087,
+            "output_tokens": 1454,
+            "total_tokens": 2541
+        },
+        "cost_usd": {
+            "input_cost": 2.3e-05,
+            "output_cost": 0.000727,
+            "total_cost": 0.00075
+        },
+        "raw_response": "```python\nimport sys\nimport bisect\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    f = int(data[idx]); idx += 1\n    monsters = [int(data[idx + j]) for j in range(n)]\n    idx += n\n    powers = [int(data[idx + j]) for j in range(f)]\n    idx += f\n    bonuses = [int(data[idx + j]) for j in range(f)]\n\n    monsters.sort()\n    fairies = sorted(zip(powers, bonuses))\n\n    killed = 0  # monstrinhos mortos formam sempre um prefixo da lista ordenada\n    ans = 0\n    for P, B in fairies:\n        # monstrinhos com poder estritamente menor que P (fada vence só se for mais forte)\n        cnt = bisect.bisect_left(monsters, P)\n        avail = cnt - killed\n        take = min(B, avail)\n        if take > 0:\n            ans += take\n            killed += take\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\nimport bisect\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    f = int(data[idx]); idx += 1\n    monsters = [int(data[idx + j]) for j in range(n)]\n    idx += n\n    powers = [int(data[idx + j]) for j in range(f)]\n    idx += f\n    bonuses = [int(data[idx + j]) for j in range(f)]\n\n    monsters.sort()\n    fairies = sorted(zip(powers, bonuses))\n\n    killed = 0  # monstrinhos mortos formam sempre um prefixo da lista ordenada\n    ans = 0\n    for P, B in fairies:\n        # monstrinhos com poder estritamente menor que P (fada vence só se for mais forte)\n        cnt = bisect.bisect_left(monsters, P)\n        avail = cnt - killed\n        take = min(B, avail)\n        if take > 0:\n            ans += take\n            killed += take\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07317730000067968,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T16:06:29.608060+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 756,
+            "output_tokens": 2448,
+            "total_tokens": 3204
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.001224,
+            "total_cost": 0.00124
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    if n <= 1:\n        print(0)\n        return\n\n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        a = int(data[idx]); b = int(data[idx + 1]); idx += 2\n        adj[a].append(b)\n        adj[b].append(a)\n\n    # DFS iterativo a partir do no 1 para obter ordem (pais antes de filhos)\n    parent = [0] * (n + 1)\n    visited = [False] * (n + 1)\n    order = []\n    stack = [1]\n    visited[1] = True\n    while stack:\n        u = stack.pop()\n        order.append(u)\n        for w in adj[u]:\n            if not visited[w]:\n                visited[w] = True\n                parent[w] = u\n                stack.append(w)\n\n    # Tamanhos de subarvore: processar em ordem reversa\n    size = [1] * (n + 1)\n    best = n\n    for i in range(n - 1, 0, -1):\n        u = order[i]\n        s = size[u]\n        size[parent[u]] += s\n        d = n - 2 * s\n        if d < 0:\n            d = -d\n        if d < best:\n            best = d\n            if best == 0:\n                break\n    print(best)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    if n <= 1:\n        print(0)\n        return\n\n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        a = int(data[idx]); b = int(data[idx + 1]); idx += 2\n        adj[a].append(b)\n        adj[b].append(a)\n\n    # DFS iterativo a partir do no 1 para obter ordem (pais antes de filhos)\n    parent = [0] * (n + 1)\n    visited = [False] * (n + 1)\n    order = []\n    stack = [1]\n    visited[1] = True\n    while stack:\n        u = stack.pop()\n        order.append(u)\n        for w in adj[u]:\n            if not visited[w]:\n                visited[w] = True\n                parent[w] = u\n                stack.append(w)\n\n    # Tamanhos de subarvore: processar em ordem reversa\n    size = [1] * (n + 1)\n    best = n\n    for i in range(n - 1, 0, -1):\n        u = order[i]\n        s = size[u]\n        size[parent[u]] += s\n        d = n - 2 * s\n        if d < 0:\n            d = -d\n        if d < best:\n            best = d\n            if best == 0:\n                break\n    print(best)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12384689999453258,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

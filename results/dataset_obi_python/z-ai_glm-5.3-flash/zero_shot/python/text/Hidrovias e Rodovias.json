@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T19:44:40.857281+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1325,
+            "output_tokens": 7132,
+            "total_tokens": 8457
+        },
+        "cost_usd": {
+            "input_cost": 2.8e-05,
+            "output_cost": 0.003566,
+            "total_cost": 0.003594
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    k = int(data[idx]); idx += 1\n\n    parent1 = list(range(n + 1))\n    parent2 = list(range(n + 1))\n\n    def find(p, x):\n        while p[x] != x:\n            p[x] = p[p[x]]\n            x = p[x]\n        return x\n\n    waters = []\n    roads = []\n    for _ in range(m):\n        a = int(data[idx]); b = int(data[idx + 1]); t = int(data[idx + 2])\n        idx += 3\n        if t == 1:\n            waters.append((a, b))\n        else:\n            roads.append((a, b))\n\n    # Rede simples = floresta. Ha K anos: todas as hidrovias existiam,\n    # e no maximo K rodovias foram adicionadas desde entao.\n    # Logo, devemos poder remover no maximo K rodovias para obter uma floresta\n    # que contenha todas as hidrovias.\n\n    # 1) Hidrovias nao podem conter ciclos\n    for a, b in waters:\n        ra = find(parent1, a)\n        rb = find(parent1, b)\n        if ra == rb:\n            print(\"N\")\n            return\n        parent1[ra] = rb\n\n    # 2) Contrair componentes das hidrovias; sobre o grafo condensado,\n    #    mantemos o maximo de rodovias possiveis (floresta geradora maximal).\n    #    Rodovias dentro de uma mesma componente de hidrovias:\n    #    remocao obrigatoria. Rodovias que fecham ciclo no condensado:\n    #    remocao obrigatoria.\n    removals = 0\n    for a, b in roads:\n        ra = find(parent1, a)\n        rb = find(parent1, b)\n        if ra == rb:\n            removals += 1\n        else:\n            ra2 = find(parent2, ra)\n            rb2 = find(parent2, rb)\n            if ra2 == rb2:\n                removals += 1\n            else:\n                parent2[ra2] = rb2\n\n    print(\"S\" if removals <= k else \"N\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    k = int(data[idx]); idx += 1\n\n    parent1 = list(range(n + 1))\n    parent2 = list(range(n + 1))\n\n    def find(p, x):\n        while p[x] != x:\n            p[x] = p[p[x]]\n            x = p[x]\n        return x\n\n    waters = []\n    roads = []\n    for _ in range(m):\n        a = int(data[idx]); b = int(data[idx + 1]); t = int(data[idx + 2])\n        idx += 3\n        if t == 1:\n            waters.append((a, b))\n        else:\n            roads.append((a, b))\n\n    # Rede simples = floresta. Ha K anos: todas as hidrovias existiam,\n    # e no maximo K rodovias foram adicionadas desde entao.\n    # Logo, devemos poder remover no maximo K rodovias para obter uma floresta\n    # que contenha todas as hidrovias.\n\n    # 1) Hidrovias nao podem conter ciclos\n    for a, b in waters:\n        ra = find(parent1, a)\n        rb = find(parent1, b)\n        if ra == rb:\n            print(\"N\")\n            return\n        parent1[ra] = rb\n\n    # 2) Contrair componentes das hidrovias; sobre o grafo condensado,\n    #    mantemos o maximo de rodovias possiveis (floresta geradora maximal).\n    #    Rodovias dentro de uma mesma componente de hidrovias:\n    #    remocao obrigatoria. Rodovias que fecham ciclo no condensado:\n    #    remocao obrigatoria.\n    removals = 0\n    for a, b in roads:\n        ra = find(parent1, a)\n        rb = find(parent1, b)\n        if ra == rb:\n            removals += 1\n        else:\n            ra2 = find(parent2, ra)\n            rb2 = find(parent2, rb)\n            if ra2 == rb2:\n                removals += 1\n            else:\n                parent2[ra2] = rb2\n\n    print(\"S\" if removals <= k else \"N\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2805882000029669,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

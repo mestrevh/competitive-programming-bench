@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:49:25.540141+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 884,
+            "output_tokens": 18042,
+            "total_tokens": 18926
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.009021,
+            "total_cost": 0.00904
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    J, P, V, E, D = map(int, sys.stdin.read().split())\n\n    if J == -1:\n        if P == -1:\n            # Ilegíveis: J e P -> calcula a partir de V, E, D\n            P = 3 * V + E\n            J = V + E + D\n        elif V == -1:\n            # Ilegíveis: J e V -> V = (P - E)/3\n            V = (P - E) // 3\n            J = V + E + D\n        elif E == -1:\n            # Ilegíveis: J e E -> E = P - 3V\n            E = P - 3 * V\n            J = V + E + D\n        else:\n            # Ilegível: apenas J -> J = V + E + D\n            if D == -1:\n                D = 0\n            J = V + E + D\n    elif P == -1:\n        if V == -1:\n            # Ilegíveis: P e V -> V = J - E - D\n            V = J - E - D\n            P = 3 * V + E\n        elif E == -1:\n            # Ilegíveis: P e E -> E = J - V - D\n            E = J - V - D\n            P = 3 * V + E\n        else:\n            # Ilegíveis: P e D -> D = J - V - E\n            D = J - V - E\n            P = 3 * V + E\n    elif V == -1:\n        if E == -1:\n            # Ilegíveis: V e E -> 2V = P - J + D\n            V = (P - J + D) // 2\n            E = J - D - V\n        else:\n            # Ilegíveis: V e D -> V = (P - E)/3\n            V = (P - E) // 3\n            D = J - V - E\n    else:\n        # Ilegíveis: E e/ou D -> E = P - 3V e D = J - V - E\n        E = P - 3 * V\n        D = J - V - E\n\n    print(J, P, V, E, D)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    J, P, V, E, D = map(int, sys.stdin.read().split())\n\n    if J == -1:\n        if P == -1:\n            # Ilegíveis: J e P -> calcula a partir de V, E, D\n            P = 3 * V + E\n            J = V + E + D\n        elif V == -1:\n            # Ilegíveis: J e V -> V = (P - E)/3\n            V = (P - E) // 3\n            J = V + E + D\n        elif E == -1:\n            # Ilegíveis: J e E -> E = P - 3V\n            E = P - 3 * V\n            J = V + E + D\n        else:\n            # Ilegível: apenas J -> J = V + E + D\n            if D == -1:\n                D = 0\n            J = V + E + D\n    elif P == -1:\n        if V == -1:\n            # Ilegíveis: P e V -> V = J - E - D\n            V = J - E - D\n            P = 3 * V + E\n        elif E == -1:\n            # Ilegíveis: P e E -> E = J - V - D\n            E = J - V - D\n            P = 3 * V + E\n        else:\n            # Ilegíveis: P e D -> D = J - V - E\n            D = J - V - E\n            P = 3 * V + E\n    elif V == -1:\n        if E == -1:\n            # Ilegíveis: V e E -> 2V = P - J + D\n            V = (P - J + D) // 2\n            E = J - D - V\n        else:\n            # Ilegíveis: V e D -> V = (P - E)/3\n            V = (P - E) // 3\n            D = J - V - E\n    else:\n        # Ilegíveis: E e/ou D -> E = P - 3V e D = J - V - E\n        E = P - 3 * V\n        D = J - V - E\n\n    print(J, P, V, E, D)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0866980999999214,
+            "counts": {
+                "AC": 124,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 124
+        }
+    }
+]

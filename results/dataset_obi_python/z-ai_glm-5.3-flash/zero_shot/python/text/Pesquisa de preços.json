@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:32:50.310814+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 776,
+            "output_tokens": 1907,
+            "total_tokens": 2683
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.000954,
+            "total_cost": 0.00097
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    idx = 1\n    out = []\n    for _ in range(n):\n        estado = data[idx]\n        # trabalho em centavos (inteiros) para evitar erros de ponto flutuante\n        a = round(float(data[idx + 1]) * 100)\n        g = round(float(data[idx + 2]) * 100)\n        idx += 3\n        # condição: A <= 0.70 * G  <=>  100*A <= 70*G (em centavos)  <=>  10*A <= 7*G\n        if 10 * a <= 7 * g:\n            out.append(estado)\n    if out:\n        sys.stdout.write('\\n'.join(out) + '\\n')\n    else:\n        sys.stdout.write('*\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    idx = 1\n    out = []\n    for _ in range(n):\n        estado = data[idx]\n        # trabalho em centavos (inteiros) para evitar erros de ponto flutuante\n        a = round(float(data[idx + 1]) * 100)\n        g = round(float(data[idx + 2]) * 100)\n        idx += 3\n        # condição: A <= 0.70 * G  <=>  100*A <= 70*G (em centavos)  <=>  10*A <= 7*G\n        if 10 * a <= 7 * g:\n            out.append(estado)\n    if out:\n        sys.stdout.write('\\n'.join(out) + '\\n')\n    else:\n        sys.stdout.write('*\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0702463999914471,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:41:58.105294+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 561,
+            "output_tokens": 2275,
+            "total_tokens": 2836
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.001138,
+            "total_cost": 0.00115
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    k = int(data[1])\n    nums = map(int, data[2:2 + n])\n\n    seen = {0: 1}\n    get = seen.get\n    prefix = 0\n    count = 0\n\n    for x in nums:\n        prefix += x\n        v = get(prefix - k)\n        if v:\n            count += v\n        if prefix in seen:\n            seen[prefix] += 1\n        else:\n            seen[prefix] = 1\n\n    print(count)\n\nmain()\n```\n\n**Explicação da abordagem:**\n\n- Usamos a técnica de **somas de prefixo com dicionário** (contagem de subarrays com soma K em tempo O(N)).\n- Para cada posição `j`, o número de retângulos terminando em `j` com soma igual a K é a quantidade de índices anteriores `i` (incluindo `i = 0` com prefixo 0) tais que `prefixo[i] = prefixo[j] - K`.\n- O dicionário `seen` armazena quantas vezes cada valor de soma de prefixo já apareceu. Inicializamos `seen[0] = 1` para cobrir retângulos que começam no primeiro quadrado.\n- Essa abordagem lida corretamente com os zeros (que quebrariam a técnica de janela deslizante), pois grupos de zeros produzem prefixos iguais, e cada par de prefixos iguais difere em K exatamente quando há um retângulo válido — PODEROSA verificação com os exemplos: Exemplo 1 retorna 5 e Exemplo 2 retorna 25 (15 + 1 + 6 + 3 pares de prefixos repetidos).\n\n**Complexidade:** O(N) tempo, O(N) espaço — adequado para N = 5×10⁵.",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    k = int(data[1])\n    nums = map(int, data[2:2 + n])\n\n    seen = {0: 1}\n    get = seen.get\n    prefix = 0\n    count = 0\n\n    for x in nums:\n        prefix += x\n        v = get(prefix - k)\n        if v:\n            count += v\n        if prefix in seen:\n            seen[prefix] += 1\n        else:\n            seen[prefix] = 1\n\n    print(count)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16478979999965304,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T14:54:15.386850+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 653,
+            "output_tokens": 7030,
+            "total_tokens": 7683
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.003515,
+            "total_cost": 0.003529
+        },
+        "raw_response": "```python\nimport sys\nfrom math import sqrt\n\ndef isqrt(n):\n    if n < 0:\n        return -1\n    x = int(sqrt(n))\n    while x * x > n:\n        x -= 1\n    while (x + 1) * (x + 1) <= n:\n        x += 1\n    return x\n\ndef main():\n    data = sys.stdin.read().split()\n    if len(data) < 2:\n        return\n    A = int(data[0])\n    B = int(data[1])\n    out = \"-1 -1\"\n    if A % 2 == 0:\n        # Room W x L: blue border A = 2W + 2L - 4, white interior B = (W-2)(L-2)\n        # Let u = W-2, v = L-2: u*v = B, u+v = (A-4)/2\n        s = (A - 4) // 2  # u + v\n        if s >= 2:\n            d = s * s - 4 * B  # discriminant\n            if d >= 0:\n                r = isqrt(d)\n                if r * r == d and (s - r) % 2 == 0:\n                    u = (s - r) // 2\n                    v = (s + r) // 2\n                    if u >= 1:  # interior must be non-empty (u <= v)\n                        out = \"%d %d\" % (u + 2, v + 2)\n    sys.stdout.write(out + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom math import sqrt\n\ndef isqrt(n):\n    if n < 0:\n        return -1\n    x = int(sqrt(n))\n    while x * x > n:\n        x -= 1\n    while (x + 1) * (x + 1) <= n:\n        x += 1\n    return x\n\ndef main():\n    data = sys.stdin.read().split()\n    if len(data) < 2:\n        return\n    A = int(data[0])\n    B = int(data[1])\n    out = \"-1 -1\"\n    if A % 2 == 0:\n        # Room W x L: blue border A = 2W + 2L - 4, white interior B = (W-2)(L-2)\n        # Let u = W-2, v = L-2: u*v = B, u+v = (A-4)/2\n        s = (A - 4) // 2  # u + v\n        if s >= 2:\n            d = s * s - 4 * B  # discriminant\n            if d >= 0:\n                r = isqrt(d)\n                if r * r == d and (s - r) % 2 == 0:\n                    u = (s - r) // 2\n                    v = (s + r) // 2\n                    if u >= 1:  # interior must be non-empty (u <= v)\n                        out = \"%d %d\" % (u + 2, v + 2)\n    sys.stdout.write(out + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09911840000131633,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

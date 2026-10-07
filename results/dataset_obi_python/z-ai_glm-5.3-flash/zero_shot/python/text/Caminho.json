@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:32:07.117592+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 695,
+            "output_tokens": 4351,
+            "total_tokens": 5046
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.002175,
+            "total_cost": 0.00219
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    p = list(map(int, data[1:1 + n]))\n\n    # dark[i] == '1' se o trecho entre o poste i e o poste (i+1) % n é escuro\n    # (soma das potências < 1000)\n    dark = ''.join('1' if a + b < 1000 else '0' for a, b in zip(p, p[1:]))\n    dark += '1' if p[-1] + p[0] < 1000 else '0'\n\n    if '0' not in dark:\n        # Todos os N trechos são escuros: em um ciclo, formam N trechos\n        # escuros consecutivos (ex.: exemplo 1 -> 3, exemplo 5 -> 2)\n        print(n)\n        return\n\n    # Duplicar a string permite capturar sequências que cruzam a \"emenda\"\n    # do círculo; como existe ao menos um '0', nenhuma sequência excede n-1.\n    doubled = dark + dark\n    best = max(len(run) for run in doubled.split('0'))\n    print(best)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    p = list(map(int, data[1:1 + n]))\n\n    # dark[i] == '1' se o trecho entre o poste i e o poste (i+1) % n é escuro\n    # (soma das potências < 1000)\n    dark = ''.join('1' if a + b < 1000 else '0' for a, b in zip(p, p[1:]))\n    dark += '1' if p[-1] + p[0] < 1000 else '0'\n\n    if '0' not in dark:\n        # Todos os N trechos são escuros: em um ciclo, formam N trechos\n        # escuros consecutivos (ex.: exemplo 1 -> 3, exemplo 5 -> 2)\n        print(n)\n        return\n\n    # Duplicar a string permite capturar sequências que cruzam a \"emenda\"\n    # do círculo; como existe ao menos um '0', nenhuma sequência excede n-1.\n    doubled = dark + dark\n    best = max(len(run) for run in doubled.split('0'))\n    print(best)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16269459999602986,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

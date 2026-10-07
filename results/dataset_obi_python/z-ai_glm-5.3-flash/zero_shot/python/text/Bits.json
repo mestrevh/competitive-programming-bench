@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:03:02.130398+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 559,
+            "output_tokens": 5433,
+            "total_tokens": 5992
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.002717,
+            "total_cost": 0.002728
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    N, K = int(data[0]), int(data[1])\n    MOD = 10**9 + 7\n\n    # dp[j] = numero de sequencias validas de comprimento n\n    #         que terminam com exatamente j bits 1 consecutivos (0 <= j <= K-1)\n    dp = [0] * K\n    dp[0] = 1          # sequencia \"0\"\n    if K > 1:\n        dp[1] = 1      # sequencia \"1\"\n\n    S = sum(dp) % MOD  # total de sequencias validas de comprimento 1\n\n    for _ in range(N - 1):\n        # Novo total = (todas as anteriores, acrescentando 0)\n        #            + (todas as anteriores, acrescentando 1) - (aquelas que criariam K uns)\n        # dp[n][0] = S ; dp[n][j] = dp[n-1][j-1]\n        # => novo S = 2*S - dp[K-1]\n        S = (2 * S - dp[K - 1]) % MOD\n        dp = [S] + dp[:-1]\n\n    print(S % MOD)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    N, K = int(data[0]), int(data[1])\n    MOD = 10**9 + 7\n\n    # dp[j] = numero de sequencias validas de comprimento n\n    #         que terminam com exatamente j bits 1 consecutivos (0 <= j <= K-1)\n    dp = [0] * K\n    dp[0] = 1          # sequencia \"0\"\n    if K > 1:\n        dp[1] = 1      # sequencia \"1\"\n\n    S = sum(dp) % MOD  # total de sequencias validas de comprimento 1\n\n    for _ in range(N - 1):\n        # Novo total = (todas as anteriores, acrescentando 0)\n        #            + (todas as anteriores, acrescentando 1) - (aquelas que criariam K uns)\n        # dp[n][0] = S ; dp[n][j] = dp[n-1][j-1]\n        # => novo S = 2*S - dp[K-1]\n        S = (2 * S - dp[K - 1]) % MOD\n        dp = [S] + dp[:-1]\n\n    print(S % MOD)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.0805093000017223,
+            "counts": {
+                "AC": 16,
+                "WA": 18,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

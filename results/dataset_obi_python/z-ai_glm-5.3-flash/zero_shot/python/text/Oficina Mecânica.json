@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:31:39.411760+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1442,
+            "output_tokens": 64106,
+            "total_tokens": 65548
+        },
+        "cost_usd": {
+            "input_cost": 3.1e-05,
+            "output_cost": 0.032053,
+            "total_cost": 0.032084
+        },
+        "raw_response": "```python\nimport sys\nfrom heapq import heapify, heapreplace\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    T = sorted(map(int, data[2:2 + n]), reverse=True)\n    # cada mecânico j oferece \"vagas\" com preço incremental F_j * k (k = 0,1,2,...)\n    # heap guarda (preço da próxima vaga, fator) de cada mecânico\n    heap = [(0, int(x)) for x in data[2 + n:2 + n + m]]\n    heapify(heap)\n    total = 0\n    # processa carros do maior tempo base para o menor; atribui cada carro\n    # à vaga mais barata disponível (custo incremental = t * F_j * k)\n    for t in T:\n        u, f = heap[0]\n        total += t * u\n        heapreplace(heap, (u + f, f))\n    print(total)\n\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom heapq import heapify, heapreplace\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    T = sorted(map(int, data[2:2 + n]), reverse=True)\n    # cada mecânico j oferece \"vagas\" com preço incremental F_j * k (k = 0,1,2,...)\n    # heap guarda (preço da próxima vaga, fator) de cada mecânico\n    heap = [(0, int(x)) for x in data[2 + n:2 + n + m]]\n    heapify(heap)\n    total = 0\n    # processa carros do maior tempo base para o menor; atribui cada carro\n    # à vaga mais barata disponível (custo incremental = t * F_j * k)\n    for t in T:\n        u, f = heap[0]\n        total += t * u\n        heapreplace(heap, (u + f, f))\n    print(total)\n\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21802949999982957,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

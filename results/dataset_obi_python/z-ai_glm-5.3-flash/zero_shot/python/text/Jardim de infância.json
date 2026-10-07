@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T19:52:56.506706+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1091,
+            "output_tokens": 16665,
+            "total_tokens": 17756
+        },
+        "cost_usd": {
+            "input_cost": 2.3e-05,
+            "output_cost": 0.008332,
+            "total_cost": 0.008356
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    pts = []\n    for i in range(7):\n        x = int(data[2 * i])\n        y = int(data[2 * i + 1])\n        pts.append((x, y))\n    P1, P2, P3, P4, P5, P6, P7 = pts\n\n    def sub(a, b):\n        return (a[0] - b[0], a[1] - b[1])\n\n    def dot(a, b):\n        return a[0] * b[0] + a[1] * b[1]\n\n    def crs(a, b):\n        return a[0] * b[1] - a[1] * b[0]\n\n    def sq(a):\n        return a[0] * a[0] + a[1] * a[1]\n\n    v2 = sub(P2, P1)\n    v3 = sub(P3, P1)\n    d = sub(P3, P2)          # direção da reta que contém P2P3\n    e6 = sub(P6, P4)\n    e7 = sub(P7, P5)\n    e5 = sub(P5, P4)\n\n    # 1) Ângulo P2P1P3 agudo (estritamente entre 0 e 90 graus)\n    if dot(v2, v3) <= 0 or crs(v2, v3) == 0:\n        print(\"N\")\n        return\n    # 2) |P1P2| == |P1P3| (comparando comprimentos ao quadrado)\n    if sq(v2) != sq(v3):\n        print(\"N\")\n        return\n    # 3) P2, P3, P4, P5 colineares\n    if crs(d, sub(P4, P2)) != 0 or crs(d, sub(P5, P2)) != 0:\n        print(\"N\")\n        return\n    # 4) Pontos médios de P2P3 e P4P5 coincidem: P2 + P3 == P4 + P5\n    if P2[0] + P3[0] != P4[0] + P5[0] or P2[1] + P3[1] != P4[1] + P5[1]:\n        print(\"N\")\n        return\n    # 5) |P2P3| > |P4P5| (estrito)\n    if sq(d) <= sq(e5):\n        print(\"N\")\n        return\n    # 6) P4P6 e P5P7 perpendiculares a P2P3 (produto interno nulo)\n    if dot(e6, d) != 0 or dot(e7, d) != 0:\n        print(\"N\")\n        return\n    # 7) |P4P6| == |P5P7|\n    if sq(e6) != sq(e7):\n        print(\"N\")\n        return\n    # 8) P1 e P6 em lados estritamente opostos da reta que contém P2P3\n    #    (segmento P1P6 intercepta a reta em exatamente um ponto)\n    c1 = crs(d, sub(P1, P2))\n    c6 = crs(d, sub(P6, P2))\n    if not ((c1 > 0 and c6 < 0) or (c1 < 0 and c6 > 0)):\n        print(\"N\")\n        return\n    print(\"S\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    pts = []\n    for i in range(7):\n        x = int(data[2 * i])\n        y = int(data[2 * i + 1])\n        pts.append((x, y))\n    P1, P2, P3, P4, P5, P6, P7 = pts\n\n    def sub(a, b):\n        return (a[0] - b[0], a[1] - b[1])\n\n    def dot(a, b):\n        return a[0] * b[0] + a[1] * b[1]\n\n    def crs(a, b):\n        return a[0] * b[1] - a[1] * b[0]\n\n    def sq(a):\n        return a[0] * a[0] + a[1] * a[1]\n\n    v2 = sub(P2, P1)\n    v3 = sub(P3, P1)\n    d = sub(P3, P2)          # direção da reta que contém P2P3\n    e6 = sub(P6, P4)\n    e7 = sub(P7, P5)\n    e5 = sub(P5, P4)\n\n    # 1) Ângulo P2P1P3 agudo (estritamente entre 0 e 90 graus)\n    if dot(v2, v3) <= 0 or crs(v2, v3) == 0:\n        print(\"N\")\n        return\n    # 2) |P1P2| == |P1P3| (comparando comprimentos ao quadrado)\n    if sq(v2) != sq(v3):\n        print(\"N\")\n        return\n    # 3) P2, P3, P4, P5 colineares\n    if crs(d, sub(P4, P2)) != 0 or crs(d, sub(P5, P2)) != 0:\n        print(\"N\")\n        return\n    # 4) Pontos médios de P2P3 e P4P5 coincidem: P2 + P3 == P4 + P5\n    if P2[0] + P3[0] != P4[0] + P5[0] or P2[1] + P3[1] != P4[1] + P5[1]:\n        print(\"N\")\n        return\n    # 5) |P2P3| > |P4P5| (estrito)\n    if sq(d) <= sq(e5):\n        print(\"N\")\n        return\n    # 6) P4P6 e P5P7 perpendiculares a P2P3 (produto interno nulo)\n    if dot(e6, d) != 0 or dot(e7, d) != 0:\n        print(\"N\")\n        return\n    # 7) |P4P6| == |P5P7|\n    if sq(e6) != sq(e7):\n        print(\"N\")\n        return\n    # 8) P1 e P6 em lados estritamente opostos da reta que contém P2P3\n    #    (segmento P1P6 intercepta a reta em exatamente um ponto)\n    c1 = crs(d, sub(P1, P2))\n    c6 = crs(d, sub(P6, P2))\n    if not ((c1 > 0 and c6 < 0) or (c1 < 0 and c6 > 0)):\n        print(\"N\")\n        return\n    print(\"S\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16786580000189133,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

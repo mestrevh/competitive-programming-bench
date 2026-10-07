@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T17:59:00.403256+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 800,
+            "output_tokens": 3662,
+            "total_tokens": 4462
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.001831,
+            "total_cost": 0.001848
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    \n    parent = [0] * (n + 1)\n    for i in range(1, n + 1):\n        parent[i] = int(data[1 + i])\n    \n    attendees = set(map(int, data[2 + n: 2 + n + m]))\n    \n    depth = [-1] * (n + 1)\n    depth[0] = 0\n    \n    total = [0] * (n + 2)\n    present = [0] * (n + 2)\n    max_depth = 0\n    \n    for i in range(1, n + 1):\n        if depth[i] == -1:\n            chain = []\n            node = i\n            while depth[node] == -1:\n                chain.append(node)\n                node = parent[node]\n            d = depth[node]\n            for j in range(len(chain) - 1, -1, -1):\n                d += 1\n                depth[chain[j]] = d\n        gen = depth[i]\n        total[gen] += 1\n        if i in attendees:\n            present[gen] += 1\n        if gen > max_depth:\n            max_depth = gen\n    \n    out = []\n    for g in range(1, max_depth + 1):\n        t = total[g]\n        p = present[g]\n        out.append(\"%.2f\" % (p * 100.0 / t))\n    \n    sys.stdout.write(\" \".join(out) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    \n    parent = [0] * (n + 1)\n    for i in range(1, n + 1):\n        parent[i] = int(data[1 + i])\n    \n    attendees = set(map(int, data[2 + n: 2 + n + m]))\n    \n    depth = [-1] * (n + 1)\n    depth[0] = 0\n    \n    total = [0] * (n + 2)\n    present = [0] * (n + 2)\n    max_depth = 0\n    \n    for i in range(1, n + 1):\n        if depth[i] == -1:\n            chain = []\n            node = i\n            while depth[node] == -1:\n                chain.append(node)\n                node = parent[node]\n            d = depth[node]\n            for j in range(len(chain) - 1, -1, -1):\n                d += 1\n                depth[chain[j]] = d\n        gen = depth[i]\n        total[gen] += 1\n        if i in attendees:\n            present[gen] += 1\n        if gen > max_depth:\n            max_depth = gen\n    \n    out = []\n    for g in range(1, max_depth + 1):\n        t = total[g]\n        p = present[g]\n        out.append(\"%.2f\" % (p * 100.0 / t))\n    \n    sys.stdout.write(\" \".join(out) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06319190000067465,
+            "counts": {
+                "AC": 15,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

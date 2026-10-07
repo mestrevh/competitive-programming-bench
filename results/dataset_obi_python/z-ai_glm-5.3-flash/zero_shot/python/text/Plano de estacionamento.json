@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:40:02.561346+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 809,
+            "output_tokens": 33459,
+            "total_tokens": 34268
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.01673,
+            "total_cost": 0.016747
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if len(data) < 2:\n        sys.stdout.write(\"0\\n\")\n        return\n    n = int(data[0])\n    m = int(data[1])\n    # DSU \"para baixo\": parent[x] == x  <=>  vaga x livre.\n    # Ao ocupar a vaga s, apontamos s -> s-1 (0 = sentinela \"nenhuma vaga livre\").\n    # find(v) devolve a maior vaga livre <= v.\n    # Estrategia otima: cada carro ocupa a maior vaga livre <= V_i\n    # (mantem as vagas baixas livres para clientes com Vi pequenos).\n    parent = list(range(n + 1))\n    p = parent\n    count = 0\n    for i in range(m):\n        v = int(data[2 + i])\n        if v > n:\n            v = n\n        # find: maior vaga livre <= v\n        root = v\n        while p[root] != root:\n            root = p[root]\n        if root == 0:\n            # cliente nao consegue estacionar -> processo para\n            break\n        # compressao de caminho\n        x = v\n        while x != root:\n            nxt = p[x]\n            p[x] = root\n            x = nxt\n        # ocupa a vaga root\n        p[root] = root - 1\n        count += 1\n    sys.stdout.write(str(count) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if len(data) < 2:\n        sys.stdout.write(\"0\\n\")\n        return\n    n = int(data[0])\n    m = int(data[1])\n    # DSU \"para baixo\": parent[x] == x  <=>  vaga x livre.\n    # Ao ocupar a vaga s, apontamos s -> s-1 (0 = sentinela \"nenhuma vaga livre\").\n    # find(v) devolve a maior vaga livre <= v.\n    # Estrategia otima: cada carro ocupa a maior vaga livre <= V_i\n    # (mantem as vagas baixas livres para clientes com Vi pequenos).\n    parent = list(range(n + 1))\n    p = parent\n    count = 0\n    for i in range(m):\n        v = int(data[2 + i])\n        if v > n:\n            v = n\n        # find: maior vaga livre <= v\n        root = v\n        while p[root] != root:\n            root = p[root]\n        if root == 0:\n            # cliente nao consegue estacionar -> processo para\n            break\n        # compressao de caminho\n        x = v\n        while x != root:\n            nxt = p[x]\n            p[x] = root\n            x = nxt\n        # ocupa a vaga root\n        p[root] = root - 1\n        count += 1\n    sys.stdout.write(str(count) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12299099999654572,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

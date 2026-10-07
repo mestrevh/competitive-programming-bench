@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T14:52:01.420537+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 813,
+            "output_tokens": 51057,
+            "total_tokens": 51870
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.025528,
+            "total_cost": 0.025546
+        },
+        "raw_response": "```python\nimport sys\nfrom bisect import bisect_right, insort\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    vals = list(map(int, data[1:2 * n + 1]))\n\n    CAP = 1024          # Fenwick capacity (>= max possible number of blocks)\n    SPLIT_AT = 1024     # max block size before splitting\n    fen = [0] * (CAP + 1)\n    blocks = []         # list of sorted blocks (sqrt decomposition)\n    maxes = []          # maxes[t] = last element of blocks[t]\n    M = 0               # number of blocks\n\n    total = 0\n    p = 0               # penalty of the previous arrow\n    br = bisect_right\n\n    cit = iter(vals)\n    for X, Y in zip(cit, cit):\n        dx = X + p\n        dy = Y + p\n        d = dx * dx + dy * dy\n\n        # count of previous distances <= d\n        i = br(maxes, d)\n        c = 0\n        j = i\n        while j:\n            c += fen[j]\n            j &= j - 1\n        if i < M:\n            c += br(blocks[i], d)\n        total += c\n        p = c\n\n        # insert d keeping global sorted order\n        if i == M:\n            if M and maxes[M - 1] == d:\n                b = M - 1\n                blocks[b].append(d)\n            elif M and len(blocks[M - 1]) < SPLIT_AT:\n                b = M - 1\n                blocks[b].append(d)\n                maxes[b] = d\n            else:\n                b = M\n                blocks.append([d])\n                maxes.append(d)\n                M += 1\n        else:\n            b = i\n            insort(blocks[b], d)\n\n        j = b + 1\n        while j <= CAP:\n            fen[j] += 1\n            j += j & -j\n\n        blk = blocks[b]\n        if len(blk) > SPLIT_AT:\n            h = len(blk) >> 1\n            L = blk[:h]\n            R = blk[h:]\n            blocks[b:b + 1] = (L, R)\n            maxes[b:b + 1] = (L[-1], R[-1])\n            M += 1\n            # full O(CAP) rebuild of the Fenwick tree over block sizes\n            f = [0] * (CAP + 1)\n            for t in range(1, M + 1):\n                f[t] = len(blocks[t - 1])\n            for t in range(1, CAP + 1):\n                j2 = t + (t & -t)\n                if j2 <= CAP:\n                    f[j2] += f[t]\n            fen = f\n\n    print(total)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom bisect import bisect_right, insort\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    vals = list(map(int, data[1:2 * n + 1]))\n\n    CAP = 1024          # Fenwick capacity (>= max possible number of blocks)\n    SPLIT_AT = 1024     # max block size before splitting\n    fen = [0] * (CAP + 1)\n    blocks = []         # list of sorted blocks (sqrt decomposition)\n    maxes = []          # maxes[t] = last element of blocks[t]\n    M = 0               # number of blocks\n\n    total = 0\n    p = 0               # penalty of the previous arrow\n    br = bisect_right\n\n    cit = iter(vals)\n    for X, Y in zip(cit, cit):\n        dx = X + p\n        dy = Y + p\n        d = dx * dx + dy * dy\n\n        # count of previous distances <= d\n        i = br(maxes, d)\n        c = 0\n        j = i\n        while j:\n            c += fen[j]\n            j &= j - 1\n        if i < M:\n            c += br(blocks[i], d)\n        total += c\n        p = c\n\n        # insert d keeping global sorted order\n        if i == M:\n            if M and maxes[M - 1] == d:\n                b = M - 1\n                blocks[b].append(d)\n            elif M and len(blocks[M - 1]) < SPLIT_AT:\n                b = M - 1\n                blocks[b].append(d)\n                maxes[b] = d\n            else:\n                b = M\n                blocks.append([d])\n                maxes.append(d)\n                M += 1\n        else:\n            b = i\n            insort(blocks[b], d)\n\n        j = b + 1\n        while j <= CAP:\n            fen[j] += 1\n            j += j & -j\n\n        blk = blocks[b]\n        if len(blk) > SPLIT_AT:\n            h = len(blk) >> 1\n            L = blk[:h]\n            R = blk[h:]\n            blocks[b:b + 1] = (L, R)\n            maxes[b:b + 1] = (L[-1], R[-1])\n            M += 1\n            # full O(CAP) rebuild of the Fenwick tree over block sizes\n            f = [0] * (CAP + 1)\n            for t in range(1, M + 1):\n                f[t] = len(blocks[t - 1])\n            for t in range(1, CAP + 1):\n                j2 = t + (t & -t)\n                if j2 <= CAP:\n                    f[j2] += f[t]\n            fen = f\n\n    print(total)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.23509520000516204,
+            "counts": {
+                "AC": 11,
+                "WA": 28,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

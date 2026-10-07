@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T19:50:57.167561+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1512,
+            "output_tokens": 23999,
+            "total_tokens": 25511
+        },
+        "cost_usd": {
+            "input_cost": 3.2e-05,
+            "output_cost": 0.011999,
+            "total_cost": 0.012032
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); d = int(data[1]); w = int(data[2])\n\n    # Prefix sums: P[i] = p[0] + ... + p[i-1]\n    P = [0] * (n + 1)\n    acc = 0\n    idx = 3\n    for i in range(1, n + 1):\n        acc += int(data[idx]); idx += 1\n        P[i] = acc\n\n    # Model: interval [l, r] (0-indexed, inclusive) of consecutive stay days,\n    # inside it a consecutive block of d days paid by the contest.\n    # Cost = sum(l..r) - S[a] where S[a] = sum(a..a+d-1).\n    # For a fixed interval the best choice of paid block is the maximum S[a]\n    # with a in [l, r-d+1]. Feasible iff f(l,r) = sum(l..r) - maxD(l,r) <= W.\n    #\n    # Key facts (proofs via comparing neighbouring d-windows, prices >= 1):\n    #   - f(l+1, r) <= f(l, r) - 1  (shrinking from left strictly lowers cost)\n    #   - f(l, r+1) >= f(l, r) + 1  (growing to the right strictly raises cost)\n    # Hence for each r the feasible l's form a suffix interval, and the\n    # smallest feasible l is non-decreasing in r -> two pointers work, using a\n    # monotonic deque for sliding-window maximum of S.\n\n    ans = 0\n    l = 0\n    dq = []   # window start indices with strictly decreasing S values\n    head = 0  # front pointer of dq\n\n    for r in range(n):\n        a = r - d + 1  # new d-window ending at r\n        if a >= 0:\n            sa = P[a + d] - P[a]\n            while len(dq) > head and P[dq[-1] + d] - P[dq[-1]] <= sa:\n                dq.pop()\n            dq.append(a)\n\n        if r + 1 < d:  # need at least d days for the interval\n            continue\n\n        re = r + 1  # P[re] - P[l] = sum(l..r)\n        while re - l > d:  # len > d\n            f0 = dq[head]\n            if P[re] - P[l] - (P[f0 + d] - P[f0]) > w:\n                l += 1\n                if dq[head] < l:\n                    head += 1\n            else:\n                break\n        # Here len == d (always free: contest pays everything) or f <= W.\n        L = re - l\n        if L > ans:\n            ans = L\n\n    sys.stdout.write(str(ans) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); d = int(data[1]); w = int(data[2])\n\n    # Prefix sums: P[i] = p[0] + ... + p[i-1]\n    P = [0] * (n + 1)\n    acc = 0\n    idx = 3\n    for i in range(1, n + 1):\n        acc += int(data[idx]); idx += 1\n        P[i] = acc\n\n    # Model: interval [l, r] (0-indexed, inclusive) of consecutive stay days,\n    # inside it a consecutive block of d days paid by the contest.\n    # Cost = sum(l..r) - S[a] where S[a] = sum(a..a+d-1).\n    # For a fixed interval the best choice of paid block is the maximum S[a]\n    # with a in [l, r-d+1]. Feasible iff f(l,r) = sum(l..r) - maxD(l,r) <= W.\n    #\n    # Key facts (proofs via comparing neighbouring d-windows, prices >= 1):\n    #   - f(l+1, r) <= f(l, r) - 1  (shrinking from left strictly lowers cost)\n    #   - f(l, r+1) >= f(l, r) + 1  (growing to the right strictly raises cost)\n    # Hence for each r the feasible l's form a suffix interval, and the\n    # smallest feasible l is non-decreasing in r -> two pointers work, using a\n    # monotonic deque for sliding-window maximum of S.\n\n    ans = 0\n    l = 0\n    dq = []   # window start indices with strictly decreasing S values\n    head = 0  # front pointer of dq\n\n    for r in range(n):\n        a = r - d + 1  # new d-window ending at r\n        if a >= 0:\n            sa = P[a + d] - P[a]\n            while len(dq) > head and P[dq[-1] + d] - P[dq[-1]] <= sa:\n                dq.pop()\n            dq.append(a)\n\n        if r + 1 < d:  # need at least d days for the interval\n            continue\n\n        re = r + 1  # P[re] - P[l] = sum(l..r)\n        while re - l > d:  # len > d\n            f0 = dq[head]\n            if P[re] - P[l] - (P[f0 + d] - P[f0]) > w:\n                l += 1\n                if dq[head] < l:\n                    head += 1\n            else:\n                break\n        # Here len == d (always free: contest pays everything) or f <= W.\n        L = re - l\n        if L > ans:\n            ans = L\n\n    sys.stdout.write(str(ans) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.281225099999574,
+            "counts": {
+                "AC": 60,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 60
+        }
+    }
+]

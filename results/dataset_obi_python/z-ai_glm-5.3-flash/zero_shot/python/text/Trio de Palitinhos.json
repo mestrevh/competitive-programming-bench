@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T01:57:16.734694+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 946,
+            "output_tokens": 16439,
+            "total_tokens": 17385
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.008219,
+            "total_cost": 0.00824
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    a = sorted(map(int, data[1:1 + n]))\n    total = 0\n    small_sum = a[0] + a[1]\n    for i in range(n - 1, 1, -1):\n        t = a[i]\n        # Atalho 1: se os dois menores palitos ja formam triangulo com a[i],\n        # entao TODOS os pares de indices (< i) sao validos.\n        if small_sum > t:\n            total += (i * (i - 1)) // 2\n            continue\n        # Atalho 2: se mesmo os dois maiores palitos anteriores nao bastam,\n        # nenhum par com a[i] como maior lado funciona.\n        if a[i - 1] + a[i - 2] <= t:\n            continue\n        # Two pointers: conta pares (l, r) com l < r < i e a[l] + a[r] > a[i]\n        l = 0\n        r = i - 1\n        while l < r:\n            if a[l] + a[r] > t:\n                total += r - l\n                r -= 1\n            else:\n                l += 1\n    print(total)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    a = sorted(map(int, data[1:1 + n]))\n    total = 0\n    small_sum = a[0] + a[1]\n    for i in range(n - 1, 1, -1):\n        t = a[i]\n        # Atalho 1: se os dois menores palitos ja formam triangulo com a[i],\n        # entao TODOS os pares de indices (< i) sao validos.\n        if small_sum > t:\n            total += (i * (i - 1)) // 2\n            continue\n        # Atalho 2: se mesmo os dois maiores palitos anteriores nao bastam,\n        # nenhum par com a[i] como maior lado funciona.\n        if a[i - 1] + a[i - 2] <= t:\n            continue\n        # Two pointers: conta pares (l, r) com l < r < i e a[l] + a[r] > a[i]\n        l = 0\n        r = i - 1\n        while l < r:\n            if a[l] + a[r] > t:\n                total += r - l\n                r -= 1\n            else:\n                l += 1\n    print(total)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10892220000005182,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

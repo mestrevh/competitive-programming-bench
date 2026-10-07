@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T17:18:24.155823+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1597,
+            "output_tokens": 20564,
+            "total_tokens": 22161
+        },
+        "cost_usd": {
+            "input_cost": 3.4e-05,
+            "output_cost": 0.010282,
+            "total_cost": 0.010316
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    lines = sys.stdin.buffer.read().split(b'\\n')\n    pos = 0\n    L = len(lines)\n\n    def next_tokens():\n        nonlocal pos\n        while pos < L:\n            t = lines[pos].split()\n            pos += 1\n            if t:\n                return t\n        return []\n\n    n = int(next_tokens()[0])\n\n    # Como a amizade é transitiva, cada componente conexa é uma clique:\n    # todos dentro de uma componente são amigos entre si, e ninguém de\n    # componentes diferentes são amigos. Basta identificar as componentes.\n    comp = [0] * (n + 1)  # comp[c] = id da componente do candidato c (1-based)\n    cnt = 0\n    for i in range(n):\n        row = b''.join(next_tokens())\n        j = row.find(b'1', 0, i)  # menor índice j < i friend de i\n        if j < 0:\n            # i é o menor elemento da sua componente -> nova componente\n            comp[i + 1] = cnt\n            cnt += 1\n        else:\n            comp[i + 1] = comp[j + 1]\n\n    # mapa de token (bytes) -> componente, para processar consultas rápido\n    mp = {str(c).encode(): comp[c] for c in range(1, n + 1)}\n    mget = mp.__getitem__\n\n    e = int(next_tokens()[0])\n    out = []\n    for _ in range(e):\n        toks = next_tokens()\n        k = int(toks[0])\n        ids = toks[1:]\n        while len(ids) < k:\n            nxt = next_tokens()\n            if not nxt:\n                break\n            ids.extend(nxt)\n        s = set(map(mget, ids[:k]))\n        out.append('S' if len(s) < k else 'N')\n\n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    lines = sys.stdin.buffer.read().split(b'\\n')\n    pos = 0\n    L = len(lines)\n\n    def next_tokens():\n        nonlocal pos\n        while pos < L:\n            t = lines[pos].split()\n            pos += 1\n            if t:\n                return t\n        return []\n\n    n = int(next_tokens()[0])\n\n    # Como a amizade é transitiva, cada componente conexa é uma clique:\n    # todos dentro de uma componente são amigos entre si, e ninguém de\n    # componentes diferentes são amigos. Basta identificar as componentes.\n    comp = [0] * (n + 1)  # comp[c] = id da componente do candidato c (1-based)\n    cnt = 0\n    for i in range(n):\n        row = b''.join(next_tokens())\n        j = row.find(b'1', 0, i)  # menor índice j < i friend de i\n        if j < 0:\n            # i é o menor elemento da sua componente -> nova componente\n            comp[i + 1] = cnt\n            cnt += 1\n        else:\n            comp[i + 1] = comp[j + 1]\n\n    # mapa de token (bytes) -> componente, para processar consultas rápido\n    mp = {str(c).encode(): comp[c] for c in range(1, n + 1)}\n    mget = mp.__getitem__\n\n    e = int(next_tokens()[0])\n    out = []\n    for _ in range(e):\n        toks = next_tokens()\n        k = int(toks[0])\n        ids = toks[1:]\n        while len(ids) < k:\n            nxt = next_tokens()\n            if not nxt:\n                break\n            ids.extend(nxt)\n        s = set(map(mget, ids[:k]))\n        out.append('S' if len(s) < k else 'N')\n\n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.41760269999940647,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

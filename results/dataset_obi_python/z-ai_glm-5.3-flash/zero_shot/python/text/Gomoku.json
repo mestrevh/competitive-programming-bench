@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T19:32:57.235294+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1483,
+            "output_tokens": 1967,
+            "total_tokens": 3450
+        },
+        "cost_usd": {
+            "input_cost": 3.2e-05,
+            "output_cost": 0.000983,
+            "total_cost": 0.001015
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    board = [list(map(int, data[i * 15:(i + 1) * 15])) for i in range(15)]\n\n    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]\n    n = 15\n\n    for i in range(n):\n        for j in range(n):\n            color = board[i][j]\n            if color == 0:\n                continue\n            for di, dj in directions:\n                count = 1\n                ni, nj = i + di, j + dj\n                while 0 <= ni < n and 0 <= nj < n and board[ni][nj] == color:\n                    count += 1\n                    ni += di\n                    nj += dj\n                ni, nj = i - di, j - dj\n                while 0 <= ni < n and 0 <= nj < n and board[ni][nj] == color:\n                    count += 1\n                    ni -= di\n                    nj -= dj\n                if count >= 5:\n                    print(color)\n                    return\n    print(0)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    board = [list(map(int, data[i * 15:(i + 1) * 15])) for i in range(15)]\n\n    directions = [(0, 1), (1, 0), (1, 1), (1, -1)]\n    n = 15\n\n    for i in range(n):\n        for j in range(n):\n            color = board[i][j]\n            if color == 0:\n                continue\n            for di, dj in directions:\n                count = 1\n                ni, nj = i + di, j + dj\n                while 0 <= ni < n and 0 <= nj < n and board[ni][nj] == color:\n                    count += 1\n                    ni += di\n                    nj += dj\n                ni, nj = i - di, j - dj\n                while 0 <= ni < n and 0 <= nj < n and board[ni][nj] == color:\n                    count += 1\n                    ni -= di\n                    nj -= dj\n                if count >= 5:\n                    print(color)\n                    return\n    print(0)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08469669999612961,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

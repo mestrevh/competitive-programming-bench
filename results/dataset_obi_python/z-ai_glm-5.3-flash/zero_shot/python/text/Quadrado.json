@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:46:08.575761+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 769,
+            "output_tokens": 215,
+            "total_tokens": 984
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.000107,
+            "total_cost": 0.000124
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    a = []\n    idx = 1\n    for i in range(n):\n        a.append([int(x) for x in data[idx:idx+n]])\n        idx += n\n    rs = [sum(r) for r in a]\n    cs = [sum(a[i][j] for i in range(n)) for j in range(n)]\n    m = Counter(rs).most_common(1)[0][0]\n    ri = next(i for i in range(n) if rs[i] != m)\n    cj = next(j for j in range(n) if cs[j] != m)\n    original = a[ri][cj] + (m - rs[ri])\n    print(original, a[ri][cj])\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    a = []\n    idx = 1\n    for i in range(n):\n        a.append([int(x) for x in data[idx:idx+n]])\n        idx += n\n    rs = [sum(r) for r in a]\n    cs = [sum(a[i][j] for i in range(n)) for j in range(n)]\n    m = Counter(rs).most_common(1)[0][0]\n    ri = next(i for i in range(n) if rs[i] != m)\n    cj = next(j for j in range(n) if cs[j] != m)\n    original = a[ri][cj] + (m - rs[ri])\n    print(original, a[ri][cj])\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09293700000853278,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

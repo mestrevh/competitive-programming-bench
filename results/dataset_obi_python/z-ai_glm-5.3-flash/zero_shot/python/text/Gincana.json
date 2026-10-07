@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T19:32:06.914732+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 685,
+            "output_tokens": 21427,
+            "total_tokens": 22112
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.010714,
+            "total_cost": 0.010728
+        },
+        "raw_response": "```python\nimport sys\nimport math\nimport random\n\ndef is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for p in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37):\n        if n % p == 0:\n            return n == p\n    d = n - 1\n    r = 0\n    while d % 2 == 0:\n        d >>= 1\n        r += 1\n    for a in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37):\n        x = pow(a, d, n)\n        if x == 1 or x == n - 1:\n            continue\n        ok = False\n        for _ in range(r - 1):\n            x = x * x % n\n            if x == n - 1:\n                ok = True\n                break\n        if not ok:\n            return False\n    return True\n\ndef pollard_brent(n: int) -> int:\n    if n % 2 == 0:\n        return 2\n    if n % 3 == 0:\n        return 3\n    while True:\n        y = random.randrange(1, n)\n        c = random.randrange(1, n)\n        m = 128\n        g = r = q = 1\n        x = ys = 2\n        while g == 1:\n            x = y\n            for _ in range(r):\n                y = (y * y + c) % n\n            k = 0\n            while k < r and g == 1:\n                ys = y\n                for _ in range(min(m, r - k)):\n                    y = (y * y + c) % n\n                    q = q * abs(x - y) % n\n                g = math.gcd(q, n)\n                k += m\n            r <<= 1\n        if g == n:\n            g = 1\n            while g == 1:\n                ys = (ys * ys + c) % n\n                g = math.gcd(abs(x - ys), n)\n        if g != n:\n            return g\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    N = int(data[0])\n    M = int(data[1])\n    random.seed(0xDEADBEEF)\n\n    # fatorar N em primos distintos (N <= 10^18 -> Pollard-Brent + Miller-Rabin)\n    primes = set()\n    n = N\n    for p in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47):\n        if n % p == 0:\n            primes.add(p)\n            while n % p == 0:\n                n //= p\n    if n > 1:\n        stack = [n]\n        while stack:\n            v = stack.pop()\n            if is_prime(v):\n                primes.add(v)\n            else:\n                d = pollard_brent(v)\n                stack.append(d)\n                stack.append(v // d)\n\n    if math.gcd(M, N) == 1:\n        print(M)\n        return\n\n    # divisors com sinal para inclusao-exclusao: f(Y) = #{x <= Y : gcd(x,N)=1}\n    pos = [1]\n    neg = []\n    for p in sorted(primes):\n        new_pos = pos + [d * p for d in neg]\n        new_neg = neg + [d * p for d in pos]\n        pos, neg = new_pos, new_neg\n    pos = tuple(pos)\n    neg = tuple(neg)\n\n    def coprime_count(Y: int) -> int:\n        return sum(map(Y.__floordiv__, pos)) - sum(map(Y.__floordiv__, neg))\n\n    target = coprime_count(M)\n    # maior X <= M coprimo com N = menor Y em [1,M] com coprime_count(Y) == target\n    lo, hi = 1, M\n    while lo < hi:\n        mid = (lo + hi) >> 1\n        if coprime_count(mid) == target:\n            hi = mid\n        else:\n            lo = mid + 1\n    print(lo)\n\nmain()\n```",
+        "extracted_code": "import sys\nimport math\nimport random\n\ndef is_prime(n: int) -> bool:\n    if n < 2:\n        return False\n    for p in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37):\n        if n % p == 0:\n            return n == p\n    d = n - 1\n    r = 0\n    while d % 2 == 0:\n        d >>= 1\n        r += 1\n    for a in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37):\n        x = pow(a, d, n)\n        if x == 1 or x == n - 1:\n            continue\n        ok = False\n        for _ in range(r - 1):\n            x = x * x % n\n            if x == n - 1:\n                ok = True\n                break\n        if not ok:\n            return False\n    return True\n\ndef pollard_brent(n: int) -> int:\n    if n % 2 == 0:\n        return 2\n    if n % 3 == 0:\n        return 3\n    while True:\n        y = random.randrange(1, n)\n        c = random.randrange(1, n)\n        m = 128\n        g = r = q = 1\n        x = ys = 2\n        while g == 1:\n            x = y\n            for _ in range(r):\n                y = (y * y + c) % n\n            k = 0\n            while k < r and g == 1:\n                ys = y\n                for _ in range(min(m, r - k)):\n                    y = (y * y + c) % n\n                    q = q * abs(x - y) % n\n                g = math.gcd(q, n)\n                k += m\n            r <<= 1\n        if g == n:\n            g = 1\n            while g == 1:\n                ys = (ys * ys + c) % n\n                g = math.gcd(abs(x - ys), n)\n        if g != n:\n            return g\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    N = int(data[0])\n    M = int(data[1])\n    random.seed(0xDEADBEEF)\n\n    # fatorar N em primos distintos (N <= 10^18 -> Pollard-Brent + Miller-Rabin)\n    primes = set()\n    n = N\n    for p in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47):\n        if n % p == 0:\n            primes.add(p)\n            while n % p == 0:\n                n //= p\n    if n > 1:\n        stack = [n]\n        while stack:\n            v = stack.pop()\n            if is_prime(v):\n                primes.add(v)\n            else:\n                d = pollard_brent(v)\n                stack.append(d)\n                stack.append(v // d)\n\n    if math.gcd(M, N) == 1:\n        print(M)\n        return\n\n    # divisors com sinal para inclusao-exclusao: f(Y) = #{x <= Y : gcd(x,N)=1}\n    pos = [1]\n    neg = []\n    for p in sorted(primes):\n        new_pos = pos + [d * p for d in neg]\n        new_neg = neg + [d * p for d in pos]\n        pos, neg = new_pos, new_neg\n    pos = tuple(pos)\n    neg = tuple(neg)\n\n    def coprime_count(Y: int) -> int:\n        return sum(map(Y.__floordiv__, pos)) - sum(map(Y.__floordiv__, neg))\n\n    target = coprime_count(M)\n    # maior X <= M coprimo com N = menor Y em [1,M] com coprime_count(Y) == target\n    lo, hi = 1, M\n    while lo < hi:\n        mid = (lo + hi) >> 1\n        if coprime_count(mid) == target:\n            hi = mid\n        else:\n            lo = mid + 1\n    print(lo)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22118110000155866,
+            "counts": {
+                "AC": 59,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 59
+        }
+    }
+]

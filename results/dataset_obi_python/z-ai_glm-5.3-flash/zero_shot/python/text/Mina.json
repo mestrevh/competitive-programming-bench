@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T21:12:42.395011+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 645,
+            "output_tokens": 3528,
+            "total_tokens": 4173
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.001764,
+            "total_cost": 0.001778
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    grid = []\n    pos = 1\n    for i in range(n):\n        row = [int(data[pos + j]) for j in range(n)]\n        pos += n\n        grid.append(row)\n\n    # Custo de entrar em uma célula: 1 se bloqueada, 0 se livre.\n    # Caminho mínimo com pesos 0/1 -> Dijkstra (ou 0-1 BFS).\n    INF = float('inf')\n    dist = [[INF] * n for _ in range(n)]\n    dist[0][0] = 0\n    pq = [(0, 0, 0)]\n    while pq:\n        d, i, j = heapq.heappop(pq)\n        if d > dist[i][j]:\n            continue\n        if i == n - 1 and j == n - 1:\n            print(d)\n            return\n        for ni, nj in ((i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)):\n            if 0 <= ni < n and 0 <= nj < n:\n                nd = d + grid[ni][nj]\n                if nd < dist[ni][nj]:\n                    dist[ni][nj] = nd\n                    heapq.heappush(pq, (nd, ni, nj))\n    print(dist[n - 1][n - 1])\n\nmain()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    grid = []\n    pos = 1\n    for i in range(n):\n        row = [int(data[pos + j]) for j in range(n)]\n        pos += n\n        grid.append(row)\n\n    # Custo de entrar em uma célula: 1 se bloqueada, 0 se livre.\n    # Caminho mínimo com pesos 0/1 -> Dijkstra (ou 0-1 BFS).\n    INF = float('inf')\n    dist = [[INF] * n for _ in range(n)]\n    dist[0][0] = 0\n    pq = [(0, 0, 0)]\n    while pq:\n        d, i, j = heapq.heappop(pq)\n        if d > dist[i][j]:\n            continue\n        if i == n - 1 and j == n - 1:\n            print(d)\n            return\n        for ni, nj in ((i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)):\n            if 0 <= ni < n and 0 <= nj < n:\n                nd = d + grid[ni][nj]\n                if nd < dist[ni][nj]:\n                    dist[ni][nj] = nd\n                    heapq.heappush(pq, (nd, ni, nj))\n    print(dist[n - 1][n - 1])\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0918491000047652,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

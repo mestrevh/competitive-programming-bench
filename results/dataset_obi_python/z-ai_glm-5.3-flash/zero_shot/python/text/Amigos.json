@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T14:32:31.572138+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1811,
+            "output_tokens": 24341,
+            "total_tokens": 26152
+        },
+        "cost_usd": {
+            "input_cost": 3.9e-05,
+            "output_cost": 0.012171,
+            "total_cost": 0.012209
+        },
+        "raw_response": "Análise: a resposta é Σ|p_i − q_i| onde p_i são as posições dos amigos do lado superior e q_i as do lado inferior (pareadas por ordem).\n\nJustificativa rápida:\n- Para um conjunto-alvo T = {t_1 < ... < t_K} (posições finais dos amigos, iguais nos dois lados), o número mínimo de trocas adjacentes para transformar uma sequência binária em outra é Σ|pos_i − t_i| (pareamento por ordem dos 1s), que é o número de inversões e é um limite inferior/alcançável clássico.\n- Logo o custo total para T é Σ_i(|p_i − t_i| + |q_i − t_i|) ≥ Σ_i |p_i − q_i| (desigualdade triangular, termo a termo), para qualquer T.\n- Tomando T = P (posições do lado superior), o lado superior não faz nada e o lado inferior custa exatamente Σ|q_i − p_i|, atingindo o limite inferior.\n\nPortanto, o mínimo é simplesmente a soma das distâncias pareadas por rank, verificada em todos os exemplos (3, 7, 10, 0).\n\n```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    # k = int(data[1])  # cada linha tem exatamente k uns; não é necessário além do parsing\n    a = data[2:2 + n]\n    b = data[2 + n:2 + 2 * n]\n    pa = [i for i, v in enumerate(a) if v == b'1']\n    pb = [i for i, v in enumerate(b) if v == b'1']\n    ans = sum(abs(x - y) for x, y in zip(pa, pb))\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    # k = int(data[1])  # cada linha tem exatamente k uns; não é necessário além do parsing\n    a = data[2:2 + n]\n    b = data[2 + n:2 + 2 * n]\n    pa = [i for i, v in enumerate(a) if v == b'1']\n    pb = [i for i, v in enumerate(b) if v == b'1']\n    ans = sum(abs(x - y) for x, y in zip(pa, pb))\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10751309999614023,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

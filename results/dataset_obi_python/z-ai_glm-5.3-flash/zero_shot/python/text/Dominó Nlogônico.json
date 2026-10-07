@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T16:24:05.900088+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1436,
+            "output_tokens": 44326,
+            "total_tokens": 45762
+        },
+        "cost_usd": {
+            "input_cost": 3.1e-05,
+            "output_cost": 0.022163,
+            "total_cost": 0.022194
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    X = list(map(int, data[1:1 + n]))\n    H = list(map(int, data[1 + n:1 + 2 * n]))\n    X.append(1 << 62)  # sentinela: \"nao existe dominio seguinte\"\n\n    # Ideia (O(N)):\n    # A cadeia iniciada por i cobre o intervalo continuo [i, f(i)], onde\n    # f(i) = menor t >= i tal que X[t+1] > max_{i<=k<=t}(X[k]+H[k])\n    # (o proximo dominio escaparia do alcance cumulativo maximo).\n    # Cada dominio que cai tem, por abstracao, alcance A_k = X_k + H_k.\n    # Processamos da direita para a esquerda e mantemos uma pilha de segmentos\n    # [a, b] consecutivos com alcance maximo m = max A no segmento, com a\n    # propriedade: \"se a cai, entao todo o segmento [a, b] cai\".\n    # Ao processar i, expandimos b/m absorvendo segmentos inteiros enquanto\n    # X[b+1] <= m (o proximo dominio e derrubado pelo alcance cumulativo).\n    # Dentro de um segmento absorvido, a propagacao e garantida pela\n    # propriedade de Pilha, logo fundir o segmento inteiro e valido.\n\n    st = []            # pilha de segmentos: (fim_do_segmento, alcance_maximo)\n    stPush = st.append\n    stPop = st.pop\n    res = [0] * n\n\n    for i in range(n - 1, -1, -1):\n        b = i\n        m = X[i] + H[i]              # alcance cumulativo da cadeia atual\n        # enquanto o proximo dominio (posicao b+1) for alcancado,吸收 o segmento\n        while st and X[b + 1] <= m:\n            b2, m2 = stPop()\n            if m2 > m:\n                m = m2\n            b = b2\n        res[i] = b - i + 1\n        stPush((b, m))\n\n    sys.stdout.write(' '.join(map(str, res)) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    X = list(map(int, data[1:1 + n]))\n    H = list(map(int, data[1 + n:1 + 2 * n]))\n    X.append(1 << 62)  # sentinela: \"nao existe dominio seguinte\"\n\n    # Ideia (O(N)):\n    # A cadeia iniciada por i cobre o intervalo continuo [i, f(i)], onde\n    # f(i) = menor t >= i tal que X[t+1] > max_{i<=k<=t}(X[k]+H[k])\n    # (o proximo dominio escaparia do alcance cumulativo maximo).\n    # Cada dominio que cai tem, por abstracao, alcance A_k = X_k + H_k.\n    # Processamos da direita para a esquerda e mantemos uma pilha de segmentos\n    # [a, b] consecutivos com alcance maximo m = max A no segmento, com a\n    # propriedade: \"se a cai, entao todo o segmento [a, b] cai\".\n    # Ao processar i, expandimos b/m absorvendo segmentos inteiros enquanto\n    # X[b+1] <= m (o proximo dominio e derrubado pelo alcance cumulativo).\n    # Dentro de um segmento absorvido, a propagacao e garantida pela\n    # propriedade de Pilha, logo fundir o segmento inteiro e valido.\n\n    st = []            # pilha de segmentos: (fim_do_segmento, alcance_maximo)\n    stPush = st.append\n    stPop = st.pop\n    res = [0] * n\n\n    for i in range(n - 1, -1, -1):\n        b = i\n        m = X[i] + H[i]              # alcance cumulativo da cadeia atual\n        # enquanto o proximo dominio (posicao b+1) for alcancado,吸收 o segmento\n        while st and X[b + 1] <= m:\n            b2, m2 = stPop()\n            if m2 > m:\n                m = m2\n            b = b2\n        res[i] = b - i + 1\n        stPush((b, m))\n\n    sys.stdout.write(' '.join(map(str, res)) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22495460000209277,
+            "counts": {
+                "AC": 73,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 73
+        }
+    }
+]

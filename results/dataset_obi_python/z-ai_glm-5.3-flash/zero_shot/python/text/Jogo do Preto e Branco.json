@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T20:49:15.736865+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 816,
+            "output_tokens": 15109,
+            "total_tokens": 15925
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.007554,
+            "total_cost": 0.007572
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve(L, C, black):\n    # Celulas candidatas: casas vazias com pelo menos um vizinho ortogonal preto\n    cand = []\n    for x in range(1, L + 1):\n        for y in range(1, C + 1):\n            if (x, y) in black:\n                continue\n            if ((x + 1, y) in black or (x - 1, y) in black or\n                    (x, y + 1) in black or (x, y - 1) in black):\n                cand.append((x, y))\n\n    pos = {cell: i for i, cell in enumerate(cand)}\n    n = len(cand)\n\n    # O grafo de conflito entre candidatas e o subgrafo induzido da grade,\n    # que e bipartido (coloracao de xadrez pela paridade de x+y).\n    # Maximo de pecas brancas = Conjunto Independente Maximo = n - emparelhamento maximo (Konig).\n    adj = [[] for _ in range(n)]\n    for i, (x, y) in enumerate(cand):\n        if (x + y) % 2 == 1:  # lado esquerdo da biparticao\n            for nb in ((x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)):\n                j = pos.get(nb)\n                if j is not None:\n                    adj[i].append(j)\n\n    matchR = [-1] * n\n\n    def try_kuhn(v, visited):\n        for u in adj[v]:\n            if not visited[u]:\n                visited[u] = True\n                if matchR[u] == -1 or try_kuhn(matchR[u], visited):\n                    matchR[u] = v\n                    return True\n        return False\n\n    matching = 0\n    for i, (x, y) in enumerate(cand):\n        if (x + y) % 2 == 1:\n            visited = [False] * n\n            if try_kuhn(i, visited):\n                matching += 1\n\n    return n - matching\n\n\ndef main():\n    sys.setrecursionlimit(1 << 20)\n    data = sys.stdin.buffer.read().split()\n    i = 0\n    out = []\n    while i < len(data):\n        L = int(data[i]); C = int(data[i + 1]); P = int(data[i + 2])\n        i += 3\n        black = set()\n        for _ in range(P):\n            x = int(data[i]); y = int(data[i + 1])\n            i += 2\n            black.add((x, y))\n        out.append(str(solve(L, C, black)))\n    print('\\n'.join(out))\n\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef solve(L, C, black):\n    # Celulas candidatas: casas vazias com pelo menos um vizinho ortogonal preto\n    cand = []\n    for x in range(1, L + 1):\n        for y in range(1, C + 1):\n            if (x, y) in black:\n                continue\n            if ((x + 1, y) in black or (x - 1, y) in black or\n                    (x, y + 1) in black or (x, y - 1) in black):\n                cand.append((x, y))\n\n    pos = {cell: i for i, cell in enumerate(cand)}\n    n = len(cand)\n\n    # O grafo de conflito entre candidatas e o subgrafo induzido da grade,\n    # que e bipartido (coloracao de xadrez pela paridade de x+y).\n    # Maximo de pecas brancas = Conjunto Independente Maximo = n - emparelhamento maximo (Konig).\n    adj = [[] for _ in range(n)]\n    for i, (x, y) in enumerate(cand):\n        if (x + y) % 2 == 1:  # lado esquerdo da biparticao\n            for nb in ((x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)):\n                j = pos.get(nb)\n                if j is not None:\n                    adj[i].append(j)\n\n    matchR = [-1] * n\n\n    def try_kuhn(v, visited):\n        for u in adj[v]:\n            if not visited[u]:\n                visited[u] = True\n                if matchR[u] == -1 or try_kuhn(matchR[u], visited):\n                    matchR[u] = v\n                    return True\n        return False\n\n    matching = 0\n    for i, (x, y) in enumerate(cand):\n        if (x + y) % 2 == 1:\n            visited = [False] * n\n            if try_kuhn(i, visited):\n                matching += 1\n\n    return n - matching\n\n\ndef main():\n    sys.setrecursionlimit(1 << 20)\n    data = sys.stdin.buffer.read().split()\n    i = 0\n    out = []\n    while i < len(data):\n        L = int(data[i]); C = int(data[i + 1]); P = int(data[i + 2])\n        i += 3\n        black = set()\n        for _ in range(P):\n            x = int(data[i]); y = int(data[i + 1])\n            i += 2\n            black.add((x, y))\n        out.append(str(solve(L, C, black)))\n    print('\\n'.join(out))\n\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08961080000153743,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

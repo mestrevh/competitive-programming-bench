@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:51:38.604017+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1254,
+            "output_tokens": 4850,
+            "total_tokens": 6104
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.002425,
+            "total_cost": 0.002452
+        },
+        "raw_response": "```python\nimport sys\nfrom itertools import accumulate\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    nums = list(map(int, data))\n    n, q = nums[0], nums[1]\n\n    # Potencial de um intervalo de tamanho M com soma S:\n    # cada dígito aparece (M-1) vezes como dezena e (M-1) vezes como unidade\n    # => potencial = 10*S*(M-1) + S*(M-1) = 11 * (M-1) * S = 11 * (R-L) * S\n\n    # Detecta formato: dígitos separados por espaço ou como string contínua\n    if n > 1 and len(data[2]) == n:\n        vals = [c - 48 for c in data[2]]  # bytes -> ints\n        idx = 3\n    else:\n        vals = nums[2:2 + n]\n        idx = 2 + n\n\n    prefix = [0] + list(accumulate(vals))\n\n    qs = nums[idx:idx + 2 * q]\n    it = iter(qs)\n    out = [str(11 * (r - l) * (prefix[r] - prefix[l - 1])) for l, r in zip(it, it)]\n\n    sys.stdout.write('\\n'.join(out) + ('\\n' if out else ''))\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom itertools import accumulate\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    nums = list(map(int, data))\n    n, q = nums[0], nums[1]\n\n    # Potencial de um intervalo de tamanho M com soma S:\n    # cada dígito aparece (M-1) vezes como dezena e (M-1) vezes como unidade\n    # => potencial = 10*S*(M-1) + S*(M-1) = 11 * (M-1) * S = 11 * (R-L) * S\n\n    # Detecta formato: dígitos separados por espaço ou como string contínua\n    if n > 1 and len(data[2]) == n:\n        vals = [c - 48 for c in data[2]]  # bytes -> ints\n        idx = 3\n    else:\n        vals = nums[2:2 + n]\n        idx = 2 + n\n\n    prefix = [0] + list(accumulate(vals))\n\n    qs = nums[idx:idx + 2 * q]\n    it = iter(qs)\n    out = [str(11 * (r - l) * (prefix[r] - prefix[l - 1])) for l, r in zip(it, it)]\n\n    sys.stdout.write('\\n'.join(out) + ('\\n' if out else ''))\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10000340000260621,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

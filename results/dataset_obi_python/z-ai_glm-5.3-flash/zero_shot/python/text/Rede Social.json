@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:06:49.735370+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 727,
+            "output_tokens": 2570,
+            "total_tokens": 3297
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.001285,
+            "total_cost": 0.001301
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    # Contagem de índices de repostagem, limitando valores maiores que n a n\n    # (pois o Fator de Influência nunca excede n)\n    cnt = [0] * (n + 1)\n    for r in map(int, data[1:n + 1]):\n        cnt[r if r < n else n] += 1\n\n    # Procura o maior k tal que o número de mensagens com índice >= k seja >= k\n    suffix = 0  # quantidade de mensagens com índice de repostagem >= k\n    ans = 0\n    for k in range(n, 0, -1):\n        suffix += cnt[k]\n        if suffix >= k:\n            ans = k\n            break\n\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    # Contagem de índices de repostagem, limitando valores maiores que n a n\n    # (pois o Fator de Influência nunca excede n)\n    cnt = [0] * (n + 1)\n    for r in map(int, data[1:n + 1]):\n        cnt[r if r < n else n] += 1\n\n    # Procura o maior k tal que o número de mensagens com índice >= k seja >= k\n    suffix = 0  # quantidade de mensagens com índice de repostagem >= k\n    ans = 0\n    for k in range(n, 0, -1):\n        suffix += cnt[k]\n        if suffix >= k:\n            ans = k\n            break\n\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1189707000000908,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T15:53:22.446615+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 939,
+            "output_tokens": 4100,
+            "total_tokens": 5039
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.00205,
+            "total_cost": 0.00207
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    m, n = int(data[0]), int(data[1])\n    a = list(map(int, data[2:2 + m]))\n    b = list(map(int, data[2 + m:2 + m + n]))\n\n    L = max(m, n)\n    a += [0] * (L - m)\n    b += [0] * (L - n)\n\n    res = [0] * L\n    carry = 0\n    for i in range(L - 1, -1, -1):\n        s = a[i] + b[i] + carry\n        res[i] = s & 1\n        carry = s >> 1\n    # carry == 0 garantido, pois X + Y < 1\n\n    # representação mínima: remover zeros à direita (dígito mais à direita deve ser 1)\n    end = L\n    while end > 0 and res[end - 1] == 0:\n        end -= 1\n\n    print(' '.join(map(str, res[:end])))\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    m, n = int(data[0]), int(data[1])\n    a = list(map(int, data[2:2 + m]))\n    b = list(map(int, data[2 + m:2 + m + n]))\n\n    L = max(m, n)\n    a += [0] * (L - m)\n    b += [0] * (L - n)\n\n    res = [0] * L\n    carry = 0\n    for i in range(L - 1, -1, -1):\n        s = a[i] + b[i] + carry\n        res[i] = s & 1\n        carry = s >> 1\n    # carry == 0 garantido, pois X + Y < 1\n\n    # representação mínima: remover zeros à direita (dígito mais à direita deve ser 1)\n    end = L\n    while end > 0 and res[end - 1] == 0:\n        end -= 1\n\n    print(' '.join(map(str, res[:end])))\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06137290000333451,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

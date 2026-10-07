@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:41:34.831492+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 829,
+            "output_tokens": 787,
+            "total_tokens": 1616
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.000394,
+            "total_cost": 0.000411
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    A = int(data[idx]); idx += 1\n    N = int(data[idx]); idx += 1\n    M = int(data[idx]); idx += 1\n    rows = []\n    for i in range(N):\n        row = [int(data[idx + j]) for j in range(M)]\n        idx += M\n        rows.append(row)  # rows[k] é a fila N-k (mais distante primeiro)\n\n    def tem_run(row, A):\n        cnt = 0\n        for x in row:\n            if x == 0:\n                cnt += 1\n                if cnt >= A:\n                    return True\n            else:\n                cnt = 0\n        return False\n\n    # fila 1 é a última linha da entrada (mais próxima do palco)\n    for fila in range(1, N + 1):\n        row = rows[N - fila]\n        if tem_run(row, A):\n            print(fila)\n            return\n    print(-1)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    A = int(data[idx]); idx += 1\n    N = int(data[idx]); idx += 1\n    M = int(data[idx]); idx += 1\n    rows = []\n    for i in range(N):\n        row = [int(data[idx + j]) for j in range(M)]\n        idx += M\n        rows.append(row)  # rows[k] é a fila N-k (mais distante primeiro)\n\n    def tem_run(row, A):\n        cnt = 0\n        for x in row:\n            if x == 0:\n                cnt += 1\n                if cnt >= A:\n                    return True\n            else:\n                cnt = 0\n        return False\n\n    # fila 1 é a última linha da entrada (mais próxima do palco)\n    for fila in range(1, N + 1):\n        row = rows[N - fila]\n        if tem_run(row, A):\n            print(fila)\n            return\n    print(-1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07477410000001328,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

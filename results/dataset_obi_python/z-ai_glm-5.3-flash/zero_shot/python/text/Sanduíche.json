@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-07T00:34:59.814459+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 830,
+            "output_tokens": 15350,
+            "total_tokens": 16180
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.007675,
+            "total_cost": 0.007693
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n\n    adj = [0] * n\n    p = 2\n    for _ in range(m):\n        x = int(data[p]) - 1\n        y = int(data[p + 1]) - 1\n        p += 2\n        adj[x] |= 1 << y\n        adj[y] |= 1 << x\n\n    # Meet in the middle: contar subconjuntos independentes do grafo de conflitos\n    a = n // 2          # primeira metade: vertices 0..a-1\n    b = n - a           # segunda metade:  vertices a..n-1 (bits locais 0..b-1)\n    fullB = (1 << b) - 1\n\n    # --- Lado A ---\n    adjA = [adj[v] & ((1 << a) - 1) for v in range(a)]\n    crossB = [adj[v] >> a for v in range(a)]\n\n    validA = bytearray(1 << a)\n    validA[0] = 1\n    cross = [0] * (1 << a)\n    for mask in range(1, 1 << a):\n        low = mask & -mask\n        v = low.bit_length() - 1\n        rest = mask ^ low\n        if validA[rest] and not (adjA[v] & mask):\n            validA[mask] = 1\n        cross[mask] = cross[rest] | crossB[v]\n\n    # --- Lado B ---\n    # cntB[S] = numero de subconjuntos independentes dentro de S\n    adjBloc = [adj[a + j] >> a for j in range(b)]\n    cntB = [0] * (1 << b)\n    cntB[0] = 1\n    for S in range(1, 1 << b):\n        low = S & -S\n        j = low.bit_length() - 1\n        rest = S ^ low\n        cntB[S] = cntB[rest] + cntB[rest & ~adjBloc[j]]\n\n    total = 0\n    for mask in range(1 << a):\n        if validA[mask]:\n            total += cntB[fullB ^ cross[mask]]\n\n    # subtrai o conjunto vazio (sanduiche precisa de ao menos um ingrediente)\n    print(total - 1)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n\n    adj = [0] * n\n    p = 2\n    for _ in range(m):\n        x = int(data[p]) - 1\n        y = int(data[p + 1]) - 1\n        p += 2\n        adj[x] |= 1 << y\n        adj[y] |= 1 << x\n\n    # Meet in the middle: contar subconjuntos independentes do grafo de conflitos\n    a = n // 2          # primeira metade: vertices 0..a-1\n    b = n - a           # segunda metade:  vertices a..n-1 (bits locais 0..b-1)\n    fullB = (1 << b) - 1\n\n    # --- Lado A ---\n    adjA = [adj[v] & ((1 << a) - 1) for v in range(a)]\n    crossB = [adj[v] >> a for v in range(a)]\n\n    validA = bytearray(1 << a)\n    validA[0] = 1\n    cross = [0] * (1 << a)\n    for mask in range(1, 1 << a):\n        low = mask & -mask\n        v = low.bit_length() - 1\n        rest = mask ^ low\n        if validA[rest] and not (adjA[v] & mask):\n            validA[mask] = 1\n        cross[mask] = cross[rest] | crossB[v]\n\n    # --- Lado B ---\n    # cntB[S] = numero de subconjuntos independentes dentro de S\n    adjBloc = [adj[a + j] >> a for j in range(b)]\n    cntB = [0] * (1 << b)\n    cntB[0] = 1\n    for S in range(1, 1 << b):\n        low = S & -S\n        j = low.bit_length() - 1\n        rest = S ^ low\n        cntB[S] = cntB[rest] + cntB[rest & ~adjBloc[j]]\n\n    total = 0\n    for mask in range(1 << a):\n        if validA[mask]:\n            total += cntB[fullB ^ cross[mask]]\n\n    # subtrai o conjunto vazio (sanduiche precisa de ao menos um ingrediente)\n    print(total - 1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0752505000000383,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

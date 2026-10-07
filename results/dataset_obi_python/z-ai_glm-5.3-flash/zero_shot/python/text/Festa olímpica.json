@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T18:21:28.456983+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 9.5,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1024,
+            "output_tokens": 3426,
+            "total_tokens": 4450
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.001713,
+            "total_cost": 0.001735
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    ts = [int(x) for x in data[2:2 + m]]\n\n    # Simula apenas a contagem (para frente)\n    c = n\n    for t in ts:\n        c -= c // t\n\n    K = min(c, 10000)\n\n    # Inverte os turnos: o elemento de rank s da lista apos um turno\n    # (remocao de posicoes multiplas de T) vinha do rank\n    # r = s + (s-1) // (T-1) da lista anterior.\n    # Aplicando isso do ultimo turno ate o primeiro ao rank s do final,\n    # obtemos o numero original do sobrevivente de rank s.\n    ranks = list(range(1, K + 1))\n    use_numpy = False\n    try:\n        import numpy as np\n        arr = np.arange(1, K + 1, dtype=np.int64)\n        use_numpy = True\n    except ImportError:\n        np = None\n        arr = ranks\n\n    if use_numpy:\n        for t in reversed(ts):\n            d = t - 1\n            arr = arr + (arr - 1) // d\n        res = arr.tolist()\n    else:\n        arr = ranks\n        for t in reversed(ts):\n            d = t - 1\n            arr = [x + (x - 1) // d for x in arr]\n        res = arr\n\n    sys.stdout.write('\\n'.join(map(str, res)) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    ts = [int(x) for x in data[2:2 + m]]\n\n    # Simula apenas a contagem (para frente)\n    c = n\n    for t in ts:\n        c -= c // t\n\n    K = min(c, 10000)\n\n    # Inverte os turnos: o elemento de rank s da lista apos um turno\n    # (remocao de posicoes multiplas de T) vinha do rank\n    # r = s + (s-1) // (T-1) da lista anterior.\n    # Aplicando isso do ultimo turno ate o primeiro ao rank s do final,\n    # obtemos o numero original do sobrevivente de rank s.\n    ranks = list(range(1, K + 1))\n    use_numpy = False\n    try:\n        import numpy as np\n        arr = np.arange(1, K + 1, dtype=np.int64)\n        use_numpy = True\n    except ImportError:\n        np = None\n        arr = ranks\n\n    if use_numpy:\n        for t in reversed(ts):\n            d = t - 1\n            arr = arr + (arr - 1) // d\n        res = arr.tolist()\n    else:\n        arr = ranks\n        for t in reversed(ts):\n            d = t - 1\n            arr = [x + (x - 1) // d for x in arr]\n        res = arr\n\n    sys.stdout.write('\\n'.join(map(str, res)) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.28051050000067335,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

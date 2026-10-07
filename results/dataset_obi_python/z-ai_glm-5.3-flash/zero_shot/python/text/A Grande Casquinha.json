@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-06T14:27:22.534729+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 623,
+            "output_tokens": 2923,
+            "total_tokens": 3546
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.001461,
+            "total_cost": 0.001475
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    # data[1] é S (não necessário para o algoritmo)\n    \n    last = {}          # última posição de cada sabor\n    left = 0           # início da janela atual (casquinha)\n    best = 0\n    \n    for i in range(n):\n        x = int(data[2 + i])\n        j = last.get(x, -1)\n        # se o sabor já apareceu dentro da janela atual, Samyra recusa aqui,\n        # então a casquinha deve começar depois da última ocorrência\n        if j >= left:\n            left = j + 1\n        last[x] = i\n        cur = i - left + 1\n        if cur > best:\n            best = cur\n    \n    print(best)\n\nmain()\n```\n\n**Explicação da abordagem:**\n\nO problema se reduz a encontrar o **maior segmento contíguo com sabores todos distintos**: Samyra entra em alguma posição e anda para a direita pegando bolas; ela só precisa recusar (e finalizar) quando encontra um sabor repetido dentro do trecho escolhido. Logo, a resposta é a maior janela contígua sem repetições.\n\nIsso é resolvido com **janela deslizante (two pointers)**:\n- Mantemos `left` como o início da casquinha atual e um dicionário `last` com a última posição em que cada sabor apareceu.\n- Ao processar a posição `i`, se o sabor `Xi` já ocorreu em uma posição `j >= left`, a casquinha atual precisa recomeçar em `j + 1`.\n- A resposta é o máximo tamanho de janela observado.\n\n**Complexidade:** O(N) tempo e O(N) memória — eficiente para N ≤ 120.000, e o dicionário evita alocar um array de tamanho S (que pode ser até 10⁷).",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    # data[1] é S (não necessário para o algoritmo)\n    \n    last = {}          # última posição de cada sabor\n    left = 0           # início da janela atual (casquinha)\n    best = 0\n    \n    for i in range(n):\n        x = int(data[2 + i])\n        j = last.get(x, -1)\n        # se o sabor já apareceu dentro da janela atual, Samyra recusa aqui,\n        # então a casquinha deve começar depois da última ocorrência\n        if j >= left:\n            left = j + 1\n        last[x] = i\n        cur = i - left + 1\n        if cur > best:\n            best = cur\n    \n    print(best)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10447289999865461,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]
