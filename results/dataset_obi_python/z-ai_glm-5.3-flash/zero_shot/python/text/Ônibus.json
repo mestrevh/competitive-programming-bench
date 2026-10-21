@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-12T11:54:32.109259+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 707,
+            "output_tokens": 1514,
+            "total_tokens": 2221
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.000757,
+            "total_cost": 0.000772
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    a = int(data[idx]); idx += 1\n    b = int(data[idx]); idx += 1\n\n    adj = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        p = int(data[idx]); idx += 1\n        q = int(data[idx]); idx += 1\n        adj[p].append(q)\n        adj[q].append(p)\n\n    # Como o grafo é uma árvore (caminho único entre qualquer par de cidades),\n    # a resposta é simplesmente a distância (número de arestas) entre A e B.\n    dist = [-1] * (n + 1)\n    dist[a] = 0\n    dq = deque([a])\n    while dq:\n        u = dq.popleft()\n        for v in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + 1\n                dq.append(v)\n\n    print(dist[b])\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    a = int(data[idx]); idx += 1\n    b = int(data[idx]); idx += 1\n\n    adj = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        p = int(data[idx]); idx += 1\n        q = int(data[idx]); idx += 1\n        adj[p].append(q)\n        adj[q].append(p)\n\n    # Como o grafo é uma árvore (caminho único entre qualquer par de cidades),\n    # a resposta é simplesmente a distância (número de arestas) entre A e B.\n    dist = [-1] * (n + 1)\n    dist[a] = 0\n    dq = deque([a])\n    while dq:\n        u = dq.popleft()\n        for v in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + 1\n                dq.append(v)\n\n    print(dist[b])\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0786009000003105,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]
