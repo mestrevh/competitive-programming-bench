@@ -118,8 +118,8 @@ def extract_code(response_text: str, language: str = "python") -> str:
     if not response_text:
         return ""
 
-    # Tenta encontrar blocos com a linguagem específica: ```python ... ``` ou ```cpp ... ```
-    pattern_lang = rf"```(?:{language}|py|cpp|c\+\+)?\s*\n(.*?)```"
+    # Tenta encontrar blocos com a linguagem específica: ```python ... ```, ```cpp ... ```, etc.
+    pattern_lang = rf"```(?:{re.escape(language)}|python|py|cpp|c\+\+|c|java|javascript|js)?\s*\n(.*?)```"
     matches = re.findall(pattern_lang, response_text, re.DOTALL | re.IGNORECASE)
     
     if matches:

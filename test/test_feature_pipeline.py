@@ -244,9 +244,62 @@ def test_orchestrator_json_accumulation_and_judge_csv():
         print(f"[PASS] Judge CSV verified with columns: {list(df.columns)}")
 
 
+def test_oracle_multilanguage_selection_and_fallback():
+    print("\nTesting Oracle multi-language selection and fallback...")
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tmp_path = Path(tmp_dir)
+        problem_dir = tmp_path / "mock_oracle_problem"
+        solutions_dir = problem_dir / "solutions"
+        test_cases_dir = problem_dir / "test_cases"
+        solutions_dir.mkdir(parents=True, exist_ok=True)
+        (test_cases_dir / "inputs").mkdir(parents=True, exist_ok=True)
+        (test_cases_dir / "outputs").mkdir(parents=True, exist_ok=True)
+
+        (test_cases_dir / "inputs" / "1.in").write_text("5\n", encoding="utf-8")
+        (test_cases_dir / "outputs" / "1.out").write_text("10\n", encoding="utf-8")
+
+        mock_problem_data = {
+            "title": "Mock Oracle Problem",
+            "statement": "Multiply by 2",
+            "input": "n",
+            "output": "2*n",
+            "constraints": "n > 0",
+            "examples": [{"input": "5", "output": "10"}],
+            "year": "2024",
+            "time_limit": 2.0,
+            "memory_limit": 512
+        }
+        (problem_dir / "problem.json").write_text(
+            json.dumps(mock_problem_data), encoding="utf-8"
+        )
+
+        # Create a Python 2 (broken) solution and a valid JavaScript (OBI scanf/printf) solution
+        (solutions_dir / "sol_py2.py").write_text("print 999\n", encoding="utf-8")
+        (solutions_dir / "sol_js.js").write_text(
+            'var n;\nscanf("%d", "n");\nprintf("%d\\n", n * 2);\n',
+            encoding="utf-8"
+        )
+
+        orch = Orchestrator(output="test_oracle_ds")
+        orch._Orchestrator__output = tmp_path / "results" / "test_oracle_ds"
+
+        ok = orch.execute(problem_path=problem_dir, oracle=True)
+        assert ok is True
+
+        import pandas as pd
+        oracle_csv = tmp_path / "results" / "test_oracle_ds" / "oracle.csv"
+        assert oracle_csv.exists(), "oracle.csv was not created!"
+        df = pd.read_csv(oracle_csv)
+        assert len(df) == 1
+        assert df.iloc[0]["judge_predict"] == "AC"
+        assert df.iloc[0]["AC"] == 1
+        print("[PASS] Oracle multi-language selection and fallback verified.")
+
+
 if __name__ == "__main__":
     test_code_extraction()
     test_prompt_builder()
     test_llm_response_and_cost()
     test_orchestrator_json_accumulation_and_judge_csv()
+    test_oracle_multilanguage_selection_and_fallback()
     print("\nALL FEATURE TESTS PASSED SUCCESSFULLY!")

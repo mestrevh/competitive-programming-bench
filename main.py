@@ -25,16 +25,29 @@ def choice_dir(path: Path) -> Optional[str]:
 
 
 def choice_language() -> str:
-    print("\nEscolha a linguagem:")
+    languages = {
+        "0": "python",
+        "1": "cpp",
+        "2": "c",
+        "3": "java",
+        "4": "javascript",
+    }
+    print("\nEscolha a linguagem (geração da LLM e avaliação do Judge):")
     print(" 0 - Python (python)")
     print(" 1 - C++ (cpp)")
-    try:
-        choice = input('Escolha um número [0]: ').strip()
-        if choice == "1":
-            return "cpp"
-        return "python"
-    except Exception:
-        return "python"
+    print(" 2 - C (c)")
+    print(" 3 - Java (java)")
+    print(" 4 - JavaScript (javascript)")
+    while True:
+        try:
+            choice = input('Escolha um número [0]: ').strip()
+            if choice == "":
+                return "python"
+            if choice in languages:
+                return languages[choice]
+            print("[ERROR]: Opção inválida. Escolha entre 0 e 4.")
+        except Exception:
+            return "python"
 
 
 def choice_llms() -> tuple[Optional[str], Optional[ProviderConfig]]:
@@ -135,14 +148,13 @@ def main():
     if name_env is None:
         exit_system()
 
-    language: str = choice_language()
-    
     path_problems = Path('database/') / name_env
     questions = [q for q in path_problems.iterdir() if q.is_dir()]
 
     oracle_raw = input("\nExecute the oracle mod [True, False]: ").strip().lower()
     oracle = oracle_raw in ["true", "t", "tr", "tru", "1", "yes", "y", "sim", "s"]
     
+    language: str = "python"
     prompt_name = "oracle"
     prompt_template = ""
     modality = "text"
@@ -150,6 +162,8 @@ def main():
     llm = None
     
     if not oracle:
+        language = choice_language()
+
         name_llm, llm = choice_llms()
         if llm is None:
             exit_system()

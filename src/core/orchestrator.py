@@ -1,4 +1,6 @@
+import ast
 import json
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -84,17 +86,91 @@ class Orchestrator:
                 code: str           = None,
                 timeout: float      = 30.0,
                 memory_limit: int   = 2048,
+                language: Optional[str] = None,
                 ) -> tuple[str, dict, int, float]:
         
+        target_language = language if language is not None else self.__language
         judge = JudgeService(code=code,
                              timeout=timeout,
-                             language=self.__language,
+                             language=target_language,
                              memory_limit=memory_limit,
                              test_cases=self.__get_test_cases(problem_path=path))
         
         status_final, counts, total_cases, max_time = judge.execute()
         print(f"Question executed: {path.name}")
         return status_final, counts, total_cases, max_time
+
+    def __get_oracle_candidates(self, code_path: Path) -> list[tuple[Path, str]]:
+        """Retorna lista ordenada de (arquivo_solucao, linguagem) disponíveis em solutions/."""
+        if not code_path.exists():
+            return []
+
+        ext_to_lang = {
+            ".py": "python",
+            ".cpp": "cpp",
+            ".cc": "cpp",
+            ".java": "java",
+            ".c": "c",
+            ".js": "javascript",
+        }
+        lang_priority = {
+            "cpp": 0,
+            "c": 1,
+            "python": 2,
+            "java": 3,
+            "javascript": 4,
+        }
+        deprioritized_tags = ("brute", "naive", "slow", "dummy", "py2")
+
+        def is_runtime_available(lang: str) -> bool:
+            if lang == "python":
+                return True
+            if lang == "cpp":
+                return shutil.which("g++") is not None
+            if lang == "c":
+                return shutil.which("gcc") is not None
+            if lang == "java":
+                return shutil.which("javac") is not None and shutil.which("java") is not None
+            if lang == "javascript":
+                return shutil.which("node") is not None
+            return False
+
+        candidates: list[tuple[Path, str]] = []
+        for file_path in code_path.iterdir():
+            if file_path.is_file():
+                lang = ext_to_lang.get(file_path.suffix.lower())
+                if lang is not None:
+                    candidates.append((file_path, lang))
+
+        def is_Incompatible_py2(file_path: Path, lang: str) -> bool:
+            if lang != "python":
+                return False
+            try:
+                content = file_path.read_text(encoding="utf-8", errors="replace")
+                ast.parse(content)
+                return "raw_input" in content or "xrange" in content
+            except SyntaxError:
+                return True
+            except Exception:
+                return False
+
+        def sort_key(item: tuple[Path, str]):
+            file_path, lang = item
+            stem_lower = file_path.stem.lower()
+            has_deprioritized_tag = (
+                any(tag in stem_lower for tag in deprioritized_tags)
+                or is_Incompatible_py2(file_path, lang)
+            )
+            runtime_missing = not is_runtime_available(lang)
+            return (
+                1 if runtime_missing else 0,
+                1 if has_deprioritized_tag else 0,
+                lang_priority.get(lang, 99),
+                file_path.name.lower(),
+            )
+
+        candidates.sort(key=sort_key)
+        return candidates
 
     def __sanitize_name(self, name: str) -> str:
         """Sanitiza strings para uso seguro como caminhos de diretório/arquivo."""
@@ -126,28 +202,40 @@ class Orchestrator:
                 results = pd.DataFrame(columns=list(EvaluationOracle.model_fields.keys()))
                 file_manager.save_csv(content=results, path=results_path)
             
-            ext = "*.py"
-            if self.__language == "cpp":
-                ext = "*.cpp"
-            
             code_path = problem_path / "solutions"
-            list_code = list(code_path.glob(ext))
+            candidates = self.__get_oracle_candidates(code_path)
             
-            if len(list_code) == 0 and ext == "*.cpp":
-                list_code = list(code_path.glob("*.cc"))                
-            
-            if len(list_code) == 0:
+            if len(candidates) == 0:
                 print(f"[Error]: Nenhuma solução encontrada em {code_path}")
                 return False
             
-            code = self.__get_code(list_code[0])
+            best_result = None
+            for sol_file, sol_lang in candidates:
+                code = self.__get_code(sol_file)
+                if not code:
+                    continue
+                
+                print(f"[Oracle]: Testando solução '{sol_file.name}' ({sol_lang}) para '{problem_path.name}'...")
+                status_final, counts, total_cases, max_time = self.__judge(
+                    path=problem_path,
+                    code=code,
+                    timeout=problem.time_limit,
+                    memory_limit=problem.memory_limit,
+                    language=sol_lang
+                )
+                
+                if best_result is None or counts.get("AC", 0) > best_result[1].get("AC", -1):
+                    best_result = (status_final, counts, total_cases, max_time)
+                
+                if status_final == "AC":
+                    break
+                print(f"[Oracle]: Solução '{sol_file.name}' obteve '{status_final}'. Tentando próxima opção se disponível...")
             
-            status_final, counts, total_cases, max_time = self.__judge(
-                path=problem_path,
-                code=code,
-                timeout=problem.time_limit,
-                memory_limit=problem.memory_limit
-            )
+            if best_result is None:
+                print(f"[Error]: Nenhuma solução pôde ser lida em {code_path}")
+                return False
+            
+            status_final, counts, total_cases, max_time = best_result
             
             evaluation = EvaluationOracle(
                 question_name=problem_path.name,

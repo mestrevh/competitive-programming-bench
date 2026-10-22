@@ -1,5 +1,6 @@
 import tempfile
 import os
+import re
 import time
 import subprocess
 import sys
@@ -9,6 +10,47 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Tuple, Optional
 
+_OBI_JS_SHIM = """
+const __obi_fs = require('fs');
+const __obi_input = __obi_fs.readFileSync(0, 'utf8');
+let __obi_pos = 0;
+function scanf(__obi_fmt) {
+    const __obi_specs = __obi_fmt.match(/%[dfsc]/g) || [];
+    for (let __obi_i = 0; __obi_i < __obi_specs.length; __obi_i++) {
+        const __obi_spec = __obi_specs[__obi_i];
+        const __obi_target = arguments[__obi_i + 1];
+        if (__obi_spec === '%c') {
+            if (__obi_pos < __obi_input.length) {
+                const __obi_ch = __obi_input[__obi_pos++];
+                eval(__obi_target + ' = ' + JSON.stringify(__obi_ch));
+            }
+            if (__obi_fmt.includes('%c\\n') && __obi_pos < __obi_input.length && (__obi_input[__obi_pos] === '\\r' || __obi_input[__obi_pos] === '\\n')) {
+                if (__obi_input[__obi_pos] === '\\r') __obi_pos++;
+                if (__obi_input[__obi_pos] === '\\n') __obi_pos++;
+            }
+        } else {
+            while (__obi_pos < __obi_input.length && __obi_input.charCodeAt(__obi_pos) <= 32) __obi_pos++;
+            let __obi_start = __obi_pos;
+            while (__obi_pos < __obi_input.length && __obi_input.charCodeAt(__obi_pos) > 32) __obi_pos++;
+            const __obi_tok = __obi_input.slice(__obi_start, __obi_pos);
+            if (__obi_spec === '%d') eval(__obi_target + ' = ' + (__obi_tok ? parseInt(__obi_tok, 10) : 0));
+            else if (__obi_spec === '%f') eval(__obi_target + ' = ' + (__obi_tok ? parseFloat(__obi_tok) : 0.0));
+            else eval(__obi_target + ' = ' + JSON.stringify(__obi_tok));
+        }
+    }
+}
+function printf(__obi_fmt) {
+    let __obi_idx = 1;
+    const __obi_out = String(__obi_fmt).replace(/%(?:\\.(\\d+))?([dfsc])/g, (_, __obi_prec, __obi_type) => {
+        const __obi_val = arguments[__obi_idx++];
+        if (__obi_type === 'd') return Math.trunc(Number(__obi_val)).toString();
+        if (__obi_type === 'f') return __obi_prec !== undefined ? Number(__obi_val).toFixed(Number(__obi_prec)) : Number(__obi_val).toString();
+        return String(__obi_val);
+    });
+    process.stdout.write(__obi_out);
+}
+"""
+
 class JudgeService:
     def __init__(self,
                  code: str                                  = None,
@@ -17,19 +59,33 @@ class JudgeService:
                  language: str                              = "python",
                  test_cases: Optional[List[Tuple[str, str]]] = None):
         
-        self.__language     = language.lower()
+        lang_norm = language.lower().strip().lstrip(".")
+        lang_aliases = {
+            "py": "python",
+            "python": "python",
+            "cpp": "cpp",
+            "c++": "cpp",
+            "cc": "cpp",
+            "c": "c",
+            "java": "java",
+            "js": "javascript",
+            "javascript": "javascript",
+        }
+        self.__language     = lang_aliases.get(lang_norm, lang_norm)
         self.__code         = code
         self.__test_cases   = test_cases if test_cases is not None else []
         self.__timeout      = timeout
         self.__memory_limit = memory_limit
+        self.__python_cmd   = sys.executable
         
-        if self.__language == "python":
-            self.__extension = "py"
-            self.__python_cmd = sys.executable 
-        elif self.__language == "cpp":
-            self.__extension = "cpp"
-        else:
-            self.__extension = self.__language
+        ext_map = {
+            "python": "py",
+            "cpp": "cpp",
+            "c": "c",
+            "java": "java",
+            "javascript": "js",
+        }
+        self.__extension = ext_map.get(self.__language, self.__language)
 
     def __run_single_test(self,
                           cmd: List[str],
@@ -115,7 +171,9 @@ class JudgeService:
             if process.returncode != 0:
                 return "RE", exec_time
 
-            if stdout.strip() == expected.strip():
+            out_lines = [line.rstrip() for line in stdout.strip().splitlines()]
+            exp_lines = [line.rstrip() for line in expected.strip().splitlines()]
+            if out_lines == exp_lines:
                 return "AC", exec_time
             else:
                 return "WA", exec_time
@@ -166,32 +224,112 @@ class JudgeService:
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_path = Path(tmp_dir)
             source_file = tmp_path / f"code.{self.__extension}"
-            source_file.write_text(self.__code, encoding="utf-8")
+
+            stack_bytes = self.__memory_limit * 1024 * 1024
 
             if self.__language == "cpp":
+                source_file.write_text(self.__code, encoding="utf-8")
                 executable = tmp_path / ("program.exe" if sys.platform == "win32" else "program.out")
+                cpp_cmd = [
+                    "g++",
+                    "-include", "cassert",
+                    "-include", "cstdint",
+                    "-include", "cstring",
+                    "-include", "algorithm",
+                    "-DNDEBUG",
+                    str(source_file),
+                    "-o", str(executable),
+                    "-O2",
+                ]
+                if sys.platform == "win32":
+                    cpp_cmd.append(f"-Wl,--stack,{stack_bytes}")
                 try:
                     compile_res = subprocess.run(
-                        ["g++", str(source_file), "-o", str(executable), "-O2"],
+                        cpp_cmd,
                         capture_output=True, text=True, timeout=15.0
                     )
                     if compile_res.returncode != 0:
                         self.__print_summary("CE", counts, total_cases, 0.0)
                         return "CE", counts, total_cases, 0.0
-                except FileNotFoundError:
-                    print("[Error]: Compilador 'g++' não encontrado no sistema.")
-                    counts = {
-                        "AC": 0,
-                        "WA": 0,
-                        "RE": 0,
-                        "TLE": 0,
-                        "MLE": 0,
-                        "CE": total_cases
-                    }
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    print("[Error]: Compilador 'g++' não encontrado ou tempo esgotado.")
                     self.__print_summary("CE", counts, total_cases, 0.0)
                     return "CE", counts, total_cases, 0.0
                 cmd = [str(executable)]
+
+            elif self.__language == "c":
+                source_file.write_text(self.__code, encoding="utf-8")
+                executable = tmp_path / ("program.exe" if sys.platform == "win32" else "program.out")
+                c_cmd = [
+                    "gcc",
+                    "-DNDEBUG",
+                    str(source_file),
+                    "-o", str(executable),
+                    "-O2",
+                    "-lm",
+                ]
+                if sys.platform == "win32":
+                    c_cmd.append(f"-Wl,--stack,{stack_bytes}")
+                try:
+                    compile_res = subprocess.run(
+                        c_cmd,
+                        capture_output=True, text=True, timeout=15.0
+                    )
+                    if compile_res.returncode != 0:
+                        self.__print_summary("CE", counts, total_cases, 0.0)
+                        return "CE", counts, total_cases, 0.0
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    print("[Error]: Compilador 'gcc' não encontrado ou tempo esgotado.")
+                    self.__print_summary("CE", counts, total_cases, 0.0)
+                    return "CE", counts, total_cases, 0.0
+                cmd = [str(executable)]
+
+            elif self.__language == "java":
+                match = (
+                    re.search(r"public\s+class\s+([A-Za-z_]\w*)", self.__code)
+                    or re.search(r"class\s+([A-Za-z_]\w*)", self.__code)
+                )
+                class_name = match.group(1) if match else "Main"
+                source_file = tmp_path / f"{class_name}.java"
+                source_file.write_text(self.__code, encoding="utf-8")
+                try:
+                    compile_res = subprocess.run(
+                        ["javac", "-encoding", "UTF-8", str(source_file)],
+                        capture_output=True, text=True, timeout=20.0
+                    )
+                    if compile_res.returncode != 0:
+                        self.__print_summary("CE", counts, total_cases, 0.0)
+                        return "CE", counts, total_cases, 0.0
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    print("[Error]: Compilador 'javac' não encontrado ou tempo esgotado.")
+                    self.__print_summary("CE", counts, total_cases, 0.0)
+                    return "CE", counts, total_cases, 0.0
+                cmd = ["java", "-cp", str(tmp_path), class_name]
+
+            elif self.__language == "javascript":
+                js_code = self.__code
+                if (
+                    re.search(r"\b(scanf|printf)\s*\(", js_code)
+                    and not re.search(r"function\s+(scanf|printf)\b", js_code)
+                ):
+                    js_code = _OBI_JS_SHIM + "\n" + js_code
+                source_file.write_text(js_code, encoding="utf-8")
+                try:
+                    check_res = subprocess.run(
+                        ["node", "--check", str(source_file)],
+                        capture_output=True, text=True, timeout=10.0
+                    )
+                    if check_res.returncode != 0:
+                        self.__print_summary("CE", counts, total_cases, 0.0)
+                        return "CE", counts, total_cases, 0.0
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    print("[Error]: Runtime 'node' não encontrado ou tempo esgotado.")
+                    self.__print_summary("CE", counts, total_cases, 0.0)
+                    return "CE", counts, total_cases, 0.0
+                cmd = ["node", str(source_file)]
+
             else:
+                source_file.write_text(self.__code, encoding="utf-8")
                 cmd = [self.__python_cmd, str(source_file)]
 
             def worker(case):
