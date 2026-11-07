@@ -1,8 +1,31 @@
 import base64
+import json
 import re
 from pathlib import Path
 from typing import Union, List, Dict, Any, Optional
 from src.models.problem import Problem
+
+
+def has_images(problem_path: Path) -> bool:
+    """Verifica se uma questão possui imagens associadas (diretório imgs ou problem.json)."""
+    imgs_dir = problem_path / "imgs"
+    if imgs_dir.exists() and imgs_dir.is_dir():
+        for item in imgs_dir.iterdir():
+            if item.is_file():
+                return True
+
+    problem_json_file = problem_path / "problem.json"
+    if problem_json_file.exists():
+        try:
+            with open(problem_json_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                imgs = data.get("imgs")
+                if imgs and isinstance(imgs, list) and len(imgs) > 0:
+                    return True
+        except Exception:
+            pass
+
+    return False
 
 
 def encode_image_to_base64(image_path: Path) -> str:
@@ -86,29 +109,37 @@ def build_prompt_payload(
     text_content = text_content.replace("{time_limit}", f"{problem.time_limit}s")
     text_content = text_content.replace("{memory_limit}", f"{problem.memory_limit}MB")
 
-    # Se a modalidade for apenas texto, retorna a string
-    if modality != "img" or not problem.imgs:
+    # 1. Se a modalidade for apenas texto ou a questão não tiver imagens
+    if modality == "text" or not problem.imgs:
         return text_content
 
-    # Se a modalidade for img, monta o payload multimodal
-    content: List[Dict[str, Any]] = [{"type": "text", "text": text_content}]
-    imgs_dir = problem_path / "imgs"
+    # 2. Se a modalidade for imagens em forma descritiva
+    if modality == "description":
+        # Será estruturado e detalhado conforme o plano nos próximos prompts
+        return text_content
 
-    for img_name in problem.imgs:
-        img_path = imgs_dir / img_name
-        if img_path.exists():
-            mime_type = get_image_mime_type(img_path)
-            b64_str = encode_image_to_base64(img_path)
-            content.append({
-                "type": "image_url",
-                "image_url": {
-                    "url": f"data:{mime_type};base64,{b64_str}"
-                }
-            })
-        else:
-            print(f"[Aviso]: Imagem '{img_name}' não encontrada no diretório '{imgs_dir}'.")
+    # 3. Se a modalidade for imagens em Base64 ("img")
+    if modality == "img":
+        content: List[Dict[str, Any]] = [{"type": "text", "text": text_content}]
+        imgs_dir = problem_path / "imgs"
 
-    return content
+        for img_name in problem.imgs:
+            img_path = imgs_dir / img_name
+            if img_path.exists():
+                mime_type = get_image_mime_type(img_path)
+                b64_str = encode_image_to_base64(img_path)
+                content.append({
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:{mime_type};base64,{b64_str}"
+                    }
+                })
+            else:
+                print(f"[Aviso]: Imagem '{img_name}' não encontrada no diretório '{imgs_dir}'.")
+
+        return content
+
+    return text_content
 
 
 def extract_code(response_text: str, language: str = "python") -> str:

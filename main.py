@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Optional
 from src.core.orchestrator import Orchestrator
 from src.core.config import config, ProviderConfig
+from src.core.prompt_builder import has_images
 
 
 def choice_dir(path: Path) -> Optional[str]:
@@ -108,18 +109,36 @@ def choice_prompt(prompt_dir: Path = Path('prompts/')) -> tuple[Optional[str], O
             print('[ERROR]: Apenas números são permitidos')
 
 
-def choice_modality() -> str:
-    print("\nEscolha a modalidade do problema:")
-    print(" 0 - Apenas texto (text)")
-    print(" 1 - Texto com imagens em Base64 (img)")
+def choice_execution_scope(total_all: int, total_imgs: int) -> str:
+    print("\nEscolha o escopo de execução:")
+    print(f" 0 - Todas as questões ({total_all} questões) [padrão]")
+    print(f" 1 - Apenas as questões com imagens ({total_imgs} questões)")
     while True:
         raw = input('Escolha um número [0]: ').strip()
         if raw == "" or raw == "0":
-            return "text"
+            return "all"
         elif raw == "1":
-            return "img"
+            return "only_images"
         else:
             print("[ERROR]: Opção inválida. Digite 0 ou 1.")
+
+
+def choice_image_modality() -> str:
+    print("\nEscolha a modalidade para as questões com imagens:")
+    print(" 1 - Prompt com apenas texto (text)")
+    print(" 2 - Prompt com as imagens na Base64 (img)")
+    print(" 3 - Prompt com as imagens em forma descritiva (description) [Plano a ser definido]")
+    while True:
+        raw = input('Escolha um número [1]: ').strip()
+        if raw in ["", "1"]:
+            return "text"
+        elif raw == "2":
+            return "img"
+        elif raw == "3":
+            print("[Aviso]: O plano para a modalidade descritiva será configurado nos próximos passos.")
+            return "description"
+        else:
+            print("[ERROR]: Opção inválida. Escolha 1, 2 ou 3.")
 
 
 def choice_include_limits() -> bool:
@@ -149,7 +168,7 @@ def main():
         exit_system()
 
     path_problems = Path('database/') / name_env
-    questions = [q for q in path_problems.iterdir() if q.is_dir()]
+    questions = sorted([q for q in path_problems.iterdir() if q.is_dir()])
 
     oracle_raw = input("\nExecute the oracle mod [True, False]: ").strip().lower()
     oracle = oracle_raw in ["true", "t", "tr", "tru", "1", "yes", "y", "sim", "s"]
@@ -168,7 +187,19 @@ def main():
         if llm is None:
             exit_system()
         
-        modality = choice_modality()
+        questions_with_images = [q for q in questions if has_images(q)]
+        scope = choice_execution_scope(total_all=len(questions), total_imgs=len(questions_with_images))
+
+        if scope == "only_images":
+            if not questions_with_images:
+                print("[ERROR]: Nenhuma questão com imagens encontrada neste dataset.")
+                exit_system()
+            questions = questions_with_images
+            modality = choice_image_modality()
+            print(f"\n[Info]: Selecionadas {len(questions)} questões com imagens. Modalidade: '{modality}'.")
+        else:
+            modality = "text"
+            print(f"\n[Info]: Selecionadas todas as {len(questions)} questões. Modalidade: '{modality}'.")
         
         prompt_name, prompt_template = choice_prompt()
         if prompt_name is None:
