@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:34:03.869675+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1156,
+            "output_tokens": 9477,
+            "total_tokens": 10633
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.022745,
+            "total_cost": 0.022748
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class Fenwick {\n        int n;\n        int[] tree;\n\n        Fenwick(int n) {\n            this.n = n;\n            this.tree = new int[n + 2];\n        }\n\n        void add(int idx, int val) {\n            while (idx <= n) {\n                tree[idx] += val;\n                idx += idx & -idx;\n            }\n        }\n\n        int sum(int idx) {\n            int res = 0;\n            while (idx > 0) {\n                res += tree[idx];\n                idx -= idx & -idx;\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        long X1 = Long.parseLong(st.nextToken());\n        long X2 = Long.parseLong(st.nextToken());\n\n        int[] A = new int[N];\n        int[] B = new int[N];\n        long[] val1 = new long[N];\n        long[] val2 = new long[N];\n\n        for (int i = 0; i < N; i++) {\n            st = new StringTokenizer(br.readLine());\n            A[i] = Integer.parseInt(st.nextToken());\n            B[i] = Integer.parseInt(st.nextToken());\n            val1[i] = (long) A[i] * X1 + B[i];\n            val2[i] = (long) A[i] * X2 + B[i];\n        }\n\n        Integer[] ord1 = new Integer[N];\n        Integer[] ord2 = new Integer[N];\n\n        for (int i = 0; i < N; i++) {\n            ord1[i] = i;\n            ord2[i] = i;\n        }\n\n        Arrays.sort(ord1, (i, j) -> {\n            if (val1[i] != val1[j]) {\n                return Long.compare(val1[i], val1[j]);\n            }\n            return Long.compare(A[j], A[i]);\n        });\n\n        Arrays.sort(ord2, (i, j) -> {\n            if (val2[i] != val2[j]) {\n                return Long.compare(val2[i], val2[j]);\n            }\n            return Long.compare(A[i], A[j]);\n        });\n\n        int[] pos2 = new int[N];\n        for (int i = 0; i < N; i++) {\n            pos2[ord2[i]] = i + 1;\n        }\n\n        Fenwick bit = new Fenwick(N);\n        long inversions = 0;\n        int processed = 0;\n\n        for (int i = 0; i < N; i++) {\n            int x = pos2[ord1[i]];\n            int leq = bit.sum(x);\n            inversions += (long) processed - leq;\n            bit.add(x, 1);\n            processed++;\n        }\n\n        System.out.println(inversions);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class Fenwick {\n        int n;\n        int[] tree;\n\n        Fenwick(int n) {\n            this.n = n;\n            this.tree = new int[n + 2];\n        }\n\n        void add(int idx, int val) {\n            while (idx <= n) {\n                tree[idx] += val;\n                idx += idx & -idx;\n            }\n        }\n\n        int sum(int idx) {\n            int res = 0;\n            while (idx > 0) {\n                res += tree[idx];\n                idx -= idx & -idx;\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        long X1 = Long.parseLong(st.nextToken());\n        long X2 = Long.parseLong(st.nextToken());\n\n        int[] A = new int[N];\n        int[] B = new int[N];\n        long[] val1 = new long[N];\n        long[] val2 = new long[N];\n\n        for (int i = 0; i < N; i++) {\n            st = new StringTokenizer(br.readLine());\n            A[i] = Integer.parseInt(st.nextToken());\n            B[i] = Integer.parseInt(st.nextToken());\n            val1[i] = (long) A[i] * X1 + B[i];\n            val2[i] = (long) A[i] * X2 + B[i];\n        }\n\n        Integer[] ord1 = new Integer[N];\n        Integer[] ord2 = new Integer[N];\n\n        for (int i = 0; i < N; i++) {\n            ord1[i] = i;\n            ord2[i] = i;\n        }\n\n        Arrays.sort(ord1, (i, j) -> {\n            if (val1[i] != val1[j]) {\n                return Long.compare(val1[i], val1[j]);\n            }\n            return Long.compare(A[j], A[i]);\n        });\n\n        Arrays.sort(ord2, (i, j) -> {\n            if (val2[i] != val2[j]) {\n                return Long.compare(val2[i], val2[j]);\n            }\n            return Long.compare(A[i], A[j]);\n        });\n\n        int[] pos2 = new int[N];\n        for (int i = 0; i < N; i++) {\n            pos2[ord2[i]] = i + 1;\n        }\n\n        Fenwick bit = new Fenwick(N);\n        long inversions = 0;\n        int processed = 0;\n\n        for (int i = 0; i < N; i++) {\n            int x = pos2[ord1[i]];\n            int leq = bit.sum(x);\n            inversions += (long) processed - leq;\n            bit.add(x, 1);\n            processed++;\n        }\n\n        System.out.println(inversions);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.32224999999743886,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

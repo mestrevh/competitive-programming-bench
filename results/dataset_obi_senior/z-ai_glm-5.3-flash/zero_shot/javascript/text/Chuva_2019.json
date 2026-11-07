@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T00:31:55.819505+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 931,
+            "output_tokens": 53321,
+            "total_tokens": 54252
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.026661,
+            "total_cost": 0.02668
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const lines = fs\n    .readFileSync(0, 'utf8')\n    .split('\\n')\n    .map((s) => s.replace(/\\r/g, ''))\n    .filter((s) => s.trim().length > 0);\n\n  let idx = 0;\n  const header = lines[idx++].trim().split(/\\s+/);\n  const n = +header[0];\n  const m = +header[1];\n\n  const grid = new Array(n);\n  for (let i = 0; i < n; i++) {\n    let line = lines[idx++] || '';\n    if (line.length < m) line += '.'.repeat(m - line.length);\n    grid[i] = line;\n  }\n\n  const total = n * m;\n  const wet = new Uint8Array(total);\n  const queue = new Int32Array(total);\n  let head = 0;\n  let tail = 0;\n\n  // ponto de vazamento (único 'o' na primeira linha)\n  const start = grid[0].indexOf('o');\n  if (start >= 0) {\n    wet[start] = 1;\n    queue[tail++] = start;\n  }\n\n  // Propagação (fechamento mínimo das regras do enunciado):\n  // - célula molhada com '.' embaixo -> molha a de baixo (queda vertical)\n  // - célula molhada com '#' embaixo -> escorre para esquerda/direita\n  //   (molha as laterais que sejam '.'; nelas a água continua ou cai)\n  while (head < tail) {\n    const pos = queue[head++];\n    const i = (pos / m) | 0;\n    const j = pos - i * m;\n\n    if (i + 1 >= n) continue; // última linha\n    const below = grid[i + 1][j];\n\n    if (below === '.') {\n      const np = pos + m;\n      if (!wet[np]) {\n        wet[np] = 1;\n        queue[tail++] = np;\n      }\n    } else if (below === '#') {\n      if (j + 1 < m && grid[i][j + 1] === '.') {\n        const np = pos + 1;\n        if (!wet[np]) {\n          wet[np] = 1;\n          queue[tail++] = np;\n        }\n      }\n      if (j - 1 >= 0 && grid[i][j - 1] === '.') {\n        const np = pos - 1;\n        if (!wet[np]) {\n          wet[np] = 1;\n          queue[tail++] = np;\n        }\n      }\n    }\n  }\n\n  const out = new Array(n);\n  for (let i = 0; i < n; i++) {\n    const row = grid[i];\n    const base = i * m;\n    const chars = new Array(m);\n    for (let j = 0; j < m; j++) {\n      chars[j] = wet[base + j] ? 'o' : row[j];\n    }\n    out[i] = chars.join('');\n  }\n\n  process.stdout.write(out.join('\\n') + '\\n');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const lines = fs\n    .readFileSync(0, 'utf8')\n    .split('\\n')\n    .map((s) => s.replace(/\\r/g, ''))\n    .filter((s) => s.trim().length > 0);\n\n  let idx = 0;\n  const header = lines[idx++].trim().split(/\\s+/);\n  const n = +header[0];\n  const m = +header[1];\n\n  const grid = new Array(n);\n  for (let i = 0; i < n; i++) {\n    let line = lines[idx++] || '';\n    if (line.length < m) line += '.'.repeat(m - line.length);\n    grid[i] = line;\n  }\n\n  const total = n * m;\n  const wet = new Uint8Array(total);\n  const queue = new Int32Array(total);\n  let head = 0;\n  let tail = 0;\n\n  // ponto de vazamento (único 'o' na primeira linha)\n  const start = grid[0].indexOf('o');\n  if (start >= 0) {\n    wet[start] = 1;\n    queue[tail++] = start;\n  }\n\n  // Propagação (fechamento mínimo das regras do enunciado):\n  // - célula molhada com '.' embaixo -> molha a de baixo (queda vertical)\n  // - célula molhada com '#' embaixo -> escorre para esquerda/direita\n  //   (molha as laterais que sejam '.'; nelas a água continua ou cai)\n  while (head < tail) {\n    const pos = queue[head++];\n    const i = (pos / m) | 0;\n    const j = pos - i * m;\n\n    if (i + 1 >= n) continue; // última linha\n    const below = grid[i + 1][j];\n\n    if (below === '.') {\n      const np = pos + m;\n      if (!wet[np]) {\n        wet[np] = 1;\n        queue[tail++] = np;\n      }\n    } else if (below === '#') {\n      if (j + 1 < m && grid[i][j + 1] === '.') {\n        const np = pos + 1;\n        if (!wet[np]) {\n          wet[np] = 1;\n          queue[tail++] = np;\n        }\n      }\n      if (j - 1 >= 0 && grid[i][j - 1] === '.') {\n        const np = pos - 1;\n        if (!wet[np]) {\n          wet[np] = 1;\n          queue[tail++] = np;\n        }\n      }\n    }\n  }\n\n  const out = new Array(n);\n  for (let i = 0; i < n; i++) {\n    const row = grid[i];\n    const base = i * m;\n    const chars = new Array(m);\n    for (let j = 0; j < m; j++) {\n      chars[j] = wet[base + j] ? 'o' : row[j];\n    }\n    out[i] = chars.join('');\n  }\n\n  process.stdout.write(out.join('\\n') + '\\n');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15257709997240454,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:25:52.630958+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 543,
+            "output_tokens": 608,
+            "total_tokens": 2771
+        },
+        "cost_usd": {
+            "input_cost": 0.000407,
+            "output_cost": 0.00228,
+            "total_cost": 0.002687
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n    C = int(input_data[2])\n\n    A = [int(x) for x in input_data[3 : 3 + N]]\n\n    total_sum = sum(A)\n\n    if K * C == N:\n        print(0)\n        return\n\n    if C == 1:\n        A.sort()\n        min_covered = sum(A[:K])\n        print(total_sum - min_covered)\n        return\n\n    # Prefix sums for range sum calculation\n    pref = [0] * (N + 1)\n    for i in range(N):\n        pref[i + 1] = pref[i] + A[i]\n\n    # window_sum[i] = sum(A[i-C : i])\n    # i is 1-based index in fita\n    # We want to minimize the covered sum with K segments of length C.\n    # dp[i] is the minimum covered sum using j segments ending at or before i.\n    # We only need the previous row `prev_dp` and current row `curr_dp`.\n\n    prev_dp = [0] * (N + 1)\n\n    for j in range(1, K + 1):\n        curr_dp = [0] * (N + 1)\n        start_i = j * C\n        end_i = N - (K - j) * C\n\n        # For the first valid position\n        # curr_dp[start_i] = prev_dp[start_i - C] + sum of window\n        w_sum = pref[start_i] - pref[start_i - C]\n        curr_dp[start_i] = prev_dp[start_i - C] + w_sum\n\n        for i in range(start_i + 1, end_i + 1):\n            w_sum = pref[i] - pref[i - C]\n            take = prev_dp[i - C] + w_sum\n            not_take = curr_dp[i - 1]\n            if take < not_take:\n                curr_dp[i] = take\n            else:\n                curr_dp[i] = not_take\n\n        prev_dp = curr_dp\n\n    min_covered = prev_dp[N]\n    print(total_sum - min_covered)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n    C = int(input_data[2])\n\n    A = [int(x) for x in input_data[3 : 3 + N]]\n\n    total_sum = sum(A)\n\n    if K * C == N:\n        print(0)\n        return\n\n    if C == 1:\n        A.sort()\n        min_covered = sum(A[:K])\n        print(total_sum - min_covered)\n        return\n\n    # Prefix sums for range sum calculation\n    pref = [0] * (N + 1)\n    for i in range(N):\n        pref[i + 1] = pref[i] + A[i]\n\n    # window_sum[i] = sum(A[i-C : i])\n    # i is 1-based index in fita\n    # We want to minimize the covered sum with K segments of length C.\n    # dp[i] is the minimum covered sum using j segments ending at or before i.\n    # We only need the previous row `prev_dp` and current row `curr_dp`.\n\n    prev_dp = [0] * (N + 1)\n\n    for j in range(1, K + 1):\n        curr_dp = [0] * (N + 1)\n        start_i = j * C\n        end_i = N - (K - j) * C\n\n        # For the first valid position\n        # curr_dp[start_i] = prev_dp[start_i - C] + sum of window\n        w_sum = pref[start_i] - pref[start_i - C]\n        curr_dp[start_i] = prev_dp[start_i - C] + w_sum\n\n        for i in range(start_i + 1, end_i + 1):\n            w_sum = pref[i] - pref[i - C]\n            take = prev_dp[i - C] + w_sum\n            not_take = curr_dp[i - 1]\n            if take < not_take:\n                curr_dp[i] = take\n            else:\n                curr_dp[i] = not_take\n\n        prev_dp = curr_dp\n\n    min_covered = prev_dp[N]\n    print(total_sum - min_covered)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.0608831999998074,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

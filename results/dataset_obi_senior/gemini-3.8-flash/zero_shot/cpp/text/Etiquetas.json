@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:33:06.468783+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 543,
+            "output_tokens": 484,
+            "total_tokens": 2390
+        },
+        "cost_usd": {
+            "input_cost": 0.000407,
+            "output_cost": 0.001815,
+            "total_cost": 0.002222
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <numeric>\n#include <algorithm>\n\nusing namespace std;\n\nconst int INF = 1e9;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, k, c;\n    if (!(cin >> n >> k >> c)) return 0;\n\n    vector<int> a(n + 1);\n    vector<int> pref(n + 1, 0);\n    long long total_sum = 0;\n\n    for (int i = 1; i <= n; ++i) {\n        cin >> a[i];\n        pref[i] = pref[i - 1] + a[i];\n        total_sum += a[i];\n    }\n\n    // dp[i] armazenará o menor custo de cobrir usando 'step' etiquetas até o índice i\n    vector<int> dp(n + 1, 0);\n    vector<int> next_dp(n + 1, INF);\n\n    for (int step = 1; step <= k; ++step) {\n        int min_i = step * c;\n        int max_i = n - (k - step) * c;\n\n        next_dp[min_i] = dp[min_i - c] + (pref[min_i] - pref[min_i - c]);\n        for (int i = min_i + 1; i <= max_i; ++i) {\n            int cover_here = dp[i - c] + (pref[i] - pref[i - c]);\n            next_dp[i] = min(next_dp[i - 1], cover_here);\n        }\n\n        for (int i = min_i; i <= max_i; ++i) {\n            dp[i] = next_dp[i];\n        }\n    }\n\n    long long min_covered = dp[n];\n    cout << total_sum - min_covered << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <numeric>\n#include <algorithm>\n\nusing namespace std;\n\nconst int INF = 1e9;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, k, c;\n    if (!(cin >> n >> k >> c)) return 0;\n\n    vector<int> a(n + 1);\n    vector<int> pref(n + 1, 0);\n    long long total_sum = 0;\n\n    for (int i = 1; i <= n; ++i) {\n        cin >> a[i];\n        pref[i] = pref[i - 1] + a[i];\n        total_sum += a[i];\n    }\n\n    // dp[i] armazenará o menor custo de cobrir usando 'step' etiquetas até o índice i\n    vector<int> dp(n + 1, 0);\n    vector<int> next_dp(n + 1, INF);\n\n    for (int step = 1; step <= k; ++step) {\n        int min_i = step * c;\n        int max_i = n - (k - step) * c;\n\n        next_dp[min_i] = dp[min_i - c] + (pref[min_i] - pref[min_i - c]);\n        for (int i = min_i + 1; i <= max_i; ++i) {\n            int cover_here = dp[i - c] + (pref[i] - pref[i - c]);\n            next_dp[i] = min(next_dp[i - 1], cover_here);\n        }\n\n        for (int i = min_i; i <= max_i; ++i) {\n            dp[i] = next_dp[i];\n        }\n    }\n\n    long long min_covered = dp[n];\n    cout << total_sum - min_covered << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18006379998405464,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

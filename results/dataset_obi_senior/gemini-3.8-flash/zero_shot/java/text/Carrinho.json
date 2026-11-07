@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:06:54.980596+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 655,
+            "output_tokens": 484,
+            "total_tokens": 2229
+        },
+        "cost_usd": {
+            "input_cost": 0.000491,
+            "output_cost": 0.001815,
+            "total_cost": 0.002306
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.Locale;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer tokenizer = new StringTokenizer(line);\n        int n = Integer.parseInt(tokenizer.nextToken());\n        double d = Double.parseDouble(tokenizer.nextToken());\n\n        double[] p = new double[n + 1];\n        double[] c = new double[n + 1];\n\n        for (int i = 0; i < n; i++) {\n            line = reader.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = reader.readLine();\n            }\n            tokenizer = new StringTokenizer(line);\n            p[i] = Double.parseDouble(tokenizer.nextToken());\n            c[i] = Double.parseDouble(tokenizer.nextToken());\n        }\n\n        p[n] = d;\n\n        double[] dp = new double[n + 1];\n        for (int i = 1; i <= n; i++) {\n            dp[i] = Double.POSITIVE_INFINITY;\n        }\n        dp[0] = 0.0;\n\n        for (int j = 1; j <= n; j++) {\n            for (int i = 0; i < j; i++) {\n                double dist = p[j] - p[i];\n                double time = (dist * dist) / c[i];\n                if (dp[i] + time < dp[j]) {\n                    dp[j] = dp[i] + time;\n                }\n            }\n        }\n\n        System.out.printf(Locale.US, \"%.3f\\n\", dp[n]);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.Locale;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer tokenizer = new StringTokenizer(line);\n        int n = Integer.parseInt(tokenizer.nextToken());\n        double d = Double.parseDouble(tokenizer.nextToken());\n\n        double[] p = new double[n + 1];\n        double[] c = new double[n + 1];\n\n        for (int i = 0; i < n; i++) {\n            line = reader.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = reader.readLine();\n            }\n            tokenizer = new StringTokenizer(line);\n            p[i] = Double.parseDouble(tokenizer.nextToken());\n            c[i] = Double.parseDouble(tokenizer.nextToken());\n        }\n\n        p[n] = d;\n\n        double[] dp = new double[n + 1];\n        for (int i = 1; i <= n; i++) {\n            dp[i] = Double.POSITIVE_INFINITY;\n        }\n        dp[0] = 0.0;\n\n        for (int j = 1; j <= n; j++) {\n            for (int i = 0; i < j; i++) {\n                double dist = p[j] - p[i];\n                double time = (dist * dist) / c[i];\n                if (dp[i] + time < dp[j]) {\n                    dp[j] = dp[i] + time;\n                }\n            }\n        }\n\n        System.out.printf(Locale.US, \"%.3f\\n\", dp[n]);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08431360000395216,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

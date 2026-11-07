@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T23:16:13.375754+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1136,
+            "output_tokens": 3110,
+            "total_tokens": 4246
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.001555,
+            "total_cost": 0.001579
+        },
+        "raw_response": "```cpp\n#include <cstdio>\n#include <vector>\n#include <climits>\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    std::vector<int> a(n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n\n    const int INF = INT_MAX / 2;\n    std::vector<int> b(n);\n\n    // Passagem da esquerda para a direita:\n    // b[i] = min(A_i se conhecido, b[i-1] + 1)\n    for (int i = 0; i < n; i++) {\n        b[i] = (a[i] == -1) ? INF : a[i];\n        if (i > 0 && b[i - 1] + 1 < b[i]) b[i] = b[i - 1] + 1;\n    }\n\n    // Passagem da direita para a esquerda:\n    // b[i] = min(b[i], b[i+1] + 1)\n    for (int i = n - 2; i >= 0; i--) {\n        if (b[i + 1] + 1 < b[i]) b[i] = b[i + 1] + 1;\n    }\n\n    // Agora b[i] = min sobre todo degrau conhecido j de (A_j + |i - j|),\n    // que é a maior altura possível do degrau i (o \"cone\" inferior é uma\n    // reconstrução válida que atinge esse valor em cada posição).\n    for (int i = 0; i < n; i++) {\n        if (i + 1 < n) printf(\"%d \", b[i]);\n        else printf(\"%d\\n\", b[i]);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <cstdio>\n#include <vector>\n#include <climits>\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    std::vector<int> a(n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n\n    const int INF = INT_MAX / 2;\n    std::vector<int> b(n);\n\n    // Passagem da esquerda para a direita:\n    // b[i] = min(A_i se conhecido, b[i-1] + 1)\n    for (int i = 0; i < n; i++) {\n        b[i] = (a[i] == -1) ? INF : a[i];\n        if (i > 0 && b[i - 1] + 1 < b[i]) b[i] = b[i - 1] + 1;\n    }\n\n    // Passagem da direita para a esquerda:\n    // b[i] = min(b[i], b[i+1] + 1)\n    for (int i = n - 2; i >= 0; i--) {\n        if (b[i + 1] + 1 < b[i]) b[i] = b[i + 1] + 1;\n    }\n\n    // Agora b[i] = min sobre todo degrau conhecido j de (A_j + |i - j|),\n    // que é a maior altura possível do degrau i (o \"cone\" inferior é uma\n    // reconstrução válida que atinge esse valor em cada posição).\n    for (int i = 0; i < n; i++) {\n        if (i + 1 < n) printf(\"%d \", b[i]);\n        else printf(\"%d\\n\", b[i]);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16584819999843603,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

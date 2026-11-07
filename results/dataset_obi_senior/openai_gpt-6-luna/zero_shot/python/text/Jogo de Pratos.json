@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:38:47.895934+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1822,
+            "output_tokens": 9579,
+            "total_tokens": 11401
+        },
+        "cost_usd": {
+            "input_cost": 0.000182,
+            "output_cost": 0.00479,
+            "total_cost": 0.004972
+        },
+        "raw_response": "```python\nimport sys\nfrom bisect import bisect_right\nfrom functools import cmp_to_key\n\nMOD = 1_000_000_007\n\n\ndef compare_meals(x, y):\n    a1, b1 = x\n    a2, b2 = y\n\n    if a1 == 1:\n        return 0 if a2 == 1 else -1\n    if a2 == 1:\n        return 1\n\n    left = b1 * (a2 - 1)\n    right = b2 * (a1 - 1)\n    if left > right:\n        return -1\n    if left < right:\n        return 1\n    return 0\n\n\ndef repeated_affine_mod(x, a, b, count):\n    if a == 1:\n        return (x + b * count) % MOD\n\n    power = pow(a, count, MOD)\n    geometric = (power - 1) * pow(a - 1, MOD - 2, MOD) % MOD\n    return (power * x + b * geometric) % MOD\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    pos = 0\n\n    n, m, k = data[pos], data[pos + 1], data[pos + 2]\n    pos += 3\n\n    spell_a = data[pos:pos + n]\n    pos += n\n    spell_b = data[pos:pos + n]\n    pos += n\n\n    meal_a = data[pos:pos + m]\n    pos += m\n    meal_b = data[pos:pos + m]\n    pos += m\n\n    q = data[pos]\n    pos += 1\n    queries = data[pos:pos + q]\n\n    # Build the upper envelope of the spell lines a*x+b.\n    lines = sorted(zip(spell_a, spell_b))\n    unique_lines = []\n    for a, b in lines:\n        if unique_lines and unique_lines[-1][0] == a:\n            if b > unique_lines[-1][1]:\n                unique_lines[-1] = (a, b)\n        else:\n            unique_lines.append((a, b))\n\n    hull = []\n    starts = []\n\n    for a, b in unique_lines:\n        while hull:\n            prev_a, prev_b = hull[-1]\n            # First integer x where the new line is at least the old line.\n            numerator = prev_b - b\n            denominator = a - prev_a\n            crossing = -((-numerator) // denominator)\n\n            if len(hull) == 1 or crossing > starts[-1]:\n                break\n            hull.pop()\n            starts.pop()\n\n        if not hull:\n            hull.append((a, b))\n            starts.append(-10**30)\n        else:\n            prev_a, prev_b = hull[-1]\n            numerator = prev_b - b\n            denominator = a - prev_a\n            crossing = -((-numerator) // denominator)\n            hull.append((a, b))\n            starts.append(crossing)\n\n    # Compose all meals in their optimal order.\n    meals = sorted(zip(meal_a, meal_b), key=cmp_to_key(compare_meals))\n    meal_mul, meal_add = 1, 0\n    for a, b in meals:\n        meal_mul = meal_mul * a % MOD\n        meal_add = (meal_add * a + b) % MOD\n\n    out = []\n    for initial_x in queries:\n        x = initial_x\n        remaining = k\n\n        while remaining:\n            idx = bisect_right(starts, x) - 1\n            a, b = hull[idx]\n\n            if idx == len(hull) - 1:\n                x = repeated_affine_mod(x % MOD, a, b, remaining)\n                remaining = 0\n                break\n\n            right = starts[idx + 1] - 1\n\n            if a == 1:\n                count = min(remaining, (right - x) // b + 1)\n                x += count * b\n                remaining -= count\n            else:\n                x = a * x + b\n                remaining -= 1\n\n        result = (meal_mul * (x % MOD) + meal_add) % MOD\n        out.append(str(result))\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom bisect import bisect_right\nfrom functools import cmp_to_key\n\nMOD = 1_000_000_007\n\n\ndef compare_meals(x, y):\n    a1, b1 = x\n    a2, b2 = y\n\n    if a1 == 1:\n        return 0 if a2 == 1 else -1\n    if a2 == 1:\n        return 1\n\n    left = b1 * (a2 - 1)\n    right = b2 * (a1 - 1)\n    if left > right:\n        return -1\n    if left < right:\n        return 1\n    return 0\n\n\ndef repeated_affine_mod(x, a, b, count):\n    if a == 1:\n        return (x + b * count) % MOD\n\n    power = pow(a, count, MOD)\n    geometric = (power - 1) * pow(a - 1, MOD - 2, MOD) % MOD\n    return (power * x + b * geometric) % MOD\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    pos = 0\n\n    n, m, k = data[pos], data[pos + 1], data[pos + 2]\n    pos += 3\n\n    spell_a = data[pos:pos + n]\n    pos += n\n    spell_b = data[pos:pos + n]\n    pos += n\n\n    meal_a = data[pos:pos + m]\n    pos += m\n    meal_b = data[pos:pos + m]\n    pos += m\n\n    q = data[pos]\n    pos += 1\n    queries = data[pos:pos + q]\n\n    # Build the upper envelope of the spell lines a*x+b.\n    lines = sorted(zip(spell_a, spell_b))\n    unique_lines = []\n    for a, b in lines:\n        if unique_lines and unique_lines[-1][0] == a:\n            if b > unique_lines[-1][1]:\n                unique_lines[-1] = (a, b)\n        else:\n            unique_lines.append((a, b))\n\n    hull = []\n    starts = []\n\n    for a, b in unique_lines:\n        while hull:\n            prev_a, prev_b = hull[-1]\n            # First integer x where the new line is at least the old line.\n            numerator = prev_b - b\n            denominator = a - prev_a\n            crossing = -((-numerator) // denominator)\n\n            if len(hull) == 1 or crossing > starts[-1]:\n                break\n            hull.pop()\n            starts.pop()\n\n        if not hull:\n            hull.append((a, b))\n            starts.append(-10**30)\n        else:\n            prev_a, prev_b = hull[-1]\n            numerator = prev_b - b\n            denominator = a - prev_a\n            crossing = -((-numerator) // denominator)\n            hull.append((a, b))\n            starts.append(crossing)\n\n    # Compose all meals in their optimal order.\n    meals = sorted(zip(meal_a, meal_b), key=cmp_to_key(compare_meals))\n    meal_mul, meal_add = 1, 0\n    for a, b in meals:\n        meal_mul = meal_mul * a % MOD\n        meal_add = (meal_add * a + b) % MOD\n\n    out = []\n    for initial_x in queries:\n        x = initial_x\n        remaining = k\n\n        while remaining:\n            idx = bisect_right(starts, x) - 1\n            a, b = hull[idx]\n\n            if idx == len(hull) - 1:\n                x = repeated_affine_mod(x % MOD, a, b, remaining)\n                remaining = 0\n                break\n\n            right = starts[idx + 1] - 1\n\n            if a == 1:\n                count = min(remaining, (right - x) // b + 1)\n                x += count * b\n                remaining -= count\n            else:\n                x = a * x + b\n                remaining -= 1\n\n        result = (meal_mul * (x % MOD) + meal_add) % MOD\n        out.append(str(result))\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.733179899994866,
+            "counts": {
+                "AC": 73,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 73
+        }
+    }
+]

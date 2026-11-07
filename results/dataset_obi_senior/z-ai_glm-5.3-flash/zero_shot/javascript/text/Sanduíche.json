@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:05:07.533111+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 843,
+            "output_tokens": 717,
+            "total_tokens": 1560
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.000358,
+            "total_cost": 0.000377
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split('\\n');\nlet idx = 0;\nconst first = data[idx++].trim().split(/\\s+/).map(Number);\nconst N = first[0], M = first[1];\nconst adj = new Array(N).fill(0);\nfor (let i = 0; i < M; i++) {\n  const line = data[idx++];\n  if (!line || line.trim() === '') { i--; continue; }\n  const [x, y] = line.trim().split(/\\s+/).map(Number);\n  adj[x - 1] |= 1 << (y - 1);\n  adj[y - 1] |= 1 << (x - 1);\n}\n\nconst total = 1 << N;\nconst dp = new Array(total).fill(0);\ndp[0] = 1;\nfor (let mask = 1; mask < total; mask++) {\n  const v = mask & -mask;\n  const vi = Math.log2(v) | 0;\n  // caso 1: v não está no sanduíche\n  const without = mask ^ v;\n  // caso 2: v está no sanduíche -> vizinhos removidos\n  const withoutNb = mask & ~(adj[vi] | v);\n  dp[mask] = dp[without] + dp[withoutNb];\n}\n\nconsole.log(dp[total - 1] - 1);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split('\\n');\nlet idx = 0;\nconst first = data[idx++].trim().split(/\\s+/).map(Number);\nconst N = first[0], M = first[1];\nconst adj = new Array(N).fill(0);\nfor (let i = 0; i < M; i++) {\n  const line = data[idx++];\n  if (!line || line.trim() === '') { i--; continue; }\n  const [x, y] = line.trim().split(/\\s+/).map(Number);\n  adj[x - 1] |= 1 << (y - 1);\n  adj[y - 1] |= 1 << (x - 1);\n}\n\nconst total = 1 << N;\nconst dp = new Array(total).fill(0);\ndp[0] = 1;\nfor (let mask = 1; mask < total; mask++) {\n  const v = mask & -mask;\n  const vi = Math.log2(v) | 0;\n  // caso 1: v não está no sanduíche\n  const without = mask ^ v;\n  // caso 2: v está no sanduíche -> vizinhos removidos\n  const withoutNb = mask & ~(adj[vi] | v);\n  dp[mask] = dp[without] + dp[withoutNb];\n}\n\nconsole.log(dp[total - 1] - 1);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08504040003754199,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:02:56.672907+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 891,
+            "output_tokens": 811,
+            "total_tokens": 2164
+        },
+        "cost_usd": {
+            "input_cost": 0.000668,
+            "output_cost": 0.003041,
+            "total_cost": 0.00371
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const L_str = nextToken();\n    if (!L_str) return;\n    const L = parseInt(L_str, 10);\n    const C = parseInt(nextToken(), 10);\n\n    const grid = [];\n    const rowSums = [];\n    const allVars = new Set();\n\n    for (let i = 0; i < L; i++) {\n        const row = [];\n        for (let j = 0; j < C; j++) {\n            const v = nextToken();\n            row.push(v);\n            allVars.add(v);\n        }\n        const s = parseInt(nextToken(), 10);\n        grid.push(row);\n        rowSums.push(s);\n    }\n\n    const colSums = [];\n    for (let j = 0; j < C; j++) {\n        colSums.push(parseInt(nextToken(), 10));\n    }\n\n    const totalVars = allVars.size;\n    const knownValues = new Map();\n\n    // Cria as equações: L linhas e C colunas\n    const equations = [];\n    for (let i = 0; i < L; i++) {\n        equations.push({\n            vars: grid[i],\n            sum: rowSums[i]\n        });\n    }\n\n    for (let j = 0; j < C; j++) {\n        const colVars = [];\n        for (let i = 0; i < L; i++) {\n            colVars.push(grid[i][j]);\n        }\n        equations.push({\n            vars: colVars,\n            sum: colSums[j]\n        });\n    }\n\n    while (knownValues.size < totalVars) {\n        let found = false;\n        for (let eq of equations) {\n            const unknownCountMap = new Map();\n            let knownSum = 0;\n\n            for (let v of eq.vars) {\n                if (knownValues.has(v)) {\n                    knownSum += knownValues.get(v);\n                } else {\n                    unknownCountMap.set(v, (unknownCountMap.get(v) || 0) + 1);\n                }\n            }\n\n            if (unknownCountMap.size === 1) {\n                const [unknownVar, count] = unknownCountMap.entries().next().value;\n                const value = (eq.sum - knownSum) / count;\n                knownValues.set(unknownVar, Math.round(value));\n                found = true;\n                break;\n            }\n        }\n        if (!found) break; // Segurança\n    }\n\n    const sortedVars = Array.from(knownValues.keys()).sort();\n    let out = '';\n    for (let v of sortedVars) {\n        out += `${v} ${knownValues.get(v)}\\n`;\n    }\n    process.stdout.write(out);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const L_str = nextToken();\n    if (!L_str) return;\n    const L = parseInt(L_str, 10);\n    const C = parseInt(nextToken(), 10);\n\n    const grid = [];\n    const rowSums = [];\n    const allVars = new Set();\n\n    for (let i = 0; i < L; i++) {\n        const row = [];\n        for (let j = 0; j < C; j++) {\n            const v = nextToken();\n            row.push(v);\n            allVars.add(v);\n        }\n        const s = parseInt(nextToken(), 10);\n        grid.push(row);\n        rowSums.push(s);\n    }\n\n    const colSums = [];\n    for (let j = 0; j < C; j++) {\n        colSums.push(parseInt(nextToken(), 10));\n    }\n\n    const totalVars = allVars.size;\n    const knownValues = new Map();\n\n    // Cria as equações: L linhas e C colunas\n    const equations = [];\n    for (let i = 0; i < L; i++) {\n        equations.push({\n            vars: grid[i],\n            sum: rowSums[i]\n        });\n    }\n\n    for (let j = 0; j < C; j++) {\n        const colVars = [];\n        for (let i = 0; i < L; i++) {\n            colVars.push(grid[i][j]);\n        }\n        equations.push({\n            vars: colVars,\n            sum: colSums[j]\n        });\n    }\n\n    while (knownValues.size < totalVars) {\n        let found = false;\n        for (let eq of equations) {\n            const unknownCountMap = new Map();\n            let knownSum = 0;\n\n            for (let v of eq.vars) {\n                if (knownValues.has(v)) {\n                    knownSum += knownValues.get(v);\n                } else {\n                    unknownCountMap.set(v, (unknownCountMap.get(v) || 0) + 1);\n                }\n            }\n\n            if (unknownCountMap.size === 1) {\n                const [unknownVar, count] = unknownCountMap.entries().next().value;\n                const value = (eq.sum - knownSum) / count;\n                knownValues.set(unknownVar, Math.round(value));\n                found = true;\n                break;\n            }\n        }\n        if (!found) break; // Segurança\n    }\n\n    const sortedVars = Array.from(knownValues.keys()).sort();\n    let out = '';\n    for (let v of sortedVars) {\n        out += `${v} ${knownValues.get(v)}\\n`;\n    }\n    process.stdout.write(out);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12231320000137202,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

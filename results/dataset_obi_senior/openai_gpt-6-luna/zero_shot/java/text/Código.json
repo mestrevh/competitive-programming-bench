@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:53:04.472986+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 789,
+            "output_tokens": 1771,
+            "total_tokens": 2560
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000886,
+            "total_cost": 0.000964
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.HashSet;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n\n        @SuppressWarnings(\"unchecked\")\n        HashSet<String>[] prefixes = new HashSet[10];\n        @SuppressWarnings(\"unchecked\")\n        HashSet<String>[] suffixes = new HashSet[10];\n\n        for (int i = 1; i <= 9; i++) {\n            prefixes[i] = new HashSet<>();\n            suffixes[i] = new HashSet<>();\n        }\n\n        HashSet<String> substrings = new HashSet<>();\n\n        for (int i = 0; i < n; i++) {\n            String s = br.readLine().trim();\n            boolean invalid = substrings.contains(s);\n\n            for (int split = 1; split < s.length() && split < 10 && !invalid; split++) {\n                int otherLength = 10 - split;\n                if (otherLength <= 0 || split + otherLength != s.length()) {\n                    continue;\n                }\n                if (suffixes[split].contains(s.substring(0, split))\n                        && prefixes[otherLength].contains(s.substring(split))) {\n                    invalid = true;\n                }\n            }\n\n            if (invalid) {\n                System.out.println(s);\n                return;\n            }\n\n            for (int length = 1; length <= 9 && length <= s.length(); length++) {\n                prefixes[length].add(s.substring(0, length));\n                suffixes[length].add(s.substring(s.length() - length));\n            }\n\n            for (int start = 0; start + 10 <= s.length(); start++) {\n                substrings.add(s.substring(start, start + 10));\n            }\n        }\n\n        System.out.println(\"ok\");\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.HashSet;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n\n        @SuppressWarnings(\"unchecked\")\n        HashSet<String>[] prefixes = new HashSet[10];\n        @SuppressWarnings(\"unchecked\")\n        HashSet<String>[] suffixes = new HashSet[10];\n\n        for (int i = 1; i <= 9; i++) {\n            prefixes[i] = new HashSet<>();\n            suffixes[i] = new HashSet<>();\n        }\n\n        HashSet<String> substrings = new HashSet<>();\n\n        for (int i = 0; i < n; i++) {\n            String s = br.readLine().trim();\n            boolean invalid = substrings.contains(s);\n\n            for (int split = 1; split < s.length() && split < 10 && !invalid; split++) {\n                int otherLength = 10 - split;\n                if (otherLength <= 0 || split + otherLength != s.length()) {\n                    continue;\n                }\n                if (suffixes[split].contains(s.substring(0, split))\n                        && prefixes[otherLength].contains(s.substring(split))) {\n                    invalid = true;\n                }\n            }\n\n            if (invalid) {\n                System.out.println(s);\n                return;\n            }\n\n            for (int length = 1; length <= 9 && length <= s.length(); length++) {\n                prefixes[length].add(s.substring(0, length));\n                suffixes[length].add(s.substring(s.length() - length));\n            }\n\n            for (int start = 0; start + 10 <= s.length(); start++) {\n                substrings.add(s.substring(start, start + 10));\n            }\n        }\n\n        System.out.println(\"ok\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12758809999650111,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

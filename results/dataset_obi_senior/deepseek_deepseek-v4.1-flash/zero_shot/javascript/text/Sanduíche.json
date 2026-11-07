@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:28:49.293754+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 861,
+            "output_tokens": 1828,
+            "total_tokens": 2689
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.004387,
+            "total_cost": 0.00439
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nif (data.length === 0) process.exit(0);\n\nconst N = data[0];\nconst M = data[1];\nconst adj = new Array(N).fill(0);\n\nlet p = 2;\nfor (let i = 0; i < M; i++) {\n    const x = data[p++] - 1;\n    const y = data[p++] - 1;\n    adj[x] |= 1 << y;\n    adj[y] |= 1 << x;\n}\n\nconst total = 1 << N;\nconst valid = new Uint8Array(total);\nvalid[0] = 1;\n\nlet answer = 0;\n\nfor (let mask = 1; mask < total; mask++) {\n    const low = mask & -mask;\n    const v = 31 - Math.clz32(low);\n    const rest = mask ^ low;\n\n    if (valid[rest] && (adj[v] & rest) === 0) {\n        valid[mask] = 1;\n        answer++;\n    }\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nif (data.length === 0) process.exit(0);\n\nconst N = data[0];\nconst M = data[1];\nconst adj = new Array(N).fill(0);\n\nlet p = 2;\nfor (let i = 0; i < M; i++) {\n    const x = data[p++] - 1;\n    const y = data[p++] - 1;\n    adj[x] |= 1 << y;\n    adj[y] |= 1 << x;\n}\n\nconst total = 1 << N;\nconst valid = new Uint8Array(total);\nvalid[0] = 1;\n\nlet answer = 0;\n\nfor (let mask = 1; mask < total; mask++) {\n    const low = mask & -mask;\n    const v = 31 - Math.clz32(low);\n    const rest = mask ^ low;\n\n    if (valid[rest] && (adj[v] & rest) === 0) {\n        valid[mask] = 1;\n        answer++;\n    }\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05738839998957701,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

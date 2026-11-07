@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:45:41.221813+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 884,
+            "output_tokens": 223,
+            "total_tokens": 1107
+        },
+        "cost_usd": {
+            "input_cost": 8.8e-05,
+            "output_cost": 0.000111,
+            "total_cost": 0.0002
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet pos = 0;\n\nconst M = input[pos++];\nconst N = input[pos++];\n\nconst stock = Array.from({ length: M }, () => {\n  const row = input.slice(pos, pos + N);\n  pos += N;\n  return row;\n});\n\nconst P = input[pos++];\nlet sold = 0;\n\nfor (let k = 0; k < P; k++) {\n  const type = input[pos++] - 1;\n  const size = input[pos++] - 1;\n\n  if (stock[type][size] > 0) {\n    stock[type][size]--;\n    sold++;\n  }\n}\n\nconsole.log(sold);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet pos = 0;\n\nconst M = input[pos++];\nconst N = input[pos++];\n\nconst stock = Array.from({ length: M }, () => {\n  const row = input.slice(pos, pos + N);\n  pos += N;\n  return row;\n});\n\nconst P = input[pos++];\nlet sold = 0;\n\nfor (let k = 0; k < P; k++) {\n  const type = input[pos++] - 1;\n  const size = input[pos++] - 1;\n\n  if (stock[type][size] > 0) {\n    stock[type][size]--;\n    sold++;\n  }\n}\n\nconsole.log(sold);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06537539999408182,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

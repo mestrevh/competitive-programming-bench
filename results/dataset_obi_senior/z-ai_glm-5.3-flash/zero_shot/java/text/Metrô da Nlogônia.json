@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T21:21:27.246142+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 967,
+            "output_tokens": 9565,
+            "total_tokens": 10532
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.004783,
+            "total_cost": 0.004803
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    static BufferedInputStream bin = new BufferedInputStream(System.in, 1 << 16);\n    static byte[] buf = new byte[1 << 16];\n    static int idx = 0, len = 0;\n\n    static int read() throws IOException {\n        if (idx == len) {\n            len = bin.read(buf, 0, buf.length);\n            idx = 0;\n            if (len <= 0) return -1;\n        }\n        return buf[idx++];\n    }\n\n    static int nextInt() throws IOException {\n        int c = read();\n        while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = read();\n        boolean neg = false;\n        if (c == '-') { neg = true; c = read(); }\n        int x = 0;\n        while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = read(); }\n        return neg ? -x : x;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int N = nextInt();\n        int M = nextInt();\n        int[] ea = new int[Math.max(0, N - 1)];\n        int[] eb = new int[Math.max(0, N - 1)];\n        for (int i = 0; i < N - 1; i++) { ea[i] = nextInt(); eb[i] = nextInt(); }\n        int[] fa = new int[Math.max(0, M - 1)];\n        int[] fb = new int[Math.max(0, M - 1)];\n        for (int i = 0; i < M - 1; i++) { fa[i] = nextInt(); fb[i] = nextInt(); }\n        int c1 = findCenter(N, ea, eb);\n        int c2 = findCenter(M, fa, fb);\n        OutputStream os = new BufferedOutputStream(System.out);\n        os.write((c1 + \" \" + c2 + \"\\n\").getBytes());\n        os.flush();\n    }\n\n    // Encontra o centro da árvore removendo folhas nível a nível.\n    // Ligar os centros das duas árvores minimiza o diâmetro do sistema integrado,\n    // que passa a ser max(d1, d2, r1 + r2 + 1), com r = ceil(d/2) o raio de cada árvore.\n    static int findCenter(int n, int[] ea, int[] eb) {\n        int[] deg = new int[n + 1];\n        for (int i = 0; i < n - 1; i++) { deg[ea[i]]++; deg[eb[i]]++; }\n        int[] off = new int[n + 2];\n        for (int v = 1; v <= n; v++) off[v + 1] = off[v] + deg[v];\n        int[] pos = off.clone();\n        int[] adj = new int[2 * (n - 1)];\n        for (int i = 0; i < n - 1; i++) {\n            adj[pos[ea[i]]++] = eb[i];\n            adj[pos[eb[i]]++] = ea[i];\n        }\n        boolean[] removed = new boolean[n + 1];\n        int[] queue = new int[n];\n        int head = 0, tail = 0;\n        for (int v = 1; v <= n; v++) if (deg[v] == 1) queue[tail++] = v;\n        int remaining = n;\n        while (remaining > 2) {\n            int k = tail - head;\n            if (k == 0) break;\n            for (int i = 0; i < k; i++) {\n                int u = queue[head++];\n                removed[u] = true;\n                remaining--;\n                for (int e = off[u]; e < off[u + 1]; e++) {\n                    int v = adj[e];\n                    if (!removed[v] && --deg[v] == 1) queue[tail++] = v;\n                }\n            }\n        }\n        for (int v = 1; v <= n; v++) if (!removed[v]) return v;\n        return 1;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    static BufferedInputStream bin = new BufferedInputStream(System.in, 1 << 16);\n    static byte[] buf = new byte[1 << 16];\n    static int idx = 0, len = 0;\n\n    static int read() throws IOException {\n        if (idx == len) {\n            len = bin.read(buf, 0, buf.length);\n            idx = 0;\n            if (len <= 0) return -1;\n        }\n        return buf[idx++];\n    }\n\n    static int nextInt() throws IOException {\n        int c = read();\n        while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = read();\n        boolean neg = false;\n        if (c == '-') { neg = true; c = read(); }\n        int x = 0;\n        while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = read(); }\n        return neg ? -x : x;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int N = nextInt();\n        int M = nextInt();\n        int[] ea = new int[Math.max(0, N - 1)];\n        int[] eb = new int[Math.max(0, N - 1)];\n        for (int i = 0; i < N - 1; i++) { ea[i] = nextInt(); eb[i] = nextInt(); }\n        int[] fa = new int[Math.max(0, M - 1)];\n        int[] fb = new int[Math.max(0, M - 1)];\n        for (int i = 0; i < M - 1; i++) { fa[i] = nextInt(); fb[i] = nextInt(); }\n        int c1 = findCenter(N, ea, eb);\n        int c2 = findCenter(M, fa, fb);\n        OutputStream os = new BufferedOutputStream(System.out);\n        os.write((c1 + \" \" + c2 + \"\\n\").getBytes());\n        os.flush();\n    }\n\n    // Encontra o centro da árvore removendo folhas nível a nível.\n    // Ligar os centros das duas árvores minimiza o diâmetro do sistema integrado,\n    // que passa a ser max(d1, d2, r1 + r2 + 1), com r = ceil(d/2) o raio de cada árvore.\n    static int findCenter(int n, int[] ea, int[] eb) {\n        int[] deg = new int[n + 1];\n        for (int i = 0; i < n - 1; i++) { deg[ea[i]]++; deg[eb[i]]++; }\n        int[] off = new int[n + 2];\n        for (int v = 1; v <= n; v++) off[v + 1] = off[v] + deg[v];\n        int[] pos = off.clone();\n        int[] adj = new int[2 * (n - 1)];\n        for (int i = 0; i < n - 1; i++) {\n            adj[pos[ea[i]]++] = eb[i];\n            adj[pos[eb[i]]++] = ea[i];\n        }\n        boolean[] removed = new boolean[n + 1];\n        int[] queue = new int[n];\n        int head = 0, tail = 0;\n        for (int v = 1; v <= n; v++) if (deg[v] == 1) queue[tail++] = v;\n        int remaining = n;\n        while (remaining > 2) {\n            int k = tail - head;\n            if (k == 0) break;\n            for (int i = 0; i < k; i++) {\n                int u = queue[head++];\n                removed[u] = true;\n                remaining--;\n                for (int e = off[u]; e < off[u + 1]; e++) {\n                    int v = adj[e];\n                    if (!removed[v] && --deg[v] == 1) queue[tail++] = v;\n                }\n            }\n        }\n        for (int v = 1; v <= n; v++) if (!removed[v]) return v;\n        return 1;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.14812969998456538,
+            "counts": {
+                "AC": 6,
+                "WA": 32,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

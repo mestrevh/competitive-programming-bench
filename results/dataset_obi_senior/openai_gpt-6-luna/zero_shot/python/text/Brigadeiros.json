@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:06:57.575741+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1424,
+            "output_tokens": 5467,
+            "total_tokens": 6891
+        },
+        "cost_usd": {
+            "input_cost": 0.000142,
+            "output_cost": 0.002733,
+            "total_cost": 0.002876
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, k, t = data[0], data[1], data[2]\n    plates = data[3:3 + n]\n    group = data[3 + n:3 + 2 * n]\n\n    if t >= min(k, n - k) * max(k, n - k):\n        print(sum(sorted(plates, reverse=True)[:k]))\n        return\n\n    total = sum(plates)\n    holes_are_minority = k > n - k\n    minority_count = n - k if holes_are_minority else k\n    initial = [1 - g if holes_are_minority else g for g in group]\n\n    inf = t + 1\n    prev = [None] * (minority_count + 1)\n    prev[0] = [0]\n    prefix = 0\n\n    for i in range(1, n + 1):\n        prefix += initial[i - 1]\n        remaining = n - i\n        low = max(0, minority_count - remaining)\n        high = min(i, minority_count)\n        curr = [None] * (minority_count + 1)\n        weight = plates[i - 1]\n\n        for r in range(low, high + 1):\n            add = abs(prefix - r)\n            dst = [inf] * (9 * r + 1)\n\n            if add <= t:\n                a = prev[r]\n                if a is not None:\n                    for s, cost in enumerate(a):\n                        new_cost = cost + add\n                        if new_cost <= t:\n                            dst[s] = new_cost\n\n                b = prev[r - 1] if r > 0 else None\n                if b is not None:\n                    for s, cost in enumerate(b):\n                        idx = s + weight\n                        new_cost = cost + add\n                        if new_cost <= t and new_cost < dst[idx]:\n                            dst[idx] = new_cost\n\n            curr[r] = dst\n\n        prev = curr\n\n    possible = prev[minority_count]\n    if holes_are_minority:\n        best = next(s for s, cost in enumerate(possible) if cost <= t)\n        print(total - best)\n    else:\n        best = max(s for s, cost in enumerate(possible) if cost <= t)\n        print(best)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, k, t = data[0], data[1], data[2]\n    plates = data[3:3 + n]\n    group = data[3 + n:3 + 2 * n]\n\n    if t >= min(k, n - k) * max(k, n - k):\n        print(sum(sorted(plates, reverse=True)[:k]))\n        return\n\n    total = sum(plates)\n    holes_are_minority = k > n - k\n    minority_count = n - k if holes_are_minority else k\n    initial = [1 - g if holes_are_minority else g for g in group]\n\n    inf = t + 1\n    prev = [None] * (minority_count + 1)\n    prev[0] = [0]\n    prefix = 0\n\n    for i in range(1, n + 1):\n        prefix += initial[i - 1]\n        remaining = n - i\n        low = max(0, minority_count - remaining)\n        high = min(i, minority_count)\n        curr = [None] * (minority_count + 1)\n        weight = plates[i - 1]\n\n        for r in range(low, high + 1):\n            add = abs(prefix - r)\n            dst = [inf] * (9 * r + 1)\n\n            if add <= t:\n                a = prev[r]\n                if a is not None:\n                    for s, cost in enumerate(a):\n                        new_cost = cost + add\n                        if new_cost <= t:\n                            dst[s] = new_cost\n\n                b = prev[r - 1] if r > 0 else None\n                if b is not None:\n                    for s, cost in enumerate(b):\n                        idx = s + weight\n                        new_cost = cost + add\n                        if new_cost <= t and new_cost < dst[idx]:\n                            dst[idx] = new_cost\n\n            curr[r] = dst\n\n        prev = curr\n\n    possible = prev[minority_count]\n    if holes_are_minority:\n        best = next(s for s, cost in enumerate(possible) if cost <= t)\n        print(total - best)\n    else:\n        best = max(s for s, cost in enumerate(possible) if cost <= t)\n        print(best)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.6321941999995033,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

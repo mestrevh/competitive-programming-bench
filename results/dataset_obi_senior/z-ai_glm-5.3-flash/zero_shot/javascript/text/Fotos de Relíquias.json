@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:54:03.636237+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 3905,
+            "total_tokens": 4918
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.001953,
+            "total_cost": 0.001974
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0], 10);\n\nlet ans = 0;\nlet p1 = 0; // posição (1-indexada) do 1 mais recente\nlet p2 = 0; // posição do 1 anterior a esse\n\nfor (let i = 1; i <= n; i++) {\n  if (data[i] === '1') {\n    // o 1 em p1 tem à esquerda (p1 - p2) escolhas de l\n    // e à direita (i - p1) escolhas de r (até antes deste novo 1)\n    ans += (p1 - p2) * (i - p1);\n    p2 = p1;\n    p1 = i;\n  }\n}\n\n// último 1 da lista: seções à direita vão até o fim (n + 1 - p1) escolhas\nans += (p1 - p2) * (n + 1 - p1);\n\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0], 10);\n\nlet ans = 0;\nlet p1 = 0; // posição (1-indexada) do 1 mais recente\nlet p2 = 0; // posição do 1 anterior a esse\n\nfor (let i = 1; i <= n; i++) {\n  if (data[i] === '1') {\n    // o 1 em p1 tem à esquerda (p1 - p2) escolhas de l\n    // e à direita (i - p1) escolhas de r (até antes deste novo 1)\n    ans += (p1 - p2) * (i - p1);\n    p2 = p1;\n    p1 = i;\n  }\n}\n\n// último 1 da lista: seções à direita vão até o fim (n + 1 - p1) escolhas\nans += (p1 - p2) * (n + 1 - p1);\n\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06217740004649386,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

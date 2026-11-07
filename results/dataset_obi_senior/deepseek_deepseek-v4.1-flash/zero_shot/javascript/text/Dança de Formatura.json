@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:40:19.463340+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1399,
+            "output_tokens": 6940,
+            "total_tokens": 8339
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.016656,
+            "total_cost": 0.01666
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8');\n  let pos = 0;\n  const len = data.length;\n\n  function nextInt() {\n    while (pos < len && data.charCodeAt(pos) <= 32) pos++;\n    let num = 0;\n    while (pos < len) {\n      const c = data.charCodeAt(pos);\n      if (c <= 32) break;\n      num = num * 10 + (c - 48);\n      pos++;\n    }\n    return num;\n  }\n\n  function nextChar() {\n    while (pos < len && data.charCodeAt(pos) <= 32) pos++;\n    return data[pos++];\n  }\n\n  const N = nextInt();\n  const M = nextInt();\n  const P = nextInt();\n\n  const rowMap = new Int32Array(N + 1);\n  for (let i = 1; i <= N; i++) rowMap[i] = i;\n\n  const colMap = new Int32Array(M + 1);\n  for (let j = 1; j <= M; j++) colMap[j] = j;\n\n  for (let k = 0; k < P; k++) {\n    const op = nextChar();\n    const a = nextInt();\n    const b = nextInt();\n\n    if (op === 'L') {\n      const tmp = rowMap[a];\n      rowMap[a] = rowMap[b];\n      rowMap[b] = tmp;\n    } else {\n      const tmp = colMap[a];\n      colMap[a] = colMap[b];\n      colMap[b] = tmp;\n    }\n  }\n\n  const out = [];\n  let buf = '';\n\n  for (let i = 1; i <= N; i++) {\n    const base = (rowMap[i] - 1) * M;\n    let line;\n\n    if (M === 1) {\n      line = (base + colMap[1]) + '\\n';\n    } else {\n      const row = new Array(M);\n      for (let j = 1; j <= M; j++) {\n        row[j - 1] = base + colMap[j];\n      }\n      line = row.join(' ') + '\\n';\n    }\n\n    buf += line;\n    if (buf.length >= 65536) {\n      out.push(buf);\n      buf = '';\n    }\n  }\n\n  if (buf.length > 0) out.push(buf);\n  process.stdout.write(out.join(''));\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8');\n  let pos = 0;\n  const len = data.length;\n\n  function nextInt() {\n    while (pos < len && data.charCodeAt(pos) <= 32) pos++;\n    let num = 0;\n    while (pos < len) {\n      const c = data.charCodeAt(pos);\n      if (c <= 32) break;\n      num = num * 10 + (c - 48);\n      pos++;\n    }\n    return num;\n  }\n\n  function nextChar() {\n    while (pos < len && data.charCodeAt(pos) <= 32) pos++;\n    return data[pos++];\n  }\n\n  const N = nextInt();\n  const M = nextInt();\n  const P = nextInt();\n\n  const rowMap = new Int32Array(N + 1);\n  for (let i = 1; i <= N; i++) rowMap[i] = i;\n\n  const colMap = new Int32Array(M + 1);\n  for (let j = 1; j <= M; j++) colMap[j] = j;\n\n  for (let k = 0; k < P; k++) {\n    const op = nextChar();\n    const a = nextInt();\n    const b = nextInt();\n\n    if (op === 'L') {\n      const tmp = rowMap[a];\n      rowMap[a] = rowMap[b];\n      rowMap[b] = tmp;\n    } else {\n      const tmp = colMap[a];\n      colMap[a] = colMap[b];\n      colMap[b] = tmp;\n    }\n  }\n\n  const out = [];\n  let buf = '';\n\n  for (let i = 1; i <= N; i++) {\n    const base = (rowMap[i] - 1) * M;\n    let line;\n\n    if (M === 1) {\n      line = (base + colMap[1]) + '\\n';\n    } else {\n      const row = new Array(M);\n      for (let j = 1; j <= M; j++) {\n        row[j - 1] = base + colMap[j];\n      }\n      line = row.join(' ') + '\\n';\n    }\n\n    buf += line;\n    if (buf.length >= 65536) {\n      out.push(buf);\n      buf = '';\n    }\n  }\n\n  if (buf.length > 0) out.push(buf);\n  process.stdout.write(out.join(''));\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.36750900000333786,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

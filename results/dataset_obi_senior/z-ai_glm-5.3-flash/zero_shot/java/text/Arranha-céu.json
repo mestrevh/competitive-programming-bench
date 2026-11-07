@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:14:43.488367+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 799,
+            "output_tokens": 1091,
+            "total_tokens": 1890
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.000545,
+            "total_cost": 0.000563
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    static int[] fenwick;\n    static int n;\n\n    static void update(int i, int delta) {\n        for (; i <= n; i += i & (-i)) {\n            fenwick[i] += delta;\n        }\n    }\n\n    static long query(int i) {\n        long sum = 0;\n        for (; i > 0; i -= i & (-i)) {\n            sum += fenwick[i];\n        }\n        return sum;\n    }\n\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer st = new StreamTokenizer(new BufferedInputStream(System.in, 1 << 16));\n        st.nextToken();\n        n = (int) st.nval;\n        st.nextToken();\n        int q = (int) st.nval;\n\n        fenwick = new int[n + 1];\n        int[] arr = new int[n + 1];\n\n        for (int i = 1; i <= n; i++) {\n            st.nextToken();\n            arr[i] = (int) st.nval;\n            update(i, arr[i]);\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int e = 0; e < q; e++) {\n            st.nextToken();\n            int type = (int) st.nval;\n            st.nextToken();\n            int k = (int) st.nval;\n\n            if (type == 0) {\n                st.nextToken();\n                int p = (int) st.nval;\n                update(k, p - arr[k]);\n                arr[k] = p;\n            } else {\n                sb.append(query(k)).append('\\n');\n            }\n        }\n\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    static int[] fenwick;\n    static int n;\n\n    static void update(int i, int delta) {\n        for (; i <= n; i += i & (-i)) {\n            fenwick[i] += delta;\n        }\n    }\n\n    static long query(int i) {\n        long sum = 0;\n        for (; i > 0; i -= i & (-i)) {\n            sum += fenwick[i];\n        }\n        return sum;\n    }\n\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer st = new StreamTokenizer(new BufferedInputStream(System.in, 1 << 16));\n        st.nextToken();\n        n = (int) st.nval;\n        st.nextToken();\n        int q = (int) st.nval;\n\n        fenwick = new int[n + 1];\n        int[] arr = new int[n + 1];\n\n        for (int i = 1; i <= n; i++) {\n            st.nextToken();\n            arr[i] = (int) st.nval;\n            update(i, arr[i]);\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int e = 0; e < q; e++) {\n            st.nextToken();\n            int type = (int) st.nval;\n            st.nextToken();\n            int k = (int) st.nval;\n\n            if (type == 0) {\n                st.nextToken();\n                int p = (int) st.nval;\n                update(k, p - arr[k]);\n                arr[k] = p;\n            } else {\n                sb.append(query(k)).append('\\n');\n            }\n        }\n\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3164266999810934,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

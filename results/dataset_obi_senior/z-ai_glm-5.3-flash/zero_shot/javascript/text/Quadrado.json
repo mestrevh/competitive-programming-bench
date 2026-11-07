@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:46:02.594320+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 517,
+            "output_tokens": 10756,
+            "total_tokens": 11273
+        },
+        "cost_usd": {
+            "input_cost": 1.1e-05,
+            "output_cost": 0.005378,
+            "total_cost": 0.005389
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst N = parseInt(fs.readFileSync(0, 'utf8').trim(), 10);\n\nlet out = [];\n\nif (N === 2) {\n  // Impossível: média de dois números distintos nunca é um deles\n  out.push('-1');\n} else if (N === 1) {\n  out.push('1');\n} else {\n  // T = N(N-1)/2\n  // g = [1, 2, ..., N-1, T]  (soma = N(N-1), logo média de g = N-1, que está em g)\n  // f(i) = T * (g(i) - 1)    (média de f = T*(N-2) = f(N-1))\n  // X[i][j] = f(i) + g(j)\n  //   -> média da linha i   = f(i) + (N-1)      = X[i][N-1]  (presente na linha)\n  //   -> média da coluna j  = T*(N-2) + g(j)    = X[N-1][j]  (presente na coluna)\n  // Somas f(i)+g(j) todas distintas pois |g diffs| < T <= diferença mínima escalada de f.\n  const T = N * (N - 1) / 2;\n  const g = [];\n  for (let j = 1; j < N; j++) g.push(j);\n  g.push(T); // T >= N para N >= 3, logo todos distintos\n\n  for (let i = 0; i < N; i++) {\n    const base = T * (g[i] - 1);\n    const row = new Array(N);\n    for (let j = 0; j < N; j++) row[j] = base + g[j];\n    out.push(row.join(' '));\n  }\n}\n\nconsole.log(out.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\nconst N = parseInt(fs.readFileSync(0, 'utf8').trim(), 10);\n\nlet out = [];\n\nif (N === 2) {\n  // Impossível: média de dois números distintos nunca é um deles\n  out.push('-1');\n} else if (N === 1) {\n  out.push('1');\n} else {\n  // T = N(N-1)/2\n  // g = [1, 2, ..., N-1, T]  (soma = N(N-1), logo média de g = N-1, que está em g)\n  // f(i) = T * (g(i) - 1)    (média de f = T*(N-2) = f(N-1))\n  // X[i][j] = f(i) + g(j)\n  //   -> média da linha i   = f(i) + (N-1)      = X[i][N-1]  (presente na linha)\n  //   -> média da coluna j  = T*(N-2) + g(j)    = X[N-1][j]  (presente na coluna)\n  // Somas f(i)+g(j) todas distintas pois |g diffs| < T <= diferença mínima escalada de f.\n  const T = N * (N - 1) / 2;\n  const g = [];\n  for (let j = 1; j < N; j++) g.push(j);\n  g.push(T); // T >= N para N >= 3, logo todos distintos\n\n  for (let i = 0; i < N; i++) {\n    const base = T * (g[i] - 1);\n    const row = new Array(N);\n    for (let j = 0; j < N; j++) row[j] = base + g[j];\n    out.push(row.join(' '));\n  }\n}\n\nconsole.log(out.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05845029995543882,
+            "counts": {
+                "AC": 15,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

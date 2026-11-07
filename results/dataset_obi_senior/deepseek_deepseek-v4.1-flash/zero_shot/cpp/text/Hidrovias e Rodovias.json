@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:31:42.996475+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1534,
+            "output_tokens": 10782,
+            "total_tokens": 12316
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.025877,
+            "total_cost": 0.025881
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct DSU {\n    vector<int> p, r;\n    DSU(int n) {\n        p.resize(n + 1);\n        r.resize(n + 1, 0);\n        iota(p.begin(), p.end(), 0);\n    }\n    int find(int x) {\n        return p[x] == x ? x : p[x] = find(p[x]);\n    }\n    bool unite(int a, int b) {\n        a = find(a);\n        b = find(b);\n        if (a == b) return false;\n        if (r[a] < r[b]) swap(a, b);\n        p[b] = a;\n        if (r[a] == r[b]) r[a]++;\n        return true;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M, K;\n    cin >> N >> M >> K;\n\n    DSU dsu1(N);\n    int C = N;\n    bool ok = true;\n    vector<pair<int, int>> type2;\n\n    for (int i = 0; i < M; ++i) {\n        int a, b, t;\n        cin >> a >> b >> t;\n        if (t == 1) {\n            if (!dsu1.unite(a, b)) {\n                ok = false;\n            } else {\n                --C;\n            }\n        } else {\n            type2.emplace_back(a, b);\n        }\n    }\n\n    if (!ok) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    DSU dsu2(N);\n    int cc2 = C;\n\n    for (auto &e : type2) {\n        int a = e.first, b = e.second;\n        int ra = dsu1.find(a);\n        int rb = dsu1.find(b);\n        if (ra != rb) {\n            if (dsu2.unite(ra, rb)) {\n                --cc2;\n            }\n        }\n    }\n\n    int M2 = (int)type2.size();\n    int omitted = M2 - C + cc2;\n\n    if (omitted <= K) {\n        cout << \"S\\n\";\n    } else {\n        cout << \"N\\n\";\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct DSU {\n    vector<int> p, r;\n    DSU(int n) {\n        p.resize(n + 1);\n        r.resize(n + 1, 0);\n        iota(p.begin(), p.end(), 0);\n    }\n    int find(int x) {\n        return p[x] == x ? x : p[x] = find(p[x]);\n    }\n    bool unite(int a, int b) {\n        a = find(a);\n        b = find(b);\n        if (a == b) return false;\n        if (r[a] < r[b]) swap(a, b);\n        p[b] = a;\n        if (r[a] == r[b]) r[a]++;\n        return true;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M, K;\n    cin >> N >> M >> K;\n\n    DSU dsu1(N);\n    int C = N;\n    bool ok = true;\n    vector<pair<int, int>> type2;\n\n    for (int i = 0; i < M; ++i) {\n        int a, b, t;\n        cin >> a >> b >> t;\n        if (t == 1) {\n            if (!dsu1.unite(a, b)) {\n                ok = false;\n            } else {\n                --C;\n            }\n        } else {\n            type2.emplace_back(a, b);\n        }\n    }\n\n    if (!ok) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    DSU dsu2(N);\n    int cc2 = C;\n\n    for (auto &e : type2) {\n        int a = e.first, b = e.second;\n        int ra = dsu1.find(a);\n        int rb = dsu1.find(b);\n        if (ra != rb) {\n            if (dsu2.unite(ra, rb)) {\n                --cc2;\n            }\n        }\n    }\n\n    int M2 = (int)type2.size();\n    int omitted = M2 - C + cc2;\n\n    if (omitted <= K) {\n        cout << \"S\\n\";\n    } else {\n        cout << \"N\\n\";\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1830303000024287,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

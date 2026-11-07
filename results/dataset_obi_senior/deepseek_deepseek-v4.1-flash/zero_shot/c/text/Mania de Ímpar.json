@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:30:41.974293+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1215,
+            "output_tokens": 7227,
+            "total_tokens": 8442
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.017345,
+            "total_cost": 0.017348
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int G[100][100];\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            scanf(\"%d\", &G[i][j]);\n        }\n    }\n\n    int cost0 = 0, cost1 = 0;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int gp = G[i][j] & 1;\n            int par = (i + j) & 1;\n\n            if (gp != par) {\n                cost0++;\n            } else {\n                cost1++;\n            }\n        }\n    }\n\n    int best = (cost0 <= cost1) ? 0 : 1;\n    int answer = (best == 0) ? cost0 : cost1;\n\n    printf(\"%d\\n\", answer);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int gp = G[i][j] & 1;\n            int par = (i + j) & 1;\n            int target = (best == 0) ? par : (1 - par);\n\n            int val = G[i][j] + (gp != target ? 1 : 0);\n\n            printf(\"%d\", val);\n            if (j + 1 < M) printf(\" \");\n        }\n        printf(\"\\n\");\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int G[100][100];\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            scanf(\"%d\", &G[i][j]);\n        }\n    }\n\n    int cost0 = 0, cost1 = 0;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int gp = G[i][j] & 1;\n            int par = (i + j) & 1;\n\n            if (gp != par) {\n                cost0++;\n            } else {\n                cost1++;\n            }\n        }\n    }\n\n    int best = (cost0 <= cost1) ? 0 : 1;\n    int answer = (best == 0) ? cost0 : cost1;\n\n    printf(\"%d\\n\", answer);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int gp = G[i][j] & 1;\n            int par = (i + j) & 1;\n            int target = (best == 0) ? par : (1 - par);\n\n            int val = G[i][j] + (gp != target ? 1 : 0);\n\n            printf(\"%d\", val);\n            if (j + 1 < M) printf(\" \");\n        }\n        printf(\"\\n\");\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.128911000007065,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

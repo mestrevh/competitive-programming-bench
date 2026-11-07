@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:41:10.550636+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 992,
+            "output_tokens": 433,
+            "total_tokens": 3131
+        },
+        "cost_usd": {
+            "input_cost": 0.000744,
+            "output_cost": 0.001624,
+            "total_cost": 0.002368
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    T = [int(x) for x in data[2:2 + N]]\n    F = [int(x) for x in data[2 + N:2 + N + M]]\n\n    # Ordena os tempos dos carros em ordem decrescente\n    T.sort(reverse=True)\n\n    # Se o número de carros for menor ou igual ao número de mecânicos,\n    # cada carro pode ser o primeiro de um mecânico, logo tempo de espera é 0.\n    if N <= M:\n        print(0)\n        return\n\n    # Os primeiros M carros com maiores tempos terão multiplicador 0 (espera 0).\n    # Precisamos dos próximos N - M menores slots.\n    slots = []\n\n    # Usamos uma min-heap com os primeiros múltiplos positivos de cada mecânico: (F_j, F_j)\n    heap = [[f, f] for f in F]\n    heapq.heapify(heap)\n\n    needed = N - M\n    for _ in range(needed):\n        val = heap[0][0]\n        slots.append(val)\n        heap[0][0] += heap[0][1]\n        heapq.heapreplace(heap, heap[0])\n\n    # Os N - M carros restantes (com menores tempos base) são pareados com os slots\n    # O menor slot vai para o maior T restante.\n    remaining_T = T[M:]  # Já estão em ordem decrescente\n\n    ans = sum(t * s for t, s in zip(remaining_T, slots))\n    print(ans)\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    T = [int(x) for x in data[2:2 + N]]\n    F = [int(x) for x in data[2 + N:2 + N + M]]\n\n    # Ordena os tempos dos carros em ordem decrescente\n    T.sort(reverse=True)\n\n    # Se o número de carros for menor ou igual ao número de mecânicos,\n    # cada carro pode ser o primeiro de um mecânico, logo tempo de espera é 0.\n    if N <= M:\n        print(0)\n        return\n\n    # Os primeiros M carros com maiores tempos terão multiplicador 0 (espera 0).\n    # Precisamos dos próximos N - M menores slots.\n    slots = []\n\n    # Usamos uma min-heap com os primeiros múltiplos positivos de cada mecânico: (F_j, F_j)\n    heap = [[f, f] for f in F]\n    heapq.heapify(heap)\n\n    needed = N - M\n    for _ in range(needed):\n        val = heap[0][0]\n        slots.append(val)\n        heap[0][0] += heap[0][1]\n        heapq.heapreplace(heap, heap[0])\n\n    # Os N - M carros restantes (com menores tempos base) são pareados com os slots\n    # O menor slot vai para o maior T restante.\n    remaining_T = T[M:]  # Já estão em ordem decrescente\n\n    ans = sum(t * s for t, s in zip(remaining_T, slots))\n    print(ans)\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22224990000540856,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

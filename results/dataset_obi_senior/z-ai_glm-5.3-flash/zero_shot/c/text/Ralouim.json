@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:53:30.129608+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 763,
+            "output_tokens": 9159,
+            "total_tokens": 9922
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.00458,
+            "total_cost": 0.004596
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdint.h>\n\nstatic void radix_pass(uint64_t *src, uint64_t *dst, long long n, int shift){\n    long long cnt[256];\n    memset(cnt,0,sizeof(cnt));\n    for(long long i=0;i<n;i++) cnt[(src[i]>>shift)&255]++;\n    long long pos[257], s=0;\n    for(int b=0;b<256;b++){ pos[b]=s; s+=cnt[b]; }\n    for(long long i=0;i<n;i++){\n        int b=(int)((src[i]>>shift)&255);\n        dst[pos[b]++]=src[i];\n    }\n}\n\nint main(void){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    int *X=malloc(sizeof(int)*n), *Y=malloc(sizeof(int)*n);\n    for(int i=0;i<n;i++) scanf(\"%d %d\",&X[i],&Y[i]);\n\n    long long ne=(long long)n*n; /* (n-1)*n tent->tent edges + n palace->tent edges */\n    uint64_t *E=malloc(sizeof(uint64_t)*ne);\n    uint64_t *T=malloc(sizeof(uint64_t)*ne);\n\n    long long idx=0;\n    for(int i=0;i<n;i++){\n        for(int j=0;j<n;j++){\n            if(i==j) continue;\n            long long dx=X[i]-X[j], dy=Y[i]-Y[j];\n            uint64_t d2=(uint64_t)(dx*dx+dy*dy); /* < 2^30 */\n            E[idx++]=(d2<<22)|((uint64_t)i<<11)|(uint64_t)j;\n        }\n    }\n    for(int j=0;j<n;j++){\n        long long dx=X[j], dy=Y[j];\n        uint64_t d2=(uint64_t)(dx*dx+dy*dy);\n        E[idx++]=(d2<<22)|((uint64_t)n<<11)|(uint64_t)j; /* from palace (node n) */\n    }\n\n    uint64_t *src=E,*dst=T,*sw;\n    for(int b=2;b<=6;b++){ /* squared distance occupies bytes 2..6 of the packed value */\n        radix_pass(src,dst,ne,8*b);\n        sw=src; src=dst; dst=sw;\n    }\n    uint64_t *sorted=src;\n\n    int *best_in=calloc(n,sizeof(int)); /* palace has no incoming edges */\n    int *vals=malloc(sizeof(int)*ne);\n    int ans=0;\n\n    long long i=ne-1;\n    while(i>=0){\n        uint64_t d=sorted[i]>>22;\n        long long lo=i;\n        while(lo>0 && (sorted[lo-1]>>22)==d) lo--;\n        /* compute values for this length-group before allowing them as incoming edges */\n        for(long long k=i;k>=lo;k--){\n            int u=(int)((sorted[k]>>11)&2047);\n            int val=1+best_in[u];\n            vals[k]=val;\n            if(val>ans) ans=val;\n        }\n        for(long long k=i;k>=lo;k--){\n            int v=(int)(sorted[k]&2047);\n            if(vals[k]>best_in[v]) best_in[v]=vals[k];\n        }\n        i=lo-1;\n    }\n\n    printf(\"%d\\n\",ans);\n    free(vals); free(best_in); free(E); free(T); free(X); free(Y);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdint.h>\n\nstatic void radix_pass(uint64_t *src, uint64_t *dst, long long n, int shift){\n    long long cnt[256];\n    memset(cnt,0,sizeof(cnt));\n    for(long long i=0;i<n;i++) cnt[(src[i]>>shift)&255]++;\n    long long pos[257], s=0;\n    for(int b=0;b<256;b++){ pos[b]=s; s+=cnt[b]; }\n    for(long long i=0;i<n;i++){\n        int b=(int)((src[i]>>shift)&255);\n        dst[pos[b]++]=src[i];\n    }\n}\n\nint main(void){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    int *X=malloc(sizeof(int)*n), *Y=malloc(sizeof(int)*n);\n    for(int i=0;i<n;i++) scanf(\"%d %d\",&X[i],&Y[i]);\n\n    long long ne=(long long)n*n; /* (n-1)*n tent->tent edges + n palace->tent edges */\n    uint64_t *E=malloc(sizeof(uint64_t)*ne);\n    uint64_t *T=malloc(sizeof(uint64_t)*ne);\n\n    long long idx=0;\n    for(int i=0;i<n;i++){\n        for(int j=0;j<n;j++){\n            if(i==j) continue;\n            long long dx=X[i]-X[j], dy=Y[i]-Y[j];\n            uint64_t d2=(uint64_t)(dx*dx+dy*dy); /* < 2^30 */\n            E[idx++]=(d2<<22)|((uint64_t)i<<11)|(uint64_t)j;\n        }\n    }\n    for(int j=0;j<n;j++){\n        long long dx=X[j], dy=Y[j];\n        uint64_t d2=(uint64_t)(dx*dx+dy*dy);\n        E[idx++]=(d2<<22)|((uint64_t)n<<11)|(uint64_t)j; /* from palace (node n) */\n    }\n\n    uint64_t *src=E,*dst=T,*sw;\n    for(int b=2;b<=6;b++){ /* squared distance occupies bytes 2..6 of the packed value */\n        radix_pass(src,dst,ne,8*b);\n        sw=src; src=dst; dst=sw;\n    }\n    uint64_t *sorted=src;\n\n    int *best_in=calloc(n,sizeof(int)); /* palace has no incoming edges */\n    int *vals=malloc(sizeof(int)*ne);\n    int ans=0;\n\n    long long i=ne-1;\n    while(i>=0){\n        uint64_t d=sorted[i]>>22;\n        long long lo=i;\n        while(lo>0 && (sorted[lo-1]>>22)==d) lo--;\n        /* compute values for this length-group before allowing them as incoming edges */\n        for(long long k=i;k>=lo;k--){\n            int u=(int)((sorted[k]>>11)&2047);\n            int val=1+best_in[u];\n            vals[k]=val;\n            if(val>ans) ans=val;\n        }\n        for(long long k=i;k>=lo;k--){\n            int v=(int)(sorted[k]&2047);\n            if(vals[k]>best_in[v]) best_in[v]=vals[k];\n        }\n        i=lo-1;\n    }\n\n    printf(\"%d\\n\",ans);\n    free(vals); free(best_in); free(E); free(T); free(X); free(Y);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.11995820002630353,
+            "counts": {
+                "AC": 6,
+                "WA": 34,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

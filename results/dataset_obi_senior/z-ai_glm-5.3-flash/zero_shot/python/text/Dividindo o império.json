@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T05:00:22.166690+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 741,
+            "output_tokens": 666,
+            "total_tokens": 1407
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.000333,
+            "total_cost": 0.000349
+        },
+        "raw_response": "```python\nimport sys\nfrom sys import setrecursionlimit\n\ndef main():\n    input_data = sys.stdin.buffer.read().split()\n    n = int(input_data[0])\n    if n == 2:\n        print(0)\n        return\n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        a = int(input_data[idx]); b = int(input_data[idx + 1]); idx += 2\n        adj[a].append(b)\n        adj[b].append(a)\n\n    setrecursionlimit(300000)\n    sub = [1] * (n + 1)\n\n    # iterative post-order\n    root = 1\n    order = []\n    parent = [0] * (n + 1)\n    visited = [False] * (n + 1)\n    stack = [root]\n    visited[root] = True\n    while stack:\n        u = stack.pop()\n        order.append(u)\n        for v in adj[u]:\n            if not visited[v]:\n                visited[v] = True\n                parent[v] = u\n                stack.append(v)\n    for u in reversed(order):\n        p = parent[u]\n        if p:\n            sub[p] += sub[u]\n\n    best = n\n    for v in range(2, n + 1):\n        if parent[v] != 0 or v == root:\n            s = sub[v]\n            best = min(best, abs(n - 2 * s))\n    # consider edges properly: each edge v-parent[v] for all v with parent\n    print(best)\n\nmain()\n```\n\nWait — the loop over all v≥2 with parent[v]!=0 covers every edge once (each non-root v has exactly one parent edge). Let me verify example 2 quickly is consistent... yes, edges = non-root nodes. Fixed version:\n\n```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        a = int(data[idx]); b = int(data[idx + 1]); idx += 2\n        adj[a].append(b)\n        adj[b].append(a)\n\n    sub = [1] * (n + 1)\n    root = 1\n    parent = [0] * (n + 1)\n    order = []\n    visited = [False] * (n + 1)\n    stack = [root]\n    visited[root] = True\n    while stack:\n        u = stack.pop()\n        order.append(u)\n        for v in adj[u]:\n            if not visited[v]:\n                visited[v] = True\n                parent[v] = u\n                stack.append(v)\n    for u in reversed(order):\n        p = parent[u]\n        if p:\n            sub[p] += sub[u]\n\n    best = n\n    for v in range(2, n + 1):\n        s = sub[v]\n        best = min(best, abs(n - 2 * s))\n    print(best)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom sys import setrecursionlimit\n\ndef main():\n    input_data = sys.stdin.buffer.read().split()\n    n = int(input_data[0])\n    if n == 2:\n        print(0)\n        return\n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        a = int(input_data[idx]); b = int(input_data[idx + 1]); idx += 2\n        adj[a].append(b)\n        adj[b].append(a)\n\n    setrecursionlimit(300000)\n    sub = [1] * (n + 1)\n\n    # iterative post-order\n    root = 1\n    order = []\n    parent = [0] * (n + 1)\n    visited = [False] * (n + 1)\n    stack = [root]\n    visited[root] = True\n    while stack:\n        u = stack.pop()\n        order.append(u)\n        for v in adj[u]:\n            if not visited[v]:\n                visited[v] = True\n                parent[v] = u\n                stack.append(v)\n    for u in reversed(order):\n        p = parent[u]\n        if p:\n            sub[p] += sub[u]\n\n    best = n\n    for v in range(2, n + 1):\n        if parent[v] != 0 or v == root:\n            s = sub[v]\n            best = min(best, abs(n - 2 * s))\n    # consider edges properly: each edge v-parent[v] for all v with parent\n    print(best)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1398109999972803,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:59:57.749007+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 721,
+            "output_tokens": 3086,
+            "total_tokens": 3807
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.007406,
+            "total_cost": 0.007409
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int N = Integer.parseInt(br.readLine().trim());\n\n        String[] passwords = new String[N];\n        HashMap<String, Integer> freq = new HashMap<>();\n\n        for (int i = 0; i < N; i++) {\n            passwords[i] = br.readLine().trim();\n            freq.put(passwords[i], freq.getOrDefault(passwords[i], 0) + 1);\n        }\n\n        long answer = 0;\n\n        for (String a : passwords) {\n            int len = a.length();\n            HashSet<String> seen = new HashSet<>();\n\n            for (int l = 0; l < len; l++) {\n                for (int r = l + 1; r <= len; r++) {\n                    String sub = a.substring(l, r);\n                    if (seen.add(sub)) {\n                        Integer count = freq.get(sub);\n                        if (count != null) {\n                            answer += count;\n                        }\n                    }\n                }\n            }\n\n            answer--; // exclude the user themself\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int N = Integer.parseInt(br.readLine().trim());\n\n        String[] passwords = new String[N];\n        HashMap<String, Integer> freq = new HashMap<>();\n\n        for (int i = 0; i < N; i++) {\n            passwords[i] = br.readLine().trim();\n            freq.put(passwords[i], freq.getOrDefault(passwords[i], 0) + 1);\n        }\n\n        long answer = 0;\n\n        for (String a : passwords) {\n            int len = a.length();\n            HashSet<String> seen = new HashSet<>();\n\n            for (int l = 0; l < len; l++) {\n                for (int r = l + 1; r <= len; r++) {\n                    String sub = a.substring(l, r);\n                    if (seen.add(sub)) {\n                        Integer count = freq.get(sub);\n                        if (count != null) {\n                            answer += count;\n                        }\n                    }\n                }\n            }\n\n            answer--; // exclude the user themself\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15931129999808036,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

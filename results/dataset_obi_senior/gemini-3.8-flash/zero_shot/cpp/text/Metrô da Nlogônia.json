@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:47:08.112673+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 877,
+            "output_tokens": 645,
+            "total_tokens": 2686
+        },
+        "cost_usd": {
+            "input_cost": 0.000658,
+            "output_cost": 0.002419,
+            "total_cost": 0.003076
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <queue>\n#include <algorithm>\n\nusing namespace std;\n\nint get_center(int n, const vector<vector<int>>& adj) {\n    auto bfs = [&](int start, vector<int>& dist, vector<int>& parent) {\n        fill(dist.begin(), dist.end(), -1);\n        fill(parent.begin(), parent.end(), -1);\n        queue<int> q;\n        q.push(start);\n        dist[start] = 0;\n        int farthest = start;\n\n        while (!q.empty()) {\n            int u = q.front();\n            q.pop();\n\n            if (dist[u] > dist[farthest]) {\n                farthest = u;\n            }\n\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    parent[v] = u;\n                    q.push(v);\n                }\n            }\n        }\n        return farthest;\n    };\n\n    vector<int> dist(n + 1), parent(n + 1);\n    int u = bfs(1, dist, parent);\n    int v = bfs(u, dist, parent);\n\n    vector<int> path;\n    int curr = v;\n    while (curr != -1) {\n        path.push_back(curr);\n        curr = parent[curr];\n    }\n\n    return path[path.size() / 2];\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> adj_c(n + 1);\n    for (int i = 0; i < n - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj_c[u].push_back(v);\n        adj_c[v].push_back(u);\n    }\n\n    vector<vector<int>> adj_q(m + 1);\n    for (int i = 0; i < m - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj_q[u].push_back(v);\n        adj_q[v].push_back(u);\n    }\n\n    int center_c = get_center(n, adj_c);\n    int center_q = get_center(m, adj_q);\n\n    cout << center_c << \" \" << center_q << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <algorithm>\n\nusing namespace std;\n\nint get_center(int n, const vector<vector<int>>& adj) {\n    auto bfs = [&](int start, vector<int>& dist, vector<int>& parent) {\n        fill(dist.begin(), dist.end(), -1);\n        fill(parent.begin(), parent.end(), -1);\n        queue<int> q;\n        q.push(start);\n        dist[start] = 0;\n        int farthest = start;\n\n        while (!q.empty()) {\n            int u = q.front();\n            q.pop();\n\n            if (dist[u] > dist[farthest]) {\n                farthest = u;\n            }\n\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    parent[v] = u;\n                    q.push(v);\n                }\n            }\n        }\n        return farthest;\n    };\n\n    vector<int> dist(n + 1), parent(n + 1);\n    int u = bfs(1, dist, parent);\n    int v = bfs(u, dist, parent);\n\n    vector<int> path;\n    int curr = v;\n    while (curr != -1) {\n        path.push_back(curr);\n        curr = parent[curr];\n    }\n\n    return path[path.size() / 2];\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> adj_c(n + 1);\n    for (int i = 0; i < n - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj_c[u].push_back(v);\n        adj_c[v].push_back(u);\n    }\n\n    vector<vector<int>> adj_q(m + 1);\n    for (int i = 0; i < m - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj_q[u].push_back(v);\n        adj_q[v].push_back(u);\n    }\n\n    int center_c = get_center(n, adj_c);\n    int center_q = get_center(m, adj_q);\n\n    cout << center_c << \" \" << center_q << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1857841000019107,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

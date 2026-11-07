@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:45:54.572552+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1103,
+            "output_tokens": 625,
+            "total_tokens": 2649
+        },
+        "cost_usd": {
+            "input_cost": 0.000827,
+            "output_cost": 0.002344,
+            "total_cost": 0.003171
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> g(n, vector<int>(m));\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < m; ++j) {\n            cin >> g[i][j];\n        }\n    }\n\n    // Pattern 0: (i + j) % 2 == 0 is ODD (1), (i + j) % 2 == 1 is EVEN (0)\n    // Pattern 1: (i + j) % 2 == 0 is EVEN (0), (i + j) % 2 == 1 is ODD (1)\n    int cost0 = 0;\n    int cost1 = 0;\n\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < m; ++j) {\n            int current_parity = g[i][j] % 2;\n            int desired_parity0 = ((i + j) % 2 == 0) ? 1 : 0;\n            int desired_parity1 = ((i + j) % 2 == 0) ? 0 : 1;\n\n            if (current_parity != desired_parity0) {\n                cost0++;\n            }\n            if (current_parity != desired_parity1) {\n                cost1++;\n            }\n        }\n    }\n\n    int best_pattern = (cost0 <= cost1) ? 0 : 1;\n    int min_cost = min(cost0, cost1);\n\n    cout << min_cost << \"\\n\";\n\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < m; ++j) {\n            int desired_parity;\n            if (best_pattern == 0) {\n                desired_parity = ((i + j) % 2 == 0) ? 1 : 0;\n            } else {\n                desired_parity = ((i + j) % 2 == 0) ? 0 : 1;\n            }\n\n            int val = g[i][j];\n            if (val % 2 != desired_parity) {\n                val++;\n            }\n            cout << val << (j == m - 1 ? \"\" : \" \");\n        }\n        cout << \"\\n\";\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> g(n, vector<int>(m));\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < m; ++j) {\n            cin >> g[i][j];\n        }\n    }\n\n    // Pattern 0: (i + j) % 2 == 0 is ODD (1), (i + j) % 2 == 1 is EVEN (0)\n    // Pattern 1: (i + j) % 2 == 0 is EVEN (0), (i + j) % 2 == 1 is ODD (1)\n    int cost0 = 0;\n    int cost1 = 0;\n\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < m; ++j) {\n            int current_parity = g[i][j] % 2;\n            int desired_parity0 = ((i + j) % 2 == 0) ? 1 : 0;\n            int desired_parity1 = ((i + j) % 2 == 0) ? 0 : 1;\n\n            if (current_parity != desired_parity0) {\n                cost0++;\n            }\n            if (current_parity != desired_parity1) {\n                cost1++;\n            }\n        }\n    }\n\n    int best_pattern = (cost0 <= cost1) ? 0 : 1;\n    int min_cost = min(cost0, cost1);\n\n    cout << min_cost << \"\\n\";\n\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < m; ++j) {\n            int desired_parity;\n            if (best_pattern == 0) {\n                desired_parity = ((i + j) % 2 == 0) ? 1 : 0;\n            } else {\n                desired_parity = ((i + j) % 2 == 0) ? 0 : 1;\n            }\n\n            int val = g[i][j];\n            if (val % 2 != desired_parity) {\n                val++;\n            }\n            cout << val << (j == m - 1 ? \"\" : \" \");\n        }\n        cout << \"\\n\";\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1739162000012584,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

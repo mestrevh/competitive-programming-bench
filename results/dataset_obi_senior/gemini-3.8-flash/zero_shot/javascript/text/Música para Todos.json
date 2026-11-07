@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:01:37.089551+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 779,
+            "output_tokens": 472,
+            "total_tokens": 1713
+        },
+        "cost_usd": {
+            "input_cost": 0.000584,
+            "output_cost": 0.00177,
+            "total_cost": 0.002354
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readNextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let num = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            num = num * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return num;\n    }\n\n    const N = readNextInt();\n    if (N === null) return;\n    const M = readNextInt();\n    const C = readNextInt();\n\n    // nextSong[d] guardará a música para a qual 'd' transiciona,\n    // que é A do primeiro amigo que detesta d.\n    // Inicializado com 0 (indicando que ninguém detesta d).\n    const nextSong = new Int32Array(M + 1);\n\n    for (let i = 0; i < N; i++) {\n        const a = readNextInt();\n        const d = readNextInt();\n        if (nextSong[d] === 0) {\n            nextSong[d] = a;\n        }\n    }\n\n    let current = C;\n    let steps = 0;\n    // visitado: array para detecção de ciclo\n    const visited = new Uint8Array(M + 1);\n\n    while (true) {\n        if (nextSong[current] === 0) {\n            // Ninguém detesta a música atual, todos satisfeitos\n            console.log(steps);\n            return;\n        }\n        if (visited[current]) {\n            // Entrou em um ciclo\n            console.log(-1);\n            return;\n        }\n        visited[current] = 1;\n        current = nextSong[current];\n        steps++;\n    }\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readNextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let num = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            num = num * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return num;\n    }\n\n    const N = readNextInt();\n    if (N === null) return;\n    const M = readNextInt();\n    const C = readNextInt();\n\n    // nextSong[d] guardará a música para a qual 'd' transiciona,\n    // que é A do primeiro amigo que detesta d.\n    // Inicializado com 0 (indicando que ninguém detesta d).\n    const nextSong = new Int32Array(M + 1);\n\n    for (let i = 0; i < N; i++) {\n        const a = readNextInt();\n        const d = readNextInt();\n        if (nextSong[d] === 0) {\n            nextSong[d] = a;\n        }\n    }\n\n    let current = C;\n    let steps = 0;\n    // visitado: array para detecção de ciclo\n    const visited = new Uint8Array(M + 1);\n\n    while (true) {\n        if (nextSong[current] === 0) {\n            // Ninguém detesta a música atual, todos satisfeitos\n            console.log(steps);\n            return;\n        }\n        if (visited[current]) {\n            // Entrou em um ciclo\n            console.log(-1);\n            return;\n        }\n        visited[current] = 1;\n        current = nextSong[current];\n        steps++;\n    }\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06170570000540465,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

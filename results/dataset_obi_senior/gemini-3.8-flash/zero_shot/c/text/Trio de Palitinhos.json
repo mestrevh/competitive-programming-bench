@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:37:37.012128+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 4.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 979,
+            "output_tokens": 325,
+            "total_tokens": 2331
+        },
+        "cost_usd": {
+            "input_cost": 0.000734,
+            "output_cost": 0.001219,
+            "total_cost": 0.001953
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *a = (long long *)malloc(n * sizeof(long long));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &a[i]);\n    }\n\n    qsort(a, n, sizeof(long long), cmp);\n\n    long long total_trios = 0;\n\n    for (int k = 2; k < n; k++) {\n        int i = 0;\n        int j = k - 1;\n        while (i < j) {\n            if (a[i] + a[j] > a[k]) {\n                total_trios += (j - i);\n                j--;\n            } else {\n                i++;\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", total_trios);\n\n    free(a);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *a = (long long *)malloc(n * sizeof(long long));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &a[i]);\n    }\n\n    qsort(a, n, sizeof(long long), cmp);\n\n    long long total_trios = 0;\n\n    for (int k = 2; k < n; k++) {\n        int i = 0;\n        int j = k - 1;\n        while (i < j) {\n            if (a[i] + a[j] > a[k]) {\n                total_trios += (j - i);\n                j--;\n            } else {\n                i++;\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", total_trios);\n\n    free(a);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13703159999568015,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

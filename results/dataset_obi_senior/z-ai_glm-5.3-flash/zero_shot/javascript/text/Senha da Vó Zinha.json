@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:05:32.846543+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1123,
+            "output_tokens": 5376,
+            "total_tokens": 6499
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.002688,
+            "total_cost": 0.002712
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(t => t.length > 0);\n\nconst N = +tokens[0];\nconst M = +tokens[1];\nconst K = +tokens[2];\nconst senha = tokens[3];\n\n// Ordena as letras de cada palavra (a i-ésima palavra corresponde à i-ésima letra borrada)\nconst words = [];\nfor (let i = 0; i < M; i++) {\n  words.push(tokens[4 + i].split('').sort());\n}\nconst P = +tokens[4 + M];\n\n// Como todas as senhas têm o mesmo comprimento e mesmas letras fixas,\n// a ordem lexicográfica equivale a ordenar as escolhas das posições borradas\n// da esquerda para a direita. Logo, P-1 em base K com M dígitos dá a escolha\n// de cada posição borrada (dígito mais significativo = primeira borrada).\nlet index = P - 1;\nconst digits = new Array(M).fill(0);\nfor (let j = M - 1; j >= 0; j--) {\n  digits[j] = index % K;\n  index = Math.floor(index / K);\n}\n// Nota: para K === 1, todos os dígitos são 0 (única senha possível, P = 1),\n// e o loop acima produz exatamente isso sem problema.\n\nlet out = '';\nlet wi = 0;\nfor (let i = 0; i < N; i++) {\n  const c = senha[i];\n  if (c === '#') {\n    out += words[wi][digits[wi]];\n    wi++;\n  } else {\n    out += c;\n  }\n}\n\nprocess.stdout.write(out + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(t => t.length > 0);\n\nconst N = +tokens[0];\nconst M = +tokens[1];\nconst K = +tokens[2];\nconst senha = tokens[3];\n\n// Ordena as letras de cada palavra (a i-ésima palavra corresponde à i-ésima letra borrada)\nconst words = [];\nfor (let i = 0; i < M; i++) {\n  words.push(tokens[4 + i].split('').sort());\n}\nconst P = +tokens[4 + M];\n\n// Como todas as senhas têm o mesmo comprimento e mesmas letras fixas,\n// a ordem lexicográfica equivale a ordenar as escolhas das posições borradas\n// da esquerda para a direita. Logo, P-1 em base K com M dígitos dá a escolha\n// de cada posição borrada (dígito mais significativo = primeira borrada).\nlet index = P - 1;\nconst digits = new Array(M).fill(0);\nfor (let j = M - 1; j >= 0; j--) {\n  digits[j] = index % K;\n  index = Math.floor(index / K);\n}\n// Nota: para K === 1, todos os dígitos são 0 (única senha possível, P = 1),\n// e o loop acima produz exatamente isso sem problema.\n\nlet out = '';\nlet wi = 0;\nfor (let i = 0; i < N; i++) {\n  const c = senha[i];\n  if (c === '#') {\n    out += words[wi][digits[wi]];\n    wi++;\n  } else {\n    out += c;\n  }\n}\n\nprocess.stdout.write(out + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.058882900048047304,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:24:35.300728+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1594,
+            "output_tokens": 12051,
+            "total_tokens": 13645
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.028922,
+            "total_cost": 0.028927
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n        long T = Long.parseLong(st.nextToken());\n\n        int[] P = new int[N + 1];\n        st = new StringTokenizer(br.readLine());\n        int total = 0;\n        for (int i = 1; i <= N; i++) {\n            P[i] = Integer.parseInt(st.nextToken());\n            total += P[i];\n        }\n\n        int[] s = new int[K + 1];\n        st = new StringTokenizer(br.readLine());\n        int idx = 0;\n        for (int i = 1; i <= N; i++) {\n            int g = Integer.parseInt(st.nextToken());\n            if (g == 1) {\n                s[++idx] = i;\n            }\n        }\n\n        final int INF = 1_000_000_000;\n        int[][] dp = new int[K + 1][total + 1];\n        for (int i = 0; i <= K; i++) {\n            Arrays.fill(dp[i], INF);\n        }\n        dp[0][0] = 0;\n\n        int maxScoreSoFar = 0;\n\n        for (int pos = 1; pos <= N; pos++) {\n            int p = P[pos];\n            int maxJ = Math.min(pos, K);\n\n            for (int j = maxJ; j >= 1; j--) {\n                int cost = Math.abs(s[j] - pos);\n                int[] prev = dp[j - 1];\n                int[] cur = dp[j];\n\n                int maxSc = maxScoreSoFar;\n                int lim = 9 * (j - 1);\n                if (maxSc > lim) maxSc = lim;\n\n                for (int sc = 0; sc <= maxSc; sc++) {\n                    int val = prev[sc];\n                    if (val != INF) {\n                        int nc = val + cost;\n                        int ns = sc + p;\n                        if (nc < cur[ns]) {\n                            cur[ns] = nc;\n                        }\n                    }\n                }\n            }\n\n            maxScoreSoFar += p;\n        }\n\n        int answer = 0;\n        for (int sc = total; sc >= 0; sc--) {\n            if (dp[K][sc] <= T) {\n                answer = sc;\n                break;\n            }\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n        long T = Long.parseLong(st.nextToken());\n\n        int[] P = new int[N + 1];\n        st = new StringTokenizer(br.readLine());\n        int total = 0;\n        for (int i = 1; i <= N; i++) {\n            P[i] = Integer.parseInt(st.nextToken());\n            total += P[i];\n        }\n\n        int[] s = new int[K + 1];\n        st = new StringTokenizer(br.readLine());\n        int idx = 0;\n        for (int i = 1; i <= N; i++) {\n            int g = Integer.parseInt(st.nextToken());\n            if (g == 1) {\n                s[++idx] = i;\n            }\n        }\n\n        final int INF = 1_000_000_000;\n        int[][] dp = new int[K + 1][total + 1];\n        for (int i = 0; i <= K; i++) {\n            Arrays.fill(dp[i], INF);\n        }\n        dp[0][0] = 0;\n\n        int maxScoreSoFar = 0;\n\n        for (int pos = 1; pos <= N; pos++) {\n            int p = P[pos];\n            int maxJ = Math.min(pos, K);\n\n            for (int j = maxJ; j >= 1; j--) {\n                int cost = Math.abs(s[j] - pos);\n                int[] prev = dp[j - 1];\n                int[] cur = dp[j];\n\n                int maxSc = maxScoreSoFar;\n                int lim = 9 * (j - 1);\n                if (maxSc > lim) maxSc = lim;\n\n                for (int sc = 0; sc <= maxSc; sc++) {\n                    int val = prev[sc];\n                    if (val != INF) {\n                        int nc = val + cost;\n                        int ns = sc + p;\n                        if (nc < cur[ns]) {\n                            cur[ns] = nc;\n                        }\n                    }\n                }\n            }\n\n            maxScoreSoFar += p;\n        }\n\n        int answer = 0;\n        for (int sc = total; sc >= 0; sc--) {\n            if (dp[K][sc] <= T) {\n                answer = sc;\n                break;\n            }\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16108769999118522,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

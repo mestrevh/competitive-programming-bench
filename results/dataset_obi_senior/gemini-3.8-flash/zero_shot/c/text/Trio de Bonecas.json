@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:37:22.633853+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1056,
+            "output_tokens": 569,
+            "total_tokens": 4494
+        },
+        "cost_usd": {
+            "input_cost": 0.000792,
+            "output_cost": 0.002134,
+            "total_cost": 0.002926
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int compare_desc(const void *a, const void *b) {\n    long long diff = *(const long long *)b - *(const long long *)a;\n    if (diff > 0) return 1;\n    if (diff < 0) return -1;\n    return 0;\n}\n\n#define INF 0x3f3f3f3f3f3f3f3fLL\n\nint main() {\n    int n, k;\n    if (scanf(\"%d %d\", &n, &k) != 2) return 0;\n\n    long long *t = (long long *)malloc((n + 1) * sizeof(long long));\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%lld\", &t[i]);\n    }\n\n    qsort(t + 1, n, sizeof(long long), compare_desc);\n\n    long long *dp_prev = (long long *)malloc((n + 1) * sizeof(long long));\n    long long *dp_curr = (long long *)malloc((n + 1) * sizeof(long long));\n\n    for (int i = 0; i <= n; i++) {\n        dp_prev[i] = 0;\n    }\n\n    for (int j = 1; j <= k; j++) {\n        for (int i = 0; i <= n; i++) {\n            dp_curr[i] = INF;\n        }\n\n        for (int i = 3 * j; i <= n; i++) {\n            dp_curr[i] = dp_curr[i - 1];\n\n            long long diff = t[i - 1] - t[i];\n            long long cost = diff * diff;\n\n            if (dp_prev[i - 2] != INF) {\n                long long candidate = dp_prev[i - 2] + cost;\n                if (candidate < dp_curr[i]) {\n                    dp_curr[i] = candidate;\n                }\n            }\n        }\n\n        long long *temp = dp_prev;\n        dp_prev = dp_curr;\n        dp_curr = temp;\n    }\n\n    printf(\"%lld\\n\", dp_prev[n]);\n\n    free(t);\n    free(dp_prev);\n    free(dp_curr);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int compare_desc(const void *a, const void *b) {\n    long long diff = *(const long long *)b - *(const long long *)a;\n    if (diff > 0) return 1;\n    if (diff < 0) return -1;\n    return 0;\n}\n\n#define INF 0x3f3f3f3f3f3f3f3fLL\n\nint main() {\n    int n, k;\n    if (scanf(\"%d %d\", &n, &k) != 2) return 0;\n\n    long long *t = (long long *)malloc((n + 1) * sizeof(long long));\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%lld\", &t[i]);\n    }\n\n    qsort(t + 1, n, sizeof(long long), compare_desc);\n\n    long long *dp_prev = (long long *)malloc((n + 1) * sizeof(long long));\n    long long *dp_curr = (long long *)malloc((n + 1) * sizeof(long long));\n\n    for (int i = 0; i <= n; i++) {\n        dp_prev[i] = 0;\n    }\n\n    for (int j = 1; j <= k; j++) {\n        for (int i = 0; i <= n; i++) {\n            dp_curr[i] = INF;\n        }\n\n        for (int i = 3 * j; i <= n; i++) {\n            dp_curr[i] = dp_curr[i - 1];\n\n            long long diff = t[i - 1] - t[i];\n            long long cost = diff * diff;\n\n            if (dp_prev[i - 2] != INF) {\n                long long candidate = dp_prev[i - 2] + cost;\n                if (candidate < dp_curr[i]) {\n                    dp_curr[i] = candidate;\n                }\n            }\n        }\n\n        long long *temp = dp_prev;\n        dp_prev = dp_curr;\n        dp_curr = temp;\n    }\n\n    printf(\"%lld\\n\", dp_prev[n]);\n\n    free(t);\n    free(dp_prev);\n    free(dp_curr);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19065609999233857,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

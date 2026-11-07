@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:49:44.383713+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 925,
+            "output_tokens": 480,
+            "total_tokens": 2543
+        },
+        "cost_usd": {
+            "input_cost": 0.000694,
+            "output_cost": 0.0018,
+            "total_cost": 0.002494
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    const M = readInt();\n    const T = new Int32Array(M);\n    for (let i = 0; i < M; i++) {\n        T[i] = readInt();\n    }\n\n    const maxGuests = 10000;\n    const result = new Int32Array(maxGuests);\n    let count = 0;\n\n    for (let p = 1; count < maxGuests; p++) {\n        let cur = p;\n        let exceeded = false;\n        for (let i = M - 1; i >= 0; i--) {\n            cur += Math.floor((cur - 1) / (T[i] - 1));\n            if (cur > N) {\n                exceeded = true;\n                break;\n            }\n        }\n        if (exceeded) {\n            break;\n        }\n        result[count++] = cur;\n    }\n\n    let out = '';\n    for (let i = 0; i < count; i++) {\n        out += result[i] + '\\n';\n        if (out.length > 65536) {\n            process.stdout.write(out);\n            out = '';\n        }\n    }\n    if (out.length > 0) {\n        process.stdout.write(out);\n    }\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    const M = readInt();\n    const T = new Int32Array(M);\n    for (let i = 0; i < M; i++) {\n        T[i] = readInt();\n    }\n\n    const maxGuests = 10000;\n    const result = new Int32Array(maxGuests);\n    let count = 0;\n\n    for (let p = 1; count < maxGuests; p++) {\n        let cur = p;\n        let exceeded = false;\n        for (let i = M - 1; i >= 0; i--) {\n            cur += Math.floor((cur - 1) / (T[i] - 1));\n            if (cur > N) {\n                exceeded = true;\n                break;\n            }\n        }\n        if (exceeded) {\n            break;\n        }\n        result[count++] = cur;\n    }\n\n    let out = '';\n    for (let i = 0; i < count; i++) {\n        out += result[i] + '\\n';\n        if (out.length > 65536) {\n            process.stdout.write(out);\n            out = '';\n        }\n    }\n    if (out.length > 0) {\n        process.stdout.write(out);\n    }\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.47380430001067,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

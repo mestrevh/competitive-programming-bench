@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:58:37.069199+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1093,
+            "output_tokens": 32154,
+            "total_tokens": 33247
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.07717,
+            "total_cost": 0.077173
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    long long x = *(long long *)a;\n    long long y = *(long long *)b;\n    return (x > y) - (x < y);\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    long long *T = (long long *)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &T[i]);\n    }\n\n    qsort(T, N, sizeof(long long), cmp);\n\n    long long *cost = (long long *)malloc((N - 1) * sizeof(long long));\n    for (int i = 0; i < N - 1; i++) {\n        long long d = T[i + 1] - T[i];\n        cost[i] = d * d;\n    }\n\n    const long long INF = 4000000000000000000LL;\n\n    long long *prev = (long long *)malloc(N * sizeof(long long));\n    long long *cur = (long long *)malloc(N * sizeof(long long));\n\n    for (int i = 0; i < N; i++) prev[i] = INF;\n\n    int L1 = N - 3 * K;\n    for (int i = 0; i <= L1 && i < N - 1; i++) {\n        prev[i] = cost[i];\n    }\n\n    for (int t = 2; t <= K; t++) {\n        for (int i = 0; i < N; i++) cur[i] = INF;\n\n        int Lt = N - 3 * K + 3 * t - 3;\n        int min_i = 2 * t - 2;\n        long long best = INF;\n\n        for (int i = 0; i <= Lt && i < N - 1; i++) {\n            if (i - 2 >= 0) {\n                if (prev[i - 2] < best) best = prev[i - 2];\n            }\n            if (i >= min_i && best != INF) {\n                cur[i] = cost[i] + best;\n            }\n        }\n\n        long long *tmp = prev;\n        prev = cur;\n        cur = tmp;\n    }\n\n    long long ans = INF;\n    int LK = N - 3;\n    for (int i = 0; i <= LK && i < N - 1; i++) {\n        if (prev[i] < ans) ans = prev[i];\n    }\n\n    printf(\"%lld\\n\", ans);\n\n    free(T);\n    free(cost);\n    free(prev);\n    free(cur);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    long long x = *(long long *)a;\n    long long y = *(long long *)b;\n    return (x > y) - (x < y);\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    long long *T = (long long *)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &T[i]);\n    }\n\n    qsort(T, N, sizeof(long long), cmp);\n\n    long long *cost = (long long *)malloc((N - 1) * sizeof(long long));\n    for (int i = 0; i < N - 1; i++) {\n        long long d = T[i + 1] - T[i];\n        cost[i] = d * d;\n    }\n\n    const long long INF = 4000000000000000000LL;\n\n    long long *prev = (long long *)malloc(N * sizeof(long long));\n    long long *cur = (long long *)malloc(N * sizeof(long long));\n\n    for (int i = 0; i < N; i++) prev[i] = INF;\n\n    int L1 = N - 3 * K;\n    for (int i = 0; i <= L1 && i < N - 1; i++) {\n        prev[i] = cost[i];\n    }\n\n    for (int t = 2; t <= K; t++) {\n        for (int i = 0; i < N; i++) cur[i] = INF;\n\n        int Lt = N - 3 * K + 3 * t - 3;\n        int min_i = 2 * t - 2;\n        long long best = INF;\n\n        for (int i = 0; i <= Lt && i < N - 1; i++) {\n            if (i - 2 >= 0) {\n                if (prev[i - 2] < best) best = prev[i - 2];\n            }\n            if (i >= min_i && best != INF) {\n                cur[i] = cost[i] + best;\n            }\n        }\n\n        long long *tmp = prev;\n        prev = cur;\n        cur = tmp;\n    }\n\n    long long ans = INF;\n    int LK = N - 3;\n    for (int i = 0; i <= LK && i < N - 1; i++) {\n        if (prev[i] < ans) ans = prev[i];\n    }\n\n    printf(\"%lld\\n\", ans);\n\n    free(T);\n    free(cost);\n    free(prev);\n    free(cur);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20162410000921227,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

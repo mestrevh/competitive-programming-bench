@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:25:13.281658+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 817,
+            "output_tokens": 54883,
+            "total_tokens": 55700
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.027442,
+            "total_cost": 0.027459
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8');\n  const len = data.length;\n  let ptr = 0;\n\n  function readInt() {\n    while (ptr < len) {\n      const c = data.charCodeAt(ptr);\n      if (c >= 48 && c <= 57) break;\n      ptr++;\n    }\n    let x = 0;\n    while (ptr < len) {\n      const c = data.charCodeAt(ptr);\n      if (c < 48 || c > 57) break;\n      x = x * 10 + (c - 48);\n      ptr++;\n    }\n    return x;\n  }\n\n  const n = readInt();\n  const k = readInt();\n  const m = n - 1;\n\n  const deg = new Int32Array(n + 2);\n  const ea = new Int32Array(m), eb = new Int32Array(m);\n  for (let i = 0; i < m; i++) {\n    const a = readInt(), b = readInt();\n    ea[i] = a; eb[i] = b;\n    deg[a]++; deg[b]++;\n  }\n  const start = new Int32Array(n + 2);\n  for (let i = 1; i <= n; i++) start[i + 1] = start[i] + deg[i];\n  const adj = new Int32Array(2 * m);\n  const pos = new Int32Array(n + 2);\n  for (let i = 1; i <= n; i++) pos[i] = start[i];\n  for (let i = 0; i < m; i++) {\n    adj[pos[ea[i]]++] = eb[i];\n    adj[pos[eb[i]]++] = ea[i];\n  }\n\n  // BFS a partir da sala 1 (ordem: pais antes dos filhos)\n  const order = new Int32Array(n);\n  const parent = new Int32Array(n + 1);\n  const seen = new Uint8Array(n + 1);\n  let qt = 0;\n  order[qt++] = 1; seen[1] = 1;\n  for (let qh = 0; qh < qt; qh++) {\n    const v = order[qh];\n    for (let j = start[v], e = start[v + 1]; j < e; j++) {\n      const c = adj[j];\n      if (!seen[c]) { seen[c] = 1; parent[c] = v; order[qt++] = c; }\n    }\n  }\n\n  const uncArr = new Int32Array(n + 1); // maior distância (na subárvore) a um vértice ainda não coberto (-1 = nenhum)\n  const covArr = new Int32Array(n + 1); // menor distância a um radar na subárvore (limitado a R+1)\n\n  // Verifica se é possível cobrir toda a árvore com k radares de raio R (guloso bottom-up, ótimo)\n  function check(R) {\n    const cap = R + 1;\n    let cnt = 0;\n    for (let i = n - 1; i >= 0; i--) {\n      const v = order[i];\n      const p = parent[v];\n      let unc = -1, cov = cap;\n      for (let j = start[v], e = start[v + 1]; j < e; j++) {\n        const c = adj[j];\n        if (c === p) continue;\n        const u = uncArr[c] + 1;\n        if (u > unc) unc = u;\n        let cc = covArr[c] + 1;\n        if (cc > cap) cc = cap;\n        if (cc < cov) cov = cc;\n      }\n      if (cov > R) {\n        // o próprio vértice v não está coberto por radar abaixo\n        if (unc < 0) unc = 0;\n      } else if (unc >= 0 && unc + cov <= R) {\n        // todos os descobertos da subárvore ficam cobertos pelo radar mais próximo\n        unc = -1;\n      }\n      if (unc === R) {\n        // forçado: vértice a distância R precisa de radar agora; colocar em v é ótimo\n        cnt++;\n        uncArr[v] = -1;\n        covArr[v] = 0;\n      } else {\n        uncArr[v] = unc;\n        covArr[v] = cov;\n      }\n    }\n    if (uncArr[1] >= 0) cnt++; // sobrou vértice descoberto: radar na raiz\n    return cnt <= k;\n  }\n\n  // Busca binária no menor R viável\n  let lo = 0, hi = n;\n  while (lo < hi) {\n    const mid = (lo + hi) >>> 1;\n    if (check(mid)) hi = mid; else lo = mid + 1;\n  }\n  process.stdout.write(lo + '\\n');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8');\n  const len = data.length;\n  let ptr = 0;\n\n  function readInt() {\n    while (ptr < len) {\n      const c = data.charCodeAt(ptr);\n      if (c >= 48 && c <= 57) break;\n      ptr++;\n    }\n    let x = 0;\n    while (ptr < len) {\n      const c = data.charCodeAt(ptr);\n      if (c < 48 || c > 57) break;\n      x = x * 10 + (c - 48);\n      ptr++;\n    }\n    return x;\n  }\n\n  const n = readInt();\n  const k = readInt();\n  const m = n - 1;\n\n  const deg = new Int32Array(n + 2);\n  const ea = new Int32Array(m), eb = new Int32Array(m);\n  for (let i = 0; i < m; i++) {\n    const a = readInt(), b = readInt();\n    ea[i] = a; eb[i] = b;\n    deg[a]++; deg[b]++;\n  }\n  const start = new Int32Array(n + 2);\n  for (let i = 1; i <= n; i++) start[i + 1] = start[i] + deg[i];\n  const adj = new Int32Array(2 * m);\n  const pos = new Int32Array(n + 2);\n  for (let i = 1; i <= n; i++) pos[i] = start[i];\n  for (let i = 0; i < m; i++) {\n    adj[pos[ea[i]]++] = eb[i];\n    adj[pos[eb[i]]++] = ea[i];\n  }\n\n  // BFS a partir da sala 1 (ordem: pais antes dos filhos)\n  const order = new Int32Array(n);\n  const parent = new Int32Array(n + 1);\n  const seen = new Uint8Array(n + 1);\n  let qt = 0;\n  order[qt++] = 1; seen[1] = 1;\n  for (let qh = 0; qh < qt; qh++) {\n    const v = order[qh];\n    for (let j = start[v], e = start[v + 1]; j < e; j++) {\n      const c = adj[j];\n      if (!seen[c]) { seen[c] = 1; parent[c] = v; order[qt++] = c; }\n    }\n  }\n\n  const uncArr = new Int32Array(n + 1); // maior distância (na subárvore) a um vértice ainda não coberto (-1 = nenhum)\n  const covArr = new Int32Array(n + 1); // menor distância a um radar na subárvore (limitado a R+1)\n\n  // Verifica se é possível cobrir toda a árvore com k radares de raio R (guloso bottom-up, ótimo)\n  function check(R) {\n    const cap = R + 1;\n    let cnt = 0;\n    for (let i = n - 1; i >= 0; i--) {\n      const v = order[i];\n      const p = parent[v];\n      let unc = -1, cov = cap;\n      for (let j = start[v], e = start[v + 1]; j < e; j++) {\n        const c = adj[j];\n        if (c === p) continue;\n        const u = uncArr[c] + 1;\n        if (u > unc) unc = u;\n        let cc = covArr[c] + 1;\n        if (cc > cap) cc = cap;\n        if (cc < cov) cov = cc;\n      }\n      if (cov > R) {\n        // o próprio vértice v não está coberto por radar abaixo\n        if (unc < 0) unc = 0;\n      } else if (unc >= 0 && unc + cov <= R) {\n        // todos os descobertos da subárvore ficam cobertos pelo radar mais próximo\n        unc = -1;\n      }\n      if (unc === R) {\n        // forçado: vértice a distância R precisa de radar agora; colocar em v é ótimo\n        cnt++;\n        uncArr[v] = -1;\n        covArr[v] = 0;\n      } else {\n        uncArr[v] = unc;\n        covArr[v] = cov;\n      }\n    }\n    if (uncArr[1] >= 0) cnt++; // sobrou vértice descoberto: radar na raiz\n    return cnt <= k;\n  }\n\n  // Busca binária no menor R viável\n  let lo = 0, hi = n;\n  while (lo < hi) {\n    const mid = (lo + hi) >>> 1;\n    if (check(mid)) hi = mid; else lo = mid + 1;\n  }\n  process.stdout.write(lo + '\\n');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.26431050000246614,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

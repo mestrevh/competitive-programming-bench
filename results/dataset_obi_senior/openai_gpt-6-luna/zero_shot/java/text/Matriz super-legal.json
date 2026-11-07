@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:09:27.219344+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 649,
+            "output_tokens": 2196,
+            "total_tokens": 2845
+        },
+        "cost_usd": {
+            "input_cost": 6.5e-05,
+            "output_cost": 0.001098,
+            "total_cost": 0.001163
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = read();\n            }\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value * sign;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int rows = fs.nextInt();\n        int cols = fs.nextInt();\n\n        int[] prev = new int[cols];\n        int[] curr = new int[cols];\n        for (int j = 0; j < cols; j++) {\n            prev[j] = fs.nextInt();\n        }\n\n        int[] heights = new int[cols - 1];\n        int[] stack = new int[cols];\n        int answer = Math.max(rows, cols);\n\n        for (int i = 1; i < rows; i++) {\n            for (int j = 0; j < cols; j++) {\n                curr[j] = fs.nextInt();\n            }\n\n            for (int j = 0; j < cols - 1; j++) {\n                if (prev[j] + curr[j + 1] <= prev[j + 1] + curr[j]) {\n                    heights[j]++;\n                } else {\n                    heights[j] = 0;\n                }\n            }\n\n            int top = -1;\n            for (int j = 0; j <= cols - 1; j++) {\n                int currentHeight = (j == cols - 1) ? 0 : heights[j];\n\n                while (top >= 0 && heights[stack[top]] > currentHeight) {\n                    int height = heights[stack[top--]];\n                    int left = (top >= 0) ? stack[top] + 1 : 0;\n                    int width = j - left;\n                    if (height > 0) {\n                        answer = Math.max(answer, (height + 1) * (width + 1));\n                    }\n                }\n\n                if (j < cols - 1) {\n                    stack[++top] = j;\n                }\n            }\n\n            int[] temp = prev;\n            prev = curr;\n            curr = temp;\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = read();\n            }\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value * sign;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int rows = fs.nextInt();\n        int cols = fs.nextInt();\n\n        int[] prev = new int[cols];\n        int[] curr = new int[cols];\n        for (int j = 0; j < cols; j++) {\n            prev[j] = fs.nextInt();\n        }\n\n        int[] heights = new int[cols - 1];\n        int[] stack = new int[cols];\n        int answer = Math.max(rows, cols);\n\n        for (int i = 1; i < rows; i++) {\n            for (int j = 0; j < cols; j++) {\n                curr[j] = fs.nextInt();\n            }\n\n            for (int j = 0; j < cols - 1; j++) {\n                if (prev[j] + curr[j + 1] <= prev[j + 1] + curr[j]) {\n                    heights[j]++;\n                } else {\n                    heights[j] = 0;\n                }\n            }\n\n            int top = -1;\n            for (int j = 0; j <= cols - 1; j++) {\n                int currentHeight = (j == cols - 1) ? 0 : heights[j];\n\n                while (top >= 0 && heights[stack[top]] > currentHeight) {\n                    int height = heights[stack[top--]];\n                    int left = (top >= 0) ? stack[top] + 1 : 0;\n                    int width = j - left;\n                    if (height > 0) {\n                        answer = Math.max(answer, (height + 1) * (width + 1));\n                    }\n                }\n\n                if (j < cols - 1) {\n                    stack[++top] = j;\n                }\n            }\n\n            int[] temp = prev;\n            prev = curr;\n            curr = temp;\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11091219999798341,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

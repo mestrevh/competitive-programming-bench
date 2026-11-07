@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:10:45.738380+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 726,
+            "output_tokens": 1313,
+            "total_tokens": 2039
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.003151,
+            "total_cost": 0.003153
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    int ia = *(const int *)a;\n    int ib = *(const int *)b;\n    return (ia > ib) - (ia < ib);\n}\n\nint main(void) {\n    int T, N;\n    scanf(\"%d\", &T);\n    scanf(\"%d\", &N);\n\n    int *x = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &x[i]);\n    }\n\n    qsort(x, N, sizeof(int), cmp);\n\n    double ans = 1e18;\n\n    double first = (x[0] + x[1]) / 2.0;\n    if (first < ans) ans = first;\n\n    for (int i = 1; i < N - 1; i++) {\n        double len = (x[i + 1] - x[i - 1]) / 2.0;\n        if (len < ans) ans = len;\n    }\n\n    double last = T - (x[N - 2] + x[N - 1]) / 2.0;\n    if (last < ans) ans = last;\n\n    printf(\"%.2f\\n\", ans);\n\n    free(x);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    int ia = *(const int *)a;\n    int ib = *(const int *)b;\n    return (ia > ib) - (ia < ib);\n}\n\nint main(void) {\n    int T, N;\n    scanf(\"%d\", &T);\n    scanf(\"%d\", &N);\n\n    int *x = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &x[i]);\n    }\n\n    qsort(x, N, sizeof(int), cmp);\n\n    double ans = 1e18;\n\n    double first = (x[0] + x[1]) / 2.0;\n    if (first < ans) ans = first;\n\n    for (int i = 1; i < N - 1; i++) {\n        double len = (x[i + 1] - x[i - 1]) / 2.0;\n        if (len < ans) ans = len;\n    }\n\n    double last = T - (x[N - 2] + x[N - 1]) / 2.0;\n    if (last < ans) ans = last;\n\n    printf(\"%.2f\\n\", ans);\n\n    free(x);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1284546000242699,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T08:28:21.521612+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 852,
+            "output_tokens": 2106,
+            "total_tokens": 2958
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.001053,
+            "total_cost": 0.001071
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    c = int(data[2])\n\n    # Para cada música, guarda a música adorada do primeiro amigo (mais antigo cliente)\n    # que detesta essa música. Se ninguém detesta, fica 0 (padrão).\n    detester = [0] * (m + 1)\n    pos = 3\n    for _ in range(n):\n        a = int(data[pos])\n        d = int(data[pos + 1])\n        pos += 2\n        if detester[d] == 0:\n            detester[d] = a\n\n    # A transição é determinística: da música atual s, o cliente mais antigo\n    # que detesta s troca para a música que adora. É um grafo funcional sobre as músicas.\n    visited = bytearray(m + 1)\n    s = c\n    swaps = 0\n    while detester[s] != 0:\n        if visited[s]:\n            print(-1)\n            return\n        visited[s] = 1\n        s = detester[s]\n        swaps += 1\n\n    print(swaps)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    m = int(data[1])\n    c = int(data[2])\n\n    # Para cada música, guarda a música adorada do primeiro amigo (mais antigo cliente)\n    # que detesta essa música. Se ninguém detesta, fica 0 (padrão).\n    detester = [0] * (m + 1)\n    pos = 3\n    for _ in range(n):\n        a = int(data[pos])\n        d = int(data[pos + 1])\n        pos += 2\n        if detester[d] == 0:\n            detester[d] = a\n\n    # A transição é determinística: da música atual s, o cliente mais antigo\n    # que detesta s troca para a música que adora. É um grafo funcional sobre as músicas.\n    visited = bytearray(m + 1)\n    s = c\n    swaps = 0\n    while detester[s] != 0:\n        if visited[s]:\n            print(-1)\n            return\n        visited[s] = 1\n        s = detester[s]\n        swaps += 1\n\n    print(swaps)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07888069999899017,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

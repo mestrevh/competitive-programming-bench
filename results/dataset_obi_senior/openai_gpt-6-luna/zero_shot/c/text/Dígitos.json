@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:52:50.588767+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 576,
+            "output_tokens": 1444,
+            "total_tokens": 2020
+        },
+        "cost_usd": {
+            "input_cost": 5.8e-05,
+            "output_cost": 0.000722,
+            "total_cost": 0.00078
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int n, d[1000];\n    if (scanf(\"%d\", &n) != 1) return 0;\n    for (int i = 0; i < n; i++) scanf(\"%d\", &d[i]);\n\n    for (int start_len = 1; start_len <= n; start_len++) {\n        if (d[0] == 0) continue;\n\n        char value[1005];\n        int len = start_len;\n        for (int i = 0; i < len; i++) value[i] = (char)('0' + d[i]);\n\n        int pos = 0;\n        int valid = 1;\n\n        while (pos < n) {\n            if (pos + len > n) {\n                valid = 0;\n                break;\n            }\n\n            for (int i = 0; i < len; i++) {\n                if (value[i] != (char)('0' + d[pos + i])) {\n                    valid = 0;\n                    break;\n                }\n            }\n            if (!valid) break;\n\n            pos += len;\n            if (pos == n) break;\n\n            int i = len - 1;\n            while (i >= 0 && value[i] == '9') {\n                value[i] = '0';\n                i--;\n            }\n            if (i >= 0) {\n                value[i]++;\n            } else {\n                for (int j = len; j > 0; j--) value[j] = value[j - 1];\n                value[0] = '1';\n                len++;\n            }\n        }\n\n        if (valid && pos == n) {\n            for (int i = 0; i < start_len; i++) putchar('0' + d[i]);\n            putchar('\\n');\n            return 0;\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int n, d[1000];\n    if (scanf(\"%d\", &n) != 1) return 0;\n    for (int i = 0; i < n; i++) scanf(\"%d\", &d[i]);\n\n    for (int start_len = 1; start_len <= n; start_len++) {\n        if (d[0] == 0) continue;\n\n        char value[1005];\n        int len = start_len;\n        for (int i = 0; i < len; i++) value[i] = (char)('0' + d[i]);\n\n        int pos = 0;\n        int valid = 1;\n\n        while (pos < n) {\n            if (pos + len > n) {\n                valid = 0;\n                break;\n            }\n\n            for (int i = 0; i < len; i++) {\n                if (value[i] != (char)('0' + d[pos + i])) {\n                    valid = 0;\n                    break;\n                }\n            }\n            if (!valid) break;\n\n            pos += len;\n            if (pos == n) break;\n\n            int i = len - 1;\n            while (i >= 0 && value[i] == '9') {\n                value[i] = '0';\n                i--;\n            }\n            if (i >= 0) {\n                value[i]++;\n            } else {\n                for (int j = len; j > 0; j--) value[j] = value[j - 1];\n                value[0] = '1';\n                len++;\n            }\n        }\n\n        if (valid && pos == n) {\n            for (int i = 0; i < start_len; i++) putchar('0' + d[i]);\n            putchar('\\n');\n            return 0;\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1084341000096174,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

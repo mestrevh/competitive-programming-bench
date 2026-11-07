@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:23:32.086196+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 617,
+            "total_tokens": 3113
+        },
+        "cost_usd": {
+            "input_cost": 0.000606,
+            "output_cost": 0.002314,
+            "total_cost": 0.00292
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> tree;\n\n    Fenwick(int n) : n(n), tree(n + 2, 0) {}\n\n    void add(int i, long long delta) {\n        for (; i <= n; i += i & -i) {\n            tree[i] += delta;\n        }\n    }\n\n    void range_add(int l, int r, long long delta) {\n        if (l > r) return;\n        add(l, delta);\n        add(r + 1, -delta);\n    }\n\n    long long query(int i) {\n        long long sum = 0;\n        for (; i > 0; i -= i & -i) {\n            sum += tree[i];\n        }\n        return sum;\n    }\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    Fenwick bit_const(n + 1);\n    Fenwick bit_slope(n + 1);\n\n    for (int k = 0; k < m; ++k) {\n        int type;\n        cin >> type;\n        if (type == 1) {\n            long long i, v;\n            cin >> i >> v;\n            long long l = i;\n            long long r = min((long long)n, i + v - 1);\n            if (l <= r) {\n                bit_const.range_add(l, r, v + i);\n                bit_slope.range_add(l, r, -1);\n            }\n        } else if (type == 2) {\n            long long i, v;\n            cin >> i >> v;\n            long long l = max(1LL, i - v + 1);\n            long long r = i;\n            if (l <= r) {\n                bit_const.range_add(l, r, v - i);\n                bit_slope.range_add(l, r, 1);\n            }\n        } else if (type == 3) {\n            int i;\n            cin >> i;\n            long long c = bit_const.query(i);\n            long long s = bit_slope.query(i);\n            long long ans = c + (long long)i * s;\n            cout << ans << \"\\n\";\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> tree;\n\n    Fenwick(int n) : n(n), tree(n + 2, 0) {}\n\n    void add(int i, long long delta) {\n        for (; i <= n; i += i & -i) {\n            tree[i] += delta;\n        }\n    }\n\n    void range_add(int l, int r, long long delta) {\n        if (l > r) return;\n        add(l, delta);\n        add(r + 1, -delta);\n    }\n\n    long long query(int i) {\n        long long sum = 0;\n        for (; i > 0; i -= i & -i) {\n            sum += tree[i];\n        }\n        return sum;\n    }\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    Fenwick bit_const(n + 1);\n    Fenwick bit_slope(n + 1);\n\n    for (int k = 0; k < m; ++k) {\n        int type;\n        cin >> type;\n        if (type == 1) {\n            long long i, v;\n            cin >> i >> v;\n            long long l = i;\n            long long r = min((long long)n, i + v - 1);\n            if (l <= r) {\n                bit_const.range_add(l, r, v + i);\n                bit_slope.range_add(l, r, -1);\n            }\n        } else if (type == 2) {\n            long long i, v;\n            cin >> i >> v;\n            long long l = max(1LL, i - v + 1);\n            long long r = i;\n            if (l <= r) {\n                bit_const.range_add(l, r, v - i);\n                bit_slope.range_add(l, r, 1);\n            }\n        } else if (type == 3) {\n            int i;\n            cin >> i;\n            long long c = bit_const.query(i);\n            long long s = bit_slope.query(i);\n            long long ans = c + (long long)i * s;\n            cout << ans << \"\\n\";\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15125460000126623,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

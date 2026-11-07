@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T23:40:58.736110+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 894,
+            "output_tokens": 3307,
+            "total_tokens": 4201
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.001654,
+            "total_cost": 0.001673
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split(/\\s+/).map(Number);\nconst n = data[0];\n\nlet buckets = [[]];\nconst SPLIT = 1024;\n\nfunction upperBound(arr, d) {\n    let lo = 0, hi = arr.length;\n    while (lo < hi) {\n        const m = (lo + hi) >> 1;\n        if (arr[m] <= d) lo = m + 1; else hi = m;\n    }\n    return lo;\n}\n\n// índice do primeiro bucket cujo menor elemento > d (ou buckets.length se nenhum)\nfunction firstBucketMinGreaterThan(d) {\n    let lo = 0, hi = buckets.length;\n    while (lo < hi) {\n        const m = (lo + hi) >> 1;\n        const v = buckets[m][0];\n        if (v !== undefined && v > d) hi = m; else lo = m + 1;\n    }\n    return lo;\n}\n\nfunction countLE(d) {\n    const idx = firstBucketMinGreaterThan(d); // buckets[idx] tem min > d\n    let cnt = 0;\n    for (let i = 0; i < idx - 1; i++) cnt += buckets[i].length;\n    if (idx - 1 >= 0) cnt += upperBound(buckets[idx - 1], d);\n    return cnt;\n}\n\nfunction insert(d) {\n    let idx = firstBucketMinGreaterThan(d);\n    if (idx >= buckets.length || idx === -1) idx = buckets.length - 1;\n    // se nenhum bucket tem min > d, vai pro último (d é >= todos os mins)\n    if (firstBucketMinGreaterThan(d) >= buckets.length) idx = buckets.length - 1;\n    const b = buckets[idx];\n    const pos = upperBound(b, d);\n    b.splice(pos, 0, d);\n    if (b.length > SPLIT) {\n        const mid = b.length >> 1;\n        const right = b.splice(mid);\n        buckets.splice(idx + 1, 0, right);\n    }\n}\n\nlet out = [];\nlet idx = 1;\nlet P = 0;\nfor (let k = 0; k < n; k++) {\n    let x = data[idx++] + P;\n    let y = data[idx++] + P;\n    const d = x * x + y * y;\n    const c = countLE(d); // nº de flechas anteriores com distância <= atual\n    out.push(c);\n    insert(d);\n    P = c;\n}\n\nfs.writeSync(1, out.join('\\n') + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split(/\\s+/).map(Number);\nconst n = data[0];\n\nlet buckets = [[]];\nconst SPLIT = 1024;\n\nfunction upperBound(arr, d) {\n    let lo = 0, hi = arr.length;\n    while (lo < hi) {\n        const m = (lo + hi) >> 1;\n        if (arr[m] <= d) lo = m + 1; else hi = m;\n    }\n    return lo;\n}\n\n// índice do primeiro bucket cujo menor elemento > d (ou buckets.length se nenhum)\nfunction firstBucketMinGreaterThan(d) {\n    let lo = 0, hi = buckets.length;\n    while (lo < hi) {\n        const m = (lo + hi) >> 1;\n        const v = buckets[m][0];\n        if (v !== undefined && v > d) hi = m; else lo = m + 1;\n    }\n    return lo;\n}\n\nfunction countLE(d) {\n    const idx = firstBucketMinGreaterThan(d); // buckets[idx] tem min > d\n    let cnt = 0;\n    for (let i = 0; i < idx - 1; i++) cnt += buckets[i].length;\n    if (idx - 1 >= 0) cnt += upperBound(buckets[idx - 1], d);\n    return cnt;\n}\n\nfunction insert(d) {\n    let idx = firstBucketMinGreaterThan(d);\n    if (idx >= buckets.length || idx === -1) idx = buckets.length - 1;\n    // se nenhum bucket tem min > d, vai pro último (d é >= todos os mins)\n    if (firstBucketMinGreaterThan(d) >= buckets.length) idx = buckets.length - 1;\n    const b = buckets[idx];\n    const pos = upperBound(b, d);\n    b.splice(pos, 0, d);\n    if (b.length > SPLIT) {\n        const mid = b.length >> 1;\n        const right = b.splice(mid);\n        buckets.splice(idx + 1, 0, right);\n    }\n}\n\nlet out = [];\nlet idx = 1;\nlet P = 0;\nfor (let k = 0; k < n; k++) {\n    let x = data[idx++] + P;\n    let y = data[idx++] + P;\n    const d = x * x + y * y;\n    const c = countLE(d); // nº de flechas anteriores com distância <= atual\n    out.push(c);\n    insert(d);\n    P = c;\n}\n\nfs.writeSync(1, out.join('\\n') + '\\n');",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.17541830003028736,
+            "counts": {
+                "AC": 20,
+                "WA": 19,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

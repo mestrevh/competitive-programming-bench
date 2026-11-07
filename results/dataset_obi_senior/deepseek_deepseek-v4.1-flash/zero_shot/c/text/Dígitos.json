@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:05:34.043833+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 648,
+            "output_tokens": 11787,
+            "total_tokens": 12435
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.028289,
+            "total_cost": 0.028291
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nint add_one(char *s, int len) {\n    int i = len - 1;\n    while (i >= 0 && s[i] == '9') {\n        s[i] = '0';\n        i--;\n    }\n    if (i >= 0) {\n        s[i]++;\n        return len;\n    } else {\n        memmove(s + 1, s, len);\n        s[0] = '1';\n        return len + 1;\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    char S[1005];\n    for (int i = 0; i < N; i++) {\n        int d;\n        scanf(\"%d\", &d);\n        S[i] = (char)('0' + d);\n    }\n    S[N] = '\\0';\n\n    char cur[1005];\n\n    for (int L = 1; L <= N; L++) {\n        if (S[0] == '0') break;\n\n        memcpy(cur, S, L);\n        int len = L;\n        int pos = L;\n        int ok = 1;\n\n        while (pos < N) {\n            len = add_one(cur, len);\n\n            if (pos + len > N) {\n                ok = 0;\n                break;\n            }\n\n            for (int j = 0; j < len; j++) {\n                if (cur[j] != S[pos + j]) {\n                    ok = 0;\n                    break;\n                }\n            }\n\n            if (!ok) break;\n            pos += len;\n        }\n\n        if (ok && pos == N) {\n            printf(\"%.*s\\n\", L, S);\n            return 0;\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nint add_one(char *s, int len) {\n    int i = len - 1;\n    while (i >= 0 && s[i] == '9') {\n        s[i] = '0';\n        i--;\n    }\n    if (i >= 0) {\n        s[i]++;\n        return len;\n    } else {\n        memmove(s + 1, s, len);\n        s[0] = '1';\n        return len + 1;\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    char S[1005];\n    for (int i = 0; i < N; i++) {\n        int d;\n        scanf(\"%d\", &d);\n        S[i] = (char)('0' + d);\n    }\n    S[N] = '\\0';\n\n    char cur[1005];\n\n    for (int L = 1; L <= N; L++) {\n        if (S[0] == '0') break;\n\n        memcpy(cur, S, L);\n        int len = L;\n        int pos = L;\n        int ok = 1;\n\n        while (pos < N) {\n            len = add_one(cur, len);\n\n            if (pos + len > N) {\n                ok = 0;\n                break;\n            }\n\n            for (int j = 0; j < len; j++) {\n                if (cur[j] != S[pos + j]) {\n                    ok = 0;\n                    break;\n                }\n            }\n\n            if (!ok) break;\n            pos += len;\n        }\n\n        if (ok && pos == N) {\n            printf(\"%.*s\\n\", L, S);\n            return 0;\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16467460000421852,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

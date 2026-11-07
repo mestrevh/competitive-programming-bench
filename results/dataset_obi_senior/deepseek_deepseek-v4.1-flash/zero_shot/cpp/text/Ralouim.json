@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:48:30.381234+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 765,
+            "output_tokens": 19134,
+            "total_tokens": 19899
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.045922,
+            "total_cost": 0.045924
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Point { int x, y; };\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    if (!(cin >> N)) return 0;\n\n    vector<Point> p(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> p[i].x >> p[i].y;\n    }\n\n    vector<uint64_t> edges;\n    edges.reserve(N * N);\n\n    auto pack = [](int u, int v, int w) {\n        return (uint64_t(uint32_t(w)) << 32) |\n               (uint64_t(uint32_t(u)) << 16) |\n               uint64_t(uint32_t(v));\n    };\n\n    for (int v = 0; v < N; ++v) {\n        int d = p[v].x * p[v].x + p[v].y * p[v].y;\n        edges.push_back(pack(N, v, d));\n    }\n\n    for (int u = 0; u < N; ++u) {\n        for (int v = 0; v < N; ++v) {\n            if (u == v) continue;\n            int dx = p[u].x - p[v].x;\n            int dy = p[u].y - p[v].y;\n            int d = dx * dx + dy * dy;\n            edges.push_back(pack(u, v, d));\n        }\n    }\n\n    sort(edges.begin(), edges.end(), [](uint64_t a, uint64_t b) {\n        return a > b;\n    });\n\n    const int NEG = -1000000000;\n    vector<int> best(N, NEG);\n    int ans = 0;\n    vector<int> vals;\n\n    for (size_t i = 0; i < edges.size(); ) {\n        int L = (int)(edges[i] >> 32);\n        size_t j = i + 1;\n        while (j < edges.size() && (int)(edges[j] >> 32) == L) ++j;\n\n        size_t cnt = j - i;\n        vals.resize(cnt);\n\n        for (size_t k = i; k < j; ++k) {\n            uint64_t e = edges[k];\n            int u = (int)((e >> 16) & 0xFFFF);\n            int v = (int)(e & 0xFFFF);\n\n            int val;\n            if (u == N) {\n                val = 1;\n            } else {\n                if (best[u] == NEG) val = NEG;\n                else val = best[u] + 1;\n            }\n\n            vals[k - i] = val;\n            if (val > ans) ans = val;\n        }\n\n        for (size_t k = i; k < j; ++k) {\n            uint64_t e = edges[k];\n            int v = (int)(e & 0xFFFF);\n            int val = vals[k - i];\n            if (val > best[v]) best[v] = val;\n        }\n\n        i = j;\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Point { int x, y; };\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    if (!(cin >> N)) return 0;\n\n    vector<Point> p(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> p[i].x >> p[i].y;\n    }\n\n    vector<uint64_t> edges;\n    edges.reserve(N * N);\n\n    auto pack = [](int u, int v, int w) {\n        return (uint64_t(uint32_t(w)) << 32) |\n               (uint64_t(uint32_t(u)) << 16) |\n               uint64_t(uint32_t(v));\n    };\n\n    for (int v = 0; v < N; ++v) {\n        int d = p[v].x * p[v].x + p[v].y * p[v].y;\n        edges.push_back(pack(N, v, d));\n    }\n\n    for (int u = 0; u < N; ++u) {\n        for (int v = 0; v < N; ++v) {\n            if (u == v) continue;\n            int dx = p[u].x - p[v].x;\n            int dy = p[u].y - p[v].y;\n            int d = dx * dx + dy * dy;\n            edges.push_back(pack(u, v, d));\n        }\n    }\n\n    sort(edges.begin(), edges.end(), [](uint64_t a, uint64_t b) {\n        return a > b;\n    });\n\n    const int NEG = -1000000000;\n    vector<int> best(N, NEG);\n    int ans = 0;\n    vector<int> vals;\n\n    for (size_t i = 0; i < edges.size(); ) {\n        int L = (int)(edges[i] >> 32);\n        size_t j = i + 1;\n        while (j < edges.size() && (int)(edges[j] >> 32) == L) ++j;\n\n        size_t cnt = j - i;\n        vals.resize(cnt);\n\n        for (size_t k = i; k < j; ++k) {\n            uint64_t e = edges[k];\n            int u = (int)((e >> 16) & 0xFFFF);\n            int v = (int)(e & 0xFFFF);\n\n            int val;\n            if (u == N) {\n                val = 1;\n            } else {\n                if (best[u] == NEG) val = NEG;\n                else val = best[u] + 1;\n            }\n\n            vals[k - i] = val;\n            if (val > ans) ans = val;\n        }\n\n        for (size_t k = i; k < j; ++k) {\n            uint64_t e = edges[k];\n            int v = (int)(e & 0xFFFF);\n            int val = vals[k - i];\n            if (val > best[v]) best[v] = val;\n        }\n\n        i = j;\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2521848999967915,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

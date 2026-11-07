@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T00:12:33.820766+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 713,
+            "output_tokens": 20473,
+            "total_tokens": 21186
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.010237,
+            "total_cost": 0.010252
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nlet raw = '';\ntry {\n  raw = fs.readFileSync('/dev/stdin', 'utf8');\n} catch (e) {\n  raw = fs.readFileSync(0, 'utf8');\n}\n\nconst trimmed = raw.trim();\nif (!trimmed) {\n  console.log(0);\n} else {\n  const toks = trimmed.split(/\\s+/).map(Number);\n  const n = toks[0];\n  const v = toks.slice(1, 1 + n);\n\n  // Comprime valores em ids e guarda posicoes de ocorrencia\n  const idOf = new Map();\n  const occ = [];\n  const ids = new Int32Array(n);\n  for (let i = 0; i < n; i++) {\n    let id = idOf.get(v[i]);\n    if (id === undefined) {\n      id = occ.length;\n      idOf.set(v[i], id);\n      occ.push([]);\n    }\n    ids[i] = id;\n    occ[id].push(i);\n  }\n  const D = occ.length;   // quantidade de valores distintos\n  const INF = n;          // sentinela (posicoes validas sao < n)\n\n  // nx[id][i] = menor j > i com ids[j] === id, ou INF se nao existe\n  const nx = new Array(D);\n  for (let id = 0; id < D; id++) {\n    const arr = new Int32Array(n);\n    let last = INF;\n    for (let i = n - 1; i >= 0; i--) {\n      arr[i] = last;\n      if (ids[i] === id) last = i;\n    }\n    nx[id] = arr;\n  }\n\n  // Ideia: fixando o par de valores {a,b}, a melhor subsequencia marcada\n  // tem tamanho igual ao numero de \"runs\" (blocos maximais) apos filtrar\n  // a sequencia original mantendo apenas a e b (de cada run sai no maximo 1).\n  // O numero de runs = 1 + (transicoes a->b) + (transicoes b->a), onde uma\n  // transicao a->b ocorre em uma ocorrencia p de a sse a proxima ocorrencia\n  // de b apos p vem antes da proxima ocorrencia de a apos p.\n  let ans = 1;\n  for (let a = 0; a < D; a++) {\n    const occA = occ[a];\n    const nxA = nx[a];\n    const la = occA.length;\n    for (let b = a + 1; b < D; b++) {\n      const occB = occ[b];\n      const nxB = nx[b];\n      const lb = occB.length;\n      let t = 0;\n      for (let i = 0; i < la; i++) {\n        const p = occA[i];\n        const nxtA = i + 1 < la ? occA[i + 1] : INF;\n        if (nxB[p] < nxtA) t++;\n      }\n      for (let i = 0; i < lb; i++) {\n        const p = occB[i];\n        const nxtB = i + 1 < lb ? occB[i + 1] : INF;\n        if (nxA[p] < nxtB) t++;\n      }\n      const f = 1 + t;\n      if (f > ans) ans = f;\n    }\n  }\n\n  console.log(ans);\n}\n```",
+        "extracted_code": "const fs = require('fs');\n\nlet raw = '';\ntry {\n  raw = fs.readFileSync('/dev/stdin', 'utf8');\n} catch (e) {\n  raw = fs.readFileSync(0, 'utf8');\n}\n\nconst trimmed = raw.trim();\nif (!trimmed) {\n  console.log(0);\n} else {\n  const toks = trimmed.split(/\\s+/).map(Number);\n  const n = toks[0];\n  const v = toks.slice(1, 1 + n);\n\n  // Comprime valores em ids e guarda posicoes de ocorrencia\n  const idOf = new Map();\n  const occ = [];\n  const ids = new Int32Array(n);\n  for (let i = 0; i < n; i++) {\n    let id = idOf.get(v[i]);\n    if (id === undefined) {\n      id = occ.length;\n      idOf.set(v[i], id);\n      occ.push([]);\n    }\n    ids[i] = id;\n    occ[id].push(i);\n  }\n  const D = occ.length;   // quantidade de valores distintos\n  const INF = n;          // sentinela (posicoes validas sao < n)\n\n  // nx[id][i] = menor j > i com ids[j] === id, ou INF se nao existe\n  const nx = new Array(D);\n  for (let id = 0; id < D; id++) {\n    const arr = new Int32Array(n);\n    let last = INF;\n    for (let i = n - 1; i >= 0; i--) {\n      arr[i] = last;\n      if (ids[i] === id) last = i;\n    }\n    nx[id] = arr;\n  }\n\n  // Ideia: fixando o par de valores {a,b}, a melhor subsequencia marcada\n  // tem tamanho igual ao numero de \"runs\" (blocos maximais) apos filtrar\n  // a sequencia original mantendo apenas a e b (de cada run sai no maximo 1).\n  // O numero de runs = 1 + (transicoes a->b) + (transicoes b->a), onde uma\n  // transicao a->b ocorre em uma ocorrencia p de a sse a proxima ocorrencia\n  // de b apos p vem antes da proxima ocorrencia de a apos p.\n  let ans = 1;\n  for (let a = 0; a < D; a++) {\n    const occA = occ[a];\n    const nxA = nx[a];\n    const la = occA.length;\n    for (let b = a + 1; b < D; b++) {\n      const occB = occ[b];\n      const nxB = nx[b];\n      const lb = occB.length;\n      let t = 0;\n      for (let i = 0; i < la; i++) {\n        const p = occA[i];\n        const nxtA = i + 1 < la ? occA[i + 1] : INF;\n        if (nxB[p] < nxtA) t++;\n      }\n      for (let i = 0; i < lb; i++) {\n        const p = occB[i];\n        const nxtB = i + 1 < lb ? occB[i + 1] : INF;\n        if (nxA[p] < nxtB) t++;\n      }\n      const f = 1 + t;\n      if (f > ans) ans = f;\n    }\n  }\n\n  console.log(ans);\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.061900799977593124,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

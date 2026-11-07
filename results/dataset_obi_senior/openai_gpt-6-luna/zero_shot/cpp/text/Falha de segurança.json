@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:17:28.016502+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 615,
+            "output_tokens": 823,
+            "total_tokens": 1438
+        },
+        "cost_usd": {
+            "input_cost": 6.2e-05,
+            "output_cost": 0.000411,
+            "total_cost": 0.000473
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    unordered_map<string, long long> frequency;\n    frequency.reserve(N * 2);\n\n    for (int i = 0; i < N; ++i) {\n        string password;\n        cin >> password;\n        ++frequency[password];\n    }\n\n    long long answer = 0;\n\n    for (const auto& [password, count] : frequency) {\n        vector<string> substrings;\n\n        for (int start = 0; start < static_cast<int>(password.size()); ++start) {\n            for (int length = 1; start + length <= static_cast<int>(password.size()); ++length) {\n                string sub = password.substr(start, length);\n                if (find(substrings.begin(), substrings.end(), sub) == substrings.end()) {\n                    substrings.push_back(std::move(sub));\n                }\n            }\n        }\n\n        for (const string& sub : substrings) {\n            auto it = frequency.find(sub);\n            if (it != frequency.end()) {\n                answer += count * it->second;\n            }\n        }\n\n        answer -= count;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    unordered_map<string, long long> frequency;\n    frequency.reserve(N * 2);\n\n    for (int i = 0; i < N; ++i) {\n        string password;\n        cin >> password;\n        ++frequency[password];\n    }\n\n    long long answer = 0;\n\n    for (const auto& [password, count] : frequency) {\n        vector<string> substrings;\n\n        for (int start = 0; start < static_cast<int>(password.size()); ++start) {\n            for (int length = 1; start + length <= static_cast<int>(password.size()); ++length) {\n                string sub = password.substr(start, length);\n                if (find(substrings.begin(), substrings.end(), sub) == substrings.end()) {\n                    substrings.push_back(std::move(sub));\n                }\n            }\n        }\n\n        for (const string& sub : substrings) {\n            auto it = frequency.find(sub);\n            if (it != frequency.end()) {\n                answer += count * it->second;\n            }\n        }\n\n        answer -= count;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19783649999590125,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

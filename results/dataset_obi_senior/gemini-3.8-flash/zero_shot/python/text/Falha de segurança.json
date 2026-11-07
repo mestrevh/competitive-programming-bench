@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:26:10.260413+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 646,
+            "output_tokens": 265,
+            "total_tokens": 2138
+        },
+        "cost_usd": {
+            "input_cost": 0.000485,
+            "output_cost": 0.000994,
+            "total_cost": 0.001478
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    passwords = input_data[1 : n + 1]\n\n    freq = Counter(passwords)\n    total_pairs = 0\n\n    for pwd, count in freq.items():\n        # Encontra todas as subcadeias distintas de pwd\n        subs = set()\n        l = len(pwd)\n        for i in range(l):\n            for j in range(i + 1, l + 1):\n                subs.add(pwd[i:j])\n\n        # Para um usuário com esta senha, quantos usuários B ele consegue acessar?\n        matches = 0\n        for sub in subs:\n            if sub in freq:\n                matches += freq[sub]\n\n        # Um usuário não pode acessar a sua própria conta como par ordenado distinto (A != B)\n        matches -= 1\n\n        total_pairs += matches * count\n\n    print(total_pairs)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    passwords = input_data[1 : n + 1]\n\n    freq = Counter(passwords)\n    total_pairs = 0\n\n    for pwd, count in freq.items():\n        # Encontra todas as subcadeias distintas de pwd\n        subs = set()\n        l = len(pwd)\n        for i in range(l):\n            for j in range(i + 1, l + 1):\n                subs.add(pwd[i:j])\n\n        # Para um usuário com esta senha, quantos usuários B ele consegue acessar?\n        matches = 0\n        for sub in subs:\n            if sub in freq:\n                matches += freq[sub]\n\n        # Um usuário não pode acessar a sua própria conta como par ordenado distinto (A != B)\n        matches -= 1\n\n        total_pairs += matches * count\n\n    print(total_pairs)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17380499999853782,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:04:22.432641+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1377,
+            "output_tokens": 1529,
+            "total_tokens": 2906
+        },
+        "cost_usd": {
+            "input_cost": 0.000138,
+            "output_cost": 0.000764,
+            "total_cost": 0.000902
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    static class DSU {\n        int[] parent;\n        int[] size;\n\n        DSU(int n) {\n            parent = new int[n + 1];\n            size = new int[n + 1];\n            for (int i = 1; i <= n; i++) {\n                parent[i] = i;\n                size[i] = 1;\n            }\n        }\n\n        int find(int x) {\n            while (parent[x] != x) {\n                parent[x] = parent[parent[x]];\n                x = parent[x];\n            }\n            return x;\n        }\n\n        boolean union(int a, int b) {\n            int ra = find(a);\n            int rb = find(b);\n            if (ra == rb) return false;\n\n            if (size[ra] < size[rb]) {\n                int tmp = ra;\n                ra = rb;\n                rb = tmp;\n            }\n            parent[rb] = ra;\n            size[ra] += size[rb];\n            return true;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n        int k = fs.nextInt();\n\n        DSU dsu = new DSU(n);\n        boolean possible = true;\n        int redundantRoads = 0;\n\n        for (int i = 0; i < m; i++) {\n            int a = fs.nextInt();\n            int b = fs.nextInt();\n            int type = fs.nextInt();\n\n            if (type == 1) {\n                if (!dsu.union(a, b)) possible = false;\n            } else {\n                if (!dsu.union(a, b)) redundantRoads++;\n            }\n        }\n\n        System.out.println(possible && redundantRoads <= k ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    static class DSU {\n        int[] parent;\n        int[] size;\n\n        DSU(int n) {\n            parent = new int[n + 1];\n            size = new int[n + 1];\n            for (int i = 1; i <= n; i++) {\n                parent[i] = i;\n                size[i] = 1;\n            }\n        }\n\n        int find(int x) {\n            while (parent[x] != x) {\n                parent[x] = parent[parent[x]];\n                x = parent[x];\n            }\n            return x;\n        }\n\n        boolean union(int a, int b) {\n            int ra = find(a);\n            int rb = find(b);\n            if (ra == rb) return false;\n\n            if (size[ra] < size[rb]) {\n                int tmp = ra;\n                ra = rb;\n                rb = tmp;\n            }\n            parent[rb] = ra;\n            size[ra] += size[rb];\n            return true;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n        int k = fs.nextInt();\n\n        DSU dsu = new DSU(n);\n        boolean possible = true;\n        int redundantRoads = 0;\n\n        for (int i = 0; i < m; i++) {\n            int a = fs.nextInt();\n            int b = fs.nextInt();\n            int type = fs.nextInt();\n\n            if (type == 1) {\n                if (!dsu.union(a, b)) possible = false;\n            } else {\n                if (!dsu.union(a, b)) redundantRoads++;\n            }\n        }\n\n        System.out.println(possible && redundantRoads <= k ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.10404270000435645,
+            "counts": {
+                "AC": 50,
+                "WA": 12,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

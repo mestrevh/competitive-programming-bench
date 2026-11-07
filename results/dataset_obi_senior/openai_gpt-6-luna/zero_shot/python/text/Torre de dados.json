@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:51:08.152128+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 896,
+            "output_tokens": 784,
+            "total_tokens": 1680
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.000392,
+            "total_cost": 0.000482
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\ndice = []\nidx = 1\n\nfor _ in range(n):\n    faces = data[idx:idx + 6]\n    idx += 6\n    opposite = {\n        faces[0]: faces[5], faces[5]: faces[0],\n        faces[1]: faces[3], faces[3]: faces[1],\n        faces[2]: faces[4], faces[4]: faces[2],\n    }\n    dice.append((faces, opposite))\n\nanswer = 0\n\nfor bottom in dice[0][0]:\n    total = 0\n    current_bottom = bottom\n\n    for faces, opposite in dice:\n        top = opposite[current_bottom]\n        total += max(value for value in faces if value != current_bottom and value != top)\n        current_bottom = top\n\n    answer = max(answer, total)\n\nprint(answer)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\ndice = []\nidx = 1\n\nfor _ in range(n):\n    faces = data[idx:idx + 6]\n    idx += 6\n    opposite = {\n        faces[0]: faces[5], faces[5]: faces[0],\n        faces[1]: faces[3], faces[3]: faces[1],\n        faces[2]: faces[4], faces[4]: faces[2],\n    }\n    dice.append((faces, opposite))\n\nanswer = 0\n\nfor bottom in dice[0][0]:\n    total = 0\n    current_bottom = bottom\n\n    for faces, opposite in dice:\n        top = opposite[current_bottom]\n        total += max(value for value in faces if value != current_bottom and value != top)\n        current_bottom = top\n\n    answer = max(answer, total)\n\nprint(answer)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07029020000481978,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

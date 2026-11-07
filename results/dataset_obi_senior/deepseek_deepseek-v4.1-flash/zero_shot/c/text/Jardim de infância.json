@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:21:51.448410+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1140,
+            "output_tokens": 20575,
+            "total_tokens": 21715
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.04938,
+            "total_cost": 0.049383
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\ntypedef struct {\n    long long x, y;\n} Point;\n\nlong long dot(long long x1, long long y1, long long x2, long long y2) {\n    return x1 * x2 + y1 * y2;\n}\n\nlong long cross(Point a, Point b, Point c) {\n    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n}\n\nlong long dist2(Point a, Point b) {\n    long long dx = a.x - b.x;\n    long long dy = a.y - b.y;\n    return dx * dx + dy * dy;\n}\n\nint main() {\n    Point p[7];\n    for (int i = 0; i < 7; i++) {\n        scanf(\"%lld %lld\", &p[i].x, &p[i].y);\n    }\n\n    // 1. Ângulo ∠P2P1P3 agudo\n    long long v12x = p[1].x - p[0].x;\n    long long v12y = p[1].y - p[0].y;\n    long long v13x = p[2].x - p[0].x;\n    long long v13y = p[2].y - p[0].y;\n    if (dot(v12x, v12y, v13x, v13y) <= 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 2. |P1P2| == |P1P3|\n    if (dist2(p[0], p[1]) != dist2(p[0], p[2])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 3. P2, P3, P4 e P5 colineares\n    if (cross(p[1], p[2], p[3]) != 0 || cross(p[1], p[2], p[4]) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 4. Pontos médios de P2P3 e P4P5 coincidentes\n    if (p[1].x + p[2].x != p[3].x + p[4].x ||\n        p[1].y + p[2].y != p[3].y + p[4].y) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 5. |P2P3| > |P4P5|\n    if (dist2(p[1], p[2]) <= dist2(p[3], p[4])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 6. P4P6 e P5P7 perpendiculares a P2P3\n    long long bx = p[2].x - p[1].x;\n    long long by = p[2].y - p[1].y;\n    if (dot(p[5].x - p[3].x, p[5].y - p[3].y, bx, by) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n    if (dot(p[6].x - p[4].x, p[6].y - p[4].y, bx, by) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 7. |P4P6| == |P5P7|\n    if (dist2(p[3], p[5]) != dist2(p[4], p[6])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 8. P1 e P6 separados pela reta que contém P2P3\n    long long c1 = cross(p[1], p[2], p[0]);\n    long long c2 = cross(p[1], p[2], p[5]);\n    if ((c1 > 0 && c2 > 0) || (c1 < 0 && c2 < 0) || c1 == 0 || c2 == 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    printf(\"S\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\ntypedef struct {\n    long long x, y;\n} Point;\n\nlong long dot(long long x1, long long y1, long long x2, long long y2) {\n    return x1 * x2 + y1 * y2;\n}\n\nlong long cross(Point a, Point b, Point c) {\n    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n}\n\nlong long dist2(Point a, Point b) {\n    long long dx = a.x - b.x;\n    long long dy = a.y - b.y;\n    return dx * dx + dy * dy;\n}\n\nint main() {\n    Point p[7];\n    for (int i = 0; i < 7; i++) {\n        scanf(\"%lld %lld\", &p[i].x, &p[i].y);\n    }\n\n    // 1. Ângulo ∠P2P1P3 agudo\n    long long v12x = p[1].x - p[0].x;\n    long long v12y = p[1].y - p[0].y;\n    long long v13x = p[2].x - p[0].x;\n    long long v13y = p[2].y - p[0].y;\n    if (dot(v12x, v12y, v13x, v13y) <= 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 2. |P1P2| == |P1P3|\n    if (dist2(p[0], p[1]) != dist2(p[0], p[2])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 3. P2, P3, P4 e P5 colineares\n    if (cross(p[1], p[2], p[3]) != 0 || cross(p[1], p[2], p[4]) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 4. Pontos médios de P2P3 e P4P5 coincidentes\n    if (p[1].x + p[2].x != p[3].x + p[4].x ||\n        p[1].y + p[2].y != p[3].y + p[4].y) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 5. |P2P3| > |P4P5|\n    if (dist2(p[1], p[2]) <= dist2(p[3], p[4])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 6. P4P6 e P5P7 perpendiculares a P2P3\n    long long bx = p[2].x - p[1].x;\n    long long by = p[2].y - p[1].y;\n    if (dot(p[5].x - p[3].x, p[5].y - p[3].y, bx, by) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n    if (dot(p[6].x - p[4].x, p[6].y - p[4].y, bx, by) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 7. |P4P6| == |P5P7|\n    if (dist2(p[3], p[5]) != dist2(p[4], p[6])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 8. P1 e P6 separados pela reta que contém P2P3\n    long long c1 = cross(p[1], p[2], p[0]);\n    long long c2 = cross(p[1], p[2], p[5]);\n    if ((c1 > 0 && c2 > 0) || (c1 < 0 && c2 < 0) || c1 == 0 || c2 == 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    printf(\"S\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22255810000933707,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:41:38.095422+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 575,
+            "output_tokens": 16416,
+            "total_tokens": 16991
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.008208,
+            "total_cost": 0.00822
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\n(function main() {\n  let raw;\n  try { raw = fs.readFileSync('/dev/stdin', 'utf8'); }\n  catch (e) { raw = fs.readFileSync(0, 'utf8'); }\n\n  const tokens = raw.trim().split(/\\s+/).map(Number);\n  let idx = 0;\n  const N = tokens[idx++];\n  const K = tokens[idx++];\n  const C = tokens[idx++];\n\n  // Prefix sums\n  const P = new Int32Array(N + 1);\n  for (let i = 1; i <= N; i++) P[i] = P[i - 1] + tokens[idx++];\n\n  const total = P[N];\n\n  // Maximizar soma descoberta == minimizar soma coberta pelas K janelas de tamanho C\n  const gap = N - K * C;      // celulas \"livres\" alem das obrigatoriamente cobertas\n  const width = gap + 1;\n\n  // W[i] = soma das C celulas terminando em i\n  const W = new Int32Array(N + 1);\n  for (let i = C; i <= N; i++) W[i] = P[i] - P[i - C];\n\n  // DP: com j rotulos usados, a posicao da fronteira i satisfaz j*C <= i <= j*C + gap\n  // prev[r] = minimo somatorio coberto com (j-1) rotulos dentro das primeiras (j-1)*C + r celulas\n  let prev = new Int32Array(width);\n  let cur = new Int32Array(width);\n\n  for (let j = 1; j <= K; j++) {\n    const s = j * C;\n    cur[0] = prev[0] + W[s];\n    for (let r = 1; r < width; r++) {\n      const v = prev[r] + W[s + r];       // colar rotulo terminando em s+r\n      const c = cur[r - 1];               // nao colar rotulo terminando em s+r\n      cur[r] = v < c ? v : c;\n    }\n    const t = prev; prev = cur; cur = t;\n  }\n\n  process.stdout.write((total - prev[width - 1]) + '\\n');\n})();\n```",
+        "extracted_code": "const fs = require('fs');\n\n(function main() {\n  let raw;\n  try { raw = fs.readFileSync('/dev/stdin', 'utf8'); }\n  catch (e) { raw = fs.readFileSync(0, 'utf8'); }\n\n  const tokens = raw.trim().split(/\\s+/).map(Number);\n  let idx = 0;\n  const N = tokens[idx++];\n  const K = tokens[idx++];\n  const C = tokens[idx++];\n\n  // Prefix sums\n  const P = new Int32Array(N + 1);\n  for (let i = 1; i <= N; i++) P[i] = P[i - 1] + tokens[idx++];\n\n  const total = P[N];\n\n  // Maximizar soma descoberta == minimizar soma coberta pelas K janelas de tamanho C\n  const gap = N - K * C;      // celulas \"livres\" alem das obrigatoriamente cobertas\n  const width = gap + 1;\n\n  // W[i] = soma das C celulas terminando em i\n  const W = new Int32Array(N + 1);\n  for (let i = C; i <= N; i++) W[i] = P[i] - P[i - C];\n\n  // DP: com j rotulos usados, a posicao da fronteira i satisfaz j*C <= i <= j*C + gap\n  // prev[r] = minimo somatorio coberto com (j-1) rotulos dentro das primeiras (j-1)*C + r celulas\n  let prev = new Int32Array(width);\n  let cur = new Int32Array(width);\n\n  for (let j = 1; j <= K; j++) {\n    const s = j * C;\n    cur[0] = prev[0] + W[s];\n    for (let r = 1; r < width; r++) {\n      const v = prev[r] + W[s + r];       // colar rotulo terminando em s+r\n      const c = cur[r - 1];               // nao colar rotulo terminando em s+r\n      cur[r] = v < c ? v : c;\n    }\n    const t = prev; prev = cur; cur = t;\n  }\n\n  process.stdout.write((total - prev[width - 1]) + '\\n');\n})();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0832014000043273,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

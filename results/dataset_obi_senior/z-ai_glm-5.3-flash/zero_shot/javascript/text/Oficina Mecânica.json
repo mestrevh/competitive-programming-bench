@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:39:57.529779+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1041,
+            "output_tokens": 27814,
+            "total_tokens": 28855
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.013907,
+            "total_cost": 0.013929
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  let p = 0;\n  const n = +tokens[p++], m = +tokens[p++];\n  const T = new Array(n);\n  for (let i = 0; i < n; i++) T[i] = +tokens[p++];\n  const F = new Array(m);\n  for (let j = 0; j < m; j++) F[j] = +tokens[p++];\n\n  // Se sobra pelo menos um mecânico para cada carro, ninguém espera.\n  if (n <= m) {\n    console.log(0);\n    return;\n  }\n\n  // Carros em ordem decrescente de trabalho.\n  T.sort((a, b) => b - a);\n\n  // Custo = para cada par de carros no mesmo mecânico, (menor T do par) * F do mecânico.\n  // Cada mecânico j (com c_j carros) oferece \"pesos\" 0, Fj, 2Fj, ..., (c_j-1)*Fj,\n  // casados com os carros em ordem decrescente (maior carro -> menor peso).\n  // Ótimo: pegar os N menores elementos dos fluxos {k*Fj}, j = 1..M, k >= 0.\n  // Os M primeiros são todos 0 (custo zero); restam K = N - M elementos a escolher.\n\n  const K = n - m;\n\n  // Min-heap de [proximoPeso, fator]\n  const hv = new Array(m + 1), hf = new Array(m + 1);\n  let size = 0;\n  function push(v, f) {\n    let i = size++;\n    hv[i] = v; hf[i] = f;\n    while (i > 0) {\n      const par = (i - 1) >> 1;\n      if (hv[par] <= hv[i]) break;\n      const tv = hv[i]; hv[i] = hv[par]; hv[par] = tv;\n      const tf = hf[i]; hf[i] = hf[par]; hf[par] = tf;\n      i = par;\n    }\n  }\n  function pop() {\n    const v = hv[0], f = hf[0];\n    size--;\n    if (size > 0) {\n      hv[0] = hv[size]; hf[0] = hf[size];\n      let i = 0;\n      for (;;) {\n        const l = 2 * i + 1, r = l + 1;\n        let s = i;\n        if (l < size && hv[l] < hv[s]) s = l;\n        if (r < size && hv[r] < hv[s]) s = r;\n        if (s === i) break;\n        const tv = hv[i]; hv[i] = hv[s]; hv[s] = tv;\n        const tf = hf[i]; hf[i] = hf[s]; hf[s] = tf;\n        i = s;\n      }\n    }\n    return [v, f];\n  }\n\n  for (let j = 0; j < m; j++) push(F[j], F[j]);\n\n  // Os pesos extraídos saem em ordem crescente; casar com T descrescente\n  // a partir da posição m (os m maiores carros ficam com peso 0).\n  let ans = 0n;\n  for (let k = 0; k < K; k++) {\n    const [v, f] = pop();\n    ans += BigInt(T[m + k]) * BigInt(v);\n    push(v + f, f);\n  }\n\n  console.log(ans.toString());\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  let p = 0;\n  const n = +tokens[p++], m = +tokens[p++];\n  const T = new Array(n);\n  for (let i = 0; i < n; i++) T[i] = +tokens[p++];\n  const F = new Array(m);\n  for (let j = 0; j < m; j++) F[j] = +tokens[p++];\n\n  // Se sobra pelo menos um mecânico para cada carro, ninguém espera.\n  if (n <= m) {\n    console.log(0);\n    return;\n  }\n\n  // Carros em ordem decrescente de trabalho.\n  T.sort((a, b) => b - a);\n\n  // Custo = para cada par de carros no mesmo mecânico, (menor T do par) * F do mecânico.\n  // Cada mecânico j (com c_j carros) oferece \"pesos\" 0, Fj, 2Fj, ..., (c_j-1)*Fj,\n  // casados com os carros em ordem decrescente (maior carro -> menor peso).\n  // Ótimo: pegar os N menores elementos dos fluxos {k*Fj}, j = 1..M, k >= 0.\n  // Os M primeiros são todos 0 (custo zero); restam K = N - M elementos a escolher.\n\n  const K = n - m;\n\n  // Min-heap de [proximoPeso, fator]\n  const hv = new Array(m + 1), hf = new Array(m + 1);\n  let size = 0;\n  function push(v, f) {\n    let i = size++;\n    hv[i] = v; hf[i] = f;\n    while (i > 0) {\n      const par = (i - 1) >> 1;\n      if (hv[par] <= hv[i]) break;\n      const tv = hv[i]; hv[i] = hv[par]; hv[par] = tv;\n      const tf = hf[i]; hf[i] = hf[par]; hf[par] = tf;\n      i = par;\n    }\n  }\n  function pop() {\n    const v = hv[0], f = hf[0];\n    size--;\n    if (size > 0) {\n      hv[0] = hv[size]; hf[0] = hf[size];\n      let i = 0;\n      for (;;) {\n        const l = 2 * i + 1, r = l + 1;\n        let s = i;\n        if (l < size && hv[l] < hv[s]) s = l;\n        if (r < size && hv[r] < hv[s]) s = r;\n        if (s === i) break;\n        const tv = hv[i]; hv[i] = hv[s]; hv[s] = tv;\n        const tf = hf[i]; hf[i] = hf[s]; hf[s] = tf;\n        i = s;\n      }\n    }\n    return [v, f];\n  }\n\n  for (let j = 0; j < m; j++) push(F[j], F[j]);\n\n  // Os pesos extraídos saem em ordem crescente; casar com T descrescente\n  // a partir da posição m (os m maiores carros ficam com peso 0).\n  let ans = 0n;\n  for (let k = 0; k < K; k++) {\n    const [v, f] = pop();\n    ans += BigInt(T[m + k]) * BigInt(v);\n    push(v + f, f);\n  }\n\n  console.log(ans.toString());\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12641840003198013,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

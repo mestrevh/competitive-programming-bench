@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:48:08.340930+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 851,
+            "output_tokens": 438,
+            "total_tokens": 1289
+        },
+        "cost_usd": {
+            "input_cost": 8.5e-05,
+            "output_cost": 0.000219,
+            "total_cost": 0.000304
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst n = Number(input[0]);\nconst force = Number(input[1]);\nconst grid = input.slice(2, 2 + n).map(row => row.split(''));\n\nif (Number(grid[0][0]) <= force) {\n  const visited = new Uint8Array(n * n);\n  const queue = new Int32Array(n * n);\n  let head = 0;\n  let tail = 0;\n\n  visited[0] = 1;\n  grid[0][0] = '*';\n  queue[tail++] = 0;\n\n  while (head < tail) {\n    const pos = queue[head++];\n    const r = Math.floor(pos / n);\n    const c = pos % n;\n\n    const neighbors = [\n      r > 0 ? pos - n : -1,\n      r + 1 < n ? pos + n : -1,\n      c > 0 ? pos - 1 : -1,\n      c + 1 < n ? pos + 1 : -1\n    ];\n\n    for (const next of neighbors) {\n      if (next === -1 || visited[next]) continue;\n\n      const nr = Math.floor(next / n);\n      const nc = next % n;\n      if (Number(grid[nr][nc]) <= force) {\n        visited[next] = 1;\n        grid[nr][nc] = '*';\n        queue[tail++] = next;\n      }\n    }\n  }\n}\n\nprocess.stdout.write(grid.map(row => row.join('')).join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst n = Number(input[0]);\nconst force = Number(input[1]);\nconst grid = input.slice(2, 2 + n).map(row => row.split(''));\n\nif (Number(grid[0][0]) <= force) {\n  const visited = new Uint8Array(n * n);\n  const queue = new Int32Array(n * n);\n  let head = 0;\n  let tail = 0;\n\n  visited[0] = 1;\n  grid[0][0] = '*';\n  queue[tail++] = 0;\n\n  while (head < tail) {\n    const pos = queue[head++];\n    const r = Math.floor(pos / n);\n    const c = pos % n;\n\n    const neighbors = [\n      r > 0 ? pos - n : -1,\n      r + 1 < n ? pos + n : -1,\n      c > 0 ? pos - 1 : -1,\n      c + 1 < n ? pos + 1 : -1\n    ];\n\n    for (const next of neighbors) {\n      if (next === -1 || visited[next]) continue;\n\n      const nr = Math.floor(next / n);\n      const nc = next % n;\n      if (Number(grid[nr][nc]) <= force) {\n        visited[next] = 1;\n        grid[nr][nc] = '*';\n        queue[tail++] = next;\n      }\n    }\n  }\n}\n\nprocess.stdout.write(grid.map(row => row.join('')).join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07568819999869447,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

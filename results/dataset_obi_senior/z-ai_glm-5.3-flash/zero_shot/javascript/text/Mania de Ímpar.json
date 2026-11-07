@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:29:38.445184+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1186,
+            "output_tokens": 715,
+            "total_tokens": 1901
+        },
+        "cost_usd": {
+            "input_cost": 2.5e-05,
+            "output_cost": 0.000358,
+            "total_cost": 0.000383
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(x => x.length);\nlet idx = 0;\nconst N = parseInt(data[idx++]);\nconst M = parseInt(data[idx++]);\nconst G = [];\nfor (let i = 0; i < N; i++) {\n  const row = [];\n  for (let j = 0; j < M; j++) row.push(parseInt(data[idx++]));\n  G.push(row);\n}\n\n// Para uma orientação do tabuleiro (paridade alvo em (0,0) = p):\n// célula (i,j) alvo parity = p ^ ((i+j) & 1)\n// custo = 1 se (G[i][j] & 1) !== alvo, senão 0\nfunction costAndGrid(p) {\n  let cost = 0;\n  const res = [];\n  for (let i = 0; i < N; i++) {\n    const row = [];\n    for (let j = 0; j < M; j++) {\n      const target = p ^ ((i + j) & 1);\n      const cur = G[i][j] & 1;\n      if (cur !== target) {\n        cost++;\n        row.push(G[i][j] + 1);\n      } else {\n        row.push(G[i][j]);\n      }\n    }\n    res.push(row);\n  }\n  return { cost, res };\n}\n\nconst a = costAndGrid(0);\nconst b = costAndGrid(1);\nconst best = a.cost <= b.cost ? a : b;\n\nlet out = [];\nout.push(String(best.cost));\nfor (let i = 0; i < N; i++) out.push(best.res[i].join(' '));\nconsole.log(out.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(x => x.length);\nlet idx = 0;\nconst N = parseInt(data[idx++]);\nconst M = parseInt(data[idx++]);\nconst G = [];\nfor (let i = 0; i < N; i++) {\n  const row = [];\n  for (let j = 0; j < M; j++) row.push(parseInt(data[idx++]));\n  G.push(row);\n}\n\n// Para uma orientação do tabuleiro (paridade alvo em (0,0) = p):\n// célula (i,j) alvo parity = p ^ ((i+j) & 1)\n// custo = 1 se (G[i][j] & 1) !== alvo, senão 0\nfunction costAndGrid(p) {\n  let cost = 0;\n  const res = [];\n  for (let i = 0; i < N; i++) {\n    const row = [];\n    for (let j = 0; j < M; j++) {\n      const target = p ^ ((i + j) & 1);\n      const cur = G[i][j] & 1;\n      if (cur !== target) {\n        cost++;\n        row.push(G[i][j] + 1);\n      } else {\n        row.push(G[i][j]);\n      }\n    }\n    res.push(row);\n  }\n  return { cost, res };\n}\n\nconst a = costAndGrid(0);\nconst b = costAndGrid(1);\nconst best = a.cost <= b.cost ? a : b;\n\nlet out = [];\nout.push(String(best.cost));\nfor (let i = 0; i < N; i++) out.push(best.res[i].join(' '));\nconsole.log(out.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07533200003672391,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

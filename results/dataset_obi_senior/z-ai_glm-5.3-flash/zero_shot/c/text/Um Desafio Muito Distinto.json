@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T21:00:27.196785+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1258,
+            "output_tokens": 30394,
+            "total_tokens": 31652
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.015197,
+            "total_cost": 0.015224
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef long long ll;\ntypedef unsigned long long ull;\ntypedef __int128 lll;\n\nstatic char ibuf[1 << 22];\nstatic size_t ipos = 0, ilen = 0;\n\nstatic inline int gc(void) {\n    if (ipos == ilen) {\n        ilen = fread(ibuf, 1, sizeof ibuf, stdin);\n        ipos = 0;\n        if (ilen == 0) return -1;\n    }\n    return (unsigned char)ibuf[ipos++];\n}\n\nstatic ll readLL(void) {\n    int c = gc();\n    while (c != -1 && (c < '0' || c > '9') && c != '-') c = gc();\n    int neg = 0;\n    if (c == '-') { neg = 1; c = gc(); }\n    ll x = 0;\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = gc();\n    }\n    return neg ? -x : x;\n}\n\nstatic char obuf[1 << 20];\nstatic size_t opos = 0;\n\nstatic void writeULL(ull v) {\n    char tmp[24];\n    int t = 0;\n    do { tmp[t++] = (char)('0' + (v % 10)); v /= 10; } while (v);\n    while (t) obuf[opos++] = tmp[--t];\n    obuf[opos++] = '\\n';\n}\n\nint main(void) {\n    ll P = readLL();\n    while (P-- > 0) {\n        ll L = readLL(), A = readLL(), B = readLL();\n        ull n = (ull)B - (ull)A + 1ULL;\n        lll T = ((lll)n * (lll)(A + B)) / 2;\n        ull ans;\n        if (T < (lll)L) {\n            /* Soma total de todos os valores disponiveis nao alcanca L:\n               Joao joga todas as n rodadas sem cruzar o limite. */\n            ans = n;\n        } else {\n            /* A soma apos j rodadas e sempre >= f(j) = j*A + j*(j-1)/2\n               (soma dos j menores valores do intervalo).\n               Logo o jogo acaba em ate m1+1 rodadas, onde m1 e o maior m\n               com f(m) < L. Jogando A, A+1, ..., A+m1 em ordem crescente,\n               as prefixadas ficam < L e ele completa exatamente m1+1 rodadas. */\n            ull m1 = 0;\n            if (n >= 2ULL) {\n                ull lo = 1ULL, hi = n - 1ULL;\n                while (lo <= hi) {\n                    ull mid = lo + (hi - lo) / 2ULL;\n                    lll fm = (lll)mid * (lll)A + ((lll)mid * (lll)(mid - 1ULL)) / 2;\n                    if (fm < (lll)L) { m1 = mid; lo = mid + 1ULL; }\n                    else hi = mid - 1ULL;\n                }\n            }\n            ans = m1 + 1ULL;\n        }\n        writeULL(ans);\n    }\n    fwrite(obuf, 1, opos, stdout);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef long long ll;\ntypedef unsigned long long ull;\ntypedef __int128 lll;\n\nstatic char ibuf[1 << 22];\nstatic size_t ipos = 0, ilen = 0;\n\nstatic inline int gc(void) {\n    if (ipos == ilen) {\n        ilen = fread(ibuf, 1, sizeof ibuf, stdin);\n        ipos = 0;\n        if (ilen == 0) return -1;\n    }\n    return (unsigned char)ibuf[ipos++];\n}\n\nstatic ll readLL(void) {\n    int c = gc();\n    while (c != -1 && (c < '0' || c > '9') && c != '-') c = gc();\n    int neg = 0;\n    if (c == '-') { neg = 1; c = gc(); }\n    ll x = 0;\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = gc();\n    }\n    return neg ? -x : x;\n}\n\nstatic char obuf[1 << 20];\nstatic size_t opos = 0;\n\nstatic void writeULL(ull v) {\n    char tmp[24];\n    int t = 0;\n    do { tmp[t++] = (char)('0' + (v % 10)); v /= 10; } while (v);\n    while (t) obuf[opos++] = tmp[--t];\n    obuf[opos++] = '\\n';\n}\n\nint main(void) {\n    ll P = readLL();\n    while (P-- > 0) {\n        ll L = readLL(), A = readLL(), B = readLL();\n        ull n = (ull)B - (ull)A + 1ULL;\n        lll T = ((lll)n * (lll)(A + B)) / 2;\n        ull ans;\n        if (T < (lll)L) {\n            /* Soma total de todos os valores disponiveis nao alcanca L:\n               Joao joga todas as n rodadas sem cruzar o limite. */\n            ans = n;\n        } else {\n            /* A soma apos j rodadas e sempre >= f(j) = j*A + j*(j-1)/2\n               (soma dos j menores valores do intervalo).\n               Logo o jogo acaba em ate m1+1 rodadas, onde m1 e o maior m\n               com f(m) < L. Jogando A, A+1, ..., A+m1 em ordem crescente,\n               as prefixadas ficam < L e ele completa exatamente m1+1 rodadas. */\n            ull m1 = 0;\n            if (n >= 2ULL) {\n                ull lo = 1ULL, hi = n - 1ULL;\n                while (lo <= hi) {\n                    ull mid = lo + (hi - lo) / 2ULL;\n                    lll fm = (lll)mid * (lll)A + ((lll)mid * (lll)(mid - 1ULL)) / 2;\n                    if (fm < (lll)L) { m1 = mid; lo = mid + 1ULL; }\n                    else hi = mid - 1ULL;\n                }\n            }\n            ans = m1 + 1ULL;\n        }\n        writeULL(ans);\n    }\n    fwrite(obuf, 1, opos, stdout);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13286670000525191,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

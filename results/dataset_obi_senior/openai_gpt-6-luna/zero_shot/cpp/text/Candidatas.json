@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:07:12.933968+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 15.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 749,
+            "output_tokens": 5453,
+            "total_tokens": 6202
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.002727,
+            "total_cost": 0.002801
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Group {\n    int gcdValue;\n    int count;\n};\n\nstruct Node {\n    int totalGcd = 0;\n    long long good = 0;\n    vector<Group> pref, suff;\n};\n\nvoid appendGroup(vector<Group>& groups, int value, int count) {\n    if (!groups.empty() && groups.back().gcdValue == value)\n        groups.back().count += count;\n    else\n        groups.push_back({value, count});\n}\n\nNode mergeNodes(const Node& a, const Node& b) {\n    if (a.totalGcd == 0) return b;\n    if (b.totalGcd == 0) return a;\n\n    Node result;\n    result.totalGcd = gcd(a.totalGcd, b.totalGcd);\n    result.good = a.good + b.good;\n\n    int ptr = (int)b.pref.size();\n    long long excluded = 0;\n    long long totalRightPrefixes = 0;\n    for (const auto& group : b.pref)\n        totalRightPrefixes += group.count;\n\n    for (const auto& left : a.suff) {\n        while (ptr > 0 && gcd(left.gcdValue, b.pref[ptr - 1].gcdValue) == 1) {\n            excluded += b.pref[ptr - 1].count;\n            --ptr;\n        }\n        result.good += 1LL * left.count * (totalRightPrefixes - excluded);\n    }\n\n    result.pref.reserve(a.pref.size() + b.pref.size());\n    for (const auto& group : a.pref)\n        appendGroup(result.pref, group.gcdValue, group.count);\n    for (const auto& group : b.pref)\n        appendGroup(result.pref, gcd(a.totalGcd, group.gcdValue), group.count);\n\n    result.suff.reserve(a.suff.size() + b.suff.size());\n    for (const auto& group : b.suff)\n        appendGroup(result.suff, group.gcdValue, group.count);\n    for (const auto& group : a.suff)\n        appendGroup(result.suff, gcd(b.totalGcd, group.gcdValue), group.count);\n\n    return result;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, m;\n    cin >> n >> m;\n\n    int size = 1;\n    while (size < n) size <<= 1;\n    vector<Node> tree(2 * size);\n\n    for (int i = 0; i < n; ++i) {\n        int value;\n        cin >> value;\n        Node& leaf = tree[size + i];\n        leaf.totalGcd = value;\n        leaf.good = (value > 1);\n        leaf.pref.push_back({value, 1});\n        leaf.suff.push_back({value, 1});\n    }\n\n    for (int i = size - 1; i >= 1; --i)\n        tree[i] = mergeNodes(tree[2 * i], tree[2 * i + 1]);\n\n    while (m--) {\n        int type, x, y;\n        cin >> type >> x >> y;\n\n        if (type == 1) {\n            int pos = size + x - 1;\n            tree[pos] = Node{};\n            tree[pos].totalGcd = y;\n            tree[pos].good = (y > 1);\n            tree[pos].pref.push_back({y, 1});\n            tree[pos].suff.push_back({y, 1});\n\n            for (pos >>= 1; pos >= 1; pos >>= 1)\n                tree[pos] = mergeNodes(tree[2 * pos], tree[2 * pos + 1]);\n        } else {\n            int left = size + x - 1;\n            int right = size + y;\n            Node leftResult, rightResult;\n\n            while (left < right) {\n                if (left & 1)\n                    leftResult = mergeNodes(leftResult, tree[left++]);\n                if (right & 1)\n                    rightResult = mergeNodes(tree[--right], rightResult);\n                left >>= 1;\n                right >>= 1;\n            }\n\n            Node answer = mergeNodes(leftResult, rightResult);\n            cout << answer.good << '\\n';\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Group {\n    int gcdValue;\n    int count;\n};\n\nstruct Node {\n    int totalGcd = 0;\n    long long good = 0;\n    vector<Group> pref, suff;\n};\n\nvoid appendGroup(vector<Group>& groups, int value, int count) {\n    if (!groups.empty() && groups.back().gcdValue == value)\n        groups.back().count += count;\n    else\n        groups.push_back({value, count});\n}\n\nNode mergeNodes(const Node& a, const Node& b) {\n    if (a.totalGcd == 0) return b;\n    if (b.totalGcd == 0) return a;\n\n    Node result;\n    result.totalGcd = gcd(a.totalGcd, b.totalGcd);\n    result.good = a.good + b.good;\n\n    int ptr = (int)b.pref.size();\n    long long excluded = 0;\n    long long totalRightPrefixes = 0;\n    for (const auto& group : b.pref)\n        totalRightPrefixes += group.count;\n\n    for (const auto& left : a.suff) {\n        while (ptr > 0 && gcd(left.gcdValue, b.pref[ptr - 1].gcdValue) == 1) {\n            excluded += b.pref[ptr - 1].count;\n            --ptr;\n        }\n        result.good += 1LL * left.count * (totalRightPrefixes - excluded);\n    }\n\n    result.pref.reserve(a.pref.size() + b.pref.size());\n    for (const auto& group : a.pref)\n        appendGroup(result.pref, group.gcdValue, group.count);\n    for (const auto& group : b.pref)\n        appendGroup(result.pref, gcd(a.totalGcd, group.gcdValue), group.count);\n\n    result.suff.reserve(a.suff.size() + b.suff.size());\n    for (const auto& group : b.suff)\n        appendGroup(result.suff, group.gcdValue, group.count);\n    for (const auto& group : a.suff)\n        appendGroup(result.suff, gcd(b.totalGcd, group.gcdValue), group.count);\n\n    return result;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, m;\n    cin >> n >> m;\n\n    int size = 1;\n    while (size < n) size <<= 1;\n    vector<Node> tree(2 * size);\n\n    for (int i = 0; i < n; ++i) {\n        int value;\n        cin >> value;\n        Node& leaf = tree[size + i];\n        leaf.totalGcd = value;\n        leaf.good = (value > 1);\n        leaf.pref.push_back({value, 1});\n        leaf.suff.push_back({value, 1});\n    }\n\n    for (int i = size - 1; i >= 1; --i)\n        tree[i] = mergeNodes(tree[2 * i], tree[2 * i + 1]);\n\n    while (m--) {\n        int type, x, y;\n        cin >> type >> x >> y;\n\n        if (type == 1) {\n            int pos = size + x - 1;\n            tree[pos] = Node{};\n            tree[pos].totalGcd = y;\n            tree[pos].good = (y > 1);\n            tree[pos].pref.push_back({y, 1});\n            tree[pos].suff.push_back({y, 1});\n\n            for (pos >>= 1; pos >= 1; pos >>= 1)\n                tree[pos] = mergeNodes(tree[2 * pos], tree[2 * pos + 1]);\n        } else {\n            int left = size + x - 1;\n            int right = size + y;\n            Node leftResult, rightResult;\n\n            while (left < right) {\n                if (left & 1)\n                    leftResult = mergeNodes(leftResult, tree[left++]);\n                if (right & 1)\n                    rightResult = mergeNodes(tree[--right], rightResult);\n                left >>= 1;\n                right >>= 1;\n            }\n\n            Node answer = mergeNodes(leftResult, rightResult);\n            cout << answer.good << '\\n';\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.3385258999987855,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

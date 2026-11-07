@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:57:14.495463+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 880,
+            "output_tokens": 425,
+            "total_tokens": 1672
+        },
+        "cost_usd": {
+            "input_cost": 0.00066,
+            "output_cost": 0.001594,
+            "total_cost": 0.002254
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String s = reader.readLine();\n        if (s == null || s.isEmpty()) {\n            return;\n        }\n\n        int[][] count = new int[4][14];\n        boolean[] hasDuplicate = new boolean[4];\n\n        for (int i = 0; i < s.length(); i += 3) {\n            int val = Integer.parseInt(s.substring(i, i + 2));\n            char suit = s.charAt(i + 2);\n            int suitIdx = getSuitIndex(suit);\n\n            if (count[suitIdx][val] > 0) {\n                hasDuplicate[suitIdx] = true;\n            }\n            count[suitIdx][val]++;\n        }\n\n        for (int i = 0; i < 4; i++) {\n            if (hasDuplicate[i]) {\n                System.out.println(\"erro\");\n            } else {\n                int distinctCount = 0;\n                for (int v = 1; v <= 13; v++) {\n                    if (count[i][v] > 0) {\n                        distinctCount++;\n                    }\n                }\n                System.out.println(13 - distinctCount);\n            }\n        }\n    }\n\n    private static int getSuitIndex(char suit) {\n        switch (suit) {\n            case 'C': return 0;\n            case 'E': return 1;\n            case 'U': return 2;\n            case 'P': return 3;\n            default: return -1;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String s = reader.readLine();\n        if (s == null || s.isEmpty()) {\n            return;\n        }\n\n        int[][] count = new int[4][14];\n        boolean[] hasDuplicate = new boolean[4];\n\n        for (int i = 0; i < s.length(); i += 3) {\n            int val = Integer.parseInt(s.substring(i, i + 2));\n            char suit = s.charAt(i + 2);\n            int suitIdx = getSuitIndex(suit);\n\n            if (count[suitIdx][val] > 0) {\n                hasDuplicate[suitIdx] = true;\n            }\n            count[suitIdx][val]++;\n        }\n\n        for (int i = 0; i < 4; i++) {\n            if (hasDuplicate[i]) {\n                System.out.println(\"erro\");\n            } else {\n                int distinctCount = 0;\n                for (int v = 1; v <= 13; v++) {\n                    if (count[i][v] > 0) {\n                        distinctCount++;\n                    }\n                }\n                System.out.println(13 - distinctCount);\n            }\n        }\n    }\n\n    private static int getSuitIndex(char suit) {\n        switch (suit) {\n            case 'C': return 0;\n            case 'E': return 1;\n            case 'U': return 2;\n            case 'P': return 3;\n            default: return -1;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07517130000633188,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 25,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:29:10.773284+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 880,
+            "output_tokens": 305,
+            "total_tokens": 1549
+        },
+        "cost_usd": {
+            "input_cost": 0.00066,
+            "output_cost": 0.001144,
+            "total_cost": 0.001804
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim();\n    if (!input) return;\n\n    const suits = ['C', 'E', 'U', 'P'];\n    const seen = {\n        C: new Set(),\n        E: new Set(),\n        U: new Set(),\n        P: new Set()\n    };\n    const hasDuplicate = {\n        C: false,\n        E: false,\n        U: false,\n        P: false\n    };\n\n    for (let i = 0; i < input.length; i += 3) {\n        const cardValue = input.substring(i, i + 2);\n        const cardSuit = input.charAt(i + 2);\n\n        if (seen[cardSuit]) {\n            if (seen[cardSuit].has(cardValue)) {\n                hasDuplicate[cardSuit] = true;\n            } else {\n                seen[cardSuit].add(cardValue);\n            }\n        }\n    }\n\n    for (const suit of suits) {\n        if (hasDuplicate[suit]) {\n            console.log('erro');\n        } else {\n            console.log(13 - seen[suit].size);\n        }\n    }\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim();\n    if (!input) return;\n\n    const suits = ['C', 'E', 'U', 'P'];\n    const seen = {\n        C: new Set(),\n        E: new Set(),\n        U: new Set(),\n        P: new Set()\n    };\n    const hasDuplicate = {\n        C: false,\n        E: false,\n        U: false,\n        P: false\n    };\n\n    for (let i = 0; i < input.length; i += 3) {\n        const cardValue = input.substring(i, i + 2);\n        const cardSuit = input.charAt(i + 2);\n\n        if (seen[cardSuit]) {\n            if (seen[cardSuit].has(cardValue)) {\n                hasDuplicate[cardSuit] = true;\n            } else {\n                seen[cardSuit].add(cardValue);\n            }\n        }\n    }\n\n    for (const suit of suits) {\n        if (hasDuplicate[suit]) {\n            console.log('erro');\n        } else {\n            console.log(13 - seen[suit].size);\n        }\n    }\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.04734290001215413,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

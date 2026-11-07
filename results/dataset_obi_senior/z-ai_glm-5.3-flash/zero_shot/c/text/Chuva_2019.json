@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:27:43.635469+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 931,
+            "output_tokens": 85235,
+            "total_tokens": 86166
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.042618,
+            "total_cost": 0.042637
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 505\n\nstatic char g[MAXN][MAXN];\nstatic int qx[MAXN * MAXN];\nstatic int qy[MAXN * MAXN];\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; i++) scanf(\"%s\", g[i]);\n\n    /* find the single leak on the first row */\n    int start = -1;\n    for (int j = 0; j < M; j++)\n        if (g[0][j] == 'o') { start = j; break; }\n\n    /* BFS closure applying exactly the three rules:\n       from a wet cell (i,j):\n         - if (i+1,j) == '.'  -> it gets wet (vertical drip)\n         - if (i+1,j) == '#'  -> (i,j-1) and (i,j+1) get wet (spreading\n                                 on top of the shelf, one cell past the\n                                 edge, from where it drips again)        */\n    int head = 0, tail = 0;\n    if (start >= 0) { qx[tail] = 0; qy[tail] = start; tail++; }\n\n    while (head < tail) {\n        int i = qx[head], j = qy[head];\n        head++;\n        if (i + 1 < N) {\n            if (g[i + 1][j] == '.') {\n                g[i + 1][j] = 'o';\n                qx[tail] = i + 1; qy[tail] = j; tail++;\n            } else if (g[i + 1][j] == '#') {\n                if (j + 1 < M && g[i][j + 1] == '.') {\n                    g[i][j + 1] = 'o';\n                    qx[tail] = i; qy[tail] = j + 1; tail++;\n                }\n                if (j - 1 >= 0 && g[i][j - 1] == '.') {\n                    g[i][j - 1] = 'o';\n                    qx[tail] = i; qy[tail] = j - 1; tail++;\n                }\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        fputs(g[i], stdout);\n        putchar('\\n');\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 505\n\nstatic char g[MAXN][MAXN];\nstatic int qx[MAXN * MAXN];\nstatic int qy[MAXN * MAXN];\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; i++) scanf(\"%s\", g[i]);\n\n    /* find the single leak on the first row */\n    int start = -1;\n    for (int j = 0; j < M; j++)\n        if (g[0][j] == 'o') { start = j; break; }\n\n    /* BFS closure applying exactly the three rules:\n       from a wet cell (i,j):\n         - if (i+1,j) == '.'  -> it gets wet (vertical drip)\n         - if (i+1,j) == '#'  -> (i,j-1) and (i,j+1) get wet (spreading\n                                 on top of the shelf, one cell past the\n                                 edge, from where it drips again)        */\n    int head = 0, tail = 0;\n    if (start >= 0) { qx[tail] = 0; qy[tail] = start; tail++; }\n\n    while (head < tail) {\n        int i = qx[head], j = qy[head];\n        head++;\n        if (i + 1 < N) {\n            if (g[i + 1][j] == '.') {\n                g[i + 1][j] = 'o';\n                qx[tail] = i + 1; qy[tail] = j; tail++;\n            } else if (g[i + 1][j] == '#') {\n                if (j + 1 < M && g[i][j + 1] == '.') {\n                    g[i][j + 1] = 'o';\n                    qx[tail] = i; qy[tail] = j + 1; tail++;\n                }\n                if (j - 1 >= 0 && g[i][j - 1] == '.') {\n                    g[i][j - 1] = 'o';\n                    qx[tail] = i; qy[tail] = j - 1; tail++;\n                }\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        fputs(g[i], stdout);\n        putchar('\\n');\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10533419999410398,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

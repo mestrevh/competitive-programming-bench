@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:16:21.402551+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 960,
+            "output_tokens": 579,
+            "total_tokens": 2213
+        },
+        "cost_usd": {
+            "input_cost": 0.00072,
+            "output_cost": 0.002171,
+            "total_cost": 0.002891
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_E 1000005\n#define MAX_PAIRS 100005\n\ntypedef struct {\n    int u, v;\n} Pair;\n\nPair same_group[MAX_PAIRS];\nPair diff_group[MAX_PAIRS];\nint group_id[MAX_E];\n\n// Fast I/O\nstatic inline int read_int() {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) {\n        c = getchar_unlocked();\n    }\n    if (c == EOF) return 0;\n    int res = 0;\n    while (c >= '0' && c <= '9') {\n        res = res * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return res;\n}\n\nint main() {\n    int E = read_int();\n    int M = read_int();\n    int D = read_int();\n\n    for (int i = 0; i < M; i++) {\n        same_group[i].u = read_int();\n        same_group[i].v = read_int();\n    }\n\n    for (int i = 0; i < D; i++) {\n        diff_group[i].u = read_int();\n        diff_group[i].v = read_int();\n    }\n\n    int num_groups = E / 3;\n    for (int g = 1; g <= num_groups; g++) {\n        int i = read_int();\n        int j = read_int();\n        int k = read_int();\n        group_id[i] = g;\n        group_id[j] = g;\n        group_id[k] = g;\n    }\n\n    int violations = 0;\n\n    for (int i = 0; i < M; i++) {\n        if (group_id[same_group[i].u] != group_id[same_group[i].v]) {\n            violations++;\n        }\n    }\n\n    for (int i = 0; i < D; i++) {\n        if (group_id[diff_group[i].u] == group_id[diff_group[i].v]) {\n            violations++;\n        }\n    }\n\n    printf(\"%d\\n\", violations);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_E 1000005\n#define MAX_PAIRS 100005\n\ntypedef struct {\n    int u, v;\n} Pair;\n\nPair same_group[MAX_PAIRS];\nPair diff_group[MAX_PAIRS];\nint group_id[MAX_E];\n\n// Fast I/O\nstatic inline int read_int() {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) {\n        c = getchar_unlocked();\n    }\n    if (c == EOF) return 0;\n    int res = 0;\n    while (c >= '0' && c <= '9') {\n        res = res * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return res;\n}\n\nint main() {\n    int E = read_int();\n    int M = read_int();\n    int D = read_int();\n\n    for (int i = 0; i < M; i++) {\n        same_group[i].u = read_int();\n        same_group[i].v = read_int();\n    }\n\n    for (int i = 0; i < D; i++) {\n        diff_group[i].u = read_int();\n        diff_group[i].v = read_int();\n    }\n\n    int num_groups = E / 3;\n    for (int g = 1; g <= num_groups; g++) {\n        int i = read_int();\n        int j = read_int();\n        int k = read_int();\n        group_id[i] = g;\n        group_id[j] = g;\n        group_id[k] = g;\n    }\n\n    int violations = 0;\n\n    for (int i = 0; i < M; i++) {\n        if (group_id[same_group[i].u] != group_id[same_group[i].v]) {\n            violations++;\n        }\n    }\n\n    for (int i = 0; i < D; i++) {\n        if (group_id[diff_group[i].u] == group_id[diff_group[i].v]) {\n            violations++;\n        }\n    }\n\n    printf(\"%d\\n\", violations);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 25
+            },
+            "total_test_cases": 25
+        }
+    }
+]

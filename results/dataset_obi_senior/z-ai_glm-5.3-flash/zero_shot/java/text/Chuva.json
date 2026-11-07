@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:57:22.481637+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 686,
+            "output_tokens": 1114,
+            "total_tokens": 1800
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.000557,
+            "total_cost": 0.000572
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n        int N = nextInt(in);\n        int[] h = new int[N];\n        int count = 0;\n        // lê todas as alturas disponíveis (ex.: ex. 2 tem menos alturas que N)\n        while (count < N) {\n            int v = nextInt(in);\n            if (v == -1) break;\n            h[count++] = v;\n        }\n        int n = count;\n        if (n == 0) { System.out.println(0); return; }\n\n        int[] leftMax = new int[n];\n        int[] rightMax = new int[n];\n        leftMax[0] = h[0];\n        for (int i = 1; i < n; i++) leftMax[i] = Math.max(leftMax[i - 1], h[i]);\n        rightMax[n - 1] = h[n - 1];\n        for (int i = n - 2; i >= 0; i--) rightMax[i] = Math.max(rightMax[i + 1], h[i]);\n\n        long ans = 0;\n        for (int i = 0; i < n; i++) {\n            int level = Math.min(leftMax[i], rightMax[i]);\n            if (level - h[i] >= 1) ans++;\n        }\n        System.out.println(ans);\n    }\n\n    private static int nextInt(DataInputStream in) throws IOException {\n        int ret = 0, b;\n        boolean neg = false;\n        do { b = in.read(); if (b == -1) return -1; } while (b != '-' && (b < '0' || b > '9'));\n        if (b == '-') neg = true;\n        else ret = b - '0';\n        while ((b = in.read()) >= '0' && b <= '9') ret = ret * 10 + (b - '0');\n        return neg ? -ret : ret;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n        int N = nextInt(in);\n        int[] h = new int[N];\n        int count = 0;\n        // lê todas as alturas disponíveis (ex.: ex. 2 tem menos alturas que N)\n        while (count < N) {\n            int v = nextInt(in);\n            if (v == -1) break;\n            h[count++] = v;\n        }\n        int n = count;\n        if (n == 0) { System.out.println(0); return; }\n\n        int[] leftMax = new int[n];\n        int[] rightMax = new int[n];\n        leftMax[0] = h[0];\n        for (int i = 1; i < n; i++) leftMax[i] = Math.max(leftMax[i - 1], h[i]);\n        rightMax[n - 1] = h[n - 1];\n        for (int i = n - 2; i >= 0; i--) rightMax[i] = Math.max(rightMax[i + 1], h[i]);\n\n        long ans = 0;\n        for (int i = 0; i < n; i++) {\n            int level = Math.min(leftMax[i], rightMax[i]);\n            if (level - h[i] >= 1) ans++;\n        }\n        System.out.println(ans);\n    }\n\n    private static int nextInt(DataInputStream in) throws IOException {\n        int ret = 0, b;\n        boolean neg = false;\n        do { b = in.read(); if (b == -1) return -1; } while (b != '-' && (b < '0' || b > '9'));\n        if (b == '-') neg = true;\n        else ret = b - '0';\n        while ((b = in.read()) >= '0' && b <= '9') ret = ret * 10 + (b - '0');\n        return neg ? -ret : ret;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.8220286999712698,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:39:34.529795+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 889,
+            "output_tokens": 5289,
+            "total_tokens": 6178
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.012694,
+            "total_cost": 0.012696
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  if (data.length === 0) return;\n\n  const n = parseInt(data[0], 10);\n\n  const prefix = Array.from({ length: 11 }, () => new Set());\n  const suffix = Array.from({ length: 11 }, () => new Set());\n\n  prefix[0].add('');\n  suffix[0].add('');\n\n  for (let i = 1; i <= n; i++) {\n    const t = data[i];\n\n    let invalid = false;\n\n    for (let x = 0; x <= 10; x++) {\n      const left = t.slice(0, x);\n      const right = t.slice(x);\n\n      if (suffix[x].has(left) && prefix[10 - x].has(right)) {\n        invalid = true;\n        break;\n      }\n    }\n\n    if (invalid) {\n      console.log(t);\n      return;\n    }\n\n    for (let len = 1; len <= 10; len++) {\n      prefix[len].add(t.slice(0, len));\n      suffix[len].add(t.slice(10 - len));\n    }\n  }\n\n  console.log('ok');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  if (data.length === 0) return;\n\n  const n = parseInt(data[0], 10);\n\n  const prefix = Array.from({ length: 11 }, () => new Set());\n  const suffix = Array.from({ length: 11 }, () => new Set());\n\n  prefix[0].add('');\n  suffix[0].add('');\n\n  for (let i = 1; i <= n; i++) {\n    const t = data[i];\n\n    let invalid = false;\n\n    for (let x = 0; x <= 10; x++) {\n      const left = t.slice(0, x);\n      const right = t.slice(x);\n\n      if (suffix[x].has(left) && prefix[10 - x].has(right)) {\n        invalid = true;\n        break;\n      }\n    }\n\n    if (invalid) {\n      console.log(t);\n      return;\n    }\n\n    for (let len = 1; len <= 10; len++) {\n      prefix[len].add(t.slice(0, len));\n      suffix[len].add(t.slice(10 - len));\n    }\n  }\n\n  console.log('ok');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12291589999222197,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:02:10.825961+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 651,
+            "output_tokens": 516,
+            "total_tokens": 1986
+        },
+        "cost_usd": {
+            "input_cost": 0.000488,
+            "output_cost": 0.001935,
+            "total_cost": 0.002423
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        public FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() {\n            while (st == null || !st.hasMoreElements()) {\n                try {\n                    String line = br.readLine();\n                    if (line == null) return null;\n                    st = new StringTokenizer(line);\n                } catch (IOException e) {\n                    e.printStackTrace();\n                }\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        String token = scanner.next();\n        if (token == null) return;\n        int n = Integer.parseInt(token);\n\n        int[] h = new int[n];\n        for (int i = 0; i < n; i++) {\n            h[i] = scanner.nextInt();\n        }\n\n        int[] leftMax = new int[n];\n        leftMax[0] = h[0];\n        for (int i = 1; i < n; i++) {\n            leftMax[i] = Math.max(leftMax[i - 1], h[i]);\n        }\n\n        int[] rightMax = new int[n];\n        rightMax[n - 1] = h[n - 1];\n        for (int i = n - 2; i >= 0; i--) {\n            rightMax[i] = Math.max(rightMax[i + 1], h[i]);\n        }\n\n        int count = 0;\n        for (int i = 0; i < n; i++) {\n            int waterLevel = Math.min(leftMax[i], rightMax[i]);\n            if (waterLevel > h[i]) {\n                count++;\n            }\n        }\n\n        System.out.println(count);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        public FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() {\n            while (st == null || !st.hasMoreElements()) {\n                try {\n                    String line = br.readLine();\n                    if (line == null) return null;\n                    st = new StringTokenizer(line);\n                } catch (IOException e) {\n                    e.printStackTrace();\n                }\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        String token = scanner.next();\n        if (token == null) return;\n        int n = Integer.parseInt(token);\n\n        int[] h = new int[n];\n        for (int i = 0; i < n; i++) {\n            h[i] = scanner.nextInt();\n        }\n\n        int[] leftMax = new int[n];\n        leftMax[0] = h[0];\n        for (int i = 1; i < n; i++) {\n            leftMax[i] = Math.max(leftMax[i - 1], h[i]);\n        }\n\n        int[] rightMax = new int[n];\n        rightMax[n - 1] = h[n - 1];\n        for (int i = n - 2; i >= 0; i--) {\n            rightMax[i] = Math.max(rightMax[i + 1], h[i]);\n        }\n\n        int count = 0;\n        for (int i = 0; i < n; i++) {\n            int waterLevel = Math.min(leftMax[i], rightMax[i]);\n            if (waterLevel > h[i]) {\n                count++;\n            }\n        }\n\n        System.out.println(count);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.0865265000029467,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 40,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:35:03.943760+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 651,
+            "output_tokens": 401,
+            "total_tokens": 2015
+        },
+        "cost_usd": {
+            "input_cost": 0.000488,
+            "output_cost": 0.001504,
+            "total_cost": 0.001992
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const n = nextInt();\n    if (n === null) return;\n\n    const H = new Int32Array(n);\n    for (let i = 0; i < n; i++) {\n        H[i] = nextInt();\n    }\n\n    const rightMax = new Int32Array(n);\n    rightMax[n - 1] = H[n - 1];\n    for (let i = n - 2; i >= 0; i--) {\n        rightMax[i] = Math.max(rightMax[i + 1], H[i]);\n    }\n\n    let leftMax = 0;\n    let coveredCount = 0;\n\n    for (let i = 0; i < n; i++) {\n        if (H[i] > leftMax) {\n            leftMax = H[i];\n        }\n        const waterLevel = Math.min(leftMax, rightMax[i]);\n        if (waterLevel > H[i]) {\n            coveredCount++;\n        }\n    }\n\n    console.log(coveredCount);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const n = nextInt();\n    if (n === null) return;\n\n    const H = new Int32Array(n);\n    for (let i = 0; i < n; i++) {\n        H[i] = nextInt();\n    }\n\n    const rightMax = new Int32Array(n);\n    rightMax[n - 1] = H[n - 1];\n    for (let i = n - 2; i >= 0; i--) {\n        rightMax[i] = Math.max(rightMax[i + 1], H[i]);\n    }\n\n    let leftMax = 0;\n    let coveredCount = 0;\n\n    for (let i = 0; i < n; i++) {\n        if (H[i] > leftMax) {\n            leftMax = H[i];\n        }\n        const waterLevel = Math.min(leftMax, rightMax[i]);\n        if (waterLevel > H[i]) {\n            coveredCount++;\n        }\n    }\n\n    console.log(coveredCount);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06407679998665117,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

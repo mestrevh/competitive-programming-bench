@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:05:12.400097+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1171,
+            "output_tokens": 2034,
+            "total_tokens": 3205
+        },
+        "cost_usd": {
+            "input_cost": 0.000117,
+            "output_cost": 0.001017,
+            "total_cost": 0.001134
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, b = data[0], data[1]\n\nedges = []\nidx = 2\nfor _ in range(b):\n    u, v, p = data[idx] - 1, data[idx + 1] - 1, data[idx + 2]\n    edges.append((p, u, v))\n    idx += 3\n\nc = data[idx]\nidx += 1\nqueries = [(data[idx + 2 * i] - 1, data[idx + 2 * i + 1] - 1) for i in range(c)]\ndel data\n\nedges.sort(reverse=True)\n\nparent = list(range(n))\nsize = [1] * n\n\ndef find(x):\n    while parent[x] != x:\n        parent[x] = parent[parent[x]]\n        x = parent[x]\n    return x\n\ntree = [[] for _ in range(n)]\nfor p, u, v in edges:\n    ru = find(u)\n    rv = find(v)\n    if ru != rv:\n        if size[ru] < size[rv]:\n            ru, rv = rv, ru\n        parent[rv] = ru\n        size[ru] += size[rv]\n        tree[u].append((v, p))\n        tree[v].append((u, p))\n\ndel edges, parent, size\n\nlevels = n.bit_length()\nup = [[0] * n for _ in range(levels)]\nlow = [[10**9] * n for _ in range(levels)]\ndepth = [-1] * n\n\ndepth[0] = 0\nstack = [0]\nwhile stack:\n    u = stack.pop()\n    for v, p in tree[u]:\n        if depth[v] == -1:\n            depth[v] = depth[u] + 1\n            up[0][v] = u\n            low[0][v] = p\n            stack.append(v)\n\ndel tree\n\nfor k in range(1, levels):\n    prev_up = up[k - 1]\n    prev_low = low[k - 1]\n    curr_up = up[k]\n    curr_low = low[k]\n    for v in range(n):\n        mid = prev_up[v]\n        curr_up[v] = prev_up[mid]\n        curr_low[v] = min(prev_low[v], prev_low[mid])\n\nanswers = []\nfor a, b in queries:\n    result = 10**9\n    if depth[a] < depth[b]:\n        a, b = b, a\n\n    diff = depth[a] - depth[b]\n    bit = 0\n    while diff:\n        if diff & 1:\n            result = min(result, low[bit][a])\n            a = up[bit][a]\n        diff >>= 1\n        bit += 1\n\n    if a != b:\n        for k in range(levels - 1, -1, -1):\n            if up[k][a] != up[k][b]:\n                result = min(result, low[k][a], low[k][b])\n                a = up[k][a]\n                b = up[k][b]\n        result = min(result, low[0][a], low[0][b])\n\n    answers.append(str(result))\n\nsys.stdout.write(\"\\n\".join(answers))\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, b = data[0], data[1]\n\nedges = []\nidx = 2\nfor _ in range(b):\n    u, v, p = data[idx] - 1, data[idx + 1] - 1, data[idx + 2]\n    edges.append((p, u, v))\n    idx += 3\n\nc = data[idx]\nidx += 1\nqueries = [(data[idx + 2 * i] - 1, data[idx + 2 * i + 1] - 1) for i in range(c)]\ndel data\n\nedges.sort(reverse=True)\n\nparent = list(range(n))\nsize = [1] * n\n\ndef find(x):\n    while parent[x] != x:\n        parent[x] = parent[parent[x]]\n        x = parent[x]\n    return x\n\ntree = [[] for _ in range(n)]\nfor p, u, v in edges:\n    ru = find(u)\n    rv = find(v)\n    if ru != rv:\n        if size[ru] < size[rv]:\n            ru, rv = rv, ru\n        parent[rv] = ru\n        size[ru] += size[rv]\n        tree[u].append((v, p))\n        tree[v].append((u, p))\n\ndel edges, parent, size\n\nlevels = n.bit_length()\nup = [[0] * n for _ in range(levels)]\nlow = [[10**9] * n for _ in range(levels)]\ndepth = [-1] * n\n\ndepth[0] = 0\nstack = [0]\nwhile stack:\n    u = stack.pop()\n    for v, p in tree[u]:\n        if depth[v] == -1:\n            depth[v] = depth[u] + 1\n            up[0][v] = u\n            low[0][v] = p\n            stack.append(v)\n\ndel tree\n\nfor k in range(1, levels):\n    prev_up = up[k - 1]\n    prev_low = low[k - 1]\n    curr_up = up[k]\n    curr_low = low[k]\n    for v in range(n):\n        mid = prev_up[v]\n        curr_up[v] = prev_up[mid]\n        curr_low[v] = min(prev_low[v], prev_low[mid])\n\nanswers = []\nfor a, b in queries:\n    result = 10**9\n    if depth[a] < depth[b]:\n        a, b = b, a\n\n    diff = depth[a] - depth[b]\n    bit = 0\n    while diff:\n        if diff & 1:\n            result = min(result, low[bit][a])\n            a = up[bit][a]\n        diff >>= 1\n        bit += 1\n\n    if a != b:\n        for k in range(levels - 1, -1, -1):\n            if up[k][a] != up[k][b]:\n                result = min(result, low[k][a], low[k][b])\n                a = up[k][a]\n                b = up[k][b]\n        result = min(result, low[0][a], low[0][b])\n\n    answers.append(str(result))\n\nsys.stdout.write(\"\\n\".join(answers))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 2.1444715000034194,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

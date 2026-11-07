@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:20:44.475532+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 6014,
+            "total_tokens": 6771
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.014434,
+            "total_cost": 0.014436
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    D = float(next(it))\n\n    p = [0.0] * N\n    c = [0.0] * N\n    for i in range(N):\n        p[i] = float(next(it))\n        c[i] = float(next(it))\n\n    dp = [float('inf')] * N\n    dp[0] = 0.0\n\n    for i in range(1, N):\n        best = float('inf')\n        pi = p[i]\n        for j in range(i):\n            dist = pi - p[j]\n            val = dp[j] + (dist * dist) / c[j]\n            if val < best:\n                best = val\n        dp[i] = best\n\n    ans = float('inf')\n    for j in range(N):\n        dist = D - p[j]\n        val = dp[j] + (dist * dist) / c[j]\n        if val < ans:\n            ans = val\n\n    print(f\"{ans:.3f}\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    D = float(next(it))\n\n    p = [0.0] * N\n    c = [0.0] * N\n    for i in range(N):\n        p[i] = float(next(it))\n        c[i] = float(next(it))\n\n    dp = [float('inf')] * N\n    dp[0] = 0.0\n\n    for i in range(1, N):\n        best = float('inf')\n        pi = p[i]\n        for j in range(i):\n            dist = pi - p[j]\n            val = dp[j] + (dist * dist) / c[j]\n            if val < best:\n                best = val\n        dp[i] = best\n\n    ans = float('inf')\n    for j in range(N):\n        dist = D - p[j]\n        val = dp[j] + (dist * dist) / c[j]\n        if val < ans:\n            ans = val\n\n    print(f\"{ans:.3f}\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07680450000043493,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

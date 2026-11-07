@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:27:02.471899+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 877,
+            "output_tokens": 883,
+            "total_tokens": 2712
+        },
+        "cost_usd": {
+            "input_cost": 0.000658,
+            "output_cost": 0.003311,
+            "total_cost": 0.003969
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n\ntypedef struct {\n    int to;\n    int next;\n} Edge;\n\ntypedef struct {\n    int head[MAXN];\n    Edge edges[2 * MAXN];\n    int edge_cnt;\n    int n;\n} Tree;\n\nvoid init_tree(Tree *t, int n) {\n    t->n = n;\n    t->edge_cnt = 0;\n    for (int i = 1; i <= n; i++) {\n        t->head[i] = -1;\n    }\n}\n\nvoid add_edge(Tree *t, int u, int v) {\n    t->edges[t->edge_cnt].to = v;\n    t->edges[t->edge_cnt].next = t->head[u];\n    t->head[u] = t->edge_cnt++;\n\n    t->edges[t->edge_cnt].to = u;\n    t->edges[t->edge_cnt].next = t->head[v];\n    t->head[v] = t->edge_cnt++;\n}\n\nint queue[MAXN];\nint dist[MAXN];\nint parent[MAXN];\n\nint bfs(Tree *t, int start, int get_path) {\n    for (int i = 1; i <= t->n; i++) {\n        dist[i] = -1;\n        if (get_path) parent[i] = 0;\n    }\n\n    int head = 0, tail = 0;\n    queue[tail++] = start;\n    dist[start] = 0;\n\n    int farthest = start;\n\n    while (head < tail) {\n        int u = queue[head++];\n        if (dist[u] > dist[farthest]) {\n            farthest = u;\n        }\n\n        for (int e = t->head[u]; e != -1; e = t->edges[e].next) {\n            int v = t->edges[e].to;\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                if (get_path) parent[v] = u;\n                queue[tail++] = v;\n            }\n        }\n    }\n\n    return farthest;\n}\n\nint find_center(Tree *t) {\n    int u = bfs(t, 1, 0);\n    int v = bfs(t, u, 1);\n\n    int path_len = dist[v];\n    int steps = path_len / 2;\n\n    int curr = v;\n    for (int i = 0; i < steps; i++) {\n        curr = parent[curr];\n    }\n\n    return curr;\n}\n\nTree circle, square;\n\nint main() {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    init_tree(&circle, n);\n    for (int i = 0; i < n - 1; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(&circle, u, v);\n    }\n\n    init_tree(&square, m);\n    for (int i = 0; i < m - 1; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(&square, u, v);\n    }\n\n    int c1 = find_center(&circle);\n    int c2 = find_center(&square);\n\n    printf(\"%d %d\\n\", c1, c2);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n\ntypedef struct {\n    int to;\n    int next;\n} Edge;\n\ntypedef struct {\n    int head[MAXN];\n    Edge edges[2 * MAXN];\n    int edge_cnt;\n    int n;\n} Tree;\n\nvoid init_tree(Tree *t, int n) {\n    t->n = n;\n    t->edge_cnt = 0;\n    for (int i = 1; i <= n; i++) {\n        t->head[i] = -1;\n    }\n}\n\nvoid add_edge(Tree *t, int u, int v) {\n    t->edges[t->edge_cnt].to = v;\n    t->edges[t->edge_cnt].next = t->head[u];\n    t->head[u] = t->edge_cnt++;\n\n    t->edges[t->edge_cnt].to = u;\n    t->edges[t->edge_cnt].next = t->head[v];\n    t->head[v] = t->edge_cnt++;\n}\n\nint queue[MAXN];\nint dist[MAXN];\nint parent[MAXN];\n\nint bfs(Tree *t, int start, int get_path) {\n    for (int i = 1; i <= t->n; i++) {\n        dist[i] = -1;\n        if (get_path) parent[i] = 0;\n    }\n\n    int head = 0, tail = 0;\n    queue[tail++] = start;\n    dist[start] = 0;\n\n    int farthest = start;\n\n    while (head < tail) {\n        int u = queue[head++];\n        if (dist[u] > dist[farthest]) {\n            farthest = u;\n        }\n\n        for (int e = t->head[u]; e != -1; e = t->edges[e].next) {\n            int v = t->edges[e].to;\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                if (get_path) parent[v] = u;\n                queue[tail++] = v;\n            }\n        }\n    }\n\n    return farthest;\n}\n\nint find_center(Tree *t) {\n    int u = bfs(t, 1, 0);\n    int v = bfs(t, u, 1);\n\n    int path_len = dist[v];\n    int steps = path_len / 2;\n\n    int curr = v;\n    for (int i = 0; i < steps; i++) {\n        curr = parent[curr];\n    }\n\n    return curr;\n}\n\nTree circle, square;\n\nint main() {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    init_tree(&circle, n);\n    for (int i = 0; i < n - 1; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(&circle, u, v);\n    }\n\n    init_tree(&square, m);\n    for (int i = 0; i < m - 1; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(&square, u, v);\n    }\n\n    int c1 = find_center(&circle);\n    int c2 = find_center(&square);\n\n    printf(\"%d %d\\n\", c1, c2);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.20170689999940805,
+            "counts": {
+                "AC": 6,
+                "WA": 32,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

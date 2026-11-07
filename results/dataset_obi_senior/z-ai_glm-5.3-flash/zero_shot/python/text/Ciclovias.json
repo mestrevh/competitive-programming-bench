@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T04:41:02.237348+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 996,
+            "output_tokens": 69359,
+            "total_tokens": 70355
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.03468,
+            "total_cost": 0.034701
+        },
+        "raw_response": "```python\nimport sys\nfrom itertools import islice\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n    n = int(next(it))\n    m = int(next(it))\n    nums = map(int, islice(it, 2 * m))\n    pairs = list(zip(nums, nums))\n    K = n + 1\n\n    # canonical, deduplicated edge keys (u < v)\n    keys = [a * K + b if a < b else b * K + a for a, b in pairs]\n    pairs = None\n    data = None\n    keys.sort()\n\n    # bucket states (edges) by sum u+v; process sums in decreasing order\n    buckets = [[] for _ in range(2 * n + 3)]\n    deg = bytearray(n + 1)\n    prev = -1\n    for key in keys:\n        if key != prev:          # dedupe\n            prev = key\n            u = key // K\n            v = key - u * K\n            deg[u] = 1\n            deg[v] = 1\n            buckets[u + v].append((u, v))\n    keys = None\n\n    # ra[v]: running max of B(w,v) over neighbours w already passed (decreasing w)\n    # rb[u]: running max of A(u,d) over neighbours d already passed (decreasing d)\n    # A(u,v) = 1 + ra[v]  (extra vertices after pair \"last-odd=u, last-even=v\")\n    # B(u,v) = 1 + rb[u]  (extra vertices after \"last-odd=u, last-even=v\" with next odd added)\n    ra = [-1] * (n + 1)\n    rb = [-1] * (n + 1)\n    for s in range(2 * n + 1, 2, -1):\n        for u, v in buckets[s]:\n            # orientation u -> v\n            r = ra[v]\n            t = r + 1          # A(u,v)\n            x = rb[u] + 1      # B(u,v)\n            if t > rb[u]:      # feed A(u,v) -> rb[u]\n                rb[u] = t\n            if x > r:          # feed B(u,v) -> ra[v]\n                ra[v] = x\n            # orientation v -> u\n            q = ra[u]\n            t = q + 1          # A(v,u)\n            x = rb[v] + 1      # B(v,u)\n            if t > rb[v]:      # feed A(v,u) -> rb[v]\n                rb[v] = t\n            if x > q:          # feed B(v,u) -> ra[u]\n                ra[u] = x\n\n    res = []\n    ap = res.append\n    for c in range(1, n + 1):\n        # rb[c] final = max over neighbours d of A(c,d); answer = 2 + that (or 1 if isolated)\n        ap(str(rb[c] + 2) if deg[c] else '1')\n    sys.stdout.write(' '.join(res) + '\\n')\n\nmain()\n```\n\n**Explanation of the approach (brief):**\n\nA valid path alternates between odd and even positions, each subsequence strictly increasing. Define states for ordered adjacent pairs `(a, b)`:\n- `A(a,b)`: maximum number of extra vertices appended after the pair, where `a` was the last odd-position value and `b` the last even-position value (next odd vertex must be `> a`, adjacent to `b`).\n- `B(a,b)`: same, but the path currently ends at `a` (next even vertex must be `> b`, adjacent to `a`).\n\nRecurrences: `A(a,b) = max(0, max_{w adj b, w>a} (1 + B(w,b)))` and `B(a,b) = max(0, max_{d adj a, d>b} (1 + A(a,d)))`. Every dependency goes from a state to another with **strictly larger index sum**, so processing all states grouped by decreasing `a+b` is valid. Using running maxima (`ra[v]`, `rb[u]`) each state is computed in O(1). Note that all edges falling into the same sum-bucket are vertex-disjoint, so no ordering conflicts arise inside a bucket. The answer for start `c` is `2 + max_{d adj c} A(c,d)` (or `1` if `c` has no neighbours). Total complexity: O(N + M) after a sort, which handles N ≤ 10⁵ and M ≤ 5·10⁵.",
+        "extracted_code": "import sys\nfrom itertools import islice\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n    n = int(next(it))\n    m = int(next(it))\n    nums = map(int, islice(it, 2 * m))\n    pairs = list(zip(nums, nums))\n    K = n + 1\n\n    # canonical, deduplicated edge keys (u < v)\n    keys = [a * K + b if a < b else b * K + a for a, b in pairs]\n    pairs = None\n    data = None\n    keys.sort()\n\n    # bucket states (edges) by sum u+v; process sums in decreasing order\n    buckets = [[] for _ in range(2 * n + 3)]\n    deg = bytearray(n + 1)\n    prev = -1\n    for key in keys:\n        if key != prev:          # dedupe\n            prev = key\n            u = key // K\n            v = key - u * K\n            deg[u] = 1\n            deg[v] = 1\n            buckets[u + v].append((u, v))\n    keys = None\n\n    # ra[v]: running max of B(w,v) over neighbours w already passed (decreasing w)\n    # rb[u]: running max of A(u,d) over neighbours d already passed (decreasing d)\n    # A(u,v) = 1 + ra[v]  (extra vertices after pair \"last-odd=u, last-even=v\")\n    # B(u,v) = 1 + rb[u]  (extra vertices after \"last-odd=u, last-even=v\" with next odd added)\n    ra = [-1] * (n + 1)\n    rb = [-1] * (n + 1)\n    for s in range(2 * n + 1, 2, -1):\n        for u, v in buckets[s]:\n            # orientation u -> v\n            r = ra[v]\n            t = r + 1          # A(u,v)\n            x = rb[u] + 1      # B(u,v)\n            if t > rb[u]:      # feed A(u,v) -> rb[u]\n                rb[u] = t\n            if x > r:          # feed B(u,v) -> ra[v]\n                ra[v] = x\n            # orientation v -> u\n            q = ra[u]\n            t = q + 1          # A(v,u)\n            x = rb[v] + 1      # B(v,u)\n            if t > rb[v]:      # feed A(v,u) -> rb[v]\n                rb[v] = t\n            if x > q:          # feed B(v,u) -> ra[u]\n                ra[u] = x\n\n    res = []\n    ap = res.append\n    for c in range(1, n + 1):\n        # rb[c] final = max over neighbours d of A(c,d); answer = 2 + that (or 1 if isolated)\n        ap(str(rb[c] + 2) if deg[c] else '1')\n    sys.stdout.write(' '.join(res) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.7640604999978677,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

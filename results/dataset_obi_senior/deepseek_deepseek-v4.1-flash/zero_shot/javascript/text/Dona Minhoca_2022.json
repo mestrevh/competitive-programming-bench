@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:47:59.368463+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 846,
+            "output_tokens": 13676,
+            "total_tokens": 14522
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.032822,
+            "total_cost": 0.032825
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\nlet ptr = 0;\nconst dataLen = data.length;\n\nfunction nextInt() {\n    while (ptr < dataLen && data[ptr] <= 32) ptr++;\n    let num = 0;\n    while (ptr < dataLen && data[ptr] > 32) {\n        num = num * 10 + (data[ptr] - 48);\n        ptr++;\n    }\n    return num;\n}\n\nconst N = nextInt();\nconst K = nextInt();\n\nconst head = new Int32Array(N);\nhead.fill(-1);\n\nconst edgeCount = 2 * (N - 1);\nconst to = new Int32Array(edgeCount);\nconst nxt = new Int32Array(edgeCount);\n\nlet ec = 0;\nfor (let i = 0; i < N - 1; i++) {\n    const a = nextInt() - 1;\n    const b = nextInt() - 1;\n\n    to[ec] = b;\n    nxt[ec] = head[a];\n    head[a] = ec++;\n\n    to[ec] = a;\n    nxt[ec] = head[b];\n    head[b] = ec++;\n}\n\nconst parent = new Int32Array(N);\nparent.fill(-1);\n\nconst order = new Int32Array(N);\nlet qh = 0, qt = 0;\norder[qt++] = 0;\n\nwhile (qh < qt) {\n    const u = order[qh++];\n\n    for (let e = head[u]; e !== -1; e = nxt[e]) {\n        const v = to[e];\n        if (v === parent[u]) continue;\n\n        parent[v] = u;\n        order[qt++] = v;\n    }\n}\n\nconst NEG = -1000000000;\nconst INF = 1000000000;\n\nconst mx = new Int32Array(N);\nconst dm = new Int32Array(N);\n\nfunction feasible(R) {\n    mx.fill(0);\n    dm.fill(INF);\n\n    let centers = 0;\n\n    for (let i = N - 1; i >= 0; i--) {\n        const u = order[i];\n\n        let mu = mx[u];\n        let du = dm[u];\n\n        if (mu !== NEG && mu + du <= R) {\n            mu = NEG;\n        }\n\n        if (mu === R) {\n            centers++;\n            if (centers > K) return false;\n\n            mu = NEG;\n            du = 0;\n        }\n\n        mx[u] = mu;\n        dm[u] = du;\n\n        const p = parent[u];\n\n        if (p !== -1) {\n            const childMx = mu + 1;\n            if (childMx > mx[p]) mx[p] = childMx;\n\n            const childDm = du + 1;\n            if (childDm < dm[p]) dm[p] = childDm;\n        }\n    }\n\n    if (mx[0] !== NEG) centers++;\n\n    return centers <= K;\n}\n\nlet lo = -1;\nlet hi = N;\n\nwhile (hi - lo > 1) {\n    const mid = (lo + hi) >> 1;\n\n    if (feasible(mid)) {\n        hi = mid;\n    } else {\n        lo = mid;\n    }\n}\n\nconsole.log(hi);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0);\nlet ptr = 0;\nconst dataLen = data.length;\n\nfunction nextInt() {\n    while (ptr < dataLen && data[ptr] <= 32) ptr++;\n    let num = 0;\n    while (ptr < dataLen && data[ptr] > 32) {\n        num = num * 10 + (data[ptr] - 48);\n        ptr++;\n    }\n    return num;\n}\n\nconst N = nextInt();\nconst K = nextInt();\n\nconst head = new Int32Array(N);\nhead.fill(-1);\n\nconst edgeCount = 2 * (N - 1);\nconst to = new Int32Array(edgeCount);\nconst nxt = new Int32Array(edgeCount);\n\nlet ec = 0;\nfor (let i = 0; i < N - 1; i++) {\n    const a = nextInt() - 1;\n    const b = nextInt() - 1;\n\n    to[ec] = b;\n    nxt[ec] = head[a];\n    head[a] = ec++;\n\n    to[ec] = a;\n    nxt[ec] = head[b];\n    head[b] = ec++;\n}\n\nconst parent = new Int32Array(N);\nparent.fill(-1);\n\nconst order = new Int32Array(N);\nlet qh = 0, qt = 0;\norder[qt++] = 0;\n\nwhile (qh < qt) {\n    const u = order[qh++];\n\n    for (let e = head[u]; e !== -1; e = nxt[e]) {\n        const v = to[e];\n        if (v === parent[u]) continue;\n\n        parent[v] = u;\n        order[qt++] = v;\n    }\n}\n\nconst NEG = -1000000000;\nconst INF = 1000000000;\n\nconst mx = new Int32Array(N);\nconst dm = new Int32Array(N);\n\nfunction feasible(R) {\n    mx.fill(0);\n    dm.fill(INF);\n\n    let centers = 0;\n\n    for (let i = N - 1; i >= 0; i--) {\n        const u = order[i];\n\n        let mu = mx[u];\n        let du = dm[u];\n\n        if (mu !== NEG && mu + du <= R) {\n            mu = NEG;\n        }\n\n        if (mu === R) {\n            centers++;\n            if (centers > K) return false;\n\n            mu = NEG;\n            du = 0;\n        }\n\n        mx[u] = mu;\n        dm[u] = du;\n\n        const p = parent[u];\n\n        if (p !== -1) {\n            const childMx = mu + 1;\n            if (childMx > mx[p]) mx[p] = childMx;\n\n            const childDm = du + 1;\n            if (childDm < dm[p]) dm[p] = childDm;\n        }\n    }\n\n    if (mx[0] !== NEG) centers++;\n\n    return centers <= K;\n}\n\nlet lo = -1;\nlet hi = N;\n\nwhile (hi - lo > 1) {\n    const mid = (lo + hi) >> 1;\n\n    if (feasible(mid)) {\n        hi = mid;\n    } else {\n        lo = mid;\n    }\n}\n\nconsole.log(hi);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1846291999972891,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

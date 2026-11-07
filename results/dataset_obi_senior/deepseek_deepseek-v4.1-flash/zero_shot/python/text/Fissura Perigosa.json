@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:56:57.668507+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 951,
+            "output_tokens": 1806,
+            "total_tokens": 2757
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.004334,
+            "total_cost": 0.004337
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    f = int(data[1])\n    grid = [bytearray(data[i + 2]) for i in range(n)]\n\n    limit = ord('0') + f\n    start = grid[0][0]\n\n    if start != ord('*') and start <= limit:\n        grid[0][0] = ord('*')\n        stack = [0]\n\n        while stack:\n            pos = stack.pop()\n            r = pos // n\n            c = pos - r * n\n\n            if r > 0:\n                v = grid[r - 1][c]\n                if v != ord('*') and v <= limit:\n                    grid[r - 1][c] = ord('*')\n                    stack.append((r - 1) * n + c)\n\n            if r + 1 < n:\n                v = grid[r + 1][c]\n                if v != ord('*') and v <= limit:\n                    grid[r + 1][c] = ord('*')\n                    stack.append((r + 1) * n + c)\n\n            if c > 0:\n                v = grid[r][c - 1]\n                if v != ord('*') and v <= limit:\n                    grid[r][c - 1] = ord('*')\n                    stack.append(r * n + c - 1)\n\n            if c + 1 < n:\n                v = grid[r][c + 1]\n                if v != ord('*') and v <= limit:\n                    grid[r][c + 1] = ord('*')\n                    stack.append(r * n + c + 1)\n\n    sys.stdout.buffer.write(b'\\n'.join(grid) + b'\\n')\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    f = int(data[1])\n    grid = [bytearray(data[i + 2]) for i in range(n)]\n\n    limit = ord('0') + f\n    start = grid[0][0]\n\n    if start != ord('*') and start <= limit:\n        grid[0][0] = ord('*')\n        stack = [0]\n\n        while stack:\n            pos = stack.pop()\n            r = pos // n\n            c = pos - r * n\n\n            if r > 0:\n                v = grid[r - 1][c]\n                if v != ord('*') and v <= limit:\n                    grid[r - 1][c] = ord('*')\n                    stack.append((r - 1) * n + c)\n\n            if r + 1 < n:\n                v = grid[r + 1][c]\n                if v != ord('*') and v <= limit:\n                    grid[r + 1][c] = ord('*')\n                    stack.append((r + 1) * n + c)\n\n            if c > 0:\n                v = grid[r][c - 1]\n                if v != ord('*') and v <= limit:\n                    grid[r][c - 1] = ord('*')\n                    stack.append(r * n + c - 1)\n\n            if c + 1 < n:\n                v = grid[r][c + 1]\n                if v != ord('*') and v <= limit:\n                    grid[r][c + 1] = ord('*')\n                    stack.append(r * n + c + 1)\n\n    sys.stdout.buffer.write(b'\\n'.join(grid) + b'\\n')\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14494749999721535,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:34:26.650554+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 792,
+            "output_tokens": 305,
+            "total_tokens": 1097
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000152,
+            "total_cost": 0.000232
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\n\ngraph = [[] for _ in range(n + 1)]\nindex = 2\n\nfor _ in range(m):\n    a, b, cost = data[index:index + 3]\n    index += 3\n    graph[a].append((b, cost))\n    graph[b].append((a, cost))\n\ndist = [float(\"inf\")] * (n + 1)\ndist[1] = 0\nheap = [(0, 1)]\n\nwhile heap:\n    current_dist, city = heapq.heappop(heap)\n    if current_dist != dist[city]:\n        continue\n    if city == n:\n        break\n\n    for neighbor, cost in graph[city]:\n        new_dist = current_dist + cost\n        if new_dist < dist[neighbor]:\n            dist[neighbor] = new_dist\n            heapq.heappush(heap, (new_dist, neighbor))\n\nprint(dist[n])\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\n\ngraph = [[] for _ in range(n + 1)]\nindex = 2\n\nfor _ in range(m):\n    a, b, cost = data[index:index + 3]\n    index += 3\n    graph[a].append((b, cost))\n    graph[b].append((a, cost))\n\ndist = [float(\"inf\")] * (n + 1)\ndist[1] = 0\nheap = [(0, 1)]\n\nwhile heap:\n    current_dist, city = heapq.heappop(heap)\n    if current_dist != dist[city]:\n        continue\n    if city == n:\n        break\n\n    for neighbor, cost in graph[city]:\n        new_dist = current_dist + cost\n        if new_dist < dist[neighbor]:\n            dist[neighbor] = new_dist\n            heapq.heappush(heap, (new_dist, neighbor))\n\nprint(dist[n])",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06965879999916069,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:01:00.198866+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 685,
+            "output_tokens": 721,
+            "total_tokens": 2963
+        },
+        "cost_usd": {
+            "input_cost": 0.000514,
+            "output_cost": 0.002704,
+            "total_cost": 0.003217
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res * sign;\n    }\n\n    const L = readInt();\n    if (L === null) return;\n    const C = readInt();\n\n    const A = new Int32Array(L * C);\n    for (let i = 0; i < L * C; i++) {\n        A[i] = readInt();\n    }\n\n    const H = L - 1;\n    const W = C - 1;\n\n    if (H <= 0 || W <= 0) {\n        console.log(0);\n        return;\n    }\n\n    const heights = new Int32Array(W);\n    const stack = new Int32Array(W + 1);\n\n    let maxArea = 0;\n\n    for (let r = 0; r < H; r++) {\n        const rowCurrent = r * C;\n        const rowNext = (r + 1) * C;\n\n        for (let c = 0; c < W; c++) {\n            // A[r, c] + A[r+1, c+1] <= A[r, c+1] + A[r+1, c]\n            const val = A[rowCurrent + c] + A[rowNext + c + 1] <= A[rowCurrent + c + 1] + A[rowNext + c];\n            if (val) {\n                heights[c]++;\n            } else {\n                heights[c] = 0;\n            }\n        }\n\n        // Histograma com heights\n        let top = 0;\n        for (let c = 0; c <= W; c++) {\n            const h = c === W ? 0 : heights[c];\n            while (top > 0 && heights[stack[top - 1]] >= h) {\n                const height = heights[stack[--top]];\n                if (height > 0) {\n                    const width = top === 0 ? c : c - stack[top - 1] - 1;\n                    const area = (height + 1) * (width + 1);\n                    if (area > maxArea) {\n                        maxArea = area;\n                    }\n                }\n            }\n            stack[top++] = c;\n        }\n    }\n\n    console.log(maxArea);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res * sign;\n    }\n\n    const L = readInt();\n    if (L === null) return;\n    const C = readInt();\n\n    const A = new Int32Array(L * C);\n    for (let i = 0; i < L * C; i++) {\n        A[i] = readInt();\n    }\n\n    const H = L - 1;\n    const W = C - 1;\n\n    if (H <= 0 || W <= 0) {\n        console.log(0);\n        return;\n    }\n\n    const heights = new Int32Array(W);\n    const stack = new Int32Array(W + 1);\n\n    let maxArea = 0;\n\n    for (let r = 0; r < H; r++) {\n        const rowCurrent = r * C;\n        const rowNext = (r + 1) * C;\n\n        for (let c = 0; c < W; c++) {\n            // A[r, c] + A[r+1, c+1] <= A[r, c+1] + A[r+1, c]\n            const val = A[rowCurrent + c] + A[rowNext + c + 1] <= A[rowCurrent + c + 1] + A[rowNext + c];\n            if (val) {\n                heights[c]++;\n            } else {\n                heights[c] = 0;\n            }\n        }\n\n        // Histograma com heights\n        let top = 0;\n        for (let c = 0; c <= W; c++) {\n            const h = c === W ? 0 : heights[c];\n            while (top > 0 && heights[stack[top - 1]] >= h) {\n                const height = heights[stack[--top]];\n                if (height > 0) {\n                    const width = top === 0 ? c : c - stack[top - 1] - 1;\n                    const area = (height + 1) * (width + 1);\n                    if (area > maxArea) {\n                        maxArea = area;\n                    }\n                }\n            }\n            stack[top++] = c;\n        }\n    }\n\n    console.log(maxArea);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.08758269998361357,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

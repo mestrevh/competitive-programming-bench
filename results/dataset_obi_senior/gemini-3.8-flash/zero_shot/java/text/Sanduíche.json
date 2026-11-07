@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:38:21.270894+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 794,
+            "output_tokens": 483,
+            "total_tokens": 2354
+        },
+        "cost_usd": {
+            "input_cost": 0.000596,
+            "output_cost": 0.001811,
+            "total_cost": 0.002407
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static int n, m;\n    static int[] bad;\n    static long ans = 0;\n\n    static void solve(int idx, int mask) {\n        if (idx == n) {\n            ans++;\n            return;\n        }\n\n        // Opção 1: não incluir o ingrediente idx\n        solve(idx + 1, mask);\n\n        // Opção 2: incluir o ingrediente idx, se compatível com os já escolhidos\n        if ((bad[idx] & mask) == 0) {\n            solve(idx + 1, mask | (1 << idx));\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = null;\n\n        String line = br.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = br.readLine();\n        }\n        if (line == null) return;\n\n        st = new StringTokenizer(line);\n        n = Integer.parseInt(st.nextToken());\n        m = Integer.parseInt(st.nextToken());\n\n        bad = new int[n];\n\n        for (int i = 0; i < m; i++) {\n            line = br.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = br.readLine();\n            }\n            if (line == null) break;\n            st = new StringTokenizer(line);\n            int u = Integer.parseInt(st.nextToken()) - 1;\n            int v = Integer.parseInt(st.nextToken()) - 1;\n            bad[u] |= (1 << v);\n            bad[v] |= (1 << u);\n        }\n\n        solve(0, 0);\n\n        // Subtrai 1 correspondente ao conjunto vazio\n        System.out.println(ans - 1);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static int n, m;\n    static int[] bad;\n    static long ans = 0;\n\n    static void solve(int idx, int mask) {\n        if (idx == n) {\n            ans++;\n            return;\n        }\n\n        // Opção 1: não incluir o ingrediente idx\n        solve(idx + 1, mask);\n\n        // Opção 2: incluir o ingrediente idx, se compatível com os já escolhidos\n        if ((bad[idx] & mask) == 0) {\n            solve(idx + 1, mask | (1 << idx));\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = null;\n\n        String line = br.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = br.readLine();\n        }\n        if (line == null) return;\n\n        st = new StringTokenizer(line);\n        n = Integer.parseInt(st.nextToken());\n        m = Integer.parseInt(st.nextToken());\n\n        bad = new int[n];\n\n        for (int i = 0; i < m; i++) {\n            line = br.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = br.readLine();\n            }\n            if (line == null) break;\n            st = new StringTokenizer(line);\n            int u = Integer.parseInt(st.nextToken()) - 1;\n            int v = Integer.parseInt(st.nextToken()) - 1;\n            bad[u] |= (1 << v);\n            bad[v] |= (1 << u);\n        }\n\n        solve(0, 0);\n\n        // Subtrai 1 correspondente ao conjunto vazio\n        System.out.println(ans - 1);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0927477000223007,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

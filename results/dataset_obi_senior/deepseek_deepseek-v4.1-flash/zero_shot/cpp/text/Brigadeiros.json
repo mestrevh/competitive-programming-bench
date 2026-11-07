@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:04:06.993804+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1594,
+            "output_tokens": 15888,
+            "total_tokens": 17482
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.038131,
+            "total_cost": 0.038136
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MAXN = 305;\nconst int MAXW = 9 * 300;\nconst int INF = 1000000007;\n\nstatic int dp[2][MAXN][MAXW + 1];\nstatic int bestw[MAXW + 1];\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    long long T;\n    cin >> N >> K >> T;\n\n    vector<int> P(N + 1);\n    for (int i = 1; i <= N; i++) cin >> P[i];\n\n    vector<int> s;\n    s.reserve(K);\n\n    for (int i = 1; i <= N; i++) {\n        int g;\n        cin >> g;\n        if (g) s.push_back(i);\n    }\n\n    int W = 9 * K;\n\n    for (int r = 0; r <= N; r++) {\n        fill(dp[0][r], dp[0][r] + W + 1, INF);\n        fill(dp[1][r], dp[1][r] + W + 1, INF);\n    }\n\n    dp[0][0][0] = 0;\n\n    for (int i = 1; i <= K; i++) {\n        int cur = i & 1;\n        int prv = (i - 1) & 1;\n\n        for (int r = 0; r <= N; r++) {\n            fill(dp[cur][r], dp[cur][r] + W + 1, INF);\n        }\n\n        fill(bestw, bestw + W + 1, INF);\n\n        int si = s[i - 1];\n        int low = i;\n        int high = N - K + i;\n        int limitPrev = min(W, 9 * (i - 1));\n\n        for (int j = 1; j <= high; j++) {\n            for (int w = 0; w <= limitPrev; w++) {\n                bestw[w] = min(bestw[w], dp[prv][j - 1][w]);\n            }\n\n            if (j < low) continue;\n\n            int add = abs(si - j);\n            int pj = P[j];\n\n            for (int w = 0; w <= limitPrev; w++) {\n                if (bestw[w] == INF) continue;\n\n                int nw = w + pj;\n                int nc = bestw[w] + add;\n\n                if (nc < dp[cur][j][nw]) {\n                    dp[cur][j][nw] = nc;\n                }\n            }\n        }\n    }\n\n    int layer = K & 1;\n    int ans = 0;\n\n    for (int w = 0; w <= W; w++) {\n        int minCost = INF;\n\n        for (int j = 1; j <= N; j++) {\n            minCost = min(minCost, dp[layer][j][w]);\n        }\n\n        if (minCost <= T) ans = w;\n    }\n\n    cout << ans << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MAXN = 305;\nconst int MAXW = 9 * 300;\nconst int INF = 1000000007;\n\nstatic int dp[2][MAXN][MAXW + 1];\nstatic int bestw[MAXW + 1];\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    long long T;\n    cin >> N >> K >> T;\n\n    vector<int> P(N + 1);\n    for (int i = 1; i <= N; i++) cin >> P[i];\n\n    vector<int> s;\n    s.reserve(K);\n\n    for (int i = 1; i <= N; i++) {\n        int g;\n        cin >> g;\n        if (g) s.push_back(i);\n    }\n\n    int W = 9 * K;\n\n    for (int r = 0; r <= N; r++) {\n        fill(dp[0][r], dp[0][r] + W + 1, INF);\n        fill(dp[1][r], dp[1][r] + W + 1, INF);\n    }\n\n    dp[0][0][0] = 0;\n\n    for (int i = 1; i <= K; i++) {\n        int cur = i & 1;\n        int prv = (i - 1) & 1;\n\n        for (int r = 0; r <= N; r++) {\n            fill(dp[cur][r], dp[cur][r] + W + 1, INF);\n        }\n\n        fill(bestw, bestw + W + 1, INF);\n\n        int si = s[i - 1];\n        int low = i;\n        int high = N - K + i;\n        int limitPrev = min(W, 9 * (i - 1));\n\n        for (int j = 1; j <= high; j++) {\n            for (int w = 0; w <= limitPrev; w++) {\n                bestw[w] = min(bestw[w], dp[prv][j - 1][w]);\n            }\n\n            if (j < low) continue;\n\n            int add = abs(si - j);\n            int pj = P[j];\n\n            for (int w = 0; w <= limitPrev; w++) {\n                if (bestw[w] == INF) continue;\n\n                int nw = w + pj;\n                int nc = bestw[w] + add;\n\n                if (nc < dp[cur][j][nw]) {\n                    dp[cur][j][nw] = nc;\n                }\n            }\n        }\n    }\n\n    int layer = K & 1;\n    int ans = 0;\n\n    for (int w = 0; w <= W; w++) {\n        int minCost = INF;\n\n        for (int j = 1; j <= N; j++) {\n            minCost = min(minCost, dp[layer][j][w]);\n        }\n\n        if (minCost <= T) ans = w;\n    }\n\n    cout << ans << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1741930999996839,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

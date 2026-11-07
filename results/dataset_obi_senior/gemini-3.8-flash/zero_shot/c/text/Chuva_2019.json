@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T11:59:29.092085+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 522,
+            "total_tokens": 2815
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.001958,
+            "total_cost": 0.002652
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAX 505\n\nint N, M;\nchar grid[MAX][MAX];\n\nint qx[MAX * MAX];\nint qy[MAX * MAX];\nint head = 0, tail = 0;\n\nvoid push(int r, int c) {\n    qx[tail] = r;\n    qy[tail] = c;\n    tail++;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            if (grid[i][j] == 'o') {\n                push(i, j);\n            }\n        }\n    }\n\n    while (head < tail) {\n        int r = qx[head];\n        int c = qy[head];\n        head++;\n\n        // Regra 1: Água cai verticalmente\n        if (r + 1 < N && grid[r + 1][c] == '.') {\n            grid[r + 1][c] = 'o';\n            push(r + 1, c);\n        }\n\n        // Regra 2 e 3: Se houver prateleira embaixo, água escorre para os lados\n        if (r + 1 < N && grid[r + 1][c] == '#') {\n            if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                grid[r][c - 1] = 'o';\n                push(r, c - 1);\n            }\n            if (c + 1 < M && grid[r][c + 1] == '.') {\n                grid[r][c + 1] = 'o';\n                push(r, c + 1);\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAX 505\n\nint N, M;\nchar grid[MAX][MAX];\n\nint qx[MAX * MAX];\nint qy[MAX * MAX];\nint head = 0, tail = 0;\n\nvoid push(int r, int c) {\n    qx[tail] = r;\n    qy[tail] = c;\n    tail++;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            if (grid[i][j] == 'o') {\n                push(i, j);\n            }\n        }\n    }\n\n    while (head < tail) {\n        int r = qx[head];\n        int c = qy[head];\n        head++;\n\n        // Regra 1: Água cai verticalmente\n        if (r + 1 < N && grid[r + 1][c] == '.') {\n            grid[r + 1][c] = 'o';\n            push(r + 1, c);\n        }\n\n        // Regra 2 e 3: Se houver prateleira embaixo, água escorre para os lados\n        if (r + 1 < N && grid[r + 1][c] == '#') {\n            if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                grid[r][c - 1] = 'o';\n                push(r, c - 1);\n            }\n            if (c + 1 < M && grid[r][c + 1] == '.') {\n                grid[r][c + 1] = 'o';\n                push(r, c + 1);\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2276934999972582,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:12:21.257616+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 656,
+            "output_tokens": 380,
+            "total_tokens": 1753
+        },
+        "cost_usd": {
+            "input_cost": 0.000492,
+            "output_cost": 0.001425,
+            "total_cost": 0.001917
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    double diff = (*(double *)a - *(double *)b);\n    if (diff < 0) return -1;\n    if (diff > 0) return 1;\n    return 0;\n}\n\nint main() {\n    double t;\n    int n;\n    if (scanf(\"%lf\", &t) != 1) return 0;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    double *x = (double *)malloc(n * sizeof(double));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf\", &x[i]);\n    }\n\n    qsort(x, n, sizeof(double), cmp);\n\n    double min_viz = (x[0] + x[1]) / 2.0;\n\n    for (int i = 1; i < n - 1; i++) {\n        double viz = (x[i + 1] - x[i - 1]) / 2.0;\n        if (viz < min_viz) {\n            min_viz = viz;\n        }\n    }\n\n    double last_viz = t - (x[n - 2] + x[n - 1]) / 2.0;\n    if (last_viz < min_viz) {\n        min_viz = last_viz;\n    }\n\n    printf(\"%.2f\\n\", min_viz);\n\n    free(x);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    double diff = (*(double *)a - *(double *)b);\n    if (diff < 0) return -1;\n    if (diff > 0) return 1;\n    return 0;\n}\n\nint main() {\n    double t;\n    int n;\n    if (scanf(\"%lf\", &t) != 1) return 0;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    double *x = (double *)malloc(n * sizeof(double));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf\", &x[i]);\n    }\n\n    qsort(x, n, sizeof(double), cmp);\n\n    double min_viz = (x[0] + x[1]) / 2.0;\n\n    for (int i = 1; i < n - 1; i++) {\n        double viz = (x[i + 1] - x[i - 1]) / 2.0;\n        if (viz < min_viz) {\n            min_viz = viz;\n        }\n    }\n\n    double last_viz = t - (x[n - 2] + x[n - 1]) / 2.0;\n    if (last_viz < min_viz) {\n        min_viz = last_viz;\n    }\n\n    printf(\"%.2f\\n\", min_viz);\n\n    free(x);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1989051999989897,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:14:32.661148+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 894,
+            "output_tokens": 25978,
+            "total_tokens": 26872
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.012989,
+            "total_cost": 0.013008
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n\n        int n = (int) readLong(in);\n\n        // distancias ao quadrado: maximo possivel = 2 * 10^12 (X^R, Y^R <= 10^6),\n        // universo 2^42 - 1 cobre com folga; profundidade = 42\n        final long UNIVERSE = (1L << 42) - 1;\n\n        int maxNodes = 42 * n + 100;\n        int[] lc = new int[maxNodes];\n        int[] rc = new int[maxNodes];\n        int[] cnt = new int[maxNodes];\n        for (int i = 0; i < maxNodes; i++) { lc[i] = -1; rc[i] = -1; }\n        int nodeCount = 1; // no 0 = raiz\n\n        StringBuilder sb = new StringBuilder(n * 8 + 16);\n        long prevP = 0;\n\n        for (int k = 0; k < n; k++) {\n            long x = readLong(in) + prevP;\n            long y = readLong(in) + prevP;\n            long d = x * x + y * y;\n\n            // quantos valores ja inseridos sao <= d\n            long p = 0;\n            int cur = 0;\n            long lo = 0, hi = UNIVERSE;\n            while (true) {\n                if (d >= hi) { p += cnt[cur]; break; }\n                long mid = (lo + hi) >>> 1;\n                if (d <= mid) {\n                    cur = lc[cur];\n                    if (cur == -1) break;\n                    hi = mid;\n                } else {\n                    if (lc[cur] != -1) p += cnt[lc[cur]];\n                    cur = rc[cur];\n                    if (cur == -1) break;\n                    lo = mid + 1;\n                }\n            }\n\n            sb.append(p).append('\\n');\n\n            // insere d na arvore de segmentos dinamica (multiconjunto)\n            cur = 0; lo = 0; hi = UNIVERSE;\n            cnt[0]++;\n            while (lo < hi) {\n                long mid = (lo + hi) >>> 1;\n                if (d <= mid) {\n                    if (lc[cur] == -1) lc[cur] = nodeCount++;\n                    cur = lc[cur];\n                    hi = mid;\n                } else {\n                    if (rc[cur] == -1) rc[cur] = nodeCount++;\n                    cur = rc[cur];\n                    lo = mid + 1;\n                }\n                cnt[cur]++;\n            }\n\n            prevP = p;\n        }\n\n        System.out.print(sb);\n        System.out.flush();\n    }\n\n    private static long readLong(DataInputStream in) throws IOException {\n        int c = in.read();\n        while (c != -1 && c != '-' && (c < '0' || c > '9')) c = in.read();\n        if (c == -1) return 0;\n        boolean neg = (c == '-');\n        if (neg) c = in.read();\n        long v = 0;\n        while (c >= '0' && c <= '9') {\n            v = v * 10 + (c - '0');\n            c = in.read();\n        }\n        return neg ? -v : v;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n\n        int n = (int) readLong(in);\n\n        // distancias ao quadrado: maximo possivel = 2 * 10^12 (X^R, Y^R <= 10^6),\n        // universo 2^42 - 1 cobre com folga; profundidade = 42\n        final long UNIVERSE = (1L << 42) - 1;\n\n        int maxNodes = 42 * n + 100;\n        int[] lc = new int[maxNodes];\n        int[] rc = new int[maxNodes];\n        int[] cnt = new int[maxNodes];\n        for (int i = 0; i < maxNodes; i++) { lc[i] = -1; rc[i] = -1; }\n        int nodeCount = 1; // no 0 = raiz\n\n        StringBuilder sb = new StringBuilder(n * 8 + 16);\n        long prevP = 0;\n\n        for (int k = 0; k < n; k++) {\n            long x = readLong(in) + prevP;\n            long y = readLong(in) + prevP;\n            long d = x * x + y * y;\n\n            // quantos valores ja inseridos sao <= d\n            long p = 0;\n            int cur = 0;\n            long lo = 0, hi = UNIVERSE;\n            while (true) {\n                if (d >= hi) { p += cnt[cur]; break; }\n                long mid = (lo + hi) >>> 1;\n                if (d <= mid) {\n                    cur = lc[cur];\n                    if (cur == -1) break;\n                    hi = mid;\n                } else {\n                    if (lc[cur] != -1) p += cnt[lc[cur]];\n                    cur = rc[cur];\n                    if (cur == -1) break;\n                    lo = mid + 1;\n                }\n            }\n\n            sb.append(p).append('\\n');\n\n            // insere d na arvore de segmentos dinamica (multiconjunto)\n            cur = 0; lo = 0; hi = UNIVERSE;\n            cnt[0]++;\n            while (lo < hi) {\n                long mid = (lo + hi) >>> 1;\n                if (d <= mid) {\n                    if (lc[cur] == -1) lc[cur] = nodeCount++;\n                    cur = lc[cur];\n                    hi = mid;\n                } else {\n                    if (rc[cur] == -1) rc[cur] = nodeCount++;\n                    cur = rc[cur];\n                    lo = mid + 1;\n                }\n                cnt[cur]++;\n            }\n\n            prevP = p;\n        }\n\n        System.out.print(sb);\n        System.out.flush();\n    }\n\n    private static long readLong(DataInputStream in) throws IOException {\n        int c = in.read();\n        while (c != -1 && c != '-' && (c < '0' || c > '9')) c = in.read();\n        if (c == -1) return 0;\n        boolean neg = (c == '-');\n        if (neg) c = in.read();\n        long v = 0;\n        while (c >= '0' && c <= '9') {\n            v = v * 10 + (c - '0');\n            c = in.read();\n        }\n        return neg ? -v : v;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3154310999670997,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:05:35.540737+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 868,
+            "output_tokens": 995,
+            "total_tokens": 1863
+        },
+        "cost_usd": {
+            "input_cost": 8.7e-05,
+            "output_cost": 0.000498,
+            "total_cost": 0.000584
+        },
+        "raw_response": "```python\nimport sys\n\ndata = sys.stdin.buffer.read()\nidx = 0\nlength = len(data)\n\n\ndef read_int():\n    global idx\n    while idx < length and data[idx] <= 32:\n        idx += 1\n    value = 0\n    while idx < length and data[idx] > 32:\n        value = value * 10 + data[idx] - 48\n        idx += 1\n    return value\n\n\nn = read_int()\nk = read_int()\nu = read_int()\n\ncards = []\nfor _ in range(n * k):\n    cards.append(read_int())\n\nposition = [0] * (u + 1)\nfor i in range(1, u + 1):\n    position[read_int()] = i\n\nbest_time = u + 1\nwinners = []\noffset = 0\n\nfor card_id in range(1, n + 1):\n    completion_time = 0\n    for j in range(offset, offset + k):\n        draw_time = position[cards[j]]\n        if draw_time > completion_time:\n            completion_time = draw_time\n    offset += k\n\n    if completion_time < best_time:\n        best_time = completion_time\n        winners = [card_id]\n    elif completion_time == best_time:\n        winners.append(card_id)\n\nsys.stdout.write(\" \".join(map(str, winners)))\n```",
+        "extracted_code": "import sys\n\ndata = sys.stdin.buffer.read()\nidx = 0\nlength = len(data)\n\n\ndef read_int():\n    global idx\n    while idx < length and data[idx] <= 32:\n        idx += 1\n    value = 0\n    while idx < length and data[idx] > 32:\n        value = value * 10 + data[idx] - 48\n        idx += 1\n    return value\n\n\nn = read_int()\nk = read_int()\nu = read_int()\n\ncards = []\nfor _ in range(n * k):\n    cards.append(read_int())\n\nposition = [0] * (u + 1)\nfor i in range(1, u + 1):\n    position[read_int()] = i\n\nbest_time = u + 1\nwinners = []\noffset = 0\n\nfor card_id in range(1, n + 1):\n    completion_time = 0\n    for j in range(offset, offset + k):\n        draw_time = position[cards[j]]\n        if draw_time > completion_time:\n            completion_time = draw_time\n    offset += k\n\n    if completion_time < best_time:\n        best_time = completion_time\n        winners = [card_id]\n    elif completion_time == best_time:\n        winners.append(card_id)\n\nsys.stdout.write(\" \".join(map(str, winners)))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.0671654000034323,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

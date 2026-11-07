@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T23:41:21.944827+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 799,
+            "output_tokens": 2909,
+            "total_tokens": 3708
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.001455,
+            "total_cost": 0.001472
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = (fs.readFileSync(0, 'utf8').match(/\\S+/g)) || [];\nlet idx = 0;\n\nconst N = +input[idx++];\nconst Q = +input[idx++];\n\nconst A = new Int32Array(N + 1);\nconst tree = new Int32Array(N + 1);\n\n// Build Fenwick tree em O(N)\nfor (let i = 1; i <= N; i++) {\n  A[i] = +input[idx++];\n  tree[i] += A[i];\n  const j = i + (i & -i);\n  if (j <= N) tree[j] += tree[i];\n}\n\nfunction update(i, delta) {\n  for (; i <= N; i += i & -i) tree[i] += delta;\n}\n\nfunction queryPrefix(i) {\n  let s = 0;\n  for (; i > 0; i -= i & -i) s += tree[i];\n  return s;\n}\n\nconst out = [];\nfor (let q = 0; q < Q; q++) {\n  const t = input[idx++];\n  if (t === '0') {\n    const k = +input[idx++];\n    const p = +input[idx++];\n    update(k, p - A[k]);\n    A[k] = p;\n  } else {\n    const k = +input[idx++];\n    out.push(queryPrefix(k));\n  }\n}\n\nif (out.length) process.stdout.write(out.join('\\n') + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = (fs.readFileSync(0, 'utf8').match(/\\S+/g)) || [];\nlet idx = 0;\n\nconst N = +input[idx++];\nconst Q = +input[idx++];\n\nconst A = new Int32Array(N + 1);\nconst tree = new Int32Array(N + 1);\n\n// Build Fenwick tree em O(N)\nfor (let i = 1; i <= N; i++) {\n  A[i] = +input[idx++];\n  tree[i] += A[i];\n  const j = i + (i & -i);\n  if (j <= N) tree[j] += tree[i];\n}\n\nfunction update(i, delta) {\n  for (; i <= N; i += i & -i) tree[i] += delta;\n}\n\nfunction queryPrefix(i) {\n  let s = 0;\n  for (; i > 0; i -= i & -i) s += tree[i];\n  return s;\n}\n\nconst out = [];\nfor (let q = 0; q < Q; q++) {\n  const t = input[idx++];\n  if (t === '0') {\n    const k = +input[idx++];\n    const p = +input[idx++];\n    update(k, p - A[k]);\n    A[k] = p;\n  } else {\n    const k = +input[idx++];\n    out.push(queryPrefix(k));\n  }\n}\n\nif (out.length) process.stdout.write(out.join('\\n') + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1444772999966517,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

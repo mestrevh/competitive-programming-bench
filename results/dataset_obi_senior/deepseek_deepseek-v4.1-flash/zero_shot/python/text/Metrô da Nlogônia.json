@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:14:59.017628+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 953,
+            "output_tokens": 7624,
+            "total_tokens": 8577
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.018298,
+            "total_cost": 0.0183
+        },
+        "raw_response": "```python\nimport sys\n\ndef find_center(n, adj):\n    def bfs(start, need_parent):\n        dist = [-1] * n\n        parent = [-1] * n if need_parent else None\n        dist[start] = 0\n        q = [start]\n        head = 0\n        far = start\n\n        while head < len(q):\n            u = q[head]\n            head += 1\n\n            if dist[u] > dist[far]:\n                far = u\n\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    if need_parent:\n                        parent[v] = u\n                    q.append(v)\n\n        return far, dist, parent\n\n    a, _, _ = bfs(0, False)\n    b, dist, parent = bfs(a, True)\n\n    d = dist[b]\n    cur = b\n    for _ in range(d // 2):\n        cur = parent[cur]\n\n    return cur + 1\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n\n    adj1 = [[] for _ in range(n)]\n    for _ in range(n - 1):\n        a = next(it) - 1\n        b = next(it) - 1\n        adj1[a].append(b)\n        adj1[b].append(a)\n\n    adj2 = [[] for _ in range(m)]\n    for _ in range(m - 1):\n        x = next(it) - 1\n        y = next(it) - 1\n        adj2[x].append(y)\n        adj2[y].append(x)\n\n    c1 = find_center(n, adj1)\n    c2 = find_center(m, adj2)\n\n    sys.stdout.write(f\"{c1} {c2}\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef find_center(n, adj):\n    def bfs(start, need_parent):\n        dist = [-1] * n\n        parent = [-1] * n if need_parent else None\n        dist[start] = 0\n        q = [start]\n        head = 0\n        far = start\n\n        while head < len(q):\n            u = q[head]\n            head += 1\n\n            if dist[u] > dist[far]:\n                far = u\n\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    if need_parent:\n                        parent[v] = u\n                    q.append(v)\n\n        return far, dist, parent\n\n    a, _, _ = bfs(0, False)\n    b, dist, parent = bfs(a, True)\n\n    d = dist[b]\n    cur = b\n    for _ in range(d // 2):\n        cur = parent[cur]\n\n    return cur + 1\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    n = next(it)\n    m = next(it)\n\n    adj1 = [[] for _ in range(n)]\n    for _ in range(n - 1):\n        a = next(it) - 1\n        b = next(it) - 1\n        adj1[a].append(b)\n        adj1[b].append(a)\n\n    adj2 = [[] for _ in range(m)]\n    for _ in range(m - 1):\n        x = next(it) - 1\n        y = next(it) - 1\n        adj2[x].append(y)\n        adj2[y].append(x)\n\n    c1 = find_center(n, adj1)\n    c2 = find_center(m, adj2)\n\n    sys.stdout.write(f\"{c1} {c2}\\n\")\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.291883300000336,
+            "counts": {
+                "AC": 6,
+                "WA": 32,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

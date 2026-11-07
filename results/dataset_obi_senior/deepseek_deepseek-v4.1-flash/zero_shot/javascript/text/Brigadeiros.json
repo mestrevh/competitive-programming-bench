@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:21:59.006547+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1594,
+            "output_tokens": 31761,
+            "total_tokens": 33355
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.076226,
+            "total_cost": 0.076231
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet ptr = 0;\nconst N = data[ptr++];\nconst K = data[ptr++];\nconst T = data[ptr++];\n\nconst P = new Int32Array(N);\nfor (let i = 0; i < N; i++) P[i] = data[ptr++];\n\nconst a = [];\nfor (let i = 0; i < N; i++) {\n  const g = data[ptr++];\n  if (g === 1) a.push(i + 1);\n}\n\nif (T >= K * N) {\n  const sorted = Array.from(P).sort((x, y) => y - x);\n  let sum = 0;\n  for (let i = 0; i < K; i++) sum += sorted[i];\n  console.log(sum);\n  return;\n}\n\nconst Vstride = 9 * K + 1;\nconst size = N * Vstride;\nconst INF = 1000000005;\n\nlet prev = new Int32Array(size);\nprev.fill(INF);\n\nconst a0 = a[0];\nfor (let i = 0; i < N; i++) {\n  const pos = i + 1;\n  const val = P[i];\n  const cost = a0 > pos ? a0 - pos : pos - a0;\n  prev[i * Vstride + val] = cost;\n}\n\nlet cur = new Int32Array(size);\ncur.fill(INF);\nconst prefix = new Int32Array(Vstride);\n\nfor (let j = 2; j <= K; j++) {\n  prefix.fill(INF);\n  const maxPrevVal = 9 * (j - 1);\n  const aj = a[j - 1];\n\n  for (let i = 0; i < N; i++) {\n    const pos = i + 1;\n    const base = aj > pos ? aj - pos : pos - aj;\n    const val = P[i];\n    const row = i * Vstride;\n    let curIdx = row + val;\n    let prevIdx = row;\n\n    for (let w = 0; w <= maxPrevVal; w++) {\n      const pc = prefix[w];\n      cur[curIdx] = pc + base;\n      const pv = prev[prevIdx];\n      if (pv < pc) prefix[w] = pv;\n      curIdx++;\n      prevIdx++;\n    }\n  }\n\n  let tmp = prev;\n  prev = cur;\n  cur = tmp;\n}\n\nconst maxVal = 9 * K;\nconst minCost = new Int32Array(Vstride);\nminCost.fill(INF);\n\nfor (let i = 0; i < N; i++) {\n  const row = i * Vstride;\n  for (let v = 0; v <= maxVal; v++) {\n    const c = prev[row + v];\n    if (c < minCost[v]) minCost[v] = c;\n  }\n}\n\nlet ans = 0;\nfor (let v = maxVal; v >= 0; v--) {\n  if (minCost[v] <= T) {\n    ans = v;\n    break;\n  }\n}\n\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet ptr = 0;\nconst N = data[ptr++];\nconst K = data[ptr++];\nconst T = data[ptr++];\n\nconst P = new Int32Array(N);\nfor (let i = 0; i < N; i++) P[i] = data[ptr++];\n\nconst a = [];\nfor (let i = 0; i < N; i++) {\n  const g = data[ptr++];\n  if (g === 1) a.push(i + 1);\n}\n\nif (T >= K * N) {\n  const sorted = Array.from(P).sort((x, y) => y - x);\n  let sum = 0;\n  for (let i = 0; i < K; i++) sum += sorted[i];\n  console.log(sum);\n  return;\n}\n\nconst Vstride = 9 * K + 1;\nconst size = N * Vstride;\nconst INF = 1000000005;\n\nlet prev = new Int32Array(size);\nprev.fill(INF);\n\nconst a0 = a[0];\nfor (let i = 0; i < N; i++) {\n  const pos = i + 1;\n  const val = P[i];\n  const cost = a0 > pos ? a0 - pos : pos - a0;\n  prev[i * Vstride + val] = cost;\n}\n\nlet cur = new Int32Array(size);\ncur.fill(INF);\nconst prefix = new Int32Array(Vstride);\n\nfor (let j = 2; j <= K; j++) {\n  prefix.fill(INF);\n  const maxPrevVal = 9 * (j - 1);\n  const aj = a[j - 1];\n\n  for (let i = 0; i < N; i++) {\n    const pos = i + 1;\n    const base = aj > pos ? aj - pos : pos - aj;\n    const val = P[i];\n    const row = i * Vstride;\n    let curIdx = row + val;\n    let prevIdx = row;\n\n    for (let w = 0; w <= maxPrevVal; w++) {\n      const pc = prefix[w];\n      cur[curIdx] = pc + base;\n      const pv = prev[prevIdx];\n      if (pv < pc) prefix[w] = pv;\n      curIdx++;\n      prevIdx++;\n    }\n  }\n\n  let tmp = prev;\n  prev = cur;\n  cur = tmp;\n}\n\nconst maxVal = 9 * K;\nconst minCost = new Int32Array(Vstride);\nminCost.fill(INF);\n\nfor (let i = 0; i < N; i++) {\n  const row = i * Vstride;\n  for (let v = 0; v <= maxVal; v++) {\n    const c = prev[row + v];\n    if (c < minCost[v]) minCost[v] = c;\n  }\n}\n\nlet ans = 0;\nfor (let v = maxVal; v >= 0; v--) {\n  if (minCost[v] <= T) {\n    ans = v;\n    break;\n  }\n}\n\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2229613000235986,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

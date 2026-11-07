@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:11:26.690334+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 597,
+            "output_tokens": 10741,
+            "total_tokens": 11338
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.025778,
+            "total_cost": 0.02578
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, K, C;\n    if (scanf(\"%d %d %d\", &N, &K, &C) != 3) return 0;\n\n    long long *pref = (long long *)malloc((N + 1) * sizeof(long long));\n    pref[0] = 0;\n\n    long long total = 0;\n    for (int i = 1; i <= N; ++i) {\n        int a;\n        scanf(\"%d\", &a);\n        total += a;\n        pref[i] = pref[i - 1] + a;\n    }\n\n    long long *prev = (long long *)malloc((N + 1) * sizeof(long long));\n    long long *cur = (long long *)malloc((N + 1) * sizeof(long long));\n\n    for (int i = 0; i <= N; ++i) {\n        prev[i] = 0;\n    }\n\n    const long long INF = (1LL << 60);\n\n    for (int j = 1; j <= K; ++j) {\n        int lower = j * C;\n        int upper = N - (K - j) * C;\n\n        cur[lower - 1] = INF;\n\n        for (int i = lower; i <= upper; ++i) {\n            long long best = cur[i - 1];\n            long long val = prev[i - C] + pref[i] - pref[i - C];\n            if (val < best) best = val;\n            cur[i] = best;\n        }\n\n        long long *tmp = prev;\n        prev = cur;\n        cur = tmp;\n    }\n\n    long long minCovered = prev[N];\n    printf(\"%lld\\n\", total - minCovered);\n\n    free(pref);\n    free(prev);\n    free(cur);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, K, C;\n    if (scanf(\"%d %d %d\", &N, &K, &C) != 3) return 0;\n\n    long long *pref = (long long *)malloc((N + 1) * sizeof(long long));\n    pref[0] = 0;\n\n    long long total = 0;\n    for (int i = 1; i <= N; ++i) {\n        int a;\n        scanf(\"%d\", &a);\n        total += a;\n        pref[i] = pref[i - 1] + a;\n    }\n\n    long long *prev = (long long *)malloc((N + 1) * sizeof(long long));\n    long long *cur = (long long *)malloc((N + 1) * sizeof(long long));\n\n    for (int i = 0; i <= N; ++i) {\n        prev[i] = 0;\n    }\n\n    const long long INF = (1LL << 60);\n\n    for (int j = 1; j <= K; ++j) {\n        int lower = j * C;\n        int upper = N - (K - j) * C;\n\n        cur[lower - 1] = INF;\n\n        for (int i = lower; i <= upper; ++i) {\n            long long best = cur[i - 1];\n            long long val = prev[i - C] + pref[i] - pref[i - C];\n            if (val < best) best = val;\n            cur[i] = best;\n        }\n\n        long long *tmp = prev;\n        prev = cur;\n        cur = tmp;\n    }\n\n    long long minCovered = prev[N];\n    printf(\"%lld\\n\", total - minCovered);\n\n    free(pref);\n    free(prev);\n    free(cur);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1010326000105124,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

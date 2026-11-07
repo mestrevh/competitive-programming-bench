@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:33:20.653412+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1157,
+            "output_tokens": 980,
+            "total_tokens": 2137
+        },
+        "cost_usd": {
+            "input_cost": 0.000116,
+            "output_cost": 0.00049,
+            "total_cost": 0.000606
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\ni = 0\n\nn, t_count = data[i], data[i + 1]\ni += 2\n\ntypes = data[i:i + n]\ni += n\nprices = data[i:i + n]\ni += n\n\nc = data[i]\ni += 1\nclients = data[i:i + c]\n\nstocks = [[] for _ in range(t_count + 1)]\nfor typ, price in zip(types, prices):\n    stocks[typ].append(price)\n\nfor stock in stocks:\n    heapq.heapify(stock)\n\nversions = [0] * (t_count + 1)\nglobal_heap = []\n\nfor typ in range(1, t_count + 1):\n    if stocks[typ]:\n        heapq.heappush(global_heap, (stocks[typ][0], typ, 0))\n\ntotal = 0\n\nfor typ in clients:\n    if typ == 0:\n        while global_heap:\n            price, current_type, version = global_heap[0]\n            if version == versions[current_type] and stocks[current_type] and stocks[current_type][0] == price:\n                break\n            heapq.heappop(global_heap)\n\n        if not global_heap:\n            continue\n\n        price, typ, _ = heapq.heappop(global_heap)\n    elif stocks[typ]:\n        price = stocks[typ][0]\n    else:\n        continue\n\n    total += price\n    heapq.heappop(stocks[typ])\n    versions[typ] += 1\n\n    if stocks[typ]:\n        heapq.heappush(global_heap, (stocks[typ][0], typ, versions[typ]))\n\nprint(total)\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\ni = 0\n\nn, t_count = data[i], data[i + 1]\ni += 2\n\ntypes = data[i:i + n]\ni += n\nprices = data[i:i + n]\ni += n\n\nc = data[i]\ni += 1\nclients = data[i:i + c]\n\nstocks = [[] for _ in range(t_count + 1)]\nfor typ, price in zip(types, prices):\n    stocks[typ].append(price)\n\nfor stock in stocks:\n    heapq.heapify(stock)\n\nversions = [0] * (t_count + 1)\nglobal_heap = []\n\nfor typ in range(1, t_count + 1):\n    if stocks[typ]:\n        heapq.heappush(global_heap, (stocks[typ][0], typ, 0))\n\ntotal = 0\n\nfor typ in clients:\n    if typ == 0:\n        while global_heap:\n            price, current_type, version = global_heap[0]\n            if version == versions[current_type] and stocks[current_type] and stocks[current_type][0] == price:\n                break\n            heapq.heappop(global_heap)\n\n        if not global_heap:\n            continue\n\n        price, typ, _ = heapq.heappop(global_heap)\n    elif stocks[typ]:\n        price = stocks[typ][0]\n    else:\n        continue\n\n    total += price\n    heapq.heappop(stocks[typ])\n    versions[typ] += 1\n\n    if stocks[typ]:\n        heapq.heappush(global_heap, (stocks[typ][0], typ, versions[typ]))\n\nprint(total)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2946860000010929,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

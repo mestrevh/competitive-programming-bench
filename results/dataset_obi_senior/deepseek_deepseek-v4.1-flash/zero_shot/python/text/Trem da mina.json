@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:41:13.154026+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 15.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1220,
+            "output_tokens": 31093,
+            "total_tokens": 32313
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.074623,
+            "total_cost": 0.074627
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    it = iter(data)\n    E = int(next(it))\n    R = int(next(it))\n    adj = [[] for _ in range(E + 1)]\n    for eid in range(R):\n        A = int(next(it))\n        B = int(next(it))\n        C = int(next(it))\n        adj[A].append((B, C, eid))\n        adj[B].append((A, C, eid))\n    \n    K = int(next(it))\n    queries = []\n    for _ in range(K):\n        X = int(next(it))\n        T = int(next(it))\n        queries.append((X, T))\n    \n    visited = [False] * (E + 1)\n    parent = [0] * (E + 1)\n    parent_edge = [-1] * (E + 1)\n    depth = [0] * (E + 1)\n    dist = [0] * (E + 1)\n    cycles = []\n    \n    for i in range(1, E + 1):\n        if not visited[i]:\n            visited[i] = True\n            parent[i] = -1\n            depth[i] = 0\n            dist[i] = 0\n            stack = [(i, 0)]\n            while stack:\n                u, idx = stack[-1]\n                if idx < len(adj[u]):\n                    v, w, eid = adj[u][idx]\n                    stack[-1] = (u, idx + 1)\n                    if eid == parent_edge[u]:\n                        continue\n                    if not visited[v]:\n                        visited[v] = True\n                        parent[v] = u\n                        parent_edge[v] = eid\n                        depth[v] = depth[u] + 1\n                        dist[v] = dist[u] + w\n                        stack.append((v, 0))\n                    else:\n                        if depth[v] < depth[u]:\n                            cyc_len = dist[u] - dist[v] + w\n                            verts = []\n                            cur = u\n                            while cur != v:\n                                verts.append(cur)\n                                cur = parent[cur]\n                            verts.append(v)\n                            cycles.append((cyc_len, verts))\n                else:\n                    stack.pop()\n    \n    INF = 10**18\n    out_lines = []\n    for X, T in queries:\n        dist_arr = [INF] * (E + 1)\n        dist_arr[X] = 0\n        pq = [(0, X)]\n        while pq:\n            d, u = heapq.heappop(pq)\n            if d > dist_arr[u]:\n                continue\n            for v, w, _ in adj[u]:\n                nd = d + w\n                if nd < dist_arr[v]:\n                    dist_arr[v] = nd\n                    heapq.heappush(pq, (nd, v))\n        \n        ans = INF\n        for cyc_len, verts in cycles:\n            if cyc_len >= T:\n                min_d = INF\n                for v in verts:\n                    if dist_arr[v] < min_d:\n                        min_d = dist_arr[v]\n                if min_d < INF:\n                    val = cyc_len + 2 * min_d\n                    if val < ans:\n                        ans = val\n        if ans == INF:\n            out_lines.append(\"-1\")\n        else:\n            out_lines.append(str(ans))\n    \n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    it = iter(data)\n    E = int(next(it))\n    R = int(next(it))\n    adj = [[] for _ in range(E + 1)]\n    for eid in range(R):\n        A = int(next(it))\n        B = int(next(it))\n        C = int(next(it))\n        adj[A].append((B, C, eid))\n        adj[B].append((A, C, eid))\n    \n    K = int(next(it))\n    queries = []\n    for _ in range(K):\n        X = int(next(it))\n        T = int(next(it))\n        queries.append((X, T))\n    \n    visited = [False] * (E + 1)\n    parent = [0] * (E + 1)\n    parent_edge = [-1] * (E + 1)\n    depth = [0] * (E + 1)\n    dist = [0] * (E + 1)\n    cycles = []\n    \n    for i in range(1, E + 1):\n        if not visited[i]:\n            visited[i] = True\n            parent[i] = -1\n            depth[i] = 0\n            dist[i] = 0\n            stack = [(i, 0)]\n            while stack:\n                u, idx = stack[-1]\n                if idx < len(adj[u]):\n                    v, w, eid = adj[u][idx]\n                    stack[-1] = (u, idx + 1)\n                    if eid == parent_edge[u]:\n                        continue\n                    if not visited[v]:\n                        visited[v] = True\n                        parent[v] = u\n                        parent_edge[v] = eid\n                        depth[v] = depth[u] + 1\n                        dist[v] = dist[u] + w\n                        stack.append((v, 0))\n                    else:\n                        if depth[v] < depth[u]:\n                            cyc_len = dist[u] - dist[v] + w\n                            verts = []\n                            cur = u\n                            while cur != v:\n                                verts.append(cur)\n                                cur = parent[cur]\n                            verts.append(v)\n                            cycles.append((cyc_len, verts))\n                else:\n                    stack.pop()\n    \n    INF = 10**18\n    out_lines = []\n    for X, T in queries:\n        dist_arr = [INF] * (E + 1)\n        dist_arr[X] = 0\n        pq = [(0, X)]\n        while pq:\n            d, u = heapq.heappop(pq)\n            if d > dist_arr[u]:\n                continue\n            for v, w, _ in adj[u]:\n                nd = d + w\n                if nd < dist_arr[v]:\n                    dist_arr[v] = nd\n                    heapq.heappush(pq, (nd, v))\n        \n        ans = INF\n        for cyc_len, verts in cycles:\n            if cyc_len >= T:\n                min_d = INF\n                for v in verts:\n                    if dist_arr[v] < min_d:\n                        min_d = dist_arr[v]\n                if min_d < INF:\n                    val = cyc_len + 2 * min_d\n                    if val < ans:\n                        ans = val\n        if ans == INF:\n            out_lines.append(\"-1\")\n        else:\n            out_lines.append(str(ans))\n    \n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3317366999981459,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

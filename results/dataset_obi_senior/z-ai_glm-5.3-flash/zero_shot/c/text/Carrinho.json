@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:17:59.142193+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 703,
+            "output_tokens": 2444,
+            "total_tokens": 3147
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.001222,
+            "total_cost": 0.001237
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 1005\n#define INF 1e30\n\nint main(void) {\n    int n;\n    double D;\n    if (scanf(\"%d %lf\", &n, &D) != 2) return 0;\n\n    static double p[MAXN], c[MAXN], dp[MAXN];\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &p[i], &c[i]);\n    }\n\n    /* dp[i] = tempo mínimo para chegar à posição da bateria i,\n       tendo trocado para a bateria i ao chegar lá */\n    dp[0] = 0.0;\n    for (int i = 1; i < n; i++) dp[i] = INF;\n\n    for (int i = 1; i < n; i++) {\n        for (int j = 0; j < i; j++) {\n            if (dp[j] == INF) continue;\n            double d = p[i] - p[j];\n            double t = dp[j] + d * d / c[j]; /* tempo mínimo = d^2 / C, com V = C/d */\n            if (t < dp[i]) dp[i] = t;\n        }\n    }\n\n    /* resposta: de qualquer bateria, percorrer o trecho final até D */\n    double ans = INF;\n    for (int j = 0; j < n; j++) {\n        if (dp[j] == INF) continue;\n        double d = D - p[j];\n        double t = dp[j] + d * d / c[j];\n        if (t < ans) ans = t;\n    }\n\n    printf(\"%.3f\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 1005\n#define INF 1e30\n\nint main(void) {\n    int n;\n    double D;\n    if (scanf(\"%d %lf\", &n, &D) != 2) return 0;\n\n    static double p[MAXN], c[MAXN], dp[MAXN];\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &p[i], &c[i]);\n    }\n\n    /* dp[i] = tempo mínimo para chegar à posição da bateria i,\n       tendo trocado para a bateria i ao chegar lá */\n    dp[0] = 0.0;\n    for (int i = 1; i < n; i++) dp[i] = INF;\n\n    for (int i = 1; i < n; i++) {\n        for (int j = 0; j < i; j++) {\n            if (dp[j] == INF) continue;\n            double d = p[i] - p[j];\n            double t = dp[j] + d * d / c[j]; /* tempo mínimo = d^2 / C, com V = C/d */\n            if (t < dp[i]) dp[i] = t;\n        }\n    }\n\n    /* resposta: de qualquer bateria, percorrer o trecho final até D */\n    double ans = INF;\n    for (int j = 0; j < n; j++) {\n        if (dp[j] == INF) continue;\n        double d = D - p[j];\n        double t = dp[j] + d * d / c[j];\n        if (t < ans) ans = t;\n    }\n\n    printf(\"%.3f\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11727739998605102,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

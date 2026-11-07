@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:33:54.448080+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 848,
+            "output_tokens": 2055,
+            "total_tokens": 2903
+        },
+        "cost_usd": {
+            "input_cost": 8.5e-05,
+            "output_cost": 0.001027,
+            "total_cost": 0.001112
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\nturns = data[2:]\n\nlength = n\neffective_turns = []\n\nfor t in turns:\n    if t <= length:\n        length -= length // t\n        effective_turns.append(t)\n\ncount = min(length, 10000)\nranks = list(range(1, count + 1))\n\nfor t in reversed(effective_turns):\n    if ranks[-1] >= t:\n        d = t - 1\n        ranks = [x + (x - 1) // d for x in ranks]\n\nsys.stdout.write(\"\\n\".join(map(str, ranks)))\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\nturns = data[2:]\n\nlength = n\neffective_turns = []\n\nfor t in turns:\n    if t <= length:\n        length -= length // t\n        effective_turns.append(t)\n\ncount = min(length, 10000)\nranks = list(range(1, count + 1))\n\nfor t in reversed(effective_turns):\n    if ranks[-1] >= t:\n        d = t - 1\n        ranks = [x + (x - 1) // d for x in ranks]\n\nsys.stdout.write(\"\\n\".join(map(str, ranks)))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 2.4926097999996273,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

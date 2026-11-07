@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:49:45.518099+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 590,
+            "output_tokens": 1207,
+            "total_tokens": 1797
+        },
+        "cost_usd": {
+            "input_cost": 5.9e-05,
+            "output_cost": 0.000603,
+            "total_cost": 0.000663
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, k = data[0], data[1]\na = data[2:]\n\nleft_k = left_prev = 0\nsum_k = sum_prev = 0\ncount_k = count_prev = 0\nanswer = 0\n\nfor right, x in enumerate(a):\n    sum_k += x\n    while sum_k > k:\n        sum_k -= a[left_k]\n        left_k += 1\n    count_k = right - left_k + 1\n\n    if k > 0:\n        sum_prev += x\n        while sum_prev > k - 1:\n            sum_prev -= a[left_prev]\n            left_prev += 1\n        count_prev = right - left_prev + 1\n\n    answer += count_k - count_prev\n\nprint(answer)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, k = data[0], data[1]\na = data[2:]\n\nleft_k = left_prev = 0\nsum_k = sum_prev = 0\ncount_k = count_prev = 0\nanswer = 0\n\nfor right, x in enumerate(a):\n    sum_k += x\n    while sum_k > k:\n        sum_k -= a[left_k]\n        left_k += 1\n    count_k = right - left_k + 1\n\n    if k > 0:\n        sum_prev += x\n        while sum_prev > k - 1:\n            sum_prev -= a[left_prev]\n            left_prev += 1\n        count_prev = right - left_prev + 1\n\n    answer += count_k - count_prev\n\nprint(answer)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3753422000008868,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

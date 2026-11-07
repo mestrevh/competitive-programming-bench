@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:17:30.018301+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 710,
+            "output_tokens": 1804,
+            "total_tokens": 2514
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.000902,
+            "total_cost": 0.000917
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int cmp_ll(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nint main(void) {\n    long long T, N;\n\n    if (scanf(\"%lld\", &T) != 1) return 0;\n    if (scanf(\"%lld\", &N) != 1) return 0;\n\n    long long *x = (long long *)malloc((size_t)N * sizeof(long long));\n    if (!x) return 0;\n\n    for (long long i = 0; i < N; i++) {\n        if (scanf(\"%lld\", &x[i]) != 1) { free(x); return 0; }\n    }\n\n    qsort(x, (size_t)N, sizeof(long long), cmp_ll);\n\n    /* Vizinhanca da cidade mais a oeste: de 0 ate o punto medio com a segunda cidade */\n    double best = (x[0] + x[1]) / 2.0;\n\n    /* Vizinhanca da cidade mais a leste: do ponto medio com a penultima cidade ate T */\n    double lastLen = (double)T - (x[N - 2] + x[N - 1]) / 2.0;\n    if (lastLen < best) best = lastLen;\n\n    /* Cidades internas: metade da soma dos intervalos aos vizinhos */\n    for (long long i = 1; i < N - 1; i++) {\n        double len = (x[i + 1] - x[i - 1]) / 2.0;\n        if (len < best) best = len;\n    }\n\n    printf(\"%.2f\\n\", best);\n\n    free(x);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int cmp_ll(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nint main(void) {\n    long long T, N;\n\n    if (scanf(\"%lld\", &T) != 1) return 0;\n    if (scanf(\"%lld\", &N) != 1) return 0;\n\n    long long *x = (long long *)malloc((size_t)N * sizeof(long long));\n    if (!x) return 0;\n\n    for (long long i = 0; i < N; i++) {\n        if (scanf(\"%lld\", &x[i]) != 1) { free(x); return 0; }\n    }\n\n    qsort(x, (size_t)N, sizeof(long long), cmp_ll);\n\n    /* Vizinhanca da cidade mais a oeste: de 0 ate o punto medio com a segunda cidade */\n    double best = (x[0] + x[1]) / 2.0;\n\n    /* Vizinhanca da cidade mais a leste: do ponto medio com a penultima cidade ate T */\n    double lastLen = (double)T - (x[N - 2] + x[N - 1]) / 2.0;\n    if (lastLen < best) best = lastLen;\n\n    /* Cidades internas: metade da soma dos intervalos aos vizinhos */\n    for (long long i = 1; i < N - 1; i++) {\n        double len = (x[i + 1] - x[i - 1]) / 2.0;\n        if (len < best) best = len;\n    }\n\n    printf(\"%.2f\\n\", best);\n\n    free(x);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18816000001970679,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

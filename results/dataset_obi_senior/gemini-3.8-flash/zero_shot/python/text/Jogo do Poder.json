@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:38:11.051531+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1218,
+            "output_tokens": 865,
+            "total_tokens": 7707
+        },
+        "cost_usd": {
+            "input_cost": 0.000913,
+            "output_cost": 0.003244,
+            "total_cost": 0.004157
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    V = N * M\n\n    P = [0] * V\n    idx = 2\n    for i in range(V):\n        P[i] = int(data[idx])\n        idx += 1\n\n    edges = []\n    for r in range(N):\n        r_offset = r * M\n        for c in range(M):\n            u = r_offset + c\n            # Vizinho à direita\n            if c + 1 < M:\n                v = u + 1\n                w = P[u] if P[u] > P[v] else P[v]\n                edges.append((w, u, v))\n            # Vizinho abaixo\n            if r + 1 < N:\n                v = u + M\n                w = P[u] if P[u] > P[v] else P[v]\n                edges.append((w, u, v))\n\n    edges.sort(key=lambda x: x[0])\n\n    # Inicialização da Árvore de Kruskal\n    max_nodes = 2 * V\n    sub_sum = [0] * max_nodes\n    for i in range(V):\n        sub_sum[i] = P[i]\n\n    left = [-1] * max_nodes\n    right = [-1] * max_nodes\n    weight = [0] * max_nodes\n    ans = [0] * max_nodes\n\n    dsu = list(range(max_nodes))\n\n    def find(i):\n        path = []\n        while dsu[i] != i:\n            path.append(i)\n            i = dsu[i]\n        for node in path:\n            dsu[node] = i\n        return i\n\n    curr_node = V\n    for w, u, v in edges:\n        root_u = find(u)\n        root_v = find(v)\n        if root_u != root_v:\n            new_node = curr_node\n            curr_node += 1\n\n            left[new_node] = root_u\n            right[new_node] = root_v\n            weight[new_node] = w\n            sub_sum[new_node] = sub_sum[root_u] + sub_sum[root_v]\n\n            dsu[root_u] = new_node\n            dsu[root_v] = new_node\n            dsu[new_node] = new_node\n\n    root = find(0)\n    ans[root] = sub_sum[root]\n\n    # Propagação dos valores da raiz até as folhas\n    stack = [root]\n    while stack:\n        u = stack.pop()\n        if u < V:\n            continue\n        w = weight[u]\n        l = left[u]\n        r = right[u]\n\n        ans[l] = ans[u] if sub_sum[l] >= w else sub_sum[l]\n        ans[r] = ans[u] if sub_sum[r] >= w else sub_sum[r]\n\n        stack.append(l)\n        stack.append(r)\n\n    # Formatação e saída dos resultados\n    out = []\n    for r in range(N):\n        start = r * M\n        out.append(\" \".join(str(ans[start + c]) for c in range(M)))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n    V = N * M\n\n    P = [0] * V\n    idx = 2\n    for i in range(V):\n        P[i] = int(data[idx])\n        idx += 1\n\n    edges = []\n    for r in range(N):\n        r_offset = r * M\n        for c in range(M):\n            u = r_offset + c\n            # Vizinho à direita\n            if c + 1 < M:\n                v = u + 1\n                w = P[u] if P[u] > P[v] else P[v]\n                edges.append((w, u, v))\n            # Vizinho abaixo\n            if r + 1 < N:\n                v = u + M\n                w = P[u] if P[u] > P[v] else P[v]\n                edges.append((w, u, v))\n\n    edges.sort(key=lambda x: x[0])\n\n    # Inicialização da Árvore de Kruskal\n    max_nodes = 2 * V\n    sub_sum = [0] * max_nodes\n    for i in range(V):\n        sub_sum[i] = P[i]\n\n    left = [-1] * max_nodes\n    right = [-1] * max_nodes\n    weight = [0] * max_nodes\n    ans = [0] * max_nodes\n\n    dsu = list(range(max_nodes))\n\n    def find(i):\n        path = []\n        while dsu[i] != i:\n            path.append(i)\n            i = dsu[i]\n        for node in path:\n            dsu[node] = i\n        return i\n\n    curr_node = V\n    for w, u, v in edges:\n        root_u = find(u)\n        root_v = find(v)\n        if root_u != root_v:\n            new_node = curr_node\n            curr_node += 1\n\n            left[new_node] = root_u\n            right[new_node] = root_v\n            weight[new_node] = w\n            sub_sum[new_node] = sub_sum[root_u] + sub_sum[root_v]\n\n            dsu[root_u] = new_node\n            dsu[root_v] = new_node\n            dsu[new_node] = new_node\n\n    root = find(0)\n    ans[root] = sub_sum[root]\n\n    # Propagação dos valores da raiz até as folhas\n    stack = [root]\n    while stack:\n        u = stack.pop()\n        if u < V:\n            continue\n        w = weight[u]\n        l = left[u]\n        r = right[u]\n\n        ans[l] = ans[u] if sub_sum[l] >= w else sub_sum[l]\n        ans[r] = ans[u] if sub_sum[r] >= w else sub_sum[r]\n\n        stack.append(l)\n        stack.append(r)\n\n    # Formatação e saída dos resultados\n    out = []\n    for r in range(N):\n        start = r * M\n        out.append(\" \".join(str(ans[start + c]) for c in range(M)))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4668919999967329,
+            "counts": {
+                "AC": 150,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 150
+        }
+    }
+]

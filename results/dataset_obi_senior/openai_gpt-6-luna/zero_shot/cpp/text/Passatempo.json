@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:31:21.277543+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 839,
+            "output_tokens": 2265,
+            "total_tokens": 3104
+        },
+        "cost_usd": {
+            "input_cost": 8.4e-05,
+            "output_cost": 0.001133,
+            "total_cost": 0.001216
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\n#include <boost/multiprecision/cpp_int.hpp>\nusing namespace std;\nusing boost::multiprecision::cpp_int;\n\nstruct Equation {\n    cpp_int residual;\n    vector<pair<int, int>> terms;\n    int unknowns;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    vector<vector<int>> grid(L, vector<int>(C));\n    vector<Equation> equations;\n    vector<bool> present(676, false);\n\n    for (int i = 0; i < L; ++i) {\n        map<int, int> counts;\n        for (int j = 0; j < C; ++j) {\n            string name;\n            cin >> name;\n            int id = (name[0] - 'a') * 26 + (name[1] - 'a');\n            grid[i][j] = id;\n            present[id] = true;\n            ++counts[id];\n        }\n\n        long long sum;\n        cin >> sum;\n\n        Equation eq;\n        eq.residual = sum;\n        eq.unknowns = counts.size();\n        for (auto [id, count] : counts) {\n            eq.terms.emplace_back(id, count);\n        }\n        equations.push_back(move(eq));\n    }\n\n    for (int j = 0; j < C; ++j) {\n        long long sum;\n        cin >> sum;\n\n        map<int, int> counts;\n        for (int i = 0; i < L; ++i) {\n            ++counts[grid[i][j]];\n        }\n\n        Equation eq;\n        eq.residual = sum;\n        eq.unknowns = counts.size();\n        for (auto [id, count] : counts) {\n            eq.terms.emplace_back(id, count);\n        }\n        equations.push_back(move(eq));\n    }\n\n    vector<vector<pair<int, int>>> incidence(676);\n    queue<int> ready;\n\n    for (int i = 0; i < (int)equations.size(); ++i) {\n        for (auto [id, count] : equations[i].terms) {\n            incidence[id].emplace_back(i, count);\n        }\n        if (equations[i].unknowns == 1) {\n            ready.push(i);\n        }\n    }\n\n    vector<bool> solved(676, false);\n    vector<cpp_int> value(676);\n\n    while (!ready.empty()) {\n        int ei = ready.front();\n        ready.pop();\n\n        Equation &eq = equations[ei];\n        if (eq.unknowns != 1) continue;\n\n        int variable = -1;\n        int coefficient = 0;\n        for (auto [id, count] : eq.terms) {\n            if (!solved[id]) {\n                variable = id;\n                coefficient = count;\n                break;\n            }\n        }\n\n        if (variable == -1) continue;\n\n        value[variable] = eq.residual / coefficient;\n        solved[variable] = true;\n\n        for (auto [otherEq, count] : incidence[variable]) {\n            Equation &next = equations[otherEq];\n            next.residual -= value[variable] * count;\n            --next.unknowns;\n            if (next.unknowns == 1) {\n                ready.push(otherEq);\n            }\n        }\n    }\n\n    for (int id = 0; id < 676; ++id) {\n        if (present[id]) {\n            cout << char('a' + id / 26) << char('a' + id % 26)\n                 << ' ' << value[id] << '\\n';\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\n#include <boost/multiprecision/cpp_int.hpp>\nusing namespace std;\nusing boost::multiprecision::cpp_int;\n\nstruct Equation {\n    cpp_int residual;\n    vector<pair<int, int>> terms;\n    int unknowns;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    vector<vector<int>> grid(L, vector<int>(C));\n    vector<Equation> equations;\n    vector<bool> present(676, false);\n\n    for (int i = 0; i < L; ++i) {\n        map<int, int> counts;\n        for (int j = 0; j < C; ++j) {\n            string name;\n            cin >> name;\n            int id = (name[0] - 'a') * 26 + (name[1] - 'a');\n            grid[i][j] = id;\n            present[id] = true;\n            ++counts[id];\n        }\n\n        long long sum;\n        cin >> sum;\n\n        Equation eq;\n        eq.residual = sum;\n        eq.unknowns = counts.size();\n        for (auto [id, count] : counts) {\n            eq.terms.emplace_back(id, count);\n        }\n        equations.push_back(move(eq));\n    }\n\n    for (int j = 0; j < C; ++j) {\n        long long sum;\n        cin >> sum;\n\n        map<int, int> counts;\n        for (int i = 0; i < L; ++i) {\n            ++counts[grid[i][j]];\n        }\n\n        Equation eq;\n        eq.residual = sum;\n        eq.unknowns = counts.size();\n        for (auto [id, count] : counts) {\n            eq.terms.emplace_back(id, count);\n        }\n        equations.push_back(move(eq));\n    }\n\n    vector<vector<pair<int, int>>> incidence(676);\n    queue<int> ready;\n\n    for (int i = 0; i < (int)equations.size(); ++i) {\n        for (auto [id, count] : equations[i].terms) {\n            incidence[id].emplace_back(i, count);\n        }\n        if (equations[i].unknowns == 1) {\n            ready.push(i);\n        }\n    }\n\n    vector<bool> solved(676, false);\n    vector<cpp_int> value(676);\n\n    while (!ready.empty()) {\n        int ei = ready.front();\n        ready.pop();\n\n        Equation &eq = equations[ei];\n        if (eq.unknowns != 1) continue;\n\n        int variable = -1;\n        int coefficient = 0;\n        for (auto [id, count] : eq.terms) {\n            if (!solved[id]) {\n                variable = id;\n                coefficient = count;\n                break;\n            }\n        }\n\n        if (variable == -1) continue;\n\n        value[variable] = eq.residual / coefficient;\n        solved[variable] = true;\n\n        for (auto [otherEq, count] : incidence[variable]) {\n            Equation &next = equations[otherEq];\n            next.residual -= value[variable] * count;\n            --next.unknowns;\n            if (next.unknowns == 1) {\n                ready.push(otherEq);\n            }\n        }\n    }\n\n    for (int id = 0; id < 676; ++id) {\n        if (present[id]) {\n            cout << char('a' + id / 26) << char('a' + id % 26)\n                 << ' ' << value[id] << '\\n';\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 30
+            },
+            "total_test_cases": 30
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:57:17.690120+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 862,
+            "output_tokens": 7908,
+            "total_tokens": 8770
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.018979,
+            "total_cost": 0.018982
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint *parent, *dsu_rank;\n\nint find(int x) {\n    while (parent[x] != x) {\n        parent[x] = parent[parent[x]];\n        x = parent[x];\n    }\n    return x;\n}\n\nvoid unite(int a, int b) {\n    a = find(a);\n    b = find(b);\n    if (a == b) return;\n    if (dsu_rank[a] < dsu_rank[b]) {\n        int t = a; a = b; b = t;\n    }\n    parent[b] = a;\n    if (dsu_rank[a] == dsu_rank[b]) dsu_rank[a]++;\n}\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    parent = (int*)malloc((N + 1) * sizeof(int));\n    dsu_rank = (int*)calloc(N + 1, sizeof(int));\n    for (int i = 1; i <= N; i++) parent[i] = i;\n\n    int *head = (int*)malloc((N + 1) * sizeof(int));\n    for (int i = 1; i <= N; i++) head[i] = -1;\n\n    int *to = (int*)malloc((2 * M) * sizeof(int));\n    int *nxt = (int*)malloc((2 * M) * sizeof(int));\n    int *deg = (int*)calloc(N + 1, sizeof(int));\n    int *edgeU = (int*)malloc(M * sizeof(int));\n    int *edgeV = (int*)malloc(M * sizeof(int));\n\n    int idx = 0;\n    for (int i = 0; i < M; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n\n        edgeU[i] = u;\n        edgeV[i] = v;\n\n        to[idx] = v;\n        nxt[idx] = head[u];\n        head[u] = idx++;\n\n        to[idx] = u;\n        nxt[idx] = head[v];\n        head[v] = idx++;\n\n        deg[u]++;\n        deg[v]++;\n\n        unite(u, v);\n    }\n\n    int *compSize = (int*)calloc(N + 1, sizeof(int));\n    for (int i = 1; i <= N; i++) {\n        compSize[find(i)]++;\n    }\n\n    long long *edgeCnt = (long long*)calloc(N + 1, sizeof(long long));\n    for (int i = 0; i < M; i++) {\n        edgeCnt[find(edgeU[i])]++;\n    }\n\n    int *compHead = (int*)malloc((N + 1) * sizeof(int));\n    int *compNext = (int*)malloc((N + 1) * sizeof(int));\n    for (int i = 1; i <= N; i++) compHead[i] = -1;\n\n    for (int i = 1; i <= N; i++) {\n        int r = find(i);\n        compNext[i] = compHead[r];\n        compHead[r] = i;\n    }\n\n    int *mark = (int*)calloc(N + 1, sizeof(int));\n\n    for (int r = 1; r <= N; r++) {\n        if (compSize[r] == 0) continue;\n\n        long long complete = (long long)compSize[r] * (compSize[r] - 1) / 2;\n        if (edgeCnt[r] < complete) {\n            int v = -1;\n\n            for (int x = compHead[r]; x != -1; x = compNext[x]) {\n                if (deg[x] < compSize[r] - 1) {\n                    v = x;\n                    break;\n                }\n            }\n\n            if (v == -1) continue;\n\n            int token = r;\n            for (int e = head[v]; e != -1; e = nxt[e]) {\n                mark[to[e]] = token;\n            }\n\n            for (int x = compHead[r]; x != -1; x = compNext[x]) {\n                if (x != v && mark[x] != token) {\n                    printf(\"%d %d\\n\", v, x);\n                    return 0;\n                }\n            }\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint *parent, *dsu_rank;\n\nint find(int x) {\n    while (parent[x] != x) {\n        parent[x] = parent[parent[x]];\n        x = parent[x];\n    }\n    return x;\n}\n\nvoid unite(int a, int b) {\n    a = find(a);\n    b = find(b);\n    if (a == b) return;\n    if (dsu_rank[a] < dsu_rank[b]) {\n        int t = a; a = b; b = t;\n    }\n    parent[b] = a;\n    if (dsu_rank[a] == dsu_rank[b]) dsu_rank[a]++;\n}\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    parent = (int*)malloc((N + 1) * sizeof(int));\n    dsu_rank = (int*)calloc(N + 1, sizeof(int));\n    for (int i = 1; i <= N; i++) parent[i] = i;\n\n    int *head = (int*)malloc((N + 1) * sizeof(int));\n    for (int i = 1; i <= N; i++) head[i] = -1;\n\n    int *to = (int*)malloc((2 * M) * sizeof(int));\n    int *nxt = (int*)malloc((2 * M) * sizeof(int));\n    int *deg = (int*)calloc(N + 1, sizeof(int));\n    int *edgeU = (int*)malloc(M * sizeof(int));\n    int *edgeV = (int*)malloc(M * sizeof(int));\n\n    int idx = 0;\n    for (int i = 0; i < M; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n\n        edgeU[i] = u;\n        edgeV[i] = v;\n\n        to[idx] = v;\n        nxt[idx] = head[u];\n        head[u] = idx++;\n\n        to[idx] = u;\n        nxt[idx] = head[v];\n        head[v] = idx++;\n\n        deg[u]++;\n        deg[v]++;\n\n        unite(u, v);\n    }\n\n    int *compSize = (int*)calloc(N + 1, sizeof(int));\n    for (int i = 1; i <= N; i++) {\n        compSize[find(i)]++;\n    }\n\n    long long *edgeCnt = (long long*)calloc(N + 1, sizeof(long long));\n    for (int i = 0; i < M; i++) {\n        edgeCnt[find(edgeU[i])]++;\n    }\n\n    int *compHead = (int*)malloc((N + 1) * sizeof(int));\n    int *compNext = (int*)malloc((N + 1) * sizeof(int));\n    for (int i = 1; i <= N; i++) compHead[i] = -1;\n\n    for (int i = 1; i <= N; i++) {\n        int r = find(i);\n        compNext[i] = compHead[r];\n        compHead[r] = i;\n    }\n\n    int *mark = (int*)calloc(N + 1, sizeof(int));\n\n    for (int r = 1; r <= N; r++) {\n        if (compSize[r] == 0) continue;\n\n        long long complete = (long long)compSize[r] * (compSize[r] - 1) / 2;\n        if (edgeCnt[r] < complete) {\n            int v = -1;\n\n            for (int x = compHead[r]; x != -1; x = compNext[x]) {\n                if (deg[x] < compSize[r] - 1) {\n                    v = x;\n                    break;\n                }\n            }\n\n            if (v == -1) continue;\n\n            int token = r;\n            for (int e = head[v]; e != -1; e = nxt[e]) {\n                mark[to[e]] = token;\n            }\n\n            for (int x = compHead[r]; x != -1; x = compNext[x]) {\n                if (x != v && mark[x] != token) {\n                    printf(\"%d %d\\n\", v, x);\n                    return 0;\n                }\n            }\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.17723239999031648,
+            "counts": {
+                "AC": 6,
+                "WA": 7,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

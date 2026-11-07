@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:17:54.073511+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 958,
+            "output_tokens": 1885,
+            "total_tokens": 2843
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.004524,
+            "total_cost": 0.004527
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet p = 0;\nconst N = data[p++];\nconst K = data[p++];\nconst U = data[p++];\n\nconst cards = new Int32Array(N * K);\nfor (let i = 0; i < N * K; i++) {\n    cards[i] = data[p++];\n}\n\nconst pos = new Int32Array(U + 1);\nfor (let i = 1; i <= U; i++) {\n    const num = data[p++];\n    pos[num] = i;\n}\n\nlet best = Infinity;\nlet winners = [];\n\nfor (let i = 0; i < N; i++) {\n    let maxPos = 0;\n    const base = i * K;\n\n    for (let j = 0; j < K; j++) {\n        const t = pos[cards[base + j]];\n        if (t > maxPos) maxPos = t;\n    }\n\n    const id = i + 1;\n\n    if (maxPos < best) {\n        best = maxPos;\n        winners = [id];\n    } else if (maxPos === best) {\n        winners.push(id);\n    }\n}\n\nconsole.log(winners.join(' '));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet p = 0;\nconst N = data[p++];\nconst K = data[p++];\nconst U = data[p++];\n\nconst cards = new Int32Array(N * K);\nfor (let i = 0; i < N * K; i++) {\n    cards[i] = data[p++];\n}\n\nconst pos = new Int32Array(U + 1);\nfor (let i = 1; i <= U; i++) {\n    const num = data[p++];\n    pos[num] = i;\n}\n\nlet best = Infinity;\nlet winners = [];\n\nfor (let i = 0; i < N; i++) {\n    let maxPos = 0;\n    const base = i * K;\n\n    for (let j = 0; j < K; j++) {\n        const t = pos[cards[base + j]];\n        if (t > maxPos) maxPos = t;\n    }\n\n    const id = i + 1;\n\n    if (maxPos < best) {\n        best = maxPos;\n        winners = [id];\n    } else if (maxPos === best) {\n        winners.push(id);\n    }\n}\n\nconsole.log(winners.join(' '));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19562839998980053,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T06:56:17.984917+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1279,
+            "output_tokens": 1703,
+            "total_tokens": 2982
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.000852,
+            "total_cost": 0.000879
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    t_total = int(data[idx]); idx += 1\n    types = data[idx:idx+n]\n    idx += n\n    prices = data[idx:idx+n]\n    idx += n\n    c = int(data[idx]); idx += 1\n    clients = data[idx:idx+c]\n\n    alive = [True] * n\n    type_heaps = [[] for _ in range(t_total + 1)]\n    global_heap = []\n    for i in range(n):\n        t = int(types[i]); p = int(prices[i])\n        type_heaps[t].append((p, i))\n        global_heap.append((p, t, i))\n    for h in type_heaps:\n        if h:\n            heapq.heapify(h)\n    heapq.heapify(global_heap)\n\n    total = 0\n    for cl in clients:\n        u = int(cl)\n        if u == 0:\n            gh = global_heap\n            while gh and not alive[gh[0][2]]:\n                heapq.heappop(gh)\n            if gh:\n                p, t, i = heapq.heappop(gh)\n                alive[i] = False\n                total += p\n        else:\n            th = type_heaps[u]\n            while th and not alive[th[0][1]]:\n                heapq.heappop(th)\n            if th:\n                p, i = heapq.heappop(th)\n                alive[i] = False\n                total += p\n\n    print(total)\n\nmain()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    t_total = int(data[idx]); idx += 1\n    types = data[idx:idx+n]\n    idx += n\n    prices = data[idx:idx+n]\n    idx += n\n    c = int(data[idx]); idx += 1\n    clients = data[idx:idx+c]\n\n    alive = [True] * n\n    type_heaps = [[] for _ in range(t_total + 1)]\n    global_heap = []\n    for i in range(n):\n        t = int(types[i]); p = int(prices[i])\n        type_heaps[t].append((p, i))\n        global_heap.append((p, t, i))\n    for h in type_heaps:\n        if h:\n            heapq.heapify(h)\n    heapq.heapify(global_heap)\n\n    total = 0\n    for cl in clients:\n        u = int(cl)\n        if u == 0:\n            gh = global_heap\n            while gh and not alive[gh[0][2]]:\n                heapq.heappop(gh)\n            if gh:\n                p, t, i = heapq.heappop(gh)\n                alive[i] = False\n                total += p\n        else:\n            th = type_heaps[u]\n            while th and not alive[th[0][1]]:\n                heapq.heappop(th)\n            if th:\n                p, i = heapq.heappop(th)\n                alive[i] = False\n                total += p\n\n    print(total)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2907264999994368,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

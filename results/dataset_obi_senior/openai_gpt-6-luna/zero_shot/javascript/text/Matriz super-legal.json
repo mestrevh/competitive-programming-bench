@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:55:25.508866+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 649,
+            "output_tokens": 1865,
+            "total_tokens": 2514
+        },
+        "cost_usd": {
+            "input_cost": 6.5e-05,
+            "output_cost": 0.000932,
+            "total_cost": 0.000997
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  let sign = 1;\n  if (data[pos] === 45) {\n    sign = -1;\n    pos++;\n  }\n  let value = 0;\n  while (pos < data.length && data[pos] > 32) {\n    value = value * 10 + data[pos] - 48;\n    pos++;\n  }\n  return value * sign;\n}\n\nconst L = nextInt();\nconst C = nextInt();\nconst matrix = new Int32Array(L * C);\n\nfor (let i = 0; i < L * C; i++) {\n  matrix[i] = nextInt();\n}\n\nconst squareCols = C - 1;\nconst heights = new Int32Array(squareCols);\nconst stack = new Int32Array(squareCols + 1);\nlet answer = 0;\n\nfor (let i = 0; i < L - 1; i++) {\n  const row = i * C;\n  for (let j = 0; j < squareCols; j++) {\n    const a = matrix[row + j];\n    const b = matrix[row + j + 1];\n    const c = matrix[row + C + j];\n    const d = matrix[row + C + j + 1];\n\n    if (a + d <= b + c) heights[j]++;\n    else heights[j] = 0;\n  }\n\n  let top = -1;\n  for (let j = 0; j <= squareCols; j++) {\n    const current = j === squareCols ? 0 : heights[j];\n\n    while (top >= 0 && heights[stack[top]] > current) {\n      const height = heights[stack[top--]];\n      const left = top < 0 ? 0 : stack[top] + 1;\n      const width = j - left;\n      const area = (height + 1) * (width + 1);\n      if (area > answer) answer = area;\n    }\n\n    if (j < squareCols) stack[++top] = j;\n  }\n}\n\nconsole.log(answer.toString());\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  let sign = 1;\n  if (data[pos] === 45) {\n    sign = -1;\n    pos++;\n  }\n  let value = 0;\n  while (pos < data.length && data[pos] > 32) {\n    value = value * 10 + data[pos] - 48;\n    pos++;\n  }\n  return value * sign;\n}\n\nconst L = nextInt();\nconst C = nextInt();\nconst matrix = new Int32Array(L * C);\n\nfor (let i = 0; i < L * C; i++) {\n  matrix[i] = nextInt();\n}\n\nconst squareCols = C - 1;\nconst heights = new Int32Array(squareCols);\nconst stack = new Int32Array(squareCols + 1);\nlet answer = 0;\n\nfor (let i = 0; i < L - 1; i++) {\n  const row = i * C;\n  for (let j = 0; j < squareCols; j++) {\n    const a = matrix[row + j];\n    const b = matrix[row + j + 1];\n    const c = matrix[row + C + j];\n    const d = matrix[row + C + j + 1];\n\n    if (a + d <= b + c) heights[j]++;\n    else heights[j] = 0;\n  }\n\n  let top = -1;\n  for (let j = 0; j <= squareCols; j++) {\n    const current = j === squareCols ? 0 : heights[j];\n\n    while (top >= 0 && heights[stack[top]] > current) {\n      const height = heights[stack[top--]];\n      const left = top < 0 ? 0 : stack[top] + 1;\n      const width = j - left;\n      const area = (height + 1) * (width + 1);\n      if (area > answer) answer = area;\n    }\n\n    if (j < squareCols) stack[++top] = j;\n  }\n}\n\nconsole.log(answer.toString());",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.07600630000524689,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

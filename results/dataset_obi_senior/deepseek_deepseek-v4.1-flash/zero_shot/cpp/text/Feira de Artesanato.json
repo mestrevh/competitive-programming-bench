@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:27:02.152302+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1308,
+            "output_tokens": 5347,
+            "total_tokens": 6655
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.012833,
+            "total_cost": 0.012837
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, T;\n    cin >> N >> T;\n\n    vector<int> type(N);\n    for (int i = 0; i < N; ++i) cin >> type[i];\n\n    vector<vector<int>> prices(T + 1);\n    for (int i = 0; i < N; ++i) {\n        int p;\n        cin >> p;\n        prices[type[i]].push_back(p);\n    }\n\n    vector<int> idx(T + 1, 0);\n    set<pair<int, int>> global;\n\n    for (int t = 1; t <= T; ++t) {\n        if (!prices[t].empty()) {\n            sort(prices[t].begin(), prices[t].end());\n            global.insert({prices[t][0], t});\n        }\n    }\n\n    int C;\n    cin >> C;\n\n    long long answer = 0;\n\n    for (int i = 0; i < C; ++i) {\n        int u;\n        cin >> u;\n\n        if (u == 0) {\n            if (global.empty()) continue;\n\n            auto it = global.begin();\n            int p = it->first;\n            int t = it->second;\n\n            answer += p;\n            global.erase(it);\n\n            ++idx[t];\n            if (idx[t] < (int)prices[t].size()) {\n                global.insert({prices[t][idx[t]], t});\n            }\n        } else {\n            int t = u;\n            if (idx[t] >= (int)prices[t].size()) continue;\n\n            int p = prices[t][idx[t]];\n            answer += p;\n\n            global.erase({p, t});\n            ++idx[t];\n\n            if (idx[t] < (int)prices[t].size()) {\n                global.insert({prices[t][idx[t]], t});\n            }\n        }\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, T;\n    cin >> N >> T;\n\n    vector<int> type(N);\n    for (int i = 0; i < N; ++i) cin >> type[i];\n\n    vector<vector<int>> prices(T + 1);\n    for (int i = 0; i < N; ++i) {\n        int p;\n        cin >> p;\n        prices[type[i]].push_back(p);\n    }\n\n    vector<int> idx(T + 1, 0);\n    set<pair<int, int>> global;\n\n    for (int t = 1; t <= T; ++t) {\n        if (!prices[t].empty()) {\n            sort(prices[t].begin(), prices[t].end());\n            global.insert({prices[t][0], t});\n        }\n    }\n\n    int C;\n    cin >> C;\n\n    long long answer = 0;\n\n    for (int i = 0; i < C; ++i) {\n        int u;\n        cin >> u;\n\n        if (u == 0) {\n            if (global.empty()) continue;\n\n            auto it = global.begin();\n            int p = it->first;\n            int t = it->second;\n\n            answer += p;\n            global.erase(it);\n\n            ++idx[t];\n            if (idx[t] < (int)prices[t].size()) {\n                global.insert({prices[t][idx[t]], t});\n            }\n        } else {\n            int t = u;\n            if (idx[t] >= (int)prices[t].size()) continue;\n\n            int p = prices[t][idx[t]];\n            answer += p;\n\n            global.erase({p, t});\n            ++idx[t];\n\n            if (idx[t] < (int)prices[t].size()) {\n                global.insert({prices[t][idx[t]], t});\n            }\n        }\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19127060000027996,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

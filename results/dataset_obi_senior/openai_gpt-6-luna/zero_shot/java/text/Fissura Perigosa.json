@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:00:43.318757+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 851,
+            "output_tokens": 546,
+            "total_tokens": 1397
+        },
+        "cost_usd": {
+            "input_cost": 8.5e-05,
+            "output_cost": 0.000273,
+            "total_cost": 0.000358
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.ArrayDeque;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] first = br.readLine().trim().split(\"\\\\s+\");\n        int n = Integer.parseInt(first[0]);\n        int f = Integer.parseInt(first[1]);\n\n        char[][] grid = new char[n][];\n        for (int i = 0; i < n; i++) {\n            grid[i] = br.readLine().trim().toCharArray();\n        }\n\n        boolean[][] visited = new boolean[n][n];\n        ArrayDeque<Integer> queue = new ArrayDeque<>();\n\n        if (grid[0][0] - '0' <= f) {\n            visited[0][0] = true;\n            queue.add(0);\n        }\n\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        while (!queue.isEmpty()) {\n            int cell = queue.remove();\n            int r = cell / n;\n            int c = cell % n;\n            grid[r][c] = '*';\n\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < n && nc >= 0 && nc < n\n                        && !visited[nr][nc] && grid[nr][nc] - '0' <= f) {\n                    visited[nr][nc] = true;\n                    queue.add(nr * n + nc);\n                }\n            }\n        }\n\n        StringBuilder output = new StringBuilder();\n        for (char[] row : grid) {\n            output.append(row).append('\\n');\n        }\n        System.out.print(output);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.ArrayDeque;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] first = br.readLine().trim().split(\"\\\\s+\");\n        int n = Integer.parseInt(first[0]);\n        int f = Integer.parseInt(first[1]);\n\n        char[][] grid = new char[n][];\n        for (int i = 0; i < n; i++) {\n            grid[i] = br.readLine().trim().toCharArray();\n        }\n\n        boolean[][] visited = new boolean[n][n];\n        ArrayDeque<Integer> queue = new ArrayDeque<>();\n\n        if (grid[0][0] - '0' <= f) {\n            visited[0][0] = true;\n            queue.add(0);\n        }\n\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        while (!queue.isEmpty()) {\n            int cell = queue.remove();\n            int r = cell / n;\n            int c = cell % n;\n            grid[r][c] = '*';\n\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < n && nc >= 0 && nc < n\n                        && !visited[nr][nc] && grid[nr][nc] - '0' <= f) {\n                    visited[nr][nc] = true;\n                    queue.add(nr * n + nc);\n                }\n            }\n        }\n\n        StringBuilder output = new StringBuilder();\n        for (char[] row : grid) {\n            output.append(row).append('\\n');\n        }\n        System.out.print(output);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11997629999677883,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

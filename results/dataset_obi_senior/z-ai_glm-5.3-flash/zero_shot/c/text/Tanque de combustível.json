@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T20:08:05.327206+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 726,
+            "output_tokens": 978,
+            "total_tokens": 1704
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.000489,
+            "total_cost": 0.000505
+        },
+        "raw_response": "```C\n#include <stdio.h>\n\nint main(void) {\n    int C, D, T;\n    if (scanf(\"%d %d %d\", &C, &D, &T) != 3) return 0;\n\n    /* Combustivel necessario no tanque (em litros): (D - T*C) / C\n       Queremos o valor em decimos de litro, calculado com aritmetica exata.\n       decimos = (D - T*C) * 10 / C   (se positivo; caso contrario, 0) */\n    long long need = (long long)D - (long long)T * C;\n    long long tenths;\n\n    if (need <= 0) {\n        tenths = 0;               /* ja ha combustivel suficiente */\n    } else {\n        long long num = need * 10;            /* decimos exatos */\n        /* arredondamento para o inteiro mais proximo (empates para cima) */\n        tenths = (2 * num + C) / (2 * C);\n        if (tenths < 0) tenths = 0;\n    }\n\n    printf(\"%lld.%lld\\n\", tenths / 10, tenths % 10);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int C, D, T;\n    if (scanf(\"%d %d %d\", &C, &D, &T) != 3) return 0;\n\n    /* Combustivel necessario no tanque (em litros): (D - T*C) / C\n       Queremos o valor em decimos de litro, calculado com aritmetica exata.\n       decimos = (D - T*C) * 10 / C   (se positivo; caso contrario, 0) */\n    long long need = (long long)D - (long long)T * C;\n    long long tenths;\n\n    if (need <= 0) {\n        tenths = 0;               /* ja ha combustivel suficiente */\n    } else {\n        long long num = need * 10;            /* decimos exatos */\n        /* arredondamento para o inteiro mais proximo (empates para cima) */\n        tenths = (2 * num + C) / (2 * C);\n        if (tenths < 0) tenths = 0;\n    }\n\n    printf(\"%lld.%lld\\n\", tenths / 10, tenths % 10);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12429209999390878,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

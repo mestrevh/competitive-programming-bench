@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:34:10.178556+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1424,
+            "output_tokens": 3501,
+            "total_tokens": 4925
+        },
+        "cost_usd": {
+            "input_cost": 0.000142,
+            "output_cost": 0.001751,
+            "total_cost": 0.001893
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst N = data[idx++];\nconst K = data[idx++];\nconst T = data[idx++];\n\nconst plates = data.slice(idx, idx + N);\nidx += N;\n\nconst initial = [];\nfor (let i = 0; i < N; i++) {\n  if (data[idx++] === 1) initial.push(i + 1);\n}\n\nconst maxScore = 9 * K;\nconst INF = 1e9;\nconst dp = Array.from({ length: K + 1 }, () => {\n  const row = new Int32Array(maxScore + 1);\n  row.fill(INF);\n  return row;\n});\nconst highestReachable = new Int32Array(K + 1);\nhighestReachable.fill(-1);\n\ndp[0][0] = 0;\nhighestReachable[0] = 0;\n\nfor (let pos = 1; pos <= N; pos++) {\n  const reward = plates[pos - 1];\n  const maxChosen = Math.min(pos, K);\n\n  for (let count = maxChosen; count >= 1; count--) {\n    const source = dp[count - 1];\n    const target = dp[count];\n    const sourceMax = highestReachable[count - 1];\n    if (sourceMax < 0) continue;\n\n    const moveCost = Math.abs(initial[count - 1] - pos);\n    for (let score = 0; score <= sourceMax; score++) {\n      const cost = source[score];\n      if (cost === INF || cost + moveCost > T) continue;\n\n      const newScore = score + reward;\n      const newCost = cost + moveCost;\n      if (newCost < target[newScore]) target[newScore] = newCost;\n      if (newScore > highestReachable[count]) {\n        highestReachable[count] = newScore;\n      }\n    }\n  }\n}\n\nconsole.log(highestReachable[K]);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst N = data[idx++];\nconst K = data[idx++];\nconst T = data[idx++];\n\nconst plates = data.slice(idx, idx + N);\nidx += N;\n\nconst initial = [];\nfor (let i = 0; i < N; i++) {\n  if (data[idx++] === 1) initial.push(i + 1);\n}\n\nconst maxScore = 9 * K;\nconst INF = 1e9;\nconst dp = Array.from({ length: K + 1 }, () => {\n  const row = new Int32Array(maxScore + 1);\n  row.fill(INF);\n  return row;\n});\nconst highestReachable = new Int32Array(K + 1);\nhighestReachable.fill(-1);\n\ndp[0][0] = 0;\nhighestReachable[0] = 0;\n\nfor (let pos = 1; pos <= N; pos++) {\n  const reward = plates[pos - 1];\n  const maxChosen = Math.min(pos, K);\n\n  for (let count = maxChosen; count >= 1; count--) {\n    const source = dp[count - 1];\n    const target = dp[count];\n    const sourceMax = highestReachable[count - 1];\n    if (sourceMax < 0) continue;\n\n    const moveCost = Math.abs(initial[count - 1] - pos);\n    for (let score = 0; score <= sourceMax; score++) {\n      const cost = source[score];\n      if (cost === INF || cost + moveCost > T) continue;\n\n      const newScore = score + reward;\n      const newCost = cost + moveCost;\n      if (newCost < target[newScore]) target[newScore] = newCost;\n      if (newScore > highestReachable[count]) {\n        highestReachable[count] = newScore;\n      }\n    }\n  }\n}\n\nconsole.log(highestReachable[K]);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0874753999960376,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

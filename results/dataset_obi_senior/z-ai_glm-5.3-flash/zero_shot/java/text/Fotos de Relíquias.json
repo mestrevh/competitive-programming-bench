@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T19:45:23.199962+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 2516,
+            "total_tokens": 3529
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.001258,
+            "total_cost": 0.00128
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in));\n        in.nextToken();\n        int n = (int) in.nval;\n\n        long ans = 0;\n        int last1 = 0; // posição do último destaque visto\n        int prev1 = 0; // posição do destaque anterior ao último\n\n        for (int i = 1; i <= n; i++) {\n            in.nextToken();\n            if (in.nval == 1.0) {\n                // Seções terminando em i (que é destaque): l pode ser\n                // qualquer posição depois do destaque anterior.\n                prev1 = last1;\n                last1 = i;\n                ans += i - prev1;\n            } else if (last1 > 0) {\n                // Seções terminando em i (não destaque): o único destaque\n                // dentro do intervalo deve ser o último visto (last1),\n                // então l deve estar em (prev1, last1].\n                ans += last1 - prev1;\n            }\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in));\n        in.nextToken();\n        int n = (int) in.nval;\n\n        long ans = 0;\n        int last1 = 0; // posição do último destaque visto\n        int prev1 = 0; // posição do destaque anterior ao último\n\n        for (int i = 1; i <= n; i++) {\n            in.nextToken();\n            if (in.nval == 1.0) {\n                // Seções terminando em i (que é destaque): l pode ser\n                // qualquer posição depois do destaque anterior.\n                prev1 = last1;\n                last1 = i;\n                ans += i - prev1;\n            } else if (last1 > 0) {\n                // Seções terminando em i (não destaque): o único destaque\n                // dentro do intervalo deve ser o último visto (last1),\n                // então l deve estar em (prev1, last1].\n                ans += last1 - prev1;\n            }\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10204199998406693,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

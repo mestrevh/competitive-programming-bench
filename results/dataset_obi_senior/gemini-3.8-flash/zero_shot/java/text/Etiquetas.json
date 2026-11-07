@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:19:23.395773+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 543,
+            "output_tokens": 753,
+            "total_tokens": 2864
+        },
+        "cost_usd": {
+            "input_cost": 0.000407,
+            "output_cost": 0.002824,
+            "total_cost": 0.003231
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public boolean hasNext() {\n            while (hasNextByte() && buffer[ptr] <= ' ') ptr++;\n            return hasNextByte();\n        }\n\n        public int nextInt() {\n            int b = readByte();\n            while (b <= ' ') b = readByte();\n            boolean neg = false;\n            if (b == '-') {\n                neg = true;\n                b = readByte();\n            }\n            int val = 0;\n            while (b >= '0' && b <= '9') {\n                val = val * 10 + (b - '0');\n                b = readByte();\n            }\n            return neg ? -val : val;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        if (!scanner.hasNext()) return;\n        int n = scanner.nextInt();\n        int k = scanner.nextInt();\n        int c = scanner.nextInt();\n\n        int[] a = new int[n + 1];\n        long[] pref = new long[n + 1];\n        for (int i = 1; i <= n; i++) {\n            a[i] = scanner.nextInt();\n            pref[i] = pref[i - 1] + a[i];\n        }\n\n        long totalSum = pref[n];\n\n        // dp[i] representará a menor soma coberta usando j etiquetas no prefixo i\n        long[] prev = new long[n + 1];\n        long[] curr = new long[n + 1];\n\n        for (int j = 1; j <= k; j++) {\n            int minI = j * c;\n            int maxI = n - (k - j) * c;\n\n            for (int i = minI; i <= maxI; i++) {\n                long sumC = pref[i] - pref[i - c];\n                long valCover = prev[i - c] + sumC;\n                if (i == minI) {\n                    curr[i] = valCover;\n                } else {\n                    curr[i] = Math.min(curr[i - 1], valCover);\n                }\n            }\n\n            long[] temp = prev;\n            prev = curr;\n            curr = temp;\n        }\n\n        long minCovered = prev[n];\n        long maxUncovered = totalSum - minCovered;\n\n        System.out.println(maxUncovered);\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public boolean hasNext() {\n            while (hasNextByte() && buffer[ptr] <= ' ') ptr++;\n            return hasNextByte();\n        }\n\n        public int nextInt() {\n            int b = readByte();\n            while (b <= ' ') b = readByte();\n            boolean neg = false;\n            if (b == '-') {\n                neg = true;\n                b = readByte();\n            }\n            int val = 0;\n            while (b >= '0' && b <= '9') {\n                val = val * 10 + (b - '0');\n                b = readByte();\n            }\n            return neg ? -val : val;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        if (!scanner.hasNext()) return;\n        int n = scanner.nextInt();\n        int k = scanner.nextInt();\n        int c = scanner.nextInt();\n\n        int[] a = new int[n + 1];\n        long[] pref = new long[n + 1];\n        for (int i = 1; i <= n; i++) {\n            a[i] = scanner.nextInt();\n            pref[i] = pref[i - 1] + a[i];\n        }\n\n        long totalSum = pref[n];\n\n        // dp[i] representará a menor soma coberta usando j etiquetas no prefixo i\n        long[] prev = new long[n + 1];\n        long[] curr = new long[n + 1];\n\n        for (int j = 1; j <= k; j++) {\n            int minI = j * c;\n            int maxI = n - (k - j) * c;\n\n            for (int i = minI; i <= maxI; i++) {\n                long sumC = pref[i] - pref[i - c];\n                long valCover = prev[i - c] + sumC;\n                if (i == minI) {\n                    curr[i] = valCover;\n                } else {\n                    curr[i] = Math.min(curr[i - 1], valCover);\n                }\n            }\n\n            long[] temp = prev;\n            prev = curr;\n            curr = temp;\n        }\n\n        long minCovered = prev[n];\n        long maxUncovered = totalSum - minCovered;\n\n        System.out.println(maxUncovered);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09666849998757243,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

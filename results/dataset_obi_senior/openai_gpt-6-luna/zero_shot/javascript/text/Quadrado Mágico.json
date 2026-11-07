@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:58:08.639526+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 543,
+            "output_tokens": 317,
+            "total_tokens": 860
+        },
+        "cost_usd": {
+            "input_cost": 5.4e-05,
+            "output_cost": 0.000159,
+            "total_cost": 0.000213
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst grid = [];\nlet index = 1;\nlet zeroRow = 0;\nlet zeroCol = 0;\n\nfor (let r = 0; r < n; r++) {\n  grid[r] = data.slice(index, index + n);\n  index += n;\n\n  const c = grid[r].indexOf(0);\n  if (c !== -1) {\n    zeroRow = r;\n    zeroCol = c;\n  }\n}\n\nconst magicSum = grid.find(row => !row.includes(0)).reduce((sum, value) => sum + value, 0);\nconst missingValue = magicSum - grid[zeroRow].reduce((sum, value) => sum + value, 0);\n\nconsole.log(missingValue);\nconsole.log(zeroRow + 1);\nconsole.log(zeroCol + 1);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst grid = [];\nlet index = 1;\nlet zeroRow = 0;\nlet zeroCol = 0;\n\nfor (let r = 0; r < n; r++) {\n  grid[r] = data.slice(index, index + n);\n  index += n;\n\n  const c = grid[r].indexOf(0);\n  if (c !== -1) {\n    zeroRow = r;\n    zeroCol = c;\n  }\n}\n\nconst magicSum = grid.find(row => !row.includes(0)).reduce((sum, value) => sum + value, 0);\nconst missingValue = magicSum - grid[zeroRow].reduce((sum, value) => sum + value, 0);\n\nconsole.log(missingValue);\nconsole.log(zeroRow + 1);\nconsole.log(zeroCol + 1);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05276439999579452,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

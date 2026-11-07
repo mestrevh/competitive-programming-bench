@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T20:57:27.379693+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1186,
+            "output_tokens": 7543,
+            "total_tokens": 8729
+        },
+        "cost_usd": {
+            "input_cost": 2.5e-05,
+            "output_cost": 0.003772,
+            "total_cost": 0.003797
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in, 1 << 16));\n        in.nextToken(); int n = (int) in.nval;\n        in.nextToken(); int m = (int) in.nval;\n\n        int[][] g = new int[n][m];\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < m; j++) {\n                in.nextToken();\n                g[i][j] = (int) in.nval;\n            }\n\n        // A condição (soma ímpar entre vizinhos) obriga um padrão de tabuleiro de xadrez.\n        // Só existem duas colorações possíveis:\n        //  A: células com (i+j) par devem ter valor par (e (i+j) ímpar → ímpar)\n        //  B: o oposto de A\n        // Como só podemos ADICIONAR gotas, virar a paridade de uma célula custa no mínimo 1\n        // (adicionar 1 gota); manter a paridade custa 0. Logo, o custo de cada coloração é\n        // o número de células com paridade \"errada\", e as duas somam N*M.\n\n        int costA = 0; // custo da coloração A\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < m; j++) {\n                boolean targetOdd = ((i + j) & 1) == 1; // coloração A: (i+j) ímpar -> ímpar\n                boolean isOdd = (g[i][j] & 1) == 1;\n                if (targetOdd != isOdd) costA++;\n            }\n\n        int total = n * m; // N*M é ímpar, logo não há empate entre as duas colorações\n        boolean evenClassOdd = 2 * costA > total; // true => usar coloração B ((i+j) par -> ímpar)\n        int best = evenClassOdd ? total - costA : costA;\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(best).append('\\n');\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < m; j++) {\n                boolean targetOdd = evenClassOdd ? ((i + j) & 1) == 0 : ((i + j) & 1) == 1;\n                int v = g[i][j];\n                if (((v & 1) == 1) != targetOdd) v++; // adiciona 1 gota para corrigir a paridade\n                if (j > 0) sb.append(' ');\n                sb.append(v);\n            }\n            sb.append('\\n');\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in, 1 << 16));\n        in.nextToken(); int n = (int) in.nval;\n        in.nextToken(); int m = (int) in.nval;\n\n        int[][] g = new int[n][m];\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < m; j++) {\n                in.nextToken();\n                g[i][j] = (int) in.nval;\n            }\n\n        // A condição (soma ímpar entre vizinhos) obriga um padrão de tabuleiro de xadrez.\n        // Só existem duas colorações possíveis:\n        //  A: células com (i+j) par devem ter valor par (e (i+j) ímpar → ímpar)\n        //  B: o oposto de A\n        // Como só podemos ADICIONAR gotas, virar a paridade de uma célula custa no mínimo 1\n        // (adicionar 1 gota); manter a paridade custa 0. Logo, o custo de cada coloração é\n        // o número de células com paridade \"errada\", e as duas somam N*M.\n\n        int costA = 0; // custo da coloração A\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < m; j++) {\n                boolean targetOdd = ((i + j) & 1) == 1; // coloração A: (i+j) ímpar -> ímpar\n                boolean isOdd = (g[i][j] & 1) == 1;\n                if (targetOdd != isOdd) costA++;\n            }\n\n        int total = n * m; // N*M é ímpar, logo não há empate entre as duas colorações\n        boolean evenClassOdd = 2 * costA > total; // true => usar coloração B ((i+j) par -> ímpar)\n        int best = evenClassOdd ? total - costA : costA;\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(best).append('\\n');\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < m; j++) {\n                boolean targetOdd = evenClassOdd ? ((i + j) & 1) == 0 : ((i + j) & 1) == 1;\n                int v = g[i][j];\n                if (((v & 1) == 1) != targetOdd) v++; // adiciona 1 gota para corrigir a paridade\n                if (j > 0) sb.append(' ');\n                sb.append(v);\n            }\n            sb.append('\\n');\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10937400005059317,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

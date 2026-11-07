@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:52:23.417784+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 517,
+            "output_tokens": 38957,
+            "total_tokens": 39474
+        },
+        "cost_usd": {
+            "input_cost": 1.1e-05,
+            "output_cost": 0.019478,
+            "total_cost": 0.01949
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint r[64];\n\nint main(void) {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    /* N = 2: impossivel (media de 2 numeros distintos nao pode pertencer a eles) */\n    if (N == 2) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    if (N & 1) {\n        /* N impar: preenchimento sequencial funciona.\n           Linha i tem media ((i-1)N + (N+1)/2), presente na coluna (N+1)/2.\n           Coluna j tem media ((N-1)/2)N + j, presente na linha (N+1)/2. */\n        int x = 1;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                if (j) putchar(' ');\n                printf(\"%d\", x++);\n            }\n            putchar('\\n');\n        }\n        return 0;\n    }\n\n    /* N par, N >= 4: quadrado da forma v(i,j) = W*r[i] + r[j] + 1\n       com r = (0, 1, ..., N-2, 3N/2 - 1).\n       soma(r) = N^2/2 => media(r) = N/2, que pertence a r.\n       Escolhendo W = 3N/2 > max(r) - min(r), todos os N^2 valores sao distintos.\n       Media da linha i  = W*r[i] + N/2 + 1 = v(i, N/2+1)  (presente na linha).\n       Media da coluna j = W*(N/2) + r[j] + 1 = v(N/2+1, j) (presente na coluna).\n       Maior valor = (3N/2)^2 = 3600 <= 10^6 para N <= 40. */\n    {\n        int m = N / 2;\n        int W = 3 * m;   /* 3N/2 */\n        int X = W - 1;   /* 3N/2 - 1 */\n        for (int i = 0; i < N - 1; i++) r[i] = i;\n        r[N - 1] = X;\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                if (j) putchar(' ');\n                printf(\"%d\", W * r[i] + r[j] + 1);\n            }\n            putchar('\\n');\n        }\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint r[64];\n\nint main(void) {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    /* N = 2: impossivel (media de 2 numeros distintos nao pode pertencer a eles) */\n    if (N == 2) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    if (N & 1) {\n        /* N impar: preenchimento sequencial funciona.\n           Linha i tem media ((i-1)N + (N+1)/2), presente na coluna (N+1)/2.\n           Coluna j tem media ((N-1)/2)N + j, presente na linha (N+1)/2. */\n        int x = 1;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                if (j) putchar(' ');\n                printf(\"%d\", x++);\n            }\n            putchar('\\n');\n        }\n        return 0;\n    }\n\n    /* N par, N >= 4: quadrado da forma v(i,j) = W*r[i] + r[j] + 1\n       com r = (0, 1, ..., N-2, 3N/2 - 1).\n       soma(r) = N^2/2 => media(r) = N/2, que pertence a r.\n       Escolhendo W = 3N/2 > max(r) - min(r), todos os N^2 valores sao distintos.\n       Media da linha i  = W*r[i] + N/2 + 1 = v(i, N/2+1)  (presente na linha).\n       Media da coluna j = W*(N/2) + r[j] + 1 = v(N/2+1, j) (presente na coluna).\n       Maior valor = (3N/2)^2 = 3600 <= 10^6 para N <= 40. */\n    {\n        int m = N / 2;\n        int W = 3 * m;   /* 3N/2 */\n        int X = W - 1;   /* 3N/2 - 1 */\n        for (int i = 0; i < N - 1; i++) r[i] = i;\n        r[N - 1] = X;\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                if (j) putchar(' ');\n                printf(\"%d\", W * r[i] + r[j] + 1);\n            }\n            putchar('\\n');\n        }\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.1175762000202667,
+            "counts": {
+                "AC": 0,
+                "WA": 15,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

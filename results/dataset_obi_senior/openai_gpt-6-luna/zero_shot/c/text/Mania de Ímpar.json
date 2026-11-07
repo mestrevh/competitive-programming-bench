@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:04:57.199814+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1070,
+            "output_tokens": 470,
+            "total_tokens": 1540
+        },
+        "cost_usd": {
+            "input_cost": 0.000107,
+            "output_cost": 0.000235,
+            "total_cost": 0.000342
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    int G[100][100];\n    int cost[2] = {0, 0};\n\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            scanf(\"%d\", &G[i][j]);\n            int parity = (i + j) % 2;\n            if ((G[i][j] % 2) != parity) cost[0]++;\n            if ((G[i][j] % 2) != (1 - parity)) cost[1]++;\n        }\n    }\n\n    int phase = (cost[1] < cost[0]) ? 1 : 0;\n    printf(\"%d\\n\", cost[phase]);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int desired = ((i + j) % 2) ^ phase;\n            int value = G[i][j];\n            if ((value % 2) != desired) value++;\n            printf(\"%d%c\", value, j + 1 == M ? '\\n' : ' ');\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    int G[100][100];\n    int cost[2] = {0, 0};\n\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            scanf(\"%d\", &G[i][j]);\n            int parity = (i + j) % 2;\n            if ((G[i][j] % 2) != parity) cost[0]++;\n            if ((G[i][j] % 2) != (1 - parity)) cost[1]++;\n        }\n    }\n\n    int phase = (cost[1] < cost[0]) ? 1 : 0;\n    printf(\"%d\\n\", cost[phase]);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int desired = ((i + j) % 2) ^ phase;\n            int value = G[i][j];\n            if ((value % 2) != desired) value++;\n            printf(\"%d%c\", value, j + 1 == M ? '\\n' : ' ');\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1444811999972444,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

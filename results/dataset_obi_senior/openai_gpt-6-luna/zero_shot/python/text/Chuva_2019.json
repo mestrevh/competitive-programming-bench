@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:15:24.148555+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 838,
+            "output_tokens": 2296,
+            "total_tokens": 3134
+        },
+        "cost_usd": {
+            "input_cost": 8.4e-05,
+            "output_cost": 0.001148,
+            "total_cost": 0.001232
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndata = sys.stdin.buffer.read().split()\nn, m = map(int, data[:2])\ngrid = [bytearray(row) for row in data[2:2 + n]]\n\nq = deque()\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == ord('o'):\n            q.append(i * m + j)\n\nwhile q:\n    pos = q.popleft()\n    i, j = divmod(pos, m)\n\n    if i + 1 < n:\n        if grid[i + 1][j] == ord('.'):\n            grid[i + 1][j] = ord('o')\n            q.append((i + 1) * m + j)\n\n        if grid[i + 1][j] == ord('#'):\n            if j > 0 and grid[i][j - 1] == ord('.'):\n                grid[i][j - 1] = ord('o')\n                q.append(i * m + j - 1)\n            if j + 1 < m and grid[i][j + 1] == ord('.'):\n                grid[i][j + 1] = ord('o')\n                q.append(i * m + j + 1)\n\nsys.stdout.buffer.write(b'\\n'.join(grid) + b'\\n')\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndata = sys.stdin.buffer.read().split()\nn, m = map(int, data[:2])\ngrid = [bytearray(row) for row in data[2:2 + n]]\n\nq = deque()\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == ord('o'):\n            q.append(i * m + j)\n\nwhile q:\n    pos = q.popleft()\n    i, j = divmod(pos, m)\n\n    if i + 1 < n:\n        if grid[i + 1][j] == ord('.'):\n            grid[i + 1][j] = ord('o')\n            q.append((i + 1) * m + j)\n\n        if grid[i + 1][j] == ord('#'):\n            if j > 0 and grid[i][j - 1] == ord('.'):\n                grid[i][j - 1] = ord('o')\n                q.append(i * m + j - 1)\n            if j + 1 < m and grid[i][j + 1] == ord('.'):\n                grid[i][j + 1] = ord('o')\n                q.append(i * m + j + 1)\n\nsys.stdout.buffer.write(b'\\n'.join(grid) + b'\\n')",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1746768999946653,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

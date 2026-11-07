@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:50:52.260995+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1288,
+            "output_tokens": 370,
+            "total_tokens": 1658
+        },
+        "cost_usd": {
+            "input_cost": 0.000129,
+            "output_cost": 0.000185,
+            "total_cost": 0.000314
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst N = Number(input[0]);\nconst Q = Number(input[1]);\n\nlet grid = Array.from({ length: N }, (_, i) =>\n  Array.from(input[i + 2], Number)\n);\n\nfor (let step = 0; step < Q; step++) {\n  const next = Array.from({ length: N }, () => new Array(N).fill(0));\n\n  for (let r = 0; r < N; r++) {\n    for (let c = 0; c < N; c++) {\n      let neighbors = 0;\n\n      for (let dr = -1; dr <= 1; dr++) {\n        for (let dc = -1; dc <= 1; dc++) {\n          if (dr === 0 && dc === 0) continue;\n          const nr = r + dr;\n          const nc = c + dc;\n          if (nr >= 0 && nr < N && nc >= 0 && nc < N) {\n            neighbors += grid[nr][nc];\n          }\n        }\n      }\n\n      next[r][c] = neighbors === 3 || (grid[r][c] === 1 && neighbors === 2) ? 1 : 0;\n    }\n  }\n\n  grid = next;\n}\n\nconsole.log(grid.map(row => row.join('')).join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst N = Number(input[0]);\nconst Q = Number(input[1]);\n\nlet grid = Array.from({ length: N }, (_, i) =>\n  Array.from(input[i + 2], Number)\n);\n\nfor (let step = 0; step < Q; step++) {\n  const next = Array.from({ length: N }, () => new Array(N).fill(0));\n\n  for (let r = 0; r < N; r++) {\n    for (let c = 0; c < N; c++) {\n      let neighbors = 0;\n\n      for (let dr = -1; dr <= 1; dr++) {\n        for (let dc = -1; dc <= 1; dc++) {\n          if (dr === 0 && dc === 0) continue;\n          const nr = r + dr;\n          const nc = c + dc;\n          if (nr >= 0 && nr < N && nc >= 0 && nc < N) {\n            neighbors += grid[nr][nc];\n          }\n        }\n      }\n\n      next[r][c] = neighbors === 3 || (grid[r][c] === 1 && neighbors === 2) ? 1 : 0;\n    }\n  }\n\n  grid = next;\n}\n\nconsole.log(grid.map(row => row.join('')).join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06600950000574812,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

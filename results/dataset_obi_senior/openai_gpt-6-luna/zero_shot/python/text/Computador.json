@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:17:19.395169+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 1060,
+            "total_tokens": 1817
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.00053,
+            "total_cost": 0.000606
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, m = data[0], data[1]\n    slope_tree = [0] * (n + 1)\n    intercept_tree = [0] * (n + 1)\n\n    def update(pos, ds, db):\n        while pos <= n:\n            slope_tree[pos] += ds\n            intercept_tree[pos] += db\n            pos += pos & -pos\n\n    out = []\n    p = 2\n\n    for _ in range(m):\n        typ = data[p]\n        i = data[p + 1]\n\n        if typ == 3:\n            s = b = 0\n            pos = i\n            while pos:\n                s += slope_tree[pos]\n                b += intercept_tree[pos]\n                pos -= pos & -pos\n            out.append(str(s * i + b))\n            p += 2\n        else:\n            v = data[p + 2]\n            if typ == 1:\n                left, right = i, min(n, i + v - 1)\n                ds, db = -1, v + i\n            else:\n                left, right = max(1, i - v + 1), i\n                ds, db = 1, v - i\n\n            update(left, ds, db)\n            if right < n:\n                update(right + 1, -ds, -db)\n            p += 3\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, m = data[0], data[1]\n    slope_tree = [0] * (n + 1)\n    intercept_tree = [0] * (n + 1)\n\n    def update(pos, ds, db):\n        while pos <= n:\n            slope_tree[pos] += ds\n            intercept_tree[pos] += db\n            pos += pos & -pos\n\n    out = []\n    p = 2\n\n    for _ in range(m):\n        typ = data[p]\n        i = data[p + 1]\n\n        if typ == 3:\n            s = b = 0\n            pos = i\n            while pos:\n                s += slope_tree[pos]\n                b += intercept_tree[pos]\n                pos -= pos & -pos\n            out.append(str(s * i + b))\n            p += 2\n        else:\n            v = data[p + 2]\n            if typ == 1:\n                left, right = i, min(n, i + v - 1)\n                ds, db = -1, v + i\n            else:\n                left, right = max(1, i - v + 1), i\n                ds, db = 1, v - i\n\n            update(left, ds, db)\n            if right < n:\n                update(right + 1, -ds, -db)\n            p += 3\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.6703798000016832,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

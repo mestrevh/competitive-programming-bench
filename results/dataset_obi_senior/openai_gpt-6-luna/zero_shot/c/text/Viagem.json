@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:18:15.160370+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1128,
+            "output_tokens": 1286,
+            "total_tokens": 2414
+        },
+        "cost_usd": {
+            "input_cost": 0.000113,
+            "output_cost": 0.000643,
+            "total_cost": 0.000756
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct {\n    int to, next, time, cost;\n} Edge;\n\ntypedef struct {\n    int node, cost;\n    long long time;\n} HeapItem;\n\nstatic HeapItem *heap;\nstatic int heap_size, heap_capacity;\n\nvoid push(HeapItem item) {\n    if (heap_size == heap_capacity) {\n        heap_capacity = heap_capacity ? heap_capacity * 2 : 1024;\n        heap = realloc(heap, (size_t)heap_capacity * sizeof(HeapItem));\n    }\n\n    int i = heap_size++;\n    while (i > 0) {\n        int parent = (i - 1) / 2;\n        if (heap[parent].time <= item.time) break;\n        heap[i] = heap[parent];\n        i = parent;\n    }\n    heap[i] = item;\n}\n\nHeapItem pop(void) {\n    HeapItem result = heap[0];\n    HeapItem last = heap[--heap_size];\n\n    if (heap_size > 0) {\n        int i = 0;\n        while (2 * i + 1 < heap_size) {\n            int child = 2 * i + 1;\n            if (child + 1 < heap_size &&\n                heap[child + 1].time < heap[child].time) {\n                child++;\n            }\n            if (heap[child].time >= last.time) break;\n            heap[i] = heap[child];\n            i = child;\n        }\n        heap[i] = last;\n    }\n\n    return result;\n}\n\nint main(void) {\n    int budget, n, m;\n    if (scanf(\"%d %d %d\", &budget, &n, &m) != 3) return 0;\n\n    int *head = malloc((size_t)(n + 1) * sizeof(int));\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    Edge *edges = malloc((size_t)(2 * m) * sizeof(Edge));\n    int edge_count = 0;\n\n    for (int i = 0; i < m; i++) {\n        int a, b, t, p;\n        scanf(\"%d %d %d %d\", &a, &b, &t, &p);\n\n        edges[edge_count] = (Edge){b, head[a], t, p};\n        head[a] = edge_count++;\n\n        edges[edge_count] = (Edge){a, head[b], t, p};\n        head[b] = edge_count++;\n    }\n\n    int start, destination;\n    scanf(\"%d %d\", &start, &destination);\n\n    int width = budget + 1;\n    size_t state_count = (size_t)(n + 1) * width;\n    long long *dist = malloc(state_count * sizeof(long long));\n    for (size_t i = 0; i < state_count; i++) dist[i] = LLONG_MAX;\n\n    size_t start_index = (size_t)start * width;\n    dist[start_index] = 0;\n    push((HeapItem){start, 0, 0});\n\n    while (heap_size > 0) {\n        HeapItem current = pop();\n        size_t index = (size_t)current.node * width + current.cost;\n\n        if (current.time != dist[index]) continue;\n        if (current.node == destination) {\n            printf(\"%lld\\n\", current.time);\n            free(head);\n            free(edges);\n            free(dist);\n            free(heap);\n            return 0;\n        }\n\n        for (int e = head[current.node]; e != -1; e = edges[e].next) {\n            int new_cost = current.cost + edges[e].cost;\n            if (new_cost > budget) continue;\n\n            long long new_time = current.time + edges[e].time;\n            size_t next_index = (size_t)edges[e].to * width + new_cost;\n\n            if (new_time < dist[next_index]) {\n                dist[next_index] = new_time;\n                push((HeapItem){edges[e].to, new_cost, new_time});\n            }\n        }\n    }\n\n    printf(\"-1\\n\");\n\n    free(head);\n    free(edges);\n    free(dist);\n    free(heap);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct {\n    int to, next, time, cost;\n} Edge;\n\ntypedef struct {\n    int node, cost;\n    long long time;\n} HeapItem;\n\nstatic HeapItem *heap;\nstatic int heap_size, heap_capacity;\n\nvoid push(HeapItem item) {\n    if (heap_size == heap_capacity) {\n        heap_capacity = heap_capacity ? heap_capacity * 2 : 1024;\n        heap = realloc(heap, (size_t)heap_capacity * sizeof(HeapItem));\n    }\n\n    int i = heap_size++;\n    while (i > 0) {\n        int parent = (i - 1) / 2;\n        if (heap[parent].time <= item.time) break;\n        heap[i] = heap[parent];\n        i = parent;\n    }\n    heap[i] = item;\n}\n\nHeapItem pop(void) {\n    HeapItem result = heap[0];\n    HeapItem last = heap[--heap_size];\n\n    if (heap_size > 0) {\n        int i = 0;\n        while (2 * i + 1 < heap_size) {\n            int child = 2 * i + 1;\n            if (child + 1 < heap_size &&\n                heap[child + 1].time < heap[child].time) {\n                child++;\n            }\n            if (heap[child].time >= last.time) break;\n            heap[i] = heap[child];\n            i = child;\n        }\n        heap[i] = last;\n    }\n\n    return result;\n}\n\nint main(void) {\n    int budget, n, m;\n    if (scanf(\"%d %d %d\", &budget, &n, &m) != 3) return 0;\n\n    int *head = malloc((size_t)(n + 1) * sizeof(int));\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    Edge *edges = malloc((size_t)(2 * m) * sizeof(Edge));\n    int edge_count = 0;\n\n    for (int i = 0; i < m; i++) {\n        int a, b, t, p;\n        scanf(\"%d %d %d %d\", &a, &b, &t, &p);\n\n        edges[edge_count] = (Edge){b, head[a], t, p};\n        head[a] = edge_count++;\n\n        edges[edge_count] = (Edge){a, head[b], t, p};\n        head[b] = edge_count++;\n    }\n\n    int start, destination;\n    scanf(\"%d %d\", &start, &destination);\n\n    int width = budget + 1;\n    size_t state_count = (size_t)(n + 1) * width;\n    long long *dist = malloc(state_count * sizeof(long long));\n    for (size_t i = 0; i < state_count; i++) dist[i] = LLONG_MAX;\n\n    size_t start_index = (size_t)start * width;\n    dist[start_index] = 0;\n    push((HeapItem){start, 0, 0});\n\n    while (heap_size > 0) {\n        HeapItem current = pop();\n        size_t index = (size_t)current.node * width + current.cost;\n\n        if (current.time != dist[index]) continue;\n        if (current.node == destination) {\n            printf(\"%lld\\n\", current.time);\n            free(head);\n            free(edges);\n            free(dist);\n            free(heap);\n            return 0;\n        }\n\n        for (int e = head[current.node]; e != -1; e = edges[e].next) {\n            int new_cost = current.cost + edges[e].cost;\n            if (new_cost > budget) continue;\n\n            long long new_time = current.time + edges[e].time;\n            size_t next_index = (size_t)edges[e].to * width + new_cost;\n\n            if (new_time < dist[next_index]) {\n                dist[next_index] = new_time;\n                push((HeapItem){edges[e].to, new_cost, new_time});\n            }\n        }\n    }\n\n    printf(\"-1\\n\");\n\n    free(head);\n    free(edges);\n    free(dist);\n    free(heap);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1364943999942625,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

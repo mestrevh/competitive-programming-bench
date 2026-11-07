@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:07:08.364738+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 752,
+            "output_tokens": 1034,
+            "total_tokens": 2919
+        },
+        "cost_usd": {
+            "input_cost": 0.000564,
+            "output_cost": 0.003877,
+            "total_cost": 0.004442
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 1000000000\n\ntypedef struct {\n    int to;\n    int next;\n} Edge;\n\nint head[300005];\nEdge edges[600005];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    edges[edge_cnt].to = v;\n    edges[edge_cnt].next = head[u];\n    head[u] = edge_cnt++;\n}\n\nint order[300005];\nint parent_node[300005];\nint queue[300005];\n\nvoid bfs(int n) {\n    int front = 0, back = 0;\n    queue[back++] = 1;\n    parent_node[1] = 0;\n    \n    // Visited can be tracked by parent_node != 0 or 1 for root\n    for (int i = 1; i <= n; i++) parent_node[i] = -1;\n    parent_node[1] = 0;\n\n    int idx = 0;\n    while (front < back) {\n        int u = queue[front++];\n        order[idx++] = u;\n        for (int e = head[u]; e != -1; e = edges[e].next) {\n            int v = edges[e].to;\n            if (v != parent_node[u]) {\n                parent_node[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n}\n\nint max_uncov[300005];\nint min_cent[300005];\n\nint check(int R, int n, int K) {\n    for (int i = 1; i <= n; i++) {\n        max_uncov[i] = 0;\n        min_cent[i] = INF;\n    }\n\n    int used = 0;\n\n    for (int i = n - 1; i >= 0; i--) {\n        int u = order[i];\n\n        if (max_uncov[u] + min_cent[u] <= R) {\n            max_uncov[u] = -INF;\n        }\n\n        if (max_uncov[u] == R) {\n            used++;\n            min_cent[u] = 0;\n            max_uncov[u] = -INF;\n        }\n\n        int p = parent_node[u];\n        if (p != 0) {\n            if (max_uncov[u] != -INF) {\n                if (max_uncov[u] + 1 > max_uncov[p]) {\n                    max_uncov[p] = max_uncov[u] + 1;\n                }\n            }\n            if (min_cent[u] != INF) {\n                if (min_cent[u] + 1 < min_cent[p]) {\n                    min_cent[p] = min_cent[u] + 1;\n                }\n            }\n        }\n    }\n\n    if (max_uncov[1] >= 0) {\n        used++;\n    }\n\n    return used <= K;\n}\n\nint main() {\n    int n, k;\n    if (scanf(\"%d %d\", &n, &k) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    for (int i = 0; i < n - 1; i++) {\n        int u, v;\n        if (scanf(\"%d %d\", &u, &v) != 2) return 0;\n        add_edge(u, v);\n        add_edge(v, u);\n    }\n\n    bfs(n);\n\n    int low = 0, high = n, ans = n;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (check(mid, n, k)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 1000000000\n\ntypedef struct {\n    int to;\n    int next;\n} Edge;\n\nint head[300005];\nEdge edges[600005];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    edges[edge_cnt].to = v;\n    edges[edge_cnt].next = head[u];\n    head[u] = edge_cnt++;\n}\n\nint order[300005];\nint parent_node[300005];\nint queue[300005];\n\nvoid bfs(int n) {\n    int front = 0, back = 0;\n    queue[back++] = 1;\n    parent_node[1] = 0;\n    \n    // Visited can be tracked by parent_node != 0 or 1 for root\n    for (int i = 1; i <= n; i++) parent_node[i] = -1;\n    parent_node[1] = 0;\n\n    int idx = 0;\n    while (front < back) {\n        int u = queue[front++];\n        order[idx++] = u;\n        for (int e = head[u]; e != -1; e = edges[e].next) {\n            int v = edges[e].to;\n            if (v != parent_node[u]) {\n                parent_node[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n}\n\nint max_uncov[300005];\nint min_cent[300005];\n\nint check(int R, int n, int K) {\n    for (int i = 1; i <= n; i++) {\n        max_uncov[i] = 0;\n        min_cent[i] = INF;\n    }\n\n    int used = 0;\n\n    for (int i = n - 1; i >= 0; i--) {\n        int u = order[i];\n\n        if (max_uncov[u] + min_cent[u] <= R) {\n            max_uncov[u] = -INF;\n        }\n\n        if (max_uncov[u] == R) {\n            used++;\n            min_cent[u] = 0;\n            max_uncov[u] = -INF;\n        }\n\n        int p = parent_node[u];\n        if (p != 0) {\n            if (max_uncov[u] != -INF) {\n                if (max_uncov[u] + 1 > max_uncov[p]) {\n                    max_uncov[p] = max_uncov[u] + 1;\n                }\n            }\n            if (min_cent[u] != INF) {\n                if (min_cent[u] + 1 < min_cent[p]) {\n                    min_cent[p] = min_cent[u] + 1;\n                }\n            }\n        }\n    }\n\n    if (max_uncov[1] >= 0) {\n        used++;\n    }\n\n    return used <= K;\n}\n\nint main() {\n    int n, k;\n    if (scanf(\"%d %d\", &n, &k) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    for (int i = 0; i < n - 1; i++) {\n        int u, v;\n        if (scanf(\"%d %d\", &u, &v) != 2) return 0;\n        add_edge(u, v);\n        add_edge(v, u);\n    }\n\n    bfs(n);\n\n    int low = 0, high = n, ans = n;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (check(mid, n, k)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18820979999145493,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

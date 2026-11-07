@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:51:56.332133+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 845,
+            "output_tokens": 780,
+            "total_tokens": 3280
+        },
+        "cost_usd": {
+            "input_cost": 0.000634,
+            "output_cost": 0.002925,
+            "total_cost": 0.003559
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Rect {\n    long long x1, y1, x2, y2;\n};\n\nlong long get_dist(const Rect& a, const Rect& b) {\n    long long dx = 0;\n    if (a.x1 > b.x2) {\n        dx = a.x1 - b.x2;\n    } else if (b.x1 > a.x2) {\n        dx = b.x1 - a.x2;\n    }\n\n    long long dy = 0;\n    if (a.y1 > b.y2) {\n        dy = a.y1 - b.y2;\n    } else if (b.y1 > a.y2) {\n        dy = b.y1 - a.y2;\n    }\n\n    return dx + dy;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    long long xi, yi, xf, yf;\n    if (!(cin >> xi >> yi >> xf >> yf)) return 0;\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<Rect> rects;\n    rects.reserve(n + 2);\n\n    rects.push_back({xi, yi, xi, yi});\n\n    for (int i = 0; i < n; ++i) {\n        long long x1, y1, x2, y2;\n        cin >> x1 >> y1 >> x2 >> y2;\n        if (x1 > x2) swap(x1, x2);\n        if (y1 > y2) swap(y1, y2);\n        rects.push_back({x1, y1, x2, y2});\n    }\n\n    rects.push_back({xf, yf, xf, yf});\n\n    int total_nodes = n + 2;\n    const long long INF = 1e18;\n    vector<long long> dist(total_nodes, INF);\n    vector<bool> visited(total_nodes, false);\n\n    dist[0] = 0;\n\n    for (int i = 0; i < total_nodes; ++i) {\n        int u = -1;\n        long long min_d = INF;\n\n        for (int j = 0; j < total_nodes; ++j) {\n            if (!visited[j] && dist[j] < min_d) {\n                min_d = dist[j];\n                u = j;\n            }\n        }\n\n        if (u == -1 || u == total_nodes - 1) {\n            break;\n        }\n\n        visited[u] = true;\n\n        for (int v = 0; v < total_nodes; ++v) {\n            if (!visited[v]) {\n                long long weight = get_dist(rects[u], rects[v]);\n                if (dist[u] + weight < dist[v]) {\n                    dist[v] = dist[u] + weight;\n                }\n            }\n        }\n    }\n\n    cout << dist[total_nodes - 1] << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Rect {\n    long long x1, y1, x2, y2;\n};\n\nlong long get_dist(const Rect& a, const Rect& b) {\n    long long dx = 0;\n    if (a.x1 > b.x2) {\n        dx = a.x1 - b.x2;\n    } else if (b.x1 > a.x2) {\n        dx = b.x1 - a.x2;\n    }\n\n    long long dy = 0;\n    if (a.y1 > b.y2) {\n        dy = a.y1 - b.y2;\n    } else if (b.y1 > a.y2) {\n        dy = b.y1 - a.y2;\n    }\n\n    return dx + dy;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    long long xi, yi, xf, yf;\n    if (!(cin >> xi >> yi >> xf >> yf)) return 0;\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<Rect> rects;\n    rects.reserve(n + 2);\n\n    rects.push_back({xi, yi, xi, yi});\n\n    for (int i = 0; i < n; ++i) {\n        long long x1, y1, x2, y2;\n        cin >> x1 >> y1 >> x2 >> y2;\n        if (x1 > x2) swap(x1, x2);\n        if (y1 > y2) swap(y1, y2);\n        rects.push_back({x1, y1, x2, y2});\n    }\n\n    rects.push_back({xf, yf, xf, yf});\n\n    int total_nodes = n + 2;\n    const long long INF = 1e18;\n    vector<long long> dist(total_nodes, INF);\n    vector<bool> visited(total_nodes, false);\n\n    dist[0] = 0;\n\n    for (int i = 0; i < total_nodes; ++i) {\n        int u = -1;\n        long long min_d = INF;\n\n        for (int j = 0; j < total_nodes; ++j) {\n            if (!visited[j] && dist[j] < min_d) {\n                min_d = dist[j];\n                u = j;\n            }\n        }\n\n        if (u == -1 || u == total_nodes - 1) {\n            break;\n        }\n\n        visited[u] = true;\n\n        for (int v = 0; v < total_nodes; ++v) {\n            if (!visited[v]) {\n                long long weight = get_dist(rects[u], rects[v]);\n                if (dist[u] + weight < dist[v]) {\n                    dist[v] = dist[u] + weight;\n                }\n            }\n        }\n    }\n\n    cout << dist[total_nodes - 1] << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1792303999827709,
+            "counts": {
+                "AC": 37,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 37
+        }
+    }
+]

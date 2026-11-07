@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:29:49.359349+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 960,
+            "output_tokens": 392,
+            "total_tokens": 1826
+        },
+        "cost_usd": {
+            "input_cost": 0.00072,
+            "output_cost": 0.00147,
+            "total_cost": 0.00219
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    it = iter(input_data)\n    E = int(next(it))\n    M = int(next(it))\n    D = int(next(it))\n    \n    same_group_wishes = []\n    for _ in range(M):\n        u = int(next(it))\n        v = int(next(it))\n        same_group_wishes.append((u, v))\n        \n    diff_group_wishes = []\n    for _ in range(D):\n        u = int(next(it))\n        v = int(next(it))\n        diff_group_wishes.append((u, v))\n        \n    group_id = [0] * (E + 1)\n    num_groups = E // 3\n    for g in range(num_groups):\n        a = int(next(it))\n        b = int(next(it))\n        c = int(next(it))\n        group_id[a] = g\n        group_id[b] = g\n        group_id[c] = g\n        \n    violations = 0\n    for u, v in same_group_wishes:\n        if group_id[u] != group_id[v]:\n            violations += 1\n            \n    for u, v in diff_group_wishes:\n        if group_id[u] == group_id[v]:\n            violations += 1\n            \n    print(violations)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    it = iter(input_data)\n    E = int(next(it))\n    M = int(next(it))\n    D = int(next(it))\n    \n    same_group_wishes = []\n    for _ in range(M):\n        u = int(next(it))\n        v = int(next(it))\n        same_group_wishes.append((u, v))\n        \n    diff_group_wishes = []\n    for _ in range(D):\n        u = int(next(it))\n        v = int(next(it))\n        diff_group_wishes.append((u, v))\n        \n    group_id = [0] * (E + 1)\n    num_groups = E // 3\n    for g in range(num_groups):\n        a = int(next(it))\n        b = int(next(it))\n        c = int(next(it))\n        group_id[a] = g\n        group_id[b] = g\n        group_id[c] = g\n        \n    violations = 0\n    for u, v in same_group_wishes:\n        if group_id[u] != group_id[v]:\n            violations += 1\n            \n    for u, v in diff_group_wishes:\n        if group_id[u] == group_id[v]:\n            violations += 1\n            \n    print(violations)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.23345079999853624,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

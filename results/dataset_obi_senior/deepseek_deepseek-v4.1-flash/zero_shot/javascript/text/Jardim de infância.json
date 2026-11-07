@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:08:52.307605+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1119,
+            "output_tokens": 20181,
+            "total_tokens": 21300
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.048434,
+            "total_cost": 0.048438
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst P = [];\nfor (let i = 0; i < 7; i++) {\n  P.push({ x: input[2 * i], y: input[2 * i + 1] });\n}\n\nfunction sub(a, b) {\n  return { x: a.x - b.x, y: a.y - b.y };\n}\n\nfunction dot(a, b) {\n  return a.x * b.x + a.y * b.y;\n}\n\nfunction cross(a, b, c) {\n  return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n}\n\nfunction dist2(a, b) {\n  const dx = a.x - b.x;\n  const dy = a.y - b.y;\n  return dx * dx + dy * dy;\n}\n\nlet valid = true;\n\n// 1. Ângulo ∠P2P1P3 agudo\nif (dot(sub(P[1], P[0]), sub(P[2], P[0])) <= 0) valid = false;\n\n// 2. P1P2 == P1P3\nif (dist2(P[0], P[1]) !== dist2(P[0], P[2])) valid = false;\n\n// 3. P2, P3, P4, P5 colineares\nif (cross(P[1], P[2], P[3]) !== 0 || cross(P[1], P[2], P[4]) !== 0) valid = false;\n\n// 4. Pontos médios de P2P3 e P4P5 coincidem\nif (P[1].x + P[2].x !== P[3].x + P[4].x || P[1].y + P[2].y !== P[3].y + P[4].y) valid = false;\n\n// 5. P2P3 > P4P5\nif (dist2(P[1], P[2]) <= dist2(P[3], P[4])) valid = false;\n\n// 6. P4P6 e P5P7 perpendiculares a P2P3\nconst base = sub(P[2], P[1]); // P3 - P2\nif (dot(sub(P[5], P[3]), base) !== 0) valid = false;\nif (dot(sub(P[6], P[4]), base) !== 0) valid = false;\n\n// 7. P4P6 == P5P7\nif (dist2(P[3], P[5]) !== dist2(P[4], P[6])) valid = false;\n\n// 8. P1 e P6 separados pela reta P2P3\nconst cross1 = cross(P[1], P[2], P[0]);\nconst cross6 = cross(P[1], P[2], P[5]);\nif (!((cross1 > 0 && cross6 < 0) || (cross1 < 0 && cross6 > 0))) valid = false;\n\nconsole.log(valid ? 'S' : 'N');\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst P = [];\nfor (let i = 0; i < 7; i++) {\n  P.push({ x: input[2 * i], y: input[2 * i + 1] });\n}\n\nfunction sub(a, b) {\n  return { x: a.x - b.x, y: a.y - b.y };\n}\n\nfunction dot(a, b) {\n  return a.x * b.x + a.y * b.y;\n}\n\nfunction cross(a, b, c) {\n  return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n}\n\nfunction dist2(a, b) {\n  const dx = a.x - b.x;\n  const dy = a.y - b.y;\n  return dx * dx + dy * dy;\n}\n\nlet valid = true;\n\n// 1. Ângulo ∠P2P1P3 agudo\nif (dot(sub(P[1], P[0]), sub(P[2], P[0])) <= 0) valid = false;\n\n// 2. P1P2 == P1P3\nif (dist2(P[0], P[1]) !== dist2(P[0], P[2])) valid = false;\n\n// 3. P2, P3, P4, P5 colineares\nif (cross(P[1], P[2], P[3]) !== 0 || cross(P[1], P[2], P[4]) !== 0) valid = false;\n\n// 4. Pontos médios de P2P3 e P4P5 coincidem\nif (P[1].x + P[2].x !== P[3].x + P[4].x || P[1].y + P[2].y !== P[3].y + P[4].y) valid = false;\n\n// 5. P2P3 > P4P5\nif (dist2(P[1], P[2]) <= dist2(P[3], P[4])) valid = false;\n\n// 6. P4P6 e P5P7 perpendiculares a P2P3\nconst base = sub(P[2], P[1]); // P3 - P2\nif (dot(sub(P[5], P[3]), base) !== 0) valid = false;\nif (dot(sub(P[6], P[4]), base) !== 0) valid = false;\n\n// 7. P4P6 == P5P7\nif (dist2(P[3], P[5]) !== dist2(P[4], P[6])) valid = false;\n\n// 8. P1 e P6 separados pela reta P2P3\nconst cross1 = cross(P[1], P[2], P[0]);\nconst cross6 = cross(P[1], P[2], P[5]);\nif (!((cross1 > 0 && cross6 < 0) || (cross1 < 0 && cross6 > 0))) valid = false;\n\nconsole.log(valid ? 'S' : 'N');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06580569999641739,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

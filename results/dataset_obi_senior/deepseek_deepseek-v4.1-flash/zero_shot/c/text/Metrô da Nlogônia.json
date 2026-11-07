@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:34:02.089767+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 953,
+            "output_tokens": 7467,
+            "total_tokens": 8420
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.017921,
+            "total_cost": 0.017924
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int read_center(int n) {\n    int *head = (int *)malloc((n + 1) * sizeof(int));\n    int *to = (int *)malloc((2 * n) * sizeof(int));\n    int *nxt = (int *)malloc((2 * n) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    int ec = 0;\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[ec] = b;\n        nxt[ec] = head[a];\n        head[a] = ec++;\n\n        to[ec] = a;\n        nxt[ec] = head[b];\n        head[b] = ec++;\n    }\n\n    int *queue = (int *)malloc((n + 1) * sizeof(int));\n    int *dist = (int *)malloc((n + 1) * sizeof(int));\n    int *parent = (int *)malloc((n + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) dist[i] = -1;\n\n    int front = 0, rear = 0;\n    int start = 1;\n    queue[rear++] = start;\n    dist[start] = 0;\n    parent[start] = 0;\n\n    int far = start;\n\n    while (front < rear) {\n        int u = queue[front++];\n\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[rear++] = v;\n            }\n        }\n    }\n\n    int a = far;\n\n    for (int i = 1; i <= n; i++) dist[i] = -1;\n\n    front = rear = 0;\n    queue[rear++] = a;\n    dist[a] = 0;\n    parent[a] = 0;\n    far = a;\n\n    while (front < rear) {\n        int u = queue[front++];\n\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[rear++] = v;\n            }\n        }\n    }\n\n    int b = far;\n    int diameter = dist[b];\n\n    int cur = b;\n    int steps = diameter - diameter / 2;\n    for (int i = 0; i < steps; i++) {\n        cur = parent[cur];\n    }\n\n    free(head);\n    free(to);\n    free(nxt);\n    free(queue);\n    free(dist);\n    free(parent);\n\n    return cur;\n}\n\nint main(void) {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int c1 = read_center(N);\n    int c2 = read_center(M);\n\n    printf(\"%d %d\\n\", c1, c2);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int read_center(int n) {\n    int *head = (int *)malloc((n + 1) * sizeof(int));\n    int *to = (int *)malloc((2 * n) * sizeof(int));\n    int *nxt = (int *)malloc((2 * n) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    int ec = 0;\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[ec] = b;\n        nxt[ec] = head[a];\n        head[a] = ec++;\n\n        to[ec] = a;\n        nxt[ec] = head[b];\n        head[b] = ec++;\n    }\n\n    int *queue = (int *)malloc((n + 1) * sizeof(int));\n    int *dist = (int *)malloc((n + 1) * sizeof(int));\n    int *parent = (int *)malloc((n + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) dist[i] = -1;\n\n    int front = 0, rear = 0;\n    int start = 1;\n    queue[rear++] = start;\n    dist[start] = 0;\n    parent[start] = 0;\n\n    int far = start;\n\n    while (front < rear) {\n        int u = queue[front++];\n\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[rear++] = v;\n            }\n        }\n    }\n\n    int a = far;\n\n    for (int i = 1; i <= n; i++) dist[i] = -1;\n\n    front = rear = 0;\n    queue[rear++] = a;\n    dist[a] = 0;\n    parent[a] = 0;\n    far = a;\n\n    while (front < rear) {\n        int u = queue[front++];\n\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[rear++] = v;\n            }\n        }\n    }\n\n    int b = far;\n    int diameter = dist[b];\n\n    int cur = b;\n    int steps = diameter - diameter / 2;\n    for (int i = 0; i < steps; i++) {\n        cur = parent[cur];\n    }\n\n    free(head);\n    free(to);\n    free(nxt);\n    free(queue);\n    free(dist);\n    free(parent);\n\n    return cur;\n}\n\nint main(void) {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int c1 = read_center(N);\n    int c2 = read_center(M);\n\n    printf(\"%d %d\\n\", c1, c2);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14040150001528673,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:58:42.638496+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 615,
+            "output_tokens": 943,
+            "total_tokens": 1558
+        },
+        "cost_usd": {
+            "input_cost": 6.2e-05,
+            "output_cost": 0.000472,
+            "total_cost": 0.000533
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.HashMap;\nimport java.util.HashSet;\nimport java.util.Map;\nimport java.util.Set;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n\n        Map<String, Integer> frequency = new HashMap<>();\n        for (int i = 0; i < n; i++) {\n            String password = fs.next();\n            frequency.put(password, frequency.getOrDefault(password, 0) + 1);\n        }\n\n        long answer = 0;\n        for (Map.Entry<String, Integer> entry : frequency.entrySet()) {\n            String password = entry.getKey();\n            int count = entry.getValue();\n\n            Set<String> substrings = new HashSet<>();\n            for (int start = 0; start < password.length(); start++) {\n                for (int end = start + 1; end <= password.length(); end++) {\n                    substrings.add(password.substring(start, end));\n                }\n            }\n\n            long matchingUsers = 0;\n            for (String substring : substrings) {\n                matchingUsers += frequency.getOrDefault(substring, 0);\n            }\n\n            answer += (long) count * (matchingUsers - 1);\n        }\n\n        System.out.println(answer);\n    }\n\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        String next() throws IOException {\n            StringBuilder sb = new StringBuilder();\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            while (c > ' ') {\n                sb.append((char) c);\n                c = read();\n            }\n            return sb.toString();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.HashMap;\nimport java.util.HashSet;\nimport java.util.Map;\nimport java.util.Set;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n\n        Map<String, Integer> frequency = new HashMap<>();\n        for (int i = 0; i < n; i++) {\n            String password = fs.next();\n            frequency.put(password, frequency.getOrDefault(password, 0) + 1);\n        }\n\n        long answer = 0;\n        for (Map.Entry<String, Integer> entry : frequency.entrySet()) {\n            String password = entry.getKey();\n            int count = entry.getValue();\n\n            Set<String> substrings = new HashSet<>();\n            for (int start = 0; start < password.length(); start++) {\n                for (int end = start + 1; end <= password.length(); end++) {\n                    substrings.add(password.substring(start, end));\n                }\n            }\n\n            long matchingUsers = 0;\n            for (String substring : substrings) {\n                matchingUsers += frequency.getOrDefault(substring, 0);\n            }\n\n            answer += (long) count * (matchingUsers - 1);\n        }\n\n        System.out.println(answer);\n    }\n\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        String next() throws IOException {\n            StringBuilder sb = new StringBuilder();\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            while (c > ' ') {\n                sb.append((char) c);\n                c = read();\n            }\n            return sb.toString();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15444379999826197,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

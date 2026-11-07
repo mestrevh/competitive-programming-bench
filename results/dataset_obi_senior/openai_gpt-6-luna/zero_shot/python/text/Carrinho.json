@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:14:25.379901+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 613,
+            "output_tokens": 613,
+            "total_tokens": 1226
+        },
+        "cost_usd": {
+            "input_cost": 6.1e-05,
+            "output_cost": 0.000307,
+            "total_cost": 0.000368
+        },
+        "raw_response": "```python\nimport sys\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\nd = float(data[1])\n\npositions = []\ncharges = []\nidx = 2\nfor _ in range(n):\n    positions.append(float(data[idx]))\n    charges.append(float(data[idx + 1]))\n    idx += 2\n\ndp = [float(\"inf\")] * n\ndp[0] = 0.0\n\nfor j in range(1, n):\n    for i in range(j):\n        distance = positions[j] - positions[i]\n        dp[j] = min(dp[j], dp[i] + distance * distance / charges[i])\n\nanswer = float(\"inf\")\nfor i in range(n):\n    distance = d - positions[i]\n    answer = min(answer, dp[i] + distance * distance / charges[i])\n\nprint(f\"{answer:.3f}\")\n```",
+        "extracted_code": "import sys\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\nd = float(data[1])\n\npositions = []\ncharges = []\nidx = 2\nfor _ in range(n):\n    positions.append(float(data[idx]))\n    charges.append(float(data[idx + 1]))\n    idx += 2\n\ndp = [float(\"inf\")] * n\ndp[0] = 0.0\n\nfor j in range(1, n):\n    for i in range(j):\n        distance = positions[j] - positions[i]\n        dp[j] = min(dp[j], dp[i] + distance * distance / charges[i])\n\nanswer = float(\"inf\")\nfor i in range(n):\n    distance = d - positions[i]\n    answer = min(answer, dp[i] + distance * distance / charges[i])\n\nprint(f\"{answer:.3f}\")",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.233070599999337,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

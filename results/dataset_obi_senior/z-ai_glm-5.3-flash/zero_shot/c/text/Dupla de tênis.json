@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:02:20.757810+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 513,
+            "output_tokens": 394,
+            "total_tokens": 907
+        },
+        "cost_usd": {
+            "input_cost": 1.1e-05,
+            "output_cost": 0.000197,
+            "total_cost": 0.000208
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    int x = *(const int *)a, y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint abs2(int x) { return x < 0 ? -x : x; }\n\nint main(void) {\n    int v[4];\n    for (int i = 0; i < 4; i++) {\n        if (scanf(\"%d\", &v[i]) != 1) return 0;\n    }\n    qsort(v, 4, sizeof(int), cmp);\n\n    int best = 1 << 30;\n    /* TODOS os subconjuntos de tamanho 2 (cada divisao contada duas vezes) */\n    int idx[4] = {0, 1, 2, 3};\n    for (int i = 0; i < 4; i++) {\n        for (int j = i + 1; j < 4; j++) {\n            int t1 = v[i] + v[j];\n            int t2 = 0;\n            for (int k = 0; k < 4; k++) {\n                if (k != i && k != j) t2 += v[k];\n            }\n            int diff = abs2(t1 - t2);\n            if (diff < best) best = diff;\n        }\n    }\n\n    printf(\"%d\\n\", best);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    int x = *(const int *)a, y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint abs2(int x) { return x < 0 ? -x : x; }\n\nint main(void) {\n    int v[4];\n    for (int i = 0; i < 4; i++) {\n        if (scanf(\"%d\", &v[i]) != 1) return 0;\n    }\n    qsort(v, 4, sizeof(int), cmp);\n\n    int best = 1 << 30;\n    /* TODOS os subconjuntos de tamanho 2 (cada divisao contada duas vezes) */\n    int idx[4] = {0, 1, 2, 3};\n    for (int i = 0; i < 4; i++) {\n        for (int j = i + 1; j < 4; j++) {\n            int t1 = v[i] + v[j];\n            int t2 = 0;\n            for (int k = 0; k < 4; k++) {\n                if (k != i && k != j) t2 += v[k];\n            }\n            int diff = abs2(t1 - t2);\n            if (diff < best) best = diff;\n        }\n    }\n\n    printf(\"%d\\n\", best);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12320859997998923,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

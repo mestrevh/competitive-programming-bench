@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:48:52.071484+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 812,
+            "output_tokens": 2871,
+            "total_tokens": 3683
+        },
+        "cost_usd": {
+            "input_cost": 8.1e-05,
+            "output_cost": 0.001435,
+            "total_cost": 0.001517
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nxi, yi, xf, yf = data[:4]\nn = data[4]\nrects = [tuple(data[5 + 4 * i:9 + 4 * i]) for i in range(n)]\n\ntarget = n\ndist = [0] * (n + 1)\n\nfor i, (x1, y1, x2, y2) in enumerate(rects):\n    dx = max(x1 - xf, 0, xf - x2)\n    dy = max(y1 - yf, 0, yf - y2)\n    dist[i] = dx + dy\n\ndist[target] = abs(xi - xf) + abs(yi - yf)\nvisited = [False] * (n + 1)\n\nfor _ in range(n + 1):\n    u = -1\n    best = 10**30\n    for i in range(n + 1):\n        if not visited[i] and dist[i] < best:\n            best = dist[i]\n            u = i\n\n    if u == target:\n        print(best)\n        break\n\n    visited[u] = True\n    ax1, ay1, ax2, ay2 = rects[u]\n\n    for v in range(n):\n        if not visited[v]:\n            bx1, by1, bx2, by2 = rects[v]\n            dx = max(ax1 - bx2, 0, bx1 - ax2)\n            dy = max(ay1 - by2, 0, by1 - ay2)\n            candidate = best + dx + dy\n            if candidate < dist[v]:\n                dist[v] = candidate\n\n    if not visited[target]:\n        dx = max(ax1 - xf, 0, xf - ax2)\n        dy = max(ay1 - yf, 0, yf - ay2)\n        candidate = best + dx + dy\n        if candidate < dist[target]:\n            dist[target] = candidate\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nxi, yi, xf, yf = data[:4]\nn = data[4]\nrects = [tuple(data[5 + 4 * i:9 + 4 * i]) for i in range(n)]\n\ntarget = n\ndist = [0] * (n + 1)\n\nfor i, (x1, y1, x2, y2) in enumerate(rects):\n    dx = max(x1 - xf, 0, xf - x2)\n    dy = max(y1 - yf, 0, yf - y2)\n    dist[i] = dx + dy\n\ndist[target] = abs(xi - xf) + abs(yi - yf)\nvisited = [False] * (n + 1)\n\nfor _ in range(n + 1):\n    u = -1\n    best = 10**30\n    for i in range(n + 1):\n        if not visited[i] and dist[i] < best:\n            best = dist[i]\n            u = i\n\n    if u == target:\n        print(best)\n        break\n\n    visited[u] = True\n    ax1, ay1, ax2, ay2 = rects[u]\n\n    for v in range(n):\n        if not visited[v]:\n            bx1, by1, bx2, by2 = rects[v]\n            dx = max(ax1 - bx2, 0, bx1 - ax2)\n            dy = max(ay1 - by2, 0, by1 - ay2)\n            candidate = best + dx + dy\n            if candidate < dist[v]:\n                dist[v] = candidate\n\n    if not visited[target]:\n        dx = max(ax1 - xf, 0, xf - ax2)\n        dy = max(ay1 - yf, 0, yf - ay2)\n        candidate = best + dx + dy\n        if candidate < dist[target]:\n            dist[target] = candidate",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.3255231000002823,
+            "counts": {
+                "AC": 8,
+                "WA": 29,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 37
+        }
+    }
+]

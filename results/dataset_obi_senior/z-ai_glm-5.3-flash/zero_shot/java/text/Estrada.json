@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T19:28:14.976021+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 710,
+            "output_tokens": 3044,
+            "total_tokens": 3754
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.001522,
+            "total_cost": 0.001537
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.Arrays;\nimport java.util.Locale;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StreamTokenizer in = new StreamTokenizer(br);\n\n        in.nextToken();\n        int T = (int) in.nval;\n        in.nextToken();\n        int N = (int) in.nval;\n\n        int[] x = new int[N];\n        for (int i = 0; i < N; i++) {\n            in.nextToken();\n            x[i] = (int) in.nval;\n        }\n\n        Arrays.sort(x);\n\n        double ans = Double.MAX_VALUE;\n\n        // Cidade mais a oeste: vizinhanca vai da fronteira oeste (0) ate o ponto medio com a vizinha da direita\n        ans = Math.min(ans, (x[0] + x[1]) / 2.0);\n\n        // Cidade mais a leste: vizinhanca vai do ponto medio com a vizinha da esquerda ate a fronteira leste (T)\n        ans = Math.min(ans, T - (x[N - 2] + x[N - 1]) / 2.0);\n\n        // Cidades intermediarias: pontos medios com os dois vizinhos\n        for (int i = 1; i + 1 < N; i++) {\n            ans = Math.min(ans, (x[i + 1] - x[i - 1]) / 2.0);\n        }\n\n        System.out.printf(Locale.US, \"%.2f\\n\", ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.Arrays;\nimport java.util.Locale;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StreamTokenizer in = new StreamTokenizer(br);\n\n        in.nextToken();\n        int T = (int) in.nval;\n        in.nextToken();\n        int N = (int) in.nval;\n\n        int[] x = new int[N];\n        for (int i = 0; i < N; i++) {\n            in.nextToken();\n            x[i] = (int) in.nval;\n        }\n\n        Arrays.sort(x);\n\n        double ans = Double.MAX_VALUE;\n\n        // Cidade mais a oeste: vizinhanca vai da fronteira oeste (0) ate o ponto medio com a vizinha da direita\n        ans = Math.min(ans, (x[0] + x[1]) / 2.0);\n\n        // Cidade mais a leste: vizinhanca vai do ponto medio com a vizinha da esquerda ate a fronteira leste (T)\n        ans = Math.min(ans, T - (x[N - 2] + x[N - 1]) / 2.0);\n\n        // Cidades intermediarias: pontos medios com os dois vizinhos\n        for (int i = 1; i + 1 < N; i++) {\n            ans = Math.min(ans, (x[i + 1] - x[i - 1]) / 2.0);\n        }\n\n        System.out.printf(Locale.US, \"%.2f\\n\", ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11602459999267012,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

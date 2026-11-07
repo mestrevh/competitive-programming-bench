@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T16:28:10.054584+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1308,
+            "output_tokens": 1241,
+            "total_tokens": 2549
+        },
+        "cost_usd": {
+            "input_cost": 2.8e-05,
+            "output_cost": 0.00062,
+            "total_cost": 0.000648
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n#define LOG 17\n\nstatic int N, B, C;\n\ntypedef struct { int a, b, w; } Edge;\nstatic Edge edges[MAXN];\n\n/* DSU */\nstatic int dsu[MAXN];\nstatic int find(int x){ while(dsu[x]!=x){ dsu[x]=dsu[dsu[x]]; x=dsu[x]; } return x; }\n\n/* MST adjacency */\nstatic int head[MAXN], nxt[2*MAXN], to[2*MAXN], wt[2*MAXN], ecnt;\n\nstatic void addEdge(int u,int v,int w){\n    to[ecnt]=v; wt[ecnt]=w; nxt[ecnt]=head[u]; head[u]=ecnt++;\n}\n\nstatic int dep[MAXN], par[LOG][MAXN], minw[LOG][MAXN];\nstatic int order[MAXN], ocnt;\n\nstatic int cmpEdge(const void *p, const void *q){\n    return ((const Edge*)q)->w - ((const Edge*)p)->w;\n}\n\nint main(void){\n    if(scanf(\"%d %d\",&N,&B)!=2) return 0;\n    for(int i=0;i<B;i++){\n        int a,b,w; scanf(\"%d %d %d\",&a,&b,&w);\n        edges[i].a=a; edges[i].b=b; edges[i].w=w;\n    }\n    qsort(edges,B,sizeof(Edge),cmpEdge);\n    for(int i=1;i<=N;i++) dsu[i]=i, head[i]=-1;\n    ecnt=0;\n    int taken=0;\n    for(int i=0;i<B && taken<N-1;i++){\n        int ra=find(edges[i].a), rb=find(edges[i].b);\n        if(ra!=rb){\n            dsu[ra]=rb;\n            addEdge(edges[i].a,edges[i].b,edges[i].w);\n            addEdge(edges[i].b,edges[i].a,edges[i].w);\n            taken++;\n        }\n    }\n    /* BFS from node 1 */\n    static int qq[MAXN];\n    int qh=0,qt=0;\n    for(int i=1;i<=N;i++) dep[i]=-1;\n    dep[1]=0; par[0][1]=0; minw[0][1]=0;\n    qq[qt++]=1; ocnt=0;\n    while(qh<qt){\n        int u=qq[qh++]; order[ocnt++]=u;\n        for(int e=head[u]; e!=-1; e=nxt[e]){\n            int v=to[e];\n            if(dep[v]==-1){\n                dep[v]=dep[u]+1;\n                par[0][v]=u;\n                minw[0][v]=wt[e];\n                qq[qt++]=v;\n            }\n        }\n    }\n    for(int k=1;k<LOG;k++){\n        for(int i=0;i<ocnt;i++){\n            int v=order[i];\n            int p=par[k-1][v];\n            if(p){\n                par[k][v]=par[k-1][p];\n                minw[k][v]= minw[k-1][v] < minw[k-1][p] ? minw[k-1][v] : minw[k-1][p];\n            } else {\n                par[k][v]=0;\n                minw[k][v]=0;\n            }\n        }\n    }\n    scanf(\"%d\",&C);\n    /* output buffer */\n    static char out[5*50000*8];\n    int opos=0;\n    for(int c=0;c<C;c++){\n        int x,y; scanf(\"%d %d\",&x,&y);\n        int ans=1000000000;\n        if(dep[x]<dep[y]){ int t=x; x=y; y=t; }\n        int d=dep[x]-dep[y];\n        for(int k=0; d; k++, d>>=1){\n            if(d&1){\n                if(minw[k][x] && minw[k][x]<ans) ans=minw[k][x];\n                x=par[k][x];\n            }\n        }\n        if(x!=y){\n            for(int k=LOG-1;k>=0;k--){\n                if(par[k][x]!=par[k][y]){\n                    if(minw[k][x] && minw[k][x]<ans) ans=minw[k][x];\n                    if(minw[k][y] && minw[k][y]<ans) ans=minw[k][y];\n                    x=par[k][x]; y=par[k][y];\n                }\n            }\n            if(minw[0][x] && minw[0][x]<ans) ans=minw[0][x];\n            if(minw[0][y] && minw[0][y]<ans) ans=minw[0][y];\n        }\n        opos += sprintf(out+opos,\"%d\\n\",ans);\n    }\n    fwrite(out,1,opos,stdout);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n#define LOG 17\n\nstatic int N, B, C;\n\ntypedef struct { int a, b, w; } Edge;\nstatic Edge edges[MAXN];\n\n/* DSU */\nstatic int dsu[MAXN];\nstatic int find(int x){ while(dsu[x]!=x){ dsu[x]=dsu[dsu[x]]; x=dsu[x]; } return x; }\n\n/* MST adjacency */\nstatic int head[MAXN], nxt[2*MAXN], to[2*MAXN], wt[2*MAXN], ecnt;\n\nstatic void addEdge(int u,int v,int w){\n    to[ecnt]=v; wt[ecnt]=w; nxt[ecnt]=head[u]; head[u]=ecnt++;\n}\n\nstatic int dep[MAXN], par[LOG][MAXN], minw[LOG][MAXN];\nstatic int order[MAXN], ocnt;\n\nstatic int cmpEdge(const void *p, const void *q){\n    return ((const Edge*)q)->w - ((const Edge*)p)->w;\n}\n\nint main(void){\n    if(scanf(\"%d %d\",&N,&B)!=2) return 0;\n    for(int i=0;i<B;i++){\n        int a,b,w; scanf(\"%d %d %d\",&a,&b,&w);\n        edges[i].a=a; edges[i].b=b; edges[i].w=w;\n    }\n    qsort(edges,B,sizeof(Edge),cmpEdge);\n    for(int i=1;i<=N;i++) dsu[i]=i, head[i]=-1;\n    ecnt=0;\n    int taken=0;\n    for(int i=0;i<B && taken<N-1;i++){\n        int ra=find(edges[i].a), rb=find(edges[i].b);\n        if(ra!=rb){\n            dsu[ra]=rb;\n            addEdge(edges[i].a,edges[i].b,edges[i].w);\n            addEdge(edges[i].b,edges[i].a,edges[i].w);\n            taken++;\n        }\n    }\n    /* BFS from node 1 */\n    static int qq[MAXN];\n    int qh=0,qt=0;\n    for(int i=1;i<=N;i++) dep[i]=-1;\n    dep[1]=0; par[0][1]=0; minw[0][1]=0;\n    qq[qt++]=1; ocnt=0;\n    while(qh<qt){\n        int u=qq[qh++]; order[ocnt++]=u;\n        for(int e=head[u]; e!=-1; e=nxt[e]){\n            int v=to[e];\n            if(dep[v]==-1){\n                dep[v]=dep[u]+1;\n                par[0][v]=u;\n                minw[0][v]=wt[e];\n                qq[qt++]=v;\n            }\n        }\n    }\n    for(int k=1;k<LOG;k++){\n        for(int i=0;i<ocnt;i++){\n            int v=order[i];\n            int p=par[k-1][v];\n            if(p){\n                par[k][v]=par[k-1][p];\n                minw[k][v]= minw[k-1][v] < minw[k-1][p] ? minw[k-1][v] : minw[k-1][p];\n            } else {\n                par[k][v]=0;\n                minw[k][v]=0;\n            }\n        }\n    }\n    scanf(\"%d\",&C);\n    /* output buffer */\n    static char out[5*50000*8];\n    int opos=0;\n    for(int c=0;c<C;c++){\n        int x,y; scanf(\"%d %d\",&x,&y);\n        int ans=1000000000;\n        if(dep[x]<dep[y]){ int t=x; x=y; y=t; }\n        int d=dep[x]-dep[y];\n        for(int k=0; d; k++, d>>=1){\n            if(d&1){\n                if(minw[k][x] && minw[k][x]<ans) ans=minw[k][x];\n                x=par[k][x];\n            }\n        }\n        if(x!=y){\n            for(int k=LOG-1;k>=0;k--){\n                if(par[k][x]!=par[k][y]){\n                    if(minw[k][x] && minw[k][x]<ans) ans=minw[k][x];\n                    if(minw[k][y] && minw[k][y]<ans) ans=minw[k][y];\n                    x=par[k][x]; y=par[k][y];\n                }\n            }\n            if(minw[0][x] && minw[0][x]<ans) ans=minw[0][x];\n            if(minw[0][y] && minw[0][y]<ans) ans=minw[0][y];\n        }\n        opos += sprintf(out+opos,\"%d\\n\",ans);\n    }\n    fwrite(out,1,opos,stdout);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1864095999917481,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

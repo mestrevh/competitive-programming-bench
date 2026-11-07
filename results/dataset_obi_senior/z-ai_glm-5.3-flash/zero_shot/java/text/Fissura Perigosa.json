@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T19:44:58.128038+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 948,
+            "output_tokens": 5671,
+            "total_tokens": 6619
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.002835,
+            "total_cost": 0.002856
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        // Leitura robusta de toda a entrada (tokens separados por whitespace)\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sbIn = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sbIn.append(line).append(' ');\n        }\n        StringTokenizer tok = new StringTokenizer(sbIn.toString());\n        int n = Integer.parseInt(tok.nextToken());\n        int f = Integer.parseInt(tok.nextToken());\n\n        char[][] grid = new char[n][];\n        for (int i = 0; i < n; i++) {\n            grid[i] = tok.nextToken().toCharArray();\n        }\n\n        // BFS (flood fill) a partir do canto superior esquerdo,\n        // somente se a própria posição inicial puder ser invadida.\n        if (grid[0][0] - '0' <= f) {\n            int[] queue = new int[n * n];\n            int head = 0, tail = 0;\n            grid[0][0] = '*';\n            queue[tail++] = 0;\n\n            while (head < tail) {\n                int cur = queue[head++];\n                int r = cur / n, c = cur % n;\n\n                if (r > 0 && grid[r - 1][c] != '*' && grid[r - 1][c] - '0' <= f) {\n                    grid[r - 1][c] = '*';\n                    queue[tail++] = cur - n;\n                }\n                if (r < n - 1 && grid[r + 1][c] != '*' && grid[r + 1][c] - '0' <= f) {\n                    grid[r + 1][c] = '*';\n                    queue[tail++] = cur + n;\n                }\n                if (c > 0 && grid[r][c - 1] != '*' && grid[r][c - 1] - '0' <= f) {\n                    grid[r][c - 1] = '*';\n                    queue[tail++] = cur - 1;\n                }\n                if (c < n - 1 && grid[r][c + 1] != '*' && grid[r][c + 1] - '0' <= f) {\n                    grid[r][c + 1] = '*';\n                    queue[tail++] = cur + 1;\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder(n * (n + 1));\n        for (int i = 0; i < n; i++) {\n            sb.append(grid[i]).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        // Leitura robusta de toda a entrada (tokens separados por whitespace)\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sbIn = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sbIn.append(line).append(' ');\n        }\n        StringTokenizer tok = new StringTokenizer(sbIn.toString());\n        int n = Integer.parseInt(tok.nextToken());\n        int f = Integer.parseInt(tok.nextToken());\n\n        char[][] grid = new char[n][];\n        for (int i = 0; i < n; i++) {\n            grid[i] = tok.nextToken().toCharArray();\n        }\n\n        // BFS (flood fill) a partir do canto superior esquerdo,\n        // somente se a própria posição inicial puder ser invadida.\n        if (grid[0][0] - '0' <= f) {\n            int[] queue = new int[n * n];\n            int head = 0, tail = 0;\n            grid[0][0] = '*';\n            queue[tail++] = 0;\n\n            while (head < tail) {\n                int cur = queue[head++];\n                int r = cur / n, c = cur % n;\n\n                if (r > 0 && grid[r - 1][c] != '*' && grid[r - 1][c] - '0' <= f) {\n                    grid[r - 1][c] = '*';\n                    queue[tail++] = cur - n;\n                }\n                if (r < n - 1 && grid[r + 1][c] != '*' && grid[r + 1][c] - '0' <= f) {\n                    grid[r + 1][c] = '*';\n                    queue[tail++] = cur + n;\n                }\n                if (c > 0 && grid[r][c - 1] != '*' && grid[r][c - 1] - '0' <= f) {\n                    grid[r][c - 1] = '*';\n                    queue[tail++] = cur - 1;\n                }\n                if (c < n - 1 && grid[r][c + 1] != '*' && grid[r][c + 1] - '0' <= f) {\n                    grid[r][c + 1] = '*';\n                    queue[tail++] = cur + 1;\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder(n * (n + 1));\n        for (int i = 0; i < n; i++) {\n            sb.append(grid[i]).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14142380002886057,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

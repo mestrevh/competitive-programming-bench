@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:36:19.039529+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1377,
+            "output_tokens": 1307,
+            "total_tokens": 2684
+        },
+        "cost_usd": {
+            "input_cost": 0.000138,
+            "output_cost": 0.000654,
+            "total_cost": 0.000791
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, m, k = data[0], data[1], data[2]\n\n    parent = list(range(n))\n    size = [1] * n\n    components = n\n    roads = []\n    water_cycle = False\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        nonlocal components\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return False\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n        components -= 1\n        return True\n\n    pos = 3\n    for _ in range(m):\n        a, b, t = data[pos] - 1, data[pos + 1] - 1, data[pos + 2]\n        pos += 3\n        if t == 1:\n            if not union(a, b):\n                water_cycle = True\n        else:\n            roads.append((a, b))\n\n    if water_cycle:\n        print(\"N\")\n        return\n\n    for a, b in roads:\n        union(a, b)\n\n    print(\"S\" if m - n + components <= k else \"N\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, m, k = data[0], data[1], data[2]\n\n    parent = list(range(n))\n    size = [1] * n\n    components = n\n    roads = []\n    water_cycle = False\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        nonlocal components\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return False\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n        components -= 1\n        return True\n\n    pos = 3\n    for _ in range(m):\n        a, b, t = data[pos] - 1, data[pos + 1] - 1, data[pos + 2]\n        pos += 3\n        if t == 1:\n            if not union(a, b):\n                water_cycle = True\n        else:\n            roads.append((a, b))\n\n    if water_cycle:\n        print(\"N\")\n        return\n\n    for a, b in roads:\n        union(a, b)\n\n    print(\"S\" if m - n + components <= k else \"N\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.157574900003965,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

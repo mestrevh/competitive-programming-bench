@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T23:42:24.592986+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1119,
+            "output_tokens": 8941,
+            "total_tokens": 10060
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.00447,
+            "total_cost": 0.004494
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    ll px[8], py[8];\n    for (int i = 1; i <= 7; i++) cin >> px[i] >> py[i];\n\n    auto sq = [](ll a) { return a * a; };\n\n    bool ok = true;\n\n    // Vectors P1->P2 and P1->P3\n    ll ux = px[2] - px[1], uy = py[2] - py[1];\n    ll vx = px[3] - px[1], vy = py[3] - py[1];\n\n    // 1) Angle P2P1P3 acute (dot product strictly positive)\n    ok = ok && (ux * vx + uy * vy > 0);\n\n    // 2) |P1P2| == |P1P3|\n    ok = ok && (sq(ux) + sq(uy) == sq(vx) + sq(vy));\n\n    // Direction of line P2P3 (P2 != P3 guaranteed)\n    ll dx = px[3] - px[2], dy = py[3] - py[2];\n\n    // 3) P2, P3, P4, P5 collinear\n    ll c4 = dx * (py[4] - py[2]) - dy * (px[4] - px[2]);\n    ll c5 = dx * (py[5] - py[2]) - dy * (px[5] - px[2]);\n    ok = ok && (c4 == 0 && c5 == 0);\n\n    // 4) Midpoints of P2P3 and P4P5 coincide\n    ok = ok && (px[2] + px[3] == px[4] + px[5] && py[2] + py[3] == py[4] + py[5]);\n\n    // 5) |P2P3| > |P4P5|\n    ok = ok && (sq(dx) + sq(dy) > sq(px[5] - px[4]) + sq(py[5] - py[4]));\n\n    // 6) P4P6 and P5P7 perpendicular to P2P3\n    ll ax = px[6] - px[4], ay = py[6] - py[4];\n    ll bx = px[7] - px[5], by = py[7] - py[5];\n    ok = ok && (ax * dx + ay * dy == 0);\n    ok = ok && (bx * dx + by * dy == 0);\n\n    // 7) |P4P6| == |P5P7|\n    ok = ok && (sq(ax) + sq(ay) == sq(bx) + sq(by));\n\n    // 8) P1 and P6 on strictly opposite sides of the line through P2P3\n    ll s1 = dx * (py[1] - py[2]) - dy * (px[1] - px[2]);\n    ll s6 = dx * (py[6] - py[2]) - dy * (px[6] - px[2]);\n    ok = ok && ((s1 > 0 && s6 < 0) || (s1 < 0 && s6 > 0));\n\n    cout << (ok ? 'S' : 'N') << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    ll px[8], py[8];\n    for (int i = 1; i <= 7; i++) cin >> px[i] >> py[i];\n\n    auto sq = [](ll a) { return a * a; };\n\n    bool ok = true;\n\n    // Vectors P1->P2 and P1->P3\n    ll ux = px[2] - px[1], uy = py[2] - py[1];\n    ll vx = px[3] - px[1], vy = py[3] - py[1];\n\n    // 1) Angle P2P1P3 acute (dot product strictly positive)\n    ok = ok && (ux * vx + uy * vy > 0);\n\n    // 2) |P1P2| == |P1P3|\n    ok = ok && (sq(ux) + sq(uy) == sq(vx) + sq(vy));\n\n    // Direction of line P2P3 (P2 != P3 guaranteed)\n    ll dx = px[3] - px[2], dy = py[3] - py[2];\n\n    // 3) P2, P3, P4, P5 collinear\n    ll c4 = dx * (py[4] - py[2]) - dy * (px[4] - px[2]);\n    ll c5 = dx * (py[5] - py[2]) - dy * (px[5] - px[2]);\n    ok = ok && (c4 == 0 && c5 == 0);\n\n    // 4) Midpoints of P2P3 and P4P5 coincide\n    ok = ok && (px[2] + px[3] == px[4] + px[5] && py[2] + py[3] == py[4] + py[5]);\n\n    // 5) |P2P3| > |P4P5|\n    ok = ok && (sq(dx) + sq(dy) > sq(px[5] - px[4]) + sq(py[5] - py[4]));\n\n    // 6) P4P6 and P5P7 perpendicular to P2P3\n    ll ax = px[6] - px[4], ay = py[6] - py[4];\n    ll bx = px[7] - px[5], by = py[7] - py[5];\n    ok = ok && (ax * dx + ay * dy == 0);\n    ok = ok && (bx * dx + by * dy == 0);\n\n    // 7) |P4P6| == |P5P7|\n    ok = ok && (sq(ax) + sq(ay) == sq(bx) + sq(by));\n\n    // 8) P1 and P6 on strictly opposite sides of the line through P2P3\n    ll s1 = dx * (py[1] - py[2]) - dy * (px[1] - px[2]);\n    ll s6 = dx * (py[6] - py[2]) - dy * (px[6] - px[2]);\n    ok = ok && ((s1 > 0 && s6 < 0) || (s1 < 0 && s6 > 0));\n\n    cout << (ok ? 'S' : 'N') << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16621300000406336,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:12:25.620204+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1754,
+            "output_tokens": 978,
+            "total_tokens": 19647
+        },
+        "cost_usd": {
+            "input_cost": 0.001315,
+            "output_cost": 0.003667,
+            "total_cost": 0.004983
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n\n    N = int(next(iterator))\n\n    p = [0] * (N + 1)\n    adj = [[] for _ in range(N + 1)]\n    for i in range(2, N + 1):\n        pi = int(next(iterator))\n        p[i] = pi\n        adj[pi].append(i)\n\n    # DFS iterativa para calcular tin, tout e depth\n    tin = [0] * (N + 1)\n    tout = [0] * (N + 1)\n    depth = [0] * (N + 1)\n\n    timer = 0\n    stack = [(1, 0, 0)]  # (node, adj_index, state)\n\n    while stack:\n        u, idx, state = stack.pop()\n        if state == 0:\n            timer += 1\n            tin[u] = timer\n            stack.append((u, 0, 1))\n            children = adj[u]\n            for v in reversed(children):\n                depth[v] = depth[u] + 1\n                stack.append((v, 0, 0))\n        else:\n            tout[u] = timer\n\n    MAXLOG = 18\n    up = [[0] * (N + 1) for _ in range(MAXLOG)]\n    for i in range(1, N + 1):\n        up[0][i] = p[i]\n\n    for j in range(1, MAXLOG):\n        up_j = up[j]\n        up_prev = up[j - 1]\n        for i in range(1, N + 1):\n            up_j[i] = up_prev[up_prev[i]]\n\n    def get_kth_ancestor(x, k):\n        for i in range(MAXLOG):\n            if (k >> i) & 1:\n                x = up[i][x]\n        return x\n\n    # Fenwick Tree (BIT) para point query, range update\n    bit = [0] * (N + 2)\n\n    def bit_add(idx, val):\n        while idx <= N:\n            bit[idx] += val\n            idx += idx & -idx\n\n    def bit_query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & -idx\n        return s\n\n    Q = int(next(iterator))\n    out = []\n\n    for _ in range(Q):\n        op = next(iterator)\n        if op == \"1\":\n            v = int(next(iterator))\n            k = int(next(iterator))\n\n            parent_v = p[v]\n            if parent_v == 0 or bit_query(tin[parent_v]) == 0:\n                # Nenhum ancestral de v foi achatado\n                ans = get_kth_ancestor(v, k)\n                out.append(str(ans))\n            else:\n                # Encontrar o ancestral achatado mais alto\n                curr = parent_v\n                for i in range(MAXLOG - 1, -1, -1):\n                    anc = up[i][curr]\n                    if anc != 0 and bit_query(tin[anc]) > 0:\n                        curr = anc\n                A = curr\n\n                if k == 1:\n                    out.append(str(A))\n                else:\n                    ans = get_kth_ancestor(A, k - 1)\n                    out.append(str(ans))\n        else:\n            v = int(next(iterator))\n            # 2 v só tem efeito se nem v nem nenhum ancestral de v foi achatado\n            if bit_query(tin[v]) == 0:\n                bit_add(tin[v], 1)\n                bit_add(tout[v] + 1, -1)\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n\n    N = int(next(iterator))\n\n    p = [0] * (N + 1)\n    adj = [[] for _ in range(N + 1)]\n    for i in range(2, N + 1):\n        pi = int(next(iterator))\n        p[i] = pi\n        adj[pi].append(i)\n\n    # DFS iterativa para calcular tin, tout e depth\n    tin = [0] * (N + 1)\n    tout = [0] * (N + 1)\n    depth = [0] * (N + 1)\n\n    timer = 0\n    stack = [(1, 0, 0)]  # (node, adj_index, state)\n\n    while stack:\n        u, idx, state = stack.pop()\n        if state == 0:\n            timer += 1\n            tin[u] = timer\n            stack.append((u, 0, 1))\n            children = adj[u]\n            for v in reversed(children):\n                depth[v] = depth[u] + 1\n                stack.append((v, 0, 0))\n        else:\n            tout[u] = timer\n\n    MAXLOG = 18\n    up = [[0] * (N + 1) for _ in range(MAXLOG)]\n    for i in range(1, N + 1):\n        up[0][i] = p[i]\n\n    for j in range(1, MAXLOG):\n        up_j = up[j]\n        up_prev = up[j - 1]\n        for i in range(1, N + 1):\n            up_j[i] = up_prev[up_prev[i]]\n\n    def get_kth_ancestor(x, k):\n        for i in range(MAXLOG):\n            if (k >> i) & 1:\n                x = up[i][x]\n        return x\n\n    # Fenwick Tree (BIT) para point query, range update\n    bit = [0] * (N + 2)\n\n    def bit_add(idx, val):\n        while idx <= N:\n            bit[idx] += val\n            idx += idx & -idx\n\n    def bit_query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & -idx\n        return s\n\n    Q = int(next(iterator))\n    out = []\n\n    for _ in range(Q):\n        op = next(iterator)\n        if op == \"1\":\n            v = int(next(iterator))\n            k = int(next(iterator))\n\n            parent_v = p[v]\n            if parent_v == 0 or bit_query(tin[parent_v]) == 0:\n                # Nenhum ancestral de v foi achatado\n                ans = get_kth_ancestor(v, k)\n                out.append(str(ans))\n            else:\n                # Encontrar o ancestral achatado mais alto\n                curr = parent_v\n                for i in range(MAXLOG - 1, -1, -1):\n                    anc = up[i][curr]\n                    if anc != 0 and bit_query(tin[anc]) > 0:\n                        curr = anc\n                A = curr\n\n                if k == 1:\n                    out.append(str(A))\n                else:\n                    ans = get_kth_ancestor(A, k - 1)\n                    out.append(str(ans))\n        else:\n            v = int(next(iterator))\n            # 2 v só tem efeito se nem v nem nenhum ancestral de v foi achatado\n            if bit_query(tin[v]) == 0:\n                bit_add(tin[v], 1)\n                bit_add(tout[v] + 1, -1)\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.6159713000015472,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

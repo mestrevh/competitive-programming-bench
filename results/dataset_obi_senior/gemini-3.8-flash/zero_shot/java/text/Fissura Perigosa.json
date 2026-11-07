@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:21:57.574377+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 971,
+            "output_tokens": 542,
+            "total_tokens": 2080
+        },
+        "cost_usd": {
+            "input_cost": 0.000728,
+            "output_cost": 0.002032,
+            "total_cost": 0.002761
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.PrintWriter;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int n = Integer.parseInt(st.nextToken());\n        int f = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[n][];\n        for (int i = 0; i < n; i++) {\n            grid[i] = reader.readLine().trim().toCharArray();\n        }\n\n        if (grid[0][0] - '0' <= f) {\n            grid[0][0] = '*';\n            int[] queue = new int[n * n];\n            int head = 0;\n            int tail = 0;\n            queue[tail++] = 0; // encode as r * n + c\n\n            int[] dr = {-1, 1, 0, 0};\n            int[] dc = {0, 0, -1, 1};\n\n            while (head < tail) {\n                int curr = queue[head++];\n                int r = curr / n;\n                int c = curr % n;\n\n                for (int d = 0; d < 4; d++) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n\n                    if (nr >= 0 && nr < n && nc >= 0 && nc < n) {\n                        if (grid[nr][nc] != '*' && (grid[nr][nc] - '0') <= f) {\n                            grid[nr][nc] = '*';\n                            queue[tail++] = nr * n + nc;\n                        }\n                    }\n                }\n            }\n        }\n\n        PrintWriter out = new PrintWriter(System.out);\n        for (int i = 0; i < n; i++) {\n            out.println(grid[i]);\n        }\n        out.flush();\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.PrintWriter;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int n = Integer.parseInt(st.nextToken());\n        int f = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[n][];\n        for (int i = 0; i < n; i++) {\n            grid[i] = reader.readLine().trim().toCharArray();\n        }\n\n        if (grid[0][0] - '0' <= f) {\n            grid[0][0] = '*';\n            int[] queue = new int[n * n];\n            int head = 0;\n            int tail = 0;\n            queue[tail++] = 0; // encode as r * n + c\n\n            int[] dr = {-1, 1, 0, 0};\n            int[] dc = {0, 0, -1, 1};\n\n            while (head < tail) {\n                int curr = queue[head++];\n                int r = curr / n;\n                int c = curr % n;\n\n                for (int d = 0; d < 4; d++) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n\n                    if (nr >= 0 && nr < n && nc >= 0 && nc < n) {\n                        if (grid[nr][nc] != '*' && (grid[nr][nc] - '0') <= f) {\n                            grid[nr][nc] = '*';\n                            queue[tail++] = nr * n + nc;\n                        }\n                    }\n                }\n            }\n        }\n\n        PrintWriter out = new PrintWriter(System.out);\n        for (int i = 0; i < n; i++) {\n            out.println(grid[i]);\n        }\n        out.flush();\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11831910000182688,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

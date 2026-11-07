@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:11:51.192529+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 610,
+            "output_tokens": 669,
+            "total_tokens": 2973
+        },
+        "cost_usd": {
+            "input_cost": 0.000458,
+            "output_cost": 0.002509,
+            "total_cost": 0.002966
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n\n    static char[] addOne(char[] num) {\n        int n = num.length;\n        char[] res = new char[n];\n        int carry = 1;\n        for (int i = n - 1; i >= 0; i--) {\n            int d = (num[i] - '0') + carry;\n            if (d >= 10) {\n                res[i] = (char) ('0' + (d - 10));\n                carry = 1;\n            } else {\n                res[i] = (char) ('0' + d);\n                carry = 0;\n            }\n        }\n        if (carry == 1) {\n            char[] extended = new char[n + 1];\n            extended[0] = '1';\n            System.arraycopy(res, 0, extended, 1, n);\n            return extended;\n        }\n        return res;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        int n = Integer.parseInt(line.trim());\n        char[] s = new char[n];\n        int count = 0;\n\n        while (count < n) {\n            String l = reader.readLine();\n            if (l == null) break;\n            StringTokenizer tokenizer = new StringTokenizer(l);\n            while (tokenizer.hasMoreTokens() && count < n) {\n                s[count++] = tokenizer.nextToken().charAt(0);\n            }\n        }\n\n        for (int l = 1; l <= n; l++) {\n            char[] cur = new char[l];\n            System.arraycopy(s, 0, cur, 0, l);\n\n            int idx = l;\n            boolean ok = true;\n\n            while (idx < n) {\n                cur = addOne(cur);\n                int len = cur.length;\n                if (idx + len > n) {\n                    ok = false;\n                    break;\n                }\n                for (int j = 0; j < len; j++) {\n                    if (s[idx + j] != cur[j]) {\n                        ok = false;\n                        break;\n                    }\n                }\n                if (!ok) break;\n                idx += len;\n            }\n\n            if (ok && idx == n) {\n                System.out.println(new String(s, 0, l));\n                return;\n            }\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n\n    static char[] addOne(char[] num) {\n        int n = num.length;\n        char[] res = new char[n];\n        int carry = 1;\n        for (int i = n - 1; i >= 0; i--) {\n            int d = (num[i] - '0') + carry;\n            if (d >= 10) {\n                res[i] = (char) ('0' + (d - 10));\n                carry = 1;\n            } else {\n                res[i] = (char) ('0' + d);\n                carry = 0;\n            }\n        }\n        if (carry == 1) {\n            char[] extended = new char[n + 1];\n            extended[0] = '1';\n            System.arraycopy(res, 0, extended, 1, n);\n            return extended;\n        }\n        return res;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        int n = Integer.parseInt(line.trim());\n        char[] s = new char[n];\n        int count = 0;\n\n        while (count < n) {\n            String l = reader.readLine();\n            if (l == null) break;\n            StringTokenizer tokenizer = new StringTokenizer(l);\n            while (tokenizer.hasMoreTokens() && count < n) {\n                s[count++] = tokenizer.nextToken().charAt(0);\n            }\n        }\n\n        for (int l = 1; l <= n; l++) {\n            char[] cur = new char[l];\n            System.arraycopy(s, 0, cur, 0, l);\n\n            int idx = l;\n            boolean ok = true;\n\n            while (idx < n) {\n                cur = addOne(cur);\n                int len = cur.length;\n                if (idx + len > n) {\n                    ok = false;\n                    break;\n                }\n                for (int j = 0; j < len; j++) {\n                    if (s[idx + j] != cur[j]) {\n                        ok = false;\n                        break;\n                    }\n                }\n                if (!ok) break;\n                idx += len;\n            }\n\n            if (ok && idx == n) {\n                System.out.println(new String(s, 0, l));\n                return;\n            }\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.08795289997942746,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 33,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:42:04.483293+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 610,
+            "output_tokens": 445,
+            "total_tokens": 2715
+        },
+        "cost_usd": {
+            "input_cost": 0.000458,
+            "output_cost": 0.001669,
+            "total_cost": 0.002126
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nStr = nextToken();\n    if (!nStr) return;\n    const N = parseInt(nStr, 10);\n\n    let digits = '';\n    for (let i = 0; i < N; i++) {\n        digits += nextToken();\n    }\n\n    // O primeiro dígito não pode ser '0' para A >= 1\n    // Testamos todos os comprimentos possíveis L de A, de 1 até N.\n    // O primeiro L que gerar exatamente a sequência de dígitos fornece o menor valor de A.\n    for (let L = 1; L <= N; L++) {\n        const aStr = digits.slice(0, L);\n        let curr = BigInt(aStr);\n        let idx = 0;\n        let matched = true;\n\n        while (idx < N) {\n            const s = curr.toString();\n            if (idx + s.length > N) {\n                matched = false;\n                break;\n            }\n            if (digits.startsWith(s, idx)) {\n                idx += s.length;\n                curr++;\n            } else {\n                matched = false;\n                break;\n            }\n        }\n\n        if (matched && idx === N) {\n            console.log(aStr);\n            return;\n        }\n    }\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nStr = nextToken();\n    if (!nStr) return;\n    const N = parseInt(nStr, 10);\n\n    let digits = '';\n    for (let i = 0; i < N; i++) {\n        digits += nextToken();\n    }\n\n    // O primeiro dígito não pode ser '0' para A >= 1\n    // Testamos todos os comprimentos possíveis L de A, de 1 até N.\n    // O primeiro L que gerar exatamente a sequência de dígitos fornece o menor valor de A.\n    for (let L = 1; L <= N; L++) {\n        const aStr = digits.slice(0, L);\n        let curr = BigInt(aStr);\n        let idx = 0;\n        let matched = true;\n\n        while (idx < N) {\n            const s = curr.toString();\n            if (idx + s.length > N) {\n                matched = false;\n                break;\n            }\n            if (digits.startsWith(s, idx)) {\n                idx += s.length;\n                curr++;\n            } else {\n                matched = false;\n                break;\n            }\n        }\n\n        if (matched && idx === N) {\n            console.log(aStr);\n            return;\n        }\n    }\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06374879999202676,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

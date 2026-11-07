@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:02:37.356632+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 795,
+            "total_tokens": 2265
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.002981,
+            "total_cost": 0.003676
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) {\n                return true;\n            } else {\n                ptr = 0;\n                try {\n                    buflen = in.read(buffer);\n                } catch (IOException e) {\n                    e.printStackTrace();\n                }\n                return buflen > 0;\n            }\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            else return -1;\n        }\n\n        private static boolean isPrintableChar(int c) {\n            return c >= 33 && c <= 126;\n        }\n\n        public boolean hasNext() {\n            while (hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;\n            return hasNextByte();\n        }\n\n        public int nextInt() {\n            if (!hasNext()) throw new RuntimeException(\"No more input\");\n            int n = 0;\n            boolean minus = false;\n            int b = readByte();\n            if (b == '-') {\n                minus = true;\n                b = readByte();\n            }\n            while (true) {\n                if (b >= '0' && b <= '9') {\n                    n = n * 10 + (b - '0');\n                } else {\n                    return minus ? -n : n;\n                }\n                b = readByte();\n            }\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        int k = scanner.nextInt();\n        int u = scanner.nextInt();\n\n        List<Integer>[] numToCards = new ArrayList[u + 1];\n        for (int i = 1; i <= u; i++) {\n            numToCards[i] = new ArrayList<>();\n        }\n\n        int[] remaining = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            remaining[i] = k;\n            for (int j = 0; j < k; j++) {\n                int val = scanner.nextInt();\n                numToCards[val].add(i);\n            }\n        }\n\n        List<Integer> winners = new ArrayList<>();\n        for (int step = 0; step < u; step++) {\n            int drawn = scanner.nextInt();\n            if (!winners.isEmpty()) {\n                continue;\n            }\n\n            for (int card : numToCards[drawn]) {\n                remaining[card]--;\n                if (remaining[card] == 0) {\n                    winners.add(card);\n                }\n            }\n        }\n\n        winners.sort(null);\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < winners.size(); i++) {\n            if (i > 0) sb.append(\" \");\n            sb.append(winners.get(i));\n        }\n        System.out.println(sb.toString());\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) {\n                return true;\n            } else {\n                ptr = 0;\n                try {\n                    buflen = in.read(buffer);\n                } catch (IOException e) {\n                    e.printStackTrace();\n                }\n                return buflen > 0;\n            }\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            else return -1;\n        }\n\n        private static boolean isPrintableChar(int c) {\n            return c >= 33 && c <= 126;\n        }\n\n        public boolean hasNext() {\n            while (hasNextByte() && !isPrintableChar(buffer[ptr])) ptr++;\n            return hasNextByte();\n        }\n\n        public int nextInt() {\n            if (!hasNext()) throw new RuntimeException(\"No more input\");\n            int n = 0;\n            boolean minus = false;\n            int b = readByte();\n            if (b == '-') {\n                minus = true;\n                b = readByte();\n            }\n            while (true) {\n                if (b >= '0' && b <= '9') {\n                    n = n * 10 + (b - '0');\n                } else {\n                    return minus ? -n : n;\n                }\n                b = readByte();\n            }\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        int k = scanner.nextInt();\n        int u = scanner.nextInt();\n\n        List<Integer>[] numToCards = new ArrayList[u + 1];\n        for (int i = 1; i <= u; i++) {\n            numToCards[i] = new ArrayList<>();\n        }\n\n        int[] remaining = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            remaining[i] = k;\n            for (int j = 0; j < k; j++) {\n                int val = scanner.nextInt();\n                numToCards[val].add(i);\n            }\n        }\n\n        List<Integer> winners = new ArrayList<>();\n        for (int step = 0; step < u; step++) {\n            int drawn = scanner.nextInt();\n            if (!winners.isEmpty()) {\n                continue;\n            }\n\n            for (int card : numToCards[drawn]) {\n                remaining[card]--;\n                if (remaining[card] == 0) {\n                    winners.add(card);\n                }\n            }\n        }\n\n        winners.sort(null);\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < winners.size(); i++) {\n            if (i > 0) sb.append(\" \");\n            sb.append(winners.get(i));\n        }\n        System.out.println(sb.toString());\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16797420001239516,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

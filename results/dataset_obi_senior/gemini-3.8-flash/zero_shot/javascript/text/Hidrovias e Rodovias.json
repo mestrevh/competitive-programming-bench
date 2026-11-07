@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:53:50.883973+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1476,
+            "output_tokens": 665,
+            "total_tokens": 4822
+        },
+        "cost_usd": {
+            "input_cost": 0.001107,
+            "output_cost": 0.002494,
+            "total_cost": 0.003601
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const M = nextInt();\n    const K = nextInt();\n\n    const parent = new Int32Array(N + 1);\n    for (let i = 1; i <= N; i++) {\n        parent[i] = i;\n    }\n\n    function find(i) {\n        let root = i;\n        while (root !== parent[root]) {\n            root = parent[root];\n        }\n        let curr = i;\n        while (curr !== root) {\n            let nxt = parent[curr];\n            parent[curr] = root;\n            curr = nxt;\n        }\n        return root;\n    }\n\n    function union(i, j) {\n        const rootI = find(i);\n        const rootJ = find(j);\n        if (rootI !== rootJ) {\n            parent[rootI] = rootJ;\n            return true;\n        }\n        return false;\n    }\n\n    const roadsU = [];\n    const roadsV = [];\n    let hasWaterCycle = false;\n\n    for (let i = 0; i < M; i++) {\n        const u = nextInt();\n        const v = nextInt();\n        const t = nextInt();\n\n        if (t === 1) {\n            if (!union(u, v)) {\n                hasWaterCycle = true;\n            }\n        } else {\n            roadsU.push(u);\n            roadsV.push(v);\n        }\n    }\n\n    if (hasWaterCycle) {\n        process.stdout.write(\"N\\n\");\n        return;\n    }\n\n    let roadsToRemove = 0;\n    const numRoads = roadsU.length;\n    for (let i = 0; i < numRoads; i++) {\n        const u = roadsU[i];\n        const v = roadsV[i];\n        if (!union(u, v)) {\n            roadsToRemove++;\n        }\n    }\n\n    if (roadsToRemove <= K) {\n        process.stdout.write(\"S\\n\");\n    } else {\n        process.stdout.write(\"N\\n\");\n    }\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const M = nextInt();\n    const K = nextInt();\n\n    const parent = new Int32Array(N + 1);\n    for (let i = 1; i <= N; i++) {\n        parent[i] = i;\n    }\n\n    function find(i) {\n        let root = i;\n        while (root !== parent[root]) {\n            root = parent[root];\n        }\n        let curr = i;\n        while (curr !== root) {\n            let nxt = parent[curr];\n            parent[curr] = root;\n            curr = nxt;\n        }\n        return root;\n    }\n\n    function union(i, j) {\n        const rootI = find(i);\n        const rootJ = find(j);\n        if (rootI !== rootJ) {\n            parent[rootI] = rootJ;\n            return true;\n        }\n        return false;\n    }\n\n    const roadsU = [];\n    const roadsV = [];\n    let hasWaterCycle = false;\n\n    for (let i = 0; i < M; i++) {\n        const u = nextInt();\n        const v = nextInt();\n        const t = nextInt();\n\n        if (t === 1) {\n            if (!union(u, v)) {\n                hasWaterCycle = true;\n            }\n        } else {\n            roadsU.push(u);\n            roadsV.push(v);\n        }\n    }\n\n    if (hasWaterCycle) {\n        process.stdout.write(\"N\\n\");\n        return;\n    }\n\n    let roadsToRemove = 0;\n    const numRoads = roadsU.length;\n    for (let i = 0; i < numRoads; i++) {\n        const u = roadsU[i];\n        const v = roadsV[i];\n        if (!union(u, v)) {\n            roadsToRemove++;\n        }\n    }\n\n    if (roadsToRemove <= K) {\n        process.stdout.write(\"S\\n\");\n    } else {\n        process.stdout.write(\"N\\n\");\n    }\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0795170999772381,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

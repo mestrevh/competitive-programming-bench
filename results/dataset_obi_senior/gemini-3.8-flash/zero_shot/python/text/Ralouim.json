@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:44:08.940118+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 707,
+            "output_tokens": 1163,
+            "total_tokens": 3405
+        },
+        "cost_usd": {
+            "input_cost": 0.00053,
+            "output_cost": 0.004361,
+            "total_cost": 0.004892
+        },
+        "raw_response": "Para resolver este problema de forma eficiente, modelamos o caminho em ordem reversa: saindo da última tenda visitada até o Palácio Real na origem $(0, 0)$.\n\nNo caminho reverso, as distâncias entre passos consecutivos devem ser **estritamente crescentes**:\n$$d(v_k, v_{k-1}) < d(v_{k-1}, v_{k-2}) < \\dots < d(v_2, v_1) < d(v_1, 0)$$\n\nDessa forma:\n1. Começando em qualquer tenda $v$, o número de tendas visitadas é no mínimo $1$.\n2. Ao processarmos as arestas em ordem crescente de distância:\n   - Para uma aresta entre duas tendas $u$ e $v$, podemos estender os caminhos existentes: o novo caminho terminando em $u$ pode ter tamanho $dp[v] + 1$, e terminando em $v$ pode ter tamanho $dp[u] + 1$.\n   - Para uma aresta conectando uma tenda $v$ ao palácio (origem), ela encerra o caminho reverso, permitindo obter $dp[v]$ guloseimas (desde que todas as distâncias anteriores no caminho sejam estritamente menores que $d(0, v)$).\n3. Arestas com distâncias idênticas devem ser atualizadas simultaneamente para garantir que a sequência de distâncias seja estritamente crescente.\n\nPara garantir que o programa rode dentro do tempo limite em Python para $N \\le 2000$ (cerca de $2 \\times 10^6$ arestas), codificamos cada aresta em um único inteiro de 64 bits `(dist << 24) | (u << 12) | v` e ordenamos a lista de inteiros, que é executada em C de forma extremamente rápida.\n\nAbaixo está a solução completa e otimizada:\n\n```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    pts = [(0, 0)]\n    idx = 1\n    for _ in range(N):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        pts.append((x, y))\n        idx += 2\n\n    # Pré-calcula as arestas e comprimentos ao quadrado\n    # Origem é o vértice 0, tendas são vértices 1 .. N\n    edges = []\n\n    for i in range(N + 1):\n        xi, yi = pts[i]\n        for j in range(i + 1, N + 1):\n            dx = xi - pts[j][0]\n            dy = yi - pts[j][1]\n            dist_sq = dx * dx + dy * dy\n            # Empacota (dist_sq, i, j) em um único inteiro de 64 bits\n            # dist_sq < 2^30, i < 2^11, j < 2^11\n            edges.append((dist_sq << 24) | (i << 12) | j)\n\n    edges.sort()\n\n    # dp[u] = número máximo de tendas visitadas no caminho reverso terminando em u\n    dp = [1] * (N + 1)\n    dp[0] = 0\n\n    max_treats = 0\n    num_edges = len(edges)\n    i = 0\n    mask_12 = (1 << 12) - 1\n\n    while i < num_edges:\n        cur_d = edges[i] >> 24\n        j = i\n        while j < num_edges and (edges[j] >> 24) == cur_d:\n            j += 1\n\n        # Processa todas as arestas com a mesma distância cur_d\n        updates = []\n        for k in range(i, j):\n            val = edges[k]\n            u = (val >> 12) & mask_12\n            v = val & mask_12\n\n            if u == 0:\n                # Aresta com o Palácio: podemos terminar o caminho aqui\n                if dp[v] > max_treats:\n                    max_treats = dp[v]\n            else:\n                # Aresta entre duas tendas u e v\n                cand_u = dp[v] + 1\n                cand_v = dp[u] + 1\n                if cand_u > dp[u]:\n                    updates.append((u, cand_u))\n                if cand_v > dp[v]:\n                    updates.append((v, cand_v))\n\n        # Aplica as atualizações após processar todas as arestas de mesmo comprimento\n        for u, val in updates:\n            if val > dp[u]:\n                dp[u] = val\n\n        i = j\n\n    print(max_treats)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    pts = [(0, 0)]\n    idx = 1\n    for _ in range(N):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        pts.append((x, y))\n        idx += 2\n\n    # Pré-calcula as arestas e comprimentos ao quadrado\n    # Origem é o vértice 0, tendas são vértices 1 .. N\n    edges = []\n\n    for i in range(N + 1):\n        xi, yi = pts[i]\n        for j in range(i + 1, N + 1):\n            dx = xi - pts[j][0]\n            dy = yi - pts[j][1]\n            dist_sq = dx * dx + dy * dy\n            # Empacota (dist_sq, i, j) em um único inteiro de 64 bits\n            # dist_sq < 2^30, i < 2^11, j < 2^11\n            edges.append((dist_sq << 24) | (i << 12) | j)\n\n    edges.sort()\n\n    # dp[u] = número máximo de tendas visitadas no caminho reverso terminando em u\n    dp = [1] * (N + 1)\n    dp[0] = 0\n\n    max_treats = 0\n    num_edges = len(edges)\n    i = 0\n    mask_12 = (1 << 12) - 1\n\n    while i < num_edges:\n        cur_d = edges[i] >> 24\n        j = i\n        while j < num_edges and (edges[j] >> 24) == cur_d:\n            j += 1\n\n        # Processa todas as arestas com a mesma distância cur_d\n        updates = []\n        for k in range(i, j):\n            val = edges[k]\n            u = (val >> 12) & mask_12\n            v = val & mask_12\n\n            if u == 0:\n                # Aresta com o Palácio: podemos terminar o caminho aqui\n                if dp[v] > max_treats:\n                    max_treats = dp[v]\n            else:\n                # Aresta entre duas tendas u e v\n                cand_u = dp[v] + 1\n                cand_v = dp[u] + 1\n                if cand_u > dp[u]:\n                    updates.append((u, cand_u))\n                if cand_v > dp[v]:\n                    updates.append((v, cand_v))\n\n        # Aplica as atualizações após processar todas as arestas de mesmo comprimento\n        for u, val in updates:\n            if val > dp[u]:\n                dp[u] = val\n\n        i = j\n\n    print(max_treats)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 2.5285822000005282,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

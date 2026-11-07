@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:59:36.188049+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1399,
+            "output_tokens": 3995,
+            "total_tokens": 5394
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.009588,
+            "total_cost": 0.009592
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic char inbuf[1 << 20];\nstatic int inpos = 0, inlen = 0;\n\nstatic inline int getch(void) {\n    if (inpos >= inlen) {\n        inlen = fread(inbuf, 1, sizeof(inbuf), stdin);\n        inpos = 0;\n        if (inlen == 0) return EOF;\n    }\n    return (unsigned char)inbuf[inpos++];\n}\n\nstatic int readInt(void) {\n    int c = getch();\n    while (c <= ' ' && c != EOF) c = getch();\n    int x = 0;\n    while (c > ' ') {\n        x = x * 10 + (c - '0');\n        c = getch();\n    }\n    return x;\n}\n\nstatic char readOp(void) {\n    int c = getch();\n    while (c <= ' ' && c != EOF) c = getch();\n    return (char)c;\n}\n\nstatic char outbuf[1 << 20];\nstatic int outpos = 0;\n\nstatic void flushOut(void) {\n    fwrite(outbuf, 1, outpos, stdout);\n    outpos = 0;\n}\n\nstatic inline void putChar(char c) {\n    if (outpos == (int)sizeof(outbuf)) flushOut();\n    outbuf[outpos++] = c;\n}\n\nstatic void writeInt(int x) {\n    if (x == 0) {\n        putChar('0');\n        return;\n    }\n    char s[16];\n    int len = 0;\n    while (x > 0) {\n        s[len++] = (char)('0' + x % 10);\n        x /= 10;\n    }\n    while (len--) putChar(s[len]);\n}\n\nint main(void) {\n    int N = readInt();\n    int M = readInt();\n    int P = readInt();\n\n    int *row = (int *)malloc((size_t)(N + 1) * sizeof(int));\n    int *col = (int *)malloc((size_t)(M + 1) * sizeof(int));\n\n    for (int i = 1; i <= N; ++i) row[i] = i;\n    for (int j = 1; j <= M; ++j) col[j] = j;\n\n    for (int k = 0; k < P; ++k) {\n        char op = readOp();\n        int a = readInt();\n        int b = readInt();\n\n        if (op == 'L') {\n            int tmp = row[a];\n            row[a] = row[b];\n            row[b] = tmp;\n        } else {\n            int tmp = col[a];\n            col[a] = col[b];\n            col[b] = tmp;\n        }\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        int base = (row[i] - 1) * M;\n        for (int j = 1; j <= M; ++j) {\n            if (j > 1) putChar(' ');\n            writeInt(base + col[j]);\n        }\n        putChar('\\n');\n    }\n\n    flushOut();\n    free(row);\n    free(col);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic char inbuf[1 << 20];\nstatic int inpos = 0, inlen = 0;\n\nstatic inline int getch(void) {\n    if (inpos >= inlen) {\n        inlen = fread(inbuf, 1, sizeof(inbuf), stdin);\n        inpos = 0;\n        if (inlen == 0) return EOF;\n    }\n    return (unsigned char)inbuf[inpos++];\n}\n\nstatic int readInt(void) {\n    int c = getch();\n    while (c <= ' ' && c != EOF) c = getch();\n    int x = 0;\n    while (c > ' ') {\n        x = x * 10 + (c - '0');\n        c = getch();\n    }\n    return x;\n}\n\nstatic char readOp(void) {\n    int c = getch();\n    while (c <= ' ' && c != EOF) c = getch();\n    return (char)c;\n}\n\nstatic char outbuf[1 << 20];\nstatic int outpos = 0;\n\nstatic void flushOut(void) {\n    fwrite(outbuf, 1, outpos, stdout);\n    outpos = 0;\n}\n\nstatic inline void putChar(char c) {\n    if (outpos == (int)sizeof(outbuf)) flushOut();\n    outbuf[outpos++] = c;\n}\n\nstatic void writeInt(int x) {\n    if (x == 0) {\n        putChar('0');\n        return;\n    }\n    char s[16];\n    int len = 0;\n    while (x > 0) {\n        s[len++] = (char)('0' + x % 10);\n        x /= 10;\n    }\n    while (len--) putChar(s[len]);\n}\n\nint main(void) {\n    int N = readInt();\n    int M = readInt();\n    int P = readInt();\n\n    int *row = (int *)malloc((size_t)(N + 1) * sizeof(int));\n    int *col = (int *)malloc((size_t)(M + 1) * sizeof(int));\n\n    for (int i = 1; i <= N; ++i) row[i] = i;\n    for (int j = 1; j <= M; ++j) col[j] = j;\n\n    for (int k = 0; k < P; ++k) {\n        char op = readOp();\n        int a = readInt();\n        int b = readInt();\n\n        if (op == 'L') {\n            int tmp = row[a];\n            row[a] = row[b];\n            row[b] = tmp;\n        } else {\n            int tmp = col[a];\n            col[a] = col[b];\n            col[b] = tmp;\n        }\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        int base = (row[i] - 1) * M;\n        for (int j = 1; j <= M; ++j) {\n            if (j > 1) putChar(' ');\n            writeInt(base + col[j]);\n        }\n        putChar('\\n');\n    }\n\n    flushOut();\n    free(row);\n    free(col);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.37730230001034215,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

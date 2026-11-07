@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:10:12.145245+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 953,
+            "output_tokens": 16432,
+            "total_tokens": 17385
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.039437,
+            "total_cost": 0.03944
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<string> grid(N);\n    for (int i = 0; i < N; i++) {\n        cin >> grid[i];\n    }\n\n    vector<int> q;\n    q.reserve(N * M);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            if (grid[i][j] == 'o') {\n                q.push_back(i * M + j);\n            }\n        }\n    }\n\n    size_t head = 0;\n\n    while (head < q.size()) {\n        int id = q[head++];\n        int i = id / M;\n        int j = id % M;\n\n        // Water falling vertically.\n        if (i + 1 < N && grid[i + 1][j] == '.') {\n            grid[i + 1][j] = 'o';\n            q.push_back((i + 1) * M + j);\n        }\n\n        // Water running horizontally over a shelf.\n        if (i + 1 < N && grid[i + 1][j] == '#') {\n            if (j > 0 && grid[i][j - 1] == '.') {\n                grid[i][j - 1] = 'o';\n                q.push_back(i * M + (j - 1));\n            }\n\n            if (j + 1 < M && grid[i][j + 1] == '.') {\n                grid[i][j + 1] = 'o';\n                q.push_back(i * M + (j + 1));\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        cout << grid[i] << '\\n';\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<string> grid(N);\n    for (int i = 0; i < N; i++) {\n        cin >> grid[i];\n    }\n\n    vector<int> q;\n    q.reserve(N * M);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            if (grid[i][j] == 'o') {\n                q.push_back(i * M + j);\n            }\n        }\n    }\n\n    size_t head = 0;\n\n    while (head < q.size()) {\n        int id = q[head++];\n        int i = id / M;\n        int j = id % M;\n\n        // Water falling vertically.\n        if (i + 1 < N && grid[i + 1][j] == '.') {\n            grid[i + 1][j] = 'o';\n            q.push_back((i + 1) * M + j);\n        }\n\n        // Water running horizontally over a shelf.\n        if (i + 1 < N && grid[i + 1][j] == '#') {\n            if (j > 0 && grid[i][j - 1] == '.') {\n                grid[i][j - 1] = 'o';\n                q.push_back(i * M + (j - 1));\n            }\n\n            if (j + 1 < M && grid[i][j + 1] == '.') {\n                grid[i][j + 1] = 'o';\n                q.push_back(i * M + (j + 1));\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        cout << grid[i] << '\\n';\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16199800000322284,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

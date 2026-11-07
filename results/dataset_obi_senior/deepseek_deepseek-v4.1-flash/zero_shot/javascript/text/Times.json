@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:38:31.832752+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 868,
+            "output_tokens": 10050,
+            "total_tokens": 10918
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.02412,
+            "total_cost": 0.024123
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\n\nfunction nextInt() {\n    while (idx < data.length && data.charCodeAt(idx) <= 32) idx++;\n    let num = 0;\n    while (idx < data.length && data.charCodeAt(idx) > 32) {\n        num = num * 10 + (data.charCodeAt(idx) - 48);\n        idx++;\n    }\n    return num;\n}\n\nconst n = nextInt();\nconst adj = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 1; i <= n; i++) {\n    const m = nextInt();\n    const list = adj[i];\n    for (let j = 0; j < m; j++) {\n        list.push(nextInt());\n    }\n}\n\nconst color = new Int8Array(n + 1);\nconst queue = new Int32Array(n);\nlet head = 0, tail = 0;\n\ncolor[1] = 1;\nqueue[tail++] = 1;\n\nwhile (head < tail) {\n    const v = queue[head++];\n    const nc = 3 - color[v];\n    const list = adj[v];\n    for (let j = 0; j < list.length; j++) {\n        const u = list[j];\n        if (color[u] === 0) {\n            color[u] = nc;\n            queue[tail++] = u;\n        }\n    }\n}\n\nfor (let i = 1; i <= n; i++) {\n    if (color[i] === 0) {\n        color[i] = 1;\n        queue[tail++] = i;\n        while (head < tail) {\n            const v = queue[head++];\n            const nc = 3 - color[v];\n            const list = adj[v];\n            for (let j = 0; j < list.length; j++) {\n                const u = list[j];\n                if (color[u] === 0) {\n                    color[u] = nc;\n                    queue[tail++] = u;\n                }\n            }\n        }\n    }\n}\n\nconst team1 = [];\nconst team2 = [];\nfor (let i = 1; i <= n; i++) {\n    if (color[i] === 1) team1.push(i);\n    else team2.push(i);\n}\n\nconsole.log(team1.join(' '));\nconsole.log(team2.join(' '));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\n\nfunction nextInt() {\n    while (idx < data.length && data.charCodeAt(idx) <= 32) idx++;\n    let num = 0;\n    while (idx < data.length && data.charCodeAt(idx) > 32) {\n        num = num * 10 + (data.charCodeAt(idx) - 48);\n        idx++;\n    }\n    return num;\n}\n\nconst n = nextInt();\nconst adj = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 1; i <= n; i++) {\n    const m = nextInt();\n    const list = adj[i];\n    for (let j = 0; j < m; j++) {\n        list.push(nextInt());\n    }\n}\n\nconst color = new Int8Array(n + 1);\nconst queue = new Int32Array(n);\nlet head = 0, tail = 0;\n\ncolor[1] = 1;\nqueue[tail++] = 1;\n\nwhile (head < tail) {\n    const v = queue[head++];\n    const nc = 3 - color[v];\n    const list = adj[v];\n    for (let j = 0; j < list.length; j++) {\n        const u = list[j];\n        if (color[u] === 0) {\n            color[u] = nc;\n            queue[tail++] = u;\n        }\n    }\n}\n\nfor (let i = 1; i <= n; i++) {\n    if (color[i] === 0) {\n        color[i] = 1;\n        queue[tail++] = i;\n        while (head < tail) {\n            const v = queue[head++];\n            const nc = 3 - color[v];\n            const list = adj[v];\n            for (let j = 0; j < list.length; j++) {\n                const u = list[j];\n                if (color[u] === 0) {\n                    color[u] = nc;\n                    queue[tail++] = u;\n                }\n            }\n        }\n    }\n}\n\nconst team1 = [];\nconst team2 = [];\nfor (let i = 1; i <= n; i++) {\n    if (color[i] === 1) team1.push(i);\n    else team2.push(i);\n}\n\nconsole.log(team1.join(' '));\nconsole.log(team2.join(' '));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10732270000153221,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

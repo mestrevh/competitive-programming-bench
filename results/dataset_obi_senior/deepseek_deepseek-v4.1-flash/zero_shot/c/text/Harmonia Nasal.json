@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:19:23.386811+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1299,
+            "output_tokens": 42261,
+            "total_tokens": 43560
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.101426,
+            "total_cost": 0.10143
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    long long x = *(const long long*)a;\n    long long y = *(const long long*)b;\n    if (x < y) return 1;\n    if (x > y) return -1;\n    return 0;\n}\n\nint main() {\n    int N, K;\n    if (scanf(\"%d %d\", &N, &K) != 2) return 0;\n    long long *a = (long long*)malloc(N * sizeof(long long));\n    long long *b = (long long*)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) scanf(\"%lld\", &a[i]);\n    for (int i = 0; i < N; i++) scanf(\"%lld\", &b[i]);\n    \n    long long total_base = 0;\n    long long *m = (long long*)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        if (a[i] >= b[i]) {\n            total_base += a[i] - b[i];\n        }\n        m[i] = (a[i] < b[i]) ? a[i] : b[i];\n    }\n    \n    qsort(m, N, sizeof(long long), cmp);\n    \n    long long ans = total_base;\n    int lim = K + 1;\n    if (lim > N) lim = N;\n    for (int i = 0; i < lim; i++) {\n        ans += m[i];\n    }\n    \n    printf(\"%lld\\n\", ans);\n    \n    free(a); free(b); free(m);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    long long x = *(const long long*)a;\n    long long y = *(const long long*)b;\n    if (x < y) return 1;\n    if (x > y) return -1;\n    return 0;\n}\n\nint main() {\n    int N, K;\n    if (scanf(\"%d %d\", &N, &K) != 2) return 0;\n    long long *a = (long long*)malloc(N * sizeof(long long));\n    long long *b = (long long*)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) scanf(\"%lld\", &a[i]);\n    for (int i = 0; i < N; i++) scanf(\"%lld\", &b[i]);\n    \n    long long total_base = 0;\n    long long *m = (long long*)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        if (a[i] >= b[i]) {\n            total_base += a[i] - b[i];\n        }\n        m[i] = (a[i] < b[i]) ? a[i] : b[i];\n    }\n    \n    qsort(m, N, sizeof(long long), cmp);\n    \n    long long ans = total_base;\n    int lim = K + 1;\n    if (lim > N) lim = N;\n    for (int i = 0; i < lim; i++) {\n        ans += m[i];\n    }\n    \n    printf(\"%lld\\n\", ans);\n    \n    free(a); free(b); free(m);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20239079999737442,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

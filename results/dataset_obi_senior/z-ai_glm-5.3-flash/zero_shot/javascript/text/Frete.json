@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:54:32.594760+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 870,
+            "output_tokens": 8724,
+            "total_tokens": 9594
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.004362,
+            "total_cost": 0.004381
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst N = tokens[idx++];\nconst M = tokens[idx++];\n\nconst adj = Array.from({ length: N + 1 }, () => []);\nfor (let i = 0; i < M; i++) {\n  const a = tokens[idx++];\n  const b = tokens[idx++];\n  const c = tokens[idx++];\n  adj[a].push([b, c]);\n  adj[b].push([a, c]);\n}\n\n// Dijkstra com min-heap binário -> O((N + M) log N)\nconst heap = [];\n\nfunction heapPush(item) {\n  heap.push(item);\n  let i = heap.length - 1;\n  while (i > 0) {\n    const p = (i - 1) >> 1;\n    if (heap[p][0] <= heap[i][0]) break;\n    const t = heap[p]; heap[p] = heap[i]; heap[i] = t;\n    i = p;\n  }\n}\n\nfunction heapPop() {\n  const top = heap[0];\n  const last = heap.pop();\n  const size = heap.length;\n  if (size > 0) {\n    heap[0] = last;\n    let i = 0;\n    for (;;) {\n      const l = 2 * i + 1;\n      const r = 2 * i + 2;\n      let s = i;\n      if (l < size && heap[l][0] < heap[s][0]) s = l;\n      if (r < size && heap[r][0] < heap[s][0]) s = r;\n      if (s === i) break;\n      const t = heap[i]; heap[i] = heap[s]; heap[s] = t;\n      i = s;\n    }\n  }\n  return top;\n}\n\nconst dist = new Array(N + 1).fill(Infinity);\ndist[1] = 0;\nheapPush([0, 1]);\n\nwhile (heap.length > 0) {\n  const [d, u] = heapPop();\n  if (d > dist[u]) continue; // entrada obsoleta no heap\n  if (u === N) break;        // primeira extração válida do destino -> distância final\n  for (const [v, w] of adj[u]) {\n    const nd = d + w;\n    if (nd < dist[v]) {\n      dist[v] = nd;\n      heapPush([nd, v]);\n    }\n  }\n}\n\nconsole.log(dist[N]);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst N = tokens[idx++];\nconst M = tokens[idx++];\n\nconst adj = Array.from({ length: N + 1 }, () => []);\nfor (let i = 0; i < M; i++) {\n  const a = tokens[idx++];\n  const b = tokens[idx++];\n  const c = tokens[idx++];\n  adj[a].push([b, c]);\n  adj[b].push([a, c]);\n}\n\n// Dijkstra com min-heap binário -> O((N + M) log N)\nconst heap = [];\n\nfunction heapPush(item) {\n  heap.push(item);\n  let i = heap.length - 1;\n  while (i > 0) {\n    const p = (i - 1) >> 1;\n    if (heap[p][0] <= heap[i][0]) break;\n    const t = heap[p]; heap[p] = heap[i]; heap[i] = t;\n    i = p;\n  }\n}\n\nfunction heapPop() {\n  const top = heap[0];\n  const last = heap.pop();\n  const size = heap.length;\n  if (size > 0) {\n    heap[0] = last;\n    let i = 0;\n    for (;;) {\n      const l = 2 * i + 1;\n      const r = 2 * i + 2;\n      let s = i;\n      if (l < size && heap[l][0] < heap[s][0]) s = l;\n      if (r < size && heap[r][0] < heap[s][0]) s = r;\n      if (s === i) break;\n      const t = heap[i]; heap[i] = heap[s]; heap[s] = t;\n      i = s;\n    }\n  }\n  return top;\n}\n\nconst dist = new Array(N + 1).fill(Infinity);\ndist[1] = 0;\nheapPush([0, 1]);\n\nwhile (heap.length > 0) {\n  const [d, u] = heapPop();\n  if (d > dist[u]) continue; // entrada obsoleta no heap\n  if (u === N) break;        // primeira extração válida do destino -> distância final\n  for (const [v, w] of adj[u]) {\n    const nd = d + w;\n    if (nd < dist[v]) {\n      dist[v] = nd;\n      heapPush([nd, v]);\n    }\n  }\n}\n\nconsole.log(dist[N]);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06007900001714006,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

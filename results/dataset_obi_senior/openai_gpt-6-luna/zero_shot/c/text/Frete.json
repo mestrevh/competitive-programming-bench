@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:57:46.263165+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 792,
+            "output_tokens": 774,
+            "total_tokens": 1566
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000387,
+            "total_cost": 0.000466
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAX_N 100\n#define INF 1000000000\n\nint main(void) {\n    int n, m;\n    int graph[MAX_N][MAX_N];\n\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < n; j++)\n            graph[i][j] = (i == j) ? 0 : INF;\n\n    for (int i = 0; i < m; i++) {\n        int a, b, cost;\n        scanf(\"%d %d %d\", &a, &b, &cost);\n        a--;\n        b--;\n        if (cost < graph[a][b]) {\n            graph[a][b] = cost;\n            graph[b][a] = cost;\n        }\n    }\n\n    int dist[MAX_N], visited[MAX_N] = {0};\n    for (int i = 0; i < n; i++) dist[i] = INF;\n    dist[0] = 0;\n\n    for (int i = 0; i < n; i++) {\n        int u = -1;\n        for (int j = 0; j < n; j++)\n            if (!visited[j] && (u == -1 || dist[j] < dist[u]))\n                u = j;\n\n        if (u == -1 || dist[u] == INF) break;\n        visited[u] = 1;\n\n        for (int v = 0; v < n; v++)\n            if (dist[u] + graph[u][v] < dist[v])\n                dist[v] = dist[u] + graph[u][v];\n    }\n\n    printf(\"%d\\n\", dist[n - 1]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAX_N 100\n#define INF 1000000000\n\nint main(void) {\n    int n, m;\n    int graph[MAX_N][MAX_N];\n\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < n; j++)\n            graph[i][j] = (i == j) ? 0 : INF;\n\n    for (int i = 0; i < m; i++) {\n        int a, b, cost;\n        scanf(\"%d %d %d\", &a, &b, &cost);\n        a--;\n        b--;\n        if (cost < graph[a][b]) {\n            graph[a][b] = cost;\n            graph[b][a] = cost;\n        }\n    }\n\n    int dist[MAX_N], visited[MAX_N] = {0};\n    for (int i = 0; i < n; i++) dist[i] = INF;\n    dist[0] = 0;\n\n    for (int i = 0; i < n; i++) {\n        int u = -1;\n        for (int j = 0; j < n; j++)\n            if (!visited[j] && (u == -1 || dist[j] < dist[u]))\n                u = j;\n\n        if (u == -1 || dist[u] == INF) break;\n        visited[u] = 1;\n\n        for (int v = 0; v < n; v++)\n            if (dist[u] + graph[u][v] < dist[v])\n                dist[v] = dist[u] + graph[u][v];\n    }\n\n    printf(\"%d\\n\", dist[n - 1]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12401499999396037,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

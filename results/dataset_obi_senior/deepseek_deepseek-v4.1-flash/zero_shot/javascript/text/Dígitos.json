@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:49:13.972870+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 669,
+            "output_tokens": 5400,
+            "total_tokens": 6069
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.01296,
+            "total_cost": 0.012962
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst N = parseInt(input[0], 10);\nconst S = input.slice(1).join('').slice(0, N);\n\nfunction increment(s) {\n    const arr = s.split('');\n    let i = arr.length - 1;\n\n    while (i >= 0 && arr[i] === '9') {\n        arr[i] = '0';\n        i--;\n    }\n\n    if (i < 0) {\n        arr.unshift('1');\n    } else {\n        arr[i] = String.fromCharCode(arr[i].charCodeAt(0) + 1);\n    }\n\n    return arr.join('');\n}\n\nfunction valid(len) {\n    let current = S.slice(0, len);\n    let pos = len;\n\n    while (pos < N) {\n        current = increment(current);\n\n        const curLen = current.length;\n        if (pos + curLen > N) return false;\n\n        for (let i = 0; i < curLen; i++) {\n            if (current[i] !== S[pos + i]) return false;\n        }\n\n        pos += curLen;\n    }\n\n    return true;\n}\n\nlet answer = '';\n\nfor (let len = 1; len <= N; len++) {\n    if (S[0] === '0') break;\n\n    if (valid(len)) {\n        answer = S.slice(0, len);\n        break;\n    }\n}\n\nprocess.stdout.write(answer + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst N = parseInt(input[0], 10);\nconst S = input.slice(1).join('').slice(0, N);\n\nfunction increment(s) {\n    const arr = s.split('');\n    let i = arr.length - 1;\n\n    while (i >= 0 && arr[i] === '9') {\n        arr[i] = '0';\n        i--;\n    }\n\n    if (i < 0) {\n        arr.unshift('1');\n    } else {\n        arr[i] = String.fromCharCode(arr[i].charCodeAt(0) + 1);\n    }\n\n    return arr.join('');\n}\n\nfunction valid(len) {\n    let current = S.slice(0, len);\n    let pos = len;\n\n    while (pos < N) {\n        current = increment(current);\n\n        const curLen = current.length;\n        if (pos + curLen > N) return false;\n\n        for (let i = 0; i < curLen; i++) {\n            if (current[i] !== S[pos + i]) return false;\n        }\n\n        pos += curLen;\n    }\n\n    return true;\n}\n\nlet answer = '';\n\nfor (let len = 1; len <= N; len++) {\n    if (S[0] === '0') break;\n\n    if (valid(len)) {\n        answer = S.slice(0, len);\n        break;\n    }\n}\n\nprocess.stdout.write(answer + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0694921999820508,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

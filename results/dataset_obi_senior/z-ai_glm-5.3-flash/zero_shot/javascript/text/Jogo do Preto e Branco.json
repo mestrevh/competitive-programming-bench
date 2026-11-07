@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:25:02.888635+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 829,
+            "output_tokens": 11056,
+            "total_tokens": 11885
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.005528,
+            "total_cost": 0.005546
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst L = data[idx++], C = data[idx++], P = data[idx++];\n\nconst black = Array.from({ length: L }, () => new Uint8Array(C));\nfor (let i = 0; i < P; i++) {\n  black[data[idx++] - 1][data[idx++] - 1] = 1;\n}\n\n// Para cada linha: máscara de células que podem ser brancas (livres e vizinhas de alguma peça preta)\n// e máscara de peças pretas.\nconst rowCand = new Array(L);\nconst rowBlack = new Array(L);\nfor (let r = 0; r < L; r++) {\n  let cm = 0, bm = 0;\n  for (let c = 0; c < C; c++) {\n    if (black[r][c]) { bm |= 1 << c; continue; }\n    const hasBlackNeighbor =\n      (r > 0 && black[r - 1][c]) ||\n      (r < L - 1 && black[r + 1][c]) ||\n      (c > 0 && black[r][c - 1]) ||\n      (c < C - 1 && black[r][c + 1]);\n    if (hasBlackNeighbor) cm |= 1 << c;\n  }\n  rowCand[r] = cm;\n  rowBlack[r] = bm;\n}\n\nconst pc = m => { let n = 0; while (m) { m &= m - 1; n++; } return n; };\n\n// Gera todas as máscaras válidas (subconjuntos sem peças brancas adjacentes horizontalmente)\nfunction getValid(mask) {\n  const arr = [];\n  for (let m = mask; ; m = (m - 1) & mask) {\n    if ((m & (m << 1)) === 0) arr.push(m);\n    if (m === 0) break;\n  }\n  return arr;\n}\n\n// DP por linhas: dp[mask] = máx. de brancas até a linha atual, com 'mask' sendo as brancas da linha atual\nconst FULL = 1 << C;\nlet dp = new Array(FULL).fill(-1);\ndp[0] = 0;\n\nfor (let r = 0; r < L; r++) {\n  const masks = getValid(rowCand[r]);\n  const ndp = new Array(FULL).fill(-1);\n  for (const m of masks) {\n    const add = pc(m);\n    for (let pm = 0; pm < FULL; pm++) {\n      if (dp[pm] < 0) continue;\n      if (m & pm) continue; // conflito vertical entre brancas\n      const val = dp[pm] + add;\n      if (val > ndp[m]) ndp[m] = val;\n    }\n  }\n  dp = ndp;\n}\n\nlet ans = 0;\nfor (const v of dp) if (v > ans) ans = v;\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst L = data[idx++], C = data[idx++], P = data[idx++];\n\nconst black = Array.from({ length: L }, () => new Uint8Array(C));\nfor (let i = 0; i < P; i++) {\n  black[data[idx++] - 1][data[idx++] - 1] = 1;\n}\n\n// Para cada linha: máscara de células que podem ser brancas (livres e vizinhas de alguma peça preta)\n// e máscara de peças pretas.\nconst rowCand = new Array(L);\nconst rowBlack = new Array(L);\nfor (let r = 0; r < L; r++) {\n  let cm = 0, bm = 0;\n  for (let c = 0; c < C; c++) {\n    if (black[r][c]) { bm |= 1 << c; continue; }\n    const hasBlackNeighbor =\n      (r > 0 && black[r - 1][c]) ||\n      (r < L - 1 && black[r + 1][c]) ||\n      (c > 0 && black[r][c - 1]) ||\n      (c < C - 1 && black[r][c + 1]);\n    if (hasBlackNeighbor) cm |= 1 << c;\n  }\n  rowCand[r] = cm;\n  rowBlack[r] = bm;\n}\n\nconst pc = m => { let n = 0; while (m) { m &= m - 1; n++; } return n; };\n\n// Gera todas as máscaras válidas (subconjuntos sem peças brancas adjacentes horizontalmente)\nfunction getValid(mask) {\n  const arr = [];\n  for (let m = mask; ; m = (m - 1) & mask) {\n    if ((m & (m << 1)) === 0) arr.push(m);\n    if (m === 0) break;\n  }\n  return arr;\n}\n\n// DP por linhas: dp[mask] = máx. de brancas até a linha atual, com 'mask' sendo as brancas da linha atual\nconst FULL = 1 << C;\nlet dp = new Array(FULL).fill(-1);\ndp[0] = 0;\n\nfor (let r = 0; r < L; r++) {\n  const masks = getValid(rowCand[r]);\n  const ndp = new Array(FULL).fill(-1);\n  for (const m of masks) {\n    const add = pc(m);\n    for (let pm = 0; pm < FULL; pm++) {\n      if (dp[pm] < 0) continue;\n      if (m & pm) continue; // conflito vertical entre brancas\n      const val = dp[pm] + add;\n      if (val > ndp[m]) ndp[m] = val;\n    }\n  }\n  dp = ndp;\n}\n\nlet ans = 0;\nfor (const v of dp) if (v > ans) ans = v;\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.048723199986852705,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

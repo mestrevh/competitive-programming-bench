@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:54:13.524072+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 868,
+            "output_tokens": 5604,
+            "total_tokens": 6472
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.01345,
+            "total_cost": 0.013452
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<vector<int>> adj(N + 1);\n\n    for (int i = 1; i <= N; ++i) {\n        int M;\n        cin >> M;\n        for (int j = 0; j < M; ++j) {\n            int x;\n            cin >> x;\n            if (x == i) continue;\n            adj[i].push_back(x);\n            adj[x].push_back(i);\n        }\n    }\n\n    vector<int> color(N + 1, -1);\n    queue<int> q;\n\n    color[1] = 0;\n    q.push(1);\n\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n\n        for (int v : adj[u]) {\n            if (color[v] == -1) {\n                color[v] = color[u] ^ 1;\n                q.push(v);\n            }\n        }\n    }\n\n    for (int i = 2; i <= N; ++i) {\n        if (color[i] == -1) {\n            color[i] = 0;\n            queue<int> qq;\n            qq.push(i);\n\n            while (!qq.empty()) {\n                int u = qq.front();\n                qq.pop();\n\n                for (int v : adj[u]) {\n                    if (color[v] == -1) {\n                        color[v] = color[u] ^ 1;\n                        qq.push(v);\n                    }\n                }\n            }\n        }\n    }\n\n    vector<int> team1, team2;\n\n    for (int i = 1; i <= N; ++i) {\n        if (color[i] == 0) team1.push_back(i);\n        else team2.push_back(i);\n    }\n\n    for (int i = 0; i < (int)team1.size(); ++i) {\n        if (i) cout << ' ';\n        cout << team1[i];\n    }\n    cout << '\\n';\n\n    for (int i = 0; i < (int)team2.size(); ++i) {\n        if (i) cout << ' ';\n        cout << team2[i];\n    }\n    cout << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<vector<int>> adj(N + 1);\n\n    for (int i = 1; i <= N; ++i) {\n        int M;\n        cin >> M;\n        for (int j = 0; j < M; ++j) {\n            int x;\n            cin >> x;\n            if (x == i) continue;\n            adj[i].push_back(x);\n            adj[x].push_back(i);\n        }\n    }\n\n    vector<int> color(N + 1, -1);\n    queue<int> q;\n\n    color[1] = 0;\n    q.push(1);\n\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n\n        for (int v : adj[u]) {\n            if (color[v] == -1) {\n                color[v] = color[u] ^ 1;\n                q.push(v);\n            }\n        }\n    }\n\n    for (int i = 2; i <= N; ++i) {\n        if (color[i] == -1) {\n            color[i] = 0;\n            queue<int> qq;\n            qq.push(i);\n\n            while (!qq.empty()) {\n                int u = qq.front();\n                qq.pop();\n\n                for (int v : adj[u]) {\n                    if (color[v] == -1) {\n                        color[v] = color[u] ^ 1;\n                        qq.push(v);\n                    }\n                }\n            }\n        }\n    }\n\n    vector<int> team1, team2;\n\n    for (int i = 1; i <= N; ++i) {\n        if (color[i] == 0) team1.push_back(i);\n        else team2.push_back(i);\n    }\n\n    for (int i = 0; i < (int)team1.size(); ++i) {\n        if (i) cout << ' ';\n        cout << team1[i];\n    }\n    cout << '\\n';\n\n    for (int i = 0; i < (int)team2.size(); ++i) {\n        if (i) cout << ' ';\n        cout << team2[i];\n    }\n    cout << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20344840000325348,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

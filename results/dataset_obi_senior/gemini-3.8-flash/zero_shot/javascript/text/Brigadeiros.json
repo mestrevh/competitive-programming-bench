@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:58:25.259239+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1529,
+            "output_tokens": 902,
+            "total_tokens": 4712
+        },
+        "cost_usd": {
+            "input_cost": 0.001147,
+            "output_cost": 0.003383,
+            "total_cost": 0.004529
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                buflen = -1;\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public int nextInt() {\n            int c = readByte();\n            while (c <= ' ' && c != -1) c = readByte();\n            if (c == -1) return -1;\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = readByte();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int k = scanner.nextInt();\n        int t = scanner.nextInt();\n\n        int[] p = new int[n];\n        for (int i = 0; i < n; i++) {\n            p[i] = scanner.nextInt();\n        }\n\n        int[] initialPos = new int[k];\n        int idx = 0;\n        for (int i = 0; i < n; i++) {\n            int g = scanner.nextInt();\n            if (g == 1) {\n                initialPos[idx++] = i;\n            }\n        }\n\n        // DP[j][c] = max brigadeiros allocating j friends among the first i plates, with cost c\n        // The maximum possible cost cannot exceed n * (n - k) <= n * n / 4 <= 22500\n        int maxCost = Math.min(t, n * (n - k));\n        \n        int[][] dp = new int[k + 1][maxCost + 1];\n        for (int j = 0; j <= k; j++) {\n            Arrays.fill(dp[j], -1);\n        }\n        dp[0][0] = 0;\n\n        for (int i = 0; i < n; i++) {\n            int val = p[i];\n            // Update DP backwards in j to avoid using the same element multiple times\n            for (int j = Math.min(i, k - 1); j >= 0; j--) {\n                int costStep = Math.abs(initialPos[j] - i);\n                int limit = maxCost - costStep;\n                for (int c = 0; c <= limit; c++) {\n                    int prev = dp[j][c];\n                    if (prev != -1) {\n                        int nc = c + costStep;\n                        int nv = prev + val;\n                        if (nv > dp[j + 1][nc]) {\n                            dp[j + 1][nc] = nv;\n                        }\n                    }\n                }\n            }\n        }\n\n        int ans = 0;\n        for (int c = 0; c <= maxCost; c++) {\n            if (dp[k][c] > ans) {\n                ans = dp[k][c];\n            }\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                buflen = -1;\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public int nextInt() {\n            int c = readByte();\n            while (c <= ' ' && c != -1) c = readByte();\n            if (c == -1) return -1;\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = readByte();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int k = scanner.nextInt();\n        int t = scanner.nextInt();\n\n        int[] p = new int[n];\n        for (int i = 0; i < n; i++) {\n            p[i] = scanner.nextInt();\n        }\n\n        int[] initialPos = new int[k];\n        int idx = 0;\n        for (int i = 0; i < n; i++) {\n            int g = scanner.nextInt();\n            if (g == 1) {\n                initialPos[idx++] = i;\n            }\n        }\n\n        // DP[j][c] = max brigadeiros allocating j friends among the first i plates, with cost c\n        // The maximum possible cost cannot exceed n * (n - k) <= n * n / 4 <= 22500\n        int maxCost = Math.min(t, n * (n - k));\n        \n        int[][] dp = new int[k + 1][maxCost + 1];\n        for (int j = 0; j <= k; j++) {\n            Arrays.fill(dp[j], -1);\n        }\n        dp[0][0] = 0;\n\n        for (int i = 0; i < n; i++) {\n            int val = p[i];\n            // Update DP backwards in j to avoid using the same element multiple times\n            for (int j = Math.min(i, k - 1); j >= 0; j--) {\n                int costStep = Math.abs(initialPos[j] - i);\n                int limit = maxCost - costStep;\n                for (int c = 0; c <= limit; c++) {\n                    int prev = dp[j][c];\n                    if (prev != -1) {\n                        int nc = c + costStep;\n                        int nv = prev + val;\n                        if (nv > dp[j + 1][nc]) {\n                            dp[j + 1][nc] = nv;\n                        }\n                    }\n                }\n            }\n        }\n\n        int ans = 0;\n        for (int c = 0; c <= maxCost; c++) {\n            if (dp[k][c] > ans) {\n                ans = dp[k][c];\n            }\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07625640000333078,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 67,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:30:26.152693+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1529,
+            "output_tokens": 1125,
+            "total_tokens": 5828
+        },
+        "cost_usd": {
+            "input_cost": 0.001147,
+            "output_cost": 0.004219,
+            "total_cost": 0.005365
+        },
+        "raw_response": "Uma solução eficiente e correta em **JavaScript (Node.js)** para o problema **Brigadeiros**.\n\n### Abordagem\n\nO problema consiste em escolher $K$ novas posições $1 \\le j_1 < j_2 < \\dots < j_K \\le N$ para os $K$ amigos de modo a maximizar a soma dos brigadeiros $\\sum P_{j_i}$, respeitando o limite de trocas $\\sum |pos_i - j_i| \\le T$.\n\nComo cada prato tem entre $0$ e $9$ brigadeiros, a soma máxima possível é $9 \\times K \\le 2700$. Em vez de usar as trocas como dimensão da Programação Dinâmica (já que $T$ pode ser grande), invertemos o estado e minimizamos o custo em trocas para alcançar cada possível soma de brigadeiros $s$:\n\n- Seja $dp[i][s]$ o menor número de trocas necessárias para posicionar os primeiros $i$ amigos até a posição atual da mesa, totalizando uma soma de $s$ brigadeiros.\n- Conforme percorremos cada posição $p$ de $1$ a $N$, decidimos se alocamos o $i$-ésimo amigo nessa posição. Se alocarmos, a transição é:\n  $$dp[i][s] = \\min(dp[i][s], dp[i - 1][s - P_p] + |pos_i - p|)$$\n- Limitando o intervalo de $i$ viável para cada $p$ ($\\max(1, K - N + p) \\le i \\le \\min(p, K)$), o número total de operações fica na ordem de $\\approx 1.5 \\times 10^7$, executando em poucos milissegundos.\n\nAo final, a resposta é a maior soma $s$ tal que $dp[K][s] \\le T$.\n\n### Código em JavaScript\n\n```javascript\nconst fs = require('fs');\n\nfunction solve() {\n  const buffer = fs.readFileSync(0);\n  let offset = 0;\n\n  function nextInt() {\n    while (offset < buffer.length && buffer[offset] <= 32) {\n      offset++;\n    }\n    if (offset >= buffer.length) return null;\n    let res = 0;\n    while (offset < buffer.length && buffer[offset] > 32) {\n      res = res * 10 + (buffer[offset] - 48);\n      offset++;\n    }\n    return res;\n  }\n\n  const N = nextInt();\n  if (N === null) return;\n  const K = nextInt();\n  const T = nextInt();\n\n  const P = new Int32Array(N + 1);\n  for (let i = 1; i <= N; i++) {\n    P[i] = nextInt();\n  }\n\n  const pos = new Int32Array(K + 1);\n  let kIdx = 1;\n  for (let i = 1; i <= N; i++) {\n    const g = nextInt();\n    if (g === 1) {\n      pos[kIdx++] = i;\n    }\n  }\n\n  const maxS = 9 * K;\n  const stride = maxS + 1;\n  const INF = 1000000001;\n\n  // dp[i * stride + s] armazena o menor custo para i amigos com soma s\n  const dp = new Int32Array((K + 1) * stride).fill(INF);\n  dp[0] = 0;\n\n  for (let p = 1; p <= N; p++) {\n    const v = P[p];\n    const minI = Math.max(1, K - (N - p));\n    const maxI = Math.min(p, K);\n\n    for (let i = maxI; i >= minI; i--) {\n      const dist = Math.abs(pos[i] - p);\n      const currRow = i * stride;\n      const prevRow = (i - 1) * stride;\n      const maxVal = i * 9;\n\n      for (let s = maxVal; s >= v; s--) {\n        const prevCost = dp[prevRow + (s - v)];\n        if (prevCost !== INF) {\n          const cost = prevCost + dist;\n          if (cost < dp[currRow + s]) {\n            dp[currRow + s] = cost;\n          }\n        }\n      }\n    }\n  }\n\n  let ans = 0;\n  const rowK = K * stride;\n  for (let s = maxS; s >= 0; s--) {\n    if (dp[rowK + s] <= T) {\n      ans = s;\n      break;\n    }\n  }\n\n  console.log(ans);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n  const buffer = fs.readFileSync(0);\n  let offset = 0;\n\n  function nextInt() {\n    while (offset < buffer.length && buffer[offset] <= 32) {\n      offset++;\n    }\n    if (offset >= buffer.length) return null;\n    let res = 0;\n    while (offset < buffer.length && buffer[offset] > 32) {\n      res = res * 10 + (buffer[offset] - 48);\n      offset++;\n    }\n    return res;\n  }\n\n  const N = nextInt();\n  if (N === null) return;\n  const K = nextInt();\n  const T = nextInt();\n\n  const P = new Int32Array(N + 1);\n  for (let i = 1; i <= N; i++) {\n    P[i] = nextInt();\n  }\n\n  const pos = new Int32Array(K + 1);\n  let kIdx = 1;\n  for (let i = 1; i <= N; i++) {\n    const g = nextInt();\n    if (g === 1) {\n      pos[kIdx++] = i;\n    }\n  }\n\n  const maxS = 9 * K;\n  const stride = maxS + 1;\n  const INF = 1000000001;\n\n  // dp[i * stride + s] armazena o menor custo para i amigos com soma s\n  const dp = new Int32Array((K + 1) * stride).fill(INF);\n  dp[0] = 0;\n\n  for (let p = 1; p <= N; p++) {\n    const v = P[p];\n    const minI = Math.max(1, K - (N - p));\n    const maxI = Math.min(p, K);\n\n    for (let i = maxI; i >= minI; i--) {\n      const dist = Math.abs(pos[i] - p);\n      const currRow = i * stride;\n      const prevRow = (i - 1) * stride;\n      const maxVal = i * 9;\n\n      for (let s = maxVal; s >= v; s--) {\n        const prevCost = dp[prevRow + (s - v)];\n        if (prevCost !== INF) {\n          const cost = prevCost + dist;\n          if (cost < dp[currRow + s]) {\n            dp[currRow + s] = cost;\n          }\n        }\n      }\n    }\n  }\n\n  let ans = 0;\n  const rowK = K * stride;\n  for (let s = maxS; s >= 0; s--) {\n    if (dp[rowK + s] <= T) {\n      ans = s;\n      break;\n    }\n  }\n\n  console.log(ans);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07367929999600165,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:39:05.817061+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 899,
+            "output_tokens": 3469,
+            "total_tokens": 4368
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.001734,
+            "total_cost": 0.001824
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < input.length && input[pos] > 32) {\n    value = value * 10 + input[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst head = new Int32Array(2 * N + 1);\nhead.fill(-1);\n\nconst edgeCount = 2 * M;\nconst from = new Int32Array(edgeCount);\nconst to = new Int32Array(edgeCount);\nconst next = new Int32Array(edgeCount);\nconst dp = new Int32Array(edgeCount);\n\nlet id = 0;\n\nfunction addEdge(a, b) {\n  from[id] = a;\n  to[id] = b;\n  next[id] = head[a + b];\n  head[a + b] = id++;\n}\n\nfor (let i = 0; i < M; i++) {\n  const a = nextInt();\n  const b = nextInt();\n  addEdge(a, b);\n  addEdge(b, a);\n}\n\nconst best = new Int32Array(N + 1);\n\nfor (let sum = 2 * N; sum >= 2; sum--) {\n  for (let e = head[sum]; e !== -1; e = next[e]) {\n    const length = 1 + best[to[e]];\n    dp[e] = length < 2 ? 2 : length;\n  }\n  for (let e = head[sum]; e !== -1; e = next[e]) {\n    const a = from[e];\n    if (dp[e] > best[a]) best[a] = dp[e];\n  }\n}\n\nconst result = new Array(N);\nfor (let i = 1; i <= N; i++) {\n  result[i - 1] = best[i] > 0 ? best[i] : 1;\n}\n\nconsole.log(result.join(' '));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < input.length && input[pos] > 32) {\n    value = value * 10 + input[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst head = new Int32Array(2 * N + 1);\nhead.fill(-1);\n\nconst edgeCount = 2 * M;\nconst from = new Int32Array(edgeCount);\nconst to = new Int32Array(edgeCount);\nconst next = new Int32Array(edgeCount);\nconst dp = new Int32Array(edgeCount);\n\nlet id = 0;\n\nfunction addEdge(a, b) {\n  from[id] = a;\n  to[id] = b;\n  next[id] = head[a + b];\n  head[a + b] = id++;\n}\n\nfor (let i = 0; i < M; i++) {\n  const a = nextInt();\n  const b = nextInt();\n  addEdge(a, b);\n  addEdge(b, a);\n}\n\nconst best = new Int32Array(N + 1);\n\nfor (let sum = 2 * N; sum >= 2; sum--) {\n  for (let e = head[sum]; e !== -1; e = next[e]) {\n    const length = 1 + best[to[e]];\n    dp[e] = length < 2 ? 2 : length;\n  }\n  for (let e = head[sum]; e !== -1; e = next[e]) {\n    const a = from[e];\n    if (dp[e] > best[a]) best[a] = dp[e];\n  }\n}\n\nconst result = new Array(N);\nfor (let i = 1; i <= N; i++) {\n  result[i - 1] = best[i] > 0 ? best[i] : 1;\n}\n\nconsole.log(result.join(' '));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12774119999085087,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

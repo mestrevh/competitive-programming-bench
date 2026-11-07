@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:11:49.227114+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1119,
+            "output_tokens": 22069,
+            "total_tokens": 23188
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.052966,
+            "total_cost": 0.052969
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static long dist2(long x1, long y1, long x2, long y2) {\n        long dx = x1 - x2;\n        long dy = y1 - y2;\n        return dx * dx + dy * dy;\n    }\n\n    static long cross(long dx, long dy, long vx, long vy) {\n        return dx * vy - dy * vx;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        long[] x = new long[8];\n        long[] y = new long[8];\n\n        for (int i = 1; i <= 7; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            x[i] = Long.parseLong(st.nextToken());\n            y[i] = Long.parseLong(st.nextToken());\n        }\n\n        boolean ok = true;\n\n        long v2x = x[2] - x[1];\n        long v2y = y[2] - y[1];\n        long v3x = x[3] - x[1];\n        long v3y = y[3] - y[1];\n\n        if (v2x * v3x + v2y * v3y <= 0) ok = false;\n\n        if (dist2(x[1], y[1], x[2], y[2]) != dist2(x[1], y[1], x[3], y[3])) ok = false;\n\n        long dx = x[3] - x[2];\n        long dy = y[3] - y[2];\n\n        if (cross(dx, dy, x[4] - x[2], y[4] - y[2]) != 0) ok = false;\n        if (cross(dx, dy, x[5] - x[2], y[5] - y[2]) != 0) ok = false;\n\n        if (x[2] + x[3] != x[4] + x[5] || y[2] + y[3] != y[4] + y[5]) ok = false;\n\n        if (dist2(x[2], y[2], x[3], y[3]) <= dist2(x[4], y[4], x[5], y[5])) ok = false;\n\n        if ((x[6] - x[4]) * dx + (y[6] - y[4]) * dy != 0) ok = false;\n        if ((x[7] - x[5]) * dx + (y[7] - y[5]) * dy != 0) ok = false;\n\n        if (dist2(x[4], y[4], x[6], y[6]) != dist2(x[5], y[5], x[7], y[7])) ok = false;\n\n        long c1 = cross(dx, dy, x[1] - x[2], y[1] - y[2]);\n        long c6 = cross(dx, dy, x[6] - x[2], y[6] - y[2]);\n\n        if (!((c1 < 0 && c6 > 0) || (c1 > 0 && c6 < 0))) ok = false;\n\n        System.out.println(ok ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static long dist2(long x1, long y1, long x2, long y2) {\n        long dx = x1 - x2;\n        long dy = y1 - y2;\n        return dx * dx + dy * dy;\n    }\n\n    static long cross(long dx, long dy, long vx, long vy) {\n        return dx * vy - dy * vx;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        long[] x = new long[8];\n        long[] y = new long[8];\n\n        for (int i = 1; i <= 7; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            x[i] = Long.parseLong(st.nextToken());\n            y[i] = Long.parseLong(st.nextToken());\n        }\n\n        boolean ok = true;\n\n        long v2x = x[2] - x[1];\n        long v2y = y[2] - y[1];\n        long v3x = x[3] - x[1];\n        long v3y = y[3] - y[1];\n\n        if (v2x * v3x + v2y * v3y <= 0) ok = false;\n\n        if (dist2(x[1], y[1], x[2], y[2]) != dist2(x[1], y[1], x[3], y[3])) ok = false;\n\n        long dx = x[3] - x[2];\n        long dy = y[3] - y[2];\n\n        if (cross(dx, dy, x[4] - x[2], y[4] - y[2]) != 0) ok = false;\n        if (cross(dx, dy, x[5] - x[2], y[5] - y[2]) != 0) ok = false;\n\n        if (x[2] + x[3] != x[4] + x[5] || y[2] + y[3] != y[4] + y[5]) ok = false;\n\n        if (dist2(x[2], y[2], x[3], y[3]) <= dist2(x[4], y[4], x[5], y[5])) ok = false;\n\n        if ((x[6] - x[4]) * dx + (y[6] - y[4]) * dy != 0) ok = false;\n        if ((x[7] - x[5]) * dx + (y[7] - y[5]) * dy != 0) ok = false;\n\n        if (dist2(x[4], y[4], x[6], y[6]) != dist2(x[5], y[5], x[7], y[7])) ok = false;\n\n        long c1 = cross(dx, dy, x[1] - x[2], y[1] - y[2]);\n        long c6 = cross(dx, dy, x[6] - x[2], y[6] - y[2]);\n\n        if (!((c1 < 0 && c6 > 0) || (c1 > 0 && c6 < 0))) ok = false;\n\n        System.out.println(ok ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08288100000936538,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

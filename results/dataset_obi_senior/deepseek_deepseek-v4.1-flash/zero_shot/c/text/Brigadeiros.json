@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:45:10.500971+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1594,
+            "output_tokens": 12700,
+            "total_tokens": 14294
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.03048,
+            "total_cost": 0.030485
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXK 305\n#define MAXS 2705\n#define INF 1000000000\n\nint main() {\n    int N, K, T;\n    scanf(\"%d %d %d\", &N, &K, &T);\n\n    int P[305], G[305], s[305];\n    int sumP = 0;\n\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &P[i]);\n        sumP += P[i];\n    }\n\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &G[i]);\n    }\n\n    int cnt = 0;\n    for (int i = 1; i <= N; i++) {\n        if (G[i] == 1) {\n            s[cnt++] = i;\n        }\n    }\n\n    int maxScore = 9 * K;\n    if (maxScore > sumP) maxScore = sumP;\n\n    static int dp[MAXK][MAXS];\n\n    for (int i = 0; i <= K; i++) {\n        for (int w = 0; w <= maxScore; w++) {\n            dp[i][w] = INF;\n        }\n    }\n\n    dp[0][0] = 0;\n\n    for (int p = 1; p <= N; p++) {\n        int val = P[p];\n        int maxj = p < K ? p : K;\n\n        for (int j = maxj; j >= 1; j--) {\n            int add = abs(s[j - 1] - p);\n            int maxw = maxScore - val;\n            if (maxw < 0) continue;\n\n            int srcMax = 9 * (j - 1);\n            if (srcMax > maxw) srcMax = maxw;\n\n            for (int w = 0; w <= srcMax; w++) {\n                if (dp[j - 1][w] != INF) {\n                    int nc = dp[j - 1][w] + add;\n                    int idx = w + val;\n                    if (nc < dp[j][idx]) {\n                        dp[j][idx] = nc;\n                    }\n                }\n            }\n        }\n    }\n\n    int ans = 0;\n    for (int w = maxScore; w >= 0; w--) {\n        if (dp[K][w] <= T) {\n            ans = w;\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXK 305\n#define MAXS 2705\n#define INF 1000000000\n\nint main() {\n    int N, K, T;\n    scanf(\"%d %d %d\", &N, &K, &T);\n\n    int P[305], G[305], s[305];\n    int sumP = 0;\n\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &P[i]);\n        sumP += P[i];\n    }\n\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &G[i]);\n    }\n\n    int cnt = 0;\n    for (int i = 1; i <= N; i++) {\n        if (G[i] == 1) {\n            s[cnt++] = i;\n        }\n    }\n\n    int maxScore = 9 * K;\n    if (maxScore > sumP) maxScore = sumP;\n\n    static int dp[MAXK][MAXS];\n\n    for (int i = 0; i <= K; i++) {\n        for (int w = 0; w <= maxScore; w++) {\n            dp[i][w] = INF;\n        }\n    }\n\n    dp[0][0] = 0;\n\n    for (int p = 1; p <= N; p++) {\n        int val = P[p];\n        int maxj = p < K ? p : K;\n\n        for (int j = maxj; j >= 1; j--) {\n            int add = abs(s[j - 1] - p);\n            int maxw = maxScore - val;\n            if (maxw < 0) continue;\n\n            int srcMax = 9 * (j - 1);\n            if (srcMax > maxw) srcMax = maxw;\n\n            for (int w = 0; w <= srcMax; w++) {\n                if (dp[j - 1][w] != INF) {\n                    int nc = dp[j - 1][w] + add;\n                    int idx = w + val;\n                    if (nc < dp[j][idx]) {\n                        dp[j][idx] = nc;\n                    }\n                }\n            }\n        }\n    }\n\n    int ans = 0;\n    for (int w = maxScore; w >= 0; w--) {\n        if (dp[K][w] <= T) {\n            ans = w;\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20034390001092106,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

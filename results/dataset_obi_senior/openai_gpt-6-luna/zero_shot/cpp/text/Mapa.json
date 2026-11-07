@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:29:24.351397+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 834,
+            "output_tokens": 925,
+            "total_tokens": 1759
+        },
+        "cost_usd": {
+            "input_cost": 8.3e-05,
+            "output_cost": 0.000463,
+            "total_cost": 0.000546
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    vector<string> grid(L);\n    pair<int, int> start;\n    for (int i = 0; i < L; ++i) {\n        cin >> grid[i];\n        for (int j = 0; j < C; ++j) {\n            if (grid[i][j] == 'o') start = {i, j};\n        }\n    }\n\n    const int dr[] = {-1, 1, 0, 0};\n    const int dc[] = {0, 0, -1, 1};\n\n    int prevR = start.first, prevC = start.second;\n    int curR = -1, curC = -1;\n\n    for (int d = 0; d < 4; ++d) {\n        int nr = start.first + dr[d];\n        int nc = start.second + dc[d];\n        if (nr >= 0 && nr < L && nc >= 0 && nc < C && grid[nr][nc] == 'H') {\n            curR = nr;\n            curC = nc;\n            break;\n        }\n    }\n\n    while (true) {\n        int nextR = -1, nextC = -1;\n        for (int d = 0; d < 4; ++d) {\n            int nr = curR + dr[d];\n            int nc = curC + dc[d];\n            if (nr >= 0 && nr < L && nc >= 0 && nc < C &&\n                grid[nr][nc] == 'H' && !(nr == prevR && nc == prevC)) {\n                nextR = nr;\n                nextC = nc;\n                break;\n            }\n        }\n\n        if (nextR == -1) break;\n        prevR = curR;\n        prevC = curC;\n        curR = nextR;\n        curC = nextC;\n    }\n\n    cout << curR + 1 << ' ' << curC + 1 << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    vector<string> grid(L);\n    pair<int, int> start;\n    for (int i = 0; i < L; ++i) {\n        cin >> grid[i];\n        for (int j = 0; j < C; ++j) {\n            if (grid[i][j] == 'o') start = {i, j};\n        }\n    }\n\n    const int dr[] = {-1, 1, 0, 0};\n    const int dc[] = {0, 0, -1, 1};\n\n    int prevR = start.first, prevC = start.second;\n    int curR = -1, curC = -1;\n\n    for (int d = 0; d < 4; ++d) {\n        int nr = start.first + dr[d];\n        int nc = start.second + dc[d];\n        if (nr >= 0 && nr < L && nc >= 0 && nc < C && grid[nr][nc] == 'H') {\n            curR = nr;\n            curC = nc;\n            break;\n        }\n    }\n\n    while (true) {\n        int nextR = -1, nextC = -1;\n        for (int d = 0; d < 4; ++d) {\n            int nr = curR + dr[d];\n            int nc = curC + dc[d];\n            if (nr >= 0 && nr < L && nc >= 0 && nc < C &&\n                grid[nr][nc] == 'H' && !(nr == prevR && nc == prevC)) {\n                nextR = nr;\n                nextC = nc;\n                break;\n            }\n        }\n\n        if (nextR == -1) break;\n        prevR = curR;\n        prevC = curC;\n        curR = nextR;\n        curC = nextC;\n    }\n\n    cout << curR + 1 << ' ' << curC + 1 << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1724326999974437,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

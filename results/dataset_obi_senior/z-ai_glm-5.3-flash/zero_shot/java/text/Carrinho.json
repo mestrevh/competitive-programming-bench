@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:56:48.556787+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 703,
+            "output_tokens": 1108,
+            "total_tokens": 1811
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.000554,
+            "total_cost": 0.000569
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StreamTokenizer st = new StreamTokenizer(br);\n        st.nextToken();\n        int n = (int) st.nval;\n        st.nextToken();\n        double D = st.nval;\n\n        double[] P = new double[n];\n        double[] C = new double[n];\n        for (int i = 0; i < n; i++) {\n            st.nextToken();\n            P[i] = st.nval;\n            st.nextToken();\n            C[i] = st.nval;\n        }\n\n        double INF = Double.POSITIVE_INFINITY;\n        double[] dp = new double[n];\n        Arrays.fill(dp, INF);\n        dp[0] = 0.0;\n        double ans = INF;\n\n        for (int j = 0; j < n; j++) {\n            if (dp[j] == INF) continue;\n            // opção: ir até o fim com a bateria j\n            double seg = D - P[j];\n            double t = dp[j] + seg * seg / C[j];\n            if (t < ans) ans = t;\n            // opção: trocar para bateria k > j\n            for (int k = j + 1; k < n; k++) {\n                double L = P[k] - P[j];\n                double t2 = dp[j] + L * L / C[j];\n                if (t2 < dp[k]) dp[k] = t2;\n            }\n        }\n\n        System.out.printf(Locale.US, \"%.3f%n\", ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StreamTokenizer st = new StreamTokenizer(br);\n        st.nextToken();\n        int n = (int) st.nval;\n        st.nextToken();\n        double D = st.nval;\n\n        double[] P = new double[n];\n        double[] C = new double[n];\n        for (int i = 0; i < n; i++) {\n            st.nextToken();\n            P[i] = st.nval;\n            st.nextToken();\n            C[i] = st.nval;\n        }\n\n        double INF = Double.POSITIVE_INFINITY;\n        double[] dp = new double[n];\n        Arrays.fill(dp, INF);\n        dp[0] = 0.0;\n        double ans = INF;\n\n        for (int j = 0; j < n; j++) {\n            if (dp[j] == INF) continue;\n            // opção: ir até o fim com a bateria j\n            double seg = D - P[j];\n            double t = dp[j] + seg * seg / C[j];\n            if (t < ans) ans = t;\n            // opção: trocar para bateria k > j\n            for (int k = j + 1; k < n; k++) {\n                double L = P[k] - P[j];\n                double t2 = dp[j] + L * L / C[j];\n                if (t2 < dp[k]) dp[k] = t2;\n            }\n        }\n\n        System.out.printf(Locale.US, \"%.3f%n\", ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09703890001401305,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

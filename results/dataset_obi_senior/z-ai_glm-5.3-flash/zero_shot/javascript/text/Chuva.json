@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T00:27:41.292937+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 670,
+            "output_tokens": 5218,
+            "total_tokens": 5888
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.002609,
+            "total_cost": 0.002623
+        },
+        "raw_response": "```javascript\nprocess.stdin.resume();\nprocess.stdin.setEncoding('utf8');\n\nconst chunks = [];\nprocess.stdin.on('data', (c) => chunks.push(c));\nprocess.stdin.on('end', () => {\n  const tokens = chunks.join('').split(/\\s+/).filter(Boolean);\n  solve(tokens);\n});\n\nfunction solve(tokens) {\n  if (tokens.length === 0) return;\n  const N = parseInt(tokens[0], 10) || 0;\n  const n = Math.min(N, tokens.length - 1);\n  if (n <= 0) {\n    process.stdout.write('0\\n');\n    return;\n  }\n\n  const h = new Int32Array(n);\n  for (let i = 0; i < n; i++) h[i] = parseInt(tokens[i + 1], 10);\n\n  // Máximo do sufixo (incluindo i)\n  const sufMax = new Int32Array(n);\n  let m = h[n - 1];\n  for (let i = n - 1; i >= 0; i--) {\n    if (h[i] > m) m = h[i];\n    sufMax[i] = m;\n  }\n\n  let count = 0;\n  m = h[0]; // máximo do prefixo (incluindo i)\n  for (let i = 0; i < n; i++) {\n    if (h[i] > m) m = h[i];\n    const level = m < sufMax[i] ? m : sufMax[i];\n    // secao coberta se agua tiver >= 1m de profundidade:\n    // min(prefMax, sufMax) - h[i] >= 1, isto e, level > h[i]\n    if (level > h[i]) count++;\n  }\n\n  process.stdout.write(String(count) + '\\n');\n}\n```",
+        "extracted_code": "process.stdin.resume();\nprocess.stdin.setEncoding('utf8');\n\nconst chunks = [];\nprocess.stdin.on('data', (c) => chunks.push(c));\nprocess.stdin.on('end', () => {\n  const tokens = chunks.join('').split(/\\s+/).filter(Boolean);\n  solve(tokens);\n});\n\nfunction solve(tokens) {\n  if (tokens.length === 0) return;\n  const N = parseInt(tokens[0], 10) || 0;\n  const n = Math.min(N, tokens.length - 1);\n  if (n <= 0) {\n    process.stdout.write('0\\n');\n    return;\n  }\n\n  const h = new Int32Array(n);\n  for (let i = 0; i < n; i++) h[i] = parseInt(tokens[i + 1], 10);\n\n  // Máximo do sufixo (incluindo i)\n  const sufMax = new Int32Array(n);\n  let m = h[n - 1];\n  for (let i = n - 1; i >= 0; i--) {\n    if (h[i] > m) m = h[i];\n    sufMax[i] = m;\n  }\n\n  let count = 0;\n  m = h[0]; // máximo do prefixo (incluindo i)\n  for (let i = 0; i < n; i++) {\n    if (h[i] > m) m = h[i];\n    const level = m < sufMax[i] ? m : sufMax[i];\n    // secao coberta se agua tiver >= 1m de profundidade:\n    // min(prefMax, sufMax) - h[i] >= 1, isto e, level > h[i]\n    if (level > h[i]) count++;\n  }\n\n  process.stdout.write(String(count) + '\\n');\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12413529999321327,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

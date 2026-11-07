@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:44:26.803352+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1032,
+            "output_tokens": 13027,
+            "total_tokens": 14059
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.031265,
+            "total_cost": 0.031268
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int N = Integer.parseInt(line.trim());\n        int[][] opp = new int[N][7];\n        int[][] score = new int[N][7];\n        for (int i = 0; i < N; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            int A = Integer.parseInt(st.nextToken());\n            int B = Integer.parseInt(st.nextToken());\n            int C = Integer.parseInt(st.nextToken());\n            int D = Integer.parseInt(st.nextToken());\n            int E = Integer.parseInt(st.nextToken());\n            int F = Integer.parseInt(st.nextToken());\n            opp[i][A] = F;\n            opp[i][F] = A;\n            opp[i][B] = D;\n            opp[i][D] = B;\n            opp[i][C] = E;\n            opp[i][E] = C;\n            for (int v = 1; v <= 6; v++) {\n                int top = opp[i][v];\n                int max = 0;\n                for (int f = 1; f <= 6; f++) {\n                    if (f != v && f != top) {\n                        if (f > max) max = f;\n                    }\n                }\n                score[i][v] = max;\n            }\n        }\n        int ans = 0;\n        for (int start = 1; start <= 6; start++) {\n            int bottom = start;\n            int sum = 0;\n            for (int i = 0; i < N; i++) {\n                sum += score[i][bottom];\n                bottom = opp[i][bottom];\n            }\n            if (sum > ans) ans = sum;\n        }\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        int N = Integer.parseInt(line.trim());\n        int[][] opp = new int[N][7];\n        int[][] score = new int[N][7];\n        for (int i = 0; i < N; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            int A = Integer.parseInt(st.nextToken());\n            int B = Integer.parseInt(st.nextToken());\n            int C = Integer.parseInt(st.nextToken());\n            int D = Integer.parseInt(st.nextToken());\n            int E = Integer.parseInt(st.nextToken());\n            int F = Integer.parseInt(st.nextToken());\n            opp[i][A] = F;\n            opp[i][F] = A;\n            opp[i][B] = D;\n            opp[i][D] = B;\n            opp[i][C] = E;\n            opp[i][E] = C;\n            for (int v = 1; v <= 6; v++) {\n                int top = opp[i][v];\n                int max = 0;\n                for (int f = 1; f <= 6; f++) {\n                    if (f != v && f != top) {\n                        if (f > max) max = f;\n                    }\n                }\n                score[i][v] = max;\n            }\n        }\n        int ans = 0;\n        for (int start = 1; start <= 6; start++) {\n            int bottom = start;\n            int sum = 0;\n            for (int i = 0; i < N; i++) {\n                sum += score[i][bottom];\n                bottom = opp[i][bottom];\n            }\n            if (sum > ans) ans = sum;\n        }\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09961549998843111,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

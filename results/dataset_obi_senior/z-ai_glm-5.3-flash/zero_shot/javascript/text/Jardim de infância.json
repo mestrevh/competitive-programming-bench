@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:03:44.659349+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1119,
+            "output_tokens": 17942,
+            "total_tokens": 19061
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.008971,
+            "total_cost": 0.008995
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n  const P = [];\n  for (let i = 0; i < 7; i++) P.push([tokens[2 * i], tokens[2 * i + 1]]);\n  const [P1, P2, P3, P4, P5, P6, P7] = P;\n\n  const dx23 = P3[0] - P2[0], dy23 = P3[1] - P2[1];\n\n  // 1) angulo P2-P1-P3 agudo\n  const ax = P2[0] - P1[0], ay = P2[1] - P1[1];\n  const bx = P3[0] - P1[0], by = P3[1] - P1[1];\n  if (ax * bx + ay * by <= 0) return 'N';\n\n  // 2) |P1P2| == |P1P3|\n  if (ax * ax + ay * ay !== bx * bx + by * by) return 'N';\n\n  // 3) P2,P3,P4,P5 colineares\n  const cx = P4[0] - P2[0], cy = P4[1] - P2[1];\n  const ex = P5[0] - P2[0], ey = P5[1] - P2[1];\n  if (dx23 * cy - dy23 * cx !== 0) return 'N';\n  if (dx23 * ey - dy23 * ex !== 0) return 'N';\n\n  // 4) pontos medios dos segmentos P2P3 e P4P5 coincidem\n  if (P2[0] + P3[0] !== P4[0] + P5[0] || P2[1] + P3[1] !== P4[1] + P5[1]) return 'N';\n\n  // 5) |P2P3| > |P4P5|\n  const fx = P5[0] - P4[0], fy = P5[1] - P4[1];\n  if (dx23 * dx23 + dy23 * dy23 <= fx * fx + fy * fy) return 'N';\n\n  // 6) P4P6 e P5P7 perpendiculares a P2P3\n  const gx = P6[0] - P4[0], gy = P6[1] - P4[1];\n  const hx = P7[0] - P5[0], hy = P7[1] - P5[1];\n  if (gx * dx23 + gy * dy23 !== 0) return 'N';\n  if (hx * dx23 + hy * dy23 !== 0) return 'N';\n\n  // 7) |P4P6| == |P5P7|\n  if (gx * gx + gy * gy !== hx * hx + hy * hy) return 'N';\n\n  // 8) P1 e P6 em lados estritamente opostos da reta P2P3\n  //    (equivale a: segmento P1P6 cruza a reta em exatamente um ponto)\n  const c1 = dx23 * (P1[1] - P2[1]) - dy23 * (P1[0] - P2[0]);\n  const c6 = dx23 * (P6[1] - P2[1]) - dy23 * (P6[0] - P2[0]);\n  if (!((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0))) return 'N';\n\n  return 'S';\n}\n\nprocess.stdout.write(main() + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n  const P = [];\n  for (let i = 0; i < 7; i++) P.push([tokens[2 * i], tokens[2 * i + 1]]);\n  const [P1, P2, P3, P4, P5, P6, P7] = P;\n\n  const dx23 = P3[0] - P2[0], dy23 = P3[1] - P2[1];\n\n  // 1) angulo P2-P1-P3 agudo\n  const ax = P2[0] - P1[0], ay = P2[1] - P1[1];\n  const bx = P3[0] - P1[0], by = P3[1] - P1[1];\n  if (ax * bx + ay * by <= 0) return 'N';\n\n  // 2) |P1P2| == |P1P3|\n  if (ax * ax + ay * ay !== bx * bx + by * by) return 'N';\n\n  // 3) P2,P3,P4,P5 colineares\n  const cx = P4[0] - P2[0], cy = P4[1] - P2[1];\n  const ex = P5[0] - P2[0], ey = P5[1] - P2[1];\n  if (dx23 * cy - dy23 * cx !== 0) return 'N';\n  if (dx23 * ey - dy23 * ex !== 0) return 'N';\n\n  // 4) pontos medios dos segmentos P2P3 e P4P5 coincidem\n  if (P2[0] + P3[0] !== P4[0] + P5[0] || P2[1] + P3[1] !== P4[1] + P5[1]) return 'N';\n\n  // 5) |P2P3| > |P4P5|\n  const fx = P5[0] - P4[0], fy = P5[1] - P4[1];\n  if (dx23 * dx23 + dy23 * dy23 <= fx * fx + fy * fy) return 'N';\n\n  // 6) P4P6 e P5P7 perpendiculares a P2P3\n  const gx = P6[0] - P4[0], gy = P6[1] - P4[1];\n  const hx = P7[0] - P5[0], hy = P7[1] - P5[1];\n  if (gx * dx23 + gy * dy23 !== 0) return 'N';\n  if (hx * dx23 + hy * dy23 !== 0) return 'N';\n\n  // 7) |P4P6| == |P5P7|\n  if (gx * gx + gy * gy !== hx * hx + hy * hy) return 'N';\n\n  // 8) P1 e P6 em lados estritamente opostos da reta P2P3\n  //    (equivale a: segmento P1P6 cruza a reta em exatamente um ponto)\n  const c1 = dx23 * (P1[1] - P2[1]) - dy23 * (P1[0] - P2[0]);\n  const c6 = dx23 * (P6[1] - P2[1]) - dy23 * (P6[0] - P2[0]);\n  if (!((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0))) return 'N';\n\n  return 'S';\n}\n\nprocess.stdout.write(main() + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07517269998788834,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

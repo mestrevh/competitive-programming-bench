@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:29:54.529704+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 497,
+            "output_tokens": 3565,
+            "total_tokens": 4062
+        },
+        "cost_usd": {
+            "input_cost": 5e-05,
+            "output_cost": 0.001783,
+            "total_cost": 0.001832
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nN, K, C = data[0], data[1], data[2]\nA = data[3:3 + N]\n\ntotal = sum(A)\n\nif C == 1:\n    print(total - sum(sorted(A)[:K]))\nelse:\n    prefix = [0] * (N + 1)\n    for i, value in enumerate(A, 1):\n        prefix[i] = prefix[i - 1] + value\n\n    inf = 10**18\n    rows = [[inf] * (K + 1) for _ in range(C + 1)]\n    rows[0][0] = 0\n\n    for i in range(1, N + 1):\n        cur = rows[i % (C + 1)]\n        prev = rows[(i - 1) % (C + 1)]\n        old = rows[(i - C) % (C + 1)] if i >= C else None\n\n        cur[0] = 0\n        max_k = min(K, i // C)\n        prev_limit = (i - 1) // C\n\n        if i >= C:\n            window = prefix[i] - prefix[i - C]\n            for k in range(1, max_k + 1):\n                best = prev[k] if k <= prev_limit else inf\n                covered = old[k - 1] + window\n                cur[k] = min(best, covered)\n        else:\n            for k in range(1, max_k + 1):\n                cur[k] = prev[k] if k <= prev_limit else inf\n\n    minimum_covered = rows[N % (C + 1)][K]\n    print(total - minimum_covered)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nN, K, C = data[0], data[1], data[2]\nA = data[3:3 + N]\n\ntotal = sum(A)\n\nif C == 1:\n    print(total - sum(sorted(A)[:K]))\nelse:\n    prefix = [0] * (N + 1)\n    for i, value in enumerate(A, 1):\n        prefix[i] = prefix[i - 1] + value\n\n    inf = 10**18\n    rows = [[inf] * (K + 1) for _ in range(C + 1)]\n    rows[0][0] = 0\n\n    for i in range(1, N + 1):\n        cur = rows[i % (C + 1)]\n        prev = rows[(i - 1) % (C + 1)]\n        old = rows[(i - C) % (C + 1)] if i >= C else None\n\n        cur[0] = 0\n        max_k = min(K, i // C)\n        prev_limit = (i - 1) // C\n\n        if i >= C:\n            window = prefix[i] - prefix[i - C]\n            for k in range(1, max_k + 1):\n                best = prev[k] if k <= prev_limit else inf\n                covered = old[k - 1] + window\n                cur[k] = min(best, covered)\n        else:\n            for k in range(1, max_k + 1):\n                cur[k] = prev[k] if k <= prev_limit else inf\n\n    minimum_covered = rows[N % (C + 1)][K]\n    print(total - minimum_covered)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.8685463000001619,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

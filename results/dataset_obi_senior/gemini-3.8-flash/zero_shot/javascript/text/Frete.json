@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:50:30.145694+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 804,
+            "output_tokens": 549,
+            "total_tokens": 1819
+        },
+        "cost_usd": {
+            "input_cost": 0.000603,
+            "output_cost": 0.002059,
+            "total_cost": 0.002662
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const M = nextInt();\n\n    const adj = Array.from({ length: N + 1 }, () => []);\n\n    for (let i = 0; i < M; i++) {\n        const u = nextInt();\n        const v = nextInt();\n        const c = nextInt();\n        adj[u].push({ to: v, cost: c });\n        adj[v].push({ to: u, cost: c });\n    }\n\n    const dist = new Array(N + 1).fill(Infinity);\n    const visited = new Uint8Array(N + 1);\n\n    dist[1] = 0;\n\n    for (let i = 1; i <= N; i++) {\n        let u = -1;\n        let minD = Infinity;\n\n        for (let j = 1; j <= N; j++) {\n            if (!visited[j] && dist[j] < minD) {\n                minD = dist[j];\n                u = j;\n            }\n        }\n\n        if (u === -1 || u === N) {\n            break;\n        }\n\n        visited[u] = 1;\n\n        const edges = adj[u];\n        for (let j = 0; j < edges.length; j++) {\n            const edge = edges[j];\n            const v = edge.to;\n            const w = edge.cost;\n            if (dist[u] + w < dist[v]) {\n                dist[v] = dist[u] + w;\n            }\n        }\n    }\n\n    console.log(dist[N]);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const M = nextInt();\n\n    const adj = Array.from({ length: N + 1 }, () => []);\n\n    for (let i = 0; i < M; i++) {\n        const u = nextInt();\n        const v = nextInt();\n        const c = nextInt();\n        adj[u].push({ to: v, cost: c });\n        adj[v].push({ to: u, cost: c });\n    }\n\n    const dist = new Array(N + 1).fill(Infinity);\n    const visited = new Uint8Array(N + 1);\n\n    dist[1] = 0;\n\n    for (let i = 1; i <= N; i++) {\n        let u = -1;\n        let minD = Infinity;\n\n        for (let j = 1; j <= N; j++) {\n            if (!visited[j] && dist[j] < minD) {\n                minD = dist[j];\n                u = j;\n            }\n        }\n\n        if (u === -1 || u === N) {\n            break;\n        }\n\n        visited[u] = 1;\n\n        const edges = adj[u];\n        for (let j = 0; j < edges.length; j++) {\n            const edge = edges[j];\n            const v = edge.to;\n            const w = edge.cost;\n            if (dist[u] + w < dist[v]) {\n                dist[v] = dist[u] + w;\n            }\n        }\n    }\n\n    console.log(dist[N]);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05819129999144934,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

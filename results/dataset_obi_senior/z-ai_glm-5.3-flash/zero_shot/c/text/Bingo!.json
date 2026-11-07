@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T16:28:25.872935+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 956,
+            "output_tokens": 676,
+            "total_tokens": 1632
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.000338,
+            "total_cost": 0.000358
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main(void) {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) return 0;\n\n    /* listas de cartelas por número sorteável */\n    int cnt = (int *)calloc(U + 1, sizeof(int));\n    int **cards_of = (int **)malloc((U + 1) * sizeof(int *));\n    for (int i = 0; i <= U; i++) {\n        cards_of[i] = (int *)malloc(N * sizeof(int));\n    }\n\n    int *remaining = (int *)malloc(N * sizeof(int));\n    int *finish_step = (int *)malloc(N * sizeof(int));\n\n    for (int c = 0; c < N; c++) {\n        remaining[c] = K;\n        finish_step[c] = -1;\n        for (int j = 0; j < K; j++) {\n            int x;\n            scanf(\"%d\", &x);\n            cards_of[x][cnt[x]++] = c;\n        }\n    }\n\n    int finished_count = 0;\n    for (int step = 1; step <= U; step++) {\n        int x;\n        scanf(\"%d\", &x);\n        if (finished_count == N) continue; /* ainda precisa ler o resto da entrada */\n        int m = cnt[x];\n        int *list = cards_of[x];\n        for (int i = 0; i < m; i++) {\n            int c = list[i];\n            if (finish_step[c] == -1) {\n                if (--remaining[c] == 0) {\n                    finish_step[c] = step;\n                    finished_count++;\n                }\n            }\n        }\n        if (finished_count == N) {\n            /* podemos parar de processar, mas continuar lendo a entrada é seguro */\n        }\n    }\n\n    int best = -1;\n    for (int c = 0; c < N; c++) {\n        if (finish_step[c] != -1 && (best == -1 || finish_step[c] < best))\n            best = finish_step[c];\n    }\n\n    int first = 1;\n    for (int c = 0; c < N; c++) {\n        if (finish_step[c] == best) {\n            if (!first) printf(\" \");\n            printf(\"%d\", c + 1);\n            first = 0;\n        }\n    }\n    printf(\"\\n\");\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main(void) {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) return 0;\n\n    /* listas de cartelas por número sorteável */\n    int cnt = (int *)calloc(U + 1, sizeof(int));\n    int **cards_of = (int **)malloc((U + 1) * sizeof(int *));\n    for (int i = 0; i <= U; i++) {\n        cards_of[i] = (int *)malloc(N * sizeof(int));\n    }\n\n    int *remaining = (int *)malloc(N * sizeof(int));\n    int *finish_step = (int *)malloc(N * sizeof(int));\n\n    for (int c = 0; c < N; c++) {\n        remaining[c] = K;\n        finish_step[c] = -1;\n        for (int j = 0; j < K; j++) {\n            int x;\n            scanf(\"%d\", &x);\n            cards_of[x][cnt[x]++] = c;\n        }\n    }\n\n    int finished_count = 0;\n    for (int step = 1; step <= U; step++) {\n        int x;\n        scanf(\"%d\", &x);\n        if (finished_count == N) continue; /* ainda precisa ler o resto da entrada */\n        int m = cnt[x];\n        int *list = cards_of[x];\n        for (int i = 0; i < m; i++) {\n            int c = list[i];\n            if (finish_step[c] == -1) {\n                if (--remaining[c] == 0) {\n                    finish_step[c] = step;\n                    finished_count++;\n                }\n            }\n        }\n        if (finished_count == N) {\n            /* podemos parar de processar, mas continuar lendo a entrada é seguro */\n        }\n    }\n\n    int best = -1;\n    for (int c = 0; c < N; c++) {\n        if (finish_step[c] != -1 && (best == -1 || finish_step[c] < best))\n            best = finish_step[c];\n    }\n\n    int first = 1;\n    for (int c = 0; c < N; c++) {\n        if (finish_step[c] == best) {\n            if (!first) printf(\" \");\n            printf(\"%d\", c + 1);\n            first = 0;\n        }\n    }\n    printf(\"\\n\");\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 35
+            },
+            "total_test_cases": 35
+        }
+    }
+]

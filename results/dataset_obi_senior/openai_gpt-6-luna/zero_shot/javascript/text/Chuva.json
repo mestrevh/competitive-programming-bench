@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:38:03.396923+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 612,
+            "output_tokens": 827,
+            "total_tokens": 1439
+        },
+        "cost_usd": {
+            "input_cost": 6.1e-05,
+            "output_cost": 0.000414,
+            "total_cost": 0.000475
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = input[0];\nconst heights = input.slice(1);\n\nconst leftMax = new Array(n);\nconst rightMax = new Array(n);\n\nleftMax[0] = heights[0];\nfor (let i = 1; i < n; i++) {\n  leftMax[i] = Math.max(leftMax[i - 1], heights[i]);\n}\n\nrightMax[n - 1] = heights[n - 1];\nfor (let i = n - 2; i >= 0; i--) {\n  rightMax[i] = Math.max(rightMax[i + 1], heights[i]);\n}\n\nlet covered = 0;\nfor (let i = 0; i < n; i++) {\n  if (Math.min(leftMax[i], rightMax[i]) - heights[i] >= 1) {\n    covered++;\n  }\n}\n\nconsole.log(covered);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = input[0];\nconst heights = input.slice(1);\n\nconst leftMax = new Array(n);\nconst rightMax = new Array(n);\n\nleftMax[0] = heights[0];\nfor (let i = 1; i < n; i++) {\n  leftMax[i] = Math.max(leftMax[i - 1], heights[i]);\n}\n\nrightMax[n - 1] = heights[n - 1];\nfor (let i = n - 2; i >= 0; i--) {\n  rightMax[i] = Math.max(rightMax[i + 1], heights[i]);\n}\n\nlet covered = 0;\nfor (let i = 0; i < n; i++) {\n  if (Math.min(leftMax[i], rightMax[i]) - heights[i] >= 1) {\n    covered++;\n  }\n}\n\nconsole.log(covered);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08665420000033919,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

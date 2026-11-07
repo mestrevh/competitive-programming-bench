@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:37:16.309435+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1012,
+            "output_tokens": 26434,
+            "total_tokens": 27446
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.063442,
+            "total_cost": 0.063445
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve() -> None:\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    it = iter(data)\n    N = int(next(it))\n\n    def get_opp_and_score(a, b, c, d, e, f):\n        # Opposite pairs according to the problem: (A,F), (B,D), (C,E)\n        opp = [0] * 7\n        opp[a] = f\n        opp[f] = a\n        opp[b] = d\n        opp[d] = b\n        opp[c] = e\n        opp[e] = c\n\n        faces = [a, b, c, d, e, f]\n        score = [0] * 7\n        for v in range(1, 7):\n            m = 0\n            for face in faces:\n                if face != v and face != opp[v]:\n                    if face > m:\n                        m = face\n            score[v] = m\n        return opp, score\n\n    # Process the first die\n    a, b, c, d, e, f = (int(next(it)) for _ in range(6))\n    opp, score = get_opp_and_score(a, b, c, d, e, f)\n    NEG_INF = -10**9\n    DP = [NEG_INF] * 7\n    for v in range(1, 7):\n        top = opp[v]\n        if score[v] > DP[top]:\n            DP[top] = score[v]\n\n    # Process the remaining dice\n    for _ in range(N - 1):\n        a, b, c, d, e, f = (int(next(it)) for _ in range(6))\n        opp, score = get_opp_and_score(a, b, c, d, e, f)\n        newDP = [NEG_INF] * 7\n        for bottom in range(1, 7):\n            if DP[bottom] > NEG_INF:\n                top = opp[bottom]\n                val = DP[bottom] + score[bottom]\n                if val > newDP[top]:\n                    newDP[top] = val\n        DP = newDP\n\n    print(max(DP[1:]))\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve() -> None:\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    it = iter(data)\n    N = int(next(it))\n\n    def get_opp_and_score(a, b, c, d, e, f):\n        # Opposite pairs according to the problem: (A,F), (B,D), (C,E)\n        opp = [0] * 7\n        opp[a] = f\n        opp[f] = a\n        opp[b] = d\n        opp[d] = b\n        opp[c] = e\n        opp[e] = c\n\n        faces = [a, b, c, d, e, f]\n        score = [0] * 7\n        for v in range(1, 7):\n            m = 0\n            for face in faces:\n                if face != v and face != opp[v]:\n                    if face > m:\n                        m = face\n            score[v] = m\n        return opp, score\n\n    # Process the first die\n    a, b, c, d, e, f = (int(next(it)) for _ in range(6))\n    opp, score = get_opp_and_score(a, b, c, d, e, f)\n    NEG_INF = -10**9\n    DP = [NEG_INF] * 7\n    for v in range(1, 7):\n        top = opp[v]\n        if score[v] > DP[top]:\n            DP[top] = score[v]\n\n    # Process the remaining dice\n    for _ in range(N - 1):\n        a, b, c, d, e, f = (int(next(it)) for _ in range(6))\n        opp, score = get_opp_and_score(a, b, c, d, e, f)\n        newDP = [NEG_INF] * 7\n        for bottom in range(1, 7):\n            if DP[bottom] > NEG_INF:\n                top = opp[bottom]\n                val = DP[bottom] + score[bottom]\n                if val > newDP[top]:\n                    newDP[top] = val\n        DP = newDP\n\n    print(max(DP[1:]))\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08954999999696156,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

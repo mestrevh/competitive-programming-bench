@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:08:18.539420+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 657,
+            "output_tokens": 710,
+            "total_tokens": 1367
+        },
+        "cost_usd": {
+            "input_cost": 6.6e-05,
+            "output_cost": 0.000355,
+            "total_cost": 0.000421
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        long[] a = new long[n];\n\n        for (int i = 0; i < n; i++) {\n            a[i] = fs.nextInt();\n        }\n\n        int left = 0;\n        int right = n - 1;\n        int operations = 0;\n\n        while (left < right) {\n            if (a[left] == a[right]) {\n                left++;\n                right--;\n            } else if (a[left] < a[right]) {\n                a[left + 1] += a[left];\n                left++;\n                operations++;\n            } else {\n                a[right - 1] += a[right];\n                right--;\n                operations++;\n            }\n        }\n\n        System.out.println(operations);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        long[] a = new long[n];\n\n        for (int i = 0; i < n; i++) {\n            a[i] = fs.nextInt();\n        }\n\n        int left = 0;\n        int right = n - 1;\n        int operations = 0;\n\n        while (left < right) {\n            if (a[left] == a[right]) {\n                left++;\n                right--;\n            } else if (a[left] < a[right]) {\n                a[left + 1] += a[left];\n                left++;\n                operations++;\n            } else {\n                a[right - 1] += a[right];\n                right--;\n                operations++;\n            }\n        }\n\n        System.out.println(operations);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10045569999783766,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

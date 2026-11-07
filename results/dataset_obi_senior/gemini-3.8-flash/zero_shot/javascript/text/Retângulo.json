@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:06:04.386522+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 694,
+            "output_tokens": 514,
+            "total_tokens": 1734
+        },
+        "cost_usd": {
+            "input_cost": 0.00052,
+            "output_cost": 0.001928,
+            "total_cost": 0.002448
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const n = readInt();\n    if (n === null) return;\n\n    const L = new Float64Array(n);\n    let total = 0;\n    for (let i = 0; i < n; i++) {\n        L[i] = readInt();\n        total += L[i];\n    }\n\n    if (total % 2 !== 0) {\n        process.stdout.write('N\\n');\n        return;\n    }\n\n    const half = total / 2;\n\n    let p1 = 0;\n    let p2 = 0;\n    let currentDist = 0;\n    let diameterCount = 0;\n\n    while (p1 < n) {\n        while (currentDist < half) {\n            currentDist += L[p2];\n            p2 = (p2 + 1) % n;\n        }\n\n        if (currentDist === half) {\n            diameterCount++;\n            if (diameterCount >= 4) { // cada diâmetro é contado duas vezes (a partir de cada extremidade)\n                break;\n            }\n        }\n\n        currentDist -= L[p1];\n        p1++;\n    }\n\n    // Como contamos a partir de cada vértice, cada diâmetro foi visitado 2 vezes.\n    // Precisamos de pelo menos 2 diâmetros distintos, ou seja, diameterCount >= 4.\n    if (diameterCount >= 4) {\n        process.stdout.write('S\\n');\n    } else {\n        process.stdout.write('N\\n');\n    }\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const n = readInt();\n    if (n === null) return;\n\n    const L = new Float64Array(n);\n    let total = 0;\n    for (let i = 0; i < n; i++) {\n        L[i] = readInt();\n        total += L[i];\n    }\n\n    if (total % 2 !== 0) {\n        process.stdout.write('N\\n');\n        return;\n    }\n\n    const half = total / 2;\n\n    let p1 = 0;\n    let p2 = 0;\n    let currentDist = 0;\n    let diameterCount = 0;\n\n    while (p1 < n) {\n        while (currentDist < half) {\n            currentDist += L[p2];\n            p2 = (p2 + 1) % n;\n        }\n\n        if (currentDist === half) {\n            diameterCount++;\n            if (diameterCount >= 4) { // cada diâmetro é contado duas vezes (a partir de cada extremidade)\n                break;\n            }\n        }\n\n        currentDist -= L[p1];\n        p1++;\n    }\n\n    // Como contamos a partir de cada vértice, cada diâmetro foi visitado 2 vezes.\n    // Precisamos de pelo menos 2 diâmetros distintos, ou seja, diameterCount >= 4.\n    if (diameterCount >= 4) {\n        process.stdout.write('S\\n');\n    } else {\n        process.stdout.write('N\\n');\n    }\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06457669998053461,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

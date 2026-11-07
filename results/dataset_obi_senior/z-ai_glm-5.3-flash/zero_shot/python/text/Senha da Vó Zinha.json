@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T09:28:51.461878+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1123,
+            "output_tokens": 5785,
+            "total_tokens": 6908
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.002893,
+            "total_cost": 0.002917
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n, m, k = int(data[0]), int(data[1]), int(data[2])\n    s = data[3]\n    words = [data[4 + i] for i in range(m)]\n    p = int(data[4 + m])\n\n    # Para cada letra borrada (da esquerda para a direita), as letras\n    # candidatas ordenadas geram o produto cartesiano em ordem\n    # lexicográfica (a posição borrada mais à esquerda é a mais\n    # significativa).\n    letters = [sorted(w) for w in words]\n\n    # Converte P-1 (índice 0-based) para base K com M dígitos,\n    # onde o dígito menos significativo corresponde à última\n    # letra borrada.\n    idx = p - 1\n    digits = [0] * m\n    for j in range(m - 1, -1, -1):\n        digits[j] = idx % k\n        idx //= k\n\n    out = []\n    pos = 0\n    for ch in s:\n        if ch == '#':\n            out.append(letters[pos][digits[pos]])\n            pos += 1\n        else:\n            out.append(ch)\n\n    sys.stdout.write(''.join(out) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n, m, k = int(data[0]), int(data[1]), int(data[2])\n    s = data[3]\n    words = [data[4 + i] for i in range(m)]\n    p = int(data[4 + m])\n\n    # Para cada letra borrada (da esquerda para a direita), as letras\n    # candidatas ordenadas geram o produto cartesiano em ordem\n    # lexicográfica (a posição borrada mais à esquerda é a mais\n    # significativa).\n    letters = [sorted(w) for w in words]\n\n    # Converte P-1 (índice 0-based) para base K com M dígitos,\n    # onde o dígito menos significativo corresponde à última\n    # letra borrada.\n    idx = p - 1\n    digits = [0] * m\n    for j in range(m - 1, -1, -1):\n        digits[j] = idx % k\n        idx //= k\n\n    out = []\n    pos = 0\n    for ch in s:\n        if ch == '#':\n            out.append(letters[pos][digits[pos]])\n            pos += 1\n        else:\n            out.append(ch)\n\n    sys.stdout.write(''.join(out) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08104530000127852,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

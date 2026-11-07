@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:59:30.672515+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1160,
+            "output_tokens": 5719,
+            "total_tokens": 6879
+        },
+        "cost_usd": {
+            "input_cost": 0.000116,
+            "output_cost": 0.00286,
+            "total_cost": 0.002975
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long gain;\n    int index;\n} Item;\n\nint compare_items(const void *x, const void *y) {\n    const Item *a = (const Item *)x;\n    const Item *b = (const Item *)y;\n\n    if (a->gain > b->gain) return -1;\n    if (a->gain < b->gain) return 1;\n    return 0;\n}\n\nint main(void) {\n    int N, K;\n    if (scanf(\"%d %d\", &N, &K) != 2) return 0;\n\n    long long *a = malloc((size_t)N * sizeof(long long));\n    long long *b = malloc((size_t)N * sizeof(long long));\n    long long *positive = malloc((size_t)N * sizeof(long long));\n    long long *gain = malloc((size_t)N * sizeof(long long));\n    int *rank = malloc((size_t)N * sizeof(int));\n    Item *items = malloc((size_t)N * sizeof(Item));\n\n    for (int i = 0; i < N; i++) scanf(\"%lld\", &a[i]);\n    for (int i = 0; i < N; i++) scanf(\"%lld\", &b[i]);\n\n    long long total_positive = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long d = a[i] - b[i];\n        positive[i] = d > 0 ? d : 0;\n        total_positive += positive[i];\n\n        gain[i] = d > 0 ? b[i] : a[i];\n        items[i].gain = gain[i];\n        items[i].index = i;\n    }\n\n    qsort(items, (size_t)N, sizeof(Item), compare_items);\n\n    for (int i = 0; i < N; i++) rank[items[i].index] = i;\n\n    int k = K < N - 1 ? K : N - 1;\n    long long top_sum = 0;\n    for (int i = 0; i < k; i++) top_sum += items[i].gain;\n\n    long long answer = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long upgrades = top_sum;\n        if (rank[i] < k) {\n            upgrades = top_sum - gain[i] + items[k].gain;\n        }\n\n        long long candidate = total_positive - positive[i] + a[i] + upgrades;\n        if (candidate > answer) answer = candidate;\n    }\n\n    printf(\"%lld\\n\", answer);\n\n    free(a);\n    free(b);\n    free(positive);\n    free(gain);\n    free(rank);\n    free(items);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long gain;\n    int index;\n} Item;\n\nint compare_items(const void *x, const void *y) {\n    const Item *a = (const Item *)x;\n    const Item *b = (const Item *)y;\n\n    if (a->gain > b->gain) return -1;\n    if (a->gain < b->gain) return 1;\n    return 0;\n}\n\nint main(void) {\n    int N, K;\n    if (scanf(\"%d %d\", &N, &K) != 2) return 0;\n\n    long long *a = malloc((size_t)N * sizeof(long long));\n    long long *b = malloc((size_t)N * sizeof(long long));\n    long long *positive = malloc((size_t)N * sizeof(long long));\n    long long *gain = malloc((size_t)N * sizeof(long long));\n    int *rank = malloc((size_t)N * sizeof(int));\n    Item *items = malloc((size_t)N * sizeof(Item));\n\n    for (int i = 0; i < N; i++) scanf(\"%lld\", &a[i]);\n    for (int i = 0; i < N; i++) scanf(\"%lld\", &b[i]);\n\n    long long total_positive = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long d = a[i] - b[i];\n        positive[i] = d > 0 ? d : 0;\n        total_positive += positive[i];\n\n        gain[i] = d > 0 ? b[i] : a[i];\n        items[i].gain = gain[i];\n        items[i].index = i;\n    }\n\n    qsort(items, (size_t)N, sizeof(Item), compare_items);\n\n    for (int i = 0; i < N; i++) rank[items[i].index] = i;\n\n    int k = K < N - 1 ? K : N - 1;\n    long long top_sum = 0;\n    for (int i = 0; i < k; i++) top_sum += items[i].gain;\n\n    long long answer = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long upgrades = top_sum;\n        if (rank[i] < k) {\n            upgrades = top_sum - gain[i] + items[k].gain;\n        }\n\n        long long candidate = total_positive - positive[i] + a[i] + upgrades;\n        if (candidate > answer) answer = candidate;\n    }\n\n    printf(\"%lld\\n\", answer);\n\n    free(a);\n    free(b);\n    free(positive);\n    free(gain);\n    free(rank);\n    free(items);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12510080001084134,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

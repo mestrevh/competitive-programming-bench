@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:21:25.950456+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 956,
+            "output_tokens": 8349,
+            "total_tokens": 9305
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.020038,
+            "total_cost": 0.02004
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet pos = 0;\n\nconst L = parseInt(tokens[pos++], 10);\nconst C = parseInt(tokens[pos++], 10);\n\nconst grid = Array.from({ length: L }, () => Array(C));\nconst rowTargets = [];\nconst namesSet = new Set();\n\nfor (let r = 0; r < L; r++) {\n    for (let c = 0; c < C; c++) {\n        const name = tokens[pos++];\n        grid[r][c] = name;\n        namesSet.add(name);\n    }\n    rowTargets.push(BigInt(tokens[pos++]));\n}\n\nconst colTargets = [];\nfor (let c = 0; c < C; c++) {\n    colTargets.push(BigInt(tokens[pos++]));\n}\n\nconst names = Array.from(namesSet).sort();\nconst nameToIdx = new Map();\nfor (let i = 0; i < names.length; i++) {\n    nameToIdx.set(names[i], i);\n}\n\nconst V = names.length;\nconst E = L + C;\n\nconst counts = Array.from({ length: E }, () => new Array(V).fill(0));\n\nfor (let r = 0; r < L; r++) {\n    for (let c = 0; c < C; c++) {\n        const v = nameToIdx.get(grid[r][c]);\n        counts[r][v]++;\n        counts[L + c][v]++;\n    }\n}\n\nconst targets = new Array(E);\nfor (let r = 0; r < L; r++) targets[r] = rowTargets[r];\nfor (let c = 0; c < C; c++) targets[L + c] = colTargets[c];\n\nconst eqPairs = Array.from({ length: E }, () => []);\nconst varEqs = Array.from({ length: V }, () => []);\nconst unknownCount = new Array(E).fill(0);\n\nfor (let e = 0; e < E; e++) {\n    for (let v = 0; v < V; v++) {\n        const cnt = counts[e][v];\n        if (cnt > 0) {\n            eqPairs[e].push([v, cnt]);\n            varEqs[v].push([e, cnt]);\n            unknownCount[e]++;\n        }\n    }\n}\n\nconst knownSum = new Array(E).fill(0n);\nconst values = new Array(V).fill(null);\nconst queue = [];\n\nfor (let e = 0; e < E; e++) {\n    if (unknownCount[e] === 1) queue.push(e);\n}\n\nlet head = 0;\nwhile (head < queue.length) {\n    const e = queue[head++];\n    if (unknownCount[e] !== 1) continue;\n\n    let varIdx = -1;\n    let mult = 0;\n\n    for (const [v, cnt] of eqPairs[e]) {\n        if (values[v] === null) {\n            varIdx = v;\n            mult = cnt;\n            break;\n        }\n    }\n\n    const val = (targets[e] - knownSum[e]) / BigInt(mult);\n    values[varIdx] = val;\n\n    for (const [e2, cnt2] of varEqs[varIdx]) {\n        knownSum[e2] += val * BigInt(cnt2);\n        unknownCount[e2]--;\n\n        if (unknownCount[e2] === 1) {\n            queue.push(e2);\n        }\n    }\n}\n\nconst out = [];\nfor (let i = 0; i < V; i++) {\n    out.push(names[i] + ' ' + values[i].toString());\n}\n\nconsole.log(out.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet pos = 0;\n\nconst L = parseInt(tokens[pos++], 10);\nconst C = parseInt(tokens[pos++], 10);\n\nconst grid = Array.from({ length: L }, () => Array(C));\nconst rowTargets = [];\nconst namesSet = new Set();\n\nfor (let r = 0; r < L; r++) {\n    for (let c = 0; c < C; c++) {\n        const name = tokens[pos++];\n        grid[r][c] = name;\n        namesSet.add(name);\n    }\n    rowTargets.push(BigInt(tokens[pos++]));\n}\n\nconst colTargets = [];\nfor (let c = 0; c < C; c++) {\n    colTargets.push(BigInt(tokens[pos++]));\n}\n\nconst names = Array.from(namesSet).sort();\nconst nameToIdx = new Map();\nfor (let i = 0; i < names.length; i++) {\n    nameToIdx.set(names[i], i);\n}\n\nconst V = names.length;\nconst E = L + C;\n\nconst counts = Array.from({ length: E }, () => new Array(V).fill(0));\n\nfor (let r = 0; r < L; r++) {\n    for (let c = 0; c < C; c++) {\n        const v = nameToIdx.get(grid[r][c]);\n        counts[r][v]++;\n        counts[L + c][v]++;\n    }\n}\n\nconst targets = new Array(E);\nfor (let r = 0; r < L; r++) targets[r] = rowTargets[r];\nfor (let c = 0; c < C; c++) targets[L + c] = colTargets[c];\n\nconst eqPairs = Array.from({ length: E }, () => []);\nconst varEqs = Array.from({ length: V }, () => []);\nconst unknownCount = new Array(E).fill(0);\n\nfor (let e = 0; e < E; e++) {\n    for (let v = 0; v < V; v++) {\n        const cnt = counts[e][v];\n        if (cnt > 0) {\n            eqPairs[e].push([v, cnt]);\n            varEqs[v].push([e, cnt]);\n            unknownCount[e]++;\n        }\n    }\n}\n\nconst knownSum = new Array(E).fill(0n);\nconst values = new Array(V).fill(null);\nconst queue = [];\n\nfor (let e = 0; e < E; e++) {\n    if (unknownCount[e] === 1) queue.push(e);\n}\n\nlet head = 0;\nwhile (head < queue.length) {\n    const e = queue[head++];\n    if (unknownCount[e] !== 1) continue;\n\n    let varIdx = -1;\n    let mult = 0;\n\n    for (const [v, cnt] of eqPairs[e]) {\n        if (values[v] === null) {\n            varIdx = v;\n            mult = cnt;\n            break;\n        }\n    }\n\n    const val = (targets[e] - knownSum[e]) / BigInt(mult);\n    values[varIdx] = val;\n\n    for (const [e2, cnt2] of varEqs[varIdx]) {\n        knownSum[e2] += val * BigInt(cnt2);\n        unknownCount[e2]--;\n\n        if (unknownCount[e2] === 1) {\n            queue.push(e2);\n        }\n    }\n}\n\nconst out = [];\nfor (let i = 0; i < V; i++) {\n    out.push(names[i] + ' ' + values[i].toString());\n}\n\nconsole.log(out.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08903920001466759,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

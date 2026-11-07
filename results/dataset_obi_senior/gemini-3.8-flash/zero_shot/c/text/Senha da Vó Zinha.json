@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:32:54.334274+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1052,
+            "output_tokens": 355,
+            "total_tokens": 2728
+        },
+        "cost_usd": {
+            "input_cost": 0.000789,
+            "output_cost": 0.001331,
+            "total_cost": 0.00212
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint cmp_char(const void *a, const void *b) {\n    return (*(const char *)a - *(const char *)b);\n}\n\nint main() {\n    int n, m, k;\n    if (scanf(\"%d %d %d\", &n, &m, &k) != 3) return 0;\n\n    char s[505];\n    scanf(\"%s\", s);\n\n    char words[505][30];\n    for (int i = 0; i < m; i++) {\n        scanf(\"%s\", words[i]);\n        qsort(words[i], k, sizeof(char), cmp_char);\n    }\n\n    long long p;\n    scanf(\"%lld\", &p);\n    p--; // converte para 0-indexado\n\n    int choice[505];\n    for (int i = m - 1; i >= 0; i--) {\n        choice[i] = p % k;\n        p /= k;\n    }\n\n    int word_idx = 0;\n    for (int i = 0; i < n; i++) {\n        if (s[i] == '#') {\n            putchar(words[word_idx][choice[word_idx]]);\n            word_idx++;\n        } else {\n            putchar(s[i]);\n        }\n    }\n    putchar('\\n');\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint cmp_char(const void *a, const void *b) {\n    return (*(const char *)a - *(const char *)b);\n}\n\nint main() {\n    int n, m, k;\n    if (scanf(\"%d %d %d\", &n, &m, &k) != 3) return 0;\n\n    char s[505];\n    scanf(\"%s\", s);\n\n    char words[505][30];\n    for (int i = 0; i < m; i++) {\n        scanf(\"%s\", words[i]);\n        qsort(words[i], k, sizeof(char), cmp_char);\n    }\n\n    long long p;\n    scanf(\"%lld\", &p);\n    p--; // converte para 0-indexado\n\n    int choice[505];\n    for (int i = m - 1; i >= 0; i--) {\n        choice[i] = p % k;\n        p /= k;\n    }\n\n    int word_idx = 0;\n    for (int i = 0; i < n; i++) {\n        if (s[i] == '#') {\n            putchar(words[word_idx][choice[word_idx]]);\n            word_idx++;\n        } else {\n            putchar(s[i]);\n        }\n    }\n    putchar('\\n');\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17265100000076927,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

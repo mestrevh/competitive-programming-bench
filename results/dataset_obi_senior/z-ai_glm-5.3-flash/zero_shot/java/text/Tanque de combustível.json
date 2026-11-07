@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T21:59:25.425348+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 726,
+            "output_tokens": 5066,
+            "total_tokens": 5792
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.002533,
+            "total_cost": 0.002549
+        },
+        "raw_response": "```java\nimport java.util.Locale;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int c = sc.nextInt(); // consumo (km por litro)\n        int d = sc.nextInt(); // distância até o aeroporto (km)\n        int t = sc.nextInt(); // litros no tanque antes do abastecimento\n\n        // Combustível necessário além do que já existe no tanque: D/C - T = (D - T*C)/C\n        long need = (long) d - (long) t * c;\n\n        double ans = (need > 0) ? (double) need / (double) c : 0.0;\n\n        // Saída com um dígito de precisão, garantindo ponto decimal (Locale US)\n        System.out.printf(Locale.US, \"%.1f\\n\", ans);\n        sc.close();\n    }\n}\n```\n\n**Explicação da solução:**\n\n- Cássio precisa de `D/C` litros para chegar ao aeroporto. Ele já tem `T` litros.\n- Se `T >= D/C`, ele não compra nada (`0.0`). Caso contrário, compra exatamente `D/C - T` litros, que é equivalente a `(D - T*C) / C`.\n- Verificação com os exemplos:\n  - Ex. 1: `(10 - 0)/2 = 5.0` ✓\n  - Ex. 2: `(100 - 60)/30 = 1.333... → 1.3` ✓\n  - Ex. 3: `120 - 150 < 0 → 0.0` ✓\n  - Ex. 4: `73/50 = 1.46 → 1.5` ✓\n- Complexidade: **O(1)** — apenas aritmética inteira e uma formatação, sem risco de overflow (`t*c ≤ 5000`).",
+        "extracted_code": "import java.util.Locale;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int c = sc.nextInt(); // consumo (km por litro)\n        int d = sc.nextInt(); // distância até o aeroporto (km)\n        int t = sc.nextInt(); // litros no tanque antes do abastecimento\n\n        // Combustível necessário além do que já existe no tanque: D/C - T = (D - T*C)/C\n        long need = (long) d - (long) t * c;\n\n        double ans = (need > 0) ? (double) need / (double) c : 0.0;\n\n        // Saída com um dígito de precisão, garantindo ponto decimal (Locale US)\n        System.out.printf(Locale.US, \"%.1f\\n\", ans);\n        sc.close();\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11943219997920096,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

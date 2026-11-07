@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T09:58:01.071737+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1889,
+            "output_tokens": 35692,
+            "total_tokens": 37581
+        },
+        "cost_usd": {
+            "input_cost": 4e-05,
+            "output_cost": 0.017846,
+            "total_cost": 0.017886
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    N = int(data[0]); M = int(data[1]); K = int(data[2])\n    P = [0] + [int(x) for x in data[3:3 + K]]\n    bt = 3 + K\n    rest = data[bt: bt + 3 * M]\n    ev = [int(x) - 1 for x in rest[0::3]]\n    eu = [int(x) - 1 for x in rest[1::3]]\n    et = [int(x) for x in rest[2::3]]\n    A = int(data[bt + 3 * M]) - 1\n    B = int(data[bt + 3 * M + 1]) - 1\n\n    by_sys = [[] for _ in range(K + 1)]\n    for j in range(M):\n        by_sys[et[j]].append(j)\n\n    comp_sys = []\n    incidences = set()\n    parent = {}\n    root_comp = {}\n\n    def find(x):\n        root = x\n        while parent[root] != root:\n            root = parent[root]\n        while parent[x] != root:\n            parent[x], x = root, parent[x]\n        return root\n\n    for t in range(1, K + 1):\n        ids = by_sys[t]\n        if not ids:\n            continue\n        if len(ids) == 1:\n            j = ids[0]\n            cid = N + len(comp_sys)\n            comp_sys.append(t)\n            incidences.add((ev[j], cid))\n            incidences.add((eu[j], cid))\n            continue\n        b = t << 17\n        for j in ids:\n            v = b | ev[j]\n            if v not in parent:\n                parent[v] = v\n            u = b | eu[j]\n            if u not in parent:\n                parent[u] = u\n        for j in ids:\n            rv = find(b | ev[j])\n            ru = find(b | eu[j])\n            if rv != ru:\n                parent[rv] = ru\n        for j in ids:\n            r = find(b | ev[j])\n            cid = root_comp.get(r)\n            if cid is None:\n                cid = N + len(comp_sys)\n                comp_sys.append(t)\n                root_comp[r] = cid\n            incidences.add((ev[j], cid))\n            incidences.add((eu[j], cid))\n\n    n_total = N + len(comp_sys)\n    adj = [[] for _ in range(n_total)]\n    for v, cid in incidences:\n        adj[v].append((cid, P[comp_sys[cid - N]]))\n        adj[cid].append((v, 0))\n\n    INF = 1 << 60\n    dist = [INF] * n_total\n    dist[A] = 0\n    MASK = (1 << 20) - 1\n    heap = [A]\n    push = heapq.heappush\n    pop = heapq.heappop\n    ans = -1\n    while heap:\n        pk = pop(heap)\n        x = pk & MASK\n        d = pk >> 20\n        if d > dist[x]:\n            continue\n        if x == B:\n            ans = d\n            break\n        for y, w in adj[x]:\n            nd = d + w\n            if nd < dist[y]:\n                dist[y] = nd\n                push(heap, (nd << 20) | y)\n\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    N = int(data[0]); M = int(data[1]); K = int(data[2])\n    P = [0] + [int(x) for x in data[3:3 + K]]\n    bt = 3 + K\n    rest = data[bt: bt + 3 * M]\n    ev = [int(x) - 1 for x in rest[0::3]]\n    eu = [int(x) - 1 for x in rest[1::3]]\n    et = [int(x) for x in rest[2::3]]\n    A = int(data[bt + 3 * M]) - 1\n    B = int(data[bt + 3 * M + 1]) - 1\n\n    by_sys = [[] for _ in range(K + 1)]\n    for j in range(M):\n        by_sys[et[j]].append(j)\n\n    comp_sys = []\n    incidences = set()\n    parent = {}\n    root_comp = {}\n\n    def find(x):\n        root = x\n        while parent[root] != root:\n            root = parent[root]\n        while parent[x] != root:\n            parent[x], x = root, parent[x]\n        return root\n\n    for t in range(1, K + 1):\n        ids = by_sys[t]\n        if not ids:\n            continue\n        if len(ids) == 1:\n            j = ids[0]\n            cid = N + len(comp_sys)\n            comp_sys.append(t)\n            incidences.add((ev[j], cid))\n            incidences.add((eu[j], cid))\n            continue\n        b = t << 17\n        for j in ids:\n            v = b | ev[j]\n            if v not in parent:\n                parent[v] = v\n            u = b | eu[j]\n            if u not in parent:\n                parent[u] = u\n        for j in ids:\n            rv = find(b | ev[j])\n            ru = find(b | eu[j])\n            if rv != ru:\n                parent[rv] = ru\n        for j in ids:\n            r = find(b | ev[j])\n            cid = root_comp.get(r)\n            if cid is None:\n                cid = N + len(comp_sys)\n                comp_sys.append(t)\n                root_comp[r] = cid\n            incidences.add((ev[j], cid))\n            incidences.add((eu[j], cid))\n\n    n_total = N + len(comp_sys)\n    adj = [[] for _ in range(n_total)]\n    for v, cid in incidences:\n        adj[v].append((cid, P[comp_sys[cid - N]]))\n        adj[cid].append((v, 0))\n\n    INF = 1 << 60\n    dist = [INF] * n_total\n    dist[A] = 0\n    MASK = (1 << 20) - 1\n    heap = [A]\n    push = heapq.heappush\n    pop = heapq.heappop\n    ans = -1\n    while heap:\n        pk = pop(heap)\n        x = pk & MASK\n        d = pk >> 20\n        if d > dist[x]:\n            continue\n        if x == B:\n            ans = d\n            break\n        for y, w in adj[x]:\n            nd = d + w\n            if nd < dist[y]:\n                dist[y] = nd\n                push(heap, (nd << 20) | y)\n\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.7120608999975957,
+            "counts": {
+                "AC": 107,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

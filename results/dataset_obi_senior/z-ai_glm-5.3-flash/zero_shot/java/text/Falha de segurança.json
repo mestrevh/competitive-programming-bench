@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T19:29:20.249063+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 684,
+            "output_tokens": 6256,
+            "total_tokens": 6940
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.003128,
+            "total_cost": 0.003143
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        do {\n            line = br.readLine();\n        } while (line != null && line.trim().isEmpty());\n        int n = Integer.parseInt(line.trim());\n\n        Map<String, Integer> count = new HashMap<>();\n        for (int i = 0; i < n; i++) {\n            String s = br.readLine().trim();\n            count.merge(s, 1, Integer::sum);\n        }\n\n        long ans = 0;\n        Set<String> subs = new HashSet<>();\n        StringBuilder sb = new StringBuilder(16);\n\n        for (Map.Entry<String, Integer> e : count.entrySet()) {\n            String s = e.getKey();\n            long c = e.getValue();\n\n            // pares com senhas idênticas (senha contém a si mesma)\n            ans += c * (c - 1);\n\n            // sub-cadeias próprias distintas de s (t != s implica |t| < |s|)\n            int len = s.length();\n            subs.clear();\n            for (int i = 0; i < len; i++) {\n                sb.setLength(0);\n                for (int j = i; j < len; j++) {\n                    sb.append(s.charAt(j));\n                    if (j - i + 1 < len) subs.add(sb.toString());\n                }\n            }\n            for (String t : subs) {\n                Integer ct = count.get(t);\n                if (ct != null) ans += c * ct;\n            }\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        do {\n            line = br.readLine();\n        } while (line != null && line.trim().isEmpty());\n        int n = Integer.parseInt(line.trim());\n\n        Map<String, Integer> count = new HashMap<>();\n        for (int i = 0; i < n; i++) {\n            String s = br.readLine().trim();\n            count.merge(s, 1, Integer::sum);\n        }\n\n        long ans = 0;\n        Set<String> subs = new HashSet<>();\n        StringBuilder sb = new StringBuilder(16);\n\n        for (Map.Entry<String, Integer> e : count.entrySet()) {\n            String s = e.getKey();\n            long c = e.getValue();\n\n            // pares com senhas idênticas (senha contém a si mesma)\n            ans += c * (c - 1);\n\n            // sub-cadeias próprias distintas de s (t != s implica |t| < |s|)\n            int len = s.length();\n            subs.clear();\n            for (int i = 0; i < len; i++) {\n                sb.setLength(0);\n                for (int j = i; j < len; j++) {\n                    sb.append(s.charAt(j));\n                    if (j - i + 1 < len) subs.add(sb.toString());\n                }\n            }\n            for (String t : subs) {\n                Integer ct = count.get(t);\n                if (ct != null) ans += c * ct;\n            }\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15857480000704527,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

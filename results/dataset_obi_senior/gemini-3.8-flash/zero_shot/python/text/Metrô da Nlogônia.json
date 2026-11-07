@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:40:20.849825+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 877,
+            "output_tokens": 586,
+            "total_tokens": 2618
+        },
+        "cost_usd": {
+            "input_cost": 0.000658,
+            "output_cost": 0.002198,
+            "total_cost": 0.002855
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef find_center(n, adj):\n    # Encontra o centro de uma árvore de tamanho n\n    # 1. BFS a partir do nó 1 para achar o nó mais distante A\n    def bfs(start):\n        dist = [-1] * (n + 1)\n        parent = [-1] * (n + 1)\n        dist[start] = 0\n        q = deque([start])\n        farthest = start\n        \n        while q:\n            u = q.popleft()\n            if dist[u] > dist[farthest]:\n                farthest = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    parent[v] = u\n                    q.append(v)\n                    \n        return farthest, dist, parent\n\n    node_a, _, _ = bfs(1)\n    node_b, _, parent = bfs(node_a)\n\n    # Reconstrói o caminho de node_b até node_a\n    path = []\n    curr = node_b\n    while curr != -1:\n        path.append(curr)\n        curr = parent[curr]\n\n    # O centro é o elemento no meio do caminho\n    center = path[len(path) // 2]\n    return center\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    it = iter(input_data)\n    n = int(next(it))\n    m = int(next(it))\n    \n    adj1 = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj1[u].append(v)\n        adj1[v].append(u)\n        \n    adj2 = [[] for _ in range(m + 1)]\n    for _ in range(m - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj2[u].append(v)\n        adj2[v].append(u)\n        \n    c1 = find_center(n, adj1)\n    c2 = find_center(m, adj2)\n    \n    print(f\"{c1} {c2}\")\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef find_center(n, adj):\n    # Encontra o centro de uma árvore de tamanho n\n    # 1. BFS a partir do nó 1 para achar o nó mais distante A\n    def bfs(start):\n        dist = [-1] * (n + 1)\n        parent = [-1] * (n + 1)\n        dist[start] = 0\n        q = deque([start])\n        farthest = start\n        \n        while q:\n            u = q.popleft()\n            if dist[u] > dist[farthest]:\n                farthest = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    parent[v] = u\n                    q.append(v)\n                    \n        return farthest, dist, parent\n\n    node_a, _, _ = bfs(1)\n    node_b, _, parent = bfs(node_a)\n\n    # Reconstrói o caminho de node_b até node_a\n    path = []\n    curr = node_b\n    while curr != -1:\n        path.append(curr)\n        curr = parent[curr]\n\n    # O centro é o elemento no meio do caminho\n    center = path[len(path) // 2]\n    return center\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    it = iter(input_data)\n    n = int(next(it))\n    m = int(next(it))\n    \n    adj1 = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj1[u].append(v)\n        adj1[v].append(u)\n        \n    adj2 = [[] for _ in range(m + 1)]\n    for _ in range(m - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj2[u].append(v)\n        adj2[v].append(u)\n        \n    c1 = find_center(n, adj1)\n    c2 = find_center(m, adj2)\n    \n    print(f\"{c1} {c2}\")\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.5061028999989503,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

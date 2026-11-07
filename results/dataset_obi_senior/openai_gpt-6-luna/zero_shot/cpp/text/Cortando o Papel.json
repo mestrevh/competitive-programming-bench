@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:10:51.529135+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 476,
+            "output_tokens": 1455,
+            "total_tokens": 1931
+        },
+        "cost_usd": {
+            "input_cost": 4.8e-05,
+            "output_cost": 0.000727,
+            "total_cost": 0.000775
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<pair<long long, int>> heights(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> heights[i].first;\n        heights[i].second = i;\n    }\n\n    sort(heights.begin(), heights.end(), greater<>());\n\n    vector<bool> active(N, false);\n    int components = 0;\n    int maxComponents = 0;\n\n    for (int i = 0; i < N;) {\n        int j = i;\n        while (j < N && heights[j].first == heights[i].first) {\n            int pos = heights[j].second;\n            active[pos] = true;\n            ++components;\n            if (pos > 0 && active[pos - 1]) --components;\n            if (pos + 1 < N && active[pos + 1]) --components;\n            ++j;\n        }\n\n        maxComponents = max(maxComponents, components);\n        i = j;\n    }\n\n    cout << maxComponents + 1 << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<pair<long long, int>> heights(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> heights[i].first;\n        heights[i].second = i;\n    }\n\n    sort(heights.begin(), heights.end(), greater<>());\n\n    vector<bool> active(N, false);\n    int components = 0;\n    int maxComponents = 0;\n\n    for (int i = 0; i < N;) {\n        int j = i;\n        while (j < N && heights[j].first == heights[i].first) {\n            int pos = heights[j].second;\n            active[pos] = true;\n            ++components;\n            if (pos > 0 && active[pos - 1]) --components;\n            if (pos + 1 < N && active[pos + 1]) --components;\n            ++j;\n        }\n\n        maxComponents = max(maxComponents, components);\n        i = j;\n    }\n\n    cout << maxComponents + 1 << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16395400000328664,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

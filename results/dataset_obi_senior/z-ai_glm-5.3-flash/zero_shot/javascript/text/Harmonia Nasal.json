@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:59:57.008407+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1280,
+            "output_tokens": 66011,
+            "total_tokens": 67291
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.033006,
+            "total_cost": 0.033033
+        },
+        "raw_response": "Análise: o valor final é `Σ a_i (usadas) − Σ b'_i (usadas exceto a última)`, e a condição para anexar a `j`-ésima sílaba é `Σ_{t≤j} a ≥ Σ_{t≤j−1} b'` (equivalente a `D + a_j ≥ 0`, onde `D` soma os ganhos `g = a − b'` já usados). Por argumento de troca/remoção: itens não-últimos com ganho efetivo negativo nunca aparecem no ótimo (removê-los preserva a factibilidade e aumenta o valor); itens zerados têm ganho `a_i > 0` sem ônus; e com todos os ganhos ≥ 0 qualquer ordem funciona. Logo, o ótimo tem forma: conjunto `T` (itens `a_i ≥ b_i` base `a_i−b_i`, mais itens zerados contribuindo `a_i`, no máximo K zerados) seguido de uma última sílaba `L` que contribui `a_L`. Como zerar é sempre benéfico e não afeta a factibilidade nessa forma, basta, para cada `L`: `a_L + Σ_{i≠L, a_i≥b_i}(a_i−b_i) + soma dos K maiores valores de {b_i se a_i≥b_i, senão a_i} ∖ {v_L}` — computável em O(N log N) com prefixos e exclusão O(1). Verificado contra os 4 exemplos e vários casos de força bruta manual.\n\n```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const tokens = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(t => t.length !== 0);\n  let p = 0;\n  const n = +tokens[p++];\n  const kRaw = +tokens[p++];\n  const a = new Array(n);\n  const b = new Array(n);\n  for (let i = 0; i < n; i++) a[i] = +tokens[p++];\n  for (let i = 0; i < n; i++) b[i] = +tokens[p++];\n\n  const K = Math.min(kRaw, n);\n\n  // valor de \"zerar\" cada sílaba (se usada como nao-ultima):\n  // a_i >= b_i  -> bonus b_i (sobre base a_i - b_i);   a_i < b_i -> bonus a_i (sobre base 0)\n  const v = new Array(n);\n  const isQ = new Array(n);\n  let sigma = 0; // soma das bases (a_i - b_i) para itens com a_i >= b_i\n  for (let i = 0; i < n; i++) {\n    if (a[i] >= b[i]) {\n      isQ[i] = true;\n      v[i] = b[i];\n      sigma += a[i] - b[i];\n    } else {\n      isQ[i] = false;\n      v[i] = a[i];\n    }\n  }\n\n  const order = new Array(n);\n  for (let i = 0; i < n; i++) order[i] = i;\n  order.sort((x, y) => v[y] - v[x]);\n\n  const pre = new Array(n + 1);\n  pre[0] = 0;\n  for (let j = 0; j < n; j++) pre[j + 1] = pre[j] + v[order[j]];\n\n  const rank = new Array(n);\n  for (let j = 0; j < n; j++) rank[order[j]] = j + 1;\n\n  const topK = pre[K];\n  const nextSum = pre[Math.min(K + 1, n)]; // pre[K] + s_{K+1}\n\n  let ans = -Infinity;\n  for (let i = 0; i < n; i++) {\n    // base: soma de bases de todos os itens Q exceto i (o ultimo item e i, com valor a_i)\n    const base = a[i] + sigma - (isQ[i] ? a[i] - b[i] : 0);\n    // melhor uso de ate K zerinhos entre os itens != i (zerar o proprio ultimo e inutil)\n    const extra = (rank[i] <= K) ? (nextSum - v[i]) : topK;\n    const cand = base + extra;\n    if (cand > ans) ans = cand;\n  }\n\n  process.stdout.write(String(ans) + \"\\n\");\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const tokens = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(t => t.length !== 0);\n  let p = 0;\n  const n = +tokens[p++];\n  const kRaw = +tokens[p++];\n  const a = new Array(n);\n  const b = new Array(n);\n  for (let i = 0; i < n; i++) a[i] = +tokens[p++];\n  for (let i = 0; i < n; i++) b[i] = +tokens[p++];\n\n  const K = Math.min(kRaw, n);\n\n  // valor de \"zerar\" cada sílaba (se usada como nao-ultima):\n  // a_i >= b_i  -> bonus b_i (sobre base a_i - b_i);   a_i < b_i -> bonus a_i (sobre base 0)\n  const v = new Array(n);\n  const isQ = new Array(n);\n  let sigma = 0; // soma das bases (a_i - b_i) para itens com a_i >= b_i\n  for (let i = 0; i < n; i++) {\n    if (a[i] >= b[i]) {\n      isQ[i] = true;\n      v[i] = b[i];\n      sigma += a[i] - b[i];\n    } else {\n      isQ[i] = false;\n      v[i] = a[i];\n    }\n  }\n\n  const order = new Array(n);\n  for (let i = 0; i < n; i++) order[i] = i;\n  order.sort((x, y) => v[y] - v[x]);\n\n  const pre = new Array(n + 1);\n  pre[0] = 0;\n  for (let j = 0; j < n; j++) pre[j + 1] = pre[j] + v[order[j]];\n\n  const rank = new Array(n);\n  for (let j = 0; j < n; j++) rank[order[j]] = j + 1;\n\n  const topK = pre[K];\n  const nextSum = pre[Math.min(K + 1, n)]; // pre[K] + s_{K+1}\n\n  let ans = -Infinity;\n  for (let i = 0; i < n; i++) {\n    // base: soma de bases de todos os itens Q exceto i (o ultimo item e i, com valor a_i)\n    const base = a[i] + sigma - (isQ[i] ? a[i] - b[i] : 0);\n    // melhor uso de ate K zerinhos entre os itens != i (zerar o proprio ultimo e inutil)\n    const extra = (rank[i] <= K) ? (nextSum - v[i]) : topK;\n    const cand = base + extra;\n    if (cand > ans) ans = cand;\n  }\n\n  process.stdout.write(String(ans) + \"\\n\");\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12385719997109845,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

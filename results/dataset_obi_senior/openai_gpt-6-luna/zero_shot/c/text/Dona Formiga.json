@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:48:30.079540+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 792,
+            "output_tokens": 529,
+            "total_tokens": 1321
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000264,
+            "total_cost": 0.000344
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int S, T, P;\n    scanf(\"%d %d %d\", &S, &T, &P);\n\n    int altura[200];\n    for (int i = 0; i < S; i++) {\n        scanf(\"%d\", &altura[i]);\n    }\n\n    int adj[200][200] = {0};\n    for (int i = 0; i < T; i++) {\n        int I, J;\n        scanf(\"%d %d\", &I, &J);\n        I--;\n        J--;\n        adj[I][J] = adj[J][I] = 1;\n    }\n\n    int ordem[200];\n    for (int i = 0; i < S; i++) {\n        ordem[i] = i;\n        for (int j = i; j > 0 && altura[ordem[j]] < altura[ordem[j - 1]]; j--) {\n            int temp = ordem[j];\n            ordem[j] = ordem[j - 1];\n            ordem[j - 1] = temp;\n        }\n    }\n\n    int dp[200] = {0};\n    for (int i = 0; i < S; i++) {\n        int u = ordem[i];\n        for (int v = 0; v < S; v++) {\n            if (adj[u][v] && altura[u] > altura[v]) {\n                if (dp[u] < dp[v] + 1) {\n                    dp[u] = dp[v] + 1;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dp[P - 1]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int S, T, P;\n    scanf(\"%d %d %d\", &S, &T, &P);\n\n    int altura[200];\n    for (int i = 0; i < S; i++) {\n        scanf(\"%d\", &altura[i]);\n    }\n\n    int adj[200][200] = {0};\n    for (int i = 0; i < T; i++) {\n        int I, J;\n        scanf(\"%d %d\", &I, &J);\n        I--;\n        J--;\n        adj[I][J] = adj[J][I] = 1;\n    }\n\n    int ordem[200];\n    for (int i = 0; i < S; i++) {\n        ordem[i] = i;\n        for (int j = i; j > 0 && altura[ordem[j]] < altura[ordem[j - 1]]; j--) {\n            int temp = ordem[j];\n            ordem[j] = ordem[j - 1];\n            ordem[j - 1] = temp;\n        }\n    }\n\n    int dp[200] = {0};\n    for (int i = 0; i < S; i++) {\n        int u = ordem[i];\n        for (int v = 0; v < S; v++) {\n            if (adj[u][v] && altura[u] > altura[v]) {\n                if (dp[u] < dp[v] + 1) {\n                    dp[u] = dp[v] + 1;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dp[P - 1]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16847299999790266,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:38:45.557579+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1399,
+            "output_tokens": 3983,
+            "total_tokens": 5382
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.009559,
+            "total_cost": 0.009563
+        },
+        "raw_response": "```python\nimport sys\nfrom array import array\n\ndef main():\n    input = sys.stdin.buffer.readline\n    first = input().split()\n    if not first:\n        return\n\n    N = int(first[0])\n    M = int(first[1])\n    P = int(first[2])\n\n    row = array('I', range(N))\n    col = array('I', range(M))\n\n    for _ in range(P):\n        parts = input().split()\n        op = parts[0]\n        a = int(parts[1]) - 1\n        b = int(parts[2]) - 1\n\n        if op == b'L':\n            row[a], row[b] = row[b], row[a]\n        else:\n            col[a], col[b] = col[b], col[a]\n\n    write = sys.stdout.write\n    chunk = []\n    chunk_len = 0\n    LIMIT = 1 << 16\n\n    for i in range(N):\n        base = row[i] * M + 1\n        line = ' '.join(str(base + c) for c in col)\n        chunk.append(line)\n        chunk_len += len(line) + 1\n\n        if chunk_len >= LIMIT:\n            write('\\n'.join(chunk) + '\\n')\n            chunk.clear()\n            chunk_len = 0\n\n    if chunk:\n        write('\\n'.join(chunk) + '\\n')\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom array import array\n\ndef main():\n    input = sys.stdin.buffer.readline\n    first = input().split()\n    if not first:\n        return\n\n    N = int(first[0])\n    M = int(first[1])\n    P = int(first[2])\n\n    row = array('I', range(N))\n    col = array('I', range(M))\n\n    for _ in range(P):\n        parts = input().split()\n        op = parts[0]\n        a = int(parts[1]) - 1\n        b = int(parts[2]) - 1\n\n        if op == b'L':\n            row[a], row[b] = row[b], row[a]\n        else:\n            col[a], col[b] = col[b], col[a]\n\n    write = sys.stdout.write\n    chunk = []\n    chunk_len = 0\n    LIMIT = 1 << 16\n\n    for i in range(N):\n        base = row[i] * M + 1\n        line = ' '.join(str(base + c) for c in col)\n        chunk.append(line)\n        chunk_len += len(line) + 1\n\n        if chunk_len >= LIMIT:\n            write('\\n'.join(chunk) + '\\n')\n            chunk.clear()\n            chunk_len = 0\n\n    if chunk:\n        write('\\n'.join(chunk) + '\\n')\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.6129760000039823,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

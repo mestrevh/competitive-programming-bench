@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:33:11.677677+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 880,
+            "output_tokens": 2039,
+            "total_tokens": 2919
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.004894,
+            "total_cost": 0.004896
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    pos = 2\n\n    bit_a = [0] * (n + 2)\n    bit_b = [0] * (n + 2)\n\n    answers = []\n\n    for _ in range(m):\n        op = data[pos]\n        pos += 1\n\n        if op == 3:\n            x = data[pos]\n            pos += 1\n\n            sum_a = 0\n            idx = x\n            while idx > 0:\n                sum_a += bit_a[idx]\n                idx -= idx & -idx\n\n            sum_b = 0\n            idx = x\n            while idx > 0:\n                sum_b += bit_b[idx]\n                idx -= idx & -idx\n\n            answers.append(str(x * sum_a + sum_b))\n\n        else:\n            i = data[pos]\n            v = data[pos + 1]\n            pos += 2\n\n            if op == 1:\n                left = i\n                right = i + v - 1\n                if right > n:\n                    right = n\n                a = -1\n                b = v + i\n            else:\n                left = i - v + 1\n                if left < 1:\n                    left = 1\n                right = i\n                a = 1\n                b = v - i\n\n            idx = left\n            while idx <= n:\n                bit_a[idx] += a\n                bit_b[idx] += b\n                idx += idx & -idx\n\n            idx = right + 1\n            while idx <= n:\n                bit_a[idx] -= a\n                bit_b[idx] -= b\n                idx += idx & -idx\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    pos = 2\n\n    bit_a = [0] * (n + 2)\n    bit_b = [0] * (n + 2)\n\n    answers = []\n\n    for _ in range(m):\n        op = data[pos]\n        pos += 1\n\n        if op == 3:\n            x = data[pos]\n            pos += 1\n\n            sum_a = 0\n            idx = x\n            while idx > 0:\n                sum_a += bit_a[idx]\n                idx -= idx & -idx\n\n            sum_b = 0\n            idx = x\n            while idx > 0:\n                sum_b += bit_b[idx]\n                idx -= idx & -idx\n\n            answers.append(str(x * sum_a + sum_b))\n\n        else:\n            i = data[pos]\n            v = data[pos + 1]\n            pos += 2\n\n            if op == 1:\n                left = i\n                right = i + v - 1\n                if right > n:\n                    right = n\n                a = -1\n                b = v + i\n            else:\n                left = i - v + 1\n                if left < 1:\n                    left = 1\n                right = i\n                a = 1\n                b = v - i\n\n            idx = left\n            while idx <= n:\n                bit_a[idx] += a\n                bit_b[idx] += b\n                idx += idx & -idx\n\n            idx = right + 1\n            while idx <= n:\n                bit_a[idx] -= a\n                bit_b[idx] -= b\n                idx += idx & -idx\n\n    sys.stdout.write(\"\\n\".join(answers))\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.46085100000345847,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

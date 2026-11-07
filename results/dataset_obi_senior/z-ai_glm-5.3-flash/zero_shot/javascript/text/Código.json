@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:07:11.563396+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 866,
+            "output_tokens": 16851,
+            "total_tokens": 17717
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.008426,
+            "total_cost": 0.008444
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  let data;\n  try {\n    data = fs.readFileSync(0, 'utf8');\n  } catch (e) {\n    data = fs.readFileSync('/dev/stdin', 'utf8');\n  }\n  const lines = data.split('\\n').map(s => s.trim()).filter(s => s.length > 0);\n  if (lines.length === 0) {\n    process.stdout.write('ok\\n');\n    return;\n  }\n  const n = parseInt(lines[0], 10);\n\n  // Conjunto de strings completas já vistas (detecta ocorrência inteiramente\n  // dentro de S_a ou de S_b, i.e., posição 0 ou 10 da concatenação).\n  const seen = new Set();\n\n  // prefixSets[L]: prefixos de comprimento L das strings anteriores\n  // suffixSets[L]: sufixos de comprimento L das strings anteriores\n  const prefixSets = new Array(10);\n  const suffixSets = new Array(10);\n  for (let L = 1; L <= 9; L++) {\n    prefixSets[L] = new Set();\n    suffixSets[L] = new Set();\n  }\n\n  const count = Math.min(n, lines.length - 1);\n  for (let idx = 1; idx <= count; idx++) {\n    const S = lines[idx];\n\n    // Pré-computa prefixos e sufixos de todos os comprimentos 1..9\n    const pref = new Array(10);\n    const suf = new Array(10);\n    for (let L = 1; L <= 9; L++) {\n      pref[L] = S.slice(0, L);\n      suf[L] = S.slice(10 - L);\n    }\n\n    // Verifica se S_k é substring de alguma concatenação S_a S_b (a, b < k).\n    // Ocorrência na posição i (1..9): S_k = sufixo de S_a (comp. 10-i) + prefixo de S_b (comp. i)\n    // i = 0 ou i = 10  <=>  S_k igual a alguma string anterior.\n    let bad = seen.has(S);\n    if (!bad) {\n      for (let j = 1; j <= 9; j++) {\n        // parte de S_b tem comprimento j; parte de S_a tem comprimento 10-j\n        if (suffixSets[10 - j].has(pref[10 - j]) && prefixSets[j].has(suf[j])) {\n          bad = true;\n          break;\n        }\n      }\n    }\n\n    if (bad) {\n      process.stdout.write(S + '\\n');\n      return;\n    }\n\n    // Insere a string atual nas estruturas para as próximas verificações\n    seen.add(S);\n    for (let L = 1; L <= 9; L++) {\n      prefixSets[L].add(pref[L]);\n      suffixSets[L].add(suf[L]);\n    }\n  }\n\n  process.stdout.write('ok\\n');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  let data;\n  try {\n    data = fs.readFileSync(0, 'utf8');\n  } catch (e) {\n    data = fs.readFileSync('/dev/stdin', 'utf8');\n  }\n  const lines = data.split('\\n').map(s => s.trim()).filter(s => s.length > 0);\n  if (lines.length === 0) {\n    process.stdout.write('ok\\n');\n    return;\n  }\n  const n = parseInt(lines[0], 10);\n\n  // Conjunto de strings completas já vistas (detecta ocorrência inteiramente\n  // dentro de S_a ou de S_b, i.e., posição 0 ou 10 da concatenação).\n  const seen = new Set();\n\n  // prefixSets[L]: prefixos de comprimento L das strings anteriores\n  // suffixSets[L]: sufixos de comprimento L das strings anteriores\n  const prefixSets = new Array(10);\n  const suffixSets = new Array(10);\n  for (let L = 1; L <= 9; L++) {\n    prefixSets[L] = new Set();\n    suffixSets[L] = new Set();\n  }\n\n  const count = Math.min(n, lines.length - 1);\n  for (let idx = 1; idx <= count; idx++) {\n    const S = lines[idx];\n\n    // Pré-computa prefixos e sufixos de todos os comprimentos 1..9\n    const pref = new Array(10);\n    const suf = new Array(10);\n    for (let L = 1; L <= 9; L++) {\n      pref[L] = S.slice(0, L);\n      suf[L] = S.slice(10 - L);\n    }\n\n    // Verifica se S_k é substring de alguma concatenação S_a S_b (a, b < k).\n    // Ocorrência na posição i (1..9): S_k = sufixo de S_a (comp. 10-i) + prefixo de S_b (comp. i)\n    // i = 0 ou i = 10  <=>  S_k igual a alguma string anterior.\n    let bad = seen.has(S);\n    if (!bad) {\n      for (let j = 1; j <= 9; j++) {\n        // parte de S_b tem comprimento j; parte de S_a tem comprimento 10-j\n        if (suffixSets[10 - j].has(pref[10 - j]) && prefixSets[j].has(suf[j])) {\n          bad = true;\n          break;\n        }\n      }\n    }\n\n    if (bad) {\n      process.stdout.write(S + '\\n');\n      return;\n    }\n\n    // Insere a string atual nas estruturas para as próximas verificações\n    seen.add(S);\n    for (let L = 1; L <= 9; L++) {\n      prefixSets[L].add(pref[L]);\n      suffixSets[L].add(suf[L]);\n    }\n  }\n\n  process.stdout.write('ok\\n');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.24542470002779737,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

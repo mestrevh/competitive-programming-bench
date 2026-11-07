@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:32:30.304770+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 704,
+            "output_tokens": 509,
+            "total_tokens": 1213
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.001222,
+            "total_cost": 0.001224
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst s = data[1];\n\nlet prefix = 0;\nlet answer = 0;\nconst count = new Map();\ncount.set(0, 1);\n\nfor (let i = 0; i < n; i++) {\n    prefix += data[2 + i];\n    const need = prefix - s;\n    answer += count.get(need) || 0;\n    count.set(prefix, (count.get(prefix) || 0) + 1);\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst s = data[1];\n\nlet prefix = 0;\nlet answer = 0;\nconst count = new Map();\ncount.set(0, 1);\n\nfor (let i = 0; i < n; i++) {\n    prefix += data[2 + i];\n    const need = prefix - s;\n    answer += count.get(need) || 0;\n    count.set(prefix, (count.get(prefix) || 0) + 1);\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07989110000198707,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

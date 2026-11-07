@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:04:52.692668+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 898,
+            "output_tokens": 27592,
+            "total_tokens": 28490
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.013796,
+            "total_cost": 0.013815
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  let raw;\n  try {\n    raw = fs.readFileSync(0, 'utf8');\n  } catch (e) {\n    raw = fs.readFileSync('/dev/stdin', 'utf8');\n  }\n  const data = raw.trim().split(/\\s+/).map(Number);\n  let p = 0;\n  const sx = data[p++], sy = data[p++], tx = data[p++], ty = data[p++];\n  const N = data[p++];\n  const M = N + 2; // node 0 = início, 1..N = retângulos, M-1 = destino\n\n  const X1 = new Int32Array(M), Y1 = new Int32Array(M);\n  const X2 = new Int32Array(M), Y2 = new Int32Array(M);\n\n  // início e destino como retângulos degenerados (pontos)\n  X1[0] = X2[0] = sx; Y1[0] = Y2[0] = sy;\n  for (let i = 1; i <= N; i++) {\n    const a = data[p++], b = data[p++], c = data[p++], d = data[p++];\n    X1[i] = a < c ? a : c; X2[i] = a < c ? c : a;\n    Y1[i] = b < d ? b : d; Y2[i] = b < d ? d : b;\n  }\n  X1[M - 1] = X2[M - 1] = tx; Y1[M - 1] = Y2[M - 1] = ty;\n\n  const dist = new Float64Array(M).fill(Infinity);\n  const done = new Uint8Array(M);\n  dist[0] = 0;\n  const last = M - 1;\n\n  // Dijkstra O(V^2) sobre grafo completo\n  // peso(a,b) = distância L1 (lacuna) entre os conjuntos: max(0, falha em x) + max(0, falha em y)\n  for (;;) {\n    let u = -1, bd = Infinity;\n    for (let v = 0; v < M; v++) {\n      if (!done[v] && dist[v] < bd) { bd = dist[v]; u = v; }\n    }\n    if (u < 0 || u === last) break;\n    done[u] = 1;\n    const ax1 = X1[u], ax2 = X2[u], ay1 = Y1[u], ay2 = Y2[u];\n    for (let v = 0; v < M; v++) {\n      if (done[v]) continue;\n      let w = 0;\n      if (X1[v] > ax2) w = X1[v] - ax2;\n      else if (ax1 > X2[v]) w = ax1 - X2[v];\n      if (Y1[v] > ay2) w += Y1[v] - ay2;\n      else if (ay1 > Y2[v]) w += ay1 - Y2[v];\n      const nd = bd + w;\n      if (nd < dist[v]) dist[v] = nd;\n    }\n  }\n\n  console.log(Math.round(dist[last]));\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  let raw;\n  try {\n    raw = fs.readFileSync(0, 'utf8');\n  } catch (e) {\n    raw = fs.readFileSync('/dev/stdin', 'utf8');\n  }\n  const data = raw.trim().split(/\\s+/).map(Number);\n  let p = 0;\n  const sx = data[p++], sy = data[p++], tx = data[p++], ty = data[p++];\n  const N = data[p++];\n  const M = N + 2; // node 0 = início, 1..N = retângulos, M-1 = destino\n\n  const X1 = new Int32Array(M), Y1 = new Int32Array(M);\n  const X2 = new Int32Array(M), Y2 = new Int32Array(M);\n\n  // início e destino como retângulos degenerados (pontos)\n  X1[0] = X2[0] = sx; Y1[0] = Y2[0] = sy;\n  for (let i = 1; i <= N; i++) {\n    const a = data[p++], b = data[p++], c = data[p++], d = data[p++];\n    X1[i] = a < c ? a : c; X2[i] = a < c ? c : a;\n    Y1[i] = b < d ? b : d; Y2[i] = b < d ? d : b;\n  }\n  X1[M - 1] = X2[M - 1] = tx; Y1[M - 1] = Y2[M - 1] = ty;\n\n  const dist = new Float64Array(M).fill(Infinity);\n  const done = new Uint8Array(M);\n  dist[0] = 0;\n  const last = M - 1;\n\n  // Dijkstra O(V^2) sobre grafo completo\n  // peso(a,b) = distância L1 (lacuna) entre os conjuntos: max(0, falha em x) + max(0, falha em y)\n  for (;;) {\n    let u = -1, bd = Infinity;\n    for (let v = 0; v < M; v++) {\n      if (!done[v] && dist[v] < bd) { bd = dist[v]; u = v; }\n    }\n    if (u < 0 || u === last) break;\n    done[u] = 1;\n    const ax1 = X1[u], ax2 = X2[u], ay1 = Y1[u], ay2 = Y2[u];\n    for (let v = 0; v < M; v++) {\n      if (done[v]) continue;\n      let w = 0;\n      if (X1[v] > ax2) w = X1[v] - ax2;\n      else if (ax1 > X2[v]) w = ax1 - X2[v];\n      if (Y1[v] > ay2) w += Y1[v] - ay2;\n      else if (ay1 > Y2[v]) w += ay1 - Y2[v];\n      const nd = bd + w;\n      if (nd < dist[v]) dist[v] = nd;\n    }\n  }\n\n  console.log(Math.round(dist[last]));\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0762704000226222,
+            "counts": {
+                "AC": 37,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 37
+        }
+    }
+]

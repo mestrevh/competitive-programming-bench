@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T20:53:23.303996+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 4.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1042,
+            "output_tokens": 10509,
+            "total_tokens": 11551
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.005254,
+            "total_cost": 0.005277
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long a[1600];\n\nstatic int cmp_ll(const void *x, const void *y) {\n    long long u = *(const long long *)x;\n    long long v = *(const long long *)y;\n    if (u < v) return -1;\n    if (u > v) return 1;\n    return 0;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    for (int i = 0; i < n; i++) {\n        long long v;\n        if (scanf(\"%lld\", &v) != 1) v = 0;\n        a[i] = v;\n    }\n    qsort(a, n, sizeof(long long), cmp_ll);\n\n    /* Para cada par (i, j) com a[i] <= a[j] (menores lados), conta os k > j\n       com a[k] < a[i] + a[j] (maior lado). Como a[i] + a[j] nao decresce com j,\n       o ponteiro r (primeiro indice invalido) so avanca: O(N^2) total. */\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        int r = i + 2;\n        for (int j = i + 1; j < n; j++) {\n            if (r < j + 1) r = j + 1;\n            long long lim = a[i] + a[j];\n            while (r < n && a[r] < lim) r++;\n            total += r - j - 1;\n        }\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long a[1600];\n\nstatic int cmp_ll(const void *x, const void *y) {\n    long long u = *(const long long *)x;\n    long long v = *(const long long *)y;\n    if (u < v) return -1;\n    if (u > v) return 1;\n    return 0;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    for (int i = 0; i < n; i++) {\n        long long v;\n        if (scanf(\"%lld\", &v) != 1) v = 0;\n        a[i] = v;\n    }\n    qsort(a, n, sizeof(long long), cmp_ll);\n\n    /* Para cada par (i, j) com a[i] <= a[j] (menores lados), conta os k > j\n       com a[k] < a[i] + a[j] (maior lado). Como a[i] + a[j] nao decresce com j,\n       o ponteiro r (primeiro indice invalido) so avanca: O(N^2) total. */\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        int r = i + 2;\n        for (int j = i + 1; j < n; j++) {\n            if (r < j + 1) r = j + 1;\n            long long lim = a[i] + a[j];\n            while (r < n && a[r] < lim) r++;\n            total += r - j - 1;\n        }\n    }\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21447139998781495,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

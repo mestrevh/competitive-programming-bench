@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:17:33.589944+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 395,
+            "total_tokens": 1152
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.000198,
+            "total_cost": 0.000214
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(Boolean).map(Number);\n\nlet idx = 0;\nconst N = input[idx++];\nconst adj = Array.from({ length: N + 1 }, () => []);\n\nfor (let i = 0; i < N - 1; i++) {\n  const a = input[idx++];\n  const b = input[idx++];\n  adj[a].push(b);\n  adj[b].push(a);\n}\n\nconst size = new Array(N + 1).fill(1);\nconst parent = new Array(N + 1).fill(0);\nconst visited = new Array(N + 1).fill(false);\n\n// DFS iterativo\nconst stack = [1];\nvisited[1] = true;\nconst order = [];\n\nwhile (stack.length) {\n  const u = stack.pop();\n  order.push(u);\n  for (const v of adj[u]) {\n    if (!visited[v]) {\n      visited[v] = true;\n      parent[v] = u;\n      stack.push(v);\n    }\n  }\n}\n\n// processar em ordem inversa (folhas para raiz)\nlet ans = Infinity;\nfor (let i = order.length - 1; i >= 0; i--) {\n  const u = order[i];\n  if (u !== 1) {\n    const diff = Math.abs(N - 2 * size[u]);\n    if (diff < ans) ans = diff;\n    size[parent[u]] += size[u];\n  }\n}\n\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(Boolean).map(Number);\n\nlet idx = 0;\nconst N = input[idx++];\nconst adj = Array.from({ length: N + 1 }, () => []);\n\nfor (let i = 0; i < N - 1; i++) {\n  const a = input[idx++];\n  const b = input[idx++];\n  adj[a].push(b);\n  adj[b].push(a);\n}\n\nconst size = new Array(N + 1).fill(1);\nconst parent = new Array(N + 1).fill(0);\nconst visited = new Array(N + 1).fill(false);\n\n// DFS iterativo\nconst stack = [1];\nvisited[1] = true;\nconst order = [];\n\nwhile (stack.length) {\n  const u = stack.pop();\n  order.push(u);\n  for (const v of adj[u]) {\n    if (!visited[v]) {\n      visited[v] = true;\n      parent[v] = u;\n      stack.push(v);\n    }\n  }\n}\n\n// processar em ordem inversa (folhas para raiz)\nlet ans = Infinity;\nfor (let i = order.length - 1; i >= 0; i--) {\n  const u = order[i];\n  if (u !== 1) {\n    const diff = Math.abs(N - 2 * size[u]);\n    if (diff < ans) ans = diff;\n    size[parent[u]] += size[u];\n  }\n}\n\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13329369999701157,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

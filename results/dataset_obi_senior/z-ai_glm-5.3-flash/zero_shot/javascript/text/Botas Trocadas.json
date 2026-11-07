@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T23:44:14.577851+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 634,
+            "output_tokens": 240,
+            "total_tokens": 874
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.00012,
+            "total_cost": 0.000134
+        },
+        "raw_response": "```javascript\nconst readline = require('readline');\n\nconst rl = readline.createInterface({\n    input: process.stdin,\n    output: process.stdout,\n    terminal: false\n});\n\nlet n = 0;\nlet count = 0;\nconst right = new Array(61).fill(0);\nconst left = new Array(61).fill(0);\nlet expected = -1;\n\nrl.on('line', (line) => {\n    const parts = line.trim().split(/\\s+/);\n    if (parts.length === 1 && expected === -1) {\n        n = parseInt(parts[0]);\n        expected = n;\n        return;\n    }\n    if (parts.length < 2) return;\n    const m = parseInt(parts[0]);\n    const l = parts[1];\n    if (l === 'D') right[m]++;\n    else left[m]++;\n    count++;\n    if (count === expected) {\n        let total = 0;\n        for (let i = 30; i <= 60; i++) {\n            total += Math.min(right[i], left[i]);\n        }\n        console.log(total);\n        rl.close();\n    }\n});\n```",
+        "extracted_code": "const readline = require('readline');\n\nconst rl = readline.createInterface({\n    input: process.stdin,\n    output: process.stdout,\n    terminal: false\n});\n\nlet n = 0;\nlet count = 0;\nconst right = new Array(61).fill(0);\nconst left = new Array(61).fill(0);\nlet expected = -1;\n\nrl.on('line', (line) => {\n    const parts = line.trim().split(/\\s+/);\n    if (parts.length === 1 && expected === -1) {\n        n = parseInt(parts[0]);\n        expected = n;\n        return;\n    }\n    if (parts.length < 2) return;\n    const m = parseInt(parts[0]);\n    const l = parts[1];\n    if (l === 'D') right[m]++;\n    else left[m]++;\n    count++;\n    if (count === expected) {\n        let total = 0;\n        for (let i = 30; i <= 60; i++) {\n            total += Math.min(right[i], left[i]);\n        }\n        console.log(total);\n        rl.close();\n    }\n});",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08154789998661727,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

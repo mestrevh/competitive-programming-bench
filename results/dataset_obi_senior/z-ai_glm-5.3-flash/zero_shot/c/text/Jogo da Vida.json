@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:53:39.372261+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1403,
+            "output_tokens": 13603,
+            "total_tokens": 15006
+        },
+        "cost_usd": {
+            "input_cost": 3e-05,
+            "output_cost": 0.006802,
+            "total_cost": 0.006832
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nstatic int grid[2][50][50];\n\nint main(void) {\n    int N, Q;\n    if (scanf(\"%d %d\", &N, &Q) != 2) return 0;\n\n    static const int dx[8] = {-1, -1, -1, 0, 0, 1, 1, 1};\n    static const int dy[8] = {-1, 0, 1, -1, 1, -1, 0, 1};\n\n    char line[64];\n    for (int i = 0; i < N; i++) {\n        if (scanf(\"%63s\", line) != 1) return 0;\n        for (int j = 0; j < N; j++)\n            grid[0][i][j] = line[j] - '0';\n    }\n\n    int c = 0;\n    for (int step = 0; step < Q; step++) {\n        int nc = c ^ 1;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                int cnt = 0;\n                for (int k = 0; k < 8; k++) {\n                    int ni = i + dx[k], nj = j + dy[k];\n                    if (ni >= 0 && ni < N && nj >= 0 && nj < N)\n                        cnt += grid[c][ni][nj];\n                }\n                if (grid[c][i][j])\n                    grid[nc][i][j] = (cnt == 2 || cnt == 3) ? 1 : 0;\n                else\n                    grid[nc][i][j] = (cnt == 3) ? 1 : 0;\n            }\n        }\n        c = nc;\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++)\n            putchar('0' + grid[c][i][j]);\n        putchar('\\n');\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nstatic int grid[2][50][50];\n\nint main(void) {\n    int N, Q;\n    if (scanf(\"%d %d\", &N, &Q) != 2) return 0;\n\n    static const int dx[8] = {-1, -1, -1, 0, 0, 1, 1, 1};\n    static const int dy[8] = {-1, 0, 1, -1, 1, -1, 0, 1};\n\n    char line[64];\n    for (int i = 0; i < N; i++) {\n        if (scanf(\"%63s\", line) != 1) return 0;\n        for (int j = 0; j < N; j++)\n            grid[0][i][j] = line[j] - '0';\n    }\n\n    int c = 0;\n    for (int step = 0; step < Q; step++) {\n        int nc = c ^ 1;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                int cnt = 0;\n                for (int k = 0; k < 8; k++) {\n                    int ni = i + dx[k], nj = j + dy[k];\n                    if (ni >= 0 && ni < N && nj >= 0 && nj < N)\n                        cnt += grid[c][ni][nj];\n                }\n                if (grid[c][i][j])\n                    grid[nc][i][j] = (cnt == 2 || cnt == 3) ? 1 : 0;\n                else\n                    grid[nc][i][j] = (cnt == 3) ? 1 : 0;\n            }\n        }\n        c = nc;\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++)\n            putchar('0' + grid[c][i][j]);\n        putchar('\\n');\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19462050002766773,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

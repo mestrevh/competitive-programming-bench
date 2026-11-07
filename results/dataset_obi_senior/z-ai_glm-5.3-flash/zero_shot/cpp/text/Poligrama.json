@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T00:12:43.790346+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 627,
+            "output_tokens": 5539,
+            "total_tokens": 6166
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.002769,
+            "total_cost": 0.002783
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    cin >> n;\n    string p;\n    cin >> p;\n\n    // prefix[i][c] = quantidade da letra c nos primeiros i caracteres\n    vector<array<int, 26>> pre(n + 1);\n    pre[0].fill(0);\n    for (int i = 0; i < n; ++i) {\n        pre[i + 1] = pre[i];\n        pre[i + 1][p[i] - 'a']++;\n    }\n\n    // Tenta cada comprimento candidato L (raiz), em ordem crescente,\n    // tal que L divide n e sobram pelo menos 2 blocos.\n    for (int L = 1; 2 * L <= n; ++L) {\n        if (n % L != 0) continue;\n\n        const array<int, 26>& base = pre[L]; // contagens do bloco 0\n        int k = n / L;                       // numero de blocos\n        bool ok = true;\n\n        for (int j = 1; j < k && ok; ++j) {\n            const array<int, 26>& hi = pre[(j + 1) * L];\n            const array<int, 26>& lo = pre[j * L];\n            for (int c = 0; c < 26; ++c) {\n                if (hi[c] - lo[c] != base[c]) { ok = false; break; }\n            }\n        }\n\n        if (ok) {\n            cout << p.substr(0, L) << \"\\n\";\n            return 0;\n        }\n    }\n\n    cout << \"*\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    cin >> n;\n    string p;\n    cin >> p;\n\n    // prefix[i][c] = quantidade da letra c nos primeiros i caracteres\n    vector<array<int, 26>> pre(n + 1);\n    pre[0].fill(0);\n    for (int i = 0; i < n; ++i) {\n        pre[i + 1] = pre[i];\n        pre[i + 1][p[i] - 'a']++;\n    }\n\n    // Tenta cada comprimento candidato L (raiz), em ordem crescente,\n    // tal que L divide n e sobram pelo menos 2 blocos.\n    for (int L = 1; 2 * L <= n; ++L) {\n        if (n % L != 0) continue;\n\n        const array<int, 26>& base = pre[L]; // contagens do bloco 0\n        int k = n / L;                       // numero de blocos\n        bool ok = true;\n\n        for (int j = 1; j < k && ok; ++j) {\n            const array<int, 26>& hi = pre[(j + 1) * L];\n            const array<int, 26>& lo = pre[j * L];\n            for (int c = 0; c < 26; ++c) {\n                if (hi[c] - lo[c] != base[c]) { ok = false; break; }\n            }\n        }\n\n        if (ok) {\n            cout << p.substr(0, L) << \"\\n\";\n            return 0;\n        }\n    }\n\n    cout << \"*\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11788599999272265,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

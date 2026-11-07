@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:50:23.659338+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 606,
+            "output_tokens": 430,
+            "total_tokens": 1036
+        },
+        "cost_usd": {
+            "input_cost": 6.1e-05,
+            "output_cost": 0.000215,
+            "total_cost": 0.000276
+        },
+        "raw_response": "```python\nimport sys\n\ndata = sys.stdin.buffer.read().split()\nnumber = data[0]\nm = int(data[1])\n\nmapping = bytearray(range(256))\nfor digit, letters in (\n    (b'2', b'abc'), (b'3', b'def'), (b'4', b'ghi'),\n    (b'5', b'jkl'), (b'6', b'mno'), (b'7', b'pqrs'),\n    (b'8', b'tuv'), (b'9', b'wxyz')\n):\n    for letter in letters:\n        mapping[letter] = digit\n\ncount = sum(\n    len(word) == len(number) and word.translate(mapping) == number\n    for word in data[2:2 + m]\n)\n\nprint(count)\n```",
+        "extracted_code": "import sys\n\ndata = sys.stdin.buffer.read().split()\nnumber = data[0]\nm = int(data[1])\n\nmapping = bytearray(range(256))\nfor digit, letters in (\n    (b'2', b'abc'), (b'3', b'def'), (b'4', b'ghi'),\n    (b'5', b'jkl'), (b'6', b'mno'), (b'7', b'pqrs'),\n    (b'8', b'tuv'), (b'9', b'wxyz')\n):\n    for letter in letters:\n        mapping[letter] = digit\n\ncount = sum(\n    len(word) == len(number) and word.translate(mapping) == number\n    for word in data[2:2 + m]\n)\n\nprint(count)",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.10814810000010766,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 27,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

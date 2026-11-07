@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:18:52.566669+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1476,
+            "output_tokens": 596,
+            "total_tokens": 4580
+        },
+        "cost_usd": {
+            "input_cost": 0.001107,
+            "output_cost": 0.002235,
+            "total_cost": 0.003342
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n\nint parent[MAXN];\n\nint find_set(int v) {\n    if (v == parent[v])\n        return v;\n    return parent[v] = find_set(parent[v]);\n}\n\nint union_sets(int a, int b) {\n    a = find_set(a);\n    b = find_set(b);\n    if (a != b) {\n        parent[b] = a;\n        return 1;\n    }\n    return 0;\n}\n\ntypedef struct {\n    int u, v, t;\n} Edge;\n\nEdge edges[MAXN];\n\nint main() {\n    int n, m, k;\n    if (scanf(\"%d %d %d\", &n, &m, &k) != 3)\n        return 0;\n\n    for (int i = 1; i <= n; i++) {\n        parent[i] = i;\n    }\n\n    int water_cycle = 0;\n\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d %d %d\", &edges[i].u, &edges[i].v, &edges[i].t);\n        if (edges[i].t == 1) {\n            if (!union_sets(edges[i].u, edges[i].v)) {\n                water_cycle = 1;\n            }\n        }\n    }\n\n    if (water_cycle) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    /* Agora conectamos também as rodovias para contar os componentes do grafo total */\n    for (int i = 0; i < m; i++) {\n        if (edges[i].t == 2) {\n            union_sets(edges[i].u, edges[i].v);\n        }\n    }\n\n    int components = 0;\n    for (int i = 1; i <= n; i++) {\n        if (find_set(i) == i) {\n            components++;\n        }\n    }\n\n    /* O número mínimo de arestas a remover para eliminar todos os ciclos é M - N + C */\n    long long needed_removals = (long long)m - n + components;\n\n    if (needed_removals <= k) {\n        printf(\"S\\n\");\n    } else {\n        printf(\"N\\n\");\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n\nint parent[MAXN];\n\nint find_set(int v) {\n    if (v == parent[v])\n        return v;\n    return parent[v] = find_set(parent[v]);\n}\n\nint union_sets(int a, int b) {\n    a = find_set(a);\n    b = find_set(b);\n    if (a != b) {\n        parent[b] = a;\n        return 1;\n    }\n    return 0;\n}\n\ntypedef struct {\n    int u, v, t;\n} Edge;\n\nEdge edges[MAXN];\n\nint main() {\n    int n, m, k;\n    if (scanf(\"%d %d %d\", &n, &m, &k) != 3)\n        return 0;\n\n    for (int i = 1; i <= n; i++) {\n        parent[i] = i;\n    }\n\n    int water_cycle = 0;\n\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d %d %d\", &edges[i].u, &edges[i].v, &edges[i].t);\n        if (edges[i].t == 1) {\n            if (!union_sets(edges[i].u, edges[i].v)) {\n                water_cycle = 1;\n            }\n        }\n    }\n\n    if (water_cycle) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    /* Agora conectamos também as rodovias para contar os componentes do grafo total */\n    for (int i = 0; i < m; i++) {\n        if (edges[i].t == 2) {\n            union_sets(edges[i].u, edges[i].v);\n        }\n    }\n\n    int components = 0;\n    for (int i = 1; i <= n; i++) {\n        if (find_set(i) == i) {\n            components++;\n        }\n    }\n\n    /* O número mínimo de arestas a remover para eliminar todos os ciclos é M - N + C */\n    long long needed_removals = (long long)m - n + components;\n\n    if (needed_removals <= k) {\n        printf(\"S\\n\");\n    } else {\n        printf(\"N\\n\");\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13496620001387782,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:04:32.311596+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 924,
+            "output_tokens": 1610,
+            "total_tokens": 2534
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003864,
+            "total_cost": 0.003867
+        },
+        "raw_response": "```java\nimport java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        int[][] adj = new int[N + 1][N + 1];\n        for (int i = 1; i <= N; i++) {\n            Arrays.fill(adj[i], Integer.MAX_VALUE);\n        }\n\n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            int c = Integer.parseInt(st.nextToken());\n            if (c < adj[a][b]) {\n                adj[a][b] = c;\n                adj[b][a] = c;\n            }\n        }\n\n        int[] dist = new int[N + 1];\n        boolean[] visited = new boolean[N + 1];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[1] = 0;\n\n        for (int i = 0; i < N; i++) {\n            int u = -1;\n            int best = Integer.MAX_VALUE;\n            for (int j = 1; j <= N; j++) {\n                if (!visited[j] && dist[j] < best) {\n                    best = dist[j];\n                    u = j;\n                }\n            }\n\n            if (u == -1) break;\n            visited[u] = true;\n\n            for (int v = 1; v <= N; v++) {\n                if (!visited[v] && adj[u][v] != Integer.MAX_VALUE) {\n                    int nd = dist[u] + adj[u][v];\n                    if (nd < dist[v]) {\n                        dist[v] = nd;\n                    }\n                }\n            }\n        }\n\n        System.out.println(dist[N]);\n    }\n}\n```",
+        "extracted_code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        int[][] adj = new int[N + 1][N + 1];\n        for (int i = 1; i <= N; i++) {\n            Arrays.fill(adj[i], Integer.MAX_VALUE);\n        }\n\n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            int c = Integer.parseInt(st.nextToken());\n            if (c < adj[a][b]) {\n                adj[a][b] = c;\n                adj[b][a] = c;\n            }\n        }\n\n        int[] dist = new int[N + 1];\n        boolean[] visited = new boolean[N + 1];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[1] = 0;\n\n        for (int i = 0; i < N; i++) {\n            int u = -1;\n            int best = Integer.MAX_VALUE;\n            for (int j = 1; j <= N; j++) {\n                if (!visited[j] && dist[j] < best) {\n                    best = dist[j];\n                    u = j;\n                }\n            }\n\n            if (u == -1) break;\n            visited[u] = true;\n\n            for (int v = 1; v <= N; v++) {\n                if (!visited[v] && adj[u][v] != Integer.MAX_VALUE) {\n                    int nd = dist[u] + adj[u][v];\n                    if (nd < dist[v]) {\n                        dist[v] = nd;\n                    }\n                }\n            }\n        }\n\n        System.out.println(dist[N]);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09912130000884645,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T19:43:40.832652+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 964,
+            "output_tokens": 11697,
+            "total_tokens": 12661
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.005849,
+            "total_cost": 0.005869
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StreamTokenizer st = new StreamTokenizer(br);\n        st.nextToken();\n        int N = (int) st.nval;\n        st.nextToken();\n        int M = (int) st.nval;\n        int[] t = new int[M];\n        for (int i = 0; i < M; i++) {\n            st.nextToken();\n            t[i] = (int) st.nval;\n        }\n\n        // Total de sobreviventes: aplica f(y) = y - floor(y/t) sequencialmente a partir de N\n        long total = N;\n        for (int i = 0; i < M; i++) {\n            total -= total / t[i];\n        }\n\n        int K = (int) Math.min(total, 10000L);\n\n        StringBuilder sb = new StringBuilder();\n        for (int k = 1; k <= K; k++) {\n            // Encontra o menor x tal que f_M(x) >= k, invertendo cada turno de tras para frente.\n            // Inversa de g(y) = y - floor(y/t): menor y com g(y) >= z  =>  y = z + q,\n            // onde q = floor((z-t)/(t-1)) + 1  (q = floor(y/t) satisfaz (t-1)q <= z < (t-1)q + t).\n            long w = k;\n            for (int i = M - 1; i >= 0; i--) {\n                long ti = t[i];\n                w += Math.floorDiv(w - ti, ti - 1) + 1;\n            }\n            sb.append(w).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StreamTokenizer st = new StreamTokenizer(br);\n        st.nextToken();\n        int N = (int) st.nval;\n        st.nextToken();\n        int M = (int) st.nval;\n        int[] t = new int[M];\n        for (int i = 0; i < M; i++) {\n            st.nextToken();\n            t[i] = (int) st.nval;\n        }\n\n        // Total de sobreviventes: aplica f(y) = y - floor(y/t) sequencialmente a partir de N\n        long total = N;\n        for (int i = 0; i < M; i++) {\n            total -= total / t[i];\n        }\n\n        int K = (int) Math.min(total, 10000L);\n\n        StringBuilder sb = new StringBuilder();\n        for (int k = 1; k <= K; k++) {\n            // Encontra o menor x tal que f_M(x) >= k, invertendo cada turno de tras para frente.\n            // Inversa de g(y) = y - floor(y/t): menor y com g(y) >= z  =>  y = z + q,\n            // onde q = floor((z-t)/(t-1)) + 1  (q = floor(y/t) satisfaz (t-1)q <= z < (t-1)q + t).\n            long w = k;\n            for (int i = M - 1; i >= 0; i--) {\n                long ti = t[i];\n                w += Math.floorDiv(w - ti, ti - 1) + 1;\n            }\n            sb.append(w).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.27785539999604225,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

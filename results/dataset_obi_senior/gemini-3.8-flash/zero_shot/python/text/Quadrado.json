@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:43:27.843506+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 506,
+            "output_tokens": 377,
+            "total_tokens": 4483
+        },
+        "cost_usd": {
+            "input_cost": 0.00038,
+            "output_cost": 0.001414,
+            "total_cost": 0.001793
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    N = int(input_data[0])\n\n    if N == 2:\n        print(-1)\n        return\n\n    if N % 2 == 1:\n        # Para N ímpar, basta preencher sequencialmente de 1 a N^2\n        val = 1\n        for _ in range(N):\n            row = []\n            for _ in range(N):\n                row.append(str(val))\n                val += 1\n            print(\" \".join(row))\n    else:\n        # Para N par (N >= 4)\n        K = N * (N - 1) // 2\n\n        # Linha base c_j\n        c = [j for j in range(1, N)] + [K]\n\n        # b_i para as primeiras N-1 linhas\n        b = [(i - 1) * K for i in range(1, N)]\n\n        # B para a última linha\n        B = K * (N - 2) * (N + 1) // 2\n\n        matrix = []\n        for i in range(N - 1):\n            row = [b[i] + c[j] for j in range(N)]\n            matrix.append(row)\n\n        row_N = [B + c[j] for j in range(N)]\n        matrix.append(row_N)\n\n        for row in matrix:\n            print(*(row))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    N = int(input_data[0])\n\n    if N == 2:\n        print(-1)\n        return\n\n    if N % 2 == 1:\n        # Para N ímpar, basta preencher sequencialmente de 1 a N^2\n        val = 1\n        for _ in range(N):\n            row = []\n            for _ in range(N):\n                row.append(str(val))\n                val += 1\n            print(\" \".join(row))\n    else:\n        # Para N par (N >= 4)\n        K = N * (N - 1) // 2\n\n        # Linha base c_j\n        c = [j for j in range(1, N)] + [K]\n\n        # b_i para as primeiras N-1 linhas\n        b = [(i - 1) * K for i in range(1, N)]\n\n        # B para a última linha\n        B = K * (N - 2) * (N + 1) // 2\n\n        matrix = []\n        for i in range(N - 1):\n            row = [b[i] + c[j] for j in range(N)]\n            matrix.append(row)\n\n        row_N = [B + c[j] for j in range(N)]\n        matrix.append(row_N)\n\n        for row in matrix:\n            print(*(row))\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.09386459999950603,
+            "counts": {
+                "AC": 5,
+                "WA": 10,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

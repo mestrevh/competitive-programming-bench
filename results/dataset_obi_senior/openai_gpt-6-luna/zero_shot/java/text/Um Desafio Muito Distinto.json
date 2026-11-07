@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:21:25.936659+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1117,
+            "output_tokens": 1760,
+            "total_tokens": 2877
+        },
+        "cost_usd": {
+            "input_cost": 0.000112,
+            "output_cost": 0.00088,
+            "total_cost": 0.000992
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    static boolean reaches(long n, long a, long limit) {\n        if (n > (limit - 1) / a) return true;\n\n        long base = n * a;\n        long remaining = limit - base;\n\n        long x = n;\n        long y = n - 1;\n        if ((x & 1) == 0) x /= 2;\n        else y /= 2;\n\n        return y != 0 && x > (remaining - 1) / y;\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner(System.in);\n        int p = (int) fs.nextLong();\n        StringBuilder out = new StringBuilder();\n\n        for (int i = 0; i < p; i++) {\n            long l = fs.nextLong();\n            long a = fs.nextLong();\n            long b = fs.nextLong();\n            long count = b - a + 1;\n\n            long answer;\n            if (!reaches(count, a, l)) {\n                answer = count;\n            } else {\n                long low = 1;\n                long high = count;\n                while (low < high) {\n                    long mid = low + (high - low) / 2;\n                    if (reaches(mid, a, l)) high = mid;\n                    else low = mid + 1;\n                }\n                answer = low;\n            }\n\n            out.append(answer).append('\\n');\n        }\n\n        System.out.print(out);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        long nextLong() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            long value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    static boolean reaches(long n, long a, long limit) {\n        if (n > (limit - 1) / a) return true;\n\n        long base = n * a;\n        long remaining = limit - base;\n\n        long x = n;\n        long y = n - 1;\n        if ((x & 1) == 0) x /= 2;\n        else y /= 2;\n\n        return y != 0 && x > (remaining - 1) / y;\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner(System.in);\n        int p = (int) fs.nextLong();\n        StringBuilder out = new StringBuilder();\n\n        for (int i = 0; i < p; i++) {\n            long l = fs.nextLong();\n            long a = fs.nextLong();\n            long b = fs.nextLong();\n            long count = b - a + 1;\n\n            long answer;\n            if (!reaches(count, a, l)) {\n                answer = count;\n            } else {\n                long low = 1;\n                long high = count;\n                while (low < high) {\n                    long mid = low + (high - low) / 2;\n                    if (reaches(mid, a, l)) high = mid;\n                    else low = mid + 1;\n                }\n                answer = low;\n            }\n\n            out.append(answer).append('\\n');\n        }\n\n        System.out.print(out);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        long nextLong() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            long value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13444040000467794,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

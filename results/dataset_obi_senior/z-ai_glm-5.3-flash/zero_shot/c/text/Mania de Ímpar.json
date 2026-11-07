@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:20:46.698912+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1186,
+            "output_tokens": 1402,
+            "total_tokens": 2588
+        },
+        "cost_usd": {
+            "input_cost": 2.5e-05,
+            "output_cost": 0.000701,
+            "total_cost": 0.000726
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint G[105][105];\nint N, M;\n\nint main(void) {\n    scanf(\"%d %d\", &N, &M);\n    for (int i = 0; i < N; i++)\n        for (int j = 0; j < M; j++)\n            scanf(\"%d\", &G[i][j]);\n\n    /* Pattern A: required parity of cell (i,j) is (i+j) mod 2\n       Pattern B: required parity is (i+j+1) mod 2 */\n    long long costA = 0, costB = 0;\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int p = G[i][j] & 1;\n            if (p != ((i + j) & 1)) costA++;\n            else costB++;\n        }\n    }\n\n    int useB = costB < costA;\n    printf(\"%lld\\n\", costB < costA ? costB : costA);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int need = useB ? ((i + j + 1) & 1) : ((i + j) & 1);\n            int v = G[i][j];\n            if ((v & 1) != need) v++;\n            printf(\"%d\", v);\n            if (j + 1 < M) printf(\" \");\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint G[105][105];\nint N, M;\n\nint main(void) {\n    scanf(\"%d %d\", &N, &M);\n    for (int i = 0; i < N; i++)\n        for (int j = 0; j < M; j++)\n            scanf(\"%d\", &G[i][j]);\n\n    /* Pattern A: required parity of cell (i,j) is (i+j) mod 2\n       Pattern B: required parity is (i+j+1) mod 2 */\n    long long costA = 0, costB = 0;\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int p = G[i][j] & 1;\n            if (p != ((i + j) & 1)) costA++;\n            else costB++;\n        }\n    }\n\n    int useB = costB < costA;\n    printf(\"%lld\\n\", costB < costA ? costB : costA);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int need = useB ? ((i + j + 1) & 1) : ((i + j) & 1);\n            int v = G[i][j];\n            if ((v & 1) != need) v++;\n            printf(\"%d\", v);\n            if (j + 1 < M) printf(\" \");\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.23064680001698434,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

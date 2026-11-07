@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:05:26.944224+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1278,
+            "output_tokens": 18545,
+            "total_tokens": 19823
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.044508,
+            "total_cost": 0.044512
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\n\nconst N = data[idx++];\nconst K = data[idx++];\n\nconst a = new Array(N);\nfor (let i = 0; i < N; i++) a[i] = data[idx++];\n\nconst b = new Array(N);\nfor (let i = 0; i < N; i++) b[i] = data[idx++];\n\nlet base = 0;\nconst g = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n    if (a[i] > b[i]) {\n        base += a[i] - b[i];\n    }\n    g[i] = Math.min(a[i], b[i]);\n}\n\ng.sort((x, y) => y - x);\n\nconst take = Math.min(K + 1, N);\nlet extra = 0;\n\nfor (let i = 0; i < take; i++) {\n    extra += g[i];\n}\n\nconsole.log(base + extra);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\n\nconst N = data[idx++];\nconst K = data[idx++];\n\nconst a = new Array(N);\nfor (let i = 0; i < N; i++) a[i] = data[idx++];\n\nconst b = new Array(N);\nfor (let i = 0; i < N; i++) b[i] = data[idx++];\n\nlet base = 0;\nconst g = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n    if (a[i] > b[i]) {\n        base += a[i] - b[i];\n    }\n    g[i] = Math.min(a[i], b[i]);\n}\n\ng.sort((x, y) => y - x);\n\nconst take = Math.min(K + 1, N);\nlet extra = 0;\n\nfor (let i = 0; i < take; i++) {\n    extra += g[i];\n}\n\nconsole.log(base + extra);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13007630000356585,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T10:02:33.714371+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 781,
+            "output_tokens": 932,
+            "total_tokens": 1713
+        },
+        "cost_usd": {
+            "input_cost": 7.8e-05,
+            "output_cost": 0.000466,
+            "total_cost": 0.000544
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst n = nextInt();\nconst graph = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 1; i <= n; i++) {\n  const m = nextInt();\n  for (let j = 0; j < m; j++) {\n    const x = nextInt();\n    graph[i].push(x);\n    graph[x].push(i);\n  }\n}\n\nconst color = new Int8Array(n + 1);\ncolor.fill(-1);\n\nfor (let start = 1; start <= n; start++) {\n  if (color[start] !== -1) continue;\n\n  color[start] = start === 1 ? 0 : 0;\n  const queue = [start];\n\n  for (let head = 0; head < queue.length; head++) {\n    const u = queue[head];\n    for (const v of graph[u]) {\n      if (color[v] === -1) {\n        color[v] = color[u] ^ 1;\n        queue.push(v);\n      }\n    }\n  }\n}\n\nconst team1 = [];\nconst team2 = [];\nfor (let i = 1; i <= n; i++) {\n  (color[i] === 0 ? team1 : team2).push(i);\n}\n\nprocess.stdout.write(team1.join(' ') + '\\n' + team2.join(' ') + '\\n');\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst n = nextInt();\nconst graph = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 1; i <= n; i++) {\n  const m = nextInt();\n  for (let j = 0; j < m; j++) {\n    const x = nextInt();\n    graph[i].push(x);\n    graph[x].push(i);\n  }\n}\n\nconst color = new Int8Array(n + 1);\ncolor.fill(-1);\n\nfor (let start = 1; start <= n; start++) {\n  if (color[start] !== -1) continue;\n\n  color[start] = start === 1 ? 0 : 0;\n  const queue = [start];\n\n  for (let head = 0; head < queue.length; head++) {\n    const u = queue[head];\n    for (const v of graph[u]) {\n      if (color[v] === -1) {\n        color[v] = color[u] ^ 1;\n        queue.push(v);\n      }\n    }\n  }\n}\n\nconst team1 = [];\nconst team2 = [];\nfor (let i = 1; i <= n; i++) {\n  (color[i] === 0 ? team1 : team2).push(i);\n}\n\nprocess.stdout.write(team1.join(' ') + '\\n' + team2.join(' ') + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13561149999441113,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

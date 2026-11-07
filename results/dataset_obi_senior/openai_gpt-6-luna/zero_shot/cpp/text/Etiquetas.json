@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:17:15.009018+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 497,
+            "output_tokens": 1326,
+            "total_tokens": 1823
+        },
+        "cost_usd": {
+            "input_cost": 5e-05,
+            "output_cost": 0.000663,
+            "total_cost": 0.000713
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K, C;\n    cin >> N >> K >> C;\n\n    vector<long long> prefix(N + 1, 0);\n    for (int i = 1; i <= N; ++i) {\n        long long x;\n        cin >> x;\n        prefix[i] = prefix[i - 1] + x;\n    }\n\n    const long long INF = LLONG_MAX / 4;\n    vector<long long> prev(N + 1, 0), cur(N + 1, INF);\n\n    for (int j = 1; j <= K; ++j) {\n        fill(cur.begin(), cur.end(), INF);\n\n        for (int i = j * C; i <= N; ++i) {\n            cur[i] = cur[i - 1];\n            long long covered = prefix[i] - prefix[i - C];\n            cur[i] = min(cur[i], prev[i - C] + covered);\n        }\n\n        prev.swap(cur);\n    }\n\n    cout << prefix[N] - prev[N] << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K, C;\n    cin >> N >> K >> C;\n\n    vector<long long> prefix(N + 1, 0);\n    for (int i = 1; i <= N; ++i) {\n        long long x;\n        cin >> x;\n        prefix[i] = prefix[i - 1] + x;\n    }\n\n    const long long INF = LLONG_MAX / 4;\n    vector<long long> prev(N + 1, 0), cur(N + 1, INF);\n\n    for (int j = 1; j <= K; ++j) {\n        fill(cur.begin(), cur.end(), INF);\n\n        for (int i = j * C; i <= N; ++i) {\n            cur[i] = cur[i - 1];\n            long long covered = prefix[i] - prefix[i - C];\n            cur[i] = min(cur[i], prev[i - C] + covered);\n        }\n\n        prev.swap(cur);\n    }\n\n    cout << prefix[N] - prev[N] << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15354620000289287,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

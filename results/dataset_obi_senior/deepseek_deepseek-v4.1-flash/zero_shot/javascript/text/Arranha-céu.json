@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:15:35.727603+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 826,
+            "output_tokens": 798,
+            "total_tokens": 1624
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.001915,
+            "total_cost": 0.001918
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nif (input.length === 0) process.exit(0);\n\nlet idx = 0;\nconst N = Number(input[idx++]);\nconst Q = Number(input[idx++]);\n\nconst bit = new Array(N + 1).fill(0);\nconst people = new Array(N + 1).fill(0);\n\nfunction add(i, delta) {\n  while (i <= N) {\n    bit[i] += delta;\n    i += i & -i;\n  }\n}\n\nfunction prefixSum(i) {\n  let sum = 0;\n  while (i > 0) {\n    sum += bit[i];\n    i -= i & -i;\n  }\n  return sum;\n}\n\nfor (let i = 1; i <= N; i++) {\n  const v = Number(input[idx++]);\n  people[i] = v;\n  add(i, v);\n}\n\nconst output = [];\n\nfor (let e = 0; e < Q; e++) {\n  const type = Number(input[idx++]);\n\n  if (type === 0) {\n    const k = Number(input[idx++]);\n    const p = Number(input[idx++]);\n    add(k, p - people[k]);\n    people[k] = p;\n  } else {\n    const k = Number(input[idx++]);\n    output.push(prefixSum(k));\n  }\n}\n\nconsole.log(output.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nif (input.length === 0) process.exit(0);\n\nlet idx = 0;\nconst N = Number(input[idx++]);\nconst Q = Number(input[idx++]);\n\nconst bit = new Array(N + 1).fill(0);\nconst people = new Array(N + 1).fill(0);\n\nfunction add(i, delta) {\n  while (i <= N) {\n    bit[i] += delta;\n    i += i & -i;\n  }\n}\n\nfunction prefixSum(i) {\n  let sum = 0;\n  while (i > 0) {\n    sum += bit[i];\n    i -= i & -i;\n  }\n  return sum;\n}\n\nfor (let i = 1; i <= N; i++) {\n  const v = Number(input[idx++]);\n  people[i] = v;\n  add(i, v);\n}\n\nconst output = [];\n\nfor (let e = 0; e < Q; e++) {\n  const type = Number(input[idx++]);\n\n  if (type === 0) {\n    const k = Number(input[idx++]);\n    const p = Number(input[idx++]);\n    add(k, p - people[k]);\n    people[k] = p;\n  } else {\n    const k = Number(input[idx++]);\n    output.push(prefixSum(k));\n  }\n}\n\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10949370000162162,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

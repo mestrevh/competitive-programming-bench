@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:39:09.055339+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1103,
+            "output_tokens": 633,
+            "total_tokens": 2738
+        },
+        "cost_usd": {
+            "input_cost": 0.000827,
+            "output_cost": 0.002374,
+            "total_cost": 0.003201
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n\n    G = []\n    idx = 2\n    for i in range(N):\n        row = [int(x) for x in input_data[idx : idx + M]]\n        idx += M\n        G.append(row)\n\n    # Opção 0: (i + j) % 2 == 0 tem paridade ÍMPAR (1), e (i + j) % 2 == 1 tem paridade PAR (0)\n    # Opção 1: (i + j) % 2 == 0 tem paridade PAR (0), e (i + j) % 2 == 1 tem paridade ÍMPAR (1)\n\n    cost0 = 0\n    cost1 = 0\n\n    for i in range(N):\n        for j in range(M):\n            p = G[i][j] % 2\n            # Para opção 0: paridade desejada é 1 se (i+j)%2 == 0 senão 0\n            target0 = 1 if (i + j) % 2 == 0 else 0\n            if p != target0:\n                cost0 += 1\n\n            # Para opção 1: paridade desejada é 0 se (i+j)%2 == 0 senão 1\n            target1 = 0 if (i + j) % 2 == 0 else 1\n            if p != target1:\n                cost1 += 1\n\n    if cost0 <= cost1:\n        min_cost = cost0\n        best_option = 0\n    else:\n        min_cost = cost1\n        best_option = 1\n\n    ans_matrix = []\n    for i in range(N):\n        row = []\n        for j in range(M):\n            val = G[i][j]\n            p = val % 2\n            if best_option == 0:\n                target = 1 if (i + j) % 2 == 0 else 0\n            else:\n                target = 0 if (i + j) % 2 == 0 else 1\n\n            if p != target:\n                row.append(val + 1)\n            else:\n                row.append(val)\n        ans_matrix.append(row)\n\n    out = [str(min_cost)]\n    for row in ans_matrix:\n        out.append(\" \".join(map(str, row)))\n\n    print(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n\n    G = []\n    idx = 2\n    for i in range(N):\n        row = [int(x) for x in input_data[idx : idx + M]]\n        idx += M\n        G.append(row)\n\n    # Opção 0: (i + j) % 2 == 0 tem paridade ÍMPAR (1), e (i + j) % 2 == 1 tem paridade PAR (0)\n    # Opção 1: (i + j) % 2 == 0 tem paridade PAR (0), e (i + j) % 2 == 1 tem paridade ÍMPAR (1)\n\n    cost0 = 0\n    cost1 = 0\n\n    for i in range(N):\n        for j in range(M):\n            p = G[i][j] % 2\n            # Para opção 0: paridade desejada é 1 se (i+j)%2 == 0 senão 0\n            target0 = 1 if (i + j) % 2 == 0 else 0\n            if p != target0:\n                cost0 += 1\n\n            # Para opção 1: paridade desejada é 0 se (i+j)%2 == 0 senão 1\n            target1 = 0 if (i + j) % 2 == 0 else 1\n            if p != target1:\n                cost1 += 1\n\n    if cost0 <= cost1:\n        min_cost = cost0\n        best_option = 0\n    else:\n        min_cost = cost1\n        best_option = 1\n\n    ans_matrix = []\n    for i in range(N):\n        row = []\n        for j in range(M):\n            val = G[i][j]\n            p = val % 2\n            if best_option == 0:\n                target = 1 if (i + j) % 2 == 0 else 0\n            else:\n                target = 0 if (i + j) % 2 == 0 else 1\n\n            if p != target:\n                row.append(val + 1)\n            else:\n                row.append(val)\n        ans_matrix.append(row)\n\n    out = [str(min_cost)]\n    for row in ans_matrix:\n        out.append(\" \".join(map(str, row)))\n\n    print(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08495489999768324,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

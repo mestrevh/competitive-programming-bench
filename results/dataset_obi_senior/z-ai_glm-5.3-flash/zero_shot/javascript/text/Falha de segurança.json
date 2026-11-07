@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:42:02.650580+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 685,
+            "output_tokens": 1960,
+            "total_tokens": 2645
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.00098,
+            "total_cost": 0.000995
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').split('\\n');\nconst n = parseInt(input[0], 10);\n\n// Conta quantos usuários têm cada senha distinta\nconst count = new Map();\nfor (let i = 1; i <= n; i++) {\n  const s = input[i].trim();\n  if (!s) continue;\n  count.set(s, (count.get(s) || 0) + 1);\n}\n\n// Para cada cadeia u, M[u] = soma das contagens das senhas distintas s que contêm u como subcadeia\nconst M = new Map();\nfor (const [s, c] of count) {\n  const L = s.length;\n  for (let i = 0; i < L; i++) {\n    for (let j = i + 1; j <= L; j++) {\n      const sub = s.slice(i, j);\n      M.set(sub, (M.get(sub) || 0) + c);\n    }\n  }\n}\n\n// Total = soma sobre cada senha t de c_t * M[t] (conta todos os pares, incluindo A=B) - N\nlet ans = 0;\nfor (const [t, c] of count) {\n  ans += c * (M.get(t) || 0);\n}\n\nconsole.log(ans - n);\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').split('\\n');\nconst n = parseInt(input[0], 10);\n\n// Conta quantos usuários têm cada senha distinta\nconst count = new Map();\nfor (let i = 1; i <= n; i++) {\n  const s = input[i].trim();\n  if (!s) continue;\n  count.set(s, (count.get(s) || 0) + 1);\n}\n\n// Para cada cadeia u, M[u] = soma das contagens das senhas distintas s que contêm u como subcadeia\nconst M = new Map();\nfor (const [s, c] of count) {\n  const L = s.length;\n  for (let i = 0; i < L; i++) {\n    for (let j = i + 1; j <= L; j++) {\n      const sub = s.slice(i, j);\n      M.set(sub, (M.get(sub) || 0) + c);\n    }\n  }\n}\n\n// Total = soma sobre cada senha t de c_t * M[t] (conta todos os pares, incluindo A=B) - N\nlet ans = 0;\nfor (const [t, c] of count) {\n  ans += c * (M.get(t) || 0);\n}\n\nconsole.log(ans - n);",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.12962070002686232,
+            "counts": {
+                "AC": 14,
+                "WA": 16,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

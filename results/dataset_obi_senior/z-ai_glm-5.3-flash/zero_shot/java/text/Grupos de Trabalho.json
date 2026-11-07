@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T19:46:15.293304+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1015,
+            "output_tokens": 3926,
+            "total_tokens": 4941
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.001963,
+            "total_cost": 0.001985
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    private static final int BUF_SIZE = 1 << 16;\n    private static final byte[] buf = new byte[BUF_SIZE];\n    private static int bufLen = 0, bufPos = 0;\n    private static final InputStream in = System.in;\n\n    private static int readByte() throws IOException {\n        if (bufPos == bufLen) {\n            bufLen = in.read(buf, 0, BUF_SIZE);\n            bufPos = 0;\n            if (bufLen <= 0) return -1;\n        }\n        return buf[bufPos++];\n    }\n\n    private static int nextInt() throws IOException {\n        int b = readByte();\n        while (b != -1 && (b < '0' || b > '9')) b = readByte();\n        int ret = 0;\n        while (b >= '0' && b <= '9') {\n            ret = ret * 10 + (b - '0');\n            b = readByte();\n        }\n        return ret;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int E = nextInt();\n        int M = nextInt();\n        int D = nextInt();\n\n        int totalPairs = M + D;\n        int[] pairA = new int[totalPairs];\n        int[] pairB = new int[totalPairs];\n\n        // Primeiras M posições: pares \"juntos\"; próximas D: pares \"separados\"\n        for (int i = 0; i < totalPairs; i++) {\n            pairA[i] = nextInt();\n            pairB[i] = nextInt();\n        }\n\n        int[] group = new int[E + 1];\n        int g = 0;\n        for (int i = 0; i < E / 3; i++, g++) {\n            int a = nextInt();\n            int b = nextInt();\n            int c = nextInt();\n            group[a] = g;\n            group[b] = g;\n            group[c] = g;\n        }\n\n        int violations = 0;\n        // Par que queria estar junto: viola se grupos diferem\n        for (int i = 0; i < M; i++) {\n            if (group[pairA[i]] != group[pairB[i]]) violations++;\n        }\n        // Par que queria estar separado: viola se grupos iguais\n        for (int i = M; i < totalPairs; i++) {\n            if (group[pairA[i]] == group[pairB[i]]) violations++;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(violations).append('\\n');\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    private static final int BUF_SIZE = 1 << 16;\n    private static final byte[] buf = new byte[BUF_SIZE];\n    private static int bufLen = 0, bufPos = 0;\n    private static final InputStream in = System.in;\n\n    private static int readByte() throws IOException {\n        if (bufPos == bufLen) {\n            bufLen = in.read(buf, 0, BUF_SIZE);\n            bufPos = 0;\n            if (bufLen <= 0) return -1;\n        }\n        return buf[bufPos++];\n    }\n\n    private static int nextInt() throws IOException {\n        int b = readByte();\n        while (b != -1 && (b < '0' || b > '9')) b = readByte();\n        int ret = 0;\n        while (b >= '0' && b <= '9') {\n            ret = ret * 10 + (b - '0');\n            b = readByte();\n        }\n        return ret;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int E = nextInt();\n        int M = nextInt();\n        int D = nextInt();\n\n        int totalPairs = M + D;\n        int[] pairA = new int[totalPairs];\n        int[] pairB = new int[totalPairs];\n\n        // Primeiras M posições: pares \"juntos\"; próximas D: pares \"separados\"\n        for (int i = 0; i < totalPairs; i++) {\n            pairA[i] = nextInt();\n            pairB[i] = nextInt();\n        }\n\n        int[] group = new int[E + 1];\n        int g = 0;\n        for (int i = 0; i < E / 3; i++, g++) {\n            int a = nextInt();\n            int b = nextInt();\n            int c = nextInt();\n            group[a] = g;\n            group[b] = g;\n            group[c] = g;\n        }\n\n        int violations = 0;\n        // Par que queria estar junto: viola se grupos diferem\n        for (int i = 0; i < M; i++) {\n            if (group[pairA[i]] != group[pairB[i]]) violations++;\n        }\n        // Par que queria estar separado: viola se grupos iguais\n        for (int i = M; i < totalPairs; i++) {\n            if (group[pairA[i]] == group[pairB[i]]) violations++;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(violations).append('\\n');\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12370659998850897,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

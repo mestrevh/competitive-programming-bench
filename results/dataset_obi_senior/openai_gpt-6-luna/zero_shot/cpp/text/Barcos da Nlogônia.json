@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:02:44.358152+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1171,
+            "output_tokens": 1255,
+            "total_tokens": 2426
+        },
+        "cost_usd": {
+            "input_cost": 0.000117,
+            "output_cost": 0.000628,
+            "total_cost": 0.000745
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    int u, v, w;\n    bool operator<(const Edge& other) const {\n        return w > other.w;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, B;\n    cin >> N >> B;\n\n    vector<Edge> edges(B);\n    for (auto& e : edges) {\n        cin >> e.u >> e.v >> e.w;\n        --e.u;\n        --e.v;\n    }\n\n    sort(edges.begin(), edges.end());\n\n    vector<int> dsu(N), sz(N, 1);\n    iota(dsu.begin(), dsu.end(), 0);\n\n    auto find = [&](int x) {\n        int root = x;\n        while (dsu[root] != root) root = dsu[root];\n        while (dsu[x] != x) {\n            int next = dsu[x];\n            dsu[x] = root;\n            x = next;\n        }\n        return root;\n    };\n\n    vector<vector<pair<int, int>>> tree(N);\n    for (const auto& e : edges) {\n        int ru = find(e.u);\n        int rv = find(e.v);\n        if (ru == rv) continue;\n\n        if (sz[ru] < sz[rv]) swap(ru, rv);\n        dsu[rv] = ru;\n        sz[ru] += sz[rv];\n\n        tree[e.u].push_back({e.v, e.w});\n        tree[e.v].push_back({e.u, e.w});\n    }\n\n    int LOG = 1;\n    while ((1 << LOG) <= N) ++LOG;\n\n    vector<vector<int>> parent(LOG, vector<int>(N));\n    vector<vector<int>> minEdge(LOG, vector<int>(N, INT_MAX));\n    vector<int> depth(N, 0);\n\n    vector<int> stack = {0};\n    parent[0][0] = 0;\n    vector<bool> visited(N, false);\n    visited[0] = true;\n\n    while (!stack.empty()) {\n        int v = stack.back();\n        stack.pop_back();\n\n        for (auto [to, w] : tree[v]) {\n            if (visited[to]) continue;\n            visited[to] = true;\n            parent[0][to] = v;\n            minEdge[0][to] = w;\n            depth[to] = depth[v] + 1;\n            stack.push_back(to);\n        }\n    }\n\n    for (int k = 1; k < LOG; ++k) {\n        for (int v = 0; v < N; ++v) {\n            parent[k][v] = parent[k - 1][parent[k - 1][v]];\n            minEdge[k][v] = min(minEdge[k - 1][v],\n                                minEdge[k - 1][parent[k - 1][v]]);\n        }\n    }\n\n    auto query = [&](int a, int b) {\n        int answer = INT_MAX;\n\n        if (depth[a] < depth[b]) swap(a, b);\n\n        int diff = depth[a] - depth[b];\n        for (int k = 0; k < LOG; ++k) {\n            if (diff & (1 << k)) {\n                answer = min(answer, minEdge[k][a]);\n                a = parent[k][a];\n            }\n        }\n\n        if (a == b) return answer;\n\n        for (int k = LOG - 1; k >= 0; --k) {\n            if (parent[k][a] != parent[k][b]) {\n                answer = min(answer, minEdge[k][a]);\n                answer = min(answer, minEdge[k][b]);\n                a = parent[k][a];\n                b = parent[k][b];\n            }\n        }\n\n        answer = min(answer, minEdge[0][a]);\n        answer = min(answer, minEdge[0][b]);\n        return answer;\n    };\n\n    int C;\n    cin >> C;\n    while (C--) {\n        int X, Y;\n        cin >> X >> Y;\n        cout << query(X - 1, Y - 1) << '\\n';\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    int u, v, w;\n    bool operator<(const Edge& other) const {\n        return w > other.w;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, B;\n    cin >> N >> B;\n\n    vector<Edge> edges(B);\n    for (auto& e : edges) {\n        cin >> e.u >> e.v >> e.w;\n        --e.u;\n        --e.v;\n    }\n\n    sort(edges.begin(), edges.end());\n\n    vector<int> dsu(N), sz(N, 1);\n    iota(dsu.begin(), dsu.end(), 0);\n\n    auto find = [&](int x) {\n        int root = x;\n        while (dsu[root] != root) root = dsu[root];\n        while (dsu[x] != x) {\n            int next = dsu[x];\n            dsu[x] = root;\n            x = next;\n        }\n        return root;\n    };\n\n    vector<vector<pair<int, int>>> tree(N);\n    for (const auto& e : edges) {\n        int ru = find(e.u);\n        int rv = find(e.v);\n        if (ru == rv) continue;\n\n        if (sz[ru] < sz[rv]) swap(ru, rv);\n        dsu[rv] = ru;\n        sz[ru] += sz[rv];\n\n        tree[e.u].push_back({e.v, e.w});\n        tree[e.v].push_back({e.u, e.w});\n    }\n\n    int LOG = 1;\n    while ((1 << LOG) <= N) ++LOG;\n\n    vector<vector<int>> parent(LOG, vector<int>(N));\n    vector<vector<int>> minEdge(LOG, vector<int>(N, INT_MAX));\n    vector<int> depth(N, 0);\n\n    vector<int> stack = {0};\n    parent[0][0] = 0;\n    vector<bool> visited(N, false);\n    visited[0] = true;\n\n    while (!stack.empty()) {\n        int v = stack.back();\n        stack.pop_back();\n\n        for (auto [to, w] : tree[v]) {\n            if (visited[to]) continue;\n            visited[to] = true;\n            parent[0][to] = v;\n            minEdge[0][to] = w;\n            depth[to] = depth[v] + 1;\n            stack.push_back(to);\n        }\n    }\n\n    for (int k = 1; k < LOG; ++k) {\n        for (int v = 0; v < N; ++v) {\n            parent[k][v] = parent[k - 1][parent[k - 1][v]];\n            minEdge[k][v] = min(minEdge[k - 1][v],\n                                minEdge[k - 1][parent[k - 1][v]]);\n        }\n    }\n\n    auto query = [&](int a, int b) {\n        int answer = INT_MAX;\n\n        if (depth[a] < depth[b]) swap(a, b);\n\n        int diff = depth[a] - depth[b];\n        for (int k = 0; k < LOG; ++k) {\n            if (diff & (1 << k)) {\n                answer = min(answer, minEdge[k][a]);\n                a = parent[k][a];\n            }\n        }\n\n        if (a == b) return answer;\n\n        for (int k = LOG - 1; k >= 0; --k) {\n            if (parent[k][a] != parent[k][b]) {\n                answer = min(answer, minEdge[k][a]);\n                answer = min(answer, minEdge[k][b]);\n                a = parent[k][a];\n                b = parent[k][b];\n            }\n        }\n\n        answer = min(answer, minEdge[0][a]);\n        answer = min(answer, minEdge[0][b]);\n        return answer;\n    };\n\n    int C;\n    cin >> C;\n    while (C--) {\n        int X, Y;\n        cin >> X >> Y;\n        cout << query(X - 1, Y - 1) << '\\n';\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2712941999998293,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

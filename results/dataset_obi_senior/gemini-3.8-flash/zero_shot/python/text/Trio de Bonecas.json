@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:50:40.120860+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1056,
+            "output_tokens": 381,
+            "total_tokens": 5068
+        },
+        "cost_usd": {
+            "input_cost": 0.000792,
+            "output_cost": 0.001429,
+            "total_cost": 0.002221
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n    T = [int(x) for x in input_data[2:]]\n    T.sort()\n\n    diff_sq = [(T[i + 1] - T[i]) ** 2 for i in range(N - 1)]\n\n    # prev_dp armazena o custo mínimo para (j - 1) trios\n    # Para j = 0, o custo é 0 para qualquer sufixo\n    prev_dp = [0] * (N + 1)\n\n    for j in range(1, K + 1):\n        max_i = N - 3 * j\n        dp = [0] * (max_i + 1)\n\n        # Para i = max_i, não é possível ignorar o elemento (o sufixo i+1 teria tamanho < 3*j)\n        curr = prev_dp[max_i + 2] + diff_sq[max_i]\n        dp[max_i] = curr\n\n        # Preenche de trás para frente\n        for i in range(max_i - 1, -1, -1):\n            cand = prev_dp[i + 2] + diff_sq[i]\n            if cand < curr:\n                curr = cand\n            dp[i] = curr\n\n        prev_dp = dp\n\n    print(prev_dp[0])\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n    T = [int(x) for x in input_data[2:]]\n    T.sort()\n\n    diff_sq = [(T[i + 1] - T[i]) ** 2 for i in range(N - 1)]\n\n    # prev_dp armazena o custo mínimo para (j - 1) trios\n    # Para j = 0, o custo é 0 para qualquer sufixo\n    prev_dp = [0] * (N + 1)\n\n    for j in range(1, K + 1):\n        max_i = N - 3 * j\n        dp = [0] * (max_i + 1)\n\n        # Para i = max_i, não é possível ignorar o elemento (o sufixo i+1 teria tamanho < 3*j)\n        curr = prev_dp[max_i + 2] + diff_sq[max_i]\n        dp[max_i] = curr\n\n        # Preenche de trás para frente\n        for i in range(max_i - 1, -1, -1):\n            cand = prev_dp[i + 2] + diff_sq[i]\n            if cand < curr:\n                curr = cand\n            dp[i] = curr\n\n        prev_dp = dp\n\n    print(prev_dp[0])\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.037974300001224,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:38:32.587407+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 836,
+            "output_tokens": 2355,
+            "total_tokens": 3191
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.001177,
+            "total_cost": 0.001195
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, M, C;\n    if (scanf(\"%d %d %d\", &N, &M, &C) != 3) return 0;\n\n    /* best[s] = musica amada pelo amigo mais antigo que detesta s (0 se ninguem detesta s) */\n    int *best = (int *)calloc((size_t)(M + 1), sizeof(int));\n    unsigned char *visited = (unsigned char *)calloc((size_t)(M + 1), sizeof(unsigned char));\n    if (!best || !visited) return 0;\n\n    for (int i = 0; i < N; i++) {\n        int A, D;\n        scanf(\"%d %d\", &A, &D);\n        /* a primeira ocorrencia (menor indice = cliente mais antigo) define quem troca */\n        if (best[D] == 0) best[D] = A;\n    }\n\n    long long count = 0;\n    int cur = C;\n    int infinite = 0;\n\n    while (best[cur] != 0) {\n        if (visited[cur]) { /* estado ja visitado -> ciclo, trocas interminaveis */\n            infinite = 1;\n            break;\n        }\n        visited[cur] = 1;\n        cur = best[cur];\n        count++;\n    }\n\n    if (infinite) printf(\"-1\\n\");\n    else printf(\"%lld\\n\", count);\n\n    free(best);\n    free(visited);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, M, C;\n    if (scanf(\"%d %d %d\", &N, &M, &C) != 3) return 0;\n\n    /* best[s] = musica amada pelo amigo mais antigo que detesta s (0 se ninguem detesta s) */\n    int *best = (int *)calloc((size_t)(M + 1), sizeof(int));\n    unsigned char *visited = (unsigned char *)calloc((size_t)(M + 1), sizeof(unsigned char));\n    if (!best || !visited) return 0;\n\n    for (int i = 0; i < N; i++) {\n        int A, D;\n        scanf(\"%d %d\", &A, &D);\n        /* a primeira ocorrencia (menor indice = cliente mais antigo) define quem troca */\n        if (best[D] == 0) best[D] = A;\n    }\n\n    long long count = 0;\n    int cur = C;\n    int infinite = 0;\n\n    while (best[cur] != 0) {\n        if (visited[cur]) { /* estado ja visitado -> ciclo, trocas interminaveis */\n            infinite = 1;\n            break;\n        }\n        visited[cur] = 1;\n        cur = best[cur];\n        count++;\n    }\n\n    if (infinite) printf(\"-1\\n\");\n    else printf(\"%lld\\n\", count);\n\n    free(best);\n    free(visited);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13483370002359152,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

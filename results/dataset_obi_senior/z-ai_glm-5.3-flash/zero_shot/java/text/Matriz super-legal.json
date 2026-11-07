@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T21:17:46.552927+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 698,
+            "output_tokens": 59127,
+            "total_tokens": 59825
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.029563,
+            "total_cost": 0.029578
+        },
+        "raw_response": "Analisando o problema: \"super-legal\" significa que toda submatriz com ≥2 linhas e ≥2 colunas é legal. Verifica-se (por telescopia) isso equivale a exigir que **todo bloco 2×2 adjacente** satisfaça a condição de Monge: `A[i][j] + A[i+1][j+1] ≤ A[i][j+1] + A[i+1][j] `. Assim, uma submatriz de dimensões h×w (h,w ≥ 2) é super-legal sse todos os \"blocos bons\" em seu interior satisfazem essa desigualdade.\n\nReduzimos a: matriz binária G de (L-1)×(C-1) onde G[i][j]=1 se o bloco 2×2 é \"bom\". A maior submatriz super-legal corresponde ao maior retângulo de 1s em G, com área **(h+1)·(w+1)** na matriz original. Isso é resolvido com a técnica clássica de histograma (maior retângulo em matriz binária) em O(L·C). Se nenhum bloco 2×2 for bom, não existe submatriz super-legal (a única possibilidade seria degenerada, que o enunciado exclui ao citar o caso de saída zero) e imprime-se 0.\n\nVerifiquei manualmente os três exemplos: G produz áreas máximas 9, 4 e 15, respectivamente.\n\n```java\nimport java.io.*;\n\npublic class Main {\n\n    static byte[] data;\n    static int pos;\n\n    public static void main(String[] args) throws IOException {\n        data = readAll(System.in);\n        pos = 0;\n\n        int L = nextInt();\n        int C = nextInt();\n\n        int[][] a = new int[L][C];\n        for (int i = 0; i < L; i++) {\n            for (int j = 0; j < C; j++) {\n                a[i][j] = nextInt();\n            }\n        }\n\n        int cols = C - 1;\n        long best = 0;\n        int[] hgt = new int[Math.max(cols, 1)];\n        int[] stk = new int[Math.max(cols, 1) + 1];\n\n        for (int i = 0; i < L - 1; i++) {\n            int[] up = a[i];\n            int[] dn = a[i + 1];\n            for (int j = 0; j < cols; j++) {\n                if (up[j] + dn[j + 1] <= up[j + 1] + dn[j]) {\n                    hgt[j]++;\n                } else {\n                    hgt[j] = 0;\n                }\n            }\n            int top = -1;\n            for (int j = 0; j <= cols; j++) {\n                int h = (j < cols) ? hgt[j] : 0;\n                while (top >= 0 && hgt[stk[top]] >= h) {\n                    int H = hgt[stk[top--]];\n                    if (H > 0) {\n                        int left = (top >= 0) ? stk[top] : -1;\n                        int w = j - left - 1;\n                        long area = (long) (H + 1) * (w + 1);\n                        if (area > best) best = area;\n                    }\n                }\n                stk[++top] = j;\n            }\n        }\n\n        System.out.println(best);\n    }\n\n    static int nextInt() {\n        while (pos < data.length && (data[pos] < '0' || data[pos] > '9') && data[pos] != '-') pos++;\n        boolean neg = false;\n        if (pos < data.length && data[pos] == '-') {\n            neg = true;\n            pos++;\n        }\n        int x = 0;\n        while (pos < data.length && data[pos] >= '0' && data[pos] <= '9') {\n            x = x * 10 + (data[pos++] - '0');\n        }\n        return neg ? -x : x;\n    }\n\n    static byte[] readAll(InputStream is) throws IOException {\n        byte[] buf = new byte[1 << 20];\n        int len = 0;\n        int n;\n        while ((n = is.read(buf, len, buf.length - len)) > 0) {\n            len += n;\n            if (len == buf.length) {\n                byte[] nb = new byte[buf.length << 1];\n                System.arraycopy(buf, 0, nb, 0, len);\n                buf = nb;\n            }\n        }\n        byte[] res = new byte[len];\n        System.arraycopy(buf, 0, res, 0, len);\n        return res;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n\n    static byte[] data;\n    static int pos;\n\n    public static void main(String[] args) throws IOException {\n        data = readAll(System.in);\n        pos = 0;\n\n        int L = nextInt();\n        int C = nextInt();\n\n        int[][] a = new int[L][C];\n        for (int i = 0; i < L; i++) {\n            for (int j = 0; j < C; j++) {\n                a[i][j] = nextInt();\n            }\n        }\n\n        int cols = C - 1;\n        long best = 0;\n        int[] hgt = new int[Math.max(cols, 1)];\n        int[] stk = new int[Math.max(cols, 1) + 1];\n\n        for (int i = 0; i < L - 1; i++) {\n            int[] up = a[i];\n            int[] dn = a[i + 1];\n            for (int j = 0; j < cols; j++) {\n                if (up[j] + dn[j + 1] <= up[j + 1] + dn[j]) {\n                    hgt[j]++;\n                } else {\n                    hgt[j] = 0;\n                }\n            }\n            int top = -1;\n            for (int j = 0; j <= cols; j++) {\n                int h = (j < cols) ? hgt[j] : 0;\n                while (top >= 0 && hgt[stk[top]] >= h) {\n                    int H = hgt[stk[top--]];\n                    if (H > 0) {\n                        int left = (top >= 0) ? stk[top] : -1;\n                        int w = j - left - 1;\n                        long area = (long) (H + 1) * (w + 1);\n                        if (area > best) best = area;\n                    }\n                }\n                stk[++top] = j;\n            }\n        }\n\n        System.out.println(best);\n    }\n\n    static int nextInt() {\n        while (pos < data.length && (data[pos] < '0' || data[pos] > '9') && data[pos] != '-') pos++;\n        boolean neg = false;\n        if (pos < data.length && data[pos] == '-') {\n            neg = true;\n            pos++;\n        }\n        int x = 0;\n        while (pos < data.length && data[pos] >= '0' && data[pos] <= '9') {\n            x = x * 10 + (data[pos++] - '0');\n        }\n        return neg ? -x : x;\n    }\n\n    static byte[] readAll(InputStream is) throws IOException {\n        byte[] buf = new byte[1 << 20];\n        int len = 0;\n        int n;\n        while ((n = is.read(buf, len, buf.length - len)) > 0) {\n            len += n;\n            if (len == buf.length) {\n                byte[] nb = new byte[buf.length << 1];\n                System.arraycopy(buf, 0, nb, 0, len);\n                buf = nb;\n            }\n        }\n        byte[] res = new byte[len];\n        System.arraycopy(buf, 0, res, 0, len);\n        return res;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.13457059999927878,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

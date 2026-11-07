@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:26:44.851241+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1099,
+            "output_tokens": 1087,
+            "total_tokens": 9922
+        },
+        "cost_usd": {
+            "input_cost": 0.000824,
+            "output_cost": 0.004076,
+            "total_cost": 0.004901
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.StringTokenizer;\n\npublic class Main {\n\n    static class Point {\n        long x, y;\n\n        Point(long x, long y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n\n    static long dot(Point a, Point b) {\n        return a.x * b.x + a.y * b.y;\n    }\n\n    static long cross(Point a, Point b) {\n        return a.x * b.y - a.y * b.x;\n    }\n\n    static Point sub(Point a, Point b) {\n        return new Point(a.x - b.x, a.y - b.y);\n    }\n\n    static long distSq(Point a, Point b) {\n        long dx = a.x - b.x;\n        long dy = a.y - b.y;\n        return dx * dx + dy * dy;\n    }\n\n    public static void main(String[] args) throws Exception {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        Point[] p = new Point[8];\n\n        for (int i = 1; i <= 7; i++) {\n            String line = reader.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = reader.readLine();\n            }\n            if (line == null) break;\n            StringTokenizer tokenizer = new StringTokenizer(line);\n            long x = Long.parseLong(tokenizer.nextToken());\n            long y = Long.parseLong(tokenizer.nextToken());\n            p[i] = new Point(x, y);\n        }\n\n        boolean isValid = true;\n\n        // 1. O ângulo ∠P2P1P3 é agudo (vértice em P1)\n        Point v1 = sub(p[2], p[1]);\n        Point v2 = sub(p[3], p[1]);\n        if (dot(v1, v2) <= 0) {\n            isValid = false;\n        }\n\n        // 2. Os segmentos P1P2 e P1P3 têm o mesmo comprimento\n        if (distSq(p[1], p[2]) != distSq(p[1], p[3])) {\n            isValid = false;\n        }\n\n        // 3. Os pontos P2, P3, P4 e P5 são colineares\n        Point base = sub(p[3], p[2]);\n        if (cross(sub(p[4], p[2]), base) != 0 || cross(sub(p[5], p[2]), base) != 0) {\n            isValid = false;\n        }\n\n        // 4. Os pontos médios dos segmentos P2P3 e P4P5 são coincidentes\n        if (p[2].x + p[3].x != p[4].x + p[5].x || p[2].y + p[3].y != p[4].y + p[5].y) {\n            isValid = false;\n        }\n\n        // 5. O segmento P2P3 tem comprimento maior que o segmento P4P5\n        if (distSq(p[2], p[3]) <= distSq(p[4], p[5])) {\n            isValid = false;\n        }\n\n        // 6. Os segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3\n        Point seg46 = sub(p[6], p[4]);\n        Point seg57 = sub(p[7], p[5]);\n        if (dot(seg46, base) != 0 || dot(seg57, base) != 0) {\n            isValid = false;\n        }\n\n        // 7. Os segmentos P4P6 e P5P7 têm o mesmo comprimento\n        if (distSq(p[4], p[6]) != distSq(p[5], p[7])) {\n            isValid = false;\n        }\n\n        // 8. Os pontos P1 e P6 devem estar separados pela reta que contém o segmento P2P3\n        long c1 = cross(sub(p[1], p[2]), base);\n        long c2 = cross(sub(p[6], p[2]), base);\n        if (!((c1 > 0 && c2 < 0) || (c1 < 0 && c2 > 0))) {\n            isValid = false;\n        }\n\n        if (isValid) {\n            System.out.println(\"S\");\n        } else {\n            System.out.println(\"N\");\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.StringTokenizer;\n\npublic class Main {\n\n    static class Point {\n        long x, y;\n\n        Point(long x, long y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n\n    static long dot(Point a, Point b) {\n        return a.x * b.x + a.y * b.y;\n    }\n\n    static long cross(Point a, Point b) {\n        return a.x * b.y - a.y * b.x;\n    }\n\n    static Point sub(Point a, Point b) {\n        return new Point(a.x - b.x, a.y - b.y);\n    }\n\n    static long distSq(Point a, Point b) {\n        long dx = a.x - b.x;\n        long dy = a.y - b.y;\n        return dx * dx + dy * dy;\n    }\n\n    public static void main(String[] args) throws Exception {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        Point[] p = new Point[8];\n\n        for (int i = 1; i <= 7; i++) {\n            String line = reader.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = reader.readLine();\n            }\n            if (line == null) break;\n            StringTokenizer tokenizer = new StringTokenizer(line);\n            long x = Long.parseLong(tokenizer.nextToken());\n            long y = Long.parseLong(tokenizer.nextToken());\n            p[i] = new Point(x, y);\n        }\n\n        boolean isValid = true;\n\n        // 1. O ângulo ∠P2P1P3 é agudo (vértice em P1)\n        Point v1 = sub(p[2], p[1]);\n        Point v2 = sub(p[3], p[1]);\n        if (dot(v1, v2) <= 0) {\n            isValid = false;\n        }\n\n        // 2. Os segmentos P1P2 e P1P3 têm o mesmo comprimento\n        if (distSq(p[1], p[2]) != distSq(p[1], p[3])) {\n            isValid = false;\n        }\n\n        // 3. Os pontos P2, P3, P4 e P5 são colineares\n        Point base = sub(p[3], p[2]);\n        if (cross(sub(p[4], p[2]), base) != 0 || cross(sub(p[5], p[2]), base) != 0) {\n            isValid = false;\n        }\n\n        // 4. Os pontos médios dos segmentos P2P3 e P4P5 são coincidentes\n        if (p[2].x + p[3].x != p[4].x + p[5].x || p[2].y + p[3].y != p[4].y + p[5].y) {\n            isValid = false;\n        }\n\n        // 5. O segmento P2P3 tem comprimento maior que o segmento P4P5\n        if (distSq(p[2], p[3]) <= distSq(p[4], p[5])) {\n            isValid = false;\n        }\n\n        // 6. Os segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3\n        Point seg46 = sub(p[6], p[4]);\n        Point seg57 = sub(p[7], p[5]);\n        if (dot(seg46, base) != 0 || dot(seg57, base) != 0) {\n            isValid = false;\n        }\n\n        // 7. Os segmentos P4P6 e P5P7 têm o mesmo comprimento\n        if (distSq(p[4], p[6]) != distSq(p[5], p[7])) {\n            isValid = false;\n        }\n\n        // 8. Os pontos P1 e P6 devem estar separados pela reta que contém o segmento P2P3\n        long c1 = cross(sub(p[1], p[2]), base);\n        long c2 = cross(sub(p[6], p[2]), base);\n        if (!((c1 > 0 && c2 < 0) || (c1 < 0 && c2 > 0))) {\n            isValid = false;\n        }\n\n        if (isValid) {\n            System.out.println(\"S\");\n        } else {\n            System.out.println(\"N\");\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08038059997488745,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

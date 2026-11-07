@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:10:24.526771+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 6058,
+            "total_tokens": 6815
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.003029,
+            "total_cost": 0.003045
+        },
+        "raw_response": "```javascript\nconst tokens = require('fs').readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(tokens[0], 10);\n\n// Representa o preço P exatamente em centavos (P * 100) usando inteiros\nlet bp = -1, bg = 1; // melhor preço (centavos) e gramas correspondentes\n\nfor (let i = 0; i < n; i++) {\n  const p = Math.round(parseFloat(tokens[1 + 2 * i]) * 100);\n  const g = parseInt(tokens[2 + 2 * i], 10);\n  // compara p/g < bp/bg por multiplicação cruzada (exato, sem ponto flutuante)\n  if (bp < 0 || p * bg < bp * g) {\n    bp = p;\n    bg = g;\n  }\n}\n\n// custo por kg em centavos = (bp/100) * (1000/bg) * 100 = bp * 1000 / bg\nconst num = bp * 1000;\nconst den = bg;\n\n// arredondamento para 2 casas decimais feito com aritmética inteira exata:\n// cents = round(num/den) = floor((2*num + den) / (2*den))\nconst cents = Math.floor((2 * num + den) / (2 * den));\n\nconst intPart = Math.floor(cents / 100);\nconst frac = String(cents % 100).padStart(2, '0');\n\nprocess.stdout.write(intPart + '.' + frac + '\\n');\n```",
+        "extracted_code": "const tokens = require('fs').readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(tokens[0], 10);\n\n// Representa o preço P exatamente em centavos (P * 100) usando inteiros\nlet bp = -1, bg = 1; // melhor preço (centavos) e gramas correspondentes\n\nfor (let i = 0; i < n; i++) {\n  const p = Math.round(parseFloat(tokens[1 + 2 * i]) * 100);\n  const g = parseInt(tokens[2 + 2 * i], 10);\n  // compara p/g < bp/bg por multiplicação cruzada (exato, sem ponto flutuante)\n  if (bp < 0 || p * bg < bp * g) {\n    bp = p;\n    bg = g;\n  }\n}\n\n// custo por kg em centavos = (bp/100) * (1000/bg) * 100 = bp * 1000 / bg\nconst num = bp * 1000;\nconst den = bg;\n\n// arredondamento para 2 casas decimais feito com aritmética inteira exata:\n// cents = round(num/den) = floor((2*num + den) / (2*den))\nconst cents = Math.floor((2 * num + den) / (2 * den));\n\nconst intPart = Math.floor(cents / 100);\nconst frac = String(cents % 100).padStart(2, '0');\n\nprocess.stdout.write(intPart + '.' + frac + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.046156999946106225,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

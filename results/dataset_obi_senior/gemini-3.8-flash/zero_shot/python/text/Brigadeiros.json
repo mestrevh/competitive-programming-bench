@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:09:35.159225+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1529,
+            "output_tokens": 840,
+            "total_tokens": 22893
+        },
+        "cost_usd": {
+            "input_cost": 0.001147,
+            "output_cost": 0.00315,
+            "total_cost": 0.004297
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n    T = int(input_data[2])\n\n    P = [int(x) for x in input_data[3 : 3 + N]]\n    G = [int(x) for x in input_data[3 + N : 3 + 2 * N]]\n\n    # Posições iniciais dos amigos (1-indexadas)\n    A = [i + 1 for i, g in enumerate(G) if g == 1]\n\n    # Se T for suficiente para qualquer rearranjo dos amigos,\n    # basta escolher os K pratos com maior quantidade de brigadeiros.\n    max_possible_swaps = K * (N - K)\n    if T >= max_possible_swaps:\n        P_sorted = sorted(P, reverse=True)\n        print(sum(P_sorted[:K]))\n        return\n\n    # max_v[i] guarda a soma máxima possível de brigadeiros escolhendo i pratos\n    P_sorted = sorted(P, reverse=True)\n    max_v = [0] * (K + 1)\n    for i in range(1, K + 1):\n        max_v[i] = max_v[i - 1] + P_sorted[i - 1]\n\n    INF = T + 1\n\n    # prev_dp[j] guardará o custo mínimo para cada pontuação v\n    # obtida posicionando os primeiros i-1 amigos em pratos <= j.\n    # Para i = 0: 0 amigos geram 0 brigadeiros com custo 0.\n    prev_dp = [[0] for _ in range(N + 1)]\n\n    for i in range(1, K + 1):\n        target_pos = A[i - 1]\n        cur_len = max_v[i] + 1\n        curr_dp = [None] * (N + 1)\n\n        # Para j < i, é impossível acomodar i amigos\n        for j in range(i):\n            curr_dp[j] = [INF] * cur_len\n\n        # O i-ésimo amigo só precisa ser considerado até a posição N - K + i\n        for j in range(i, N - K + i + 1):\n            cost = abs(target_pos - j)\n            p = P[j - 1]\n\n            # Opção 1: o i-ésimo amigo fica em algum prato <= j - 1\n            curr_row = list(curr_dp[j - 1])\n\n            # Opção 2: o i-ésimo amigo fica exatamente no prato j\n            source_row = prev_dp[j - 1]\n            for u, s in enumerate(source_row):\n                if s <= T:\n                    val = s + cost\n                    idx = u + p\n                    if val < curr_row[idx]:\n                        curr_row[idx] = val\n\n            curr_dp[j] = curr_row\n\n        prev_dp = curr_dp\n\n    # O resultado final está em prev_dp[N]\n    final_row = prev_dp[N]\n    ans = 0\n    for v in range(len(final_row) - 1, -1, -1):\n        if final_row[v] <= T:\n            ans = v\n            break\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n    T = int(input_data[2])\n\n    P = [int(x) for x in input_data[3 : 3 + N]]\n    G = [int(x) for x in input_data[3 + N : 3 + 2 * N]]\n\n    # Posições iniciais dos amigos (1-indexadas)\n    A = [i + 1 for i, g in enumerate(G) if g == 1]\n\n    # Se T for suficiente para qualquer rearranjo dos amigos,\n    # basta escolher os K pratos com maior quantidade de brigadeiros.\n    max_possible_swaps = K * (N - K)\n    if T >= max_possible_swaps:\n        P_sorted = sorted(P, reverse=True)\n        print(sum(P_sorted[:K]))\n        return\n\n    # max_v[i] guarda a soma máxima possível de brigadeiros escolhendo i pratos\n    P_sorted = sorted(P, reverse=True)\n    max_v = [0] * (K + 1)\n    for i in range(1, K + 1):\n        max_v[i] = max_v[i - 1] + P_sorted[i - 1]\n\n    INF = T + 1\n\n    # prev_dp[j] guardará o custo mínimo para cada pontuação v\n    # obtida posicionando os primeiros i-1 amigos em pratos <= j.\n    # Para i = 0: 0 amigos geram 0 brigadeiros com custo 0.\n    prev_dp = [[0] for _ in range(N + 1)]\n\n    for i in range(1, K + 1):\n        target_pos = A[i - 1]\n        cur_len = max_v[i] + 1\n        curr_dp = [None] * (N + 1)\n\n        # Para j < i, é impossível acomodar i amigos\n        for j in range(i):\n            curr_dp[j] = [INF] * cur_len\n\n        # O i-ésimo amigo só precisa ser considerado até a posição N - K + i\n        for j in range(i, N - K + i + 1):\n            cost = abs(target_pos - j)\n            p = P[j - 1]\n\n            # Opção 1: o i-ésimo amigo fica em algum prato <= j - 1\n            curr_row = list(curr_dp[j - 1])\n\n            # Opção 2: o i-ésimo amigo fica exatamente no prato j\n            source_row = prev_dp[j - 1]\n            for u, s in enumerate(source_row):\n                if s <= T:\n                    val = s + cost\n                    idx = u + p\n                    if val < curr_row[idx]:\n                        curr_row[idx] = val\n\n            curr_dp[j] = curr_row\n\n        prev_dp = curr_dp\n\n    # O resultado final está em prev_dp[N]\n    final_row = prev_dp[N]\n    ans = 0\n    for v in range(len(final_row) - 1, -1, -1):\n        if final_row[v] <= T:\n            ans = v\n            break\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.7681215999982669,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:12:16.336688+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1215,
+            "output_tokens": 3170,
+            "total_tokens": 4385
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.007608,
+            "total_cost": 0.007612
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    grid = []\n    idx = 2\n    for _ in range(n):\n        grid.append(data[idx:idx + m])\n        idx += m\n\n    cost_a = 0\n    cost_b = 0\n\n    for i in range(n):\n        for j in range(m):\n            g = grid[i][j] & 1\n            t = (i + j) & 1\n            if g != t:\n                cost_a += 1\n            else:\n                cost_b += 1\n\n    if cost_a <= cost_b:\n        cost = cost_a\n        use_a = True\n    else:\n        cost = cost_b\n        use_a = False\n\n    out = [str(cost)]\n    for i in range(n):\n        row = []\n        for j in range(m):\n            t = (i + j) & 1\n            if not use_a:\n                t = 1 - t\n\n            v = grid[i][j]\n            if (v & 1) != t:\n                v += 1\n            row.append(str(v))\n        out.append(\" \".join(row))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    n, m = data[0], data[1]\n    grid = []\n    idx = 2\n    for _ in range(n):\n        grid.append(data[idx:idx + m])\n        idx += m\n\n    cost_a = 0\n    cost_b = 0\n\n    for i in range(n):\n        for j in range(m):\n            g = grid[i][j] & 1\n            t = (i + j) & 1\n            if g != t:\n                cost_a += 1\n            else:\n                cost_b += 1\n\n    if cost_a <= cost_b:\n        cost = cost_a\n        use_a = True\n    else:\n        cost = cost_b\n        use_a = False\n\n    out = [str(cost)]\n    for i in range(n):\n        row = []\n        for j in range(m):\n            t = (i + j) & 1\n            if not use_a:\n                t = 1 - t\n\n            v = grid[i][j]\n            if (v & 1) != t:\n                v += 1\n            row.append(str(v))\n        out.append(\" \".join(row))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07399349999468541,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

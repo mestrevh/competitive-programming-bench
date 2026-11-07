@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:37:31.840974+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 835,
+            "output_tokens": 14555,
+            "total_tokens": 15390
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.007278,
+            "total_cost": 0.007295
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 200005\n\nstatic int N;\nstatic long long bitA[MAXN + 1]; /* soma dos 'alpha': FRENTE (i+V), TRAS (V-i) */\nstatic long long bitB[MAXN + 1]; /* soma dos coeficientes de x: FRENTE -1, TRAS +1 */\n\n/* Atualiza prefixos (range add via diferenca, point query via prefixo) */\nstatic inline void bitupd(long long *b, int pos, long long v) {\n    for (; pos <= N; pos += pos & (-pos)) b[pos] += v;\n}\n\nstatic inline long long bitqry(const long long *b, int pos) {\n    long long s = 0;\n    for (; pos > 0; pos -= pos & (-pos)) s += b[pos];\n    return s;\n}\n\nstatic char *rp;\n\nstatic inline int rdint(void) {\n    while (*rp && (*rp < '0' || *rp > '9')) rp++;\n    int x = 0;\n    while (*rp >= '0' && *rp <= '9') {\n        x = x * 10 + (*rp - '0');\n        rp++;\n    }\n    return x;\n}\n\nint main(void) {\n    /* le toda a entrada de uma vez */\n    size_t cap = 1u << 22;\n    char *ibuf = (char *)malloc(cap);\n    size_t ilen = 0;\n    for (;;) {\n        if (ilen + 1 >= cap) {\n            cap <<= 1;\n            ibuf = (char *)realloc(ibuf, cap);\n        }\n        size_t got = fread(ibuf + ilen, 1, cap - ilen - 1, stdin);\n        if (got == 0) break;\n        ilen += got;\n    }\n    ibuf[ilen] = '\\0';\n    rp = ibuf;\n\n    N = rdint();\n    int M = rdint();\n\n    char *obuf = (char *)malloc((size_t)(M + 2) * 14 + 16);\n    size_t op = 0;\n\n    for (int q = 0; q < M; q++) {\n        int type = rdint();\n        if (type == 1) {\n            /* FRENTE i V : posicoes i..min(N,i+V-1) recebem (V+i)-x */\n            int i = rdint();\n            int V = rdint();\n            long long re = (long long)i + V - 1;\n            int r = (re > (long long)N) ? N : (int)re;\n            long long alpha = (long long)V + i;\n            bitupd(bitA, i, alpha);\n            bitupd(bitB, i, -1);\n            if (r < N) {\n                bitupd(bitA, r + 1, -alpha);\n                bitupd(bitB, r + 1, 1);\n            }\n        } else if (type == 2) {\n            /* TRAS i V : posicoes max(1,i-V+1)..i recebem x+(V-i) */\n            int i = rdint();\n            int V = rdint();\n            long long lb = (long long)i - V + 1;\n            int l = (lb < 1) ? 1 : (int)lb;\n            long long alpha = (long long)V - i;\n            bitupd(bitA, l, alpha);\n            bitupd(bitB, l, 1);\n            if (i < N) {\n                bitupd(bitA, i + 1, -alpha);\n                bitupd(bitB, i + 1, -1);\n            }\n        } else {\n            /* IMPRIME x : soma das progressoes cobrindo x = alpha + x*slope */\n            int x = rdint();\n            long long ans = bitqry(bitA, x) + (long long)x * bitqry(bitB, x);\n            if (ans == 0) {\n                obuf[op++] = '0';\n            } else {\n                char tmp[24];\n                int t = 0;\n                long long v = ans;\n                if (v < 0) { obuf[op++] = '-'; v = -v; }\n                while (v > 0) { tmp[t++] = (char)('0' + (int)(v % 10)); v /= 10; }\n                while (t > 0) obuf[op++] = tmp[--t];\n            }\n            obuf[op++] = '\\n';\n        }\n    }\n\n    fwrite(obuf, 1, op, stdout);\n    free(ibuf);\n    free(obuf);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 200005\n\nstatic int N;\nstatic long long bitA[MAXN + 1]; /* soma dos 'alpha': FRENTE (i+V), TRAS (V-i) */\nstatic long long bitB[MAXN + 1]; /* soma dos coeficientes de x: FRENTE -1, TRAS +1 */\n\n/* Atualiza prefixos (range add via diferenca, point query via prefixo) */\nstatic inline void bitupd(long long *b, int pos, long long v) {\n    for (; pos <= N; pos += pos & (-pos)) b[pos] += v;\n}\n\nstatic inline long long bitqry(const long long *b, int pos) {\n    long long s = 0;\n    for (; pos > 0; pos -= pos & (-pos)) s += b[pos];\n    return s;\n}\n\nstatic char *rp;\n\nstatic inline int rdint(void) {\n    while (*rp && (*rp < '0' || *rp > '9')) rp++;\n    int x = 0;\n    while (*rp >= '0' && *rp <= '9') {\n        x = x * 10 + (*rp - '0');\n        rp++;\n    }\n    return x;\n}\n\nint main(void) {\n    /* le toda a entrada de uma vez */\n    size_t cap = 1u << 22;\n    char *ibuf = (char *)malloc(cap);\n    size_t ilen = 0;\n    for (;;) {\n        if (ilen + 1 >= cap) {\n            cap <<= 1;\n            ibuf = (char *)realloc(ibuf, cap);\n        }\n        size_t got = fread(ibuf + ilen, 1, cap - ilen - 1, stdin);\n        if (got == 0) break;\n        ilen += got;\n    }\n    ibuf[ilen] = '\\0';\n    rp = ibuf;\n\n    N = rdint();\n    int M = rdint();\n\n    char *obuf = (char *)malloc((size_t)(M + 2) * 14 + 16);\n    size_t op = 0;\n\n    for (int q = 0; q < M; q++) {\n        int type = rdint();\n        if (type == 1) {\n            /* FRENTE i V : posicoes i..min(N,i+V-1) recebem (V+i)-x */\n            int i = rdint();\n            int V = rdint();\n            long long re = (long long)i + V - 1;\n            int r = (re > (long long)N) ? N : (int)re;\n            long long alpha = (long long)V + i;\n            bitupd(bitA, i, alpha);\n            bitupd(bitB, i, -1);\n            if (r < N) {\n                bitupd(bitA, r + 1, -alpha);\n                bitupd(bitB, r + 1, 1);\n            }\n        } else if (type == 2) {\n            /* TRAS i V : posicoes max(1,i-V+1)..i recebem x+(V-i) */\n            int i = rdint();\n            int V = rdint();\n            long long lb = (long long)i - V + 1;\n            int l = (lb < 1) ? 1 : (int)lb;\n            long long alpha = (long long)V - i;\n            bitupd(bitA, l, alpha);\n            bitupd(bitB, l, 1);\n            if (i < N) {\n                bitupd(bitA, i + 1, -alpha);\n                bitupd(bitB, i + 1, -1);\n            }\n        } else {\n            /* IMPRIME x : soma das progressoes cobrindo x = alpha + x*slope */\n            int x = rdint();\n            long long ans = bitqry(bitA, x) + (long long)x * bitqry(bitB, x);\n            if (ans == 0) {\n                obuf[op++] = '0';\n            } else {\n                char tmp[24];\n                int t = 0;\n                long long v = ans;\n                if (v < 0) { obuf[op++] = '-'; v = -v; }\n                while (v > 0) { tmp[t++] = (char)('0' + (int)(v % 10)); v /= 10; }\n                while (t > 0) obuf[op++] = tmp[--t];\n            }\n            obuf[op++] = '\\n';\n        }\n    }\n\n    fwrite(obuf, 1, op, stdout);\n    free(ibuf);\n    free(obuf);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15965310001047328,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

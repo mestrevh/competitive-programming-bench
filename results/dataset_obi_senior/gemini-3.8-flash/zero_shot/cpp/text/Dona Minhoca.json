@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:27:16.160095+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 663,
+            "output_tokens": 979,
+            "total_tokens": 3534
+        },
+        "cost_usd": {
+            "input_cost": 0.000497,
+            "output_cost": 0.003671,
+            "total_cost": 0.004169
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <queue>\n\nusing namespace std;\n\nint N;\nvector<vector<int>> adj;\n\nvoid get_dist(int start, vector<int>& dist) {\n    dist.assign(N + 1, -1);\n    queue<int> q;\n    q.push(start);\n    dist[start] = 0;\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        for (int v : adj[u]) {\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                q.push(v);\n            }\n        }\n    }\n}\n\nint count_at_depth(int u, int p, int d) {\n    if (d == 0) return 1;\n    int cnt = 0;\n    for (int v : adj[u]) {\n        if (v != p) {\n            cnt += count_at_depth(v, u, d - 1);\n        }\n    }\n    return cnt;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    if (!(cin >> N)) return 0;\n\n    adj.resize(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n\n    vector<int> dist1;\n    get_dist(1, dist1);\n\n    int A = 1;\n    for (int i = 1; i <= N; ++i) {\n        if (dist1[i] > dist1[A]) {\n            A = i;\n        }\n    }\n\n    vector<int> distA;\n    get_dist(A, distA);\n\n    int B = A;\n    for (int i = 1; i <= N; ++i) {\n        if (distA[i] > distA[B]) {\n            B = i;\n        }\n    }\n\n    int D = distA[B];\n    vector<int> distB;\n    get_dist(B, distB);\n\n    long long ways = 0;\n\n    if (D % 2 == 0) {\n        int C = -1;\n        for (int i = 1; i <= N; ++i) {\n            if (distA[i] == D / 2 && distB[i] == D / 2) {\n                C = i;\n                break;\n            }\n        }\n\n        vector<long long> counts;\n        for (int v : adj[C]) {\n            counts.push_back(count_at_depth(v, C, D / 2 - 1));\n        }\n\n        long long sum = 0;\n        long long sum_sq = 0;\n        for (long long c : counts) {\n            sum += c;\n            sum_sq += c * c;\n        }\n        ways = (sum * sum - sum_sq) / 2;\n    } else {\n        int C1 = -1, C2 = -1;\n        for (int i = 1; i <= N; ++i) {\n            if (distA[i] == D / 2 && distB[i] == D / 2 + 1) {\n                C1 = i;\n            }\n            if (distA[i] == D / 2 + 1 && distB[i] == D / 2) {\n                C2 = i;\n            }\n        }\n\n        long long c1 = count_at_depth(C1, C2, D / 2);\n        long long c2 = count_at_depth(C2, C1, D / 2);\n        ways = c1 * c2;\n    }\n\n    cout << D + 1 << \"\\n\";\n    cout << ways << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <queue>\n\nusing namespace std;\n\nint N;\nvector<vector<int>> adj;\n\nvoid get_dist(int start, vector<int>& dist) {\n    dist.assign(N + 1, -1);\n    queue<int> q;\n    q.push(start);\n    dist[start] = 0;\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        for (int v : adj[u]) {\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                q.push(v);\n            }\n        }\n    }\n}\n\nint count_at_depth(int u, int p, int d) {\n    if (d == 0) return 1;\n    int cnt = 0;\n    for (int v : adj[u]) {\n        if (v != p) {\n            cnt += count_at_depth(v, u, d - 1);\n        }\n    }\n    return cnt;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    if (!(cin >> N)) return 0;\n\n    adj.resize(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n\n    vector<int> dist1;\n    get_dist(1, dist1);\n\n    int A = 1;\n    for (int i = 1; i <= N; ++i) {\n        if (dist1[i] > dist1[A]) {\n            A = i;\n        }\n    }\n\n    vector<int> distA;\n    get_dist(A, distA);\n\n    int B = A;\n    for (int i = 1; i <= N; ++i) {\n        if (distA[i] > distA[B]) {\n            B = i;\n        }\n    }\n\n    int D = distA[B];\n    vector<int> distB;\n    get_dist(B, distB);\n\n    long long ways = 0;\n\n    if (D % 2 == 0) {\n        int C = -1;\n        for (int i = 1; i <= N; ++i) {\n            if (distA[i] == D / 2 && distB[i] == D / 2) {\n                C = i;\n                break;\n            }\n        }\n\n        vector<long long> counts;\n        for (int v : adj[C]) {\n            counts.push_back(count_at_depth(v, C, D / 2 - 1));\n        }\n\n        long long sum = 0;\n        long long sum_sq = 0;\n        for (long long c : counts) {\n            sum += c;\n            sum_sq += c * c;\n        }\n        ways = (sum * sum - sum_sq) / 2;\n    } else {\n        int C1 = -1, C2 = -1;\n        for (int i = 1; i <= N; ++i) {\n            if (distA[i] == D / 2 && distB[i] == D / 2 + 1) {\n                C1 = i;\n            }\n            if (distA[i] == D / 2 + 1 && distB[i] == D / 2) {\n                C2 = i;\n            }\n        }\n\n        long long c1 = count_at_depth(C1, C2, D / 2);\n        long long c2 = count_at_depth(C2, C1, D / 2);\n        ways = c1 * c2;\n    }\n\n    cout << D + 1 << \"\\n\";\n    cout << ways << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22249320000992157,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

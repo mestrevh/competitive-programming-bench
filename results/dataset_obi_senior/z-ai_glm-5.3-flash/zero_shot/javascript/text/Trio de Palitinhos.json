@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:59:10.872370+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 4.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1042,
+            "output_tokens": 2251,
+            "total_tokens": 3293
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.001125,
+            "total_cost": 0.001148
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(s => s.length > 0);\nconst n = parseInt(data[0], 10);\nconst a = [];\nfor (let i = 0; i < n; i++) a.push(parseInt(data[1 + i], 10));\na.sort((x, y) => x - y);\n\nlet count = 0;\n// Para cada maior lado a[k] (array ordenado), conta pares (i, j) com i < j < k\n// tais que a[i] + a[j] > a[k] (as outras desigualdades são automáticas).\n// Two pointers: O(n^2) no total.\nfor (let k = n - 1; k >= 2; k--) {\n  const ak = a[k];\n  let i = 0, j = k - 1;\n  while (i < j) {\n    if (a[i] + a[j] > ak) {\n      // a[i..j-1] + a[j] todos formam triângulo com a[k]\n      count += j - i;\n      j--;\n    } else {\n      i++;\n    }\n  }\n}\n\nconsole.log(count);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(s => s.length > 0);\nconst n = parseInt(data[0], 10);\nconst a = [];\nfor (let i = 0; i < n; i++) a.push(parseInt(data[1 + i], 10));\na.sort((x, y) => x - y);\n\nlet count = 0;\n// Para cada maior lado a[k] (array ordenado), conta pares (i, j) com i < j < k\n// tais que a[i] + a[j] > a[k] (as outras desigualdades são automáticas).\n// Two pointers: O(n^2) no total.\nfor (let k = n - 1; k >= 2; k--) {\n  const ak = a[k];\n  let i = 0, j = k - 1;\n  while (i < j) {\n    if (a[i] + a[j] > ak) {\n      // a[i..j-1] + a[j] todos formam triângulo com a[k]\n      count += j - i;\n      j--;\n    } else {\n      i++;\n    }\n  }\n}\n\nconsole.log(count);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07165579998400062,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

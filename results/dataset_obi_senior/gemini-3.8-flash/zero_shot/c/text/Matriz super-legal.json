@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:26:32.182305+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 685,
+            "output_tokens": 689,
+            "total_tokens": 2811
+        },
+        "cost_usd": {
+            "input_cost": 0.000514,
+            "output_cost": 0.002584,
+            "total_cost": 0.003097
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXC 1005\n\nint A[2][MAXC];\nint height[MAXC];\nint stack[MAXC];\nint left_bound[MAXC];\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int cur = 0, prev = 1;\n    for (int j = 0; j < C; j++) {\n        scanf(\"%d\", &A[cur][j]);\n    }\n\n    int max_area = 0;\n\n    for (int i = 1; i < L; i++) {\n        // Swap cur and prev\n        cur ^= 1;\n        prev ^= 1;\n\n        for (int j = 0; j < C; j++) {\n            scanf(\"%d\", &A[cur][j]);\n        }\n\n        // Compute B for row i-1\n        // B has C-1 columns: j from 0 to C-2\n        for (int j = 0; j < C - 1; j++) {\n            // Check condition: A[prev][j] + A[cur][j+1] <= A[prev][j+1] + A[cur][j]\n            if (A[prev][j] + A[cur][j + 1] <= A[prev][j + 1] + A[cur][j]) {\n                height[j]++;\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        // Largest rectangle in histogram of size C - 1\n        int top = 0;\n        int m = C - 1;\n\n        for (int j = 0; j < m; j++) {\n            while (top > 0 && height[stack[top - 1]] >= height[j]) {\n                top--;\n            }\n            left_bound[j] = (top == 0) ? -1 : stack[top - 1];\n            stack[top++] = j;\n        }\n\n        top = 0;\n        for (int j = m - 1; j >= 0; j--) {\n            while (top > 0 && height[stack[top - 1]] >= height[j]) {\n                top--;\n            }\n            int right_bound = (top == 0) ? m : stack[top - 1];\n            stack[top++] = j;\n\n            int h = height[j];\n            if (h > 0) {\n                int w = right_bound - left_bound[j] - 1;\n                int area = (h + 1) * (w + 1);\n                if (area > max_area) {\n                    max_area = area;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", max_area);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXC 1005\n\nint A[2][MAXC];\nint height[MAXC];\nint stack[MAXC];\nint left_bound[MAXC];\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int cur = 0, prev = 1;\n    for (int j = 0; j < C; j++) {\n        scanf(\"%d\", &A[cur][j]);\n    }\n\n    int max_area = 0;\n\n    for (int i = 1; i < L; i++) {\n        // Swap cur and prev\n        cur ^= 1;\n        prev ^= 1;\n\n        for (int j = 0; j < C; j++) {\n            scanf(\"%d\", &A[cur][j]);\n        }\n\n        // Compute B for row i-1\n        // B has C-1 columns: j from 0 to C-2\n        for (int j = 0; j < C - 1; j++) {\n            // Check condition: A[prev][j] + A[cur][j+1] <= A[prev][j+1] + A[cur][j]\n            if (A[prev][j] + A[cur][j + 1] <= A[prev][j + 1] + A[cur][j]) {\n                height[j]++;\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        // Largest rectangle in histogram of size C - 1\n        int top = 0;\n        int m = C - 1;\n\n        for (int j = 0; j < m; j++) {\n            while (top > 0 && height[stack[top - 1]] >= height[j]) {\n                top--;\n            }\n            left_bound[j] = (top == 0) ? -1 : stack[top - 1];\n            stack[top++] = j;\n        }\n\n        top = 0;\n        for (int j = m - 1; j >= 0; j--) {\n            while (top > 0 && height[stack[top - 1]] >= height[j]) {\n                top--;\n            }\n            int right_bound = (top == 0) ? m : stack[top - 1];\n            stack[top++] = j;\n\n            int h = height[j];\n            if (h > 0) {\n                int w = right_bound - left_bound[j] - 1;\n                int area = (h + 1) * (w + 1);\n                if (area > max_area) {\n                    max_area = area;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", max_area);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.176474900014,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

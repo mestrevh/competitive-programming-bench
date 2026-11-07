@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:42:18.808143+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 705,
+            "output_tokens": 19357,
+            "total_tokens": 20062
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.046457,
+            "total_cost": 0.046459
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    vector<int> prev(C);\n    for (int c = 0; c < C; ++c) cin >> prev[c];\n\n    long long ans = max(L, C);\n\n    if (C >= 2) {\n        vector<int> height(C - 1, 0);\n        vector<int> diff(C), cur(C);\n\n        for (int r = 1; r < L; ++r) {\n            for (int c = 0; c < C; ++c) {\n                cin >> cur[c];\n                diff[c] = cur[c] - prev[c];\n            }\n            prev = cur;\n\n            int m = C - 1;\n            for (int e = 0; e < m; ++e) {\n                if (diff[e] < diff[e + 1]) height[e] = 0;\n                else ++height[e];\n            }\n\n            vector<pair<int, int>> st;\n            st.reserve(m + 1);\n\n            for (int i = 0; i <= m; ++i) {\n                int h = (i == m ? 0 : height[i]);\n                int start = i;\n\n                while (!st.empty() && st.back().first > h) {\n                    int ph = st.back().first;\n                    int ps = st.back().second;\n                    st.pop_back();\n\n                    int width = i - ps;\n                    long long area = 1LL * (ph + 1) * (width + 1);\n                    if (area > ans) ans = area;\n\n                    start = ps;\n                }\n\n                if (st.empty() || st.back().first < h) {\n                    st.push_back({h, start});\n                }\n            }\n        }\n    } else {\n        for (int r = 1; r < L; ++r) {\n            int x;\n            cin >> x;\n        }\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    vector<int> prev(C);\n    for (int c = 0; c < C; ++c) cin >> prev[c];\n\n    long long ans = max(L, C);\n\n    if (C >= 2) {\n        vector<int> height(C - 1, 0);\n        vector<int> diff(C), cur(C);\n\n        for (int r = 1; r < L; ++r) {\n            for (int c = 0; c < C; ++c) {\n                cin >> cur[c];\n                diff[c] = cur[c] - prev[c];\n            }\n            prev = cur;\n\n            int m = C - 1;\n            for (int e = 0; e < m; ++e) {\n                if (diff[e] < diff[e + 1]) height[e] = 0;\n                else ++height[e];\n            }\n\n            vector<pair<int, int>> st;\n            st.reserve(m + 1);\n\n            for (int i = 0; i <= m; ++i) {\n                int h = (i == m ? 0 : height[i]);\n                int start = i;\n\n                while (!st.empty() && st.back().first > h) {\n                    int ph = st.back().first;\n                    int ps = st.back().second;\n                    st.pop_back();\n\n                    int width = i - ps;\n                    long long area = 1LL * (ph + 1) * (width + 1);\n                    if (area > ans) ans = area;\n\n                    start = ps;\n                }\n\n                if (st.empty() || st.back().first < h) {\n                    st.push_back({h, start});\n                }\n            }\n        }\n    } else {\n        for (int r = 1; r < L; ++r) {\n            int x;\n            cin >> x;\n        }\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17887619999964954,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

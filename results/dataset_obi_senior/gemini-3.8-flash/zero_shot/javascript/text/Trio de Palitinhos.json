@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:11:32.283625+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 4.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 979,
+            "output_tokens": 349,
+            "total_tokens": 2054
+        },
+        "cost_usd": {
+            "input_cost": 0.000734,
+            "output_cost": 0.001309,
+            "total_cost": 0.002043
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const n = nextInt();\n    if (n === null) return;\n\n    const a = new Int32Array(n);\n    for (let i = 0; i < n; i++) {\n        a[i] = nextInt();\n    }\n\n    a.sort();\n\n    let ans = 0;\n    for (let k = n - 1; k >= 2; k--) {\n        let i = 0;\n        let j = k - 1;\n        const target = a[k];\n        while (i < j) {\n            if (a[i] + a[j] > target) {\n                ans += (j - i);\n                j--;\n            } else {\n                i++;\n            }\n        }\n    }\n\n    console.log(ans);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const n = nextInt();\n    if (n === null) return;\n\n    const a = new Int32Array(n);\n    for (let i = 0; i < n; i++) {\n        a[i] = nextInt();\n    }\n\n    a.sort();\n\n    let ans = 0;\n    for (let k = n - 1; k >= 2; k--) {\n        let i = 0;\n        let j = k - 1;\n        const target = a[k];\n        while (i < j) {\n            if (a[i] + a[j] > target) {\n                ans += (j - i);\n                j--;\n            } else {\n                i++;\n            }\n        }\n    }\n\n    console.log(ans);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.055775699991500005,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T21:22:16.597342+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 836,
+            "output_tokens": 11157,
+            "total_tokens": 11993
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.005579,
+            "total_cost": 0.005596
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n\n        int n = nextInt(in);\n        int m = nextInt(in);\n        int c = nextInt(in);\n\n        // nxt[s] = musica amada do amigo mais antigo que detesta a musica s (0 se ninguem detesta s)\n        int[] nxt = new int[m + 1];\n        for (int i = 0; i < n; i++) {\n            int a = nextInt(in);\n            int d = nextInt(in);\n            if (nxt[d] == 0) nxt[d] = a; // primeira ocorrencia (amigo mais antigo) define a transicao\n        }\n\n        boolean[] vis = new boolean[m + 1];\n        int cur = c;\n        vis[cur] = true;\n        int cnt = 0;\n        int ans;\n        while (true) {\n            int t = nxt[cur];\n            if (t == 0) {          // ninguem detesta a musica atual -> todos satisfeitos\n                ans = cnt;\n                break;\n            }\n            cur = t;\n            cnt++;\n            if (vis[cur]) {        // estado repetido -> laco infinito\n                ans = -1;\n                break;\n            }\n            vis[cur] = true;\n        }\n\n        System.out.println(ans);\n    }\n\n    private static int nextInt(DataInputStream in) throws IOException {\n        int b = in.read();\n        while (b < '0' || b > '9') {\n            if (b == -1) throw new EOFException();\n            b = in.read();\n        }\n        int v = 0;\n        while (b >= '0' && b <= '9') {\n            v = v * 10 + (b - '0');\n            b = in.read();\n        }\n        return v;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n\n        int n = nextInt(in);\n        int m = nextInt(in);\n        int c = nextInt(in);\n\n        // nxt[s] = musica amada do amigo mais antigo que detesta a musica s (0 se ninguem detesta s)\n        int[] nxt = new int[m + 1];\n        for (int i = 0; i < n; i++) {\n            int a = nextInt(in);\n            int d = nextInt(in);\n            if (nxt[d] == 0) nxt[d] = a; // primeira ocorrencia (amigo mais antigo) define a transicao\n        }\n\n        boolean[] vis = new boolean[m + 1];\n        int cur = c;\n        vis[cur] = true;\n        int cnt = 0;\n        int ans;\n        while (true) {\n            int t = nxt[cur];\n            if (t == 0) {          // ninguem detesta a musica atual -> todos satisfeitos\n                ans = cnt;\n                break;\n            }\n            cur = t;\n            cnt++;\n            if (vis[cur]) {        // estado repetido -> laco infinito\n                ans = -1;\n                break;\n            }\n            vis[cur] = true;\n        }\n\n        System.out.println(ans);\n    }\n\n    private static int nextInt(DataInputStream in) throws IOException {\n        int b = in.read();\n        while (b < '0' || b > '9') {\n            if (b == -1) throw new EOFException();\n            b = in.read();\n        }\n        int v = 0;\n        while (b >= '0' && b <= '9') {\n            v = v * 10 + (b - '0');\n            b = in.read();\n        }\n        return v;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10738479997962713,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

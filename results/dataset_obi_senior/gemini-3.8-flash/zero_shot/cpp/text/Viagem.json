@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:57:59.296935+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1201,
+            "output_tokens": 554,
+            "total_tokens": 2499
+        },
+        "cost_usd": {
+            "input_cost": 0.000901,
+            "output_cost": 0.002077,
+            "total_cost": 0.002978
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <queue>\n#include <tuple>\n\nusing namespace std;\n\nconst long long INF = 1e18;\n\nstruct Edge {\n    int to;\n    int time;\n    int cost;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int V, N, M;\n    if (!(cin >> V >> N >> M)) return 0;\n\n    vector<vector<Edge>> adj(N + 1);\n    for (int i = 0; i < M; ++i) {\n        int u, v, t, p;\n        cin >> u >> v >> t >> p;\n        adj[u].push_back({v, t, p});\n        adj[v].push_back({u, t, p});\n    }\n\n    int X, Y;\n    cin >> X >> Y;\n\n    vector<vector<long long>> dist(N + 1, vector<long long>(V + 1, INF));\n    \n    // min-heap: (tempo, vertice, custo)\n    priority_queue<tuple<long long, int, int>, \n                   vector<tuple<long long, int, int>>, \n                   greater<tuple<long long, int, int>>> pq;\n\n    dist[X][0] = 0;\n    pq.emplace(0, X, 0);\n\n    while (!pq.empty()) {\n        auto [d, u, c] = pq.top();\n        pq.pop();\n\n        if (d > dist[u][c]) continue;\n        if (u == Y) {\n            // Como é min-heap ordenado pelo tempo, o primeiro a alcançar Y é o de menor tempo\n            cout << d << \"\\n\";\n            return 0;\n        }\n\n        for (const auto& edge : adj[u]) {\n            int nc = c + edge.cost;\n            if (nc <= V) {\n                if (dist[edge.to][nc] > d + edge.time) {\n                    dist[edge.to][nc] = d + edge.time;\n                    pq.emplace(dist[edge.to][nc], edge.to, nc);\n                }\n            }\n        }\n    }\n\n    cout << -1 << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <tuple>\n\nusing namespace std;\n\nconst long long INF = 1e18;\n\nstruct Edge {\n    int to;\n    int time;\n    int cost;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int V, N, M;\n    if (!(cin >> V >> N >> M)) return 0;\n\n    vector<vector<Edge>> adj(N + 1);\n    for (int i = 0; i < M; ++i) {\n        int u, v, t, p;\n        cin >> u >> v >> t >> p;\n        adj[u].push_back({v, t, p});\n        adj[v].push_back({u, t, p});\n    }\n\n    int X, Y;\n    cin >> X >> Y;\n\n    vector<vector<long long>> dist(N + 1, vector<long long>(V + 1, INF));\n    \n    // min-heap: (tempo, vertice, custo)\n    priority_queue<tuple<long long, int, int>, \n                   vector<tuple<long long, int, int>>, \n                   greater<tuple<long long, int, int>>> pq;\n\n    dist[X][0] = 0;\n    pq.emplace(0, X, 0);\n\n    while (!pq.empty()) {\n        auto [d, u, c] = pq.top();\n        pq.pop();\n\n        if (d > dist[u][c]) continue;\n        if (u == Y) {\n            // Como é min-heap ordenado pelo tempo, o primeiro a alcançar Y é o de menor tempo\n            cout << d << \"\\n\";\n            return 0;\n        }\n\n        for (const auto& edge : adj[u]) {\n            int nc = c + edge.cost;\n            if (nc <= V) {\n                if (dist[edge.to][nc] > d + edge.time) {\n                    dist[edge.to][nc] = d + edge.time;\n                    pq.emplace(dist[edge.to][nc], edge.to, nc);\n                }\n            }\n        }\n    }\n\n    cout << -1 << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19088819998432882,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

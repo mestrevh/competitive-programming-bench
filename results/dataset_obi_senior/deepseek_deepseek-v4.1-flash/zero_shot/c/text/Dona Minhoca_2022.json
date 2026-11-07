@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:04:44.562770+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 825,
+            "output_tokens": 22311,
+            "total_tokens": 23136
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.053546,
+            "total_cost": 0.053549
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 1000000000\n\nstatic int N, K;\nstatic int *head, *to, *nxt;\nstatic int *parent, *order, *stack;\nstatic int *maxD, *minD;\nstatic int edgeCnt = 0;\n\nstatic void addEdge(int u, int v) {\n    to[edgeCnt] = v;\n    nxt[edgeCnt] = head[u];\n    head[u] = edgeCnt++;\n}\n\nstatic int feasible(int R) {\n    for (int i = 1; i <= N; ++i) {\n        maxD[i] = 0;\n        minD[i] = INF;\n    }\n\n    int ans = 0;\n\n    for (int idx = N; idx >= 1; --idx) {\n        int u = order[idx];\n        int m = maxD[u];\n        int c = minD[u];\n\n        if (c != INF && m >= 0 && m + c <= R) {\n            m = -INF;\n        }\n\n        if (m == R) {\n            ++ans;\n            if (ans > K) return 0;\n            m = -INF;\n            c = 0;\n        }\n\n        maxD[u] = m;\n        minD[u] = c;\n\n        int p = parent[u];\n        if (p != 0) {\n            if (m >= 0) {\n                int val = m + 1;\n                if (val > maxD[p]) maxD[p] = val;\n            }\n            if (c < INF) {\n                int val = c + 1;\n                if (val < minD[p]) minD[p] = val;\n            }\n        }\n    }\n\n    if (maxD[1] >= 0) ++ans;\n    return ans <= K;\n}\n\nint main(void) {\n    scanf(\"%d %d\", &N, &K);\n\n    head = (int*)malloc((N + 1) * sizeof(int));\n    to = (int*)malloc((2 * N) * sizeof(int));\n    nxt = (int*)malloc((2 * N) * sizeof(int));\n    parent = (int*)malloc((N + 1) * sizeof(int));\n    order = (int*)malloc((N + 1) * sizeof(int));\n    stack = (int*)malloc((N + 1) * sizeof(int));\n    maxD = (int*)malloc((N + 1) * sizeof(int));\n    minD = (int*)malloc((N + 1) * sizeof(int));\n\n    for (int i = 1; i <= N; ++i) head[i] = -1;\n\n    for (int i = 0; i < N - 1; ++i) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        addEdge(a, b);\n        addEdge(b, a);\n    }\n\n    parent[1] = 0;\n    int top = 0;\n    stack[top++] = 1;\n    int cnt = 0;\n\n    while (top > 0) {\n        int u = stack[--top];\n        order[++cnt] = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (v != parent[u]) {\n                parent[v] = u;\n                stack[top++] = v;\n            }\n        }\n    }\n\n    int lo = 0, hi = N;\n    while (lo < hi) {\n        int mid = (lo + hi) / 2;\n        if (feasible(mid)) hi = mid;\n        else lo = mid + 1;\n    }\n\n    printf(\"%d\\n\", lo);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 1000000000\n\nstatic int N, K;\nstatic int *head, *to, *nxt;\nstatic int *parent, *order, *stack;\nstatic int *maxD, *minD;\nstatic int edgeCnt = 0;\n\nstatic void addEdge(int u, int v) {\n    to[edgeCnt] = v;\n    nxt[edgeCnt] = head[u];\n    head[u] = edgeCnt++;\n}\n\nstatic int feasible(int R) {\n    for (int i = 1; i <= N; ++i) {\n        maxD[i] = 0;\n        minD[i] = INF;\n    }\n\n    int ans = 0;\n\n    for (int idx = N; idx >= 1; --idx) {\n        int u = order[idx];\n        int m = maxD[u];\n        int c = minD[u];\n\n        if (c != INF && m >= 0 && m + c <= R) {\n            m = -INF;\n        }\n\n        if (m == R) {\n            ++ans;\n            if (ans > K) return 0;\n            m = -INF;\n            c = 0;\n        }\n\n        maxD[u] = m;\n        minD[u] = c;\n\n        int p = parent[u];\n        if (p != 0) {\n            if (m >= 0) {\n                int val = m + 1;\n                if (val > maxD[p]) maxD[p] = val;\n            }\n            if (c < INF) {\n                int val = c + 1;\n                if (val < minD[p]) minD[p] = val;\n            }\n        }\n    }\n\n    if (maxD[1] >= 0) ++ans;\n    return ans <= K;\n}\n\nint main(void) {\n    scanf(\"%d %d\", &N, &K);\n\n    head = (int*)malloc((N + 1) * sizeof(int));\n    to = (int*)malloc((2 * N) * sizeof(int));\n    nxt = (int*)malloc((2 * N) * sizeof(int));\n    parent = (int*)malloc((N + 1) * sizeof(int));\n    order = (int*)malloc((N + 1) * sizeof(int));\n    stack = (int*)malloc((N + 1) * sizeof(int));\n    maxD = (int*)malloc((N + 1) * sizeof(int));\n    minD = (int*)malloc((N + 1) * sizeof(int));\n\n    for (int i = 1; i <= N; ++i) head[i] = -1;\n\n    for (int i = 0; i < N - 1; ++i) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        addEdge(a, b);\n        addEdge(b, a);\n    }\n\n    parent[1] = 0;\n    int top = 0;\n    stack[top++] = 1;\n    int cnt = 0;\n\n    while (top > 0) {\n        int u = stack[--top];\n        order[++cnt] = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (v != parent[u]) {\n                parent[v] = u;\n                stack[top++] = v;\n            }\n        }\n    }\n\n    int lo = 0, hi = N;\n    while (lo < hi) {\n        int mid = (lo + hi) / 2;\n        if (feasible(mid)) hi = mid;\n        else lo = mid + 1;\n    }\n\n    printf(\"%d\\n\", lo);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2074480000010226,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

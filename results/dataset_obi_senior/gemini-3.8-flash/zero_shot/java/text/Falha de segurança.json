@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:19:42.589506+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 646,
+            "output_tokens": 461,
+            "total_tokens": 2428
+        },
+        "cost_usd": {
+            "input_cost": 0.000485,
+            "output_cost": 0.001729,
+            "total_cost": 0.002213
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.HashMap;\nimport java.util.HashSet;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        if (line == null) return;\n        \n        StringTokenizer tokenizer = new StringTokenizer(line);\n        if (!tokenizer.hasMoreTokens()) return;\n        \n        int n = Integer.parseInt(tokenizer.nextToken());\n        String[] passwords = new String[n];\n        HashMap<String, Integer> freq = new HashMap<>(n * 2);\n\n        for (int i = 0; i < n; i++) {\n            passwords[i] = reader.readLine().trim();\n            freq.put(passwords[i], freq.getOrDefault(passwords[i], 0) + 1);\n        }\n\n        long totalPairs = 0;\n        HashSet<String> uniqueSubstrings = new HashSet<>(64);\n\n        for (int i = 0; i < n; i++) {\n            String s = passwords[i];\n            uniqueSubstrings.clear();\n            int len = s.length();\n            \n            for (int start = 0; start < len; start++) {\n                for (int end = start + 1; end <= len; end++) {\n                    uniqueSubstrings.add(s.substring(start, end));\n                }\n            }\n\n            for (String sub : uniqueSubstrings) {\n                Integer count = freq.get(sub);\n                if (count != null) {\n                    if (sub.equals(s)) {\n                        totalPairs += (count - 1);\n                    } else {\n                        totalPairs += count;\n                    }\n                }\n            }\n        }\n\n        System.out.println(totalPairs);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.HashMap;\nimport java.util.HashSet;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        if (line == null) return;\n        \n        StringTokenizer tokenizer = new StringTokenizer(line);\n        if (!tokenizer.hasMoreTokens()) return;\n        \n        int n = Integer.parseInt(tokenizer.nextToken());\n        String[] passwords = new String[n];\n        HashMap<String, Integer> freq = new HashMap<>(n * 2);\n\n        for (int i = 0; i < n; i++) {\n            passwords[i] = reader.readLine().trim();\n            freq.put(passwords[i], freq.getOrDefault(passwords[i], 0) + 1);\n        }\n\n        long totalPairs = 0;\n        HashSet<String> uniqueSubstrings = new HashSet<>(64);\n\n        for (int i = 0; i < n; i++) {\n            String s = passwords[i];\n            uniqueSubstrings.clear();\n            int len = s.length();\n            \n            for (int start = 0; start < len; start++) {\n                for (int end = start + 1; end <= len; end++) {\n                    uniqueSubstrings.add(s.substring(start, end));\n                }\n            }\n\n            for (String sub : uniqueSubstrings) {\n                Integer count = freq.get(sub);\n                if (count != null) {\n                    if (sub.equals(s)) {\n                        totalPairs += (count - 1);\n                    } else {\n                        totalPairs += count;\n                    }\n                }\n            }\n        }\n\n        System.out.println(totalPairs);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15854629999375902,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

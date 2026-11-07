@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:22:49.505236+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 913,
+            "output_tokens": 29333,
+            "total_tokens": 30246
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.014667,
+            "total_cost": 0.014686
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nstatic char grid[128][128];\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    for (int i = 0; i < L; i++) {\n        scanf(\"%127s\", grid[i]);\n    }\n\n    /* localizar a posicao inicial 'o' */\n    int cr = 0, cc = 0;\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            if (grid[i][j] == 'o') { cr = i; cc = j; }\n        }\n    }\n\n    const int dr[4] = {-1, 1, 0, 0};\n    const int dc[4] = {0, 0, -1, 1};\n\n    int pr = -1, pc = -1; /* celula de onde viemos */\n    long guard = (long)L * (long)C + 10; /* caminho simples tem no maximo L*C celulas */\n\n    while (guard-- > 0) {\n        int nr = -1, nc = -1;\n        for (int d = 0; d < 4; d++) {\n            int r2 = cr + dr[d];\n            int c2 = cc + dc[d];\n            if (r2 < 0 || r2 >= L || c2 < 0 || c2 >= C) continue;\n            if (grid[r2][c2] != 'H') continue;\n            if (r2 == pr && c2 == pc) continue; /* nao voltar */\n            nr = r2; nc = c2;\n            break; /* pelas garantias do problema, ha no maximo um candidato */\n        }\n        if (nr < 0) break; /* fim do trajeto */\n        pr = cr; pc = cc;\n        cr = nr; cc = nc;\n    }\n\n    printf(\"%d %d\\n\", cr + 1, cc + 1);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nstatic char grid[128][128];\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    for (int i = 0; i < L; i++) {\n        scanf(\"%127s\", grid[i]);\n    }\n\n    /* localizar a posicao inicial 'o' */\n    int cr = 0, cc = 0;\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            if (grid[i][j] == 'o') { cr = i; cc = j; }\n        }\n    }\n\n    const int dr[4] = {-1, 1, 0, 0};\n    const int dc[4] = {0, 0, -1, 1};\n\n    int pr = -1, pc = -1; /* celula de onde viemos */\n    long guard = (long)L * (long)C + 10; /* caminho simples tem no maximo L*C celulas */\n\n    while (guard-- > 0) {\n        int nr = -1, nc = -1;\n        for (int d = 0; d < 4; d++) {\n            int r2 = cr + dr[d];\n            int c2 = cc + dc[d];\n            if (r2 < 0 || r2 >= L || c2 < 0 || c2 >= C) continue;\n            if (grid[r2][c2] != 'H') continue;\n            if (r2 == pr && c2 == pc) continue; /* nao voltar */\n            nr = r2; nc = c2;\n            break; /* pelas garantias do problema, ha no maximo um candidato */\n        }\n        if (nr < 0) break; /* fim do trajeto */\n        pr = cr; pc = cc;\n        cr = nr; cc = nc;\n    }\n\n    printf(\"%d %d\\n\", cr + 1, cc + 1);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17433549999259412,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

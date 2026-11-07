@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:18:37.821236+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1123,
+            "output_tokens": 705,
+            "total_tokens": 4611
+        },
+        "cost_usd": {
+            "input_cost": 0.000842,
+            "output_cost": 0.002644,
+            "total_cost": 0.003486
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        private int read() {\n            if (ptr >= len) {\n                try {\n                    len = in.read(buffer);\n                    ptr = 0;\n                } catch (IOException e) {\n                    throw new RuntimeException(e);\n                }\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        public int nextInt() {\n            int c = read();\n            while (c <= ' ' && c != -1) {\n                c = read();\n            }\n            if (c == -1) return -1;\n            int sgn = 1;\n            if (c == '-') {\n                sgn = -1;\n                c = read();\n            }\n            int res = 0;\n            while (c >= '0' && c <= '9') {\n                res = res * 10 + (c - '0');\n                c = read();\n            }\n            return res * sgn;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n\n        int[] a = new int[n];\n        for (int i = 0; i < n; i++) {\n            a[i] = scanner.nextInt();\n        }\n\n        int[] left = new int[n];\n        final int INF = 1_000_000_000;\n\n        int current = INF;\n        for (int i = 0; i < n; i++) {\n            if (current < INF) {\n                current++;\n            }\n            if (a[i] != -1) {\n                current = Math.min(current, a[i]);\n            }\n            left[i] = current;\n        }\n\n        int[] right = new int[n];\n        current = INF;\n        for (int i = n - 1; i >= 0; i--) {\n            if (current < INF) {\n                current++;\n            }\n            if (a[i] != -1) {\n                current = Math.min(current, a[i]);\n            }\n            right[i] = current;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < n; i++) {\n            int ans = Math.min(left[i], right[i]);\n            sb.append(ans);\n            if (i < n - 1) {\n                sb.append(' ');\n            }\n        }\n        sb.append('\\n');\n        System.out.print(sb.toString());\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        private int read() {\n            if (ptr >= len) {\n                try {\n                    len = in.read(buffer);\n                    ptr = 0;\n                } catch (IOException e) {\n                    throw new RuntimeException(e);\n                }\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        public int nextInt() {\n            int c = read();\n            while (c <= ' ' && c != -1) {\n                c = read();\n            }\n            if (c == -1) return -1;\n            int sgn = 1;\n            if (c == '-') {\n                sgn = -1;\n                c = read();\n            }\n            int res = 0;\n            while (c >= '0' && c <= '9') {\n                res = res * 10 + (c - '0');\n                c = read();\n            }\n            return res * sgn;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n\n        int[] a = new int[n];\n        for (int i = 0; i < n; i++) {\n            a[i] = scanner.nextInt();\n        }\n\n        int[] left = new int[n];\n        final int INF = 1_000_000_000;\n\n        int current = INF;\n        for (int i = 0; i < n; i++) {\n            if (current < INF) {\n                current++;\n            }\n            if (a[i] != -1) {\n                current = Math.min(current, a[i]);\n            }\n            left[i] = current;\n        }\n\n        int[] right = new int[n];\n        current = INF;\n        for (int i = n - 1; i >= 0; i--) {\n            if (current < INF) {\n                current++;\n            }\n            if (a[i] != -1) {\n                current = Math.min(current, a[i]);\n            }\n            right[i] = current;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < n; i++) {\n            int ans = Math.min(left[i], right[i]);\n            sb.append(ans);\n            if (i < n - 1) {\n                sb.append(' ');\n            }\n        }\n        sb.append('\\n');\n        System.out.print(sb.toString());\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11212549998890609,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

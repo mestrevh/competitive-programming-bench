@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:18:10.871634+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 839,
+            "output_tokens": 273,
+            "total_tokens": 2747
+        },
+        "cost_usd": {
+            "input_cost": 0.000629,
+            "output_cost": 0.001024,
+            "total_cost": 0.001653
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    strings = input_data[1:]\n\n    seen_full = set()\n    seen_prefixes = set()\n    seen_suffixes = set()\n\n    for s in strings:\n        # Check if s can be formed\n        invalid = False\n        if s in seen_full:\n            invalid = True\n        else:\n            for j in range(1, 10):\n                pref = s[:j]\n                suff = s[j:]\n                if pref in seen_suffixes and suff in seen_prefixes:\n                    invalid = True\n                    break\n\n        if invalid:\n            print(s)\n            return\n\n        # If not invalid, add its prefixes, suffixes, and full string\n        seen_full.add(s)\n        for j in range(1, 10):\n            seen_prefixes.add(s[:j])\n            seen_suffixes.add(s[10 - j :])\n\n    print(\"ok\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    strings = input_data[1:]\n\n    seen_full = set()\n    seen_prefixes = set()\n    seen_suffixes = set()\n\n    for s in strings:\n        # Check if s can be formed\n        invalid = False\n        if s in seen_full:\n            invalid = True\n        else:\n            for j in range(1, 10):\n                pref = s[:j]\n                suff = s[j:]\n                if pref in seen_suffixes and suff in seen_prefixes:\n                    invalid = True\n                    break\n\n        if invalid:\n            print(s)\n            return\n\n        # If not invalid, add its prefixes, suffixes, and full string\n        seen_full.add(s)\n        for j in range(1, 10):\n            seen_prefixes.add(s[:j])\n            seen_suffixes.add(s[10 - j :])\n\n    print(\"ok\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11990840000362368,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

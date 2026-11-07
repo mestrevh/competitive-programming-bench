@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:09:22.772979+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 529,
+            "output_tokens": 2411,
+            "total_tokens": 2940
+        },
+        "cost_usd": {
+            "input_cost": 1.1e-05,
+            "output_cost": 0.001205,
+            "total_cost": 0.001217
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nlet data;\ntry {\n  data = fs.readFileSync('/dev/stdin', 'utf8');\n} catch (e) {\n  data = fs.readFileSync(0, 'utf8');\n}\n\nconst lines = data.split('\\n');\nconst n = parseInt(lines[0], 10);\nconst s = (lines[1] || '').trim();\nconst len = s.length;\n\n// Expande ao redor de um centro (ímpar: l === r; par: l === r - 1)\nfunction expand(l, r) {\n  while (l >= 0 && r < len && s[l] === s[r]) {\n    l--;\n    r++;\n  }\n  return r - l - 1;\n}\n\nlet best = len > 0 ? 1 : 0;\nfor (let i = 0; i < len; i++) {\n  const odd = expand(i, i);       // palíndromo de comprimento ímpar centrado em i\n  const even = expand(i, i + 1);  // palíndromo de comprimento par centrado entre i e i+1\n  if (odd > best) best = odd;\n  if (even > best) best = even;\n}\n\nconsole.log(best);\n```",
+        "extracted_code": "const fs = require('fs');\n\nlet data;\ntry {\n  data = fs.readFileSync('/dev/stdin', 'utf8');\n} catch (e) {\n  data = fs.readFileSync(0, 'utf8');\n}\n\nconst lines = data.split('\\n');\nconst n = parseInt(lines[0], 10);\nconst s = (lines[1] || '').trim();\nconst len = s.length;\n\n// Expande ao redor de um centro (ímpar: l === r; par: l === r - 1)\nfunction expand(l, r) {\n  while (l >= 0 && r < len && s[l] === s[r]) {\n    l--;\n    r++;\n  }\n  return r - l - 1;\n}\n\nlet best = len > 0 ? 1 : 0;\nfor (let i = 0; i < len; i++) {\n  const odd = expand(i, i);       // palíndromo de comprimento ímpar centrado em i\n  const even = expand(i, i + 1);  // palíndromo de comprimento par centrado entre i e i+1\n  if (odd > best) best = odd;\n  if (even > best) best = even;\n}\n\nconsole.log(best);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05053730000508949,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

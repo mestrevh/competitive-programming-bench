@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:33:28.799164+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 736,
+            "output_tokens": 6357,
+            "total_tokens": 7093
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.015257,
+            "total_cost": 0.015259
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] first = br.readLine().trim().split(\"\\\\s+\");\n        int N = Integer.parseInt(first[0]);\n        double D = Double.parseDouble(first[1]);\n\n        double[] P = new double[N];\n        double[] C = new double[N];\n\n        for (int i = 0; i < N; i++) {\n            String[] line = br.readLine().trim().split(\"\\\\s+\");\n            P[i] = Double.parseDouble(line[0]);\n            C[i] = Double.parseDouble(line[1]);\n        }\n\n        double[] dp = new double[N];\n        Arrays.fill(dp, Double.POSITIVE_INFINITY);\n        dp[0] = 0.0;\n\n        for (int j = 1; j < N; j++) {\n            double best = Double.POSITIVE_INFINITY;\n            for (int i = 0; i < j; i++) {\n                double dist = P[j] - P[i];\n                double cost = dp[i] + (dist * dist) / C[i];\n                if (cost < best) best = cost;\n            }\n            dp[j] = best;\n        }\n\n        double ans = Double.POSITIVE_INFINITY;\n        for (int i = 0; i < N; i++) {\n            double dist = D - P[i];\n            double cost = dp[i] + (dist * dist) / C[i];\n            if (cost < ans) ans = cost;\n        }\n\n        System.out.printf(Locale.US, \"%.3f\\n\", ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] first = br.readLine().trim().split(\"\\\\s+\");\n        int N = Integer.parseInt(first[0]);\n        double D = Double.parseDouble(first[1]);\n\n        double[] P = new double[N];\n        double[] C = new double[N];\n\n        for (int i = 0; i < N; i++) {\n            String[] line = br.readLine().trim().split(\"\\\\s+\");\n            P[i] = Double.parseDouble(line[0]);\n            C[i] = Double.parseDouble(line[1]);\n        }\n\n        double[] dp = new double[N];\n        Arrays.fill(dp, Double.POSITIVE_INFINITY);\n        dp[0] = 0.0;\n\n        for (int j = 1; j < N; j++) {\n            double best = Double.POSITIVE_INFINITY;\n            for (int i = 0; i < j; i++) {\n                double dist = P[j] - P[i];\n                double cost = dp[i] + (dist * dist) / C[i];\n                if (cost < best) best = cost;\n            }\n            dp[j] = best;\n        }\n\n        double ans = Double.POSITIVE_INFINITY;\n        for (int i = 0; i < N; i++) {\n            double dist = D - P[i];\n            double cost = dp[i] + (dist * dist) / C[i];\n            if (cost < ans) ans = cost;\n        }\n\n        System.out.printf(Locale.US, \"%.3f\\n\", ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11599329998716712,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

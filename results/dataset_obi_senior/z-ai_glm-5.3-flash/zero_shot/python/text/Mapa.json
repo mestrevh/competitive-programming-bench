@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T08:26:54.568868+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 913,
+            "output_tokens": 35757,
+            "total_tokens": 36670
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.017878,
+            "total_cost": 0.017898
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    L = int(data[0])\n    C = int(data[1])\n    grid = [data[2 + i].ljust(C, '.') for i in range(L)]\n\n    # localiza a posição inicial 'o'\n    r = c = 0\n    for i in range(L):\n        j = grid[i].find('o')\n        if j != -1:\n            r, c = i, j\n            break\n\n    prev_r, prev_c = -1, -1\n    limit = L * C + 1\n    steps = 0\n    while steps < limit:\n        nxt = None\n        cnt = 0\n        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n            ar, ac = r + dr, c + dc\n            if 0 <= ar < L and 0 <= ac < C and grid[ar][ac] == 'H' and not (ar == prev_r and ac == prev_c):\n                cnt += 1\n                if cnt == 1:\n                    nxt = (ar, ac)\n                else:\n                    break\n        if cnt == 0:\n            break  # posição atual de Hermione encontrada\n        prev_r, prev_c = r, c\n        r, c = nxt\n        steps += 1\n\n    print(r + 1, c + 1)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    L = int(data[0])\n    C = int(data[1])\n    grid = [data[2 + i].ljust(C, '.') for i in range(L)]\n\n    # localiza a posição inicial 'o'\n    r = c = 0\n    for i in range(L):\n        j = grid[i].find('o')\n        if j != -1:\n            r, c = i, j\n            break\n\n    prev_r, prev_c = -1, -1\n    limit = L * C + 1\n    steps = 0\n    while steps < limit:\n        nxt = None\n        cnt = 0\n        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n            ar, ac = r + dr, c + dc\n            if 0 <= ar < L and 0 <= ac < C and grid[ar][ac] == 'H' and not (ar == prev_r and ac == prev_c):\n                cnt += 1\n                if cnt == 1:\n                    nxt = (ar, ac)\n                else:\n                    break\n        if cnt == 0:\n            break  # posição atual de Hermione encontrada\n        prev_r, prev_c = r, c\n        r, c = nxt\n        steps += 1\n\n    print(r + 1, c + 1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07982360000096378,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

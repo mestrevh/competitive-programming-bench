@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:17:36.216660+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 726,
+            "output_tokens": 8663,
+            "total_tokens": 9389
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.020791,
+            "total_cost": 0.020793
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst buf = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n    while (pos < buf.length && buf[pos] <= 32) pos++;\n    let sign = 1;\n    if (buf[pos] === 45) {\n        sign = -1;\n        pos++;\n    }\n    let num = 0;\n    while (pos < buf.length && buf[pos] > 32) {\n        num = num * 10 + (buf[pos] - 48);\n        pos++;\n    }\n    return num * sign;\n}\n\nconst L = nextInt();\nconst C = nextInt();\n\nlet prev = new Int32Array(C);\nlet curr = new Int32Array(C);\n\nfor (let j = 0; j < C; j++) {\n    prev[j] = nextInt();\n}\n\nconst n = C - 1;\nconst heights = new Int32Array(n);\nconst stackH = new Int32Array(n + 1);\nconst stackS = new Int32Array(n + 1);\n\nlet ans = Math.max(L, C);\n\nfor (let i = 0; i < L - 1; i++) {\n    for (let j = 0; j < C; j++) {\n        curr[j] = nextInt();\n    }\n\n    for (let j = 0; j < n; j++) {\n        if (prev[j] + curr[j + 1] > prev[j + 1] + curr[j]) {\n            heights[j] = 0;\n        } else {\n            heights[j]++;\n        }\n    }\n\n    let top = 0;\n\n    for (let j = 0; j <= n; j++) {\n        const cur = j < n ? heights[j] : 0;\n        let start = j;\n\n        while (top > 0 && stackH[top - 1] > cur) {\n            top--;\n            const h = stackH[top];\n            const st = stackS[top];\n            const area = (h + 1) * (j - st + 1);\n            if (area > ans) ans = area;\n            start = st;\n        }\n\n        if (cur > 0 && (top === 0 || stackH[top - 1] < cur)) {\n            stackH[top] = cur;\n            stackS[top] = start;\n            top++;\n        }\n    }\n\n    const tmp = prev;\n    prev = curr;\n    curr = tmp;\n}\n\nprocess.stdout.write(String(ans));\n```",
+        "extracted_code": "const fs = require('fs');\nconst buf = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n    while (pos < buf.length && buf[pos] <= 32) pos++;\n    let sign = 1;\n    if (buf[pos] === 45) {\n        sign = -1;\n        pos++;\n    }\n    let num = 0;\n    while (pos < buf.length && buf[pos] > 32) {\n        num = num * 10 + (buf[pos] - 48);\n        pos++;\n    }\n    return num * sign;\n}\n\nconst L = nextInt();\nconst C = nextInt();\n\nlet prev = new Int32Array(C);\nlet curr = new Int32Array(C);\n\nfor (let j = 0; j < C; j++) {\n    prev[j] = nextInt();\n}\n\nconst n = C - 1;\nconst heights = new Int32Array(n);\nconst stackH = new Int32Array(n + 1);\nconst stackS = new Int32Array(n + 1);\n\nlet ans = Math.max(L, C);\n\nfor (let i = 0; i < L - 1; i++) {\n    for (let j = 0; j < C; j++) {\n        curr[j] = nextInt();\n    }\n\n    for (let j = 0; j < n; j++) {\n        if (prev[j] + curr[j + 1] > prev[j + 1] + curr[j]) {\n            heights[j] = 0;\n        } else {\n            heights[j]++;\n        }\n    }\n\n    let top = 0;\n\n    for (let j = 0; j <= n; j++) {\n        const cur = j < n ? heights[j] : 0;\n        let start = j;\n\n        while (top > 0 && stackH[top - 1] > cur) {\n            top--;\n            const h = stackH[top];\n            const st = stackS[top];\n            const area = (h + 1) * (j - st + 1);\n            if (area > ans) ans = area;\n            start = st;\n        }\n\n        if (cur > 0 && (top === 0 || stackH[top - 1] < cur)) {\n            stackH[top] = cur;\n            stackS[top] = start;\n            top++;\n        }\n    }\n\n    const tmp = prev;\n    prev = curr;\n    curr = tmp;\n}\n\nprocess.stdout.write(String(ans));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10329410000122152,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

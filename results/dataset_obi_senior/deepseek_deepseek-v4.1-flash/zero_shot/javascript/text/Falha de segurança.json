@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:58:01.882037+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 721,
+            "output_tokens": 4552,
+            "total_tokens": 5273
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.010925,
+            "total_cost": 0.010927
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  if (data.length === 0) return;\n\n  const n = parseInt(data[0], 10);\n  const arr = data.slice(1, 1 + n);\n\n  const freq = new Map();\n  for (const s of arr) {\n    freq.set(s, (freq.get(s) || 0) + 1);\n  }\n\n  let ans = 0;\n\n  for (const s of arr) {\n    const substrings = new Set();\n    const len = s.length;\n\n    for (let i = 0; i < len; i++) {\n      for (let j = i + 1; j <= len; j++) {\n        substrings.add(s.slice(i, j));\n      }\n    }\n\n    let total = 0;\n    for (const sub of substrings) {\n      total += freq.get(sub) || 0;\n    }\n\n    ans += total - 1;\n  }\n\n  console.log(ans);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  if (data.length === 0) return;\n\n  const n = parseInt(data[0], 10);\n  const arr = data.slice(1, 1 + n);\n\n  const freq = new Map();\n  for (const s of arr) {\n    freq.set(s, (freq.get(s) || 0) + 1);\n  }\n\n  let ans = 0;\n\n  for (const s of arr) {\n    const substrings = new Set();\n    const len = s.length;\n\n    for (let i = 0; i < len; i++) {\n      for (let j = i + 1; j <= len; j++) {\n        substrings.add(s.slice(i, j));\n      }\n    }\n\n    let total = 0;\n    for (const sub of substrings) {\n      total += freq.get(sub) || 0;\n    }\n\n    ans += total - 1;\n  }\n\n  console.log(ans);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10891760000959039,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

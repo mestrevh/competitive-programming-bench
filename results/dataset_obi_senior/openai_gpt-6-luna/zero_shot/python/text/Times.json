@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:50:50.862310+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 781,
+            "output_tokens": 1114,
+            "total_tokens": 1895
+        },
+        "cost_usd": {
+            "input_cost": 7.8e-05,
+            "output_cost": 0.000557,
+            "total_cost": 0.000635
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nit = iter(data)\n\nn = next(it)\ngraph = [[] for _ in range(n)]\n\nfor u in range(n):\n    m = next(it)\n    for _ in range(m):\n        v = next(it) - 1\n        graph[u].append(v)\n\ncolor = bytearray(n)\ncolor[0] = 1\nstack = [0]\n\nwhile stack:\n    u = stack.pop()\n    next_color = 3 - color[u]\n    for v in graph[u]:\n        if color[v] == 0:\n            color[v] = next_color\n            stack.append(v)\n\nteam1 = []\nteam2 = []\n\nfor i, c in enumerate(color, 1):\n    if c == 1:\n        team1.append(str(i))\n    else:\n        team2.append(str(i))\n\nsys.stdout.write(\" \".join(team1) + \"\\n\" + \" \".join(team2) + \"\\n\")\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nit = iter(data)\n\nn = next(it)\ngraph = [[] for _ in range(n)]\n\nfor u in range(n):\n    m = next(it)\n    for _ in range(m):\n        v = next(it) - 1\n        graph[u].append(v)\n\ncolor = bytearray(n)\ncolor[0] = 1\nstack = [0]\n\nwhile stack:\n    u = stack.pop()\n    next_color = 3 - color[u]\n    for v in graph[u]:\n        if color[v] == 0:\n            color[v] = next_color\n            stack.append(v)\n\nteam1 = []\nteam2 = []\n\nfor i, c in enumerate(color, 1):\n    if c == 1:\n        team1.append(str(i))\n    else:\n        team2.append(str(i))\n\nsys.stdout.write(\" \".join(team1) + \"\\n\" + \" \".join(team2) + \"\\n\")",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.291357699999935,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:16:12.809994+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1849,
+            "output_tokens": 27139,
+            "total_tokens": 28988
+        },
+        "cost_usd": {
+            "input_cost": 6e-06,
+            "output_cost": 0.065134,
+            "total_cost": 0.065139
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n\n    p = [0] * (N + 1)\n    children = [[] for _ in range(N + 1)]\n\n    for i in range(2, N + 1):\n        pi = next(it)\n        p[i] = pi\n        children[pi].append(i)\n\n    Q = next(it)\n\n    LOG = (N + 1).bit_length()\n    up = [[0] * (N + 1) for _ in range(LOG)]\n\n    for i in range(2, N + 1):\n        up[0][i] = p[i]\n\n    for j in range(1, LOG):\n        prev = up[j - 1]\n        curr = up[j]\n        for i in range(1, N + 1):\n            pi = prev[i]\n            if pi:\n                curr[i] = prev[pi]\n\n    def kth_ancestor(v, k):\n        j = 0\n        while k:\n            if k & 1:\n                v = up[j][v]\n                if v == 0:\n                    return 0\n            k >>= 1\n            j += 1\n        return v\n\n    tin = [0] * (N + 1)\n    tout = [0] * (N + 1)\n    node_at = [0] * (N + 1)\n\n    timer = 0\n    stack = [(1, 0)]\n\n    while stack:\n        v, state = stack.pop()\n        if state == 0:\n            timer += 1\n            tin[v] = timer\n            node_at[timer] = v\n            stack.append((v, 1))\n            for c in reversed(children[v]):\n                stack.append((c, 0))\n        else:\n            tout[v] = timer\n\n    bit = [0] * (N + 2)\n\n    def bit_add(i, delta):\n        while i <= N:\n            bit[i] += delta\n            i += i & -i\n\n    def bit_sum(i):\n        s = 0\n        while i > 0:\n            s += bit[i]\n            i -= i & -i\n        return s\n\n    def bit_kth(k):\n        idx = 0\n        bitmask = 1 << (N.bit_length() - 1)\n        while bitmask:\n            nxt = idx + bitmask\n            if nxt <= N and bit[nxt] < k:\n                idx = nxt\n                k -= bit[nxt]\n            bitmask >>= 1\n        return idx + 1\n\n    out = []\n\n    for _ in range(Q):\n        typ = next(it)\n\n        if typ == 1:\n            v = next(it)\n            k = next(it)\n\n            idx = tin[v]\n            cnt = bit_sum(idx)\n            special = 0\n\n            if cnt:\n                a_tin = bit_kth(cnt)\n                a = node_at[a_tin]\n                if tout[a] >= idx and a != v:\n                    special = a\n\n            if special:\n                ans = kth_ancestor(special, k - 1)\n            else:\n                ans = kth_ancestor(v, k)\n\n            out.append(str(ans))\n\n        else:\n            v = next(it)\n            idx = tin[v]\n\n            cnt = bit_sum(idx)\n            inside = False\n\n            if cnt:\n                a_tin = bit_kth(cnt)\n                a = node_at[a_tin]\n                if tout[a] >= idx:\n                    inside = True\n\n            if not inside:\n                L = idx\n                R = tout[v]\n\n                while True:\n                    cntL = bit_sum(L - 1)\n                    cntR = bit_sum(R)\n                    if cntR - cntL <= 0:\n                        break\n                    first_idx = bit_kth(cntL + 1)\n                    bit_add(first_idx, -1)\n\n                bit_add(L, 1)\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n\n    p = [0] * (N + 1)\n    children = [[] for _ in range(N + 1)]\n\n    for i in range(2, N + 1):\n        pi = next(it)\n        p[i] = pi\n        children[pi].append(i)\n\n    Q = next(it)\n\n    LOG = (N + 1).bit_length()\n    up = [[0] * (N + 1) for _ in range(LOG)]\n\n    for i in range(2, N + 1):\n        up[0][i] = p[i]\n\n    for j in range(1, LOG):\n        prev = up[j - 1]\n        curr = up[j]\n        for i in range(1, N + 1):\n            pi = prev[i]\n            if pi:\n                curr[i] = prev[pi]\n\n    def kth_ancestor(v, k):\n        j = 0\n        while k:\n            if k & 1:\n                v = up[j][v]\n                if v == 0:\n                    return 0\n            k >>= 1\n            j += 1\n        return v\n\n    tin = [0] * (N + 1)\n    tout = [0] * (N + 1)\n    node_at = [0] * (N + 1)\n\n    timer = 0\n    stack = [(1, 0)]\n\n    while stack:\n        v, state = stack.pop()\n        if state == 0:\n            timer += 1\n            tin[v] = timer\n            node_at[timer] = v\n            stack.append((v, 1))\n            for c in reversed(children[v]):\n                stack.append((c, 0))\n        else:\n            tout[v] = timer\n\n    bit = [0] * (N + 2)\n\n    def bit_add(i, delta):\n        while i <= N:\n            bit[i] += delta\n            i += i & -i\n\n    def bit_sum(i):\n        s = 0\n        while i > 0:\n            s += bit[i]\n            i -= i & -i\n        return s\n\n    def bit_kth(k):\n        idx = 0\n        bitmask = 1 << (N.bit_length() - 1)\n        while bitmask:\n            nxt = idx + bitmask\n            if nxt <= N and bit[nxt] < k:\n                idx = nxt\n                k -= bit[nxt]\n            bitmask >>= 1\n        return idx + 1\n\n    out = []\n\n    for _ in range(Q):\n        typ = next(it)\n\n        if typ == 1:\n            v = next(it)\n            k = next(it)\n\n            idx = tin[v]\n            cnt = bit_sum(idx)\n            special = 0\n\n            if cnt:\n                a_tin = bit_kth(cnt)\n                a = node_at[a_tin]\n                if tout[a] >= idx and a != v:\n                    special = a\n\n            if special:\n                ans = kth_ancestor(special, k - 1)\n            else:\n                ans = kth_ancestor(v, k)\n\n            out.append(str(ans))\n\n        else:\n            v = next(it)\n            idx = tin[v]\n\n            cnt = bit_sum(idx)\n            inside = False\n\n            if cnt:\n                a_tin = bit_kth(cnt)\n                a = node_at[a_tin]\n                if tout[a] >= idx:\n                    inside = True\n\n            if not inside:\n                L = idx\n                R = tout[v]\n\n                while True:\n                    cntL = bit_sum(L - 1)\n                    cntR = bit_sum(R)\n                    if cntR - cntL <= 0:\n                        break\n                    first_idx = bit_kth(cntL + 1)\n                    bit_add(first_idx, -1)\n\n                bit_add(L, 1)\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.37480170000344515,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

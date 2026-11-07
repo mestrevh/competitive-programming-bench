@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T10:48:05.863918+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1234,
+            "output_tokens": 401,
+            "total_tokens": 1635
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.0002,
+            "total_cost": 0.000227
+        },
+        "raw_response": "```python\nimport sys, heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    V = int(data[idx]); idx += 1\n    N = int(data[idx]); idx += 1\n    M = int(data[idx]); idx += 1\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(M):\n        a = int(data[idx]); idx += 1\n        b = int(data[idx]); idx += 1\n        t = int(data[idx]); idx += 1\n        p = int(data[idx]); idx += 1\n        adj[a].append((b, t, p))\n        adj[b].append((a, t, p))\n    X = int(data[idx]); idx += 1\n    Y = int(data[idx]); idx += 1\n\n    INF = float('inf')\n    # dist[node][money_left]\n    dist = [[INF] * (V + 1) for _ in range(N + 1)]\n    dist[X][V] = 0\n    heap = [(0, X, V)]\n    while heap:\n        d, u, m = heapq.heappop(heap)\n        if d > dist[u][m]:\n            continue\n        if u == Y:\n            print(d)\n            return\n        for v, t, p in adj[u]:\n            nm = m - p\n            if nm >= 0 and d + t < dist[v][nm]:\n                dist[v][nm] = d + t\n                heapq.heappush(heap, (d + t, v, nm))\n    print(-1)\n\nmain()\n```",
+        "extracted_code": "import sys, heapq\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    V = int(data[idx]); idx += 1\n    N = int(data[idx]); idx += 1\n    M = int(data[idx]); idx += 1\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(M):\n        a = int(data[idx]); idx += 1\n        b = int(data[idx]); idx += 1\n        t = int(data[idx]); idx += 1\n        p = int(data[idx]); idx += 1\n        adj[a].append((b, t, p))\n        adj[b].append((a, t, p))\n    X = int(data[idx]); idx += 1\n    Y = int(data[idx]); idx += 1\n\n    INF = float('inf')\n    # dist[node][money_left]\n    dist = [[INF] * (V + 1) for _ in range(N + 1)]\n    dist[X][V] = 0\n    heap = [(0, X, V)]\n    while heap:\n        d, u, m = heapq.heappop(heap)\n        if d > dist[u][m]:\n            continue\n        if u == Y:\n            print(d)\n            return\n        for v, t, p in adj[u]:\n            nm = m - p\n            if nm >= 0 and d + t < dist[v][nm]:\n                dist[v][nm] = d + t\n                heapq.heappush(heap, (d + t, v, nm))\n    print(-1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0922467999989749,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

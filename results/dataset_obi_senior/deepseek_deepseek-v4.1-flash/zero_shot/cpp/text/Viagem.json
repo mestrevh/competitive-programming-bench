@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T21:03:54.703930+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1266,
+            "output_tokens": 2626,
+            "total_tokens": 3892
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.006302,
+            "total_cost": 0.006306
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    int to;\n    int time;\n    int cost;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int V, N, M;\n    if (!(cin >> V >> N >> M)) return 0;\n\n    vector<vector<Edge>> adj(N + 1);\n\n    for (int i = 0; i < M; ++i) {\n        int A, B, T, P;\n        cin >> A >> B >> T >> P;\n        adj[A].push_back({B, T, P});\n        adj[B].push_back({A, T, P});\n    }\n\n    int X, Y;\n    cin >> X >> Y;\n\n    const long long INF = (1LL << 60);\n    int W = N + 1;\n\n    vector<long long> dist((V + 1) * W, INF);\n    auto id = [&](int cost, int node) {\n        return cost * W + node;\n    };\n\n    priority_queue<\n        tuple<long long, int, int>,\n        vector<tuple<long long, int, int>>,\n        greater<tuple<long long, int, int>>\n    > pq;\n\n    dist[id(0, X)] = 0;\n    pq.emplace(0, X, 0);\n\n    long long answer = -1;\n\n    while (!pq.empty()) {\n        auto [currentTime, u, currentCost] = pq.top();\n        pq.pop();\n\n        if (currentTime != dist[id(currentCost, u)]) continue;\n\n        if (u == Y) {\n            answer = currentTime;\n            break;\n        }\n\n        for (const Edge &e : adj[u]) {\n            int newCost = currentCost + e.cost;\n            if (newCost > V) continue;\n\n            long long newTime = currentTime + e.time;\n            int idx = id(newCost, e.to);\n\n            if (newTime < dist[idx]) {\n                dist[idx] = newTime;\n                pq.emplace(newTime, e.to, newCost);\n            }\n        }\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    int to;\n    int time;\n    int cost;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int V, N, M;\n    if (!(cin >> V >> N >> M)) return 0;\n\n    vector<vector<Edge>> adj(N + 1);\n\n    for (int i = 0; i < M; ++i) {\n        int A, B, T, P;\n        cin >> A >> B >> T >> P;\n        adj[A].push_back({B, T, P});\n        adj[B].push_back({A, T, P});\n    }\n\n    int X, Y;\n    cin >> X >> Y;\n\n    const long long INF = (1LL << 60);\n    int W = N + 1;\n\n    vector<long long> dist((V + 1) * W, INF);\n    auto id = [&](int cost, int node) {\n        return cost * W + node;\n    };\n\n    priority_queue<\n        tuple<long long, int, int>,\n        vector<tuple<long long, int, int>>,\n        greater<tuple<long long, int, int>>\n    > pq;\n\n    dist[id(0, X)] = 0;\n    pq.emplace(0, X, 0);\n\n    long long answer = -1;\n\n    while (!pq.empty()) {\n        auto [currentTime, u, currentCost] = pq.top();\n        pq.pop();\n\n        if (currentTime != dist[id(currentCost, u)]) continue;\n\n        if (u == Y) {\n            answer = currentTime;\n            break;\n        }\n\n        for (const Edge &e : adj[u]) {\n            int newCost = currentCost + e.cost;\n            if (newCost > V) continue;\n\n            long long newTime = currentTime + e.time;\n            int idx = id(newCost, e.to);\n\n            if (newTime < dist[idx]) {\n                dist[idx] = newTime;\n                pq.emplace(newTime, e.to, newCost);\n            }\n        }\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20892160000221338,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

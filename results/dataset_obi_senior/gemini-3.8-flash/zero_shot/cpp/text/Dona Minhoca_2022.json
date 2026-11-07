@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:27:46.418529+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 752,
+            "output_tokens": 776,
+            "total_tokens": 3905
+        },
+        "cost_usd": {
+            "input_cost": 0.000564,
+            "output_cost": 0.00291,
+            "total_cost": 0.003474
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, k;\n    if (!(cin >> n >> k)) return 0;\n\n    vector<vector<int>> adj(n + 1);\n    for (int i = 0; i < n - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n\n    if (k >= n) {\n        cout << 0 << \"\\n\";\n        return 0;\n    }\n\n    // BFS para determinar a ordem de pós-ordem e os pais\n    vector<int> order;\n    order.reserve(n);\n    vector<int> parent(n + 1, 0);\n    vector<bool> visited(n + 1, false);\n\n    order.push_back(1);\n    visited[1] = true;\n\n    int head = 0;\n    while (head < (int)order.size()) {\n        int u = order[head++];\n        for (int v : adj[u]) {\n            if (!visited[v]) {\n                visited[v] = true;\n                parent[v] = u;\n                order.push_back(v);\n            }\n        }\n    }\n\n    auto check = [&](int R) -> bool {\n        vector<int> max_uncovered(n + 1, 0);\n        vector<int> max_cover(n + 1, -1);\n        int radars = 0;\n\n        for (int i = n - 1; i >= 0; --i) {\n            int u = order[i];\n\n            if (max_cover[u] >= max_uncovered[u]) {\n                max_uncovered[u] = -1;\n            }\n\n            if (max_uncovered[u] == R) {\n                radars++;\n                max_cover[u] = R;\n                max_uncovered[u] = -1;\n            }\n\n            int p = parent[u];\n            if (p != 0) {\n                if (max_uncovered[u] >= 0) {\n                    max_uncovered[p] = max(max_uncovered[p], max_uncovered[u] + 1);\n                }\n                if (max_cover[u] > 0) {\n                    max_cover[p] = max(max_cover[p], max_cover[u] - 1);\n                }\n            }\n        }\n\n        if (max_uncovered[1] >= 0) {\n            radars++;\n        }\n\n        return radars <= k;\n    };\n\n    int low = 0, high = n, ans = n;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (check(mid)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, k;\n    if (!(cin >> n >> k)) return 0;\n\n    vector<vector<int>> adj(n + 1);\n    for (int i = 0; i < n - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n\n    if (k >= n) {\n        cout << 0 << \"\\n\";\n        return 0;\n    }\n\n    // BFS para determinar a ordem de pós-ordem e os pais\n    vector<int> order;\n    order.reserve(n);\n    vector<int> parent(n + 1, 0);\n    vector<bool> visited(n + 1, false);\n\n    order.push_back(1);\n    visited[1] = true;\n\n    int head = 0;\n    while (head < (int)order.size()) {\n        int u = order[head++];\n        for (int v : adj[u]) {\n            if (!visited[v]) {\n                visited[v] = true;\n                parent[v] = u;\n                order.push_back(v);\n            }\n        }\n    }\n\n    auto check = [&](int R) -> bool {\n        vector<int> max_uncovered(n + 1, 0);\n        vector<int> max_cover(n + 1, -1);\n        int radars = 0;\n\n        for (int i = n - 1; i >= 0; --i) {\n            int u = order[i];\n\n            if (max_cover[u] >= max_uncovered[u]) {\n                max_uncovered[u] = -1;\n            }\n\n            if (max_uncovered[u] == R) {\n                radars++;\n                max_cover[u] = R;\n                max_uncovered[u] = -1;\n            }\n\n            int p = parent[u];\n            if (p != 0) {\n                if (max_uncovered[u] >= 0) {\n                    max_uncovered[p] = max(max_uncovered[p], max_uncovered[u] + 1);\n                }\n                if (max_cover[u] > 0) {\n                    max_cover[p] = max(max_cover[p], max_cover[u] - 1);\n                }\n            }\n        }\n\n        if (max_uncovered[1] >= 0) {\n            radars++;\n        }\n\n        return radars <= k;\n    };\n\n    int low = 0, high = n, ans = n;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (check(mid)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20814230001997203,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

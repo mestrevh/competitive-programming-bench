@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:39:04.825662+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 868,
+            "output_tokens": 499,
+            "total_tokens": 1367
+        },
+        "cost_usd": {
+            "input_cost": 8.7e-05,
+            "output_cost": 0.000249,
+            "total_cost": 0.000336
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) return 0;\n\n    int *cards = malloc((size_t)N * K * sizeof(int));\n    int *position = malloc((size_t)(U + 1) * sizeof(int));\n\n    for (int i = 0; i < N * K; i++) {\n        scanf(\"%d\", &cards[i]);\n    }\n\n    for (int i = 1; i <= U; i++) {\n        int number;\n        scanf(\"%d\", &number);\n        position[number] = i;\n    }\n\n    int earliest = U + 1;\n    int *completion = malloc((size_t)N * sizeof(int));\n\n    for (int i = 0; i < N; i++) {\n        int last = 0;\n        for (int j = 0; j < K; j++) {\n            int p = position[cards[i * K + j]];\n            if (p > last) last = p;\n        }\n        completion[i] = last;\n        if (last < earliest) earliest = last;\n    }\n\n    int first = 1;\n    for (int i = 0; i < N; i++) {\n        if (completion[i] == earliest) {\n            if (!first) printf(\" \");\n            printf(\"%d\", i + 1);\n            first = 0;\n        }\n    }\n    printf(\"\\n\");\n\n    free(cards);\n    free(position);\n    free(completion);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) return 0;\n\n    int *cards = malloc((size_t)N * K * sizeof(int));\n    int *position = malloc((size_t)(U + 1) * sizeof(int));\n\n    for (int i = 0; i < N * K; i++) {\n        scanf(\"%d\", &cards[i]);\n    }\n\n    for (int i = 1; i <= U; i++) {\n        int number;\n        scanf(\"%d\", &number);\n        position[number] = i;\n    }\n\n    int earliest = U + 1;\n    int *completion = malloc((size_t)N * sizeof(int));\n\n    for (int i = 0; i < N; i++) {\n        int last = 0;\n        for (int j = 0; j < K; j++) {\n            int p = position[cards[i * K + j]];\n            if (p > last) last = p;\n        }\n        completion[i] = last;\n        if (last < earliest) earliest = last;\n    }\n\n    int first = 1;\n    for (int i = 0; i < N; i++) {\n        if (completion[i] == earliest) {\n            if (!first) printf(\" \");\n            printf(\"%d\", i + 1);\n            first = 0;\n        }\n    }\n    printf(\"\\n\");\n\n    free(cards);\n    free(position);\n    free(completion);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21339929998794105,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

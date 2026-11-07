@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:35:38.329960+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 528,
+            "output_tokens": 16337,
+            "total_tokens": 16865
+        },
+        "cost_usd": {
+            "input_cost": 1.1e-05,
+            "output_cost": 0.008169,
+            "total_cost": 0.00818
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    if(!(cin >> n)) return 0;\n\n    vector<long long> a(n);\n    for (int i = 0; i < n; ++i) cin >> a[i];\n\n    // Ao cortar na altura h:\n    //   - o Trecho abaixo do corte forma sempre 1 peca (as bases assentam na mesma linha);\n    //   - cada \"run\" maximal de retangulos consecutivos com altura > h forma 1 peca acima.\n    // Logo, pedacos(h) = 1 + numero de \"inicios de run\": indices i com A[i] > h e (i == 0 ou A[i-1] <= h).\n    // O inicio i (i > 0) fica ativo para h em [A[i-1], A[i]); o inicio 0 fica ativo para h em [0, A[0]).\n    // Se A[i-1] >= A[i], o inicio i nunca fica ativo (intervalo vazio).\n    // A resposta e 1 + maximo de intervalos contendo algum h (varredura de eventos, aplicando\n    // todos os deltas de um mesmo valor antes de registrar, o que trata corretamente extremos abertos/fechados).\n\n    vector<pair<long long,int>> ev;\n    ev.reserve(2u * (size_t)n);\n\n    ev.push_back({0LL, +1});\n    ev.push_back({a[0], -1});\n\n    for (int i = 1; i < n; ++i){\n        if (a[i-1] < a[i]){\n            ev.push_back({a[i-1], +1});\n            ev.push_back({a[i], -1});\n        }\n    }\n\n    sort(ev.begin(), ev.end(),\n         [](const pair<long long,int>& x, const pair<long long,int>& y){\n             return x.first < y.first;\n         });\n\n    long long cnt = 0, best = 0;\n    size_t i = 0;\n    while (i < ev.size()){\n        long long v = ev[i].first;\n        while (i < ev.size() && ev[i].first == v){\n            cnt += ev[i].second;\n            ++i;\n        }\n        if (cnt > best) best = cnt;\n    }\n\n    cout << (best + 1) << \"\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    if(!(cin >> n)) return 0;\n\n    vector<long long> a(n);\n    for (int i = 0; i < n; ++i) cin >> a[i];\n\n    // Ao cortar na altura h:\n    //   - o Trecho abaixo do corte forma sempre 1 peca (as bases assentam na mesma linha);\n    //   - cada \"run\" maximal de retangulos consecutivos com altura > h forma 1 peca acima.\n    // Logo, pedacos(h) = 1 + numero de \"inicios de run\": indices i com A[i] > h e (i == 0 ou A[i-1] <= h).\n    // O inicio i (i > 0) fica ativo para h em [A[i-1], A[i]); o inicio 0 fica ativo para h em [0, A[0]).\n    // Se A[i-1] >= A[i], o inicio i nunca fica ativo (intervalo vazio).\n    // A resposta e 1 + maximo de intervalos contendo algum h (varredura de eventos, aplicando\n    // todos os deltas de um mesmo valor antes de registrar, o que trata corretamente extremos abertos/fechados).\n\n    vector<pair<long long,int>> ev;\n    ev.reserve(2u * (size_t)n);\n\n    ev.push_back({0LL, +1});\n    ev.push_back({a[0], -1});\n\n    for (int i = 1; i < n; ++i){\n        if (a[i-1] < a[i]){\n            ev.push_back({a[i-1], +1});\n            ev.push_back({a[i], -1});\n        }\n    }\n\n    sort(ev.begin(), ev.end(),\n         [](const pair<long long,int>& x, const pair<long long,int>& y){\n             return x.first < y.first;\n         });\n\n    long long cnt = 0, best = 0;\n    size_t i = 0;\n    while (i < ev.size()){\n        long long v = ev[i].first;\n        while (i < ev.size() && ev[i].first == v){\n            cnt += ev[i].second;\n            ++i;\n        }\n        if (cnt > best) best = cnt;\n    }\n\n    cout << (best + 1) << \"\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1938806000034674,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

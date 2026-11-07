@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:09:05.367966+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 834,
+            "output_tokens": 1063,
+            "total_tokens": 1897
+        },
+        "cost_usd": {
+            "input_cost": 8.3e-05,
+            "output_cost": 0.000531,
+            "total_cost": 0.000615
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int l = Integer.parseInt(st.nextToken());\n        int c = Integer.parseInt(st.nextToken());\n\n        char[][] map = new char[l][];\n        int startR = 0, startC = 0;\n\n        for (int r = 0; r < l; r++) {\n            map[r] = br.readLine().trim().toCharArray();\n            for (int col = 0; col < c; col++) {\n                if (map[r][col] == 'o') {\n                    startR = r;\n                    startC = col;\n                }\n            }\n        }\n\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        int prevR = -1, prevC = -1;\n        int curR = startR, curC = startC;\n\n        while (true) {\n            int nextR = -1, nextC = -1;\n\n            for (int d = 0; d < 4; d++) {\n                int nr = curR + dr[d];\n                int nc = curC + dc[d];\n\n                if (nr < 0 || nr >= l || nc < 0 || nc >= c) continue;\n                if (map[nr][nc] != 'H') continue;\n                if (nr == prevR && nc == prevC) continue;\n\n                nextR = nr;\n                nextC = nc;\n                break;\n            }\n\n            if (nextR == -1) break;\n\n            prevR = curR;\n            prevC = curC;\n            curR = nextR;\n            curC = nextC;\n        }\n\n        System.out.println((curR + 1) + \" \" + (curC + 1));\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int l = Integer.parseInt(st.nextToken());\n        int c = Integer.parseInt(st.nextToken());\n\n        char[][] map = new char[l][];\n        int startR = 0, startC = 0;\n\n        for (int r = 0; r < l; r++) {\n            map[r] = br.readLine().trim().toCharArray();\n            for (int col = 0; col < c; col++) {\n                if (map[r][col] == 'o') {\n                    startR = r;\n                    startC = col;\n                }\n            }\n        }\n\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        int prevR = -1, prevC = -1;\n        int curR = startR, curC = startC;\n\n        while (true) {\n            int nextR = -1, nextC = -1;\n\n            for (int d = 0; d < 4; d++) {\n                int nr = curR + dr[d];\n                int nc = curC + dc[d];\n\n                if (nr < 0 || nr >= l || nc < 0 || nc >= c) continue;\n                if (map[nr][nc] != 'H') continue;\n                if (nr == prevR && nc == prevC) continue;\n\n                nextR = nr;\n                nextC = nc;\n                break;\n            }\n\n            if (nextR == -1) break;\n\n            prevR = curR;\n            prevC = curC;\n            curR = nextR;\n            curC = nextC;\n        }\n\n        System.out.println((curR + 1) + \" \" + (curC + 1));\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11264209999353625,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

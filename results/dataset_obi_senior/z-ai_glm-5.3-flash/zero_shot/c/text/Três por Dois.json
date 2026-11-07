@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T20:53:52.283137+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 628,
+            "output_tokens": 5496,
+            "total_tokens": 6124
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.002748,
+            "total_cost": 0.002761
+        },
+        "raw_response": "```C\n#include <stdio.h>\n\nstatic int cnt[1001];\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        int p;\n        if (scanf(\"%d\", &p) != 1) return 0;\n        cnt[p]++;\n        total += p;\n    }\n\n    /*\n     * Estrategia otima: ordenar os precos em ordem decrescente e, a cada\n     * grupo de tres consecutivos, o terceiro (o mais barato do grupo) e\n     * gratis. Ou seja, os produtos gratuitos sao os de indices 2, 5, 8, ...\n     * (0-based) na ordenacao decrescente.\n     *\n     * Prova de otimalidade: se g1 >= g2 >= ... >= gk sao os chocolates\n     * gratuitos de qualquer solucao viavel, cada gi precisa de dois pagos\n     * com valor >= gi; logo existem pelo menos 3i chocolates com valor >= gi,\n     * o que implica gi <= p_{3i}. Portanto a soma economizada e no maximo\n     * soma de p_3 + p_6 + ..., atingida pela estrategia gulosa.\n     *\n     * Implementado com counting sort (P <= 1000): percorre os valores do\n     * maior para o menor mantendo a posicao global, standing em indices\n     * congruentes a 2 (mod 3).\n     */\n    long long idx = 0;\n    for (int v = 1000; v >= 1; v--) {\n        for (int k = 0; k < cnt[v]; k++) {\n            if (idx % 3 == 2) total -= v;\n            idx++;\n        }\n    }\n\n    printf(\"%lld\\n\", total);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nstatic int cnt[1001];\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        int p;\n        if (scanf(\"%d\", &p) != 1) return 0;\n        cnt[p]++;\n        total += p;\n    }\n\n    /*\n     * Estrategia otima: ordenar os precos em ordem decrescente e, a cada\n     * grupo de tres consecutivos, o terceiro (o mais barato do grupo) e\n     * gratis. Ou seja, os produtos gratuitos sao os de indices 2, 5, 8, ...\n     * (0-based) na ordenacao decrescente.\n     *\n     * Prova de otimalidade: se g1 >= g2 >= ... >= gk sao os chocolates\n     * gratuitos de qualquer solucao viavel, cada gi precisa de dois pagos\n     * com valor >= gi; logo existem pelo menos 3i chocolates com valor >= gi,\n     * o que implica gi <= p_{3i}. Portanto a soma economizada e no maximo\n     * soma de p_3 + p_6 + ..., atingida pela estrategia gulosa.\n     *\n     * Implementado com counting sort (P <= 1000): percorre os valores do\n     * maior para o menor mantendo a posicao global, standing em indices\n     * congruentes a 2 (mod 3).\n     */\n    long long idx = 0;\n    for (int v = 1000; v >= 1; v--) {\n        for (int k = 0; k < cnt[v]; k++) {\n            if (idx % 3 == 2) total -= v;\n            idx++;\n        }\n    }\n\n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.29132180000306107,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:39:18.599871+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 987,
+            "total_tokens": 1744
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.000494,
+            "total_cost": 0.000569
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\n\nconst slope = new Float64Array(N + 1);\nconst intercept = new Float64Array(N + 1);\n\nfunction add(bit, index, value) {\n  for (let i = index; i <= N; i += i & -i) bit[i] += value;\n}\n\nfunction rangeAdd(bit, left, right, value) {\n  add(bit, left, value);\n  if (right < N) add(bit, right + 1, -value);\n}\n\nfunction prefixSum(bit, index) {\n  let sum = 0;\n  for (let i = index; i > 0; i -= i & -i) sum += bit[i];\n  return sum;\n}\n\nconst output = [];\n\nfor (let k = 0; k < M; k++) {\n  const type = nextInt();\n  const i = nextInt();\n\n  if (type === 1) {\n    const v = nextInt();\n    const right = Math.min(N, i + v - 1);\n    rangeAdd(slope, i, right, -1);\n    rangeAdd(intercept, i, right, i + v);\n  } else if (type === 2) {\n    const v = nextInt();\n    const left = Math.max(1, i - v + 1);\n    rangeAdd(slope, left, i, 1);\n    rangeAdd(intercept, left, i, v - i);\n  } else {\n    const a = prefixSum(slope, i);\n    const b = prefixSum(intercept, i);\n    output.push(String(a * i + b));\n  }\n}\n\nconsole.log(output.join('\\n'));```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\n\nconst slope = new Float64Array(N + 1);\nconst intercept = new Float64Array(N + 1);\n\nfunction add(bit, index, value) {\n  for (let i = index; i <= N; i += i & -i) bit[i] += value;\n}\n\nfunction rangeAdd(bit, left, right, value) {\n  add(bit, left, value);\n  if (right < N) add(bit, right + 1, -value);\n}\n\nfunction prefixSum(bit, index) {\n  let sum = 0;\n  for (let i = index; i > 0; i -= i & -i) sum += bit[i];\n  return sum;\n}\n\nconst output = [];\n\nfor (let k = 0; k < M; k++) {\n  const type = nextInt();\n  const i = nextInt();\n\n  if (type === 1) {\n    const v = nextInt();\n    const right = Math.min(N, i + v - 1);\n    rangeAdd(slope, i, right, -1);\n    rangeAdd(intercept, i, right, i + v);\n  } else if (type === 2) {\n    const v = nextInt();\n    const left = Math.max(1, i - v + 1);\n    rangeAdd(slope, left, i, 1);\n    rangeAdd(intercept, left, i, v - i);\n  } else {\n    const a = prefixSum(slope, i);\n    const b = prefixSum(intercept, i);\n    output.push(String(a * i + b));\n  }\n}\n\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09287929999118205,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

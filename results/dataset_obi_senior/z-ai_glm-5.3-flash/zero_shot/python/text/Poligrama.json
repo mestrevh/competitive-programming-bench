@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T08:33:47.313000+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 627,
+            "output_tokens": 7838,
+            "total_tokens": 8465
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.003919,
+            "total_cost": 0.003932
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    p = data[1]  # bytes\n\n    c0 = p[0]  # primeiro byte (como int)\n\n    # Tenta cada divisor k de n (k <= n//2 garante pelo menos 2 blocos),\n    # do menor para o maior; o primeiro k que funcionar é a raiz mínima.\n    for k in range(1, n // 2 + 1):\n        if n % k:\n            continue\n\n        # Filtro rápido (O(n) em C): a contagem do primeiro caractere\n        # deve ser a mesma em todos os blocos.\n        t = p.count(c0, 0, k)\n        ok = True\n        for s in range(k, n, k):\n            if p.count(c0, s, s + k) != t:\n                ok = False\n                break\n        if not ok:\n            continue\n\n        # Verificação completa: ordenar o primeiro bloco e comparar\n        # com cada bloco subsequente ordenado.\n        ref = sorted(p[0:k])\n        ok = True\n        for s in range(k, n, k):\n            if sorted(p[s:s + k]) != ref:\n                ok = False\n                break\n        if ok:\n            sys.stdout.write(p[0:k].decode() + '\\n')\n            return\n\n    sys.stdout.write('*\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    p = data[1]  # bytes\n\n    c0 = p[0]  # primeiro byte (como int)\n\n    # Tenta cada divisor k de n (k <= n//2 garante pelo menos 2 blocos),\n    # do menor para o maior; o primeiro k que funcionar é a raiz mínima.\n    for k in range(1, n // 2 + 1):\n        if n % k:\n            continue\n\n        # Filtro rápido (O(n) em C): a contagem do primeiro caractere\n        # deve ser a mesma em todos os blocos.\n        t = p.count(c0, 0, k)\n        ok = True\n        for s in range(k, n, k):\n            if p.count(c0, s, s + k) != t:\n                ok = False\n                break\n        if not ok:\n            continue\n\n        # Verificação completa: ordenar o primeiro bloco e comparar\n        # com cada bloco subsequente ordenado.\n        ref = sorted(p[0:k])\n        ok = True\n        for s in range(k, n, k):\n            if sorted(p[s:s + k]) != ref:\n                ok = False\n                break\n        if ok:\n            sys.stdout.write(p[0:k].decode() + '\\n')\n            return\n\n    sys.stdout.write('*\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07735550000143121,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

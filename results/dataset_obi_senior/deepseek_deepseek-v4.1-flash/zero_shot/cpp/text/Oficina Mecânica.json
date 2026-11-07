@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:43:57.441843+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1058,
+            "output_tokens": 5796,
+            "total_tokens": 6854
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.01391,
+            "total_cost": 0.013914
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<long long> T(N), F(M);\n    for (int i = 0; i < N; i++) cin >> T[i];\n    for (int i = 0; i < M; i++) cin >> F[i];\n\n    sort(T.begin(), T.end(), greater<long long>());\n\n    auto count_leq = [&](long long x) {\n        long long cnt = 0;\n        for (long long f : F) {\n            cnt += x / f + 1;\n        }\n        return cnt;\n    };\n\n    long long lo = -1, hi = 1000000005LL;\n    while (hi - lo > 1) {\n        long long mid = lo + (hi - lo) / 2;\n        if (count_leq(mid) >= N) hi = mid;\n        else lo = mid;\n    }\n\n    vector<long long> coeff;\n    coeff.reserve(N + M);\n\n    for (long long f : F) {\n        long long mx = hi / f;\n        for (long long k = 0; k <= mx; k++) {\n            coeff.push_back(k * f);\n        }\n    }\n\n    sort(coeff.begin(), coeff.end());\n    coeff.resize(N);\n\n    long long ans = 0;\n    for (int i = 0; i < N; i++) {\n        ans += T[i] * coeff[i];\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<long long> T(N), F(M);\n    for (int i = 0; i < N; i++) cin >> T[i];\n    for (int i = 0; i < M; i++) cin >> F[i];\n\n    sort(T.begin(), T.end(), greater<long long>());\n\n    auto count_leq = [&](long long x) {\n        long long cnt = 0;\n        for (long long f : F) {\n            cnt += x / f + 1;\n        }\n        return cnt;\n    };\n\n    long long lo = -1, hi = 1000000005LL;\n    while (hi - lo > 1) {\n        long long mid = lo + (hi - lo) / 2;\n        if (count_leq(mid) >= N) hi = mid;\n        else lo = mid;\n    }\n\n    vector<long long> coeff;\n    coeff.reserve(N + M);\n\n    for (long long f : F) {\n        long long mx = hi / f;\n        for (long long k = 0; k <= mx; k++) {\n            coeff.push_back(k * f);\n        }\n    }\n\n    sort(coeff.begin(), coeff.end());\n    coeff.resize(N);\n\n    long long ans = 0;\n    for (int i = 0; i < N; i++) {\n        ans += T[i] * coeff[i];\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19626549999520648,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

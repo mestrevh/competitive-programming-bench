@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:06:46.265396+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 663,
+            "output_tokens": 1012,
+            "total_tokens": 3288
+        },
+        "cost_usd": {
+            "input_cost": 0.000497,
+            "output_cost": 0.003795,
+            "total_cost": 0.004292
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 50005\n\nint head[MAXN], to[MAXN * 2], nxt[MAXN * 2], edge_cnt;\n\nvoid add_edge(int u, int v) {\n    edge_cnt++;\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[edge_cnt ? u : u] = edge_cnt;\n}\n\nint dist[MAXN];\nint parent_node[MAXN];\nint queue[MAXN];\n\nvoid bfs(int start, int n) {\n    for (int i = 1; i <= n; i++) {\n        dist[i] = -1;\n        parent_node[i] = 0;\n    }\n    int qh = 0, qt = 0;\n    queue[qt++] = start;\n    dist[start] = 0;\n\n    while (qh < qt) {\n        int u = queue[qh++];\n        for (int e = head[u]; e; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent_node[v] = u;\n                queue[qt++] = v;\n            }\n        }\n    }\n}\n\nint count_at_dist(int u, int p, int d) {\n    if (d == 0) return 1;\n    int count = 0;\n    for (int e = head[u]; e; e = nxt[e]) {\n        int v = to[e];\n        if (v != p) {\n            count += count_at_dist(v, u, d - 1);\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n - 1; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(u, v);\n        add_edge(v, u);\n    }\n\n    bfs(1, n);\n    int u1 = 1;\n    for (int i = 1; i <= n; i++) {\n        if (dist[i] > dist[u1]) {\n            u1 = i;\n        }\n    }\n\n    bfs(u1, n);\n    int u2 = u1;\n    for (int i = 1; i <= n; i++) {\n        if (dist[i] > dist[u2]) {\n            u2 = i;\n        }\n    }\n\n    int D = dist[u2];\n    static int path[MAXN];\n    int curr = u2;\n    for (int i = D; i >= 0; i--) {\n        path[i] = curr;\n        curr = parent_node[curr];\n    }\n\n    long long ways = 0;\n\n    if (D % 2 == 0) {\n        int c = path[D / 2];\n        int target = D / 2;\n        long long sum = 0;\n        long long sum_sq = 0;\n\n        for (int e = head[c]; e; e = nxt[e]) {\n            int v = to[e];\n            long long cnt = count_at_dist(v, c, target - 1);\n            sum += cnt;\n            sum_sq += cnt * cnt;\n        }\n        ways = (sum * sum - sum_sq) / 2;\n    } else {\n        int c1 = path[D / 2];\n        int c2 = path[D / 2 + 1];\n        int target = D / 2;\n\n        long long cnt1 = count_at_dist(c1, c2, target);\n        long long cnt2 = count_at_dist(c2, c1, target);\n        ways = cnt1 * cnt2;\n    }\n\n    printf(\"%d\\n\", D + 1);\n    printf(\"%lld\\n\", ways);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 50005\n\nint head[MAXN], to[MAXN * 2], nxt[MAXN * 2], edge_cnt;\n\nvoid add_edge(int u, int v) {\n    edge_cnt++;\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[edge_cnt ? u : u] = edge_cnt;\n}\n\nint dist[MAXN];\nint parent_node[MAXN];\nint queue[MAXN];\n\nvoid bfs(int start, int n) {\n    for (int i = 1; i <= n; i++) {\n        dist[i] = -1;\n        parent_node[i] = 0;\n    }\n    int qh = 0, qt = 0;\n    queue[qt++] = start;\n    dist[start] = 0;\n\n    while (qh < qt) {\n        int u = queue[qh++];\n        for (int e = head[u]; e; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent_node[v] = u;\n                queue[qt++] = v;\n            }\n        }\n    }\n}\n\nint count_at_dist(int u, int p, int d) {\n    if (d == 0) return 1;\n    int count = 0;\n    for (int e = head[u]; e; e = nxt[e]) {\n        int v = to[e];\n        if (v != p) {\n            count += count_at_dist(v, u, d - 1);\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n - 1; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(u, v);\n        add_edge(v, u);\n    }\n\n    bfs(1, n);\n    int u1 = 1;\n    for (int i = 1; i <= n; i++) {\n        if (dist[i] > dist[u1]) {\n            u1 = i;\n        }\n    }\n\n    bfs(u1, n);\n    int u2 = u1;\n    for (int i = 1; i <= n; i++) {\n        if (dist[i] > dist[u2]) {\n            u2 = i;\n        }\n    }\n\n    int D = dist[u2];\n    static int path[MAXN];\n    int curr = u2;\n    for (int i = D; i >= 0; i--) {\n        path[i] = curr;\n        curr = parent_node[curr];\n    }\n\n    long long ways = 0;\n\n    if (D % 2 == 0) {\n        int c = path[D / 2];\n        int target = D / 2;\n        long long sum = 0;\n        long long sum_sq = 0;\n\n        for (int e = head[c]; e; e = nxt[e]) {\n            int v = to[e];\n            long long cnt = count_at_dist(v, c, target - 1);\n            sum += cnt;\n            sum_sq += cnt * cnt;\n        }\n        ways = (sum * sum - sum_sq) / 2;\n    } else {\n        int c1 = path[D / 2];\n        int c2 = path[D / 2 + 1];\n        int target = D / 2;\n\n        long long cnt1 = count_at_dist(c1, c2, target);\n        long long cnt2 = count_at_dist(c2, c1, target);\n        ways = cnt1 * cnt2;\n    }\n\n    printf(\"%d\\n\", D + 1);\n    printf(\"%lld\\n\", ways);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19951380000566132,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

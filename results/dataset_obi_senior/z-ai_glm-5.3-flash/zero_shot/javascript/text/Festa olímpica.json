@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:53:05.297252+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 964,
+            "output_tokens": 40612,
+            "total_tokens": 41576
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.020306,
+            "total_cost": 0.020327
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  let ptr = 0;\n  const N = +data[ptr++];\n  const M = +data[ptr++];\n  const T = new Int32Array(M);\n  for (let i = 0; i < M; i++) T[i] = +data[ptr++];\n\n  // 1) Calcula o tamanho da lista turno a turno.\n  //    Um turno com t > L (tamanho atual) não remove ninguem e pode ser ignorado.\n  let L = N;\n  const eff = [];\n  for (let i = 0; i < M; i++) {\n    const t = T[i];\n    if (t <= L) {\n      eff.push(t);\n      L -= Math.floor(L / t);\n    }\n  }\n\n  // 2) Numero de convidados a listar: min(total de sobreviventes, 10000).\n  //    A posicao final p (1-based) corresponde ao p-esimo convidado (menores numeros).\n  const K = Math.min(L, 10000);\n  const m = eff.length;\n\n  // 3) Inversao: desfazemos os turnos do ultimo para o primeiro.\n  //    No turno com t, a posicao p (sobrevivente) vai para p - floor(p/t).\n  //    O inverso e': dado a nova posicao v, a antiga era\n  //        g(v) = v + floor((v-1)/(t-1))\n  //    (o v-esimo inteiro positivo nao multiplo de t), que e monotonia estrita.\n  //    Assim, os K primeiros convidados sao obtidos aplicando g de todos os\n  //    turnos, em ordem reversa, as posicoes finais 1..K.\n  const res = new Int32Array(K);\n  for (let i = 0; i < K; i++) res[i] = i + 1;\n\n  for (let k = m - 1; k >= 0; k--) {\n    const d = eff[k] - 1;\n    if (res[K - 1] <= d) continue; // nenhum dos K primeiros valores e afetado\n    if (d === 1) {\n      // t = 2: g(v) = 2v - 1\n      for (let i = 0; i < K; i++) {\n        const v = res[i];\n        res[i] = v + v - 1;\n      }\n    } else {\n      for (let i = 0; i < K; i++) {\n        const v = res[i];\n        res[i] = v + (((v - 1) / d) | 0);\n      }\n    }\n  }\n\n  if (K > 0) process.stdout.write(res.join('\\n') + '\\n');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  let ptr = 0;\n  const N = +data[ptr++];\n  const M = +data[ptr++];\n  const T = new Int32Array(M);\n  for (let i = 0; i < M; i++) T[i] = +data[ptr++];\n\n  // 1) Calcula o tamanho da lista turno a turno.\n  //    Um turno com t > L (tamanho atual) não remove ninguem e pode ser ignorado.\n  let L = N;\n  const eff = [];\n  for (let i = 0; i < M; i++) {\n    const t = T[i];\n    if (t <= L) {\n      eff.push(t);\n      L -= Math.floor(L / t);\n    }\n  }\n\n  // 2) Numero de convidados a listar: min(total de sobreviventes, 10000).\n  //    A posicao final p (1-based) corresponde ao p-esimo convidado (menores numeros).\n  const K = Math.min(L, 10000);\n  const m = eff.length;\n\n  // 3) Inversao: desfazemos os turnos do ultimo para o primeiro.\n  //    No turno com t, a posicao p (sobrevivente) vai para p - floor(p/t).\n  //    O inverso e': dado a nova posicao v, a antiga era\n  //        g(v) = v + floor((v-1)/(t-1))\n  //    (o v-esimo inteiro positivo nao multiplo de t), que e monotonia estrita.\n  //    Assim, os K primeiros convidados sao obtidos aplicando g de todos os\n  //    turnos, em ordem reversa, as posicoes finais 1..K.\n  const res = new Int32Array(K);\n  for (let i = 0; i < K; i++) res[i] = i + 1;\n\n  for (let k = m - 1; k >= 0; k--) {\n    const d = eff[k] - 1;\n    if (res[K - 1] <= d) continue; // nenhum dos K primeiros valores e afetado\n    if (d === 1) {\n      // t = 2: g(v) = 2v - 1\n      for (let i = 0; i < K; i++) {\n        const v = res[i];\n        res[i] = v + v - 1;\n      }\n    } else {\n      for (let i = 0; i < K; i++) {\n        const v = res[i];\n        res[i] = v + (((v - 1) / d) | 0);\n      }\n    }\n  }\n\n  if (K > 0) process.stdout.write(res.join('\\n') + '\\n');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12081819999730214,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

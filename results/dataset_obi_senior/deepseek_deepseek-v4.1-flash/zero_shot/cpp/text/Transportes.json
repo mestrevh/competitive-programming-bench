@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:57:11.378143+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1907,
+            "output_tokens": 20098,
+            "total_tokens": 22005
+        },
+        "cost_usd": {
+            "input_cost": 6e-06,
+            "output_cost": 0.048235,
+            "total_cost": 0.048241
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M, K;\n    cin >> N >> M >> K;\n\n    vector<long long> P(K + 1);\n    for (int i = 1; i <= K; ++i) cin >> P[i];\n\n    vector<vector<pair<int,int>>> edgesByColor(K + 1);\n    for (int i = 0; i < M; ++i) {\n        int v, u, t;\n        cin >> v >> u >> t;\n        edgesByColor[t].push_back(make_pair(v, u));\n    }\n\n    int A, B;\n    cin >> A >> B;\n\n    vector<int> parent(N + 1), sz(N + 1), seen(N + 1, 0);\n    vector<int> markRoot(N + 1, 0), compRootId(N + 1, 0);\n    vector<vector<pair<int,long long>>> adj(N + 1);\n\n    function<int(int)> find = [&](int x) -> int {\n        if (parent[x] == x) return x;\n        return parent[x] = find(parent[x]);\n    };\n\n    auto unite = [&](int a, int b) {\n        a = find(a);\n        b = find(b);\n        if (a == b) return;\n        if (sz[a] < sz[b]) swap(a, b);\n        parent[b] = a;\n        sz[a] += sz[b];\n    };\n\n    for (int c = 1; c <= K; ++c) {\n        if (edgesByColor[c].empty()) continue;\n\n        for (size_t i = 0; i < edgesByColor[c].size(); ++i) {\n            int u = edgesByColor[c][i].first;\n            int v = edgesByColor[c][i].second;\n\n            if (seen[u] != c) {\n                seen[u] = c;\n                parent[u] = u;\n                sz[u] = 1;\n            }\n            if (seen[v] != c) {\n                seen[v] = c;\n                parent[v] = v;\n                sz[v] = 1;\n            }\n\n            unite(u, v);\n        }\n\n        for (size_t i = 0; i < edgesByColor[c].size(); ++i) {\n            int u = edgesByColor[c][i].first;\n            int v = edgesByColor[c][i].second;\n\n            int r = find(u);\n            int comp;\n            if (markRoot[r] != c) {\n                markRoot[r] = c;\n                comp = (int)adj.size();\n                compRootId[r] = comp;\n                adj.emplace_back();\n            } else {\n                comp = compRootId[r];\n            }\n\n            long long w = P[c];\n\n            adj[u].push_back(make_pair(comp, w));\n            adj[comp].push_back(make_pair(u, 0LL));\n\n            adj[v].push_back(make_pair(comp, w));\n            adj[comp].push_back(make_pair(v, 0LL));\n        }\n    }\n\n    const long long INF = (1LL << 60);\n    vector<long long> dist(adj.size(), INF);\n\n    priority_queue<\n        pair<long long,int>,\n        vector<pair<long long,int>>,\n        greater<pair<long long,int>>\n    > pq;\n\n    dist[A] = 0;\n    pq.push(make_pair(0, A));\n\n    while (!pq.empty()) {\n        pair<long long,int> cur = pq.top();\n        pq.pop();\n\n        long long d = cur.first;\n        int u = cur.second;\n\n        if (d != dist[u]) continue;\n\n        for (size_t i = 0; i < adj[u].size(); ++i) {\n            int v = adj[u][i].first;\n            long long w = adj[u][i].second;\n\n            if (dist[v] > d + w) {\n                dist[v] = d + w;\n                pq.push(make_pair(dist[v], v));\n            }\n        }\n    }\n\n    if (dist[B] == INF) cout << -1 << '\\n';\n    else cout << dist[B] << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M, K;\n    cin >> N >> M >> K;\n\n    vector<long long> P(K + 1);\n    for (int i = 1; i <= K; ++i) cin >> P[i];\n\n    vector<vector<pair<int,int>>> edgesByColor(K + 1);\n    for (int i = 0; i < M; ++i) {\n        int v, u, t;\n        cin >> v >> u >> t;\n        edgesByColor[t].push_back(make_pair(v, u));\n    }\n\n    int A, B;\n    cin >> A >> B;\n\n    vector<int> parent(N + 1), sz(N + 1), seen(N + 1, 0);\n    vector<int> markRoot(N + 1, 0), compRootId(N + 1, 0);\n    vector<vector<pair<int,long long>>> adj(N + 1);\n\n    function<int(int)> find = [&](int x) -> int {\n        if (parent[x] == x) return x;\n        return parent[x] = find(parent[x]);\n    };\n\n    auto unite = [&](int a, int b) {\n        a = find(a);\n        b = find(b);\n        if (a == b) return;\n        if (sz[a] < sz[b]) swap(a, b);\n        parent[b] = a;\n        sz[a] += sz[b];\n    };\n\n    for (int c = 1; c <= K; ++c) {\n        if (edgesByColor[c].empty()) continue;\n\n        for (size_t i = 0; i < edgesByColor[c].size(); ++i) {\n            int u = edgesByColor[c][i].first;\n            int v = edgesByColor[c][i].second;\n\n            if (seen[u] != c) {\n                seen[u] = c;\n                parent[u] = u;\n                sz[u] = 1;\n            }\n            if (seen[v] != c) {\n                seen[v] = c;\n                parent[v] = v;\n                sz[v] = 1;\n            }\n\n            unite(u, v);\n        }\n\n        for (size_t i = 0; i < edgesByColor[c].size(); ++i) {\n            int u = edgesByColor[c][i].first;\n            int v = edgesByColor[c][i].second;\n\n            int r = find(u);\n            int comp;\n            if (markRoot[r] != c) {\n                markRoot[r] = c;\n                comp = (int)adj.size();\n                compRootId[r] = comp;\n                adj.emplace_back();\n            } else {\n                comp = compRootId[r];\n            }\n\n            long long w = P[c];\n\n            adj[u].push_back(make_pair(comp, w));\n            adj[comp].push_back(make_pair(u, 0LL));\n\n            adj[v].push_back(make_pair(comp, w));\n            adj[comp].push_back(make_pair(v, 0LL));\n        }\n    }\n\n    const long long INF = (1LL << 60);\n    vector<long long> dist(adj.size(), INF);\n\n    priority_queue<\n        pair<long long,int>,\n        vector<pair<long long,int>>,\n        greater<pair<long long,int>>\n    > pq;\n\n    dist[A] = 0;\n    pq.push(make_pair(0, A));\n\n    while (!pq.empty()) {\n        pair<long long,int> cur = pq.top();\n        pq.pop();\n\n        long long d = cur.first;\n        int u = cur.second;\n\n        if (d != dist[u]) continue;\n\n        for (size_t i = 0; i < adj[u].size(); ++i) {\n            int v = adj[u][i].first;\n            long long w = adj[u][i].second;\n\n            if (dist[v] > d + w) {\n                dist[v] = d + w;\n                pq.push(make_pair(dist[v], v));\n            }\n        }\n    }\n\n    if (dist[B] == INF) cout << -1 << '\\n';\n    else cout << dist[B] << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20296239999879617,
+            "counts": {
+                "AC": 107,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

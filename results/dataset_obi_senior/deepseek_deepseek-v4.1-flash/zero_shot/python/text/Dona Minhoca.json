@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:40:32.320257+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 736,
+            "output_tokens": 7960,
+            "total_tokens": 8696
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.019104,
+            "total_cost": 0.019106
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 1\n    for _ in range(n - 1):\n        x = int(data[idx])\n        y = int(data[idx + 1])\n        idx += 2\n        adj[x].append(y)\n        adj[y].append(x)\n\n    def farthest(start):\n        dist = [-1] * (n + 1)\n        parent = [0] * (n + 1)\n        dist[start] = 0\n        stack = [start]\n\n        far = start\n        maxd = 0\n\n        while stack:\n            u = stack.pop()\n            du = dist[u]\n\n            if du > maxd:\n                maxd = du\n                far = u\n\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = du + 1\n                    parent[v] = u\n                    stack.append(v)\n\n        return far, dist, parent\n\n    A, _, _ = farthest(1)\n    B, distA, parentA = farthest(A)\n\n    D = distA[B]\n\n    path = []\n    cur = B\n    while True:\n        path.append(cur)\n        if cur == A:\n            break\n        cur = parentA[cur]\n    path.reverse()\n\n    def count_at(start, blocked, radius):\n        if radius < 0:\n            return 0\n        if radius == 0:\n            return 1\n\n        cnt = 0\n        stack = [(start, blocked, 0)]\n\n        while stack:\n            u, p, d = stack.pop()\n\n            if d == radius:\n                cnt += 1\n                continue\n\n            nd = d + 1\n            for v in adj[u]:\n                if v != p:\n                    if nd <= radius:\n                        stack.append((v, u, nd))\n\n        return cnt\n\n    length = D + 1\n\n    if D % 2 == 0:\n        r = D // 2\n        center = path[r]\n\n        if r == 0:\n            count = 0\n        else:\n            cnts = []\n            for nb in adj[center]:\n                c = count_at(nb, center, r - 1)\n                if c > 0:\n                    cnts.append(c)\n\n            total = sum(cnts)\n            count = (total * total - sum(c * c for c in cnts)) // 2\n    else:\n        k = D // 2\n        c1 = path[k]\n        c2 = path[k + 1]\n\n        cnt1 = count_at(c1, c2, k)\n        cnt2 = count_at(c2, c1, k)\n        count = cnt1 * cnt2\n\n    sys.stdout.write(f\"{length}\\n{count}\\n\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 1\n    for _ in range(n - 1):\n        x = int(data[idx])\n        y = int(data[idx + 1])\n        idx += 2\n        adj[x].append(y)\n        adj[y].append(x)\n\n    def farthest(start):\n        dist = [-1] * (n + 1)\n        parent = [0] * (n + 1)\n        dist[start] = 0\n        stack = [start]\n\n        far = start\n        maxd = 0\n\n        while stack:\n            u = stack.pop()\n            du = dist[u]\n\n            if du > maxd:\n                maxd = du\n                far = u\n\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = du + 1\n                    parent[v] = u\n                    stack.append(v)\n\n        return far, dist, parent\n\n    A, _, _ = farthest(1)\n    B, distA, parentA = farthest(A)\n\n    D = distA[B]\n\n    path = []\n    cur = B\n    while True:\n        path.append(cur)\n        if cur == A:\n            break\n        cur = parentA[cur]\n    path.reverse()\n\n    def count_at(start, blocked, radius):\n        if radius < 0:\n            return 0\n        if radius == 0:\n            return 1\n\n        cnt = 0\n        stack = [(start, blocked, 0)]\n\n        while stack:\n            u, p, d = stack.pop()\n\n            if d == radius:\n                cnt += 1\n                continue\n\n            nd = d + 1\n            for v in adj[u]:\n                if v != p:\n                    if nd <= radius:\n                        stack.append((v, u, nd))\n\n        return cnt\n\n    length = D + 1\n\n    if D % 2 == 0:\n        r = D // 2\n        center = path[r]\n\n        if r == 0:\n            count = 0\n        else:\n            cnts = []\n            for nb in adj[center]:\n                c = count_at(nb, center, r - 1)\n                if c > 0:\n                    cnts.append(c)\n\n            total = sum(cnts)\n            count = (total * total - sum(c * c for c in cnts)) // 2\n    else:\n        k = D // 2\n        c1 = path[k]\n        c2 = path[k + 1]\n\n        cnt1 = count_at(c1, c2, k)\n        cnt2 = count_at(c2, c1, k)\n        count = cnt1 * cnt2\n\n    sys.stdout.write(f\"{length}\\n{count}\\n\")\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08706510000047274,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

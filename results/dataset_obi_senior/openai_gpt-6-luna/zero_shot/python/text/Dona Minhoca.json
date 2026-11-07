@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:21:20.583690+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 638,
+            "output_tokens": 1783,
+            "total_tokens": 2421
+        },
+        "cost_usd": {
+            "input_cost": 6.4e-05,
+            "output_cost": 0.000892,
+            "total_cost": 0.000955
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\nadj = [[] for _ in range(n)]\n\nidx = 1\nfor _ in range(n - 1):\n    x = data[idx] - 1\n    y = data[idx + 1] - 1\n    idx += 2\n    adj[x].append(y)\n    adj[y].append(x)\n\n\ndef bfs(start, keep_parent=False):\n    dist = [-1] * n\n    parent = [-1] * n if keep_parent else None\n    queue = [start]\n    dist[start] = 0\n    farthest = start\n\n    for u in queue:\n        if dist[u] > dist[farthest]:\n            farthest = u\n        for v in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + 1\n                if keep_parent:\n                    parent[v] = u\n                queue.append(v)\n\n    return farthest, dist, parent\n\n\na, _, _ = bfs(0)\nb, dist_a, parent = bfs(a, True)\ndiameter = dist_a[b]\n\npath = [b]\nwhile path[-1] != a:\n    path.append(parent[path[-1]])\n\nif diameter % 2 == 0:\n    center = path[diameter // 2]\n    radius = diameter // 2\n    total = 0\n    ways = 0\n\n    for neighbor in adj[center]:\n        count = 0\n        stack = [(neighbor, center, 1)]\n        while stack:\n            u, p, depth = stack.pop()\n            if depth == radius:\n                count += 1\n            else:\n                for v in adj[u]:\n                    if v != p:\n                        stack.append((v, u, depth + 1))\n        ways += total * count\n        total += count\nelse:\n    radius = diameter // 2\n    c1 = path[radius]\n    c2 = path[radius + 1]\n\n    def count_side(start, blocked):\n        count = 0\n        stack = [(start, blocked, 1)]\n        while stack:\n            u, p, depth = stack.pop()\n            if depth == radius:\n                count += 1\n            else:\n                for v in adj[u]:\n                    if v != p:\n                        stack.append((v, u, depth + 1))\n        return count\n\n    ways = count_side(c1, c2) * count_side(c2, c1)\n\nprint(diameter + 1)\nprint(ways)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\nadj = [[] for _ in range(n)]\n\nidx = 1\nfor _ in range(n - 1):\n    x = data[idx] - 1\n    y = data[idx + 1] - 1\n    idx += 2\n    adj[x].append(y)\n    adj[y].append(x)\n\n\ndef bfs(start, keep_parent=False):\n    dist = [-1] * n\n    parent = [-1] * n if keep_parent else None\n    queue = [start]\n    dist[start] = 0\n    farthest = start\n\n    for u in queue:\n        if dist[u] > dist[farthest]:\n            farthest = u\n        for v in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + 1\n                if keep_parent:\n                    parent[v] = u\n                queue.append(v)\n\n    return farthest, dist, parent\n\n\na, _, _ = bfs(0)\nb, dist_a, parent = bfs(a, True)\ndiameter = dist_a[b]\n\npath = [b]\nwhile path[-1] != a:\n    path.append(parent[path[-1]])\n\nif diameter % 2 == 0:\n    center = path[diameter // 2]\n    radius = diameter // 2\n    total = 0\n    ways = 0\n\n    for neighbor in adj[center]:\n        count = 0\n        stack = [(neighbor, center, 1)]\n        while stack:\n            u, p, depth = stack.pop()\n            if depth == radius:\n                count += 1\n            else:\n                for v in adj[u]:\n                    if v != p:\n                        stack.append((v, u, depth + 1))\n        ways += total * count\n        total += count\nelse:\n    radius = diameter // 2\n    c1 = path[radius]\n    c2 = path[radius + 1]\n\n    def count_side(start, blocked):\n        count = 0\n        stack = [(start, blocked, 1)]\n        while stack:\n            u, p, depth = stack.pop()\n            if depth == radius:\n                count += 1\n            else:\n                for v in adj[u]:\n                    if v != p:\n                        stack.append((v, u, depth + 1))\n        return count\n\n    ways = count_side(c1, c2) * count_side(c2, c1)\n\nprint(diameter + 1)\nprint(ways)",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.19466059999831486,
+            "counts": {
+                "AC": 16,
+                "WA": 13,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

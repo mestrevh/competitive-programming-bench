@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:48:23.100813+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1093,
+            "output_tokens": 50073,
+            "total_tokens": 51166
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.120175,
+            "total_cost": 0.120178
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    N = int(data[0])\n    K = int(data[1])\n    a = list(map(int, data[2:2 + N]))\n    a.sort()\n    \n    # cost[i] = (a[i+1] - a[i])^2 for pair (i, i+1)\n    cost = [(a[i + 1] - a[i]) ** 2 for i in range(N - 1)]\n    \n    INF = 10 ** 18\n    dp1 = [INF] * (K + 1)\n    dp2 = [INF] * (K + 1)\n    dp1[0] = 0\n    dp2[0] = 0\n    \n    # Process positions from right to left (0-indexed)\n    for i in range(N - 1, -1, -1):\n        L = N - i\n        max_p = min(K, L // 3)\n        new = [INF] * (K + 1)\n        for p in range(max_p + 1):\n            # Option 1: skip position i\n            v = dp1[p]\n            # Option 2: take pair (i, i+1)\n            if p > 0 and i < N - 1:\n                v2 = dp2[p - 1] + cost[i]\n                if v2 < v:\n                    v = v2\n            new[p] = v\n        dp2 = dp1\n        dp1 = new\n    \n    print(dp1[K])\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    N = int(data[0])\n    K = int(data[1])\n    a = list(map(int, data[2:2 + N]))\n    a.sort()\n    \n    # cost[i] = (a[i+1] - a[i])^2 for pair (i, i+1)\n    cost = [(a[i + 1] - a[i]) ** 2 for i in range(N - 1)]\n    \n    INF = 10 ** 18\n    dp1 = [INF] * (K + 1)\n    dp2 = [INF] * (K + 1)\n    dp1[0] = 0\n    dp2[0] = 0\n    \n    # Process positions from right to left (0-indexed)\n    for i in range(N - 1, -1, -1):\n        L = N - i\n        max_p = min(K, L // 3)\n        new = [INF] * (K + 1)\n        for p in range(max_p + 1):\n            # Option 1: skip position i\n            v = dp1[p]\n            # Option 2: take pair (i, i+1)\n            if p > 0 and i < N - 1:\n                v2 = dp2[p - 1] + cost[i]\n                if v2 < v:\n                    v = v2\n            new[p] = v\n        dp2 = dp1\n        dp1 = new\n    \n    print(dp1[K])\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.381092499999795,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

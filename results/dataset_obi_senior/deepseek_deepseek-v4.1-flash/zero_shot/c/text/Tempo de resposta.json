@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:46:40.964014+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 7017,
+            "total_tokens": 8030
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.016841,
+            "total_cost": 0.016844
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    int pending[1005];\n    long long total[1005] = {0};\n    int seen[1005] = {0};\n\n    for (int i = 0; i < 1005; i++) {\n        pending[i] = -1;\n    }\n\n    int current_time = 0;\n    int prev_event = 0;\n    int has_T = 0;\n    int sum_T = 0;\n\n    for (int i = 0; i < N; i++) {\n        char c;\n        int x;\n        scanf(\" %c %d\", &c, &x);\n\n        if (c == 'T') {\n            has_T = 1;\n            sum_T += x;\n        } else {\n            if (prev_event) {\n                if (has_T) {\n                    current_time += sum_T;\n                } else {\n                    current_time += 1;\n                }\n            }\n            has_T = 0;\n            sum_T = 0;\n            prev_event = 1;\n\n            if (c == 'R') {\n                seen[x] = 1;\n                pending[x] = current_time;\n            } else if (c == 'E') {\n                seen[x] = 1;\n                if (pending[x] != -1) {\n                    total[x] += (long long)(current_time - pending[x]);\n                    pending[x] = -1;\n                }\n            }\n        }\n    }\n\n    for (int id = 1; id < 1005; id++) {\n        if (seen[id]) {\n            if (pending[id] != -1) {\n                total[id] = -1;\n            }\n            printf(\"%d %lld\\n\", id, total[id]);\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    int pending[1005];\n    long long total[1005] = {0};\n    int seen[1005] = {0};\n\n    for (int i = 0; i < 1005; i++) {\n        pending[i] = -1;\n    }\n\n    int current_time = 0;\n    int prev_event = 0;\n    int has_T = 0;\n    int sum_T = 0;\n\n    for (int i = 0; i < N; i++) {\n        char c;\n        int x;\n        scanf(\" %c %d\", &c, &x);\n\n        if (c == 'T') {\n            has_T = 1;\n            sum_T += x;\n        } else {\n            if (prev_event) {\n                if (has_T) {\n                    current_time += sum_T;\n                } else {\n                    current_time += 1;\n                }\n            }\n            has_T = 0;\n            sum_T = 0;\n            prev_event = 1;\n\n            if (c == 'R') {\n                seen[x] = 1;\n                pending[x] = current_time;\n            } else if (c == 'E') {\n                seen[x] = 1;\n                if (pending[x] != -1) {\n                    total[x] += (long long)(current_time - pending[x]);\n                    pending[x] = -1;\n                }\n            }\n        }\n    }\n\n    for (int id = 1; id < 1005; id++) {\n        if (seen[id]) {\n            if (pending[id] != -1) {\n                total[id] = -1;\n            }\n            printf(\"%d %lld\\n\", id, total[id]);\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17602240000269376,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:49:11.423881+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 613,
+            "output_tokens": 542,
+            "total_tokens": 1155
+        },
+        "cost_usd": {
+            "input_cost": 6.1e-05,
+            "output_cost": 0.000271,
+            "total_cost": 0.000332
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        Scanner sc = new Scanner(new BufferedInputStream(System.in));\n        int n = sc.nextInt();\n        double d = sc.nextDouble();\n\n        double[] position = new double[n];\n        double[] charge = new double[n];\n\n        for (int i = 0; i < n; i++) {\n            position[i] = sc.nextDouble();\n            charge[i] = sc.nextDouble();\n        }\n\n        double[] dp = new double[n];\n        Arrays.fill(dp, Double.POSITIVE_INFINITY);\n        dp[0] = 0.0;\n\n        for (int i = 0; i < n; i++) {\n            for (int j = i + 1; j < n; j++) {\n                double distance = position[j] - position[i];\n                double time = distance * distance / charge[i];\n                dp[j] = Math.min(dp[j], dp[i] + time);\n            }\n        }\n\n        double answer = Double.POSITIVE_INFINITY;\n        for (int i = 0; i < n; i++) {\n            double distance = d - position[i];\n            answer = Math.min(answer, dp[i] + distance * distance / charge[i]);\n        }\n\n        System.out.printf(Locale.US, \"%.3f%n\", answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        Scanner sc = new Scanner(new BufferedInputStream(System.in));\n        int n = sc.nextInt();\n        double d = sc.nextDouble();\n\n        double[] position = new double[n];\n        double[] charge = new double[n];\n\n        for (int i = 0; i < n; i++) {\n            position[i] = sc.nextDouble();\n            charge[i] = sc.nextDouble();\n        }\n\n        double[] dp = new double[n];\n        Arrays.fill(dp, Double.POSITIVE_INFINITY);\n        dp[0] = 0.0;\n\n        for (int i = 0; i < n; i++) {\n            for (int j = i + 1; j < n; j++) {\n                double distance = position[j] - position[i];\n                double time = distance * distance / charge[i];\n                dp[j] = Math.min(dp[j], dp[i] + time);\n            }\n        }\n\n        double answer = Double.POSITIVE_INFINITY;\n        for (int i = 0; i < n; i++) {\n            double distance = d - position[i];\n            answer = Math.min(answer, dp[i] + distance * distance / charge[i]);\n        }\n\n        System.out.printf(Locale.US, \"%.3f%n\", answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.1120154000018374,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 26,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

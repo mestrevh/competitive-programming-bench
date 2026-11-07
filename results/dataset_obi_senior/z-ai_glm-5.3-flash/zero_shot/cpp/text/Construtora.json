@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:32:35.301675+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1217,
+            "output_tokens": 89759,
+            "total_tokens": 90976
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.04488,
+            "total_cost": 0.044906
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\n/*\n * Ideia: comprima a rua em blocos de alturas iguais v[1..m] (v[i] != v[i+1]).\n * Uma fase incrementa um bloco inteiro em 1; quando um bloco atinge a altura\n * do vizinho, eles se fundem. O processo de fusões forma uma árvore binária\n * sobre os blocos, onde cada nó interno corresponde a uma fusão ocorrida em\n * uma altura t >= max(v no intervalo do nó), e o total de fases é:\n *\n *      H + soma(t dos nós internos) - soma(h das folhas)\n *\n * com H = altura final >= max global (ótimo: H = max global), e cada t\n * aguenta no mínimo max do intervalo correspondente. Logo basta minimizar\n * a soma dos t's sobre todas as árvores binárias fundíveis:\n *\n *      W(l, r) = max(v[l..r]) + min_k ( W(l,k) + W(k+1,r) ),  W(l,l) = 0\n *\n * Resposta = max global + W(1,m) - soma de todos os v[i].\n * Verificado nos exemplos (2, 4, 0) e vários casos pequenos.\n */\n\nint main(){\n    int n;\n    if(scanf(\"%d\", &n) != 1) return 0;\n    vector<int> a(n);\n    for(int i = 0; i < n; ++i) scanf(\"%d\", &a[i]);\n\n    vector<int> v;\n    v.reserve(n);\n    for(int i = 0; i < n; ++i)\n        if(v.empty() || v.back() != a[i]) v.push_back(a[i]);\n\n    int m = (int)v.size();\n\n    // MX[l][r] = max de v[l..r]\n    vector<vector<int>> MX(m, vector<int>(m, 0));\n    for(int l = 0; l < m; ++l){\n        MX[l][l] = v[l];\n        for(int r = l + 1; r < m; ++r)\n            MX[l][r] = max(MX[l][r-1], v[r]);\n    }\n\n    // DP de intervalos\n    vector<vector<int>> W(m, vector<int>(m, 0));\n    for(int len = 2; len <= m; ++len){\n        for(int l = 0; l + len - 1 < m; ++l){\n            int r = l + len - 1;\n            int best = INT_MAX;\n            int* Wl = W[l].data();\n            for(int k = l; k < r; ++k){\n                int c = Wl[k] + W[k+1][r];\n                if(c < best) best = c;\n            }\n            W[l][r] = MX[l][r] + best;\n        }\n    }\n\n    long long sum = 0;\n    for(int x : v) sum += x;\n    long long ans = (long long)MX[0][m-1] + W[0][m-1] - sum;\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\n/*\n * Ideia: comprima a rua em blocos de alturas iguais v[1..m] (v[i] != v[i+1]).\n * Uma fase incrementa um bloco inteiro em 1; quando um bloco atinge a altura\n * do vizinho, eles se fundem. O processo de fusões forma uma árvore binária\n * sobre os blocos, onde cada nó interno corresponde a uma fusão ocorrida em\n * uma altura t >= max(v no intervalo do nó), e o total de fases é:\n *\n *      H + soma(t dos nós internos) - soma(h das folhas)\n *\n * com H = altura final >= max global (ótimo: H = max global), e cada t\n * aguenta no mínimo max do intervalo correspondente. Logo basta minimizar\n * a soma dos t's sobre todas as árvores binárias fundíveis:\n *\n *      W(l, r) = max(v[l..r]) + min_k ( W(l,k) + W(k+1,r) ),  W(l,l) = 0\n *\n * Resposta = max global + W(1,m) - soma de todos os v[i].\n * Verificado nos exemplos (2, 4, 0) e vários casos pequenos.\n */\n\nint main(){\n    int n;\n    if(scanf(\"%d\", &n) != 1) return 0;\n    vector<int> a(n);\n    for(int i = 0; i < n; ++i) scanf(\"%d\", &a[i]);\n\n    vector<int> v;\n    v.reserve(n);\n    for(int i = 0; i < n; ++i)\n        if(v.empty() || v.back() != a[i]) v.push_back(a[i]);\n\n    int m = (int)v.size();\n\n    // MX[l][r] = max de v[l..r]\n    vector<vector<int>> MX(m, vector<int>(m, 0));\n    for(int l = 0; l < m; ++l){\n        MX[l][l] = v[l];\n        for(int r = l + 1; r < m; ++r)\n            MX[l][r] = max(MX[l][r-1], v[r]);\n    }\n\n    // DP de intervalos\n    vector<vector<int>> W(m, vector<int>(m, 0));\n    for(int len = 2; len <= m; ++len){\n        for(int l = 0; l + len - 1 < m; ++l){\n            int r = l + len - 1;\n            int best = INT_MAX;\n            int* Wl = W[l].data();\n            for(int k = l; k < r; ++k){\n                int c = Wl[k] + W[k+1][r];\n                if(c < best) best = c;\n            }\n            W[l][r] = MX[l][r] + best;\n        }\n    }\n\n    long long sum = 0;\n    for(int x : v) sum += x;\n    long long ans = (long long)MX[0][m-1] + W[0][m-1] - sum;\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22827500000130385,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

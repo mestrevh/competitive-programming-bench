@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:03:04.493617+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 794,
+            "output_tokens": 863,
+            "total_tokens": 3285
+        },
+        "cost_usd": {
+            "input_cost": 0.000596,
+            "output_cost": 0.003236,
+            "total_cost": 0.003832
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\ntypedef struct {\n    int to;\n    int next;\n} Edge;\n\nint head[200005];\nEdge edges[800005];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    edges[edge_cnt].to = v;\n    edges[edge_cnt].next = head[u];\n    head[u] = edge_cnt++;\n}\n\nint comp[200005];\nint comp_size = 0;\nbool visited[200005];\nbool is_neighbor[200005];\n\nint main() {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(u, v);\n        add_edge(v, u);\n    }\n\n    int *queue = (int *)malloc((n + 5) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) {\n        if (!visited[i]) {\n            int q_head = 0, q_tail = 0;\n            queue[q_tail++] = i;\n            visited[i] = true;\n\n            comp_size = 0;\n            long long edge_sum = 0;\n\n            while (q_head < q_tail) {\n                int u = queue[q_head++];\n                comp[comp_size++] = u;\n\n                int deg = 0;\n                for (int e = head[u]; e != -1; e = edges[e].next) {\n                    deg++;\n                    int v = edges[e].to;\n                    if (!visited[v]) {\n                        visited[v] = true;\n                        queue[q_tail++] = v;\n                    }\n                }\n                edge_sum += deg;\n            }\n\n            long long k = comp_size;\n            if (edge_sum < k * (k - 1)) {\n                // This component is not a clique\n                int chosen_u = -1;\n                for (int j = 0; j < comp_size; j++) {\n                    int u = comp[j];\n                    int deg = 0;\n                    for (int e = head[u]; e != -1; e = edges[e].next) {\n                        deg++;\n                    }\n                    if (deg < k - 1) {\n                        chosen_u = u;\n                        break;\n                    }\n                }\n\n                // Mark all neighbors of chosen_u\n                for (int e = head[chosen_u]; e != -1; e = edges[e].next) {\n                    is_neighbor[edges[e].to] = true;\n                }\n                is_neighbor[chosen_u] = true;\n\n                // Find a vertex in the same component not marked\n                for (int j = 0; j < comp_size; j++) {\n                    int v = comp[j];\n                    if (!is_neighbor[v]) {\n                        printf(\"%d %d\\n\", chosen_u, v);\n                        free(queue);\n                        return 0;\n                    }\n                }\n            }\n        }\n    }\n\n    printf(\"-1\\n\");\n    free(queue);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\ntypedef struct {\n    int to;\n    int next;\n} Edge;\n\nint head[200005];\nEdge edges[800005];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    edges[edge_cnt].to = v;\n    edges[edge_cnt].next = head[u];\n    head[u] = edge_cnt++;\n}\n\nint comp[200005];\nint comp_size = 0;\nbool visited[200005];\nbool is_neighbor[200005];\n\nint main() {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(u, v);\n        add_edge(v, u);\n    }\n\n    int *queue = (int *)malloc((n + 5) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) {\n        if (!visited[i]) {\n            int q_head = 0, q_tail = 0;\n            queue[q_tail++] = i;\n            visited[i] = true;\n\n            comp_size = 0;\n            long long edge_sum = 0;\n\n            while (q_head < q_tail) {\n                int u = queue[q_head++];\n                comp[comp_size++] = u;\n\n                int deg = 0;\n                for (int e = head[u]; e != -1; e = edges[e].next) {\n                    deg++;\n                    int v = edges[e].to;\n                    if (!visited[v]) {\n                        visited[v] = true;\n                        queue[q_tail++] = v;\n                    }\n                }\n                edge_sum += deg;\n            }\n\n            long long k = comp_size;\n            if (edge_sum < k * (k - 1)) {\n                // This component is not a clique\n                int chosen_u = -1;\n                for (int j = 0; j < comp_size; j++) {\n                    int u = comp[j];\n                    int deg = 0;\n                    for (int e = head[u]; e != -1; e = edges[e].next) {\n                        deg++;\n                    }\n                    if (deg < k - 1) {\n                        chosen_u = u;\n                        break;\n                    }\n                }\n\n                // Mark all neighbors of chosen_u\n                for (int e = head[chosen_u]; e != -1; e = edges[e].next) {\n                    is_neighbor[edges[e].to] = true;\n                }\n                is_neighbor[chosen_u] = true;\n\n                // Find a vertex in the same component not marked\n                for (int j = 0; j < comp_size; j++) {\n                    int v = comp[j];\n                    if (!is_neighbor[v]) {\n                        printf(\"%d %d\\n\", chosen_u, v);\n                        free(queue);\n                        return 0;\n                    }\n                }\n            }\n        }\n    }\n\n    printf(\"-1\\n\");\n    free(queue);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.15027850001933984,
+            "counts": {
+                "AC": 6,
+                "WA": 7,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

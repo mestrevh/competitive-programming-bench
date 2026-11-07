@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:40:04.530546+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 841,
+            "output_tokens": 1700,
+            "total_tokens": 2541
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.00408,
+            "total_cost": 0.004083
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    int P;\n    cin >> P;\n\n    vector<vector<bool>> black(L, vector<bool>(C, false));\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        cin >> x >> y;\n        --x; --y;\n        black[x][y] = true;\n    }\n\n    vector<int> eligible(L, 0);\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            bool ok = false;\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    ok = true;\n                    break;\n                }\n            }\n\n            if (ok) eligible[r] |= (1 << c);\n        }\n    }\n\n    const int INF = -1e9;\n    vector<int> dp(1 << C, INF);\n    dp[0] = 0;\n\n    for (int r = 0; r < L; r++) {\n        vector<int> ndp(1 << C, INF);\n\n        for (int mask = 0; mask < (1 << C); mask++) {\n            if ((mask & ~eligible[r]) != 0) continue;\n            if ((mask & (mask << 1)) != 0) continue;\n\n            int cnt = __builtin_popcount(mask);\n\n            for (int prev = 0; prev < (1 << C); prev++) {\n                if (dp[prev] == INF) continue;\n                if ((mask & prev) != 0) continue;\n\n                ndp[mask] = max(ndp[mask], dp[prev] + cnt);\n            }\n        }\n\n        dp = ndp;\n    }\n\n    int ans = 0;\n    for (int mask = 0; mask < (1 << C); mask++) {\n        ans = max(ans, dp[mask]);\n    }\n\n    cout << ans << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    int P;\n    cin >> P;\n\n    vector<vector<bool>> black(L, vector<bool>(C, false));\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        cin >> x >> y;\n        --x; --y;\n        black[x][y] = true;\n    }\n\n    vector<int> eligible(L, 0);\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            bool ok = false;\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    ok = true;\n                    break;\n                }\n            }\n\n            if (ok) eligible[r] |= (1 << c);\n        }\n    }\n\n    const int INF = -1e9;\n    vector<int> dp(1 << C, INF);\n    dp[0] = 0;\n\n    for (int r = 0; r < L; r++) {\n        vector<int> ndp(1 << C, INF);\n\n        for (int mask = 0; mask < (1 << C); mask++) {\n            if ((mask & ~eligible[r]) != 0) continue;\n            if ((mask & (mask << 1)) != 0) continue;\n\n            int cnt = __builtin_popcount(mask);\n\n            for (int prev = 0; prev < (1 << C); prev++) {\n                if (dp[prev] == INF) continue;\n                if ((mask & prev) != 0) continue;\n\n                ndp[mask] = max(ndp[mask], dp[prev] + cnt);\n            }\n        }\n\n        dp = ndp;\n    }\n\n    int ans = 0;\n    for (int mask = 0; mask < (1 << C); mask++) {\n        ans = max(ans, dp[mask]);\n    }\n\n    cout << ans << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1884016000003612,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

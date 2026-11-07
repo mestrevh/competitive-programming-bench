@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:11:17.837739+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 997,
+            "output_tokens": 22170,
+            "total_tokens": 23167
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.053208,
+            "total_cost": 0.053211
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct State {\n    int u, v, sum;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<State> states;\n    states.reserve(2 * M);\n\n    for (int i = 0; i < M; ++i) {\n        int a, b;\n        cin >> a >> b;\n        int s = a + b;\n        states.push_back({a, b, s});\n        states.push_back({b, a, s});\n    }\n\n    sort(states.begin(), states.end(), [](const State& x, const State& y) {\n        return x.sum > y.sum;\n    });\n\n    vector<int> best(N + 1, 0);\n    vector<pair<int, int>> updates;\n    updates.reserve(states.size());\n\n    for (size_t i = 0; i < states.size(); ) {\n        int currentSum = states[i].sum;\n        size_t j = i;\n        updates.clear();\n\n        while (j < states.size() && states[j].sum == currentSum) {\n            int u = states[j].u;\n            int v = states[j].v;\n            int val = (best[v] == 0 ? 2 : best[v] + 1);\n            updates.emplace_back(u, val);\n            ++j;\n        }\n\n        for (auto [u, val] : updates) {\n            if (val > best[u]) best[u] = val;\n        }\n\n        i = j;\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        if (i > 1) cout << ' ';\n        cout << max(1, best[i]);\n    }\n    cout << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct State {\n    int u, v, sum;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<State> states;\n    states.reserve(2 * M);\n\n    for (int i = 0; i < M; ++i) {\n        int a, b;\n        cin >> a >> b;\n        int s = a + b;\n        states.push_back({a, b, s});\n        states.push_back({b, a, s});\n    }\n\n    sort(states.begin(), states.end(), [](const State& x, const State& y) {\n        return x.sum > y.sum;\n    });\n\n    vector<int> best(N + 1, 0);\n    vector<pair<int, int>> updates;\n    updates.reserve(states.size());\n\n    for (size_t i = 0; i < states.size(); ) {\n        int currentSum = states[i].sum;\n        size_t j = i;\n        updates.clear();\n\n        while (j < states.size() && states[j].sum == currentSum) {\n            int u = states[j].u;\n            int v = states[j].v;\n            int val = (best[v] == 0 ? 2 : best[v] + 1);\n            updates.emplace_back(u, val);\n            ++j;\n        }\n\n        for (auto [u, val] : updates) {\n            if (val > best[u]) best[u] = val;\n        }\n\n        i = j;\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        if (i > 1) cout << ' ';\n        cout << max(1, best[i]);\n    }\n    cout << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1908569000006537,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

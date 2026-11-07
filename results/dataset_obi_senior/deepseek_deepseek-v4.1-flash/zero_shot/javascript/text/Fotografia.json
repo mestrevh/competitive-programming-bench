@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:01:40.272401+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 748,
+            "output_tokens": 1652,
+            "total_tokens": 2400
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.003965,
+            "total_cost": 0.003967
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst A = data[idx++];\nconst L = data[idx++];\nconst N = data[idx++];\n\nconst photoMin = Math.min(A, L);\nconst photoMax = Math.max(A, L);\nconst photoArea = A * L;\n\nlet bestId = -1;\nlet bestUnused = Infinity;\n\nfor (let i = 1; i <= N; i++) {\n    const X = data[idx++];\n    const Y = data[idx++];\n\n    const frameMin = Math.min(X, Y);\n    const frameMax = Math.max(X, Y);\n\n    if (frameMin >= photoMin && frameMax >= photoMax) {\n        const unused = X * Y - photoArea;\n        if (unused < bestUnused) {\n            bestUnused = unused;\n            bestId = i;\n        }\n    }\n}\n\nconsole.log(bestId);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst A = data[idx++];\nconst L = data[idx++];\nconst N = data[idx++];\n\nconst photoMin = Math.min(A, L);\nconst photoMax = Math.max(A, L);\nconst photoArea = A * L;\n\nlet bestId = -1;\nlet bestUnused = Infinity;\n\nfor (let i = 1; i <= N; i++) {\n    const X = data[idx++];\n    const Y = data[idx++];\n\n    const frameMin = Math.min(X, Y);\n    const frameMax = Math.max(X, Y);\n\n    if (frameMin >= photoMin && frameMax >= photoMax) {\n        const unused = X * Y - photoArea;\n        if (unused < bestUnused) {\n            bestUnused = unused;\n            bestId = i;\n        }\n    }\n}\n\nconsole.log(bestId);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05089419998694211,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:13:22.863037+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1292,
+            "output_tokens": 21581,
+            "total_tokens": 22873
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.051794,
+            "total_cost": 0.051798
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint N;\nlong long *U, *V;\nlong long gMinU, gMaxU, gMinV, gMaxV;\n\nint checkCorner(long long uL, long long uR, long long vL, long long vR, long long D) {\n    long long minU = LLONG_MAX, maxU = LLONG_MIN;\n    long long minV = LLONG_MAX, maxV = LLONG_MIN;\n    int has = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long u = U[i], v = V[i];\n        if (u >= uL && u <= uR && v >= vL && v <= vR) continue;\n\n        has = 1;\n        if (u < minU) minU = u;\n        if (u > maxU) maxU = u;\n        if (v < minV) minV = v;\n        if (v > maxV) maxV = v;\n    }\n\n    if (!has) return 1;\n    return (maxU - minU <= D && maxV - minV <= D);\n}\n\nint feasible(long long D) {\n    if (gMaxU - gMinU <= D && gMaxV - gMinV <= D) return 1;\n\n    if (checkCorner(gMinU, gMinU + D, gMinV, gMinV + D, D)) return 1;\n    if (checkCorner(gMaxU - D, gMaxU, gMinV, gMinV + D, D)) return 1;\n    if (checkCorner(gMinU, gMinU + D, gMaxV - D, gMaxV, D)) return 1;\n    if (checkCorner(gMaxU - D, gMaxU, gMaxV - D, gMaxV, D)) return 1;\n\n    return 0;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n\n    int *X = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &X[i]);\n    }\n\n    U = (long long *)malloc(N * sizeof(long long));\n    V = (long long *)malloc(N * sizeof(long long));\n\n    gMinU = LLONG_MAX;\n    gMaxU = LLONG_MIN;\n    gMinV = LLONG_MAX;\n    gMaxV = LLONG_MIN;\n\n    for (int i = 0; i < N; i++) {\n        int Y;\n        scanf(\"%d\", &Y);\n\n        long long u = (long long)X[i] + Y;\n        long long v = (long long)X[i] - Y;\n\n        U[i] = u;\n        V[i] = v;\n\n        if (u < gMinU) gMinU = u;\n        if (u > gMaxU) gMaxU = u;\n        if (v < gMinV) gMinV = v;\n        if (v > gMaxV) gMaxV = v;\n    }\n\n    free(X);\n\n    long long lo = 0;\n    long long hi = gMaxU - gMinU;\n    if (gMaxV - gMinV > hi) hi = gMaxV - gMinV;\n\n    while (lo < hi) {\n        long long mid = lo + (hi - lo) / 2;\n        if (feasible(mid)) {\n            hi = mid;\n        } else {\n            lo = mid + 1;\n        }\n    }\n\n    printf(\"%lld\\n\", lo);\n\n    free(U);\n    free(V);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint N;\nlong long *U, *V;\nlong long gMinU, gMaxU, gMinV, gMaxV;\n\nint checkCorner(long long uL, long long uR, long long vL, long long vR, long long D) {\n    long long minU = LLONG_MAX, maxU = LLONG_MIN;\n    long long minV = LLONG_MAX, maxV = LLONG_MIN;\n    int has = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long u = U[i], v = V[i];\n        if (u >= uL && u <= uR && v >= vL && v <= vR) continue;\n\n        has = 1;\n        if (u < minU) minU = u;\n        if (u > maxU) maxU = u;\n        if (v < minV) minV = v;\n        if (v > maxV) maxV = v;\n    }\n\n    if (!has) return 1;\n    return (maxU - minU <= D && maxV - minV <= D);\n}\n\nint feasible(long long D) {\n    if (gMaxU - gMinU <= D && gMaxV - gMinV <= D) return 1;\n\n    if (checkCorner(gMinU, gMinU + D, gMinV, gMinV + D, D)) return 1;\n    if (checkCorner(gMaxU - D, gMaxU, gMinV, gMinV + D, D)) return 1;\n    if (checkCorner(gMinU, gMinU + D, gMaxV - D, gMaxV, D)) return 1;\n    if (checkCorner(gMaxU - D, gMaxU, gMaxV - D, gMaxV, D)) return 1;\n\n    return 0;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n\n    int *X = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &X[i]);\n    }\n\n    U = (long long *)malloc(N * sizeof(long long));\n    V = (long long *)malloc(N * sizeof(long long));\n\n    gMinU = LLONG_MAX;\n    gMaxU = LLONG_MIN;\n    gMinV = LLONG_MAX;\n    gMaxV = LLONG_MIN;\n\n    for (int i = 0; i < N; i++) {\n        int Y;\n        scanf(\"%d\", &Y);\n\n        long long u = (long long)X[i] + Y;\n        long long v = (long long)X[i] - Y;\n\n        U[i] = u;\n        V[i] = v;\n\n        if (u < gMinU) gMinU = u;\n        if (u > gMaxU) gMaxU = u;\n        if (v < gMinV) gMinV = v;\n        if (v > gMaxV) gMaxV = v;\n    }\n\n    free(X);\n\n    long long lo = 0;\n    long long hi = gMaxU - gMinU;\n    if (gMaxV - gMinV > hi) hi = gMaxV - gMinV;\n\n    while (lo < hi) {\n        long long mid = lo + (hi - lo) / 2;\n        if (feasible(mid)) {\n            hi = mid;\n        } else {\n            lo = mid + 1;\n        }\n    }\n\n    printf(\"%lld\\n\", lo);\n\n    free(U);\n    free(V);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1895405999966897,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

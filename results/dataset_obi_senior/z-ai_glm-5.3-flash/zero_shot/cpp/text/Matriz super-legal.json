@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-03T00:18:26.302465+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 714,
+            "output_tokens": 34652,
+            "total_tokens": 35366
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.017326,
+            "total_cost": 0.017341
+        },
+        "raw_response": "```cpp\n#include <cstdio>\n#include <cstring>\n#include <algorithm>\nusing namespace std;\n\nstatic char ibuf[1 << 16];\nstatic int ipos = 0, ilen = 0;\nstatic inline int gc() {\n    if (ipos == ilen) {\n        ilen = (int)fread(ibuf, 1, sizeof(ibuf), stdin);\n        ipos = 0;\n        if (ilen <= 0) return -1;\n    }\n    return (unsigned char)ibuf[ipos++];\n}\nstatic inline int readInt() {\n    int c = gc();\n    while (c != -1 && c != '-' && (c < '0' || c > '9')) c = gc();\n    int neg = 0;\n    if (c == '-') { neg = 1; c = gc(); }\n    int x = 0;\n    while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = gc(); }\n    return neg ? -x : x;\n}\n\nstatic int A[1005][1005];\nstatic int heights[1005], leftE[1005], rightE[1005];\nstatic int stk[1005];\n\nint main() {\n    int L = readInt(), C = readInt();\n    for (int i = 0; i < L; i++)\n        for (int j = 0; j < C; j++)\n            A[i][j] = readInt();\n\n    // A matrix (submatrix) is super-legal iff for every rectangle of adjacent 2x2\n    // blocks inside it, A[i][j] + A[i+1][j+1] <= A[i][j+1] + A[i+1][j].\n    // Mark \"bad\" cells in a grid of size (L-1) x (C-1). A submatrix with >=2 rows/cols\n    // is super-legal iff the corresponding rectangle in the bad grid is all-zero,\n    // and its area is (h+1)*(w+1). Single row/column submatrices give max(L, C).\n    long long ans = max(L, C);\n    int W = C - 1;\n    for (int c = 0; c < W; c++) heights[c] = 0;\n\n    for (int r = 0; r + 1 < L; r++) {\n        for (int c = 0; c < W; c++) {\n            int a = A[r][c] + A[r + 1][c + 1];\n            int b = A[r][c + 1] + A[r + 1][c];\n            heights[c] = (a > b) ? 0 : heights[c] + 1;\n        }\n        int top = 0;\n        for (int c = 0; c < W; c++) {\n            while (top > 0 && heights[stk[top - 1]] >= heights[c]) top--;\n            leftE[c] = (top > 0) ? stk[top - 1] + 1 : 0;\n            stk[top++] = c;\n        }\n        top = 0;\n        for (int c = W - 1; c >= 0; c--) {\n            while (top > 0 && heights[stk[top - 1]] >= heights[c]) top--;\n            rightE[c] = (top > 0) ? stk[top - 1] - 1 : W - 1;\n            stk[top++] = c;\n        }\n        for (int c = 0; c < W; c++) {\n            long long area = (long long)(heights[c] + 1) * (long long)(rightE[c] - leftE[c] + 2);\n            if (area > ans) ans = area;\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <cstdio>\n#include <cstring>\n#include <algorithm>\nusing namespace std;\n\nstatic char ibuf[1 << 16];\nstatic int ipos = 0, ilen = 0;\nstatic inline int gc() {\n    if (ipos == ilen) {\n        ilen = (int)fread(ibuf, 1, sizeof(ibuf), stdin);\n        ipos = 0;\n        if (ilen <= 0) return -1;\n    }\n    return (unsigned char)ibuf[ipos++];\n}\nstatic inline int readInt() {\n    int c = gc();\n    while (c != -1 && c != '-' && (c < '0' || c > '9')) c = gc();\n    int neg = 0;\n    if (c == '-') { neg = 1; c = gc(); }\n    int x = 0;\n    while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = gc(); }\n    return neg ? -x : x;\n}\n\nstatic int A[1005][1005];\nstatic int heights[1005], leftE[1005], rightE[1005];\nstatic int stk[1005];\n\nint main() {\n    int L = readInt(), C = readInt();\n    for (int i = 0; i < L; i++)\n        for (int j = 0; j < C; j++)\n            A[i][j] = readInt();\n\n    // A matrix (submatrix) is super-legal iff for every rectangle of adjacent 2x2\n    // blocks inside it, A[i][j] + A[i+1][j+1] <= A[i][j+1] + A[i+1][j].\n    // Mark \"bad\" cells in a grid of size (L-1) x (C-1). A submatrix with >=2 rows/cols\n    // is super-legal iff the corresponding rectangle in the bad grid is all-zero,\n    // and its area is (h+1)*(w+1). Single row/column submatrices give max(L, C).\n    long long ans = max(L, C);\n    int W = C - 1;\n    for (int c = 0; c < W; c++) heights[c] = 0;\n\n    for (int r = 0; r + 1 < L; r++) {\n        for (int c = 0; c < W; c++) {\n            int a = A[r][c] + A[r + 1][c + 1];\n            int b = A[r][c + 1] + A[r + 1][c];\n            heights[c] = (a > b) ? 0 : heights[c] + 1;\n        }\n        int top = 0;\n        for (int c = 0; c < W; c++) {\n            while (top > 0 && heights[stk[top - 1]] >= heights[c]) top--;\n            leftE[c] = (top > 0) ? stk[top - 1] + 1 : 0;\n            stk[top++] = c;\n        }\n        top = 0;\n        for (int c = W - 1; c >= 0; c--) {\n            while (top > 0 && heights[stk[top - 1]] >= heights[c]) top--;\n            rightE[c] = (top > 0) ? stk[top - 1] - 1 : W - 1;\n            stk[top++] = c;\n        }\n        for (int c = 0; c < W; c++) {\n            long long area = (long long)(heights[c] + 1) * (long long)(rightE[c] - leftE[c] + 2);\n            if (area > ans) ans = area;\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19675390000338666,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T18:12:01.334699+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 835,
+            "output_tokens": 12270,
+            "total_tokens": 13105
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.006135,
+            "total_cost": 0.006153
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n\n    static int n;\n    static long[] bitCnt; // soma dos coeficientes angulares (c) cobrindo o ponto\n    static long[] bitCst; // soma dos termos constantes (d) cobrindo o ponto\n    static byte[] data;\n    static int pos;\n\n    // BIT para range update / point query (diferenças + prefix sum)\n    static void add(long[] bit, int i, long v) {\n        for (; i <= n; i += i & (-i)) bit[i] += v;\n    }\n\n    static long pref(long[] bit, int i) {\n        long s = 0;\n        for (; i > 0; i -= i & (-i)) s += bit[i];\n        return s;\n    }\n\n    static int nextInt() {\n        while (pos < data.length && (data[pos] < '0' || data[pos] > '9') && data[pos] != '-') pos++;\n        boolean neg = false;\n        if (pos < data.length && data[pos] == '-') { neg = true; pos++; }\n        int x = 0;\n        while (pos < data.length && data[pos] >= '0' && data[pos] <= '9') {\n            x = x * 10 + (data[pos] - '0');\n            pos++;\n        }\n        return neg ? -x : x;\n    }\n\n    public static void main(String[] args) throws IOException {\n        ByteArrayOutputStream bos = new ByteArrayOutputStream(1 << 22);\n        byte[] buf = new byte[1 << 16];\n        int r;\n        while ((r = System.in.read(buf)) != -1) bos.write(buf, 0, r);\n        data = bos.toByteArray();\n        pos = 0;\n\n        n = nextInt();\n        int m = nextInt();\n        bitCnt = new long[n + 1];\n        bitCst = new long[n + 1];\n        StringBuilder sb = new StringBuilder();\n\n        for (int q = 0; q < m; q++) {\n            int type = nextInt();\n            if (type == 3) { // IMPRIME\n                int x = nextInt();\n                long ans = pref(bitCnt, x) * (long) x + pref(bitCst, x);\n                sb.append(ans).append('\\n');\n            } else {\n                int i = nextInt();\n                int v = nextInt();\n                if (type == 1) {\n                    // FRENTE: em cada j em [i, min(n, i+v-1)] soma (v+i) - j\n                    int rr = (int) Math.min((long) n, (long) i + v - 1);\n                    long d = (long) v + i;\n                    add(bitCnt, i, -1);\n                    add(bitCst, i, d);\n                    if (rr < n) {\n                        add(bitCnt, rr + 1, 1);\n                        add(bitCst, rr + 1, -d);\n                    }\n                } else {\n                    // TRAS: em cada j em [max(1, i-v+1), i] soma j + (v-i)\n                    int l = (int) Math.max(1L, (long) i - v + 1);\n                    long d = (long) v - i;\n                    add(bitCnt, l, 1);\n                    add(bitCst, l, d);\n                    if (i < n) {\n                        add(bitCnt, i + 1, -1);\n                        add(bitCst, i + 1, -d);\n                    }\n                }\n            }\n        }\n        System.out.print(sb);\n    }\n}\n```\n\n**Ideia da solução:** cada `FRENTE i V` adiciona, nas posições `j ∈ [i, min(N, i+V−1)]`, o valor `(V+i) − j` (função linear decrescente); cada `TRAS i V` adiciona `j + (V−i)` nas posições `j ∈ [max(1, i−V+1), i]`. Assim, o valor em um ponto `x` é `x·Σc + Σd` sobre as atualizações que cobrem `x`. Usando duas Fenwick trees com atualização em intervalo (adicionar em `l`, subtrair em `r+1`) e consulta por prefixo — uma para os coeficientes `c ∈ {−1, +1}` e outra para as constantes `d` — cada operação e consulta custa `O(log N)`, total `O(M log N)`, com aritmética em `long` para evitar overflow.",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n\n    static int n;\n    static long[] bitCnt; // soma dos coeficientes angulares (c) cobrindo o ponto\n    static long[] bitCst; // soma dos termos constantes (d) cobrindo o ponto\n    static byte[] data;\n    static int pos;\n\n    // BIT para range update / point query (diferenças + prefix sum)\n    static void add(long[] bit, int i, long v) {\n        for (; i <= n; i += i & (-i)) bit[i] += v;\n    }\n\n    static long pref(long[] bit, int i) {\n        long s = 0;\n        for (; i > 0; i -= i & (-i)) s += bit[i];\n        return s;\n    }\n\n    static int nextInt() {\n        while (pos < data.length && (data[pos] < '0' || data[pos] > '9') && data[pos] != '-') pos++;\n        boolean neg = false;\n        if (pos < data.length && data[pos] == '-') { neg = true; pos++; }\n        int x = 0;\n        while (pos < data.length && data[pos] >= '0' && data[pos] <= '9') {\n            x = x * 10 + (data[pos] - '0');\n            pos++;\n        }\n        return neg ? -x : x;\n    }\n\n    public static void main(String[] args) throws IOException {\n        ByteArrayOutputStream bos = new ByteArrayOutputStream(1 << 22);\n        byte[] buf = new byte[1 << 16];\n        int r;\n        while ((r = System.in.read(buf)) != -1) bos.write(buf, 0, r);\n        data = bos.toByteArray();\n        pos = 0;\n\n        n = nextInt();\n        int m = nextInt();\n        bitCnt = new long[n + 1];\n        bitCst = new long[n + 1];\n        StringBuilder sb = new StringBuilder();\n\n        for (int q = 0; q < m; q++) {\n            int type = nextInt();\n            if (type == 3) { // IMPRIME\n                int x = nextInt();\n                long ans = pref(bitCnt, x) * (long) x + pref(bitCst, x);\n                sb.append(ans).append('\\n');\n            } else {\n                int i = nextInt();\n                int v = nextInt();\n                if (type == 1) {\n                    // FRENTE: em cada j em [i, min(n, i+v-1)] soma (v+i) - j\n                    int rr = (int) Math.min((long) n, (long) i + v - 1);\n                    long d = (long) v + i;\n                    add(bitCnt, i, -1);\n                    add(bitCst, i, d);\n                    if (rr < n) {\n                        add(bitCnt, rr + 1, 1);\n                        add(bitCst, rr + 1, -d);\n                    }\n                } else {\n                    // TRAS: em cada j em [max(1, i-v+1), i] soma j + (v-i)\n                    int l = (int) Math.max(1L, (long) i - v + 1);\n                    long d = (long) v - i;\n                    add(bitCnt, l, 1);\n                    add(bitCst, l, d);\n                    if (i < n) {\n                        add(bitCnt, i + 1, -1);\n                        add(bitCst, i + 1, -d);\n                    }\n                }\n            }\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18378419999498874,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

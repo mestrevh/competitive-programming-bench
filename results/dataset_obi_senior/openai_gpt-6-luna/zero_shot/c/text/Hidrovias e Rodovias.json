@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:59:43.474521+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1377,
+            "output_tokens": 1037,
+            "total_tokens": 2414
+        },
+        "cost_usd": {
+            "input_cost": 0.000138,
+            "output_cost": 0.000518,
+            "total_cost": 0.000656
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int a, b, t;\n} Edge;\n\nint parent[100005];\nint size[100005];\n\nint find(int x) {\n    if (parent[x] != x)\n        parent[x] = find(parent[x]);\n    return parent[x];\n}\n\nint unite(int a, int b) {\n    a = find(a);\n    b = find(b);\n    if (a == b)\n        return 0;\n    if (size[a] < size[b]) {\n        int tmp = a;\n        a = b;\n        b = tmp;\n    }\n    parent[b] = a;\n    size[a] += size[b];\n    return 1;\n}\n\nint main(void) {\n    int N, M, K;\n    if (scanf(\"%d %d %d\", &N, &M, &K) != 3)\n        return 0;\n\n    Edge *edges = malloc((size_t)M * sizeof(Edge));\n    for (int i = 0; i < M; i++)\n        scanf(\"%d %d %d\", &edges[i].a, &edges[i].b, &edges[i].t);\n\n    for (int i = 1; i <= N; i++) {\n        parent[i] = i;\n        size[i] = 1;\n    }\n\n    for (int i = 0; i < M; i++) {\n        if (edges[i].t == 1 && !unite(edges[i].a, edges[i].b)) {\n            printf(\"N\\n\");\n            free(edges);\n            return 0;\n        }\n    }\n\n    int removed = 0;\n    for (int i = 0; i < M; i++) {\n        if (edges[i].t == 2 && !unite(edges[i].a, edges[i].b))\n            removed++;\n    }\n\n    printf(\"%c\\n\", removed <= K ? 'S' : 'N');\n    free(edges);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int a, b, t;\n} Edge;\n\nint parent[100005];\nint size[100005];\n\nint find(int x) {\n    if (parent[x] != x)\n        parent[x] = find(parent[x]);\n    return parent[x];\n}\n\nint unite(int a, int b) {\n    a = find(a);\n    b = find(b);\n    if (a == b)\n        return 0;\n    if (size[a] < size[b]) {\n        int tmp = a;\n        a = b;\n        b = tmp;\n    }\n    parent[b] = a;\n    size[a] += size[b];\n    return 1;\n}\n\nint main(void) {\n    int N, M, K;\n    if (scanf(\"%d %d %d\", &N, &M, &K) != 3)\n        return 0;\n\n    Edge *edges = malloc((size_t)M * sizeof(Edge));\n    for (int i = 0; i < M; i++)\n        scanf(\"%d %d %d\", &edges[i].a, &edges[i].b, &edges[i].t);\n\n    for (int i = 1; i <= N; i++) {\n        parent[i] = i;\n        size[i] = 1;\n    }\n\n    for (int i = 0; i < M; i++) {\n        if (edges[i].t == 1 && !unite(edges[i].a, edges[i].b)) {\n            printf(\"N\\n\");\n            free(edges);\n            return 0;\n        }\n    }\n\n    int removed = 0;\n    for (int i = 0; i < M; i++) {\n        if (edges[i].t == 2 && !unite(edges[i].a, edges[i].b))\n            removed++;\n    }\n\n    printf(\"%c\\n\", removed <= K ? 'S' : 'N');\n    free(edges);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1727491000056034,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

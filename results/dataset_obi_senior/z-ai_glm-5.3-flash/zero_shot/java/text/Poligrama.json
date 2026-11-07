@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T21:33:14.799291+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 627,
+            "output_tokens": 13624,
+            "total_tokens": 14251
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.006812,
+            "total_cost": 0.006825
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.Arrays;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        // Primeira linha: N (o comprimento real guarda-se pela própria palavra)\n        br.readLine();\n        String p = br.readLine();\n        if (p == null) p = \"\";\n        p = p.trim();\n        int n = p.length();\n\n        String ans = null;\n        if (n >= 2) {\n            char[] s = p.toCharArray();\n            int[] a = new int[26];   // frequências da raiz (prefixo de tamanho L)\n            int[] cur = new int[26]; // frequências parciais do bloco atual\n\n            outer:\n            for (int L = 1; L <= n / 2; L++) { // raiz precisa de >= 2 blocos\n                if (n % L != 0) continue;\n                Arrays.fill(a, 0);\n                for (int i = 0; i < L; i++) a[s[i] - 'a']++;\n                Arrays.fill(cur, 0);\n                int blocks = n / L;\n                boolean ok = true;\n                for (int b = 1; b < blocks && ok; b++) {\n                    int st = b * L;\n                    int en = st + L;\n                    for (int i = st; i < en; i++) {\n                        int c = s[i] - 'a';\n                        // se exceder a contagem da raiz, o bloco não é anagrama\n                        if (++cur[c] > a[c]) { ok = false; break; }\n                    }\n                    if (ok) {\n                        // cur <= a sempre valeu e a soma de ambos e' L => cur == a\n                        // desfaz as contagens para o proximo bloco\n                        for (int i = st; i < en; i++) cur[s[i] - 'a']--;\n                    }\n                }\n                if (ok) {\n                    ans = new String(s, 0, L); // menor raiz (L crescente)\n                    break outer;\n                }\n            }\n        }\n\n        System.out.println(ans == null ? \"*\" : ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.Arrays;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        // Primeira linha: N (o comprimento real guarda-se pela própria palavra)\n        br.readLine();\n        String p = br.readLine();\n        if (p == null) p = \"\";\n        p = p.trim();\n        int n = p.length();\n\n        String ans = null;\n        if (n >= 2) {\n            char[] s = p.toCharArray();\n            int[] a = new int[26];   // frequências da raiz (prefixo de tamanho L)\n            int[] cur = new int[26]; // frequências parciais do bloco atual\n\n            outer:\n            for (int L = 1; L <= n / 2; L++) { // raiz precisa de >= 2 blocos\n                if (n % L != 0) continue;\n                Arrays.fill(a, 0);\n                for (int i = 0; i < L; i++) a[s[i] - 'a']++;\n                Arrays.fill(cur, 0);\n                int blocks = n / L;\n                boolean ok = true;\n                for (int b = 1; b < blocks && ok; b++) {\n                    int st = b * L;\n                    int en = st + L;\n                    for (int i = st; i < en; i++) {\n                        int c = s[i] - 'a';\n                        // se exceder a contagem da raiz, o bloco não é anagrama\n                        if (++cur[c] > a[c]) { ok = false; break; }\n                    }\n                    if (ok) {\n                        // cur <= a sempre valeu e a soma de ambos e' L => cur == a\n                        // desfaz as contagens para o proximo bloco\n                        for (int i = st; i < en; i++) cur[s[i] - 'a']--;\n                    }\n                }\n                if (ok) {\n                    ans = new String(s, 0, L); // menor raiz (L crescente)\n                    break outer;\n                }\n            }\n        }\n\n        System.out.println(ans == null ? \"*\" : ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11359729996183887,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

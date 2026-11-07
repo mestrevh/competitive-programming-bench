@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:07:50.101714+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1067,
+            "output_tokens": 470,
+            "total_tokens": 1537
+        },
+        "cost_usd": {
+            "input_cost": 0.0008,
+            "output_cost": 0.001762,
+            "total_cost": 0.002563
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < input.length && input[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= input.length) return null;\n        let res = 0;\n        while (offset < input.length && input[offset] > 32) {\n            res = res * 10 + (input[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const S = nextInt();\n    if (S === null) return;\n    const T = nextInt();\n\n    // Use a flattened 2D array / typed array for the adjacency matrix.\n    // S <= 1000, so a matrix of (S + 1) * (S + 1) is ~1MB.\n    const stride = S + 1;\n    const adj = new Uint8Array(stride * stride);\n\n    for (let i = 0; i < T; i++) {\n        const u = nextInt();\n        const v = nextInt();\n        adj[u * stride + v] = 1;\n        adj[v * stride + u] = 1;\n    }\n\n    const P = nextInt();\n    let validCount = 0;\n\n    for (let i = 0; i < P; i++) {\n        const N = nextInt();\n        let possible = true;\n        let prev = nextInt();\n\n        for (let j = 1; j < N; j++) {\n            const curr = nextInt();\n            if (possible) {\n                if (adj[prev * stride + curr] === 0) {\n                    possible = false;\n                }\n            }\n            prev = curr;\n        }\n\n        if (possible) {\n            validCount++;\n        }\n    }\n\n    console.log(validCount);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < input.length && input[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= input.length) return null;\n        let res = 0;\n        while (offset < input.length && input[offset] > 32) {\n            res = res * 10 + (input[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const S = nextInt();\n    if (S === null) return;\n    const T = nextInt();\n\n    // Use a flattened 2D array / typed array for the adjacency matrix.\n    // S <= 1000, so a matrix of (S + 1) * (S + 1) is ~1MB.\n    const stride = S + 1;\n    const adj = new Uint8Array(stride * stride);\n\n    for (let i = 0; i < T; i++) {\n        const u = nextInt();\n        const v = nextInt();\n        adj[u * stride + v] = 1;\n        adj[v * stride + u] = 1;\n    }\n\n    const P = nextInt();\n    let validCount = 0;\n\n    for (let i = 0; i < P; i++) {\n        const N = nextInt();\n        let possible = true;\n        let prev = nextInt();\n\n        for (let j = 1; j < N; j++) {\n            const curr = nextInt();\n            if (possible) {\n                if (adj[prev * stride + curr] === 0) {\n                    possible = false;\n                }\n            }\n            prev = curr;\n        }\n\n        if (possible) {\n            validCount++;\n        }\n    }\n\n    console.log(validCount);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07517920000827871,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

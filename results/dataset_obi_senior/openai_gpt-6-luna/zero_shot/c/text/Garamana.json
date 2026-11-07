@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:58:14.586914+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 531,
+            "output_tokens": 2192,
+            "total_tokens": 2723
+        },
+        "cost_usd": {
+            "input_cost": 5.3e-05,
+            "output_cost": 0.001096,
+            "total_cost": 0.001149
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nstatic int normalize(int cp) {\n    switch (cp) {\n        case 0x00C0: case 0x00C1: case 0x00C2: case 0x00C3: case 0x00C4:\n        case 0x00E0: case 0x00E1: case 0x00E2: case 0x00E3: case 0x00E4:\n            return 'a';\n        case 0x00C8: case 0x00C9: case 0x00CA: case 0x00CB:\n        case 0x00E8: case 0x00E9: case 0x00EA: case 0x00EB:\n            return 'e';\n        case 0x00CC: case 0x00CD: case 0x00CE: case 0x00CF:\n        case 0x00EC: case 0x00ED: case 0x00EE: case 0x00EF:\n            return 'i';\n        case 0x00D2: case 0x00D3: case 0x00D4: case 0x00D5: case 0x00D6:\n        case 0x00F2: case 0x00F3: case 0x00F4: case 0x00F5: case 0x00F6:\n            return 'o';\n        case 0x00D9: case 0x00DA: case 0x00DB: case 0x00DC:\n        case 0x00F9: case 0x00FA: case 0x00FB: case 0x00FC:\n            return 'u';\n        case 0x00C7: case 0x00E7:\n            return 'c';\n        default:\n            return cp;\n    }\n}\n\nstatic int decode(const char *s, int out[]) {\n    int n = 0;\n    const unsigned char *p = (const unsigned char *)s;\n\n    while (*p && *p != '\\n' && *p != '\\r' && *p != ' ' && *p != '\\t') {\n        int cp;\n        if (*p < 0x80) {\n            cp = *p++;\n        } else if ((*p & 0xE0) == 0xC0) {\n            cp = ((*p & 0x1F) << 6) | (p[1] & 0x3F);\n            p += 2;\n        } else if ((*p & 0xF0) == 0xE0) {\n            cp = ((*p & 0x0F) << 12) | ((p[1] & 0x3F) << 6) | (p[2] & 0x3F);\n            p += 3;\n        } else {\n            cp = ((*p & 0x07) << 18) | ((p[1] & 0x3F) << 12) |\n                 ((p[2] & 0x3F) << 6) | (p[3] & 0x3F);\n            p += 4;\n        }\n        out[n++] = normalize(cp);\n    }\n\n    return n;\n}\n\nint main(void) {\n    char line[1024];\n    int p[128], a[128], used[128] = {0};\n\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    int np = decode(line, p);\n\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    int na = decode(line, a);\n\n    if (np != na) {\n        puts(\"N\");\n        return 0;\n    }\n\n    int ok = 1;\n    for (int i = 0; i < na && ok; i++) {\n        if (a[i] == '*') continue;\n\n        int found = 0;\n        for (int j = 0; j < np; j++) {\n            if (!used[j] && p[j] == a[i]) {\n                used[j] = 1;\n                found = 1;\n                break;\n            }\n        }\n        if (!found) ok = 0;\n    }\n\n    puts(ok ? \"S\" : \"N\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nstatic int normalize(int cp) {\n    switch (cp) {\n        case 0x00C0: case 0x00C1: case 0x00C2: case 0x00C3: case 0x00C4:\n        case 0x00E0: case 0x00E1: case 0x00E2: case 0x00E3: case 0x00E4:\n            return 'a';\n        case 0x00C8: case 0x00C9: case 0x00CA: case 0x00CB:\n        case 0x00E8: case 0x00E9: case 0x00EA: case 0x00EB:\n            return 'e';\n        case 0x00CC: case 0x00CD: case 0x00CE: case 0x00CF:\n        case 0x00EC: case 0x00ED: case 0x00EE: case 0x00EF:\n            return 'i';\n        case 0x00D2: case 0x00D3: case 0x00D4: case 0x00D5: case 0x00D6:\n        case 0x00F2: case 0x00F3: case 0x00F4: case 0x00F5: case 0x00F6:\n            return 'o';\n        case 0x00D9: case 0x00DA: case 0x00DB: case 0x00DC:\n        case 0x00F9: case 0x00FA: case 0x00FB: case 0x00FC:\n            return 'u';\n        case 0x00C7: case 0x00E7:\n            return 'c';\n        default:\n            return cp;\n    }\n}\n\nstatic int decode(const char *s, int out[]) {\n    int n = 0;\n    const unsigned char *p = (const unsigned char *)s;\n\n    while (*p && *p != '\\n' && *p != '\\r' && *p != ' ' && *p != '\\t') {\n        int cp;\n        if (*p < 0x80) {\n            cp = *p++;\n        } else if ((*p & 0xE0) == 0xC0) {\n            cp = ((*p & 0x1F) << 6) | (p[1] & 0x3F);\n            p += 2;\n        } else if ((*p & 0xF0) == 0xE0) {\n            cp = ((*p & 0x0F) << 12) | ((p[1] & 0x3F) << 6) | (p[2] & 0x3F);\n            p += 3;\n        } else {\n            cp = ((*p & 0x07) << 18) | ((p[1] & 0x3F) << 12) |\n                 ((p[2] & 0x3F) << 6) | (p[3] & 0x3F);\n            p += 4;\n        }\n        out[n++] = normalize(cp);\n    }\n\n    return n;\n}\n\nint main(void) {\n    char line[1024];\n    int p[128], a[128], used[128] = {0};\n\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    int np = decode(line, p);\n\n    if (!fgets(line, sizeof(line), stdin)) return 0;\n    int na = decode(line, a);\n\n    if (np != na) {\n        puts(\"N\");\n        return 0;\n    }\n\n    int ok = 1;\n    for (int i = 0; i < na && ok; i++) {\n        if (a[i] == '*') continue;\n\n        int found = 0;\n        for (int j = 0; j < np; j++) {\n            if (!used[j] && p[j] == a[i]) {\n                used[j] = 1;\n                found = 1;\n                break;\n            }\n        }\n        if (!found) ok = 0;\n    }\n\n    puts(ok ? \"S\" : \"N\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.12153980000584852,
+            "counts": {
+                "AC": 48,
+                "WA": 1,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 49
+        }
+    }
+]

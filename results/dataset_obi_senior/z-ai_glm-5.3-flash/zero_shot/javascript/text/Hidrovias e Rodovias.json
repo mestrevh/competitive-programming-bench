@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:01:06.246946+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1526,
+            "output_tokens": 4917,
+            "total_tokens": 6443
+        },
+        "cost_usd": {
+            "input_cost": 3.3e-05,
+            "output_cost": 0.002459,
+            "total_cost": 0.002491
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(t => t.length > 0);\nlet idx = 0;\nconst N = +tokens[idx++], M = +tokens[idx++], K = +tokens[idx++];\n\nconst water = [], road = [];\nfor (let i = 0; i < M; i++) {\n  const a = +tokens[idx++], b = +tokens[idx++], t = +tokens[idx++];\n  if (t === 1) water.push(a, b);\n  else road.push(a, b);\n}\n\nconst parent = new Int32Array(N + 1);\nfor (let i = 0; i <= N; i++) parent[i] = i;\n\nfunction find(x) {\n  let r = x;\n  while (parent[r] !== r) r = parent[r];\n  while (parent[x] !== r) { const nx = parent[x]; parent[x] = r; x = nx; }\n  return r;\n}\n\n// Há K anos atrás existiam todas as hidrovias e (rodovias atuais - no máximo K).\n// O mapa antigo (todas hidrovias + rodovias restantes) precisa ser uma floresta.\n// Hidrovias fechando ciclo -> impossível (não podem ser removidas).\nlet ok = true;\n\n// Processa hidrovias: todas devem ser mantidas.\nfor (let i = 0; i < water.length; i += 2) {\n  const ra = find(water[i]), rb = find(water[i + 1]);\n  if (ra === rb) { ok = false; break; }\n  parent[ra] = rb;\n}\n\nlet removed = 0;\nif (ok) {\n  // Rodovias: mantém as que unem componentes distintas, remove as que fecham ciclo.\n  for (let i = 0; i < road.length; i += 2) {\n    const ra = find(road[i]), rb = find(road[i + 1]);\n    if (ra === rb) removed++;\n    else parent[ra] = rb;\n  }\n}\n\nconsole.log(ok && removed <= K ? 'S' : 'N');\n```",
+        "extracted_code": "const fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(t => t.length > 0);\nlet idx = 0;\nconst N = +tokens[idx++], M = +tokens[idx++], K = +tokens[idx++];\n\nconst water = [], road = [];\nfor (let i = 0; i < M; i++) {\n  const a = +tokens[idx++], b = +tokens[idx++], t = +tokens[idx++];\n  if (t === 1) water.push(a, b);\n  else road.push(a, b);\n}\n\nconst parent = new Int32Array(N + 1);\nfor (let i = 0; i <= N; i++) parent[i] = i;\n\nfunction find(x) {\n  let r = x;\n  while (parent[r] !== r) r = parent[r];\n  while (parent[x] !== r) { const nx = parent[x]; parent[x] = r; x = nx; }\n  return r;\n}\n\n// Há K anos atrás existiam todas as hidrovias e (rodovias atuais - no máximo K).\n// O mapa antigo (todas hidrovias + rodovias restantes) precisa ser uma floresta.\n// Hidrovias fechando ciclo -> impossível (não podem ser removidas).\nlet ok = true;\n\n// Processa hidrovias: todas devem ser mantidas.\nfor (let i = 0; i < water.length; i += 2) {\n  const ra = find(water[i]), rb = find(water[i + 1]);\n  if (ra === rb) { ok = false; break; }\n  parent[ra] = rb;\n}\n\nlet removed = 0;\nif (ok) {\n  // Rodovias: mantém as que unem componentes distintas, remove as que fecham ciclo.\n  for (let i = 0; i < road.length; i += 2) {\n    const ra = find(road[i]), rb = find(road[i + 1]);\n    if (ra === rb) removed++;\n    else parent[ra] = rb;\n  }\n}\n\nconsole.log(ok && removed <= K ? 'S' : 'N');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11326070001814514,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

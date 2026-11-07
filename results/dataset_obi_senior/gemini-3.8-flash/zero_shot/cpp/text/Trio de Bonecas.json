@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:56:54.823957+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1056,
+            "output_tokens": 413,
+            "total_tokens": 4069
+        },
+        "cost_usd": {
+            "input_cost": 0.000792,
+            "output_cost": 0.001549,
+            "total_cost": 0.002341
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nconst long long INF = 2e18;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, k;\n    if (!(cin >> n >> k)) return 0;\n\n    vector<long long> t(n + 1);\n    for (int i = 1; i <= n; ++i) {\n        cin >> t[i];\n    }\n\n    // Ordena em ordem decrescente (1-indexed)\n    sort(t.begin() + 1, t.end(), greater<long long>());\n\n    // dp_prev[i] armazena o menor custo para formar (j - 1) trios usando um subconjunto de t[1...i]\n    // dp_curr[i] armazenará o menor custo para formar j trios\n    vector<long long> dp_prev(n + 1, 0);\n    vector<long long> dp_curr(n + 1, INF);\n\n    for (int j = 1; j <= k; ++j) {\n        fill(dp_curr.begin(), dp_curr.end(), INF);\n        for (int i = 3 * j; i <= n; ++i) {\n            long long diff = t[i - 1] - t[i];\n            long long cost = diff * diff;\n            dp_curr[i] = min(dp_curr[i - 1], dp_prev[i - 2] + cost);\n        }\n        dp_prev = dp_curr;\n    }\n\n    cout << dp_curr[n] << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nconst long long INF = 2e18;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, k;\n    if (!(cin >> n >> k)) return 0;\n\n    vector<long long> t(n + 1);\n    for (int i = 1; i <= n; ++i) {\n        cin >> t[i];\n    }\n\n    // Ordena em ordem decrescente (1-indexed)\n    sort(t.begin() + 1, t.end(), greater<long long>());\n\n    // dp_prev[i] armazena o menor custo para formar (j - 1) trios usando um subconjunto de t[1...i]\n    // dp_curr[i] armazenará o menor custo para formar j trios\n    vector<long long> dp_prev(n + 1, 0);\n    vector<long long> dp_curr(n + 1, INF);\n\n    for (int j = 1; j <= k; ++j) {\n        fill(dp_curr.begin(), dp_curr.end(), INF);\n        for (int i = 3 * j; i <= n; ++i) {\n            long long diff = t[i - 1] - t[i];\n            long long cost = diff * diff;\n            dp_curr[i] = min(dp_curr[i - 1], dp_prev[i - 2] + cost);\n        }\n        dp_prev = dp_curr;\n    }\n\n    cout << dp_curr[n] << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16754260001471266,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:56:58.270272+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 644,
+            "output_tokens": 5731,
+            "total_tokens": 6375
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.002865,
+            "total_cost": 0.002879
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    if(!(cin >> n)) return 0;\n\n    string s;\n    s.reserve(n);\n    for(int i = 0; i < n; i++){\n        int d;\n        cin >> d;\n        s.push_back((char)('0' + d));\n    }\n\n    for(int L = 1; L <= n; ++L){\n        if(s[0] == '0') break; // A >= 1 não pode começar com 0\n        string cur = s.substr(0, L); // candidata a A\n        long long p = 0;\n        bool ok = true;\n\n        while(p < n){\n            size_t len = cur.size();\n            if((size_t)p + len > (size_t)n){ ok = false; break; }\n            if(s.compare((size_t)p, len, cur) != 0){ ok = false; break; }\n            p += (long long)len;\n\n            // incrementa cur (inteiro grande em string)\n            int i = (int)len - 1;\n            while(i >= 0 && cur[i] == '9'){ cur[i] = '0'; --i; }\n            if(i < 0) cur.insert(cur.begin(), '1');\n            else cur[i]++;\n        }\n\n        if(ok){\n            cout << s.substr(0, L) << \"\\n\";\n            return 0;\n        }\n    }\n    return 0;\n}\n```\n\n**Explicação da abordagem:**\n\n- Todos os dígitos de A devem ser exatamente os primeiros `L` dígitos da lousa (sem zero à esquerda, pois A ≥ 1). Testamos todos os comprimentos `L` de 1 a N, em ordem crescente — como números com menos dígitos são menores, o primeiro `L` que funcionar dá o menor A possível (para um mesmo `L`, A é único).\n- Para um A candidato, simulamos a sequência A, A+1, A+2, ... comparando cada número (com incremento de inteiro grande feito na string) contra a lousa. A resposta é válida se todos os prefixos casarem e a lousa terminar exatamente num limite entre dois números.\n- Custo total: para cada `L`, o custo das comparações é proporcional ao total de dígitos consumidos (≤ N) e os incrementos custam O(N) amortizados, dando O(N²) no total (≈ 10⁶ operações para N = 1000), o que é facilmente suficiente.",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    if(!(cin >> n)) return 0;\n\n    string s;\n    s.reserve(n);\n    for(int i = 0; i < n; i++){\n        int d;\n        cin >> d;\n        s.push_back((char)('0' + d));\n    }\n\n    for(int L = 1; L <= n; ++L){\n        if(s[0] == '0') break; // A >= 1 não pode começar com 0\n        string cur = s.substr(0, L); // candidata a A\n        long long p = 0;\n        bool ok = true;\n\n        while(p < n){\n            size_t len = cur.size();\n            if((size_t)p + len > (size_t)n){ ok = false; break; }\n            if(s.compare((size_t)p, len, cur) != 0){ ok = false; break; }\n            p += (long long)len;\n\n            // incrementa cur (inteiro grande em string)\n            int i = (int)len - 1;\n            while(i >= 0 && cur[i] == '9'){ cur[i] = '0'; --i; }\n            if(i < 0) cur.insert(cur.begin(), '1');\n            else cur[i]++;\n        }\n\n        if(ok){\n            cout << s.substr(0, L) << \"\\n\";\n            return 0;\n        }\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20107629999984056,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

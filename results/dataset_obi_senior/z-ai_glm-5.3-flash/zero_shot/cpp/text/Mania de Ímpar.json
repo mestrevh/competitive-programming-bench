@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-03T00:07:11.613882+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1186,
+            "output_tokens": 3315,
+            "total_tokens": 4501
+        },
+        "cost_usd": {
+            "input_cost": 2.5e-05,
+            "output_cost": 0.001657,
+            "total_cost": 0.001683
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n, m;\n    cin >> n >> m;\n    vector<vector<int>> g(n, vector<int>(m));\n    for(int i = 0; i < n; i++)\n        for(int j = 0; j < m; j++)\n            cin >> g[i][j];\n    \n    // Paridades adjacentes devem ser diferentes -> xadrez.\n    // Padrao A: celula (i,j) deve ter paridade (i+j)%2 (0-indexed).\n    // Padrao B: complementar.\n    int costA = 0;\n    for(int i = 0; i < n; i++)\n        for(int j = 0; j < m; j++)\n            if(g[i][j] % 2 != (i + j) % 2) costA++;\n    \n    int total = n * m;\n    int best = min(costA, total - costA);\n    \n    // flip = 0 -> padrao A se for o melhor, senao padrao B (complemento)\n    int flip = (costA <= total - costA) ? 0 : 1;\n    \n    cout << best << \"\\n\";\n    for(int i = 0; i < n; i++){\n        for(int j = 0; j < m; j++){\n            int t = (i + j + flip) % 2;   // paridade alvo\n            int v = g[i][j];\n            if(v % 2 != t) v++;           // 1 gota ajusta a paridade\n            cout << v << \" \\n\"[j == m - 1];\n        }\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n, m;\n    cin >> n >> m;\n    vector<vector<int>> g(n, vector<int>(m));\n    for(int i = 0; i < n; i++)\n        for(int j = 0; j < m; j++)\n            cin >> g[i][j];\n    \n    // Paridades adjacentes devem ser diferentes -> xadrez.\n    // Padrao A: celula (i,j) deve ter paridade (i+j)%2 (0-indexed).\n    // Padrao B: complementar.\n    int costA = 0;\n    for(int i = 0; i < n; i++)\n        for(int j = 0; j < m; j++)\n            if(g[i][j] % 2 != (i + j) % 2) costA++;\n    \n    int total = n * m;\n    int best = min(costA, total - costA);\n    \n    // flip = 0 -> padrao A se for o melhor, senao padrao B (complemento)\n    int flip = (costA <= total - costA) ? 0 : 1;\n    \n    cout << best << \"\\n\";\n    for(int i = 0; i < n; i++){\n        for(int j = 0; j < m; j++){\n            int t = (i + j + flip) % 2;   // paridade alvo\n            int v = g[i][j];\n            if(v % 2 != t) v++;           // 1 gota ajusta a paridade\n            cout << v << \" \\n\"[j == m - 1];\n        }\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19657780000125058,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

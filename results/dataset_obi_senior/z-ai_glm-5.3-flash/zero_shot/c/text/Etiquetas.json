@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:19:24.080414+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 575,
+            "output_tokens": 14403,
+            "total_tokens": 14978
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.007201,
+            "total_cost": 0.007214
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define INF (1LL << 62)\n\nstatic long long P[10005];\nstatic long long dpA[10005], dpB[10005];\nstatic long long A[10005];\n\nstatic int cmpLL(const void *x, const void *y) {\n    long long a = *(const long long *)x;\n    long long b = *(const long long *)y;\n    return (a > b) - (a < b);\n}\n\nint main(void) {\n    int N, K, C;\n    if (scanf(\"%d %d %d\", &N, &K, &C) != 3) return 0;\n    for (int i = 1; i <= N; i++) scanf(\"%lld\", &A[i]);\n\n    /* soma de prefixo */\n    P[0] = 0;\n    for (int i = 1; i <= N; i++) P[i] = P[i-1] + A[i];\n\n    long long cover;\n    if (C == 1) {\n        /* etiquetas de comprimento 1: basta escolher os K menores valores */\n        qsort(A + 1, (size_t)N, sizeof(long long), cmpLL);\n        cover = 0;\n        for (int i = 1; i <= K; i++) cover += A[i];\n    } else {\n        /*\n         * DP por camadas (numero de etiquetas usadas):\n         * dp[j][i] = menor soma coberta usando exatamente j etiquetas\n         *            dentro dos primeiros i quadrados\n         * dp[j][i] = min(dp[j][i-1],                      : quadrado i descoberto\n         *                dp[j-1][i-C] + soma(i-C+1..i))   : etiqueta termina em i\n         * camada 0: dp[0][i] = 0 para todo i\n         * Como j <= K e K*C <= N, toda camada j <= K e viavel em i = N.\n         * Complexidade: O(N*K) <= O(N^2/C), memoria O(N).\n         */\n        long long *prev = dpA, *cur = dpB;\n        for (int i = 0; i <= N; i++) prev[i] = 0; /* camada j = 0 */\n        for (int j = 1; j <= K; j++) {\n            cur[0] = INF;\n            for (int i = 1; i < C && i <= N; i++) cur[i] = INF;\n            for (int i = C; i <= N; i++) {\n                long long best = cur[i-1];\n                long long t = prev[i-C];\n                if (t != INF) {\n                    long long cand = t + P[i] - P[i-C];\n                    if (cand < best) best = cand;\n                }\n                cur[i] = best;\n            }\n            { long long *tmp = prev; prev = cur; cur = tmp; }\n        }\n        cover = prev[N];\n    }\n\n    printf(\"%lld\\n\", P[N] - cover);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define INF (1LL << 62)\n\nstatic long long P[10005];\nstatic long long dpA[10005], dpB[10005];\nstatic long long A[10005];\n\nstatic int cmpLL(const void *x, const void *y) {\n    long long a = *(const long long *)x;\n    long long b = *(const long long *)y;\n    return (a > b) - (a < b);\n}\n\nint main(void) {\n    int N, K, C;\n    if (scanf(\"%d %d %d\", &N, &K, &C) != 3) return 0;\n    for (int i = 1; i <= N; i++) scanf(\"%lld\", &A[i]);\n\n    /* soma de prefixo */\n    P[0] = 0;\n    for (int i = 1; i <= N; i++) P[i] = P[i-1] + A[i];\n\n    long long cover;\n    if (C == 1) {\n        /* etiquetas de comprimento 1: basta escolher os K menores valores */\n        qsort(A + 1, (size_t)N, sizeof(long long), cmpLL);\n        cover = 0;\n        for (int i = 1; i <= K; i++) cover += A[i];\n    } else {\n        /*\n         * DP por camadas (numero de etiquetas usadas):\n         * dp[j][i] = menor soma coberta usando exatamente j etiquetas\n         *            dentro dos primeiros i quadrados\n         * dp[j][i] = min(dp[j][i-1],                      : quadrado i descoberto\n         *                dp[j-1][i-C] + soma(i-C+1..i))   : etiqueta termina em i\n         * camada 0: dp[0][i] = 0 para todo i\n         * Como j <= K e K*C <= N, toda camada j <= K e viavel em i = N.\n         * Complexidade: O(N*K) <= O(N^2/C), memoria O(N).\n         */\n        long long *prev = dpA, *cur = dpB;\n        for (int i = 0; i <= N; i++) prev[i] = 0; /* camada j = 0 */\n        for (int j = 1; j <= K; j++) {\n            cur[0] = INF;\n            for (int i = 1; i < C && i <= N; i++) cur[i] = INF;\n            for (int i = C; i <= N; i++) {\n                long long best = cur[i-1];\n                long long t = prev[i-C];\n                if (t != INF) {\n                    long long cand = t + P[i] - P[i-C];\n                    if (cand < best) best = cand;\n                }\n                cur[i] = best;\n            }\n            { long long *tmp = prev; prev = cur; cur = tmp; }\n        }\n        cover = prev[N];\n    }\n\n    printf(\"%lld\\n\", P[N] - cover);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20754560001660138,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:02:57.415331+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1037,
+            "output_tokens": 1357,
+            "total_tokens": 2394
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003257,
+            "total_cost": 0.00326
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\nlet idx = 0;\nconst len = data.length;\n\nfunction nextInt() {\n  while (idx < len && data[idx] <= 32) idx++;\n  let num = 0;\n  while (idx < len && data[idx] > 32) {\n    num = num * 10 + (data[idx] - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst E = nextInt();\nconst M = nextInt();\nconst D = nextInt();\n\nconst likeX = new Int32Array(M);\nconst likeY = new Int32Array(M);\nfor (let i = 0; i < M; i++) {\n  likeX[i] = nextInt();\n  likeY[i] = nextInt();\n}\n\nconst disX = new Int32Array(D);\nconst disY = new Int32Array(D);\nfor (let i = 0; i < D; i++) {\n  disX[i] = nextInt();\n  disY[i] = nextInt();\n}\n\nconst group = new Int32Array(E + 1);\nconst numGroups = E / 3;\nfor (let g = 0; g < numGroups; g++) {\n  const a = nextInt();\n  const b = nextInt();\n  const c = nextInt();\n  group[a] = g;\n  group[b] = g;\n  group[c] = g;\n}\n\nlet violations = 0;\nfor (let i = 0; i < M; i++) {\n  if (group[likeX[i]] !== group[likeY[i]]) violations++;\n}\nfor (let i = 0; i < D; i++) {\n  if (group[disX[i]] === group[disY[i]]) violations++;\n}\n\nprocess.stdout.write(violations + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0);\nlet idx = 0;\nconst len = data.length;\n\nfunction nextInt() {\n  while (idx < len && data[idx] <= 32) idx++;\n  let num = 0;\n  while (idx < len && data[idx] > 32) {\n    num = num * 10 + (data[idx] - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst E = nextInt();\nconst M = nextInt();\nconst D = nextInt();\n\nconst likeX = new Int32Array(M);\nconst likeY = new Int32Array(M);\nfor (let i = 0; i < M; i++) {\n  likeX[i] = nextInt();\n  likeY[i] = nextInt();\n}\n\nconst disX = new Int32Array(D);\nconst disY = new Int32Array(D);\nfor (let i = 0; i < D; i++) {\n  disX[i] = nextInt();\n  disY[i] = nextInt();\n}\n\nconst group = new Int32Array(E + 1);\nconst numGroups = E / 3;\nfor (let g = 0; g < numGroups; g++) {\n  const a = nextInt();\n  const b = nextInt();\n  const c = nextInt();\n  group[a] = g;\n  group[b] = g;\n  group[c] = g;\n}\n\nlet violations = 0;\nfor (let i = 0; i < M; i++) {\n  if (group[likeX[i]] !== group[likeY[i]]) violations++;\n}\nfor (let i = 0; i < D; i++) {\n  if (group[disX[i]] === group[disY[i]]) violations++;\n}\n\nprocess.stdout.write(violations + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12168589999782853,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

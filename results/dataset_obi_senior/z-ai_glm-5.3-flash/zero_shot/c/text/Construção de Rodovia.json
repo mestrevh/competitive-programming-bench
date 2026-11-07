@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:41:32.709720+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 856,
+            "output_tokens": 3660,
+            "total_tokens": 4516
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.00183,
+            "total_cost": 0.001848
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 200005\n#define MAXM 400005\n\nstatic int parent[MAXN];\nstatic long long szv[MAXN];\nstatic long long ecnt[MAXN];\nstatic int deg[MAXN];\nstatic int head[MAXN];\nstatic int enext[2 * MAXM];\nstatic int eto[2 * MAXM];\nstatic int stampArr[MAXN];\nstatic int ex[MAXM], ey[MAXM];\n\nstatic int find(int x) {\n    int r = x;\n    while (parent[r] != r) r = parent[r];\n    while (parent[x] != r) {\n        int nx = parent[x];\n        parent[x] = r;\n        x = nx;\n    }\n    return r;\n}\n\nint main(void) {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        parent[i] = i;\n        szv[i] = 1;\n        head[i] = -1;\n    }\n\n    for (int e = 0; e < m; e++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        ex[e] = x;\n        ey[e] = y;\n        deg[x]++;\n        deg[y]++;\n\n        int i2 = e * 2;\n        eto[i2] = y; enext[i2] = head[x]; head[x] = i2;\n        eto[i2 + 1] = x; enext[i2 + 1] = head[y]; head[y] = i2 + 1;\n\n        int rx = find(x), ry = find(y);\n        if (rx != ry) {\n            if (szv[rx] < szv[ry]) { int t = rx; rx = ry; ry = t; }\n            parent[ry] = rx;\n            szv[rx] += szv[ry];\n        }\n    }\n\n    /* contar arestas por componente */\n    for (int e = 0; e < m; e++) ecnt[find(ex[e])]++;\n\n    /* procurar componente que nao seja clique */\n    int root = -1;\n    long long S = 0;\n    for (int i = 1; i <= n; i++) {\n        int r = find(i);\n        if (szv[r] * (szv[r] - 1) / 2 > ecnt[r]) {\n            root = r;\n            S = szv[r];\n            break;\n        }\n    }\n\n    if (root == -1) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    /* vertice v no componente com grau < S-1 (existe, pois nao e clique) */\n    int v = -1;\n    for (int i = 1; i <= n; i++) {\n        if (find(i) == root && deg[i] != S - 1) { v = i; break; }\n    }\n    if (v == -1) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    /* marcar vizinhos de v */\n    int cur = ++stampArr[0];\n    for (int e = head[v]; e != -1; e = enext[e]) stampArr[eto[e]] = cur;\n\n    /* procurar u no mesmo componente nao adjacente a v */\n    for (int i = 1; i <= n; i++) {\n        if (find(i) == root && i != v && stampArr[i] != cur) {\n            printf(\"%d %d\\n\", v, i);\n            return 0;\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 200005\n#define MAXM 400005\n\nstatic int parent[MAXN];\nstatic long long szv[MAXN];\nstatic long long ecnt[MAXN];\nstatic int deg[MAXN];\nstatic int head[MAXN];\nstatic int enext[2 * MAXM];\nstatic int eto[2 * MAXM];\nstatic int stampArr[MAXN];\nstatic int ex[MAXM], ey[MAXM];\n\nstatic int find(int x) {\n    int r = x;\n    while (parent[r] != r) r = parent[r];\n    while (parent[x] != r) {\n        int nx = parent[x];\n        parent[x] = r;\n        x = nx;\n    }\n    return r;\n}\n\nint main(void) {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        parent[i] = i;\n        szv[i] = 1;\n        head[i] = -1;\n    }\n\n    for (int e = 0; e < m; e++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        ex[e] = x;\n        ey[e] = y;\n        deg[x]++;\n        deg[y]++;\n\n        int i2 = e * 2;\n        eto[i2] = y; enext[i2] = head[x]; head[x] = i2;\n        eto[i2 + 1] = x; enext[i2 + 1] = head[y]; head[y] = i2 + 1;\n\n        int rx = find(x), ry = find(y);\n        if (rx != ry) {\n            if (szv[rx] < szv[ry]) { int t = rx; rx = ry; ry = t; }\n            parent[ry] = rx;\n            szv[rx] += szv[ry];\n        }\n    }\n\n    /* contar arestas por componente */\n    for (int e = 0; e < m; e++) ecnt[find(ex[e])]++;\n\n    /* procurar componente que nao seja clique */\n    int root = -1;\n    long long S = 0;\n    for (int i = 1; i <= n; i++) {\n        int r = find(i);\n        if (szv[r] * (szv[r] - 1) / 2 > ecnt[r]) {\n            root = r;\n            S = szv[r];\n            break;\n        }\n    }\n\n    if (root == -1) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    /* vertice v no componente com grau < S-1 (existe, pois nao e clique) */\n    int v = -1;\n    for (int i = 1; i <= n; i++) {\n        if (find(i) == root && deg[i] != S - 1) { v = i; break; }\n    }\n    if (v == -1) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    /* marcar vizinhos de v */\n    int cur = ++stampArr[0];\n    for (int e = head[v]; e != -1; e = enext[e]) stampArr[eto[e]] = cur;\n\n    /* procurar u no mesmo componente nao adjacente a v */\n    for (int i = 1; i <= n; i++) {\n        if (find(i) == root && i != v && stampArr[i] != cur) {\n            printf(\"%d %d\\n\", v, i);\n            return 0;\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.16107170001487248,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

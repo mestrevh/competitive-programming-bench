@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:08:07.132515+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 839,
+            "output_tokens": 3030,
+            "total_tokens": 3869
+        },
+        "cost_usd": {
+            "input_cost": 8.4e-05,
+            "output_cost": 0.001515,
+            "total_cost": 0.001599
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAX_EQ 200\n#define MAX_VAR 676\n\nint coeff[MAX_EQ][MAX_VAR];\nint grid[100][100];\nlong long rhs[MAX_EQ];\nint present[MAX_VAR];\nint solved[MAX_VAR];\nlong long value[MAX_VAR];\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    char name[3];\n\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            scanf(\"%2s\", name);\n            int v = (name[0] - 'a') * 26 + (name[1] - 'a');\n            grid[i][j] = v;\n            coeff[i][v]++;\n            present[v] = 1;\n        }\n        scanf(\"%lld\", &rhs[i]);\n    }\n\n    for (int j = 0; j < C; j++) {\n        scanf(\"%lld\", &rhs[L + j]);\n        for (int i = 0; i < L; i++)\n            coeff[L + j][grid[i][j]]++;\n    }\n\n    int total = L + C;\n    int remaining = 0;\n    for (int v = 0; v < MAX_VAR; v++)\n        remaining += present[v];\n\n    while (remaining > 0) {\n        int found = 0;\n\n        for (int e = 0; e < total && !found; e++) {\n            int unknown = -1;\n            int count = 0;\n\n            for (int v = 0; v < MAX_VAR; v++) {\n                if (!solved[v] && coeff[e][v] > 0) {\n                    unknown = v;\n                    count++;\n                    if (count > 1) break;\n                }\n            }\n\n            if (count == 1) {\n                value[unknown] = rhs[e] / coeff[e][unknown];\n                solved[unknown] = 1;\n                remaining--;\n\n                for (int k = 0; k < total; k++)\n                    rhs[k] -= (long long)coeff[k][unknown] * value[unknown];\n\n                found = 1;\n            }\n        }\n    }\n\n    for (int v = 0; v < MAX_VAR; v++) {\n        if (present[v])\n            printf(\"%c%c %lld\\n\", 'a' + v / 26, 'a' + v % 26, value[v]);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAX_EQ 200\n#define MAX_VAR 676\n\nint coeff[MAX_EQ][MAX_VAR];\nint grid[100][100];\nlong long rhs[MAX_EQ];\nint present[MAX_VAR];\nint solved[MAX_VAR];\nlong long value[MAX_VAR];\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    char name[3];\n\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            scanf(\"%2s\", name);\n            int v = (name[0] - 'a') * 26 + (name[1] - 'a');\n            grid[i][j] = v;\n            coeff[i][v]++;\n            present[v] = 1;\n        }\n        scanf(\"%lld\", &rhs[i]);\n    }\n\n    for (int j = 0; j < C; j++) {\n        scanf(\"%lld\", &rhs[L + j]);\n        for (int i = 0; i < L; i++)\n            coeff[L + j][grid[i][j]]++;\n    }\n\n    int total = L + C;\n    int remaining = 0;\n    for (int v = 0; v < MAX_VAR; v++)\n        remaining += present[v];\n\n    while (remaining > 0) {\n        int found = 0;\n\n        for (int e = 0; e < total && !found; e++) {\n            int unknown = -1;\n            int count = 0;\n\n            for (int v = 0; v < MAX_VAR; v++) {\n                if (!solved[v] && coeff[e][v] > 0) {\n                    unknown = v;\n                    count++;\n                    if (count > 1) break;\n                }\n            }\n\n            if (count == 1) {\n                value[unknown] = rhs[e] / coeff[e][unknown];\n                solved[unknown] = 1;\n                remaining--;\n\n                for (int k = 0; k < total; k++)\n                    rhs[k] -= (long long)coeff[k][unknown] * value[unknown];\n\n                found = 1;\n            }\n        }\n    }\n\n    for (int v = 0; v < MAX_VAR; v++) {\n        if (present[v])\n            printf(\"%c%c %lld\\n\", 'a' + v / 26, 'a' + v % 26, value[v]);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12472510000225157,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

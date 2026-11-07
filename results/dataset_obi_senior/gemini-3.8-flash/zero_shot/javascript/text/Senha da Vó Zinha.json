@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:07:17.482382+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1052,
+            "output_tokens": 472,
+            "total_tokens": 3968
+        },
+        "cost_usd": {
+            "input_cost": 0.000789,
+            "output_cost": 0.00177,
+            "total_cost": 0.002559
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nStr = nextToken();\n    if (!nStr) return;\n    const N = parseInt(nStr, 10);\n    const M = parseInt(nextToken(), 10);\n    const K = parseInt(nextToken(), 10);\n\n    const mask = nextToken();\n    const words = [];\n    for (let i = 0; i < M; i++) {\n        const word = nextToken();\n        const sortedChars = word.split('').sort();\n        words.push(sortedChars);\n    }\n\n    const pStr = nextToken();\n    let P = BigInt(pStr) - 1n;\n    const kBig = BigInt(K);\n\n    const chosen = [];\n    for (let i = 0; i < M; i++) {\n        const remaining = BigInt(M - 1 - i);\n        const block = kBig ** remaining;\n        const idx = Number(P / block);\n        chosen.push(words[i][idx]);\n        P = P % block;\n    }\n\n    const result = [];\n    let chosenIdx = 0;\n    for (let i = 0; i < N; i++) {\n        if (mask[i] === '#') {\n            result.push(chosen[chosenIdx++]);\n        } else {\n            result.push(mask[i]);\n        }\n    }\n\n    console.log(result.join(''));\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nStr = nextToken();\n    if (!nStr) return;\n    const N = parseInt(nStr, 10);\n    const M = parseInt(nextToken(), 10);\n    const K = parseInt(nextToken(), 10);\n\n    const mask = nextToken();\n    const words = [];\n    for (let i = 0; i < M; i++) {\n        const word = nextToken();\n        const sortedChars = word.split('').sort();\n        words.push(sortedChars);\n    }\n\n    const pStr = nextToken();\n    let P = BigInt(pStr) - 1n;\n    const kBig = BigInt(K);\n\n    const chosen = [];\n    for (let i = 0; i < M; i++) {\n        const remaining = BigInt(M - 1 - i);\n        const block = kBig ** remaining;\n        const idx = Number(P / block);\n        chosen.push(words[i][idx]);\n        P = P % block;\n    }\n\n    const result = [];\n    let chosenIdx = 0;\n    for (let i = 0; i < N; i++) {\n        if (mask[i] === '#') {\n            result.push(chosen[chosenIdx++]);\n        } else {\n            result.push(mask[i]);\n        }\n    }\n\n    console.log(result.join(''));\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.054223199986154214,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

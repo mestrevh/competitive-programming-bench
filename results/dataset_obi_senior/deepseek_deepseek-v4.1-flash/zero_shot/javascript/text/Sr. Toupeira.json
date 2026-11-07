@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:31:12.459769+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1176,
+            "output_tokens": 1124,
+            "total_tokens": 2300
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.002698,
+            "total_cost": 0.002701
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\nconst len = data.length;\n\nfunction nextInt() {\n  while (idx < len && data.charCodeAt(idx) <= 32) idx++;\n  let num = 0;\n  while (idx < len && data.charCodeAt(idx) > 32) {\n    num = num * 10 + (data.charCodeAt(idx) - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst S = nextInt();\nconst T = nextInt();\n\nconst adj = Array.from({ length: S + 1 }, () => new Uint8Array(S + 1));\n\nfor (let i = 0; i < T; i++) {\n  const x = nextInt();\n  const y = nextInt();\n  adj[x][y] = 1;\n  adj[y][x] = 1;\n}\n\nconst P = nextInt();\nlet answer = 0;\n\nfor (let i = 0; i < P; i++) {\n  const N = nextInt();\n  let prev = nextInt();\n  let ok = true;\n\n  for (let j = 1; j < N; j++) {\n    const cur = nextInt();\n    if (ok && adj[prev][cur] === 0) {\n      ok = false;\n    }\n    prev = cur;\n  }\n\n  if (ok) answer++;\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\nconst len = data.length;\n\nfunction nextInt() {\n  while (idx < len && data.charCodeAt(idx) <= 32) idx++;\n  let num = 0;\n  while (idx < len && data.charCodeAt(idx) > 32) {\n    num = num * 10 + (data.charCodeAt(idx) - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst S = nextInt();\nconst T = nextInt();\n\nconst adj = Array.from({ length: S + 1 }, () => new Uint8Array(S + 1));\n\nfor (let i = 0; i < T; i++) {\n  const x = nextInt();\n  const y = nextInt();\n  adj[x][y] = 1;\n  adj[y][x] = 1;\n}\n\nconst P = nextInt();\nlet answer = 0;\n\nfor (let i = 0; i < P; i++) {\n  const N = nextInt();\n  let prev = nextInt();\n  let ok = true;\n\n  for (let j = 1; j < N; j++) {\n    const cur = nextInt();\n    if (ok && adj[prev][cur] === 0) {\n      ok = false;\n    }\n    prev = cur;\n  }\n\n  if (ok) answer++;\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07599630000186153,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T19:08:45.902136+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 644,
+            "output_tokens": 30651,
+            "total_tokens": 31295
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.015326,
+            "total_cost": 0.015339
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n\n    static int[] s;   // digitos de entrada\n    static int[] cur; // buffer do numero corrente\n    static int n;\n\n    // Tenta A = primeiros L digitos; verifica se S = str(A)||str(A+1)||...||str(B)\n    static boolean check(int L) {\n        if (s[0] == 0) return false; // A nao pode ter zero a esquerda\n        System.arraycopy(s, 0, cur, 0, L);\n        int curLen = L;\n        int pos = L;\n        while (pos < n) {\n            // incrementa o numero atual (cur) em 1\n            int i = curLen - 1;\n            while (i >= 0 && cur[i] == 9) {\n                cur[i] = 0;\n                i--;\n            }\n            int nextLen;\n            if (i >= 0) {\n                cur[i]++;\n                nextLen = curLen;\n            } else {\n                // overflow: ex. 999 -> 1000 (tamanho aumenta em 1)\n                nextLen = curLen + 1;\n                cur[0] = 1;\n                cur[curLen] = 0;\n            }\n            if (n - pos < nextLen) return false;\n            for (int j = 0; j < nextLen; j++) {\n                if (s[pos + j] != cur[j]) return false;\n            }\n            pos += nextLen;\n            curLen = nextLen;\n        }\n        return true;\n    }\n\n    public static void main(String[] args) throws IOException {\n        InputStreamReader isr = new InputStreamReader(System.in);\n        StringBuilder input = new StringBuilder();\n        char[] buf = new char[8192];\n        int r;\n        while ((r = isr.read(buf)) != -1) {\n            input.append(buf, 0, r);\n        }\n        String text = input.toString();\n        int tlen = text.length();\n\n        // le N (primeiro numero da entrada)\n        int idx = 0;\n        while (idx < tlen && (text.charAt(idx) < '0' || text.charAt(idx) > '9')) idx++;\n        n = 0;\n        while (idx < tlen && text.charAt(idx) >= '0' && text.charAt(idx) <= '9') {\n            n = n * 10 + (text.charAt(idx) - '0');\n            idx++;\n        }\n\n        // coleta os N digitos (ignorando separadores)\n        s = new int[n];\n        cur = new int[n + 2];\n        int cnt = 0;\n        while (cnt < n && idx < tlen) {\n            char ch = text.charAt(idx++);\n            if (ch >= '0' && ch <= '9') {\n                s[cnt++] = ch - '0';\n            }\n        }\n\n        // A deve ser um prefixo de S; menor A = primeiro prefixo (menor comprimento)\n        // cuja decomposicao em inteiros consecutivos consome exatamente S.\n        for (int L = 1; L <= n; L++) {\n            if (check(L)) {\n                StringBuilder sb = new StringBuilder();\n                for (int i = 0; i < L; i++) sb.append((char) ('0' + s[i]));\n                System.out.println(sb);\n                return;\n            }\n        }\n        // Nao deve acontecer para entradas validas\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < n; i++) sb.append((char) ('0' + s[i]));\n        System.out.println(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n\n    static int[] s;   // digitos de entrada\n    static int[] cur; // buffer do numero corrente\n    static int n;\n\n    // Tenta A = primeiros L digitos; verifica se S = str(A)||str(A+1)||...||str(B)\n    static boolean check(int L) {\n        if (s[0] == 0) return false; // A nao pode ter zero a esquerda\n        System.arraycopy(s, 0, cur, 0, L);\n        int curLen = L;\n        int pos = L;\n        while (pos < n) {\n            // incrementa o numero atual (cur) em 1\n            int i = curLen - 1;\n            while (i >= 0 && cur[i] == 9) {\n                cur[i] = 0;\n                i--;\n            }\n            int nextLen;\n            if (i >= 0) {\n                cur[i]++;\n                nextLen = curLen;\n            } else {\n                // overflow: ex. 999 -> 1000 (tamanho aumenta em 1)\n                nextLen = curLen + 1;\n                cur[0] = 1;\n                cur[curLen] = 0;\n            }\n            if (n - pos < nextLen) return false;\n            for (int j = 0; j < nextLen; j++) {\n                if (s[pos + j] != cur[j]) return false;\n            }\n            pos += nextLen;\n            curLen = nextLen;\n        }\n        return true;\n    }\n\n    public static void main(String[] args) throws IOException {\n        InputStreamReader isr = new InputStreamReader(System.in);\n        StringBuilder input = new StringBuilder();\n        char[] buf = new char[8192];\n        int r;\n        while ((r = isr.read(buf)) != -1) {\n            input.append(buf, 0, r);\n        }\n        String text = input.toString();\n        int tlen = text.length();\n\n        // le N (primeiro numero da entrada)\n        int idx = 0;\n        while (idx < tlen && (text.charAt(idx) < '0' || text.charAt(idx) > '9')) idx++;\n        n = 0;\n        while (idx < tlen && text.charAt(idx) >= '0' && text.charAt(idx) <= '9') {\n            n = n * 10 + (text.charAt(idx) - '0');\n            idx++;\n        }\n\n        // coleta os N digitos (ignorando separadores)\n        s = new int[n];\n        cur = new int[n + 2];\n        int cnt = 0;\n        while (cnt < n && idx < tlen) {\n            char ch = text.charAt(idx++);\n            if (ch >= '0' && ch <= '9') {\n                s[cnt++] = ch - '0';\n            }\n        }\n\n        // A deve ser um prefixo de S; menor A = primeiro prefixo (menor comprimento)\n        // cuja decomposicao em inteiros consecutivos consome exatamente S.\n        for (int L = 1; L <= n; L++) {\n            if (check(L)) {\n                StringBuilder sb = new StringBuilder();\n                for (int i = 0; i < L; i++) sb.append((char) ('0' + s[i]));\n                System.out.println(sb);\n                return;\n            }\n        }\n        // Nao deve acontecer para entradas validas\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < n; i++) sb.append((char) ('0' + s[i]));\n        System.out.println(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08737309998832643,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

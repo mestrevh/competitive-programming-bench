@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:00:16.427279+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1308,
+            "output_tokens": 9584,
+            "total_tokens": 10892
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.023002,
+            "total_cost": 0.023006
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet pos = 0;\n\nconst N = Number(data[pos++]);\nconst T = Number(data[pos++]);\n\nconst t = new Int32Array(N);\nconst p = new Int32Array(N);\n\nfor (let i = 0; i < N; i++) t[i] = Number(data[pos++]);\nfor (let i = 0; i < N; i++) p[i] = Number(data[pos++]);\n\nconst C = Number(data[pos++]);\n\nconst perType = new Array(T + 1);\nfor (let i = 0; i < N; i++) {\n    const ty = t[i];\n    if (perType[ty] === undefined) perType[ty] = [];\n    perType[ty].push(i);\n}\n\nfor (let ty = 1; ty <= T; ty++) {\n    const arr = perType[ty];\n    if (arr !== undefined && arr.length > 1) {\n        arr.sort((a, b) => p[a] - p[b] || a - b);\n    }\n}\n\nconst global = new Array(N);\nfor (let i = 0; i < N; i++) global[i] = i;\nglobal.sort((a, b) => p[a] - p[b] || t[a] - t[b] || a - b);\n\nconst sold = new Uint8Array(N);\nconst ptr = new Int32Array(T + 1);\n\nlet globalPtr = 0;\nlet revenue = 0;\n\nfor (let j = 0; j < C; j++) {\n    const u = Number(data[pos++]);\n\n    if (u === 0) {\n        while (globalPtr < N && sold[global[globalPtr]]) globalPtr++;\n\n        if (globalPtr < N) {\n            const id = global[globalPtr++];\n            sold[id] = 1;\n            revenue += p[id];\n        }\n    } else {\n        const arr = perType[u];\n\n        if (arr !== undefined) {\n            let k = ptr[u];\n\n            while (k < arr.length && sold[arr[k]]) k++;\n            ptr[u] = k;\n\n            if (k < arr.length) {\n                const id = arr[k];\n                sold[id] = 1;\n                revenue += p[id];\n                ptr[u] = k + 1;\n            }\n        }\n    }\n}\n\nconsole.log(revenue);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet pos = 0;\n\nconst N = Number(data[pos++]);\nconst T = Number(data[pos++]);\n\nconst t = new Int32Array(N);\nconst p = new Int32Array(N);\n\nfor (let i = 0; i < N; i++) t[i] = Number(data[pos++]);\nfor (let i = 0; i < N; i++) p[i] = Number(data[pos++]);\n\nconst C = Number(data[pos++]);\n\nconst perType = new Array(T + 1);\nfor (let i = 0; i < N; i++) {\n    const ty = t[i];\n    if (perType[ty] === undefined) perType[ty] = [];\n    perType[ty].push(i);\n}\n\nfor (let ty = 1; ty <= T; ty++) {\n    const arr = perType[ty];\n    if (arr !== undefined && arr.length > 1) {\n        arr.sort((a, b) => p[a] - p[b] || a - b);\n    }\n}\n\nconst global = new Array(N);\nfor (let i = 0; i < N; i++) global[i] = i;\nglobal.sort((a, b) => p[a] - p[b] || t[a] - t[b] || a - b);\n\nconst sold = new Uint8Array(N);\nconst ptr = new Int32Array(T + 1);\n\nlet globalPtr = 0;\nlet revenue = 0;\n\nfor (let j = 0; j < C; j++) {\n    const u = Number(data[pos++]);\n\n    if (u === 0) {\n        while (globalPtr < N && sold[global[globalPtr]]) globalPtr++;\n\n        if (globalPtr < N) {\n            const id = global[globalPtr++];\n            sold[id] = 1;\n            revenue += p[id];\n        }\n    } else {\n        const arr = perType[u];\n\n        if (arr !== undefined) {\n            let k = ptr[u];\n\n            while (k < arr.length && sold[arr[k]]) k++;\n            ptr[u] = k;\n\n            if (k < arr.length) {\n                const id = arr[k];\n                sold[id] = 1;\n                revenue += p[id];\n                ptr[u] = k + 1;\n            }\n        }\n    }\n}\n\nconsole.log(revenue);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.23899169999640435,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

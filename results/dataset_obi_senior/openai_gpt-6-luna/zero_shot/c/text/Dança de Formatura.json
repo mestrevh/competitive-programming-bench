@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:47:54.832811+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1262,
+            "output_tokens": 887,
+            "total_tokens": 2149
+        },
+        "cost_usd": {
+            "input_cost": 0.000126,
+            "output_cost": 0.000443,
+            "total_cost": 0.00057
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define OUT_SIZE (1 << 20)\n\nstatic char out[OUT_SIZE];\nstatic size_t out_pos = 0;\n\nstatic void write_char(char c) {\n    if (out_pos == OUT_SIZE) {\n        fwrite(out, 1, out_pos, stdout);\n        out_pos = 0;\n    }\n    out[out_pos++] = c;\n}\n\nstatic void write_int(int x) {\n    char digits[12];\n    int count = 0;\n\n    do {\n        digits[count++] = (char)('0' + x % 10);\n        x /= 10;\n    } while (x > 0);\n\n    while (count > 0)\n        write_char(digits[--count]);\n}\n\nint main(void) {\n    int N, M, P;\n    if (scanf(\"%d %d %d\", &N, &M, &P) != 3)\n        return 0;\n\n    int *rows = malloc((size_t)N * sizeof(int));\n    int *cols = malloc((size_t)M * sizeof(int));\n\n    for (int i = 0; i < N; i++)\n        rows[i] = i;\n    for (int j = 0; j < M; j++)\n        cols[j] = j;\n\n    for (int i = 0; i < P; i++) {\n        char op;\n        int a, b;\n        scanf(\" %c %d %d\", &op, &a, &b);\n        a--;\n        b--;\n\n        int *permutation = (op == 'L') ? rows : cols;\n        int temp = permutation[a];\n        permutation[a] = permutation[b];\n        permutation[b] = temp;\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            write_int(rows[i] * M + cols[j] + 1);\n            write_char(j + 1 == M ? '\\n' : ' ');\n        }\n    }\n\n    if (out_pos > 0)\n        fwrite(out, 1, out_pos, stdout);\n\n    free(rows);\n    free(cols);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define OUT_SIZE (1 << 20)\n\nstatic char out[OUT_SIZE];\nstatic size_t out_pos = 0;\n\nstatic void write_char(char c) {\n    if (out_pos == OUT_SIZE) {\n        fwrite(out, 1, out_pos, stdout);\n        out_pos = 0;\n    }\n    out[out_pos++] = c;\n}\n\nstatic void write_int(int x) {\n    char digits[12];\n    int count = 0;\n\n    do {\n        digits[count++] = (char)('0' + x % 10);\n        x /= 10;\n    } while (x > 0);\n\n    while (count > 0)\n        write_char(digits[--count]);\n}\n\nint main(void) {\n    int N, M, P;\n    if (scanf(\"%d %d %d\", &N, &M, &P) != 3)\n        return 0;\n\n    int *rows = malloc((size_t)N * sizeof(int));\n    int *cols = malloc((size_t)M * sizeof(int));\n\n    for (int i = 0; i < N; i++)\n        rows[i] = i;\n    for (int j = 0; j < M; j++)\n        cols[j] = j;\n\n    for (int i = 0; i < P; i++) {\n        char op;\n        int a, b;\n        scanf(\" %c %d %d\", &op, &a, &b);\n        a--;\n        b--;\n\n        int *permutation = (op == 'L') ? rows : cols;\n        int temp = permutation[a];\n        permutation[a] = permutation[b];\n        permutation[b] = temp;\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            write_int(rows[i] * M + cols[j] + 1);\n            write_char(j + 1 == M ? '\\n' : ' ');\n        }\n    }\n\n    if (out_pos > 0)\n        fwrite(out, 1, out_pos, stdout);\n\n    free(rows);\n    free(cols);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.25191209999320563,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

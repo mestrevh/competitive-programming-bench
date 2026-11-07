@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:47:57.651385+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 848,
+            "output_tokens": 1010,
+            "total_tokens": 1858
+        },
+        "cost_usd": {
+            "input_cost": 8.5e-05,
+            "output_cost": 0.000505,
+            "total_cost": 0.00059
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet pos = 0;\nconst N = input[pos++];\nconst M = input[pos++];\n\nconst turns = new Array(M);\nfor (let i = 0; i < M; i++) turns[i] = input[pos++];\n\nconst lengths = new Array(M + 1);\nlengths[0] = N;\n\nfor (let i = 0; i < M; i++) {\n  const t = turns[i];\n  lengths[i + 1] = lengths[i] - Math.floor(lengths[i] / t);\n}\n\nconst count = Math.min(10000, lengths[M]);\nconst guests = new Int32Array(count);\n\nfor (let i = 0; i < count; i++) guests[i] = i + 1;\n\nfor (let i = M - 1; i >= 0; i--) {\n  const t = turns[i];\n  const divisor = t - 1;\n  for (let j = 0; j < count; j++) {\n    const rank = guests[j];\n    guests[j] = rank + Math.floor((rank - 1) / divisor);\n  }\n}\n\nlet output = '';\nfor (let i = 0; i < count; i++) output += guests[i] + '\\n';\nprocess.stdout.write(output);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet pos = 0;\nconst N = input[pos++];\nconst M = input[pos++];\n\nconst turns = new Array(M);\nfor (let i = 0; i < M; i++) turns[i] = input[pos++];\n\nconst lengths = new Array(M + 1);\nlengths[0] = N;\n\nfor (let i = 0; i < M; i++) {\n  const t = turns[i];\n  lengths[i + 1] = lengths[i] - Math.floor(lengths[i] / t);\n}\n\nconst count = Math.min(10000, lengths[M]);\nconst guests = new Int32Array(count);\n\nfor (let i = 0; i < count; i++) guests[i] = i + 1;\n\nfor (let i = M - 1; i >= 0; i--) {\n  const t = turns[i];\n  const divisor = t - 1;\n  for (let j = 0; j < count; j++) {\n    const rank = guests[j];\n    guests[j] = rank + Math.floor((rank - 1) / divisor);\n  }\n}\n\nlet output = '';\nfor (let i = 0; i < count; i++) output += guests[i] + '\\n';\nprocess.stdout.write(output);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15115540000260808,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

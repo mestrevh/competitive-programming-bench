@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T20:32:29.971338+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 15.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1188,
+            "output_tokens": 90122,
+            "total_tokens": 91310
+        },
+        "cost_usd": {
+            "input_cost": 2.5e-05,
+            "output_cost": 0.045061,
+            "total_cost": 0.045086
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAXV 10005\n#define MAXR 20005\n#define INF 0x3f3f3f3f\n\n/* Estasções: 1..E. Cada vértice pertence a no máximo um ciclo (cacto).\n * Consultas: (X, T): menor caminho fechado de X, sem U-turns imediatos,\n * com L >= T e todo par físico coincidente separado por >= T.\n * Estruturas de passeios válidos:\n *  R(v,pa)  : excursão fechada a partir de v entrando pela aresta pa, sem usar pa de novo.\n *  Q(v,pa,ret) : v->pa ->(passeio saindo de w, primeira aresta != ret)-> w -> volta por pa -> v.\n *  M(v,pa)  : passeio fechado em v, primeira aresta != pa.\n *  S(v,pa)  : passeio aberto de v (chega por pa, sai por outra aresta), termina em v.\n */\n\ntypedef struct Edge {\n    int to, len, next;\n} Edge;\n\nEdge ed[MAXR*2];\nint head[MAXV];\nint V, RE;\n\nint nEdge[MAXV];\nint parEdge[MAXV];      /* aresta usada para entrar no vértice (na floresta) */\nint parent[MAXV];\nint depth[MAXV];\nint intree[MAXR*2];\n\n/* pilha para dizer se o passeio na componente estável já abriu um ciclo */\nint inStable[MAXR*2];\nint stackEdge[2*MAXR];\nint sp;\n\nint up[MAXV];\nint bestExit[MAXV];  /* melhor passeio aberto subindo, então saindo para fora da subárvore */\nint bestTour[MAXV];  /* menor R(v,*) */\nint bestany[MAXV];\n\nstatic int E, R;\nstatic long long TT;\n\nstatic void addEdge(int a, int b, int c) {\n    ed[RE].to=b; ed[RE].len=c; ed[RE].next=head[a]; head[a]=RE++;\n    ed[RE].to=a; ed[RE].len=c; ed[RE].next=head[b]; head[b]=RE++;\n}\n\nstatic int low[MAXV], num[MAXV], cnt;\n\nstatic int upCycle[MAXV];    /* comprimento total do caminho de subida até a raiz da árvore de cacto */\nstatic int cycLen[MAXV];\n\nstatic int dfs(int v, int pe) {\n    num[v]=low[v]=++cnt;\n    parEdge[v]=pe;\n    up[v]=0; bestExit[v]=INF; bestTour[v]=INF; bestany[v]=INF;\n    for (int e=head[v]; e!=-1; e=ed[e].next) {\n        if ((e^1)==pe) continue;\n        int w=ed[e].to;\n        if (num[w]==0) {\n            interee[v] = -1;\n            int child = dfs(w, e);\n            low[v]=(low[v]<low[w])?low[v]:low[w];\n        } else {\n            if (num[w] < low[v]) low[v]=num[w];\n        }\n    }\n    return low[v];\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAXV 10005\n#define MAXR 20005\n#define INF 0x3f3f3f3f\n\n/* Estasções: 1..E. Cada vértice pertence a no máximo um ciclo (cacto).\n * Consultas: (X, T): menor caminho fechado de X, sem U-turns imediatos,\n * com L >= T e todo par físico coincidente separado por >= T.\n * Estruturas de passeios válidos:\n *  R(v,pa)  : excursão fechada a partir de v entrando pela aresta pa, sem usar pa de novo.\n *  Q(v,pa,ret) : v->pa ->(passeio saindo de w, primeira aresta != ret)-> w -> volta por pa -> v.\n *  M(v,pa)  : passeio fechado em v, primeira aresta != pa.\n *  S(v,pa)  : passeio aberto de v (chega por pa, sai por outra aresta), termina em v.\n */\n\ntypedef struct Edge {\n    int to, len, next;\n} Edge;\n\nEdge ed[MAXR*2];\nint head[MAXV];\nint V, RE;\n\nint nEdge[MAXV];\nint parEdge[MAXV];      /* aresta usada para entrar no vértice (na floresta) */\nint parent[MAXV];\nint depth[MAXV];\nint intree[MAXR*2];\n\n/* pilha para dizer se o passeio na componente estável já abriu um ciclo */\nint inStable[MAXR*2];\nint stackEdge[2*MAXR];\nint sp;\n\nint up[MAXV];\nint bestExit[MAXV];  /* melhor passeio aberto subindo, então saindo para fora da subárvore */\nint bestTour[MAXV];  /* menor R(v,*) */\nint bestany[MAXV];\n\nstatic int E, R;\nstatic long long TT;\n\nstatic void addEdge(int a, int b, int c) {\n    ed[RE].to=b; ed[RE].len=c; ed[RE].next=head[a]; head[a]=RE++;\n    ed[RE].to=a; ed[RE].len=c; ed[RE].next=head[b]; head[b]=RE++;\n}\n\nstatic int low[MAXV], num[MAXV], cnt;\n\nstatic int upCycle[MAXV];    /* comprimento total do caminho de subida até a raiz da árvore de cacto */\nstatic int cycLen[MAXV];\n\nstatic int dfs(int v, int pe) {\n    num[v]=low[v]=++cnt;\n    parEdge[v]=pe;\n    up[v]=0; bestExit[v]=INF; bestTour[v]=INF; bestany[v]=INF;\n    for (int e=head[v]; e!=-1; e=ed[e].next) {\n        if ((e^1)==pe) continue;\n        int w=ed[e].to;\n        if (num[w]==0) {\n            interee[v] = -1;\n            int child = dfs(w, e);\n            low[v]=(low[v]<low[w])?low[v]:low[w];\n        } else {\n            if (num[w] < low[v]) low[v]=num[w];\n        }\n    }\n    return low[v];\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 25
+            },
+            "total_test_cases": 25
+        }
+    }
+]

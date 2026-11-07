@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:39:49.277159+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 685,
+            "output_tokens": 464,
+            "total_tokens": 3328
+        },
+        "cost_usd": {
+            "input_cost": 0.000514,
+            "output_cost": 0.00174,
+            "total_cost": 0.002254
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n\n    idx = 2\n    A = []\n    for _ in range(L):\n        row = [int(x) for x in input_data[idx : idx + C]]\n        A.append(row)\n        idx += C\n\n    if L < 2 or C < 2:\n        print(0)\n        return\n\n    R = L - 1\n    K = C - 1\n\n    # heights array for the histogram\n    heights = [0] * K\n    max_area = 0\n\n    for i in range(R):\n        row_A_i = A[i]\n        row_A_ip1 = A[i + 1]\n\n        for j in range(K):\n            if row_A_i[j] + row_A_ip1[j + 1] <= row_A_i[j + 1] + row_A_ip1[j]:\n                heights[j] += 1\n            else:\n                heights[j] = 0\n\n        # Largest rectangle in histogram\n        stack = []\n        for j in range(K + 1):\n            h = heights[j] if j < K else 0\n            start = j\n            while stack and stack[-1][1] > h:\n                prev_idx, prev_h = stack.pop()\n                w = j - prev_idx\n                area = (prev_h + 1) * (w + 1)\n                if area > max_area:\n                    max_area = area\n                start = prev_idx\n            if not stack or stack[-1][1] < h:\n                stack.append((start, h))\n\n    print(max_area)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n\n    idx = 2\n    A = []\n    for _ in range(L):\n        row = [int(x) for x in input_data[idx : idx + C]]\n        A.append(row)\n        idx += C\n\n    if L < 2 or C < 2:\n        print(0)\n        return\n\n    R = L - 1\n    K = C - 1\n\n    # heights array for the histogram\n    heights = [0] * K\n    max_area = 0\n\n    for i in range(R):\n        row_A_i = A[i]\n        row_A_ip1 = A[i + 1]\n\n        for j in range(K):\n            if row_A_i[j] + row_A_ip1[j + 1] <= row_A_i[j + 1] + row_A_ip1[j]:\n                heights[j] += 1\n            else:\n                heights[j] = 0\n\n        # Largest rectangle in histogram\n        stack = []\n        for j in range(K + 1):\n            h = heights[j] if j < K else 0\n            start = j\n            while stack and stack[-1][1] > h:\n                prev_idx, prev_h = stack.pop()\n                w = j - prev_idx\n                area = (prev_h + 1) * (w + 1)\n                if area > max_area:\n                    max_area = area\n                start = prev_idx\n            if not stack or stack[-1][1] < h:\n                stack.append((start, h))\n\n    print(max_area)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.4284380000026431,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

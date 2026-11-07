@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:40:30.122225+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 588,
+            "output_tokens": 33904,
+            "total_tokens": 34492
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.016952,
+            "total_cost": 0.016965
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nstatic int cnt[282];\n\n/* Mapeia índice de letra acentuada minúscula (Latin-1: 0xA0..0xBF)\n   para a letra base ('a'..'z'); -1 se desconhecida. */\nstatic int folded(int x) {\n    if (x >= 0xA0 && x <= 0xA6) return 'a' - 'a';            /* à á â ã ä å æ */\n    if (x == 0xA7) return 'c' - 'a';                          /* ç */\n    if (x >= 0xA8 && x <= 0xAB) return 'e' - 'a';             /* è é ê ë */\n    if (x >= 0xAC && x <= 0xAF) return 'i' - 'a';             /* ì í î ï */\n    if (x == 0xB1) return 'n' - 'a';                          /* ñ */\n    if ((x >= 0xB2 && x <= 0xB6) || x == 0xB8) return 'o' - 'a'; /* ò ó ô õ ö ø */\n    if (x >= 0xB9 && x <= 0xBC) return 'u' - 'a';             /* ù ú û ü */\n    if (x == 0xBD || x == 0xBF) return 'y' - 'a';             /* ý ÿ */\n    return -1;\n}\n\n/* Retorna o id do próximo token, avançando *i. -1 significa '*'.\n   Ids: 0..25 = letras; >=26 = outros bytes (mantêm identidade). */\nstatic int nextTok(const unsigned char *s, size_t *i) {\n    unsigned char b = s[(*i)++];\n    if (b == '*') return -1;\n    if (b >= 'a' && b <= 'z') return b - 'a';\n    if (b >= 'A' && b <= 'Z') return b - 'A';\n    if (b == 0xC3) {                       /* UTF-8 de letras acentuadas latinas */\n        unsigned char n = s[*i];\n        if (n >= 0x80 && n <= 0xBF) {\n            (*i)++;\n            int x = (n < 0xA0) ? n + 0x20 : n;\n            int L = folded(x);\n            return (L >= 0) ? L : 26 + (int)b;\n        }\n    }\n    if (b >= 0xC0) {                       /* Latin-1 acentuado (E0..FF minúsc., C0..DF maiúsc.) */\n        int x = (b >= 0xE0) ? (int)b - 0x40 : (int)b - 0x20;\n        if (x >= 0xA0 && x <= 0xBF) {\n            int L = folded(x);\n            if (L >= 0) return L;\n        }\n    }\n    return 26 + (int)b;\n}\n\nint main(void) {\n    static char P[4096], A[4096];\n    const unsigned char *pp, *pa;\n    size_t i, j;\n    int ok = 1, t;\n\n    if (scanf(\"%4095s\", P) != 1) { puts(\"N\"); return 0; }\n    if (scanf(\"%4095s\", A) != 1) { puts(\"N\"); return 0; }\n\n    pp = (const unsigned char *)P;\n    if (pp[0] == 0xEF && pp[1] == 0xBB && pp[2] == 0xBF) pp += 3; /* BOM */\n    pa = (const unsigned char *)A;\n\n    memset(cnt, 0, sizeof(cnt));\n\n    /* Conta as letras disponíveis em P */\n    i = 0;\n    while (pp[i]) {\n        t = nextTok(pp, &i);\n        if (t >= 0) cnt[t]++;\n    }\n\n    /* A é anagrama curinga de P (|A| = |P|) sse as letras fixas de A\n       formam um submulticonjunto das letras de P; os '*' cobrem o restante. */\n    j = 0;\n    while (pa[j] && ok) {\n        t = nextTok(pa, &j);\n        if (t < 0) continue;               /* '*' ignora a letra original */\n        if (cnt[t] > 0) cnt[t]--;\n        else ok = 0;\n    }\n\n    puts(ok ? \"S\" : \"N\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nstatic int cnt[282];\n\n/* Mapeia índice de letra acentuada minúscula (Latin-1: 0xA0..0xBF)\n   para a letra base ('a'..'z'); -1 se desconhecida. */\nstatic int folded(int x) {\n    if (x >= 0xA0 && x <= 0xA6) return 'a' - 'a';            /* à á â ã ä å æ */\n    if (x == 0xA7) return 'c' - 'a';                          /* ç */\n    if (x >= 0xA8 && x <= 0xAB) return 'e' - 'a';             /* è é ê ë */\n    if (x >= 0xAC && x <= 0xAF) return 'i' - 'a';             /* ì í î ï */\n    if (x == 0xB1) return 'n' - 'a';                          /* ñ */\n    if ((x >= 0xB2 && x <= 0xB6) || x == 0xB8) return 'o' - 'a'; /* ò ó ô õ ö ø */\n    if (x >= 0xB9 && x <= 0xBC) return 'u' - 'a';             /* ù ú û ü */\n    if (x == 0xBD || x == 0xBF) return 'y' - 'a';             /* ý ÿ */\n    return -1;\n}\n\n/* Retorna o id do próximo token, avançando *i. -1 significa '*'.\n   Ids: 0..25 = letras; >=26 = outros bytes (mantêm identidade). */\nstatic int nextTok(const unsigned char *s, size_t *i) {\n    unsigned char b = s[(*i)++];\n    if (b == '*') return -1;\n    if (b >= 'a' && b <= 'z') return b - 'a';\n    if (b >= 'A' && b <= 'Z') return b - 'A';\n    if (b == 0xC3) {                       /* UTF-8 de letras acentuadas latinas */\n        unsigned char n = s[*i];\n        if (n >= 0x80 && n <= 0xBF) {\n            (*i)++;\n            int x = (n < 0xA0) ? n + 0x20 : n;\n            int L = folded(x);\n            return (L >= 0) ? L : 26 + (int)b;\n        }\n    }\n    if (b >= 0xC0) {                       /* Latin-1 acentuado (E0..FF minúsc., C0..DF maiúsc.) */\n        int x = (b >= 0xE0) ? (int)b - 0x40 : (int)b - 0x20;\n        if (x >= 0xA0 && x <= 0xBF) {\n            int L = folded(x);\n            if (L >= 0) return L;\n        }\n    }\n    return 26 + (int)b;\n}\n\nint main(void) {\n    static char P[4096], A[4096];\n    const unsigned char *pp, *pa;\n    size_t i, j;\n    int ok = 1, t;\n\n    if (scanf(\"%4095s\", P) != 1) { puts(\"N\"); return 0; }\n    if (scanf(\"%4095s\", A) != 1) { puts(\"N\"); return 0; }\n\n    pp = (const unsigned char *)P;\n    if (pp[0] == 0xEF && pp[1] == 0xBB && pp[2] == 0xBF) pp += 3; /* BOM */\n    pa = (const unsigned char *)A;\n\n    memset(cnt, 0, sizeof(cnt));\n\n    /* Conta as letras disponíveis em P */\n    i = 0;\n    while (pp[i]) {\n        t = nextTok(pp, &i);\n        if (t >= 0) cnt[t]++;\n    }\n\n    /* A é anagrama curinga de P (|A| = |P|) sse as letras fixas de A\n       formam um submulticonjunto das letras de P; os '*' cobrem o restante. */\n    j = 0;\n    while (pa[j] && ok) {\n        t = nextTok(pa, &j);\n        if (t < 0) continue;               /* '*' ignora a letra original */\n        if (cnt[t] > 0) cnt[t]--;\n        else ok = 0;\n    }\n\n    puts(ok ? \"S\" : \"N\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.415480399999069,
+            "counts": {
+                "AC": 49,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 49
+        }
+    }
+]

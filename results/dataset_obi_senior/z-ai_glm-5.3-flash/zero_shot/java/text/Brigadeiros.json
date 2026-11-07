@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:26:09.759593+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1577,
+            "output_tokens": 20759,
+            "total_tokens": 22336
+        },
+        "cost_usd": {
+            "input_cost": 3.4e-05,
+            "output_cost": 0.010379,
+            "total_cost": 0.010413
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in), 1 << 16));\n        in.nextToken(); int N = (int) in.nval;\n        in.nextToken(); int K = (int) in.nval;\n        in.nextToken(); long T = (long) in.nval;\n\n        int[] P = new int[N + 1];\n        for (int i = 1; i <= N; i++) { in.nextToken(); P[i] = (int) in.nval; }\n\n        int[] g = new int[K];\n        int idx = 0;\n        for (int i = 1; i <= N; i++) { in.nextToken(); if ((int) in.nval == 1) g[idx++] = i; }\n        // g[0..K-1] = posições iniciais do grupo, em ordem crescente.\n        // Custo mínimo de trocas para chegar ao conjunto de posições finais f1<f2<...<fK\n        // é soma |g_i - f_i| (matching monótono), pois trocas entre dois membros do grupo\n        // não alteram o conjunto de posições ocupadas.\n\n        int V = 9 * K;\n        final int INF = 1 << 29;\n\n        int[][] prev = new int[N + 1][V + 1];\n        int[][] cur = new int[N + 1][V + 1];\n        for (int j = 0; j <= N; j++) {\n            int[] pj = prev[j], cj = cur[j];\n            for (int v = 0; v <= V; v++) { pj[v] = INF; cj[v] = INF; }\n            pj[0] = 0; // camada 0: 0 membros, custo 0, valor 0\n        }\n\n        // dp[i][j][v] = custo mínimo atribuindo os primeiros i membros a posições\n        // distintas todas <= j, com valor total exatamente v.\n        // transição: dp[i][j][v] = min(dp[i][j-1][v], dp[i-1][j-1][v-P[j]] + |g_i - j|)\n        for (int i = 1; i <= K; i++) {\n            int gi = g[i - 1];\n            int maxV = 9 * i;\n            for (int v = 0; v <= maxV; v++) cur[0][v] = INF;\n            for (int j = 1; j <= N; j++) {\n                int pj = P[j];\n                int delta = gi > j ? gi - j : j - gi;\n                int[] curj = cur[j], curj1 = cur[j - 1], prevj1 = prev[j - 1];\n                for (int v = maxV; v >= 0; v--) {\n                    int best = curj1[v];\n                    int vp = v - pj;\n                    if (vp >= 0) {\n                        int c = prevj1[vp];\n                        if (c < INF) {\n                            c += delta;\n                            if (c < best) best = c;\n                        }\n                    }\n                    curj[v] = best;\n                }\n            }\n            int[][] t = prev; prev = cur; cur = t;\n        }\n\n        int ans = 0;\n        int[] fin = prev[N];\n        for (int v = V; v >= 0; v--) {\n            if (fin[v] < INF && fin[v] <= T) { ans = v; break; }\n        }\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in), 1 << 16));\n        in.nextToken(); int N = (int) in.nval;\n        in.nextToken(); int K = (int) in.nval;\n        in.nextToken(); long T = (long) in.nval;\n\n        int[] P = new int[N + 1];\n        for (int i = 1; i <= N; i++) { in.nextToken(); P[i] = (int) in.nval; }\n\n        int[] g = new int[K];\n        int idx = 0;\n        for (int i = 1; i <= N; i++) { in.nextToken(); if ((int) in.nval == 1) g[idx++] = i; }\n        // g[0..K-1] = posições iniciais do grupo, em ordem crescente.\n        // Custo mínimo de trocas para chegar ao conjunto de posições finais f1<f2<...<fK\n        // é soma |g_i - f_i| (matching monótono), pois trocas entre dois membros do grupo\n        // não alteram o conjunto de posições ocupadas.\n\n        int V = 9 * K;\n        final int INF = 1 << 29;\n\n        int[][] prev = new int[N + 1][V + 1];\n        int[][] cur = new int[N + 1][V + 1];\n        for (int j = 0; j <= N; j++) {\n            int[] pj = prev[j], cj = cur[j];\n            for (int v = 0; v <= V; v++) { pj[v] = INF; cj[v] = INF; }\n            pj[0] = 0; // camada 0: 0 membros, custo 0, valor 0\n        }\n\n        // dp[i][j][v] = custo mínimo atribuindo os primeiros i membros a posições\n        // distintas todas <= j, com valor total exatamente v.\n        // transição: dp[i][j][v] = min(dp[i][j-1][v], dp[i-1][j-1][v-P[j]] + |g_i - j|)\n        for (int i = 1; i <= K; i++) {\n            int gi = g[i - 1];\n            int maxV = 9 * i;\n            for (int v = 0; v <= maxV; v++) cur[0][v] = INF;\n            for (int j = 1; j <= N; j++) {\n                int pj = P[j];\n                int delta = gi > j ? gi - j : j - gi;\n                int[] curj = cur[j], curj1 = cur[j - 1], prevj1 = prev[j - 1];\n                for (int v = maxV; v >= 0; v--) {\n                    int best = curj1[v];\n                    int vp = v - pj;\n                    if (vp >= 0) {\n                        int c = prevj1[vp];\n                        if (c < INF) {\n                            c += delta;\n                            if (c < best) best = c;\n                        }\n                    }\n                    curj[v] = best;\n                }\n            }\n            int[][] t = prev; prev = cur; cur = t;\n        }\n\n        int ans = 0;\n        int[] fin = prev[N];\n        for (int v = V; v >= 0; v--) {\n            if (fin[v] < INF && fin[v] <= T) { ans = v; break; }\n        }\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.27661530004115775,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

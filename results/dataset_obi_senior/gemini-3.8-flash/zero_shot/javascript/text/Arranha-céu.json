@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:57:05.798337+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 774,
+            "output_tokens": 741,
+            "total_tokens": 1887
+        },
+        "cost_usd": {
+            "input_cost": 0.00058,
+            "output_cost": 0.002779,
+            "total_cost": 0.003359
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\nimport java.io.PrintWriter;\n\npublic class Main {\n    static class FastScanner {\n        private InputStream stream;\n        private byte[] buf = new byte[1024 * 64];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream stream) {\n            this.stream = stream;\n        }\n\n        private int read() {\n            if (head >= tail) {\n                head = 0;\n                try {\n                    tail = stream.read(buf, 0, buf.length);\n                } catch (IOException e) {\n                    tail = -1;\n                }\n                if (tail <= 0) return -1;\n            }\n            return buf[head++];\n        }\n\n        public int nextInt() {\n            int c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c < '0' || c > '9') {\n                    // Ignora caracteres não numéricos se houver\n                } else {\n                    res = res * 10 + c - '0';\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n\n    static class FenwickTree {\n        int n;\n        int[] tree;\n\n        public FenwickTree(int n) {\n            this.n = n;\n            this.tree = new int[n + 1];\n        }\n\n        public void add(int i, int delta) {\n            while (i <= n) {\n                tree[i] += delta;\n                i += i & (-i);\n            }\n        }\n\n        public int query(int i) {\n            int sum = 0;\n            while (i > 0) {\n                sum += tree[i];\n                i -= i & (-i);\n            }\n            return sum;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner(System.in);\n        PrintWriter out = new PrintWriter(System.out);\n\n        int n = scanner.nextInt();\n        int q = scanner.nextInt();\n\n        int[] a = new int[n + 1];\n        FenwickTree bit = new FenwickTree(n);\n\n        for (int i = 1; i <= n; i++) {\n            a[i] = scanner.nextInt();\n            bit.add(i, a[i]);\n        }\n\n        for (int j = 0; j < q; j++) {\n            int type = scanner.nextInt();\n            if (type == 0) {\n                int k = scanner.nextInt();\n                int p = scanner.nextInt();\n                int diff = p - a[k];\n                a[k] = p;\n                bit.add(k, diff);\n            } else {\n                int k = scanner.nextInt();\n                out.println(bit.query(k));\n            }\n        }\n\n        out.flush();\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\nimport java.io.PrintWriter;\n\npublic class Main {\n    static class FastScanner {\n        private InputStream stream;\n        private byte[] buf = new byte[1024 * 64];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream stream) {\n            this.stream = stream;\n        }\n\n        private int read() {\n            if (head >= tail) {\n                head = 0;\n                try {\n                    tail = stream.read(buf, 0, buf.length);\n                } catch (IOException e) {\n                    tail = -1;\n                }\n                if (tail <= 0) return -1;\n            }\n            return buf[head++];\n        }\n\n        public int nextInt() {\n            int c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c < '0' || c > '9') {\n                    // Ignora caracteres não numéricos se houver\n                } else {\n                    res = res * 10 + c - '0';\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n\n    static class FenwickTree {\n        int n;\n        int[] tree;\n\n        public FenwickTree(int n) {\n            this.n = n;\n            this.tree = new int[n + 1];\n        }\n\n        public void add(int i, int delta) {\n            while (i <= n) {\n                tree[i] += delta;\n                i += i & (-i);\n            }\n        }\n\n        public int query(int i) {\n            int sum = 0;\n            while (i > 0) {\n                sum += tree[i];\n                i -= i & (-i);\n            }\n            return sum;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner(System.in);\n        PrintWriter out = new PrintWriter(System.out);\n\n        int n = scanner.nextInt();\n        int q = scanner.nextInt();\n\n        int[] a = new int[n + 1];\n        FenwickTree bit = new FenwickTree(n);\n\n        for (int i = 1; i <= n; i++) {\n            a[i] = scanner.nextInt();\n            bit.add(i, a[i]);\n        }\n\n        for (int j = 0; j < q; j++) {\n            int type = scanner.nextInt();\n            if (type == 0) {\n                int k = scanner.nextInt();\n                int p = scanner.nextInt();\n                int diff = p - a[k];\n                a[k] = p;\n                bit.add(k, diff);\n            } else {\n                int k = scanner.nextInt();\n                out.println(bit.query(k));\n            }\n        }\n\n        out.flush();\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.08383469999535009,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 20,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:29:03.778928+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 774,
+            "output_tokens": 573,
+            "total_tokens": 2351
+        },
+        "cost_usd": {
+            "input_cost": 0.00058,
+            "output_cost": 0.002149,
+            "total_cost": 0.002729
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const Q = nextInt();\n\n    const bit = new Int32Array(N + 1);\n    const A = new Int32Array(N + 1);\n\n    function add(idx, val) {\n        for (; idx <= N; idx += idx & -idx) {\n            bit[idx] += val;\n        }\n    }\n\n    function query(idx) {\n        let sum = 0;\n        for (; idx > 0; idx -= idx & -idx) {\n            sum += bit[idx];\n        }\n        return sum;\n    }\n\n    for (let i = 1; i <= N; i++) {\n        const val = nextInt();\n        A[i] = val;\n        bit[i] += val;\n        const parent = i + (i & -i);\n        if (parent <= N) {\n            bit[parent] += bit[i];\n        }\n    }\n\n    let out = [];\n    for (let q = 0; q < Q; q++) {\n        const type = nextInt();\n        if (type === 0) {\n            const K = nextInt();\n            const P = nextInt();\n            const diff = P - A[K];\n            A[K] = P;\n            add(K, diff);\n        } else {\n            const K = nextInt();\n            out.push(query(K));\n            if (out.length >= 10000) {\n                process.stdout.write(out.join('\\n') + '\\n');\n                out = [];\n            }\n        }\n    }\n\n    if (out.length > 0) {\n        process.stdout.write(out.join('\\n') + '\\n');\n    }\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const Q = nextInt();\n\n    const bit = new Int32Array(N + 1);\n    const A = new Int32Array(N + 1);\n\n    function add(idx, val) {\n        for (; idx <= N; idx += idx & -idx) {\n            bit[idx] += val;\n        }\n    }\n\n    function query(idx) {\n        let sum = 0;\n        for (; idx > 0; idx -= idx & -idx) {\n            sum += bit[idx];\n        }\n        return sum;\n    }\n\n    for (let i = 1; i <= N; i++) {\n        const val = nextInt();\n        A[i] = val;\n        bit[i] += val;\n        const parent = i + (i & -i);\n        if (parent <= N) {\n            bit[parent] += bit[i];\n        }\n    }\n\n    let out = [];\n    for (let q = 0; q < Q; q++) {\n        const type = nextInt();\n        if (type === 0) {\n            const K = nextInt();\n            const P = nextInt();\n            const diff = P - A[K];\n            A[K] = P;\n            add(K, diff);\n        } else {\n            const K = nextInt();\n            out.push(query(K));\n            if (out.length >= 10000) {\n                process.stdout.write(out.join('\\n') + '\\n');\n                out = [];\n            }\n        }\n    }\n\n    if (out.length > 0) {\n        process.stdout.write(out.join('\\n') + '\\n');\n    }\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08623360001365654,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:49:54.116746+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1160,
+            "output_tokens": 5187,
+            "total_tokens": 6347
+        },
+        "cost_usd": {
+            "input_cost": 0.000116,
+            "output_cost": 0.002593,
+            "total_cost": 0.00271
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = input[0];\nconst K = input[1];\nconst a = input.slice(2, 2 + N);\nconst b = input.slice(2 + N, 2 + 2 * N);\n\nlet answer = 0;\nconst bonuses = [];\n\nfor (let i = 0; i < N; i++) {\n  answer += Math.max(0, a[i] - b[i]);\n  bonuses.push(Math.min(a[i], b[i]));\n}\n\nbonuses.sort((x, y) => y - x);\n\nfor (let i = 0; i < Math.min(N, K + 1); i++) {\n  answer += bonuses[i];\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = input[0];\nconst K = input[1];\nconst a = input.slice(2, 2 + N);\nconst b = input.slice(2 + N, 2 + 2 * N);\n\nlet answer = 0;\nconst bonuses = [];\n\nfor (let i = 0; i < N; i++) {\n  answer += Math.max(0, a[i] - b[i]);\n  bonuses.push(Math.min(a[i], b[i]));\n}\n\nbonuses.sort((x, y) => y - x);\n\nfor (let i = 0; i < Math.min(N, K + 1); i++) {\n  answer += bonuses[i];\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11445629999798257,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

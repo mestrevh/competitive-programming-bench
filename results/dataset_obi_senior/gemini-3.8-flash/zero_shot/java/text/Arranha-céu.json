@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:01:50.027712+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 774,
+            "output_tokens": 746,
+            "total_tokens": 1872
+        },
+        "cost_usd": {
+            "input_cost": 0.00058,
+            "output_cost": 0.002798,
+            "total_cost": 0.003378
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\nimport java.io.PrintWriter;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int count = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int readByte() {\n            if (ptr >= count) {\n                try {\n                    count = in.read(buffer);\n                } catch (IOException e) {\n                    throw new RuntimeException(e);\n                }\n                if (count <= 0) return -1;\n                ptr = 0;\n            }\n            return buffer[ptr++];\n        }\n\n        public int nextInt() {\n            int c = readByte();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = readByte();\n            }\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = readByte();\n            }\n            int res = 0;\n            while (c >= '0' && c <= '9') {\n                res = res * 10 + (c - '0');\n                c = readByte();\n            }\n            return res * sign;\n        }\n    }\n\n    static class FenwickTree {\n        private final int size;\n        private final int[] tree;\n\n        public FenwickTree(int size) {\n            this.size = size;\n            this.tree = new int[size + 1];\n        }\n\n        public void add(int index, int delta) {\n            for (; index <= size; index += index & -index) {\n                tree[index] += delta;\n            }\n        }\n\n        public int query(int index) {\n            int sum = 0;\n            for (; index > 0; index -= index & -index) {\n                sum += tree[index];\n            }\n            return sum;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner(System.in);\n        PrintWriter out = new PrintWriter(System.out);\n\n        int n = scanner.nextInt();\n        int q = scanner.nextInt();\n\n        int[] a = new int[n + 1];\n        FenwickTree bit = new FenwickTree(n);\n\n        for (int i = 1; i <= n; i++) {\n            a[i] = scanner.nextInt();\n            bit.add(i, a[i]);\n        }\n\n        for (int i = 0; i < q; i++) {\n            int type = scanner.nextInt();\n            if (type == 0) {\n                int k = scanner.nextInt();\n                int p = scanner.nextInt();\n                int diff = p - a[k];\n                a[k] = p;\n                bit.add(k, diff);\n            } else {\n                int k = scanner.nextInt();\n                out.println(bit.query(k));\n            }\n        }\n\n        out.flush();\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\nimport java.io.PrintWriter;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int count = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int readByte() {\n            if (ptr >= count) {\n                try {\n                    count = in.read(buffer);\n                } catch (IOException e) {\n                    throw new RuntimeException(e);\n                }\n                if (count <= 0) return -1;\n                ptr = 0;\n            }\n            return buffer[ptr++];\n        }\n\n        public int nextInt() {\n            int c = readByte();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = readByte();\n            }\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = readByte();\n            }\n            int res = 0;\n            while (c >= '0' && c <= '9') {\n                res = res * 10 + (c - '0');\n                c = readByte();\n            }\n            return res * sign;\n        }\n    }\n\n    static class FenwickTree {\n        private final int size;\n        private final int[] tree;\n\n        public FenwickTree(int size) {\n            this.size = size;\n            this.tree = new int[size + 1];\n        }\n\n        public void add(int index, int delta) {\n            for (; index <= size; index += index & -index) {\n                tree[index] += delta;\n            }\n        }\n\n        public int query(int index) {\n            int sum = 0;\n            for (; index > 0; index -= index & -index) {\n                sum += tree[index];\n            }\n            return sum;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner(System.in);\n        PrintWriter out = new PrintWriter(System.out);\n\n        int n = scanner.nextInt();\n        int q = scanner.nextInt();\n\n        int[] a = new int[n + 1];\n        FenwickTree bit = new FenwickTree(n);\n\n        for (int i = 1; i <= n; i++) {\n            a[i] = scanner.nextInt();\n            bit.add(i, a[i]);\n        }\n\n        for (int i = 0; i < q; i++) {\n            int type = scanner.nextInt();\n            if (type == 0) {\n                int k = scanner.nextInt();\n                int p = scanner.nextInt();\n                int diff = p - a[k];\n                a[k] = p;\n                bit.add(k, diff);\n            } else {\n                int k = scanner.nextInt();\n                out.println(bit.query(k));\n            }\n        }\n\n        out.flush();\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15305199997965246,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

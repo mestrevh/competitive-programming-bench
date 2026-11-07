@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:07:46.212247+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 682,
+            "output_tokens": 874,
+            "total_tokens": 2209
+        },
+        "cost_usd": {
+            "input_cost": 0.000512,
+            "output_cost": 0.003278,
+            "total_cost": 0.003789
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner(System.in);\n        int n = scanner.nextInt();\n        if (n == 0) return;\n\n        int[] head = new int[n + 1];\n        int[] to = new int[2 * (n - 1) + 1];\n        int[] next = new int[2 * (n - 1) + 1];\n        int edgeCount = 0;\n\n        for (int i = 0; i < n - 1; i++) {\n            int u = scanner.nextInt();\n            int v = scanner.nextInt();\n\n            edgeCount++;\n            to[edgeCount] = v;\n            next[edgeCount] = head[u];\n            head[u] = edgeCount;\n\n            edgeCount++;\n            to[edgeCount] = u;\n            next[edgeCount] = head[v];\n            head[v] = edgeCount;\n        }\n\n        int[] order = new int[n];\n        int[] parent = new int[n + 1];\n        boolean[] visited = new boolean[n + 1];\n\n        int headQueue = 0;\n        int tailQueue = 0;\n\n        order[tailQueue++] = 1;\n        visited[1] = true;\n\n        while (headQueue < tailQueue) {\n            int u = order[headQueue++];\n            for (int e = head[u]; e != 0; e = next[e]) {\n                int v = to[e];\n                if (!visited[v]) {\n                    visited[v] = true;\n                    parent[v] = u;\n                    order[tailQueue++] = v;\n                }\n            }\n        }\n\n        int[] size = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            size[i] = 1;\n        }\n\n        int minDiff = n;\n\n        for (int i = n - 1; i >= 0; i--) {\n            int u = order[i];\n            if (u != 1) {\n                int p = parent[u];\n                size[p] += size[u];\n                int diff = Math.abs(2 * size[u] - n);\n                if (diff < minDiff) {\n                    minDiff = diff;\n                }\n            }\n        }\n\n        System.out.println(minDiff);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[32768];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() {\n            if (head >= tail) {\n                head = 0;\n                try {\n                    tail = in.read(buffer, 0, buffer.length);\n                } catch (IOException e) {\n                    tail = -1;\n                }\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() {\n            byte c = read();\n            while (c <= ' ') {\n                if (c == -1) return 0;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + c - '0';\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner(System.in);\n        int n = scanner.nextInt();\n        if (n == 0) return;\n\n        int[] head = new int[n + 1];\n        int[] to = new int[2 * (n - 1) + 1];\n        int[] next = new int[2 * (n - 1) + 1];\n        int edgeCount = 0;\n\n        for (int i = 0; i < n - 1; i++) {\n            int u = scanner.nextInt();\n            int v = scanner.nextInt();\n\n            edgeCount++;\n            to[edgeCount] = v;\n            next[edgeCount] = head[u];\n            head[u] = edgeCount;\n\n            edgeCount++;\n            to[edgeCount] = u;\n            next[edgeCount] = head[v];\n            head[v] = edgeCount;\n        }\n\n        int[] order = new int[n];\n        int[] parent = new int[n + 1];\n        boolean[] visited = new boolean[n + 1];\n\n        int headQueue = 0;\n        int tailQueue = 0;\n\n        order[tailQueue++] = 1;\n        visited[1] = true;\n\n        while (headQueue < tailQueue) {\n            int u = order[headQueue++];\n            for (int e = head[u]; e != 0; e = next[e]) {\n                int v = to[e];\n                if (!visited[v]) {\n                    visited[v] = true;\n                    parent[v] = u;\n                    order[tailQueue++] = v;\n                }\n            }\n        }\n\n        int[] size = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            size[i] = 1;\n        }\n\n        int minDiff = n;\n\n        for (int i = n - 1; i >= 0; i--) {\n            int u = order[i];\n            if (u != 1) {\n                int p = parent[u];\n                size[p] += size[u];\n                int diff = Math.abs(2 * size[u] - n);\n                if (diff < minDiff) {\n                    minDiff = diff;\n                }\n            }\n        }\n\n        System.out.println(minDiff);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[32768];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() {\n            if (head >= tail) {\n                head = 0;\n                try {\n                    tail = in.read(buffer, 0, buffer.length);\n                } catch (IOException e) {\n                    tail = -1;\n                }\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() {\n            byte c = read();\n            while (c <= ' ') {\n                if (c == -1) return 0;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + c - '0';\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.06429209999623708,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 18,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:40:29.992781+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 682,
+            "output_tokens": 616,
+            "total_tokens": 2079
+        },
+        "cost_usd": {
+            "input_cost": 0.000512,
+            "output_cost": 0.00231,
+            "total_cost": 0.002822
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const n = readInt();\n    if (n === null) return;\n\n    const head = new Int32Array(n + 1).fill(-1);\n    const to = new Int32Array(2 * n);\n    const next = new Int32Array(2 * n);\n    let edgeCount = 0;\n\n    function addEdge(u, v) {\n        to[edgeCount] = v;\n        next[edgeCount] = head[u];\n        head[u] = edgeCount++;\n    }\n\n    for (let i = 0; i < n - 1; i++) {\n        const u = readInt();\n        const v = readInt();\n        addEdge(u, v);\n        addEdge(v, u);\n    }\n\n    const order = new Int32Array(n);\n    const parent = new Int32Array(n + 1);\n    let headQueue = 0;\n    let tailQueue = 0;\n\n    order[tailQueue++] = 1;\n    parent[1] = 0;\n\n    while (headQueue < tailQueue) {\n        const u = order[headQueue++];\n        for (let e = head[u]; e !== -1; e = next[e]) {\n            const v = to[e];\n            if (v !== parent[u]) {\n                parent[v] = u;\n                order[tailQueue++] = v;\n            }\n        }\n    }\n\n    const sz = new Int32Array(n + 1).fill(1);\n    let minDiff = n;\n\n    for (let i = n - 1; i > 0; i--) {\n        const u = order[i];\n        const p = parent[u];\n        sz[p] += sz[u];\n\n        const diff = Math.abs(n - 2 * sz[u]);\n        if (diff < minDiff) {\n            minDiff = diff;\n        }\n    }\n\n    console.log(minDiff);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const n = readInt();\n    if (n === null) return;\n\n    const head = new Int32Array(n + 1).fill(-1);\n    const to = new Int32Array(2 * n);\n    const next = new Int32Array(2 * n);\n    let edgeCount = 0;\n\n    function addEdge(u, v) {\n        to[edgeCount] = v;\n        next[edgeCount] = head[u];\n        head[u] = edgeCount++;\n    }\n\n    for (let i = 0; i < n - 1; i++) {\n        const u = readInt();\n        const v = readInt();\n        addEdge(u, v);\n        addEdge(v, u);\n    }\n\n    const order = new Int32Array(n);\n    const parent = new Int32Array(n + 1);\n    let headQueue = 0;\n    let tailQueue = 0;\n\n    order[tailQueue++] = 1;\n    parent[1] = 0;\n\n    while (headQueue < tailQueue) {\n        const u = order[headQueue++];\n        for (let e = head[u]; e !== -1; e = next[e]) {\n            const v = to[e];\n            if (v !== parent[u]) {\n                parent[v] = u;\n                order[tailQueue++] = v;\n            }\n        }\n    }\n\n    const sz = new Int32Array(n + 1).fill(1);\n    let minDiff = n;\n\n    for (let i = n - 1; i > 0; i--) {\n        const u = order[i];\n        const p = parent[u];\n        sz[p] += sz[u];\n\n        const diff = Math.abs(n - 2 * sz[u]);\n        if (diff < minDiff) {\n            minDiff = diff;\n        }\n    }\n\n    console.log(minDiff);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05978269997285679,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:05:40.767857+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 774,
+            "output_tokens": 384,
+            "total_tokens": 1561
+        },
+        "cost_usd": {
+            "input_cost": 0.00058,
+            "output_cost": 0.00144,
+            "total_cost": 0.002021
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    \n    N = int(next(iterator))\n    Q = int(next(iterator))\n    \n    A = [0] * (N + 1)\n    bit = [0] * (N + 1)\n    \n    for i in range(1, N + 1):\n        val = int(next(iterator))\n        A[i] = val\n        bit[i] += val\n        parent = i + (i & -i)\n        if parent <= N:\n            bit[parent] += bit[i]\n            \n    def update(idx, delta):\n        while idx <= N:\n            bit[idx] += delta\n            idx += idx & -idx\n            \n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & -idx\n        return s\n\n    output = []\n    for _ in range(Q):\n        op = next(iterator)\n        if op == '0':\n            k = int(next(iterator))\n            p = int(next(iterator))\n            delta = p - A[k]\n            A[k] = p\n            update(k, delta)\n        else:\n            k = int(next(iterator))\n            output.append(str(query(k)))\n            \n    sys.stdout.write('\\n'.join(output) + '\\n')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    \n    N = int(next(iterator))\n    Q = int(next(iterator))\n    \n    A = [0] * (N + 1)\n    bit = [0] * (N + 1)\n    \n    for i in range(1, N + 1):\n        val = int(next(iterator))\n        A[i] = val\n        bit[i] += val\n        parent = i + (i & -i)\n        if parent <= N:\n            bit[parent] += bit[i]\n            \n    def update(idx, delta):\n        while idx <= N:\n            bit[idx] += delta\n            idx += idx & -idx\n            \n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & -idx\n        return s\n\n    output = []\n    for _ in range(Q):\n        op = next(iterator)\n        if op == '0':\n            k = int(next(iterator))\n            p = int(next(iterator))\n            delta = p - A[k]\n            A[k] = p\n            update(k, delta)\n        else:\n            k = int(next(iterator))\n            output.append(str(query(k)))\n            \n    sys.stdout.write('\\n'.join(output) + '\\n')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19779160000325646,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

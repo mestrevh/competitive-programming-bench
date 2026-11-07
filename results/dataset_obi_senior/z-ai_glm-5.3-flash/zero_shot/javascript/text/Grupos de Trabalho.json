@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:55:28.130526+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1015,
+            "output_tokens": 5526,
+            "total_tokens": 6541
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.002763,
+            "total_cost": 0.002785
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  let buf;\n  try {\n    buf = fs.readFileSync(0);\n  } catch (e) {\n    buf = fs.readFileSync('/dev/stdin');\n  }\n  const len = buf.length;\n  let pos = 0;\n\n  function nextInt() {\n    while (pos < len && (buf[pos] < 48 || buf[pos] > 57)) pos++;\n    let n = 0;\n    while (pos < len && buf[pos] >= 48 && buf[pos] <= 57) {\n      n = n * 10 + (buf[pos] - 48);\n      pos++;\n    }\n    return n;\n  }\n\n  const E = nextInt();\n  const M = nextInt();\n  const D = nextInt();\n\n  // Total de inteiros na entrada: 3 (E, M, D) + 2*M + 2*D + E (grupos: 3 * E/3)\n  const total = 3 + 2 * (M + D) + E;\n  const nums = new Int32Array(total);\n  nums[0] = E; nums[1] = M; nums[2] = D;\n  for (let i = 3; i < total; i++) {\n    while (pos < len && (buf[pos] < 48 || buf[pos] > 57)) pos++;\n    let n = 0;\n    while (pos < len && buf[pos] >= 48 && buf[pos] <= 57) {\n      n = n * 10 + (buf[pos] - 48);\n      pos++;\n    }\n    nums[i] = n;\n  }\n\n  const sameBase = 3;              // pares \"devem estar juntos\": 2*M inteiros\n  const diffBase = 3 + 2 * M;      // pares \"não devem estar juntos\": 2*D inteiros\n  const groupBase = 3 + 2 * (M + D); // grupos: E inteiros\n\n  // Mapeia cada estudante para o índice do seu grupo\n  const group = new Int32Array(E + 1);\n  const G = E / 3;\n  for (let g = 0, o = groupBase; g < G; g++, o += 3) {\n    group[nums[o]] = g;\n    group[nums[o + 1]] = g;\n    group[nums[o + 2]] = g;\n  }\n\n  let ans = 0;\n  // Restrição \"juntos\" violada se estiverem em grupos diferentes\n  for (let i = 0, o = sameBase; i < M; i++, o += 2) {\n    if (group[nums[o]] !== group[nums[o + 1]]) ans++;\n  }\n  // Restrição \"separados\" violada se estiverem no mesmo grupo\n  for (let i = 0, o = diffBase; i < D; i++, o += 2) {\n    if (group[nums[o]] === group[nums[o + 1]]) ans++;\n  }\n\n  process.stdout.write(ans + '\\n');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  let buf;\n  try {\n    buf = fs.readFileSync(0);\n  } catch (e) {\n    buf = fs.readFileSync('/dev/stdin');\n  }\n  const len = buf.length;\n  let pos = 0;\n\n  function nextInt() {\n    while (pos < len && (buf[pos] < 48 || buf[pos] > 57)) pos++;\n    let n = 0;\n    while (pos < len && buf[pos] >= 48 && buf[pos] <= 57) {\n      n = n * 10 + (buf[pos] - 48);\n      pos++;\n    }\n    return n;\n  }\n\n  const E = nextInt();\n  const M = nextInt();\n  const D = nextInt();\n\n  // Total de inteiros na entrada: 3 (E, M, D) + 2*M + 2*D + E (grupos: 3 * E/3)\n  const total = 3 + 2 * (M + D) + E;\n  const nums = new Int32Array(total);\n  nums[0] = E; nums[1] = M; nums[2] = D;\n  for (let i = 3; i < total; i++) {\n    while (pos < len && (buf[pos] < 48 || buf[pos] > 57)) pos++;\n    let n = 0;\n    while (pos < len && buf[pos] >= 48 && buf[pos] <= 57) {\n      n = n * 10 + (buf[pos] - 48);\n      pos++;\n    }\n    nums[i] = n;\n  }\n\n  const sameBase = 3;              // pares \"devem estar juntos\": 2*M inteiros\n  const diffBase = 3 + 2 * M;      // pares \"não devem estar juntos\": 2*D inteiros\n  const groupBase = 3 + 2 * (M + D); // grupos: E inteiros\n\n  // Mapeia cada estudante para o índice do seu grupo\n  const group = new Int32Array(E + 1);\n  const G = E / 3;\n  for (let g = 0, o = groupBase; g < G; g++, o += 3) {\n    group[nums[o]] = g;\n    group[nums[o + 1]] = g;\n    group[nums[o + 2]] = g;\n  }\n\n  let ans = 0;\n  // Restrição \"juntos\" violada se estiverem em grupos diferentes\n  for (let i = 0, o = sameBase; i < M; i++, o += 2) {\n    if (group[nums[o]] !== group[nums[o + 1]]) ans++;\n  }\n  // Restrição \"separados\" violada se estiverem no mesmo grupo\n  for (let i = 0, o = diffBase; i < D; i++, o += 2) {\n    if (group[nums[o]] === group[nums[o + 1]]) ans++;\n  }\n\n  process.stdout.write(ans + '\\n');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09089729998959228,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

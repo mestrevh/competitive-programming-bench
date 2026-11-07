@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:55:35.943885+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1011,
+            "output_tokens": 17846,
+            "total_tokens": 18857
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.04283,
+            "total_cost": 0.042833
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    if (!(cin >> N)) return 0;\n\n    const int INF = -1e9;\n    int dp[7];\n    for (int i = 0; i < 7; ++i) dp[i] = INF;\n\n    for (int i = 0; i < N; ++i) {\n        int a[6];\n        for (int j = 0; j < 6; ++j) cin >> a[j];\n\n        int opp[7] = {0};\n        opp[a[0]] = a[5];\n        opp[a[5]] = a[0];\n        opp[a[1]] = a[3];\n        opp[a[3]] = a[1];\n        opp[a[2]] = a[4];\n        opp[a[4]] = a[2];\n\n        int side[7];\n        for (int b = 1; b <= 6; ++b) {\n            int top = opp[b];\n            int mx = 0;\n            for (int v = 1; v <= 6; ++v) {\n                if (v != b && v != top) {\n                    mx = max(mx, v);\n                }\n            }\n            side[b] = mx;\n        }\n\n        if (i == 0) {\n            for (int b = 1; b <= 6; ++b) {\n                int top = opp[b];\n                dp[top] = max(dp[top], side[b]);\n            }\n        } else {\n            int new_dp[7];\n            for (int j = 0; j < 7; ++j) new_dp[j] = INF;\n\n            for (int t_prev = 1; t_prev <= 6; ++t_prev) {\n                if (dp[t_prev] == INF) continue;\n                int b = t_prev;\n                int top_cur = opp[b];\n                int val = dp[t_prev] + side[b];\n                new_dp[top_cur] = max(new_dp[top_cur], val);\n            }\n\n            for (int j = 0; j < 7; ++j) dp[j] = new_dp[j];\n        }\n    }\n\n    int ans = 0;\n    for (int t = 1; t <= 6; ++t) ans = max(ans, dp[t]);\n\n    cout << ans << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    if (!(cin >> N)) return 0;\n\n    const int INF = -1e9;\n    int dp[7];\n    for (int i = 0; i < 7; ++i) dp[i] = INF;\n\n    for (int i = 0; i < N; ++i) {\n        int a[6];\n        for (int j = 0; j < 6; ++j) cin >> a[j];\n\n        int opp[7] = {0};\n        opp[a[0]] = a[5];\n        opp[a[5]] = a[0];\n        opp[a[1]] = a[3];\n        opp[a[3]] = a[1];\n        opp[a[2]] = a[4];\n        opp[a[4]] = a[2];\n\n        int side[7];\n        for (int b = 1; b <= 6; ++b) {\n            int top = opp[b];\n            int mx = 0;\n            for (int v = 1; v <= 6; ++v) {\n                if (v != b && v != top) {\n                    mx = max(mx, v);\n                }\n            }\n            side[b] = mx;\n        }\n\n        if (i == 0) {\n            for (int b = 1; b <= 6; ++b) {\n                int top = opp[b];\n                dp[top] = max(dp[top], side[b]);\n            }\n        } else {\n            int new_dp[7];\n            for (int j = 0; j < 7; ++j) new_dp[j] = INF;\n\n            for (int t_prev = 1; t_prev <= 6; ++t_prev) {\n                if (dp[t_prev] == INF) continue;\n                int b = t_prev;\n                int top_cur = opp[b];\n                int val = dp[t_prev] + side[b];\n                new_dp[top_cur] = max(new_dp[top_cur], val);\n            }\n\n            for (int j = 0; j < 7; ++j) dp[j] = new_dp[j];\n        }\n    }\n\n    int ans = 0;\n    for (int t = 1; t <= 6; ++t) ans = max(ans, dp[t]);\n\n    cout << ans << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.185901400000148,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

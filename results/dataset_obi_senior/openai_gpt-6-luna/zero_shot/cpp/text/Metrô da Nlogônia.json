@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:30:00.056257+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 862,
+            "output_tokens": 841,
+            "total_tokens": 1703
+        },
+        "cost_usd": {
+            "input_cost": 8.6e-05,
+            "output_cost": 0.00042,
+            "total_cost": 0.000507
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\npair<int, int> findCenter(const vector<vector<int>>& graph) {\n    auto bfs = [&](int start) {\n        vector<int> dist(graph.size(), -1);\n        queue<int> q;\n        q.push(start);\n        dist[start] = 0;\n        int farthest = start;\n\n        while (!q.empty()) {\n            int u = q.front();\n            q.pop();\n            if (dist[u] > dist[farthest]) farthest = u;\n\n            for (int v : graph[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    q.push(v);\n                }\n            }\n        }\n        return pair<int, vector<int>>(farthest, move(dist));\n    };\n\n    int endpointA = bfs(0).first;\n    auto [endpointB, distA] = bfs(endpointA);\n    auto [unused, distB] = bfs(endpointB);\n\n    int center = 0;\n    for (int i = 1; i < (int)graph.size(); ++i) {\n        if (max(distA[i], distB[i]) < max(distA[center], distB[center])) {\n            center = i;\n        }\n    }\n    return {center, endpointB};\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<vector<int>> circle(N), square(M);\n\n    for (int i = 0; i < N - 1; ++i) {\n        int a, b;\n        cin >> a >> b;\n        --a;\n        --b;\n        circle[a].push_back(b);\n        circle[b].push_back(a);\n    }\n\n    for (int i = 0; i < M - 1; ++i) {\n        int x, y;\n        cin >> x >> y;\n        --x;\n        --y;\n        square[x].push_back(y);\n        square[y].push_back(x);\n    }\n\n    int circleCenter = findCenter(circle).first;\n    int squareCenter = findCenter(square).first;\n\n    cout << circleCenter + 1 << ' ' << squareCenter + 1 << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\npair<int, int> findCenter(const vector<vector<int>>& graph) {\n    auto bfs = [&](int start) {\n        vector<int> dist(graph.size(), -1);\n        queue<int> q;\n        q.push(start);\n        dist[start] = 0;\n        int farthest = start;\n\n        while (!q.empty()) {\n            int u = q.front();\n            q.pop();\n            if (dist[u] > dist[farthest]) farthest = u;\n\n            for (int v : graph[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    q.push(v);\n                }\n            }\n        }\n        return pair<int, vector<int>>(farthest, move(dist));\n    };\n\n    int endpointA = bfs(0).first;\n    auto [endpointB, distA] = bfs(endpointA);\n    auto [unused, distB] = bfs(endpointB);\n\n    int center = 0;\n    for (int i = 1; i < (int)graph.size(); ++i) {\n        if (max(distA[i], distB[i]) < max(distA[center], distB[center])) {\n            center = i;\n        }\n    }\n    return {center, endpointB};\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<vector<int>> circle(N), square(M);\n\n    for (int i = 0; i < N - 1; ++i) {\n        int a, b;\n        cin >> a >> b;\n        --a;\n        --b;\n        circle[a].push_back(b);\n        circle[b].push_back(a);\n    }\n\n    for (int i = 0; i < M - 1; ++i) {\n        int x, y;\n        cin >> x >> y;\n        --x;\n        --y;\n        square[x].push_back(y);\n        square[y].push_back(x);\n    }\n\n    int circleCenter = findCenter(circle).first;\n    int squareCenter = findCenter(square).first;\n\n    cout << circleCenter + 1 << ' ' << squareCenter + 1 << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.1788165999969351,
+            "counts": {
+                "AC": 6,
+                "WA": 32,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

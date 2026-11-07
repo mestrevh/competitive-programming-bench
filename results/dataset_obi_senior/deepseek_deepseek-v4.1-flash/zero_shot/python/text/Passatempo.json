@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:19:58.001156+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 977,
+            "output_tokens": 8267,
+            "total_tokens": 9244
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.019841,
+            "total_cost": 0.019844
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    pos = 0\n    L = int(data[pos])\n    C = int(data[pos + 1])\n    pos += 2\n\n    var_id = {}\n    names = []\n    rows = []\n    row_sums = []\n\n    for _ in range(L):\n        row = []\n        for _ in range(C):\n            name = data[pos]\n            pos += 1\n            if name not in var_id:\n                var_id[name] = len(names)\n                names.append(name)\n            row.append(var_id[name])\n        s = int(data[pos])\n        pos += 1\n        rows.append(row)\n        row_sums.append(s)\n\n    col_sums = [int(data[pos + i]) for i in range(C)]\n    pos += C\n\n    equations = []\n    for r, s in zip(rows, row_sums):\n        equations.append((r, s))\n\n    for j in range(C):\n        col = [rows[i][j] for i in range(L)]\n        equations.append((col, col_sums[j]))\n\n    V = len(names)\n    values = [None] * V\n    solved = 0\n\n    while solved < V:\n        progress = False\n        for vars_list, total in equations:\n            unknown = set()\n            known_sum = 0\n\n            for vid in vars_list:\n                val = values[vid]\n                if val is None:\n                    unknown.add(vid)\n                else:\n                    known_sum += val\n\n            if len(unknown) == 1:\n                u = next(iter(unknown))\n                coeff = 0\n                for vid in vars_list:\n                    if vid == u:\n                        coeff += 1\n\n                values[u] = (total - known_sum) // coeff\n                solved += 1\n                progress = True\n                break\n\n        if not progress:\n            break\n\n    out = []\n    for name in sorted(names):\n        out.append(f\"{name} {values[var_id[name]]}\")\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    pos = 0\n    L = int(data[pos])\n    C = int(data[pos + 1])\n    pos += 2\n\n    var_id = {}\n    names = []\n    rows = []\n    row_sums = []\n\n    for _ in range(L):\n        row = []\n        for _ in range(C):\n            name = data[pos]\n            pos += 1\n            if name not in var_id:\n                var_id[name] = len(names)\n                names.append(name)\n            row.append(var_id[name])\n        s = int(data[pos])\n        pos += 1\n        rows.append(row)\n        row_sums.append(s)\n\n    col_sums = [int(data[pos + i]) for i in range(C)]\n    pos += C\n\n    equations = []\n    for r, s in zip(rows, row_sums):\n        equations.append((r, s))\n\n    for j in range(C):\n        col = [rows[i][j] for i in range(L)]\n        equations.append((col, col_sums[j]))\n\n    V = len(names)\n    values = [None] * V\n    solved = 0\n\n    while solved < V:\n        progress = False\n        for vars_list, total in equations:\n            unknown = set()\n            known_sum = 0\n\n            for vid in vars_list:\n                val = values[vid]\n                if val is None:\n                    unknown.add(vid)\n                else:\n                    known_sum += val\n\n            if len(unknown) == 1:\n                u = next(iter(unknown))\n                coeff = 0\n                for vid in vars_list:\n                    if vid == u:\n                        coeff += 1\n\n                values[u] = (total - known_sum) // coeff\n                solved += 1\n                progress = True\n                break\n\n        if not progress:\n            break\n\n    out = []\n    for name in sorted(names):\n        out.append(f\"{name} {values[var_id[name]]}\")\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09989549999590963,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

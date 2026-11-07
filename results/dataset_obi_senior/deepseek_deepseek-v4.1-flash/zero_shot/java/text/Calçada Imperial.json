@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:28:14.360433+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 729,
+            "output_tokens": 3672,
+            "total_tokens": 4401
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.008813,
+            "total_cost": 0.008815
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int[] seq = new int[N];\n        boolean[] present = new boolean[N + 1];\n\n        for (int i = 0; i < N; i++) {\n            while (!st.hasMoreTokens()) {\n                st = new StringTokenizer(br.readLine());\n            }\n            seq[i] = Integer.parseInt(st.nextToken());\n            present[seq[i]] = true;\n        }\n\n        List<Integer> values = new ArrayList<>();\n        for (int i = 1; i <= N; i++) {\n            if (present[i]) values.add(i);\n        }\n\n        int answer = 1;\n\n        for (int i = 0; i < values.size(); i++) {\n            for (int j = i + 1; j < values.size(); j++) {\n                int a = values.get(i);\n                int b = values.get(j);\n\n                int prev = -1;\n                int count = 0;\n\n                for (int k = 0; k < N; k++) {\n                    int x = seq[k];\n                    if (x == a || x == b) {\n                        if (x != prev) {\n                            count++;\n                            prev = x;\n                        }\n                    }\n                }\n\n                if (count > answer) {\n                    answer = count;\n                }\n            }\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int[] seq = new int[N];\n        boolean[] present = new boolean[N + 1];\n\n        for (int i = 0; i < N; i++) {\n            while (!st.hasMoreTokens()) {\n                st = new StringTokenizer(br.readLine());\n            }\n            seq[i] = Integer.parseInt(st.nextToken());\n            present[seq[i]] = true;\n        }\n\n        List<Integer> values = new ArrayList<>();\n        for (int i = 1; i <= N; i++) {\n            if (present[i]) values.add(i);\n        }\n\n        int answer = 1;\n\n        for (int i = 0; i < values.size(); i++) {\n            for (int j = i + 1; j < values.size(); j++) {\n                int a = values.get(i);\n                int b = values.get(j);\n\n                int prev = -1;\n                int count = 0;\n\n                for (int k = 0; k < N; k++) {\n                    int x = seq[k];\n                    if (x == a || x == b) {\n                        if (x != prev) {\n                            count++;\n                            prev = x;\n                        }\n                    }\n                }\n\n                if (count > answer) {\n                    answer = count;\n                }\n            }\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10068699999828823,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

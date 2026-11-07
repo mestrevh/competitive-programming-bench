@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T08:35:57.373692+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 616,
+            "output_tokens": 2106,
+            "total_tokens": 2722
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.001053,
+            "total_cost": 0.001066
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    vals = list(map(int, data[1:1 + n * n]))\n    grid = [vals[i * n:(i + 1) * n] for i in range(n)]\n\n    # Localiza a posição do zero (número ilegível)\n    zero_row = zero_col = -1\n    for i in range(n):\n        for j in range(n):\n            if grid[i][j] == 0:\n                zero_row, zero_col = i, j\n                break\n        if zero_row >= 0:\n            break\n\n    # Como há apenas um zero, toda linha diferente de zero_row está completa.\n    # A soma de qualquer linha completa é a soma mágica alvo.\n    target = 0\n    for i in range(n):\n        if i != zero_row:\n            target = sum(grid[i])\n            break\n\n    # O número que falta é a diferença entre a soma mágica e a soma da linha do zero.\n    missing = target - sum(grid[zero_row])\n\n    print(missing)\n    print(zero_row + 1)\n    print(zero_col + 1)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    vals = list(map(int, data[1:1 + n * n]))\n    grid = [vals[i * n:(i + 1) * n] for i in range(n)]\n\n    # Localiza a posição do zero (número ilegível)\n    zero_row = zero_col = -1\n    for i in range(n):\n        for j in range(n):\n            if grid[i][j] == 0:\n                zero_row, zero_col = i, j\n                break\n        if zero_row >= 0:\n            break\n\n    # Como há apenas um zero, toda linha diferente de zero_row está completa.\n    # A soma de qualquer linha completa é a soma mágica alvo.\n    target = 0\n    for i in range(n):\n        if i != zero_row:\n            target = sum(grid[i])\n            break\n\n    # O número que falta é a diferença entre a soma mágica e a soma da linha do zero.\n    missing = target - sum(grid[zero_row])\n\n    print(missing)\n    print(zero_row + 1)\n    print(zero_col + 1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0740150999990874,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

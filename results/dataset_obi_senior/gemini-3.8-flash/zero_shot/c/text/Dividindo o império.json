@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:06:06.262231+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 682,
+            "output_tokens": 623,
+            "total_tokens": 1829
+        },
+        "cost_usd": {
+            "input_cost": 0.000512,
+            "output_cost": 0.002336,
+            "total_cost": 0.002848
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n\nint head[MAXN], to[2 * MAXN], nxt[2 * MAXN];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt++;\n}\n\nint queue[MAXN];\nint parent[MAXN];\nint order[MAXN];\nint sz[MAXN];\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    for (int i = 0; i < n - 1; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(u, v);\n        add_edge(v, u);\n    }\n\n    // BFS para determinar a ordem topológica e os pais\n    int front = 0, back = 0;\n    queue[back++] = 1;\n    parent[1] = 0;\n\n    int order_cnt = 0;\n    while (front < back) {\n        int u = queue[front++];\n        order[order_cnt++] = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (v != parent[u]) {\n                parent[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n\n    // Inicializa o tamanho das subárvores com 1\n    for (int i = 1; i <= n; i++) {\n        sz[i] = 1;\n    }\n\n    // Calcula os tamanhos das subárvores em ordem reversa da BFS\n    int min_diff = n;\n    for (int i = n - 1; i >= 0; i--) {\n        int u = order[i];\n        if (parent[u] != 0) {\n            sz[parent[u]] += sz[u];\n            int diff = n - 2 * sz[u];\n            if (diff < 0) diff = -diff;\n            if (diff < min_diff) {\n                min_diff = diff;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", min_diff);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n\nint head[MAXN], to[2 * MAXN], nxt[2 * MAXN];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt++;\n}\n\nint queue[MAXN];\nint parent[MAXN];\nint order[MAXN];\nint sz[MAXN];\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    for (int i = 0; i < n - 1; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(u, v);\n        add_edge(v, u);\n    }\n\n    // BFS para determinar a ordem topológica e os pais\n    int front = 0, back = 0;\n    queue[back++] = 1;\n    parent[1] = 0;\n\n    int order_cnt = 0;\n    while (front < back) {\n        int u = queue[front++];\n        order[order_cnt++] = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (v != parent[u]) {\n                parent[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n\n    // Inicializa o tamanho das subárvores com 1\n    for (int i = 1; i <= n; i++) {\n        sz[i] = 1;\n    }\n\n    // Calcula os tamanhos das subárvores em ordem reversa da BFS\n    int min_diff = n;\n    for (int i = n - 1; i >= 0; i--) {\n        int u = order[i];\n        if (parent[u] != 0) {\n            sz[parent[u]] += sz[u];\n            int diff = n - 2 * sz[u];\n            if (diff < 0) diff = -diff;\n            if (diff < min_diff) {\n                min_diff = diff;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", min_diff);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17965710000135005,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

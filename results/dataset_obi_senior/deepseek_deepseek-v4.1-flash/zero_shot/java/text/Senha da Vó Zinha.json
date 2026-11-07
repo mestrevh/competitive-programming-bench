@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:39:02.822324+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1175,
+            "output_tokens": 6466,
+            "total_tokens": 7641
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.015518,
+            "total_cost": 0.015522
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n\n        String password = br.readLine().trim();\n\n        List<List<Character>> options = new ArrayList<>();\n        for (int i = 0; i < M; i++) {\n            String word = br.readLine().trim();\n            TreeSet<Character> set = new TreeSet<>();\n            for (int j = 0; j < word.length(); j++) {\n                set.add(word.charAt(j));\n            }\n            options.add(new ArrayList<>(set));\n        }\n\n        long P = Long.parseLong(br.readLine().trim());\n        long CAP = 1_000_000_001L;\n\n        long[] suffix = new long[M + 1];\n        suffix[M] = 1;\n\n        for (int i = M - 1; i >= 0; i--) {\n            long cnt = options.get(i).size();\n            if (suffix[i + 1] > CAP / cnt) {\n                suffix[i] = CAP;\n            } else {\n                suffix[i] = suffix[i + 1] * cnt;\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        int blurIndex = 0;\n\n        for (int i = 0; i < N; i++) {\n            char ch = password.charAt(i);\n            if (ch == '#') {\n                List<Character> opts = options.get(blurIndex);\n                for (char c : opts) {\n                    long blockSize = suffix[blurIndex + 1];\n                    if (P > blockSize) {\n                        P -= blockSize;\n                    } else {\n                        sb.append(c);\n                        break;\n                    }\n                }\n                blurIndex++;\n            } else {\n                sb.append(ch);\n            }\n        }\n\n        System.out.println(sb.toString());\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n\n        String password = br.readLine().trim();\n\n        List<List<Character>> options = new ArrayList<>();\n        for (int i = 0; i < M; i++) {\n            String word = br.readLine().trim();\n            TreeSet<Character> set = new TreeSet<>();\n            for (int j = 0; j < word.length(); j++) {\n                set.add(word.charAt(j));\n            }\n            options.add(new ArrayList<>(set));\n        }\n\n        long P = Long.parseLong(br.readLine().trim());\n        long CAP = 1_000_000_001L;\n\n        long[] suffix = new long[M + 1];\n        suffix[M] = 1;\n\n        for (int i = M - 1; i >= 0; i--) {\n            long cnt = options.get(i).size();\n            if (suffix[i + 1] > CAP / cnt) {\n                suffix[i] = CAP;\n            } else {\n                suffix[i] = suffix[i + 1] * cnt;\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        int blurIndex = 0;\n\n        for (int i = 0; i < N; i++) {\n            char ch = password.charAt(i);\n            if (ch == '#') {\n                List<Character> opts = options.get(blurIndex);\n                for (char c : opts) {\n                    long blockSize = suffix[blurIndex + 1];\n                    if (P > blockSize) {\n                        P -= blockSize;\n                    } else {\n                        sb.append(c);\n                        break;\n                    }\n                }\n                blurIndex++;\n            } else {\n                sb.append(ch);\n            }\n        }\n\n        System.out.println(sb.toString());\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07603870000457391,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:13:03.058979+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 646,
+            "output_tokens": 793,
+            "total_tokens": 2934
+        },
+        "cost_usd": {
+            "input_cost": 0.000485,
+            "output_cost": 0.002974,
+            "total_cost": 0.003458
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_NODES 200005\n#define ALPHABET_SIZE 36\n\ntypedef struct {\n    int next[ALPHABET_SIZE];\n    int count;\n} TrieNode;\n\nTrieNode trie[MAX_NODES];\nint trie_nodes = 1;\n\nint get_char_index(char c) {\n    if (c >= 'a' && c <= 'z') {\n        return c - 'a';\n    }\n    return c - '0' + 26;\n}\n\nvoid insert_trie(const char *s) {\n    int u = 0;\n    for (int i = 0; s[i] != '\\0'; i++) {\n        int c = get_char_index(s[i]);\n        if (trie[u].next[c] == 0) {\n            trie[u].next[c] = trie_nodes++;\n        }\n        u = trie[u].next[c];\n    }\n    trie[u].count++;\n}\n\nint query_trie(const char *s) {\n    int u = 0;\n    for (int i = 0; s[i] != '\\0'; i++) {\n        int c = get_char_index(s[i]);\n        if (trie[u].next[c] == 0) {\n            return 0;\n        }\n        u = trie[u].next[c];\n    }\n    return trie[u].count;\n}\n\nchar passwords[20005][12];\n\nint cmp_str(const void *a, const void *b) {\n    return strcmp((const char *)a, (const char *)b);\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", passwords[i]);\n        insert_trie(passwords[i]);\n    }\n\n    long long total_pairs = 0;\n    char subs[60][12];\n\n    for (int i = 0; i < n; i++) {\n        int len = strlen(passwords[i]);\n        int num_subs = 0;\n\n        for (int j = 0; j < len; j++) {\n            for (int k = j; k < len; k++) {\n                int sub_len = k - j + 1;\n                memcpy(subs[num_subs], passwords[i] + j, sub_len);\n                subs[num_subs][sub_len] = '\\0';\n                num_subs++;\n            }\n        }\n\n        qsort(subs, num_subs, sizeof(subs[0]), cmp_str);\n\n        for (int j = 0; j < num_subs; j++) {\n            if (j == 0 || strcmp(subs[j], subs[j - 1]) != 0) {\n                total_pairs += query_trie(subs[j]);\n            }\n        }\n\n        // Subtrai o próprio usuário B = A\n        total_pairs--;\n    }\n\n    printf(\"%lld\\n\", total_pairs);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_NODES 200005\n#define ALPHABET_SIZE 36\n\ntypedef struct {\n    int next[ALPHABET_SIZE];\n    int count;\n} TrieNode;\n\nTrieNode trie[MAX_NODES];\nint trie_nodes = 1;\n\nint get_char_index(char c) {\n    if (c >= 'a' && c <= 'z') {\n        return c - 'a';\n    }\n    return c - '0' + 26;\n}\n\nvoid insert_trie(const char *s) {\n    int u = 0;\n    for (int i = 0; s[i] != '\\0'; i++) {\n        int c = get_char_index(s[i]);\n        if (trie[u].next[c] == 0) {\n            trie[u].next[c] = trie_nodes++;\n        }\n        u = trie[u].next[c];\n    }\n    trie[u].count++;\n}\n\nint query_trie(const char *s) {\n    int u = 0;\n    for (int i = 0; s[i] != '\\0'; i++) {\n        int c = get_char_index(s[i]);\n        if (trie[u].next[c] == 0) {\n            return 0;\n        }\n        u = trie[u].next[c];\n    }\n    return trie[u].count;\n}\n\nchar passwords[20005][12];\n\nint cmp_str(const void *a, const void *b) {\n    return strcmp((const char *)a, (const char *)b);\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", passwords[i]);\n        insert_trie(passwords[i]);\n    }\n\n    long long total_pairs = 0;\n    char subs[60][12];\n\n    for (int i = 0; i < n; i++) {\n        int len = strlen(passwords[i]);\n        int num_subs = 0;\n\n        for (int j = 0; j < len; j++) {\n            for (int k = j; k < len; k++) {\n                int sub_len = k - j + 1;\n                memcpy(subs[num_subs], passwords[i] + j, sub_len);\n                subs[num_subs][sub_len] = '\\0';\n                num_subs++;\n            }\n        }\n\n        qsort(subs, num_subs, sizeof(subs[0]), cmp_str);\n\n        for (int j = 0; j < num_subs; j++) {\n            if (j == 0 || strcmp(subs[j], subs[j - 1]) != 0) {\n                total_pairs += query_trie(subs[j]);\n            }\n        }\n\n        // Subtrai o próprio usuário B = A\n        total_pairs--;\n    }\n\n    printf(\"%lld\\n\", total_pairs);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16013099998235703,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

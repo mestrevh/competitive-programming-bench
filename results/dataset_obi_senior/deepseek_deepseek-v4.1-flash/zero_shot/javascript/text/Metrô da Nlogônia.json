@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:18:33.193254+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 954,
+            "output_tokens": 10390,
+            "total_tokens": 11344
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.024936,
+            "total_cost": 0.024939
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\nlet idx = 0;\n\nfunction nextInt() {\n  while (idx < data.length && data[idx] <= 32) idx++;\n  let n = 0;\n  while (idx < data.length && data[idx] > 32) {\n    n = n * 10 + (data[idx] - 48);\n    idx++;\n  }\n  return n;\n}\n\nconst N = nextInt();\nconst M = nextInt();\n\nconst adj1 = Array.from({ length: N + 1 }, () => []);\nfor (let i = 0; i < N - 1; i++) {\n  const a = nextInt();\n  const b = nextInt();\n  adj1[a].push(b);\n  adj1[b].push(a);\n}\n\nconst adj2 = Array.from({ length: M + 1 }, () => []);\nfor (let i = 0; i < M - 1; i++) {\n  const a = nextInt();\n  const b = nextInt();\n  adj2[a].push(b);\n  adj2[b].push(a);\n}\n\nfunction bfs(start, adj, n, needParent) {\n  const dist = new Int32Array(n + 1).fill(-1);\n  const parent = needParent ? new Int32Array(n + 1).fill(-1) : null;\n  const q = new Int32Array(n);\n\n  let head = 0;\n  let tail = 0;\n  let far = start;\n  let maxd = 0;\n\n  dist[start] = 0;\n  q[tail++] = start;\n\n  while (head < tail) {\n    const v = q[head++];\n    const dv = dist[v];\n\n    if (dv > maxd) {\n      maxd = dv;\n      far = v;\n    }\n\n    const list = adj[v];\n    for (let i = 0; i < list.length; i++) {\n      const to = list[i];\n      if (dist[to] === -1) {\n        dist[to] = dv + 1;\n        if (parent) parent[to] = v;\n        q[tail++] = to;\n      }\n    }\n  }\n\n  return { far, parent };\n}\n\nfunction getCenter(n, adj) {\n  const a = bfs(1, adj, n, false).far;\n  const res = bfs(a, adj, n, true);\n  const b = res.far;\n\n  const path = [];\n  let cur = b;\n  while (cur !== -1) {\n    path.push(cur);\n    cur = res.parent[cur];\n  }\n\n  return path[Math.floor(path.length / 2)];\n}\n\nconst c1 = getCenter(N, adj1);\nconst c2 = getCenter(M, adj2);\n\nprocess.stdout.write(c1 + ' ' + c2 + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0);\nlet idx = 0;\n\nfunction nextInt() {\n  while (idx < data.length && data[idx] <= 32) idx++;\n  let n = 0;\n  while (idx < data.length && data[idx] > 32) {\n    n = n * 10 + (data[idx] - 48);\n    idx++;\n  }\n  return n;\n}\n\nconst N = nextInt();\nconst M = nextInt();\n\nconst adj1 = Array.from({ length: N + 1 }, () => []);\nfor (let i = 0; i < N - 1; i++) {\n  const a = nextInt();\n  const b = nextInt();\n  adj1[a].push(b);\n  adj1[b].push(a);\n}\n\nconst adj2 = Array.from({ length: M + 1 }, () => []);\nfor (let i = 0; i < M - 1; i++) {\n  const a = nextInt();\n  const b = nextInt();\n  adj2[a].push(b);\n  adj2[b].push(a);\n}\n\nfunction bfs(start, adj, n, needParent) {\n  const dist = new Int32Array(n + 1).fill(-1);\n  const parent = needParent ? new Int32Array(n + 1).fill(-1) : null;\n  const q = new Int32Array(n);\n\n  let head = 0;\n  let tail = 0;\n  let far = start;\n  let maxd = 0;\n\n  dist[start] = 0;\n  q[tail++] = start;\n\n  while (head < tail) {\n    const v = q[head++];\n    const dv = dist[v];\n\n    if (dv > maxd) {\n      maxd = dv;\n      far = v;\n    }\n\n    const list = adj[v];\n    for (let i = 0; i < list.length; i++) {\n      const to = list[i];\n      if (dist[to] === -1) {\n        dist[to] = dv + 1;\n        if (parent) parent[to] = v;\n        q[tail++] = to;\n      }\n    }\n  }\n\n  return { far, parent };\n}\n\nfunction getCenter(n, adj) {\n  const a = bfs(1, adj, n, false).far;\n  const res = bfs(a, adj, n, true);\n  const b = res.far;\n\n  const path = [];\n  let cur = b;\n  while (cur !== -1) {\n    path.push(cur);\n    cur = res.parent[cur];\n  }\n\n  return path[Math.floor(path.length / 2)];\n}\n\nconst c1 = getCenter(N, adj1);\nconst c2 = getCenter(M, adj2);\n\nprocess.stdout.write(c1 + ' ' + c2 + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15505990001838654,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

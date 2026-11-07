@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:58:58.577323+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1016,
+            "output_tokens": 6286,
+            "total_tokens": 7302
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.015086,
+            "total_cost": 0.015089
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read()\n    pos = 0\n    length = len(data)\n\n    def next_int():\n        nonlocal pos\n        while pos < length and data[pos] <= 32:\n            pos += 1\n        num = 0\n        while pos < length and data[pos] > 32:\n            num = num * 10 + data[pos] - 48\n            pos += 1\n        return num\n\n    E = next_int()\n    M = next_int()\n    D = next_int()\n\n    likes = [0] * (2 * M)\n    for i in range(2 * M):\n        likes[i] = next_int()\n\n    dislikes = [0] * (2 * D)\n    for i in range(2 * D):\n        dislikes[i] = next_int()\n\n    group = [0] * (E + 1)\n    gid = 0\n\n    for _ in range(E // 3):\n        a = next_int()\n        b = next_int()\n        c = next_int()\n        gid += 1\n        group[a] = gid\n        group[b] = gid\n        group[c] = gid\n\n    violated = 0\n\n    for i in range(0, 2 * M, 2):\n        if group[likes[i]] != group[likes[i + 1]]:\n            violated += 1\n\n    for i in range(0, 2 * D, 2):\n        if group[dislikes[i]] == group[dislikes[i + 1]]:\n            violated += 1\n\n    sys.stdout.write(str(violated))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read()\n    pos = 0\n    length = len(data)\n\n    def next_int():\n        nonlocal pos\n        while pos < length and data[pos] <= 32:\n            pos += 1\n        num = 0\n        while pos < length and data[pos] > 32:\n            num = num * 10 + data[pos] - 48\n            pos += 1\n        return num\n\n    E = next_int()\n    M = next_int()\n    D = next_int()\n\n    likes = [0] * (2 * M)\n    for i in range(2 * M):\n        likes[i] = next_int()\n\n    dislikes = [0] * (2 * D)\n    for i in range(2 * D):\n        dislikes[i] = next_int()\n\n    group = [0] * (E + 1)\n    gid = 0\n\n    for _ in range(E // 3):\n        a = next_int()\n        b = next_int()\n        c = next_int()\n        gid += 1\n        group[a] = gid\n        group[b] = gid\n        group[c] = gid\n\n    violated = 0\n\n    for i in range(0, 2 * M, 2):\n        if group[likes[i]] != group[likes[i + 1]]:\n            violated += 1\n\n    for i in range(0, 2 * D, 2):\n        if group[dislikes[i]] == group[dislikes[i + 1]]:\n            violated += 1\n\n    sys.stdout.write(str(violated))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.1146593000012217,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

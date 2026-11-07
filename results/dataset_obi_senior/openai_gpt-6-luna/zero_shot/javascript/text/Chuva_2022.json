@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:38:28.785726+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 620,
+            "output_tokens": 245,
+            "total_tokens": 865
+        },
+        "cost_usd": {
+            "input_cost": 6.2e-05,
+            "output_cost": 0.000122,
+            "total_cost": 0.000184
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = input[0];\nconst S = input[1];\n\nlet prefix = 0;\nlet answer = 0;\nconst counts = new Map([[0, 1]]);\n\nfor (let i = 0; i < N; i++) {\n  prefix += input[i + 2];\n  answer += counts.get(prefix - S) || 0;\n  counts.set(prefix, (counts.get(prefix) || 0) + 1);\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = input[0];\nconst S = input[1];\n\nlet prefix = 0;\nlet answer = 0;\nconst counts = new Map([[0, 1]]);\n\nfor (let i = 0; i < N; i++) {\n  prefix += input[i + 2];\n  answer += counts.get(prefix - S) || 0;\n  counts.set(prefix, (counts.get(prefix) || 0) + 1);\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0645251000096323,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

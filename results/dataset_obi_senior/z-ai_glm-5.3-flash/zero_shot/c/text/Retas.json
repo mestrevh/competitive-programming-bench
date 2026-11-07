@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:56:23.934517+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1152,
+            "output_tokens": 23577,
+            "total_tokens": 24729
+        },
+        "cost_usd": {
+            "input_cost": 2.5e-05,
+            "output_cost": 0.011789,
+            "total_cost": 0.011813
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct { long long u, v; } Pt;\n\nstatic Pt pts[100005];\nstatic long long vals[100005];\nstatic int bit[100005];\nstatic int m;\n\nstatic int cmpPt(const void *x, const void *y) {\n    const Pt *p = (const Pt *)x, *q = (const Pt *)y;\n    if (p->u != q->u) return (p->u > q->u) ? -1 : 1; /* u descendente */\n    if (p->v != q->v) return (p->v < q->v) ? -1 : 1; /* v ascendente */\n    return 0;\n}\n\nstatic int cmpLL(const void *x, const void *y) {\n    long long a = *(const long long *)x, b = *(const long long *)y;\n    return (a > b) - (a < b);\n}\n\nstatic void upd(int i) { for (; i <= m; i += i & (-i)) bit[i]++; }\n\nstatic int qry(int i) {\n    int s = 0;\n    for (; i > 0; i -= i & (-i)) s += bit[i];\n    return s;\n}\n\nint main(void) {\n    int n;\n    long long X1, X2;\n    if (scanf(\"%d %lld %lld\", &n, &X1, &X2) != 3) return 0;\n\n    for (int i = 0; i < n; i++) {\n        long long a, b;\n        scanf(\"%lld %lld\", &a, &b);\n        pts[i].u = X1 * a + b; /* y da reta em x = X1 */\n        pts[i].v = X2 * a + b; /* y da reta em x = X2 */\n        vals[i] = pts[i].v;\n    }\n\n    /* comprimir valores de v */\n    qsort(vals, (size_t)n, sizeof(long long), cmpLL);\n    m = 0;\n    for (int i = 0; i < n; i++)\n        if (m == 0 || vals[i] != vals[m - 1]) vals[m++] = vals[i];\n\n    /* ordena por u descendente, desempate v ascendente */\n    qsort(pts, (size_t)n, sizeof(Pt), cmpPt);\n\n    long long ans = 0;\n    for (int i = 0; i < n; i++) {\n        int lo = 0, hi = m - 1;\n        long long target = pts[i].v;\n        while (lo < hi) {\n            int mid = (lo + hi) >> 1;\n            if (vals[mid] < target) lo = mid + 1; else hi = mid;\n        }\n        int r = lo + 1;\n        ans += qry(r);\n        upd(r);\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct { long long u, v; } Pt;\n\nstatic Pt pts[100005];\nstatic long long vals[100005];\nstatic int bit[100005];\nstatic int m;\n\nstatic int cmpPt(const void *x, const void *y) {\n    const Pt *p = (const Pt *)x, *q = (const Pt *)y;\n    if (p->u != q->u) return (p->u > q->u) ? -1 : 1; /* u descendente */\n    if (p->v != q->v) return (p->v < q->v) ? -1 : 1; /* v ascendente */\n    return 0;\n}\n\nstatic int cmpLL(const void *x, const void *y) {\n    long long a = *(const long long *)x, b = *(const long long *)y;\n    return (a > b) - (a < b);\n}\n\nstatic void upd(int i) { for (; i <= m; i += i & (-i)) bit[i]++; }\n\nstatic int qry(int i) {\n    int s = 0;\n    for (; i > 0; i -= i & (-i)) s += bit[i];\n    return s;\n}\n\nint main(void) {\n    int n;\n    long long X1, X2;\n    if (scanf(\"%d %lld %lld\", &n, &X1, &X2) != 3) return 0;\n\n    for (int i = 0; i < n; i++) {\n        long long a, b;\n        scanf(\"%lld %lld\", &a, &b);\n        pts[i].u = X1 * a + b; /* y da reta em x = X1 */\n        pts[i].v = X2 * a + b; /* y da reta em x = X2 */\n        vals[i] = pts[i].v;\n    }\n\n    /* comprimir valores de v */\n    qsort(vals, (size_t)n, sizeof(long long), cmpLL);\n    m = 0;\n    for (int i = 0; i < n; i++)\n        if (m == 0 || vals[i] != vals[m - 1]) vals[m++] = vals[i];\n\n    /* ordena por u descendente, desempate v ascendente */\n    qsort(pts, (size_t)n, sizeof(Pt), cmpPt);\n\n    long long ans = 0;\n    for (int i = 0; i < n; i++) {\n        int lo = 0, hi = m - 1;\n        long long target = pts[i].v;\n        while (lo < hi) {\n            int mid = (lo + hi) >> 1;\n            if (vals[mid] < target) lo = mid + 1; else hi = mid;\n        }\n        int r = lo + 1;\n        ans += qry(r);\n        upd(r);\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10150809999322519,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

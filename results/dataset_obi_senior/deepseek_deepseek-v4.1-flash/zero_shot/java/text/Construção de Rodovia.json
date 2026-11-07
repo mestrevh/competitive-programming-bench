@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:42:47.438411+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 862,
+            "output_tokens": 5848,
+            "total_tokens": 6710
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.014035,
+            "total_cost": 0.014038
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int n = Integer.parseInt(st.nextToken());\n        int m = Integer.parseInt(st.nextToken());\n\n        @SuppressWarnings(\"unchecked\")\n        ArrayList<Integer>[] adj = new ArrayList[n + 1];\n        for (int i = 1; i <= n; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < m; i++) {\n            st = new StringTokenizer(br.readLine());\n            int x = Integer.parseInt(st.nextToken());\n            int y = Integer.parseInt(st.nextToken());\n            adj[x].add(y);\n            adj[y].add(x);\n        }\n\n        boolean[] visited = new boolean[n + 1];\n        int[] queue = new int[n + 1];\n        int[] mark = new int[n + 1];\n        int token = 0;\n\n        for (int start = 1; start <= n; start++) {\n            if (visited[start]) continue;\n\n            int head = 0, tail = 0;\n            queue[tail++] = start;\n            visited[start] = true;\n\n            while (head < tail) {\n                int v = queue[head++];\n                for (int to : adj[v]) {\n                    if (!visited[to]) {\n                        visited[to] = true;\n                        queue[tail++] = to;\n                    }\n                }\n            }\n\n            int size = tail;\n            long sumDeg = 0;\n            for (int i = 0; i < size; i++) {\n                sumDeg += adj[queue[i]].size();\n            }\n\n            long completeDeg = (long) size * (size - 1);\n\n            if (sumDeg != completeDeg) {\n                int v = -1;\n                for (int i = 0; i < size; i++) {\n                    int u = queue[i];\n                    if (adj[u].size() < size - 1) {\n                        v = u;\n                        break;\n                    }\n                }\n\n                if (v == -1) continue;\n\n                token++;\n                for (int to : adj[v]) {\n                    mark[to] = token;\n                }\n\n                for (int i = 0; i < size; i++) {\n                    int u = queue[i];\n                    if (u != v && mark[u] != token) {\n                        System.out.println(v + \" \" + u);\n                        return;\n                    }\n                }\n            }\n        }\n\n        System.out.println(\"-1\");\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int n = Integer.parseInt(st.nextToken());\n        int m = Integer.parseInt(st.nextToken());\n\n        @SuppressWarnings(\"unchecked\")\n        ArrayList<Integer>[] adj = new ArrayList[n + 1];\n        for (int i = 1; i <= n; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < m; i++) {\n            st = new StringTokenizer(br.readLine());\n            int x = Integer.parseInt(st.nextToken());\n            int y = Integer.parseInt(st.nextToken());\n            adj[x].add(y);\n            adj[y].add(x);\n        }\n\n        boolean[] visited = new boolean[n + 1];\n        int[] queue = new int[n + 1];\n        int[] mark = new int[n + 1];\n        int token = 0;\n\n        for (int start = 1; start <= n; start++) {\n            if (visited[start]) continue;\n\n            int head = 0, tail = 0;\n            queue[tail++] = start;\n            visited[start] = true;\n\n            while (head < tail) {\n                int v = queue[head++];\n                for (int to : adj[v]) {\n                    if (!visited[to]) {\n                        visited[to] = true;\n                        queue[tail++] = to;\n                    }\n                }\n            }\n\n            int size = tail;\n            long sumDeg = 0;\n            for (int i = 0; i < size; i++) {\n                sumDeg += adj[queue[i]].size();\n            }\n\n            long completeDeg = (long) size * (size - 1);\n\n            if (sumDeg != completeDeg) {\n                int v = -1;\n                for (int i = 0; i < size; i++) {\n                    int u = queue[i];\n                    if (adj[u].size() < size - 1) {\n                        v = u;\n                        break;\n                    }\n                }\n\n                if (v == -1) continue;\n\n                token++;\n                for (int to : adj[v]) {\n                    mark[to] = token;\n                }\n\n                for (int i = 0; i < size; i++) {\n                    int u = queue[i];\n                    if (u != v && mark[u] != token) {\n                        System.out.println(v + \" \" + u);\n                        return;\n                    }\n                }\n            }\n        }\n\n        System.out.println(\"-1\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.3281423000153154,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

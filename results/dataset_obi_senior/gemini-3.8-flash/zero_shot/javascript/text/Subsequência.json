@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:08:06.045834+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 610,
+            "output_tokens": 384,
+            "total_tokens": 1349
+        },
+        "cost_usd": {
+            "input_cost": 0.000458,
+            "output_cost": 0.00144,
+            "total_cost": 0.001898
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n\n        let num = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            num = num * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return sign * num;\n    }\n\n    const A = nextInt();\n    if (A === null) return;\n    const B = nextInt();\n\n    const SA = new Int32Array(A);\n    for (let i = 0; i < A; i++) {\n        SA[i] = nextInt();\n    }\n\n    let ptrB = 0;\n    let target = nextInt();\n\n    for (let i = 0; i < A; i++) {\n        if (SA[i] === target) {\n            ptrB++;\n            if (ptrB === B) {\n                break;\n            }\n            target = nextInt();\n        }\n    }\n\n    if (ptrB === B) {\n        console.log('S');\n    } else {\n        console.log('N');\n    }\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n\n        let num = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            num = num * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return sign * num;\n    }\n\n    const A = nextInt();\n    if (A === null) return;\n    const B = nextInt();\n\n    const SA = new Int32Array(A);\n    for (let i = 0; i < A; i++) {\n        SA[i] = nextInt();\n    }\n\n    let ptrB = 0;\n    let target = nextInt();\n\n    for (let i = 0; i < A; i++) {\n        if (SA[i] === target) {\n            ptrB++;\n            if (ptrB === B) {\n                break;\n            }\n            target = nextInt();\n        }\n    }\n\n    if (ptrB === B) {\n        console.log('S');\n    } else {\n        console.log('N');\n    }\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.062311100016813725,
+            "counts": {
+                "AC": 51,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 51
+        }
+    }
+]

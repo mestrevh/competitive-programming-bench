@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:15:25.417510+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1529,
+            "output_tokens": 522,
+            "total_tokens": 4936
+        },
+        "cost_usd": {
+            "input_cost": 0.001147,
+            "output_cost": 0.001958,
+            "total_cost": 0.003104
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nconst int INF = 1e9;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, k;\n    long long t;\n    if (!(cin >> n >> k >> t)) return 0;\n\n    vector<int> p(n + 1);\n    for (int i = 1; i <= n; ++i) {\n        cin >> p[i];\n    }\n\n    vector<int> pos(k + 1);\n    int current_k = 0;\n    for (int i = 1; i <= n; ++i) {\n        int g;\n        cin >> g;\n        if (g == 1) {\n            current_k++;\n            pos[current_k] = i;\n        }\n    }\n\n    int max_v = 9 * k;\n    vector<vector<int>> dp(k + 1, vector<int>(max_v + 1, INF));\n    dp[0][0] = 0;\n\n    for (int i = 1; i <= n; ++i) {\n        int limit_j = min(i, k);\n        for (int j = limit_j; j >= 1; --j) {\n            int cost_move = abs(pos[j] - i);\n            int max_val_j = 9 * j;\n            int pi = p[i];\n            for (int v = max_val_j; v >= pi; --v) {\n                if (dp[j - 1][v - pi] != INF) {\n                    dp[j][v] = min(dp[j][v], dp[j - 1][v - pi] + cost_move);\n                }\n            }\n        }\n    }\n\n    int ans = 0;\n    for (int v = max_v; v >= 0; --v) {\n        if (dp[k][v] <= t) {\n            ans = v;\n            break;\n        }\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nconst int INF = 1e9;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, k;\n    long long t;\n    if (!(cin >> n >> k >> t)) return 0;\n\n    vector<int> p(n + 1);\n    for (int i = 1; i <= n; ++i) {\n        cin >> p[i];\n    }\n\n    vector<int> pos(k + 1);\n    int current_k = 0;\n    for (int i = 1; i <= n; ++i) {\n        int g;\n        cin >> g;\n        if (g == 1) {\n            current_k++;\n            pos[current_k] = i;\n        }\n    }\n\n    int max_v = 9 * k;\n    vector<vector<int>> dp(k + 1, vector<int>(max_v + 1, INF));\n    dp[0][0] = 0;\n\n    for (int i = 1; i <= n; ++i) {\n        int limit_j = min(i, k);\n        for (int j = limit_j; j >= 1; --j) {\n            int cost_move = abs(pos[j] - i);\n            int max_val_j = 9 * j;\n            int pi = p[i];\n            for (int v = max_val_j; v >= pi; --v) {\n                if (dp[j - 1][v - pi] != INF) {\n                    dp[j][v] = min(dp[j][v], dp[j - 1][v - pi] + cost_move);\n                }\n            }\n        }\n    }\n\n    int ans = 0;\n    for (int v = max_v; v >= 0; --v) {\n        if (dp[k][v] <= t) {\n            ans = v;\n            break;\n        }\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.17630469999858178,
+            "counts": {
+                "AC": 65,
+                "WA": 2,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

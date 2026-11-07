@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:28:23.913471+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 925,
+            "output_tokens": 373,
+            "total_tokens": 2972
+        },
+        "cost_usd": {
+            "input_cost": 0.000694,
+            "output_cost": 0.001399,
+            "total_cost": 0.002093
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n    T = [int(x) for x in input_data[2 : 2 + M]]\n\n    # Começamos com as primeiras 10.000 posições finais\n    # Se houver menos que 10.000 sobreviventes, posições que ultrapassarem N\n    # serão eliminadas.\n    pos = list(range(1, 10001))\n\n    # Voltamos no tempo do último turno para o primeiro\n    for t in reversed(T):\n        t_minus_1 = t - 1\n        # Se até o maior elemento da lista for menor que t, ninguém é alterado\n        if not pos or pos[-1] < t:\n            continue\n\n        new_pos = []\n        for x in pos:\n            # Posição antes da remoção\n            prev_x = x + (x - 1) // t_minus_1\n            if prev_x > N:\n                # Como a lista 'pos' é estritamente crescente, todos os próximos também serão > N\n                break\n            new_pos.append(prev_x)\n\n        pos = new_pos\n        if not pos:\n            break\n\n    # Imprime os resultados\n    sys.stdout.write(\"\\n\".join(map(str, pos)) + (\"\\n\" if pos else \"\"))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n    T = [int(x) for x in input_data[2 : 2 + M]]\n\n    # Começamos com as primeiras 10.000 posições finais\n    # Se houver menos que 10.000 sobreviventes, posições que ultrapassarem N\n    # serão eliminadas.\n    pos = list(range(1, 10001))\n\n    # Voltamos no tempo do último turno para o primeiro\n    for t in reversed(T):\n        t_minus_1 = t - 1\n        # Se até o maior elemento da lista for menor que t, ninguém é alterado\n        if not pos or pos[-1] < t:\n            continue\n\n        new_pos = []\n        for x in pos:\n            # Posição antes da remoção\n            prev_x = x + (x - 1) // t_minus_1\n            if prev_x > N:\n                # Como a lista 'pos' é estritamente crescente, todos os próximos também serão > N\n                break\n            new_pos.append(prev_x)\n\n        pos = new_pos\n        if not pos:\n            break\n\n    # Imprime os resultados\n    sys.stdout.write(\"\\n\".join(map(str, pos)) + (\"\\n\" if pos else \"\"))\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 3.821916399996553,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:45:53.444741+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 889,
+            "output_tokens": 7915,
+            "total_tokens": 8804
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.018996,
+            "total_cost": 0.018999
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String first = br.readLine();\n        if (first == null) return;\n\n        int N = Integer.parseInt(first.trim());\n\n        Set<Long> full = new HashSet<>();\n        List<Set<Long>> pref = new ArrayList<>();\n        List<Set<Long>> suff = new ArrayList<>();\n\n        for (int i = 0; i < 10; i++) {\n            pref.add(new HashSet<>());\n            suff.add(new HashSet<>());\n        }\n\n        String ans = null;\n\n        for (int k = 0; k < N; k++) {\n            String s = br.readLine().trim();\n\n            if (ans != null) continue;\n\n            long fullCode = encode(s, 0, 10);\n            boolean invalid = full.contains(fullCode);\n\n            if (!invalid) {\n                for (int j = 1; j <= 9; j++) {\n                    long p = encode(s, 0, j);\n                    long q = encode(s, j, 10);\n\n                    if (suff.get(j).contains(p) && pref.get(10 - j).contains(q)) {\n                        invalid = true;\n                        break;\n                    }\n                }\n            }\n\n            if (invalid) {\n                ans = s;\n            } else {\n                full.add(fullCode);\n                for (int j = 1; j <= 9; j++) {\n                    pref.get(j).add(encode(s, 0, j));\n                    suff.get(j).add(encode(s, 10 - j, 10));\n                }\n            }\n        }\n\n        System.out.println(ans == null ? \"ok\" : ans);\n    }\n\n    private static long encode(String s, int l, int r) {\n        long h = 0;\n        for (int i = l; i < r; i++) {\n            h = (h << 5) | (s.charAt(i) - 'a');\n        }\n        return h;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String first = br.readLine();\n        if (first == null) return;\n\n        int N = Integer.parseInt(first.trim());\n\n        Set<Long> full = new HashSet<>();\n        List<Set<Long>> pref = new ArrayList<>();\n        List<Set<Long>> suff = new ArrayList<>();\n\n        for (int i = 0; i < 10; i++) {\n            pref.add(new HashSet<>());\n            suff.add(new HashSet<>());\n        }\n\n        String ans = null;\n\n        for (int k = 0; k < N; k++) {\n            String s = br.readLine().trim();\n\n            if (ans != null) continue;\n\n            long fullCode = encode(s, 0, 10);\n            boolean invalid = full.contains(fullCode);\n\n            if (!invalid) {\n                for (int j = 1; j <= 9; j++) {\n                    long p = encode(s, 0, j);\n                    long q = encode(s, j, 10);\n\n                    if (suff.get(j).contains(p) && pref.get(10 - j).contains(q)) {\n                        invalid = true;\n                        break;\n                    }\n                }\n            }\n\n            if (invalid) {\n                ans = s;\n            } else {\n                full.add(fullCode);\n                for (int j = 1; j <= 9; j++) {\n                    pref.get(j).add(encode(s, 0, j));\n                    suff.get(j).add(encode(s, 10 - j, 10));\n                }\n            }\n        }\n\n        System.out.println(ans == null ? \"ok\" : ans);\n    }\n\n    private static long encode(String s, int l, int r) {\n        long h = 0;\n        for (int i = l; i < r; i++) {\n            h = (h << 5) | (s.charAt(i) - 'a');\n        }\n        return h;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1349577000073623,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

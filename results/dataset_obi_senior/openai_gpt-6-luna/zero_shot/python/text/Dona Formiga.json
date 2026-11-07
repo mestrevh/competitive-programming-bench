@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:20:55.282174+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 792,
+            "output_tokens": 321,
+            "total_tokens": 1113
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.00016,
+            "total_cost": 0.00024
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\ns, t, p = data[:3]\nheights = data[3:3 + s]\nadj = [[] for _ in range(s)]\n\nidx = 3 + s\nfor _ in range(t):\n    i, j = data[idx] - 1, data[idx + 1] - 1\n    idx += 2\n    adj[i].append(j)\n    adj[j].append(i)\n\nmemo = [-1] * s\n\ndef longest(v):\n    if memo[v] != -1:\n        return memo[v]\n    best = 0\n    for u in adj[v]:\n        if heights[u] < heights[v]:\n            best = max(best, 1 + longest(u))\n    memo[v] = best\n    return best\n\nprint(longest(p - 1))\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\ns, t, p = data[:3]\nheights = data[3:3 + s]\nadj = [[] for _ in range(s)]\n\nidx = 3 + s\nfor _ in range(t):\n    i, j = data[idx] - 1, data[idx + 1] - 1\n    idx += 2\n    adj[i].append(j)\n    adj[j].append(i)\n\nmemo = [-1] * s\n\ndef longest(v):\n    if memo[v] != -1:\n        return memo[v]\n    best = 0\n    for u in adj[v]:\n        if heights[u] < heights[v]:\n            best = max(best, 1 + longest(u))\n    memo[v] = best\n    return best\n\nprint(longest(p - 1))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0811632000040845,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

@@ -163,7 +163,13 @@ class JudgeService:
                 return "TLE", timeout
             finally:
                 stop_monitoring.set()
-                monitor_thread.join(timeout=0.1)
+                monitor_thread.join(timeout=0.2)
+                if process.stdin:
+                    process.stdin.close()
+                if process.stdout:
+                    process.stdout.close()
+                if process.stderr:
+                    process.stderr.close()
 
             if mle_occurred.is_set() or max_memory_seen[0] > limit_bytes:
                 return "MLE", exec_time
@@ -221,7 +227,7 @@ class JudgeService:
 
         print(f"\n--- Iniciando Judge: {self.__language.upper()} ---")
 
-        with tempfile.TemporaryDirectory() as tmp_dir:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp_dir:
             tmp_path = Path(tmp_dir)
             source_file = tmp_path / f"code.{self.__extension}"
 

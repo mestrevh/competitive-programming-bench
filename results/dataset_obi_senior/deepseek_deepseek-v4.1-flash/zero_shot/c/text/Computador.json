@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:56:27.587780+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 880,
+            "output_tokens": 4007,
+            "total_tokens": 4887
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.009617,
+            "total_cost": 0.009619
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 200005\n\nstatic long long bitA[MAXN], bitB[MAXN];\nstatic int N;\n\nstatic inline void add(long long *bit, int idx, long long val) {\n    while (idx <= N) {\n        bit[idx] += val;\n        idx += idx & -idx;\n    }\n}\n\nstatic inline long long sum(const long long *bit, int idx) {\n    long long res = 0;\n    while (idx > 0) {\n        res += bit[idx];\n        idx -= idx & -idx;\n    }\n    return res;\n}\n\nstatic inline void range_add(int l, int r, long long a, long long b) {\n    add(bitA, l, a);\n    add(bitA, r + 1, -a);\n    add(bitB, l, b);\n    add(bitB, r + 1, -b);\n}\n\nstatic inline long long query(int p) {\n    return sum(bitA, p) * (long long)p + sum(bitB, p);\n}\n\nint main(void) {\n    int M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int k = 0; k < M; ++k) {\n        int type, i, v;\n        scanf(\"%d\", &type);\n\n        if (type == 3) {\n            scanf(\"%d\", &i);\n            printf(\"%lld\\n\", query(i));\n        } else {\n            scanf(\"%d %d\", &i, &v);\n\n            if (type == 1) {\n                int l = i;\n                int r = i + v - 1;\n                if (r > N) r = N;\n                range_add(l, r, -1, (long long)v + i);\n            } else {\n                int l = i - v + 1;\n                if (l < 1) l = 1;\n                int r = i;\n                range_add(l, r, 1, (long long)v - i);\n            }\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 200005\n\nstatic long long bitA[MAXN], bitB[MAXN];\nstatic int N;\n\nstatic inline void add(long long *bit, int idx, long long val) {\n    while (idx <= N) {\n        bit[idx] += val;\n        idx += idx & -idx;\n    }\n}\n\nstatic inline long long sum(const long long *bit, int idx) {\n    long long res = 0;\n    while (idx > 0) {\n        res += bit[idx];\n        idx -= idx & -idx;\n    }\n    return res;\n}\n\nstatic inline void range_add(int l, int r, long long a, long long b) {\n    add(bitA, l, a);\n    add(bitA, r + 1, -a);\n    add(bitB, l, b);\n    add(bitB, r + 1, -b);\n}\n\nstatic inline long long query(int p) {\n    return sum(bitA, p) * (long long)p + sum(bitB, p);\n}\n\nint main(void) {\n    int M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int k = 0; k < M; ++k) {\n        int type, i, v;\n        scanf(\"%d\", &type);\n\n        if (type == 3) {\n            scanf(\"%d\", &i);\n            printf(\"%lld\\n\", query(i));\n        } else {\n            scanf(\"%d %d\", &i, &v);\n\n            if (type == 1) {\n                int l = i;\n                int r = i + v - 1;\n                if (r > N) r = N;\n                range_add(l, r, -1, (long long)v + i);\n            } else {\n                int l = i - v + 1;\n                if (l < 1) l = 1;\n                int r = i;\n                range_add(l, r, 1, (long long)v - i);\n            }\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4377195999841206,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

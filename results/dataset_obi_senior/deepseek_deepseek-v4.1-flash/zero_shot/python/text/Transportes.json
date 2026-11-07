@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:38:53.457588+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1928,
+            "output_tokens": 18150,
+            "total_tokens": 20078
+        },
+        "cost_usd": {
+            "input_cost": 6e-06,
+            "output_cost": 0.04356,
+            "total_cost": 0.043566
+        },
+        "raw_response": "```python\nimport sys\nfrom heapq import heappush, heappop\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = 0\n    N = data[it]\n    M = data[it + 1]\n    K = data[it + 2]\n    it += 3\n\n    P = [0] + data[it:it + K]\n    it += K\n\n    edges_by_sys = [[] for _ in range(K + 1)]\n    for _ in range(M):\n        v = data[it] - 1\n        u = data[it + 1] - 1\n        t = data[it + 2]\n        it += 3\n        edges_by_sys[t].append((v, u))\n\n    A = data[it] - 1\n    B = data[it + 1] - 1\n\n    adj = [[] for _ in range(N)]\n\n    def find(parent, x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    for sys in range(1, K + 1):\n        edges = edges_by_sys[sys]\n        if not edges:\n            continue\n\n        mapping = {}\n        parent = []\n        size = []\n\n        for u, v in edges:\n            if u not in mapping:\n                mapping[u] = len(parent)\n                parent.append(len(parent))\n                size.append(1)\n            if v not in mapping:\n                mapping[v] = len(parent)\n                parent.append(len(parent))\n                size.append(1)\n\n            ru = find(parent, mapping[u])\n            rv = find(parent, mapping[v])\n            if ru != rv:\n                if size[ru] < size[rv]:\n                    ru, rv = rv, ru\n                parent[rv] = ru\n                size[ru] += size[rv]\n\n        comps = {}\n        for station, idx in mapping.items():\n            r = find(parent, idx)\n            if r in comps:\n                comps[r].append(station)\n            else:\n                comps[r] = [station]\n\n        price = P[sys]\n        for stations in comps.values():\n            comp_node = len(adj)\n            adj.append([])\n            for station in stations:\n                adj[comp_node].append((station, 0))\n                adj[station].append((comp_node, price))\n\n    INF = 10**18\n    dist = [INF] * len(adj)\n    dist[A] = 0\n\n    heap = [(0, A)]\n    while heap:\n        d, u = heappop(heap)\n        if d != dist[u]:\n            continue\n        if u == B:\n            break\n        for v, w in adj[u]:\n            nd = d + w\n            if nd < dist[v]:\n                dist[v] = nd\n                heappush(heap, (nd, v))\n\n    ans = dist[B]\n    if ans == INF:\n        print(-1)\n    else:\n        print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom heapq import heappush, heappop\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = 0\n    N = data[it]\n    M = data[it + 1]\n    K = data[it + 2]\n    it += 3\n\n    P = [0] + data[it:it + K]\n    it += K\n\n    edges_by_sys = [[] for _ in range(K + 1)]\n    for _ in range(M):\n        v = data[it] - 1\n        u = data[it + 1] - 1\n        t = data[it + 2]\n        it += 3\n        edges_by_sys[t].append((v, u))\n\n    A = data[it] - 1\n    B = data[it + 1] - 1\n\n    adj = [[] for _ in range(N)]\n\n    def find(parent, x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    for sys in range(1, K + 1):\n        edges = edges_by_sys[sys]\n        if not edges:\n            continue\n\n        mapping = {}\n        parent = []\n        size = []\n\n        for u, v in edges:\n            if u not in mapping:\n                mapping[u] = len(parent)\n                parent.append(len(parent))\n                size.append(1)\n            if v not in mapping:\n                mapping[v] = len(parent)\n                parent.append(len(parent))\n                size.append(1)\n\n            ru = find(parent, mapping[u])\n            rv = find(parent, mapping[v])\n            if ru != rv:\n                if size[ru] < size[rv]:\n                    ru, rv = rv, ru\n                parent[rv] = ru\n                size[ru] += size[rv]\n\n        comps = {}\n        for station, idx in mapping.items():\n            r = find(parent, idx)\n            if r in comps:\n                comps[r].append(station)\n            else:\n                comps[r] = [station]\n\n        price = P[sys]\n        for stations in comps.values():\n            comp_node = len(adj)\n            adj.append([])\n            for station in stations:\n                adj[comp_node].append((station, 0))\n                adj[station].append((comp_node, price))\n\n    INF = 10**18\n    dist = [INF] * len(adj)\n    dist[A] = 0\n\n    heap = [(0, A)]\n    while heap:\n        d, u = heappop(heap)\n        if d != dist[u]:\n            continue\n        if u == B:\n            break\n        for v, w in adj[u]:\n            nd = d + w\n            if nd < dist[v]:\n                dist[v] = nd\n                heappush(heap, (nd, v))\n\n    ans = dist[B]\n    if ans == INF:\n        print(-1)\n    else:\n        print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.14605180000216933,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 107,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

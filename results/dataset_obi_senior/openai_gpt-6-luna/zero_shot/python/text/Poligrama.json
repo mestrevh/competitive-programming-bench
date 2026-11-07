@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:45:35.881456+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 558,
+            "output_tokens": 1496,
+            "total_tokens": 2054
+        },
+        "cost_usd": {
+            "input_cost": 5.6e-05,
+            "output_cost": 0.000748,
+            "total_cost": 0.000804
+        },
+        "raw_response": "```python\nimport sys\nfrom math import isqrt\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\nword = data[1]\nletters = [c - 97 for c in word]\n\ndivisors = set()\nfor d in range(1, isqrt(n) + 1):\n    if n % d == 0:\n        divisors.add(d)\n        divisors.add(n // d)\n\nfor k in sorted(d for d in divisors if d <= n // 2):\n    base = [0] * 26\n    for i in range(k):\n        base[letters[i]] += 1\n\n    valid = True\n    for start in range(k, n, k):\n        counts = [0] * 26\n        for i in range(start, start + k):\n            counts[letters[i]] += 1\n        if counts != base:\n            valid = False\n            break\n\n    if valid:\n        sys.stdout.write(word[:k].decode())\n        break\nelse:\n    sys.stdout.write(\"*\")\n```",
+        "extracted_code": "import sys\nfrom math import isqrt\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\nword = data[1]\nletters = [c - 97 for c in word]\n\ndivisors = set()\nfor d in range(1, isqrt(n) + 1):\n    if n % d == 0:\n        divisors.add(d)\n        divisors.add(n // d)\n\nfor k in sorted(d for d in divisors if d <= n // 2):\n    base = [0] * 26\n    for i in range(k):\n        base[letters[i]] += 1\n\n    valid = True\n    for start in range(k, n, k):\n        counts = [0] * 26\n        for i in range(start, start + k):\n            counts[letters[i]] += 1\n        if counts != base:\n            valid = False\n            break\n\n    if valid:\n        sys.stdout.write(word[:k].decode())\n        break\nelse:\n    sys.stdout.write(\"*\")",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09220330000243848,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:59:32.090929+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 654,
+            "output_tokens": 680,
+            "total_tokens": 1334
+        },
+        "cost_usd": {
+            "input_cost": 6.5e-05,
+            "output_cost": 0.00034,
+            "total_cost": 0.000405
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = input[0];\nconst positions = [];\nlet total = 0;\n\nfor (let i = 0; i < n; i++) {\n  positions.push(total);\n  total += input[i + 1];\n}\n\nif (total % 2 !== 0) {\n  console.log('N');\n} else {\n  const half = total / 2;\n  const trees = new Set(positions);\n  let pairs = 0;\n\n  for (const p of positions) {\n    if (p < half && trees.has(p + half)) {\n      pairs++;\n      if (pairs >= 2) break;\n    }\n  }\n\n  console.log(pairs >= 2 ? 'S' : 'N');\n}\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = input[0];\nconst positions = [];\nlet total = 0;\n\nfor (let i = 0; i < n; i++) {\n  positions.push(total);\n  total += input[i + 1];\n}\n\nif (total % 2 !== 0) {\n  console.log('N');\n} else {\n  const half = total / 2;\n  const trees = new Set(positions);\n  let pairs = 0;\n\n  for (const p of positions) {\n    if (p < half && trees.has(p + half)) {\n      pairs++;\n      if (pairs >= 2) break;\n    }\n  }\n\n  console.log(pairs >= 2 ? 'S' : 'N');\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06953380000777543,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

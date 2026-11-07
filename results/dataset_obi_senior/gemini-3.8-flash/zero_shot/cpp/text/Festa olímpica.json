@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:34:55.563471+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 925,
+            "output_tokens": 784,
+            "total_tokens": 3473
+        },
+        "cost_usd": {
+            "input_cost": 0.000694,
+            "output_cost": 0.00294,
+            "total_cost": 0.003634
+        },
+        "raw_response": "Uma solução correta e muito eficiente para o problema **Festa olímpica**.\n\n### Método\n\nComo o problema exige a impressão de no máximo os primeiros 10.000 sobreviventes e a ordem relativa dos elementos é sempre mantida, podemos rastrear a posição original de cada sobrevivente de trás para frente.\n\nSe após um turno com divisor $T$ um elemento ocupa a posição $p_{depois}$, qual era a sua posição $p_{antes}$ antes desse turno?\nA cada bloco de $T$ elementos originais, 1 é removido e $T - 1$ sobrevivem. Logo, o número de elementos removidos antes da posição $p_{depois}$ é exatamente $\\lfloor (p_{depois} - 1) / (T - 1) \\rfloor$. Dessa forma, temos a relação direta:\n$$p_{antes} = p_{depois} + \\lfloor \\frac{p_{depois} - 1}{T - 1} \\rfloor$$\n\nComeçamos com uma lista com os índices finais candidatos $1, 2, 3, \\dots, 10.000$ e aplicamos a transformação reversa para cada um dos $M$ turnos (do último turno para o primeiro). Caso a posição de algum elemento ultrapasse $N$ em qualquer momento, ele (e todos os posteriores) pode ser imediatamente descartado, pois não existia na lista inicial.\n\nCom no máximo $10.000$ elementos e $M \\le 5.000$, o número total de operações é de no máximo $5 \\times 10^7$, executando em uma fração de segundo.\n\n### Código em C++\n\n```cpp\n#include <iostream>\n#include <vector>\n#include <numeric>\n\nusing namespace std;\n\nint main() {\n    // Otimização de I/O\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    long long n;\n    int m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<long long> t(m);\n    for (int i = 0; i < m; ++i) {\n        cin >> t[i];\n    }\n\n    // Queremos no máximo os 10.000 primeiros sobreviventes.\n    int limit = min(n, 10000LL);\n    vector<long long> pos(limit);\n    for (int i = 0; i < limit; ++i) {\n        pos[i] = i + 1;\n    }\n\n    // Processa os turnos na ordem inversa\n    for (int i = m - 1; i >= 0; --i) {\n        long long current_t = t[i];\n        int valid_count = 0;\n\n        for (int j = 0; j < (int)pos.size(); ++j) {\n            long long p_antes = pos[j] + (pos[j] - 1) / (current_t - 1);\n            if (p_antes > n) {\n                break; // Elementos posteriores também serão > n\n            }\n            pos[valid_count++] = p_antes;\n        }\n        pos.resize(valid_count);\n\n        if (pos.empty()) break;\n    }\n\n    // Imprime o resultado\n    for (long long ans : pos) {\n        cout << ans << \"\\n\";\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <numeric>\n\nusing namespace std;\n\nint main() {\n    // Otimização de I/O\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    long long n;\n    int m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<long long> t(m);\n    for (int i = 0; i < m; ++i) {\n        cin >> t[i];\n    }\n\n    // Queremos no máximo os 10.000 primeiros sobreviventes.\n    int limit = min(n, 10000LL);\n    vector<long long> pos(limit);\n    for (int i = 0; i < limit; ++i) {\n        pos[i] = i + 1;\n    }\n\n    // Processa os turnos na ordem inversa\n    for (int i = m - 1; i >= 0; --i) {\n        long long current_t = t[i];\n        int valid_count = 0;\n\n        for (int j = 0; j < (int)pos.size(); ++j) {\n            long long p_antes = pos[j] + (pos[j] - 1) / (current_t - 1);\n            if (p_antes > n) {\n                break; // Elementos posteriores também serão > n\n            }\n            pos[valid_count++] = p_antes;\n        }\n        pos.resize(valid_count);\n\n        if (pos.empty()) break;\n    }\n\n    // Imprime o resultado\n    for (long long ans : pos) {\n        cout << ans << \"\\n\";\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1686766000057105,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:44:47.555983+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 627,
+            "output_tokens": 9278,
+            "total_tokens": 9905
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.004639,
+            "total_cost": 0.004652
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\n(function main() {\n  let raw;\n  try {\n    raw = fs.readFileSync(0, 'utf8');\n  } catch (e) {\n    raw = fs.readFileSync('/dev/stdin', 'utf8');\n  }\n  const tokens = raw.split(/\\s+/).filter(Boolean);\n  if (tokens.length < 2) {\n    process.stdout.write('*\\n');\n    return;\n  }\n  const p = tokens[1];\n  const n = p.length;\n\n  // Contagens por prefixo: pc[(i*26)+c] = nº de ocorrências do caractere c em p[0..i-1]\n  const pc = new Int32Array((n + 1) * 26);\n  for (let i = 0; i < n; i++) {\n    const prev = i * 26;\n    const cur = prev + 26;\n    for (let c = 0; c < 26; c++) pc[cur + c] = pc[prev + c];\n    pc[cur + (p.charCodeAt(i) - 97)]++;\n  }\n\n  // Procura o menor d que divide n (com n/d >= 2) tal que todos os blocos\n  // de comprimento d sejam anagramas entre si.\n  const half = n >> 1;\n  for (let d = 1; d <= half; d++) {\n    if (n % d !== 0) continue;\n    const bd = d * 26;\n    const k = n / d;\n    let ok = true;\n    // Contagens do bloco 0 (referência): pc[bd + c] (prefixo na posição d menos posição 0)\n    for (let j = 1; j < k; j++) {\n      const s = j * bd;\n      const e = s + bd;\n      // basta comparar 25 caracteres: a soma das contagens de um bloco é sempre d\n      for (let c = 0; c < 25; c++) {\n        if (pc[e + c] - pc[s + c] !== pc[bd + c]) {\n          ok = false;\n          break;\n        }\n      }\n      if (!ok) break;\n    }\n    if (ok) {\n      process.stdout.write(p.slice(0, d) + '\\n');\n      return;\n    }\n  }\n  process.stdout.write('*\\n');\n})();\n```",
+        "extracted_code": "const fs = require('fs');\n\n(function main() {\n  let raw;\n  try {\n    raw = fs.readFileSync(0, 'utf8');\n  } catch (e) {\n    raw = fs.readFileSync('/dev/stdin', 'utf8');\n  }\n  const tokens = raw.split(/\\s+/).filter(Boolean);\n  if (tokens.length < 2) {\n    process.stdout.write('*\\n');\n    return;\n  }\n  const p = tokens[1];\n  const n = p.length;\n\n  // Contagens por prefixo: pc[(i*26)+c] = nº de ocorrências do caractere c em p[0..i-1]\n  const pc = new Int32Array((n + 1) * 26);\n  for (let i = 0; i < n; i++) {\n    const prev = i * 26;\n    const cur = prev + 26;\n    for (let c = 0; c < 26; c++) pc[cur + c] = pc[prev + c];\n    pc[cur + (p.charCodeAt(i) - 97)]++;\n  }\n\n  // Procura o menor d que divide n (com n/d >= 2) tal que todos os blocos\n  // de comprimento d sejam anagramas entre si.\n  const half = n >> 1;\n  for (let d = 1; d <= half; d++) {\n    if (n % d !== 0) continue;\n    const bd = d * 26;\n    const k = n / d;\n    let ok = true;\n    // Contagens do bloco 0 (referência): pc[bd + c] (prefixo na posição d menos posição 0)\n    for (let j = 1; j < k; j++) {\n      const s = j * bd;\n      const e = s + bd;\n      // basta comparar 25 caracteres: a soma das contagens de um bloco é sempre d\n      for (let c = 0; c < 25; c++) {\n        if (pc[e + c] - pc[s + c] !== pc[bd + c]) {\n          ok = false;\n          break;\n        }\n      }\n      if (!ok) break;\n    }\n    if (ok) {\n      process.stdout.write(p.slice(0, d) + '\\n');\n      return;\n    }\n  }\n  process.stdout.write('*\\n');\n})();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07531879999442026,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

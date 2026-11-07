@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T00:33:51.388422+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 650,
+            "output_tokens": 2961,
+            "total_tokens": 3611
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.001481,
+            "total_cost": 0.001494
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\n// Conta subarrays (retangulos) com soma <= K usando janela deslizante.\n// Valido pois todos os X_i >= 0 (extremo esquerdo monotono).\nstatic long long countLE(const vector<int>& a, long long K) {\n    if (K < 0) return 0; // impossivel ter soma negativa\n    long long cnt = 0, s = 0;\n    size_t l = 0;\n    for (size_t r = 0; r < a.size(); r++) {\n        s += a[r];\n        while (s > K && l <= r) {\n            s -= a[l];\n            l++;\n        }\n        cnt += (long long)(r - l + 1);\n    }\n    return cnt;\n}\n\nint main() {\n    int n;\n    long long K;\n    if (scanf(\"%d %lld\", &n, &K) != 2) return 0;\n    vector<int> a(n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n\n    // Numero de subarrays com soma exatamente K:\n    // (#subarrays com soma <= K) - (#subarrays com soma <= K-1)\n    long long ans = countLE(a, K) - countLE(a, K - 1);\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\n// Conta subarrays (retangulos) com soma <= K usando janela deslizante.\n// Valido pois todos os X_i >= 0 (extremo esquerdo monotono).\nstatic long long countLE(const vector<int>& a, long long K) {\n    if (K < 0) return 0; // impossivel ter soma negativa\n    long long cnt = 0, s = 0;\n    size_t l = 0;\n    for (size_t r = 0; r < a.size(); r++) {\n        s += a[r];\n        while (s > K && l <= r) {\n            s -= a[l];\n            l++;\n        }\n        cnt += (long long)(r - l + 1);\n    }\n    return cnt;\n}\n\nint main() {\n    int n;\n    long long K;\n    if (scanf(\"%d %lld\", &n, &K) != 2) return 0;\n    vector<int> a(n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n\n    // Numero de subarrays com soma exatamente K:\n    // (#subarrays com soma <= K) - (#subarrays com soma <= K-1)\n    long long ans = countLE(a, K) - countLE(a, K - 1);\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19602950001717545,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:20:04.093292+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 845,
+            "output_tokens": 1628,
+            "total_tokens": 2473
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.000814,
+            "total_cost": 0.000832
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nint L, C, P;\nint black[8][8];\nint isCand[8][8];\nint cid[8][8];\nint n;\nint adj[40][40];\nint matchR[40];\nint used[40];\n\nint dr[4] = {0, 0, -1, 1};\nint dc[4] = {-1, 1, 0, 0};\n\nint tryAug(int u) {\n    for (int v = 0; v < n; v++) {\n        if (adj[u][v] && !used[v]) {\n            used[v] = 1;\n            if (matchR[v] == -1 || tryAug(matchR[v])) {\n                matchR[v] = u;\n                return 1;\n            }\n        }\n    }\n    return 0;\n}\n\nint main(void) {\n    scanf(\"%d %d\", &L, &C);\n    scanf(\"%d\", &P);\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x][y] = 1;\n    }\n\n    /* candidate cells: not black, adjacent to at least one black */\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (black[r][c]) continue;\n            int ok = 0;\n            for (int k = 0; k < 4; k++) {\n                int nr = r + dr[k], nc = c + dc[k];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && black[nr][nc]) {\n                    ok = 1;\n                    break;\n                }\n            }\n            if (ok) {\n                isCand[r][c] = 1;\n                cid[r][c] = n++;\n            }\n        }\n    }\n\n    /* conflict graph between candidates that are adjacent */\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (!isCand[r][c]) continue;\n            for (int k = 0; k < 4; k++) {\n                int nr = r + dr[k], nc = c + dc[k];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && isCand[nr][nc]) {\n                    adj[cid[r][c]][cid[nr][nc]] = 1;\n                }\n            }\n        }\n    }\n\n    /* Konig: max independent set = n - max matching on bipartite graph.\n       Grid adjacency is bipartite by parity: edges only between cells of\n       opposite (r+c) parity. Use candidates of even parity as left side. */\n    memset(matchR, -1, sizeof(matchR));\n    int matching = 0;\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (isCand[r][c] && ((r + c) % 2 == 0)) {\n                memset(used, 0, sizeof(used));\n                if (tryAug(cid[r][c])) matching++;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", n - matching);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nint L, C, P;\nint black[8][8];\nint isCand[8][8];\nint cid[8][8];\nint n;\nint adj[40][40];\nint matchR[40];\nint used[40];\n\nint dr[4] = {0, 0, -1, 1};\nint dc[4] = {-1, 1, 0, 0};\n\nint tryAug(int u) {\n    for (int v = 0; v < n; v++) {\n        if (adj[u][v] && !used[v]) {\n            used[v] = 1;\n            if (matchR[v] == -1 || tryAug(matchR[v])) {\n                matchR[v] = u;\n                return 1;\n            }\n        }\n    }\n    return 0;\n}\n\nint main(void) {\n    scanf(\"%d %d\", &L, &C);\n    scanf(\"%d\", &P);\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x][y] = 1;\n    }\n\n    /* candidate cells: not black, adjacent to at least one black */\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (black[r][c]) continue;\n            int ok = 0;\n            for (int k = 0; k < 4; k++) {\n                int nr = r + dr[k], nc = c + dc[k];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && black[nr][nc]) {\n                    ok = 1;\n                    break;\n                }\n            }\n            if (ok) {\n                isCand[r][c] = 1;\n                cid[r][c] = n++;\n            }\n        }\n    }\n\n    /* conflict graph between candidates that are adjacent */\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (!isCand[r][c]) continue;\n            for (int k = 0; k < 4; k++) {\n                int nr = r + dr[k], nc = c + dc[k];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && isCand[nr][nc]) {\n                    adj[cid[r][c]][cid[nr][nc]] = 1;\n                }\n            }\n        }\n    }\n\n    /* Konig: max independent set = n - max matching on bipartite graph.\n       Grid adjacency is bipartite by parity: edges only between cells of\n       opposite (r+c) parity. Use candidates of even parity as left side. */\n    memset(matchR, -1, sizeof(matchR));\n    int matching = 0;\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (isCand[r][c] && ((r + c) % 2 == 0)) {\n                memset(used, 0, sizeof(used));\n                if (tryAug(cid[r][c])) matching++;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", n - matching);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3650500999938231,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

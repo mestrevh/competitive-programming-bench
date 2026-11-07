@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:48:53.060524+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 898,
+            "output_tokens": 695,
+            "total_tokens": 1593
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.000347,
+            "total_cost": 0.000437
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c <= 32) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst E = nextInt();\nconst M = nextInt();\nconst D = nextInt();\n\nconst friendsA = new Int32Array(M);\nconst friendsB = new Int32Array(M);\nfor (let i = 0; i < M; i++) {\n  friendsA[i] = nextInt();\n  friendsB[i] = nextInt();\n}\n\nconst dislikesA = new Int32Array(D);\nconst dislikesB = new Int32Array(D);\nfor (let i = 0; i < D; i++) {\n  dislikesA[i] = nextInt();\n  dislikesB[i] = nextInt();\n}\n\nconst group = new Int32Array(E + 1);\nfor (let g = 1; g <= E / 3; g++) {\n  group[nextInt()] = g;\n  group[nextInt()] = g;\n  group[nextInt()] = g;\n}\n\nlet violations = 0;\nfor (let i = 0; i < M; i++) {\n  if (group[friendsA[i]] !== group[friendsB[i]]) violations++;\n}\nfor (let i = 0; i < D; i++) {\n  if (group[dislikesA[i]] === group[dislikesB[i]]) violations++;\n}\n\nconsole.log(violations);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c <= 32) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst E = nextInt();\nconst M = nextInt();\nconst D = nextInt();\n\nconst friendsA = new Int32Array(M);\nconst friendsB = new Int32Array(M);\nfor (let i = 0; i < M; i++) {\n  friendsA[i] = nextInt();\n  friendsB[i] = nextInt();\n}\n\nconst dislikesA = new Int32Array(D);\nconst dislikesB = new Int32Array(D);\nfor (let i = 0; i < D; i++) {\n  dislikesA[i] = nextInt();\n  dislikesB[i] = nextInt();\n}\n\nconst group = new Int32Array(E + 1);\nfor (let g = 1; g <= E / 3; g++) {\n  group[nextInt()] = g;\n  group[nextInt()] = g;\n  group[nextInt()] = g;\n}\n\nlet violations = 0;\nfor (let i = 0; i < M; i++) {\n  if (group[friendsA[i]] !== group[friendsB[i]]) violations++;\n}\nfor (let i = 0; i < D; i++) {\n  if (group[dislikesA[i]] === group[dislikesB[i]]) violations++;\n}\n\nconsole.log(violations);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08296140001039021,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

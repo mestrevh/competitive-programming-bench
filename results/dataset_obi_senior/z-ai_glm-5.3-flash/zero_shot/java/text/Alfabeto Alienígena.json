@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:09:36.838925+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 914,
+            "output_tokens": 4308,
+            "total_tokens": 5222
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.002154,
+            "total_cost": 0.002174
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sb.append(line).append(' ');\n        }\n\n        String trimmed = sb.toString().trim();\n        if (trimmed.isEmpty()) return;\n        String[] tokens = trimmed.split(\"\\\\s+\");\n        if (tokens.length < 2) return;\n\n        int k = Integer.parseInt(tokens[0]);\n        int n = Integer.parseInt(tokens[1]);\n\n        StringBuilder rest = new StringBuilder();\n        for (int i = 2; i < tokens.length; i++) {\n            rest.append(tokens[i]);\n        }\n        String all = rest.toString();\n\n        int endAlpha = Math.min(k, all.length());\n        String alphabet = all.substring(0, endAlpha);\n        String message = all.substring(endAlpha, Math.min(k + n, all.length()));\n\n        boolean[] present = new boolean[128];\n        for (int i = 0; i < alphabet.length(); i++) {\n            present[alphabet.charAt(i)] = true;\n        }\n\n        boolean ok = true;\n        for (int i = 0; i < message.length(); i++) {\n            char c = message.charAt(i);\n            if (c >= 128 || !present[c]) {\n                ok = false;\n                break;\n            }\n        }\n\n        System.out.println(ok ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sb.append(line).append(' ');\n        }\n\n        String trimmed = sb.toString().trim();\n        if (trimmed.isEmpty()) return;\n        String[] tokens = trimmed.split(\"\\\\s+\");\n        if (tokens.length < 2) return;\n\n        int k = Integer.parseInt(tokens[0]);\n        int n = Integer.parseInt(tokens[1]);\n\n        StringBuilder rest = new StringBuilder();\n        for (int i = 2; i < tokens.length; i++) {\n            rest.append(tokens[i]);\n        }\n        String all = rest.toString();\n\n        int endAlpha = Math.min(k, all.length());\n        String alphabet = all.substring(0, endAlpha);\n        String message = all.substring(endAlpha, Math.min(k + n, all.length()));\n\n        boolean[] present = new boolean[128];\n        for (int i = 0; i < alphabet.length(); i++) {\n            present[alphabet.charAt(i)] = true;\n        }\n\n        boolean ok = true;\n        for (int i = 0; i < message.length(); i++) {\n            char c = message.charAt(i);\n            if (c >= 128 || !present[c]) {\n                ok = false;\n                break;\n            }\n        }\n\n        System.out.println(ok ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14958590001333505,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

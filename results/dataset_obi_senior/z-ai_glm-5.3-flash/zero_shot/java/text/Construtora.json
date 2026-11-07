@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T18:15:56.307322+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1217,
+            "output_tokens": 42334,
+            "total_tokens": 43551
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.021167,
+            "total_cost": 0.021193
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sb.append(line).append(' ');\n        }\n        StringTokenizer st = new StringTokenizer(sb.toString());\n        int n = Integer.parseInt(st.nextToken());\n        int[] a = new int[n];\n        for (int i = 0; i < n; i++) {\n            a[i] = Integer.parseInt(st.nextToken());\n        }\n\n        // Altura final ótima: H = máximo inicial (só é possível aumentar).\n        int H = 0;\n        for (int i = 0; i < n; i++) if (a[i] > H) H = a[i];\n\n        // Déficit de cada prédio: m[i] = H - a[i].\n        // Cada fase atua num nível m = H - alturaCorrente e cobre exatamente,\n        // com intervalos disjuntos, o conjunto {i : m[i] >= nivel}. Logo o número\n        // mínimo de fases é soma, sobre todos os níveis, do número de blocos\n        // contíguos maximais de {i : m[i] >= nivel}, o que equivale a:\n        // resposta = m[0] + soma de max(0, m[i] - m[i-1])\n        //          = (H - a[0]) + soma de max(0, a[i-1] - a[i]).\n        long ans = H - a[0];\n        for (int i = 1; i < n; i++) {\n            if (a[i - 1] > a[i]) ans += a[i - 1] - a[i];\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sb.append(line).append(' ');\n        }\n        StringTokenizer st = new StringTokenizer(sb.toString());\n        int n = Integer.parseInt(st.nextToken());\n        int[] a = new int[n];\n        for (int i = 0; i < n; i++) {\n            a[i] = Integer.parseInt(st.nextToken());\n        }\n\n        // Altura final ótima: H = máximo inicial (só é possível aumentar).\n        int H = 0;\n        for (int i = 0; i < n; i++) if (a[i] > H) H = a[i];\n\n        // Déficit de cada prédio: m[i] = H - a[i].\n        // Cada fase atua num nível m = H - alturaCorrente e cobre exatamente,\n        // com intervalos disjuntos, o conjunto {i : m[i] >= nivel}. Logo o número\n        // mínimo de fases é soma, sobre todos os níveis, do número de blocos\n        // contíguos maximais de {i : m[i] >= nivel}, o que equivale a:\n        // resposta = m[0] + soma de max(0, m[i] - m[i-1])\n        //          = (H - a[0]) + soma de max(0, a[i-1] - a[i]).\n        long ans = H - a[0];\n        for (int i = 1; i < n; i++) {\n            if (a[i - 1] > a[i]) ans += a[i - 1] - a[i];\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08367550000548363,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

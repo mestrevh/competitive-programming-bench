@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:11:07.303141+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 862,
+            "output_tokens": 4200,
+            "total_tokens": 5062
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.01008,
+            "total_cost": 0.010083
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    L = next(it)\n    C = next(it)\n    P = next(it)\n\n    black = set()\n    for _ in range(P):\n        x = next(it)\n        y = next(it)\n        black.add((x - 1, y - 1))\n\n    candidates = []\n    idx = {}\n\n    for r in range(L):\n        for c in range(C):\n            if (r, c) in black:\n                continue\n\n            has_black_neighbor = False\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if (nr, nc) in black:\n                    has_black_neighbor = True\n                    break\n\n            if has_black_neighbor:\n                idx[(r, c)] = len(candidates)\n                candidates.append((r, c))\n\n    n = len(candidates)\n    adj = [[] for _ in range(n)]\n\n    for i, (r, c) in enumerate(candidates):\n        if (r + c) % 2 != 0:\n            continue\n\n        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            nr, nc = r + dr, c + dc\n            j = idx.get((nr, nc))\n            if j is not None:\n                adj[i].append(j)\n\n    match_right = [-1] * n\n\n    def dfs(u, seen):\n        for v in adj[u]:\n            if not seen[v]:\n                seen[v] = True\n                if match_right[v] == -1 or dfs(match_right[v], seen):\n                    match_right[v] = u\n                    return True\n        return False\n\n    matching = 0\n\n    for u in range(n):\n        r, c = candidates[u]\n        if (r + c) % 2 == 0:\n            seen = [False] * n\n            if dfs(u, seen):\n                matching += 1\n\n    print(n - matching)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    L = next(it)\n    C = next(it)\n    P = next(it)\n\n    black = set()\n    for _ in range(P):\n        x = next(it)\n        y = next(it)\n        black.add((x - 1, y - 1))\n\n    candidates = []\n    idx = {}\n\n    for r in range(L):\n        for c in range(C):\n            if (r, c) in black:\n                continue\n\n            has_black_neighbor = False\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if (nr, nc) in black:\n                    has_black_neighbor = True\n                    break\n\n            if has_black_neighbor:\n                idx[(r, c)] = len(candidates)\n                candidates.append((r, c))\n\n    n = len(candidates)\n    adj = [[] for _ in range(n)]\n\n    for i, (r, c) in enumerate(candidates):\n        if (r + c) % 2 != 0:\n            continue\n\n        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            nr, nc = r + dr, c + dc\n            j = idx.get((nr, nc))\n            if j is not None:\n                adj[i].append(j)\n\n    match_right = [-1] * n\n\n    def dfs(u, seen):\n        for v in adj[u]:\n            if not seen[v]:\n                seen[v] = True\n                if match_right[v] == -1 or dfs(match_right[v], seen):\n                    match_right[v] = u\n                    return True\n        return False\n\n    matching = 0\n\n    for u in range(n):\n        r, c = candidates[u]\n        if (r + c) % 2 == 0:\n            seen = [False] * n\n            if dfs(u, seen):\n                matching += 1\n\n    print(n - matching)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07950610000261804,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:43:14.650477+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 747,
+            "output_tokens": 404,
+            "total_tokens": 1151
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.000202,
+            "total_cost": 0.000277
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m, song = data[:3]\n\nnext_song = [0] * (m + 1)\nidx = 3\n\nfor _ in range(n):\n    adore, hate = data[idx], data[idx + 1]\n    idx += 2\n    if next_song[hate] == 0:\n        next_song[hate] = adore\n\nseen = bytearray(m + 1)\nswaps = 0\n\nwhile next_song[song] != 0:\n    if seen[song]:\n        print(-1)\n        break\n    seen[song] = 1\n    song = next_song[song]\n    swaps += 1\nelse:\n    print(swaps)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m, song = data[:3]\n\nnext_song = [0] * (m + 1)\nidx = 3\n\nfor _ in range(n):\n    adore, hate = data[idx], data[idx + 1]\n    idx += 2\n    if next_song[hate] == 0:\n        next_song[hate] = adore\n\nseen = bytearray(m + 1)\nswaps = 0\n\nwhile next_song[song] != 0:\n    if seen[song]:\n        print(-1)\n        break\n    seen[song] = 1\n    song = next_song[song]\n    swaps += 1\nelse:\n    print(swaps)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12367180000001099,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

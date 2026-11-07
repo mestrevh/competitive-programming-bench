@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T05:11:11.707868+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 735,
+            "output_tokens": 42478,
+            "total_tokens": 43213
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.021239,
+            "total_cost": 0.021255
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n    ptr = 1\n    for _ in range(n - 1):\n        x = int(data[ptr]); y = int(data[ptr + 1]); ptr += 2\n        adj[x].append(y)\n        adj[y].append(x)\n\n    def bfs(src):\n        dist = [-1] * (n + 1)\n        par = [0] * (n + 1)\n        dist[src] = 0\n        q = deque([src])\n        while q:\n            u = q.popleft()\n            du1 = dist[u] + 1\n            for w in adj[u]:\n                if dist[w] == -1:\n                    dist[w] = du1\n                    par[w] = u\n                    q.append(w)\n        far = src\n        best = -1\n        for v in range(1, n + 1):\n            if dist[v] > best:\n                best = dist[v]\n                far = v\n        return far, dist, par\n\n    A, _, _ = bfs(1)\n    B, dA, parA = bfs(A)\n    k = dA[B]  # diâmetro\n\n    # caminho do diâmetro: v0 = A ... vk = B\n    path = []\n    cur = B\n    while cur != A:\n        path.append(cur)\n        cur = parA[cur]\n    path.append(A)\n    path.reverse()\n\n    compidx = [-1] * (n + 1)\n    for i, v in enumerate(path):\n        compidx[v] = i\n\n    # BFS multi-fonte a partir dos nós do caminho, sem usar arestas do caminho:\n    # h[z] = distância até a raiz do seu componente; childptr[z] = primeiro\n    # vizinho da raiz no caminho raiz->z\n    h = [-1] * (n + 1)\n    childptr = [-1] * (n + 1)\n    dq = deque()\n    for i, v in enumerate(path):\n        h[v] = 0\n        childptr[v] = v\n        dq.append(v)\n    while dq:\n        u = dq.popleft()\n        hu = h[u]\n        cu = compidx[u]\n        cpu = childptr[u]\n        for w in adj[u]:\n            if h[w] == -1:\n                h[w] = hu + 1\n                compidx[w] = cu\n                childptr[w] = w if hu == 0 else cpu\n                dq.append(w)\n\n    # SA: nós a distância k de A (comp+h == k)\n    # SB: nós a distância k de B (h == comp)\n    inSA = [0] * (k + 1)\n    inSB = [0] * (k + 1)\n    for z in range(1, n + 1):\n        i = compidx[z]\n        hz = h[z]\n        if i + hz == k:\n            inSA[i] += 1\n        if hz == i:\n            inSB[i] += 1\n\n    ans = 0\n    c = 0\n    for i in range(k + 1):\n        if inSA[i]:\n            ans += c * inSA[i]\n        c += inSB[i]\n\n    # pares no mesmo componente (somente possível em comp == k/2, com k par)\n    if k % 2 == 0:\n        mid = k // 2\n        perchild = {}\n        M = 0\n        for z in range(1, n + 1):\n            if compidx[z] == mid and h[z] == mid:\n                cp = childptr[z]\n                perchild[cp] = perchild.get(cp, 0) + 1\n                M += 1\n        s = 0\n        for m in perchild.values():\n            s += m * (m - 1) // 2\n        ans += M * (M - 1) // 2 - s\n\n    sys.stdout.write(str(k + 1) + \"\\n\" + str(ans) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n    ptr = 1\n    for _ in range(n - 1):\n        x = int(data[ptr]); y = int(data[ptr + 1]); ptr += 2\n        adj[x].append(y)\n        adj[y].append(x)\n\n    def bfs(src):\n        dist = [-1] * (n + 1)\n        par = [0] * (n + 1)\n        dist[src] = 0\n        q = deque([src])\n        while q:\n            u = q.popleft()\n            du1 = dist[u] + 1\n            for w in adj[u]:\n                if dist[w] == -1:\n                    dist[w] = du1\n                    par[w] = u\n                    q.append(w)\n        far = src\n        best = -1\n        for v in range(1, n + 1):\n            if dist[v] > best:\n                best = dist[v]\n                far = v\n        return far, dist, par\n\n    A, _, _ = bfs(1)\n    B, dA, parA = bfs(A)\n    k = dA[B]  # diâmetro\n\n    # caminho do diâmetro: v0 = A ... vk = B\n    path = []\n    cur = B\n    while cur != A:\n        path.append(cur)\n        cur = parA[cur]\n    path.append(A)\n    path.reverse()\n\n    compidx = [-1] * (n + 1)\n    for i, v in enumerate(path):\n        compidx[v] = i\n\n    # BFS multi-fonte a partir dos nós do caminho, sem usar arestas do caminho:\n    # h[z] = distância até a raiz do seu componente; childptr[z] = primeiro\n    # vizinho da raiz no caminho raiz->z\n    h = [-1] * (n + 1)\n    childptr = [-1] * (n + 1)\n    dq = deque()\n    for i, v in enumerate(path):\n        h[v] = 0\n        childptr[v] = v\n        dq.append(v)\n    while dq:\n        u = dq.popleft()\n        hu = h[u]\n        cu = compidx[u]\n        cpu = childptr[u]\n        for w in adj[u]:\n            if h[w] == -1:\n                h[w] = hu + 1\n                compidx[w] = cu\n                childptr[w] = w if hu == 0 else cpu\n                dq.append(w)\n\n    # SA: nós a distância k de A (comp+h == k)\n    # SB: nós a distância k de B (h == comp)\n    inSA = [0] * (k + 1)\n    inSB = [0] * (k + 1)\n    for z in range(1, n + 1):\n        i = compidx[z]\n        hz = h[z]\n        if i + hz == k:\n            inSA[i] += 1\n        if hz == i:\n            inSB[i] += 1\n\n    ans = 0\n    c = 0\n    for i in range(k + 1):\n        if inSA[i]:\n            ans += c * inSA[i]\n        c += inSB[i]\n\n    # pares no mesmo componente (somente possível em comp == k/2, com k par)\n    if k % 2 == 0:\n        mid = k // 2\n        perchild = {}\n        M = 0\n        for z in range(1, n + 1):\n            if compidx[z] == mid and h[z] == mid:\n                cp = childptr[z]\n                perchild[cp] = perchild.get(cp, 0) + 1\n                M += 1\n        s = 0\n        for m in perchild.values():\n            s += m * (m - 1) // 2\n        ans += M * (M - 1) // 2 - s\n\n    sys.stdout.write(str(k + 1) + \"\\n\" + str(ans) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1409401999990223,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

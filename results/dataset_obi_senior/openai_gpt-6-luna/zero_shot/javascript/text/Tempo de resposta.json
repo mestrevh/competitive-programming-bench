@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T10:02:17.497457+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 860,
+            "output_tokens": 1295,
+            "total_tokens": 2155
+        },
+        "cost_usd": {
+            "input_cost": 8.6e-05,
+            "output_cost": 0.000647,
+            "total_cost": 0.000733
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst n = Number(input[0]);\nconst state = new Map();\n\nlet time = 0;\nlet gap = 1;\nlet seenEvent = false;\n\nfor (let i = 1; i < input.length; i += 2) {\n  const type = input[i];\n  const value = Number(input[i + 1]);\n\n  if (type === 'T') {\n    gap = value;\n    continue;\n  }\n\n  if (seenEvent) time += gap;\n  seenEvent = true;\n  gap = 1;\n\n  if (!state.has(value)) {\n    state.set(value, { total: 0, receivedAt: [] });\n  }\n\n  const friend = state.get(value);\n\n  if (type === 'R') {\n    friend.receivedAt.push(time);\n  } else {\n    const receivedTime = friend.receivedAt.shift();\n    friend.total += time - receivedTime;\n  }\n}\n\nconst output = [...state.keys()]\n  .sort((a, b) => a - b)\n  .map(id => {\n    const friend = state.get(id);\n    return `${id} ${friend.receivedAt.length > 0 ? -1 : friend.total}`;\n  });\n\nconsole.log(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst n = Number(input[0]);\nconst state = new Map();\n\nlet time = 0;\nlet gap = 1;\nlet seenEvent = false;\n\nfor (let i = 1; i < input.length; i += 2) {\n  const type = input[i];\n  const value = Number(input[i + 1]);\n\n  if (type === 'T') {\n    gap = value;\n    continue;\n  }\n\n  if (seenEvent) time += gap;\n  seenEvent = true;\n  gap = 1;\n\n  if (!state.has(value)) {\n    state.set(value, { total: 0, receivedAt: [] });\n  }\n\n  const friend = state.get(value);\n\n  if (type === 'R') {\n    friend.receivedAt.push(time);\n  } else {\n    const receivedTime = friend.receivedAt.shift();\n    friend.total += time - receivedTime;\n  }\n}\n\nconst output = [...state.keys()]\n  .sort((a, b) => a - b)\n  .map(id => {\n    const friend = state.get(id);\n    return `${id} ${friend.receivedAt.length > 0 ? -1 : friend.total}`;\n  });\n\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.04438300000037998,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

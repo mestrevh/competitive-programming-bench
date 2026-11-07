@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:06:31.970398+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1534,
+            "output_tokens": 8882,
+            "total_tokens": 10416
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.021317,
+            "total_cost": 0.021321
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet idx = 0;\nconst N = parseInt(input[idx++]);\nconst M = parseInt(input[idx++]);\nconst K = parseInt(input[idx++]);\n\nconst edges = [];\nfor (let i = 0; i < M; i++) {\n  const a = parseInt(input[idx++]) - 1;\n  const b = parseInt(input[idx++]) - 1;\n  const t = parseInt(input[idx++]);\n  edges.push([a, b, t]);\n}\n\nclass DSU {\n  constructor(n) {\n    this.parent = new Int32Array(n);\n    this.size = new Int32Array(n);\n    for (let i = 0; i < n; i++) {\n      this.parent[i] = i;\n      this.size[i] = 1;\n    }\n  }\n  find(x) {\n    let root = x;\n    while (this.parent[root] !== root) {\n      root = this.parent[root];\n    }\n    while (this.parent[x] !== x) {\n      const next = this.parent[x];\n      this.parent[x] = root;\n      x = next;\n    }\n    return root;\n  }\n  union(a, b) {\n    let ra = this.find(a);\n    let rb = this.find(b);\n    if (ra === rb) return false;\n    if (this.size[ra] < this.size[rb]) {\n      [ra, rb] = [rb, ra];\n    }\n    this.parent[rb] = ra;\n    this.size[ra] += this.size[rb];\n    return true;\n  }\n}\n\nconst dsuWater = new DSU(N);\nlet waterCycle = false;\n\nfor (const [a, b, t] of edges) {\n  if (t === 1) {\n    if (!dsuWater.union(a, b)) {\n      waterCycle = true;\n      break;\n    }\n  }\n}\n\nif (waterCycle) {\n  console.log('N');\n} else {\n  const dsuAll = new DSU(N);\n  for (const [a, b, t] of edges) {\n    dsuAll.union(a, b);\n  }\n\n  let components = 0;\n  for (let i = 0; i < N; i++) {\n    if (dsuAll.find(i) === i) components++;\n  }\n\n  const minRemovals = M - N + components;\n  console.log(minRemovals <= K ? 'S' : 'N');\n}\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet idx = 0;\nconst N = parseInt(input[idx++]);\nconst M = parseInt(input[idx++]);\nconst K = parseInt(input[idx++]);\n\nconst edges = [];\nfor (let i = 0; i < M; i++) {\n  const a = parseInt(input[idx++]) - 1;\n  const b = parseInt(input[idx++]) - 1;\n  const t = parseInt(input[idx++]);\n  edges.push([a, b, t]);\n}\n\nclass DSU {\n  constructor(n) {\n    this.parent = new Int32Array(n);\n    this.size = new Int32Array(n);\n    for (let i = 0; i < n; i++) {\n      this.parent[i] = i;\n      this.size[i] = 1;\n    }\n  }\n  find(x) {\n    let root = x;\n    while (this.parent[root] !== root) {\n      root = this.parent[root];\n    }\n    while (this.parent[x] !== x) {\n      const next = this.parent[x];\n      this.parent[x] = root;\n      x = next;\n    }\n    return root;\n  }\n  union(a, b) {\n    let ra = this.find(a);\n    let rb = this.find(b);\n    if (ra === rb) return false;\n    if (this.size[ra] < this.size[rb]) {\n      [ra, rb] = [rb, ra];\n    }\n    this.parent[rb] = ra;\n    this.size[ra] += this.size[rb];\n    return true;\n  }\n}\n\nconst dsuWater = new DSU(N);\nlet waterCycle = false;\n\nfor (const [a, b, t] of edges) {\n  if (t === 1) {\n    if (!dsuWater.union(a, b)) {\n      waterCycle = true;\n      break;\n    }\n  }\n}\n\nif (waterCycle) {\n  console.log('N');\n} else {\n  const dsuAll = new DSU(N);\n  for (const [a, b, t] of edges) {\n    dsuAll.union(a, b);\n  }\n\n  let components = 0;\n  for (let i = 0; i < N; i++) {\n    if (dsuAll.find(i) === i) components++;\n  }\n\n  const minRemovals = M - N + components;\n  console.log(minRemovals <= K ? 'S' : 'N');\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14839580000261776,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

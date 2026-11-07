@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:12:41.148757+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 543,
+            "output_tokens": 617,
+            "total_tokens": 2344
+        },
+        "cost_usd": {
+            "input_cost": 0.000407,
+            "output_cost": 0.002314,
+            "total_cost": 0.002721
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 0x3f3f3f3f3f3f3f3fLL\n\nint main() {\n    int n, k, c;\n    if (scanf(\"%d %d %d\", &n, &k, &c) != 3) {\n        return 0;\n    }\n\n    long long *a = (long long *)malloc((n + 1) * sizeof(long long));\n    long long *pref = (long long *)malloc((n + 1) * sizeof(long long));\n    pref[0] = 0;\n    long long total_sum = 0;\n\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%lld\", &a[i]);\n        total_sum += a[i];\n        pref[i] = pref[i - 1] + a[i];\n    }\n\n    long long *dp_prev = (long long *)malloc((n + 1) * sizeof(long long));\n    long long *dp_curr = (long long *)malloc((n + 1) * sizeof(long long));\n\n    for (int i = 0; i <= n; i++) {\n        dp_prev[i] = 0;\n    }\n\n    for (int j = 1; j <= k; j++) {\n        int min_i = j * c;\n        int max_i = n - (k - j) * c;\n\n        for (int i = 0; i < min_i; i++) {\n            dp_curr[i] = INF;\n        }\n\n        for (int i = min_i; i <= max_i; i++) {\n            long long seg_sum = pref[i] - pref[i - c];\n            long long take = dp_prev[i - c] + seg_sum;\n            long long not_take = (i > min_i) ? dp_curr[i - 1] : INF;\n            dp_curr[i] = (take < not_take) ? take : not_take;\n        }\n\n        for (int i = min_i; i <= max_i; i++) {\n            dp_prev[i] = dp_curr[i];\n        }\n    }\n\n    long long min_covered = dp_curr[n];\n    long long max_uncovered = total_sum - min_covered;\n\n    printf(\"%lld\\n\", max_uncovered);\n\n    free(a);\n    free(pref);\n    free(dp_prev);\n    free(dp_curr);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 0x3f3f3f3f3f3f3f3fLL\n\nint main() {\n    int n, k, c;\n    if (scanf(\"%d %d %d\", &n, &k, &c) != 3) {\n        return 0;\n    }\n\n    long long *a = (long long *)malloc((n + 1) * sizeof(long long));\n    long long *pref = (long long *)malloc((n + 1) * sizeof(long long));\n    pref[0] = 0;\n    long long total_sum = 0;\n\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%lld\", &a[i]);\n        total_sum += a[i];\n        pref[i] = pref[i - 1] + a[i];\n    }\n\n    long long *dp_prev = (long long *)malloc((n + 1) * sizeof(long long));\n    long long *dp_curr = (long long *)malloc((n + 1) * sizeof(long long));\n\n    for (int i = 0; i <= n; i++) {\n        dp_prev[i] = 0;\n    }\n\n    for (int j = 1; j <= k; j++) {\n        int min_i = j * c;\n        int max_i = n - (k - j) * c;\n\n        for (int i = 0; i < min_i; i++) {\n            dp_curr[i] = INF;\n        }\n\n        for (int i = min_i; i <= max_i; i++) {\n            long long seg_sum = pref[i] - pref[i - c];\n            long long take = dp_prev[i - c] + seg_sum;\n            long long not_take = (i > min_i) ? dp_curr[i - 1] : INF;\n            dp_curr[i] = (take < not_take) ? take : not_take;\n        }\n\n        for (int i = min_i; i <= max_i; i++) {\n            dp_prev[i] = dp_curr[i];\n        }\n    }\n\n    long long min_covered = dp_curr[n];\n    long long max_uncovered = total_sum - min_covered;\n\n    printf(\"%lld\\n\", max_uncovered);\n\n    free(a);\n    free(pref);\n    free(dp_prev);\n    free(dp_curr);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07942560000810772,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

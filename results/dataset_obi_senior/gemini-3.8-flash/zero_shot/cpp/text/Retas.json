@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:51:25.402748+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1129,
+            "output_tokens": 1229,
+            "total_tokens": 5830
+        },
+        "cost_usd": {
+            "input_cost": 0.000847,
+            "output_cost": 0.004609,
+            "total_cost": 0.005456
+        },
+        "raw_response": "Para resolver este problema, podemos analisar o comportamento das retas nos extremos do intervalo $[X_1, X_2]$.\n\nPara cada reta $i$, definimos os valores de $y$ nos limites $X_1$ e $X_2$:\n- $y_{i, 1} = A_i \\cdot X_1 + B_i$\n- $y_{i, 2} = A_i \\cdot X_2 + B_i$\n\nDuas retas distintas $i$ e $j$ **não** se intersectam dentro do intervalo $[X_1, X_2]$ se, e somente se, uma estiver estritamente acima da outra durante todo o intervalo, o que equivale a:\n$$(y_{i, 1} < y_{j, 1} \\text{ e } y_{i, 2} < y_{j, 2}) \\quad\\text{ou}\\quad (y_{i, 1} > y_{j, 1} \\text{ e } y_{i, 2} > y_{j, 2})$$\n\nEm qualquer outro caso (se as ordens relativas se invertem ou se coincidem em $X_1$ ou $X_2$), as duas retas se cruzam em algum ponto com coordenada $x \\in [X_1, X_2]$.\n\nPortanto, o número total de pares de retas que se intersectam no intervalo é:\n$$\\binom{N}{2} - (\\text{número de pares sem interseção})$$\n\nContar os pares com $y_{i, 1} < y_{j, 1}$ e $y_{i, 2} < y_{j, 2}$ é um problema clássico de contagem de inversões / dominância 2D, que pode ser resolvido eficientemente em $O(N \\log N)$ utilizando ordenação e uma Fenwick Tree (Binary Indexed Tree) com compressão de coordenadas.\n\n### Código em C++\n\n```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\ntypedef __int128_t int128;\n\nstruct Line {\n    long long y1;\n    long long y2;\n};\n\nstruct FenwickTree {\n    int n;\n    vector<int> tree;\n    FenwickTree(int n) : n(n), tree(n + 1, 0) {}\n\n    void add(int i, int delta) {\n        for (; i <= n; i += i & -i) {\n            tree[i] += delta;\n        }\n    }\n\n    int query(int i) {\n        int sum = 0;\n        for (; i > 0; i -= i & -i) {\n            sum += tree[i];\n        }\n        return sum;\n    }\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    long long X1, X2;\n    if (!(cin >> n >> X1 >> X2)) return 0;\n\n    vector<Line> lines(n);\n    vector<long long> all_y2;\n    all_y2.reserve(n);\n\n    for (int i = 0; i < n; ++i) {\n        long long a, b;\n        cin >> a >> b;\n        lines[i].y1 = a * X1 + b;\n        lines[i].y2 = a * X2 + b;\n        all_y2.push_back(lines[i].y2);\n    }\n\n    // Compressão de coordenadas para os valores de y2\n    sort(all_y2.begin(), all_y2.end());\n    all_y2.erase(unique(all_y2.begin(), all_y2.end()), all_y2.end());\n\n    // Ordenar as retas por y1 crescente.\n    // Em caso de empate de y1, ordenar por y2 decrescente para que\n    // pontos com mesmo y1 não sejam contados como estritamente menores.\n    sort(lines.begin(), lines.end(), [](const Line& a, const Line& b) {\n        if (a.y1 != b.y1) {\n            return a.y1 < b.y1;\n        }\n        return a.y2 > b.y2;\n    });\n\n    FenwickTree bit(all_y2.size());\n    long long no_intersection_pairs = 0;\n\n    for (int i = 0; i < n; ++i) {\n        // Encontrar a posição comprimida de y2 (1-indexada)\n        int rank = lower_bound(all_y2.begin(), all_y2.end(), lines[i].y2) - all_y2.begin() + 1;\n\n        // Contar quantos elementos já inseridos possuem y2 estritamente menor (rank - 1)\n        no_intersection_pairs += bit.query(rank - 1);\n\n        // Inserir o elemento atual\n        bit.add(rank, 1);\n    }\n\n    long long total_pairs = (long long)n * (n - 1) / 2;\n    long long ans = total_pairs - no_intersection_pairs;\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\ntypedef __int128_t int128;\n\nstruct Line {\n    long long y1;\n    long long y2;\n};\n\nstruct FenwickTree {\n    int n;\n    vector<int> tree;\n    FenwickTree(int n) : n(n), tree(n + 1, 0) {}\n\n    void add(int i, int delta) {\n        for (; i <= n; i += i & -i) {\n            tree[i] += delta;\n        }\n    }\n\n    int query(int i) {\n        int sum = 0;\n        for (; i > 0; i -= i & -i) {\n            sum += tree[i];\n        }\n        return sum;\n    }\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    long long X1, X2;\n    if (!(cin >> n >> X1 >> X2)) return 0;\n\n    vector<Line> lines(n);\n    vector<long long> all_y2;\n    all_y2.reserve(n);\n\n    for (int i = 0; i < n; ++i) {\n        long long a, b;\n        cin >> a >> b;\n        lines[i].y1 = a * X1 + b;\n        lines[i].y2 = a * X2 + b;\n        all_y2.push_back(lines[i].y2);\n    }\n\n    // Compressão de coordenadas para os valores de y2\n    sort(all_y2.begin(), all_y2.end());\n    all_y2.erase(unique(all_y2.begin(), all_y2.end()), all_y2.end());\n\n    // Ordenar as retas por y1 crescente.\n    // Em caso de empate de y1, ordenar por y2 decrescente para que\n    // pontos com mesmo y1 não sejam contados como estritamente menores.\n    sort(lines.begin(), lines.end(), [](const Line& a, const Line& b) {\n        if (a.y1 != b.y1) {\n            return a.y1 < b.y1;\n        }\n        return a.y2 > b.y2;\n    });\n\n    FenwickTree bit(all_y2.size());\n    long long no_intersection_pairs = 0;\n\n    for (int i = 0; i < n; ++i) {\n        // Encontrar a posição comprimida de y2 (1-indexada)\n        int rank = lower_bound(all_y2.begin(), all_y2.end(), lines[i].y2) - all_y2.begin() + 1;\n\n        // Contar quantos elementos já inseridos possuem y2 estritamente menor (rank - 1)\n        no_intersection_pairs += bit.query(rank - 1);\n\n        // Inserir o elemento atual\n        bit.add(rank, 1);\n    }\n\n    long long total_pairs = (long long)n * (n - 1) / 2;\n    long long ans = total_pairs - no_intersection_pairs;\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18768949998775497,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

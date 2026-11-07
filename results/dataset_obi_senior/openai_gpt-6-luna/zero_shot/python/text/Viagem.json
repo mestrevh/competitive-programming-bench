@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:56:16.695214+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1128,
+            "output_tokens": 933,
+            "total_tokens": 2061
+        },
+        "cost_usd": {
+            "input_cost": 0.000113,
+            "output_cost": 0.000467,
+            "total_cost": 0.000579
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nV, N, M = data[:3]\nadj = [[] for _ in range(N)]\nidx = 3\n\nfor _ in range(M):\n    a, b, t, p = data[idx:idx + 4]\n    idx += 4\n    a -= 1\n    b -= 1\n    adj[a].append((b, t, p))\n    adj[b].append((a, t, p))\n\nstart, destination = data[idx] - 1, data[idx + 1] - 1\n\nif start == destination:\n    print(0)\n    sys.exit()\n\nwidth = V + 1\ndist = [float(\"inf\")] * (N * width)\nstart_state = start * width\ndist[start_state] = 0\nheap = [(0, start_state)]\n\nwhile heap:\n    time, state = heapq.heappop(heap)\n    if time != dist[state]:\n        continue\n\n    node, spent = divmod(state, width)\n    if node == destination:\n        print(time)\n        break\n\n    for neighbor, travel_time, price in adj[node]:\n        new_spent = spent + price\n        if new_spent <= V:\n            next_state = neighbor * width + new_spent\n            new_time = time + travel_time\n            if new_time < dist[next_state]:\n                dist[next_state] = new_time\n                heapq.heappush(heap, (new_time, next_state))\nelse:\n    print(-1)\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nV, N, M = data[:3]\nadj = [[] for _ in range(N)]\nidx = 3\n\nfor _ in range(M):\n    a, b, t, p = data[idx:idx + 4]\n    idx += 4\n    a -= 1\n    b -= 1\n    adj[a].append((b, t, p))\n    adj[b].append((a, t, p))\n\nstart, destination = data[idx] - 1, data[idx + 1] - 1\n\nif start == destination:\n    print(0)\n    sys.exit()\n\nwidth = V + 1\ndist = [float(\"inf\")] * (N * width)\nstart_state = start * width\ndist[start_state] = 0\nheap = [(0, start_state)]\n\nwhile heap:\n    time, state = heapq.heappop(heap)\n    if time != dist[state]:\n        continue\n\n    node, spent = divmod(state, width)\n    if node == destination:\n        print(time)\n        break\n\n    for neighbor, travel_time, price in adj[node]:\n        new_spent = spent + price\n        if new_spent <= V:\n            next_state = neighbor * width + new_spent\n            new_time = time + travel_time\n            if new_time < dist[next_state]:\n                dist[next_state] = new_time\n                heapq.heappush(heap, (new_time, next_state))\nelse:\n    print(-1)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08879980000347132,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

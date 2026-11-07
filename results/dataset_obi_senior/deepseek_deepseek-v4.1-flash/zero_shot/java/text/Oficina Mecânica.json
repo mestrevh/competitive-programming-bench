@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:24:55.888170+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1058,
+            "output_tokens": 20890,
+            "total_tokens": 21948
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.050136,
+            "total_cost": 0.050139
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n        int N = fs.nextInt();\n        int M = fs.nextInt();\n\n        int[] T = new int[N];\n        for (int i = 0; i < N; i++) T[i] = fs.nextInt();\n\n        int[] F = new int[M];\n        for (int i = 0; i < M; i++) F[i] = fs.nextInt();\n\n        if (N <= M) {\n            System.out.println(0);\n            return;\n        }\n\n        Arrays.sort(T);\n        int K = N - M;\n\n        long lo = 1;\n        long hi = 10000L * N;\n\n        while (lo < hi) {\n            long mid = (lo + hi) >>> 1;\n            long cnt = 0;\n            for (int f : F) {\n                cnt += mid / f;\n                if (cnt >= K) break;\n            }\n            if (cnt >= K) {\n                hi = mid;\n            } else {\n                lo = mid + 1;\n            }\n        }\n\n        long x = lo;\n\n        long[] vals = new long[N];\n        int idx = 0;\n        for (int f : F) {\n            for (long v = f; v <= x; v += f) {\n                vals[idx++] = v;\n            }\n        }\n\n        Arrays.sort(vals, 0, idx);\n\n        long ans = 0;\n        for (int p = 0; p < K; p++) {\n            ans += vals[p] * T[K - 1 - p];\n        }\n\n        System.out.println(ans);\n    }\n\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n        int N = fs.nextInt();\n        int M = fs.nextInt();\n\n        int[] T = new int[N];\n        for (int i = 0; i < N; i++) T[i] = fs.nextInt();\n\n        int[] F = new int[M];\n        for (int i = 0; i < M; i++) F[i] = fs.nextInt();\n\n        if (N <= M) {\n            System.out.println(0);\n            return;\n        }\n\n        Arrays.sort(T);\n        int K = N - M;\n\n        long lo = 1;\n        long hi = 10000L * N;\n\n        while (lo < hi) {\n            long mid = (lo + hi) >>> 1;\n            long cnt = 0;\n            for (int f : F) {\n                cnt += mid / f;\n                if (cnt >= K) break;\n            }\n            if (cnt >= K) {\n                hi = mid;\n            } else {\n                lo = mid + 1;\n            }\n        }\n\n        long x = lo;\n\n        long[] vals = new long[N];\n        int idx = 0;\n        for (int f : F) {\n            for (long v = f; v <= x; v += f) {\n                vals[idx++] = v;\n            }\n        }\n\n        Arrays.sort(vals, 0, idx);\n\n        long ans = 0;\n        for (int p = 0; p < K; p++) {\n            ans += vals[p] * T[K - 1 - p];\n        }\n\n        System.out.println(ans);\n    }\n\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16680629999609664,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

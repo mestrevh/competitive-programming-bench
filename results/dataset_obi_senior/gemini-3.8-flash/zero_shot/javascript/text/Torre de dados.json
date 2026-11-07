@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:09:18.688306+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 927,
+            "output_tokens": 699,
+            "total_tokens": 2795
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.002621,
+            "total_cost": 0.003317
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const n = nextInt();\n    if (n === null) return;\n\n    // opposite index mapping:\n    // A (0) <-> F (5)\n    // B (1) <-> D (3)\n    // C (2) <-> E (4)\n    const opp = [5, 3, 4, 1, 2, 0];\n\n    const dice = [];\n    for (let i = 0; i < n; i++) {\n        const d = [];\n        for (let j = 0; j < 6; j++) {\n            d.push(nextInt());\n        }\n        dice.push(d);\n    }\n\n    let maxSum = 0;\n\n    // Test each of the 6 possible bottom faces for the first die\n    for (let initialBottomIdx = 0; initialBottomIdx < 6; initialBottomIdx++) {\n        let currentSum = 0;\n        let topVal = dice[0][opp[initialBottomIdx]];\n        let bottomVal = dice[0][initialBottomIdx];\n\n        // Max lateral for the first die\n        let maxSide = 0;\n        for (let val = 6; val >= 1; val--) {\n            if (val !== bottomVal && val !== topVal) {\n                maxSide = val;\n                break;\n            }\n        }\n        currentSum += maxSide;\n\n        // Propagate up the tower\n        for (let i = 1; i < n; i++) {\n            const d = dice[i];\n            const bVal = topVal;\n            // Find index of bVal in this die\n            let bIdx = -1;\n            for (let j = 0; j < 6; j++) {\n                if (d[j] === bVal) {\n                    bIdx = j;\n                    break;\n                }\n            }\n            const tVal = d[opp[bIdx]];\n            topVal = tVal;\n\n            for (let val = 6; val >= 1; val--) {\n                if (val !== bVal && val !== tVal) {\n                    currentSum += val;\n                    break;\n                }\n            }\n        }\n\n        if (currentSum > maxSum) {\n            maxSum = currentSum;\n        }\n    }\n\n    console.log(maxSum);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const n = nextInt();\n    if (n === null) return;\n\n    // opposite index mapping:\n    // A (0) <-> F (5)\n    // B (1) <-> D (3)\n    // C (2) <-> E (4)\n    const opp = [5, 3, 4, 1, 2, 0];\n\n    const dice = [];\n    for (let i = 0; i < n; i++) {\n        const d = [];\n        for (let j = 0; j < 6; j++) {\n            d.push(nextInt());\n        }\n        dice.push(d);\n    }\n\n    let maxSum = 0;\n\n    // Test each of the 6 possible bottom faces for the first die\n    for (let initialBottomIdx = 0; initialBottomIdx < 6; initialBottomIdx++) {\n        let currentSum = 0;\n        let topVal = dice[0][opp[initialBottomIdx]];\n        let bottomVal = dice[0][initialBottomIdx];\n\n        // Max lateral for the first die\n        let maxSide = 0;\n        for (let val = 6; val >= 1; val--) {\n            if (val !== bottomVal && val !== topVal) {\n                maxSide = val;\n                break;\n            }\n        }\n        currentSum += maxSide;\n\n        // Propagate up the tower\n        for (let i = 1; i < n; i++) {\n            const d = dice[i];\n            const bVal = topVal;\n            // Find index of bVal in this die\n            let bIdx = -1;\n            for (let j = 0; j < 6; j++) {\n                if (d[j] === bVal) {\n                    bIdx = j;\n                    break;\n                }\n            }\n            const tVal = d[opp[bIdx]];\n            topVal = tVal;\n\n            for (let val = 6; val >= 1; val--) {\n                if (val !== bVal && val !== tVal) {\n                    currentSum += val;\n                    break;\n                }\n            }\n        }\n\n        if (currentSum > maxSum) {\n            maxSum = currentSum;\n        }\n    }\n\n    console.log(maxSum);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05691479999222793,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

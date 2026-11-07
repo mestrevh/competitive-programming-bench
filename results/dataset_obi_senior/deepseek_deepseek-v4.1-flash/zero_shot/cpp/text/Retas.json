@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:49:00.831610+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1156,
+            "output_tokens": 4696,
+            "total_tokens": 5852
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.01127,
+            "total_cost": 0.011274
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct BIT {\n    int n;\n    vector<int> bit;\n\n    BIT(int n = 0) : n(n), bit(n + 1, 0) {}\n\n    void add(int idx, int val) {\n        for (; idx <= n; idx += idx & -idx)\n            bit[idx] += val;\n    }\n\n    int sum(int idx) {\n        int res = 0;\n        for (; idx > 0; idx -= idx & -idx)\n            res += bit[idx];\n        return res;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    long long X1, X2;\n    cin >> N >> X1 >> X2;\n\n    vector<pair<long long, long long>> pts;\n    vector<long long> vals;\n    pts.reserve(N);\n    vals.reserve(N);\n\n    for (int i = 0; i < N; ++i) {\n        long long A, B;\n        cin >> A >> B;\n\n        long long y1 = A * X1 + B;\n        long long y2 = A * X2 + B;\n\n        pts.push_back({y1, y2});\n        vals.push_back(y2);\n    }\n\n    sort(vals.begin(), vals.end());\n    vals.erase(unique(vals.begin(), vals.end()), vals.end());\n\n    sort(pts.begin(), pts.end());\n\n    BIT bit((int)vals.size());\n\n    long long ans = 0;\n    long long total = 0;\n\n    int i = 0;\n    while (i < N) {\n        int j = i;\n        while (j < N && pts[j].first == pts[i].first)\n            ++j;\n\n        long long groupSize = j - i;\n        ans += groupSize * (groupSize - 1) / 2;\n\n        for (int k = i; k < j; ++k) {\n            long long v = pts[k].second;\n            int idx = int(lower_bound(vals.begin(), vals.end(), v) - vals.begin()) + 1;\n\n            int less = bit.sum(idx - 1);\n            ans += total - less;\n        }\n\n        for (int k = i; k < j; ++k) {\n            long long v = pts[k].second;\n            int idx = int(lower_bound(vals.begin(), vals.end(), v) - vals.begin()) + 1;\n            bit.add(idx, 1);\n        }\n\n        total += groupSize;\n        i = j;\n    }\n\n    cout << ans << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct BIT {\n    int n;\n    vector<int> bit;\n\n    BIT(int n = 0) : n(n), bit(n + 1, 0) {}\n\n    void add(int idx, int val) {\n        for (; idx <= n; idx += idx & -idx)\n            bit[idx] += val;\n    }\n\n    int sum(int idx) {\n        int res = 0;\n        for (; idx > 0; idx -= idx & -idx)\n            res += bit[idx];\n        return res;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    long long X1, X2;\n    cin >> N >> X1 >> X2;\n\n    vector<pair<long long, long long>> pts;\n    vector<long long> vals;\n    pts.reserve(N);\n    vals.reserve(N);\n\n    for (int i = 0; i < N; ++i) {\n        long long A, B;\n        cin >> A >> B;\n\n        long long y1 = A * X1 + B;\n        long long y2 = A * X2 + B;\n\n        pts.push_back({y1, y2});\n        vals.push_back(y2);\n    }\n\n    sort(vals.begin(), vals.end());\n    vals.erase(unique(vals.begin(), vals.end()), vals.end());\n\n    sort(pts.begin(), pts.end());\n\n    BIT bit((int)vals.size());\n\n    long long ans = 0;\n    long long total = 0;\n\n    int i = 0;\n    while (i < N) {\n        int j = i;\n        while (j < N && pts[j].first == pts[i].first)\n            ++j;\n\n        long long groupSize = j - i;\n        ans += groupSize * (groupSize - 1) / 2;\n\n        for (int k = i; k < j; ++k) {\n            long long v = pts[k].second;\n            int idx = int(lower_bound(vals.begin(), vals.end(), v) - vals.begin()) + 1;\n\n            int less = bit.sum(idx - 1);\n            ans += total - less;\n        }\n\n        for (int k = i; k < j; ++k) {\n            long long v = pts[k].second;\n            int idx = int(lower_bound(vals.begin(), vals.end(), v) - vals.begin()) + 1;\n            bit.add(idx, 1);\n        }\n\n        total += groupSize;\n        i = j;\n    }\n\n    cout << ans << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17824670000118203,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

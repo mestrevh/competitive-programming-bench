@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:17:48.027134+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 892,
+            "output_tokens": 395,
+            "total_tokens": 1287
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.000198,
+            "total_cost": 0.000217
+        },
+        "raw_response": "```javascript\nconst readline = require('readline');\n\nfunction main() {\n    let input = '';\n    process.stdin.on('data', (chunk) => { input += chunk; });\n    process.stdin.on('end', () => {\n        const lines = input.trim().split('\\n');\n        if (lines.length === 0 || lines[0] === '') { console.log(0); return; }\n        const first = lines[0].trim().split(/\\s+/).map(Number);\n        const S = first[0], T = first[1], P = first[2];\n        const heights = lines[1].trim().split(/\\s+/).map(Number);\n\n        const adj = Array.from({ length: S + 1 }, () => []);\n        for (let i = 0; i < T; i++) {\n            const [I, J] = lines[2 + i].trim().split(/\\s+/).map(Number);\n            adj[I].push(J);\n            adj[J].push(I);\n        }\n\n        const visited = new Array(S + 1).fill(false);\n        const stack = [P];\n        visited[P] = true;\n        let count = 0;\n\n        while (stack.length > 0) {\n            const u = stack.pop();\n            for (const v of adj[u]) {\n                if (!visited[v] && heights[u - 1] > heights[v - 1]) {\n                    visited[v] = true;\n                    count++;\n                    stack.push(v);\n                }\n            }\n        }\n\n        console.log(count);\n    });\n}\n\nmain();\n```",
+        "extracted_code": "const readline = require('readline');\n\nfunction main() {\n    let input = '';\n    process.stdin.on('data', (chunk) => { input += chunk; });\n    process.stdin.on('end', () => {\n        const lines = input.trim().split('\\n');\n        if (lines.length === 0 || lines[0] === '') { console.log(0); return; }\n        const first = lines[0].trim().split(/\\s+/).map(Number);\n        const S = first[0], T = first[1], P = first[2];\n        const heights = lines[1].trim().split(/\\s+/).map(Number);\n\n        const adj = Array.from({ length: S + 1 }, () => []);\n        for (let i = 0; i < T; i++) {\n            const [I, J] = lines[2 + i].trim().split(/\\s+/).map(Number);\n            adj[I].push(J);\n            adj[J].push(I);\n        }\n\n        const visited = new Array(S + 1).fill(false);\n        const stack = [P];\n        visited[P] = true;\n        let count = 0;\n\n        while (stack.length > 0) {\n            const u = stack.pop();\n            for (const v of adj[u]) {\n                if (!visited[v] && heights[u - 1] > heights[v - 1]) {\n                    visited[v] = true;\n                    count++;\n                    stack.push(v);\n                }\n            }\n        }\n\n        console.log(count);\n    });\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.08760369999799877,
+            "counts": {
+                "AC": 10,
+                "WA": 12,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

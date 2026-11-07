@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:41:01.622317+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 663,
+            "output_tokens": 23864,
+            "total_tokens": 24527
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.057274,
+            "total_cost": 0.057276
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        FastScanner sc = new FastScanner();\n        int N = sc.nextInt();\n        int K = sc.nextInt();\n\n        if (K == 0) {\n            long ans = 0;\n            long run = 0;\n            for (int i = 0; i < N; i++) {\n                int x = sc.nextInt();\n                if (x == 0) {\n                    run++;\n                } else {\n                    ans += run * (run + 1) / 2;\n                    run = 0;\n                }\n            }\n            ans += run * (run + 1) / 2;\n            System.out.println(ans);\n            return;\n        }\n\n        int mod = K + 1;\n        int[] freq = new int[mod];\n        int[] queue = new int[N + 1];\n        int head = 0, tail = 0;\n\n        queue[tail++] = 0;\n        freq[0] = 1;\n\n        int sum = 0;\n        long ans = 0;\n\n        for (int i = 0; i < N; i++) {\n            int x = sc.nextInt();\n            sum += x;\n\n            int lower = sum - K;\n            while (head < tail && queue[head] < lower) {\n                int p = queue[head++];\n                freq[p % mod]--;\n            }\n\n            if (sum >= K) {\n                int key = sum - K;\n                ans += freq[key % mod];\n            }\n\n            freq[sum % mod]++;\n            queue[tail++] = sum;\n        }\n\n        System.out.println(ans);\n    }\n\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        FastScanner sc = new FastScanner();\n        int N = sc.nextInt();\n        int K = sc.nextInt();\n\n        if (K == 0) {\n            long ans = 0;\n            long run = 0;\n            for (int i = 0; i < N; i++) {\n                int x = sc.nextInt();\n                if (x == 0) {\n                    run++;\n                } else {\n                    ans += run * (run + 1) / 2;\n                    run = 0;\n                }\n            }\n            ans += run * (run + 1) / 2;\n            System.out.println(ans);\n            return;\n        }\n\n        int mod = K + 1;\n        int[] freq = new int[mod];\n        int[] queue = new int[N + 1];\n        int head = 0, tail = 0;\n\n        queue[tail++] = 0;\n        freq[0] = 1;\n\n        int sum = 0;\n        long ans = 0;\n\n        for (int i = 0; i < N; i++) {\n            int x = sc.nextInt();\n            sum += x;\n\n            int lower = sum - K;\n            while (head < tail && queue[head] < lower) {\n                int p = queue[head++];\n                freq[p % mod]--;\n            }\n\n            if (sum >= K) {\n                int key = sum - K;\n                ans += freq[key % mod];\n            }\n\n            freq[sum % mod]++;\n            queue[tail++] = sum;\n        }\n\n        System.out.println(ans);\n    }\n\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14649810001719743,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

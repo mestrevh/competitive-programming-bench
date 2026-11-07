@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:23:13.557568+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 960,
+            "output_tokens": 708,
+            "total_tokens": 2271
+        },
+        "cost_usd": {
+            "input_cost": 0.00072,
+            "output_cost": 0.002655,
+            "total_cost": 0.003375
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[65536];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = in.read(buffer, 0, buffer.length);\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() throws IOException {\n            byte c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n\n        int e = scanner.nextInt();\n        if (e == -1) return;\n        int m = scanner.nextInt();\n        int d = scanner.nextInt();\n\n        int[] sameX = new int[m];\n        int[] sameY = new int[m];\n        for (int i = 0; i < m; i++) {\n            sameX[i] = scanner.nextInt();\n            sameY[i] = scanner.nextInt();\n        }\n\n        int[] diffU = new int[d];\n        int[] diffV = new int[d];\n        for (int i = 0; i < d; i++) {\n            diffU[i] = scanner.nextInt();\n            diffV[i] = scanner.nextInt();\n        }\n\n        int[] group = new int[e + 1];\n        int numGroups = e / 3;\n        for (int g = 1; g <= numGroups; g++) {\n            int s1 = scanner.nextInt();\n            int s2 = scanner.nextInt();\n            int s3 = scanner.nextInt();\n            group[s1] = g;\n            group[s2] = g;\n            group[s3] = g;\n        }\n\n        int violations = 0;\n\n        for (int i = 0; i < m; i++) {\n            if (group[sameX[i]] != group[sameY[i]]) {\n                violations++;\n            }\n        }\n\n        for (int i = 0; i < d; i++) {\n            if (group[diffU[i]] == group[diffV[i]]) {\n                violations++;\n            }\n        }\n\n        System.out.println(violations);\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[65536];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = in.read(buffer, 0, buffer.length);\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() throws IOException {\n            byte c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n\n        int e = scanner.nextInt();\n        if (e == -1) return;\n        int m = scanner.nextInt();\n        int d = scanner.nextInt();\n\n        int[] sameX = new int[m];\n        int[] sameY = new int[m];\n        for (int i = 0; i < m; i++) {\n            sameX[i] = scanner.nextInt();\n            sameY[i] = scanner.nextInt();\n        }\n\n        int[] diffU = new int[d];\n        int[] diffV = new int[d];\n        for (int i = 0; i < d; i++) {\n            diffU[i] = scanner.nextInt();\n            diffV[i] = scanner.nextInt();\n        }\n\n        int[] group = new int[e + 1];\n        int numGroups = e / 3;\n        for (int g = 1; g <= numGroups; g++) {\n            int s1 = scanner.nextInt();\n            int s2 = scanner.nextInt();\n            int s3 = scanner.nextInt();\n            group[s1] = g;\n            group[s2] = g;\n            group[s3] = g;\n        }\n\n        int violations = 0;\n\n        for (int i = 0; i < m; i++) {\n            if (group[sameX[i]] != group[sameY[i]]) {\n                violations++;\n            }\n        }\n\n        for (int i = 0; i < d; i++) {\n            if (group[diffU[i]] == group[diffV[i]]) {\n                violations++;\n            }\n        }\n\n        System.out.println(violations);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11820609998540021,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

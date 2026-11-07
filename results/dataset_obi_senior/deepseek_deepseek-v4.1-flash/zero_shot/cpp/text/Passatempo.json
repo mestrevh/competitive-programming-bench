@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:46:19.154741+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 957,
+            "output_tokens": 33326,
+            "total_tokens": 34283
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.079982,
+            "total_cost": 0.079985
+        },
+        "raw_response": " sum_{j sum_{j sum_{j```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    vector<vector<int>> grid(L, vector<int>(C));\n    vector<long long> rowSum(L);\n    vector<bool> appeared(676, false);\n\n    for (int r = 0; r < L; ++r) {\n        for (int c = 0; c < C; ++c) {\n            string s;\n            cin >> s;\n            int idx = (s[0] - 'a') * 26 + (s[1] - 'a');\n            grid[r][c] = idx;\n            appeared[idx] = true;\n        }\n        cin >> rowSum[r];\n    }\n\n    vector<long long> colSum(C);\n    for (int c = 0; c < C; ++c) {\n        cin >> colSum[c];\n    }\n\n    vector<bool> known(676, false);\n    vector<long long> val(676, 0);\n\n    bool progress = true;\n    while (progress) {\n        progress = false;\n\n        // Process rows\n        for (int r = 0; r < L; ++r) {\n            long long sumKnown = 0;\n            int unknownVar = -1;\n            int coeff = 0;\n            bool multiple = false;\n\n            for (int c = 0; c < C; ++c) {\n                int v = grid[r][c];\n                if (known[v]) {\n                    sumKnown += val[v];\n                } else {\n                    if (unknownVar == -1) {\n                        unknownVar = v;\n                        coeff = 1;\n                    } else if (unknownVar == v) {\n                        ++coeff;\n                    } else {\n                        multiple = true;\n                        break;\n                    }\n                }\n            }\n\n            if (!multiple && unknownVar != -1) {\n                long long remaining = rowSum[r] - sumKnown;\n                val[unknownVar] = remaining / coeff;\n                known[unknownVar] = true;\n                progress = true;\n            }\n        }\n\n        // Process columns\n        for (int c = 0; c < C; ++c) {\n            long long sumKnown = 0;\n            int unknownVar = -1;\n            int coeff = 0;\n            bool multiple = false;\n\n            for (int r = 0; r < L; ++r) {\n                int v = grid[r][c];\n                if (known[v]) {\n                    sumKnown += val[v];\n                } else {\n                    if (unknownVar == -1) {\n                        unknownVar = v;\n                        coeff = 1;\n                    } else if (unknownVar == v) {\n                        ++coeff;\n                    } else {\n                        multiple = true;\n                        break;\n                    }\n                }\n            }\n\n            if (!multiple && unknownVar != -1) {\n                long long remaining = colSum[c] - sumKnown;\n                val[unknownVar] = remaining / coeff;\n                known[unknownVar] = true;\n                progress = true;\n            }\n        }\n    }\n\n    // Output in alphabetical order (aa, ab, ..., zz)\n    for (int i = 0; i < 676; ++i) {\n        if (appeared[i]) {\n            string name;\n            name += char('a' + i / 26);\n            name += char('a' + i % 26);\n            cout << name << \" \" << val[i] << '\\n';\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    vector<vector<int>> grid(L, vector<int>(C));\n    vector<long long> rowSum(L);\n    vector<bool> appeared(676, false);\n\n    for (int r = 0; r < L; ++r) {\n        for (int c = 0; c < C; ++c) {\n            string s;\n            cin >> s;\n            int idx = (s[0] - 'a') * 26 + (s[1] - 'a');\n            grid[r][c] = idx;\n            appeared[idx] = true;\n        }\n        cin >> rowSum[r];\n    }\n\n    vector<long long> colSum(C);\n    for (int c = 0; c < C; ++c) {\n        cin >> colSum[c];\n    }\n\n    vector<bool> known(676, false);\n    vector<long long> val(676, 0);\n\n    bool progress = true;\n    while (progress) {\n        progress = false;\n\n        // Process rows\n        for (int r = 0; r < L; ++r) {\n            long long sumKnown = 0;\n            int unknownVar = -1;\n            int coeff = 0;\n            bool multiple = false;\n\n            for (int c = 0; c < C; ++c) {\n                int v = grid[r][c];\n                if (known[v]) {\n                    sumKnown += val[v];\n                } else {\n                    if (unknownVar == -1) {\n                        unknownVar = v;\n                        coeff = 1;\n                    } else if (unknownVar == v) {\n                        ++coeff;\n                    } else {\n                        multiple = true;\n                        break;\n                    }\n                }\n            }\n\n            if (!multiple && unknownVar != -1) {\n                long long remaining = rowSum[r] - sumKnown;\n                val[unknownVar] = remaining / coeff;\n                known[unknownVar] = true;\n                progress = true;\n            }\n        }\n\n        // Process columns\n        for (int c = 0; c < C; ++c) {\n            long long sumKnown = 0;\n            int unknownVar = -1;\n            int coeff = 0;\n            bool multiple = false;\n\n            for (int r = 0; r < L; ++r) {\n                int v = grid[r][c];\n                if (known[v]) {\n                    sumKnown += val[v];\n                } else {\n                    if (unknownVar == -1) {\n                        unknownVar = v;\n                        coeff = 1;\n                    } else if (unknownVar == v) {\n                        ++coeff;\n                    } else {\n                        multiple = true;\n                        break;\n                    }\n                }\n            }\n\n            if (!multiple && unknownVar != -1) {\n                long long remaining = colSum[c] - sumKnown;\n                val[unknownVar] = remaining / coeff;\n                known[unknownVar] = true;\n                progress = true;\n            }\n        }\n    }\n\n    // Output in alphabetical order (aa, ab, ..., zz)\n    for (int i = 0; i < 676; ++i) {\n        if (appeared[i]) {\n            string name;\n            name += char('a' + i / 26);\n            name += char('a' + i % 26);\n            cout << name << \" \" << val[i] << '\\n';\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13110170000436483,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

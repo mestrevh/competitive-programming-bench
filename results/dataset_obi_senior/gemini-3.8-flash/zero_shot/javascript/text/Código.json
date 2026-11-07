@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:06:56.500620+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 839,
+            "output_tokens": 661,
+            "total_tokens": 4698
+        },
+        "cost_usd": {
+            "input_cost": 0.000629,
+            "output_cost": 0.002479,
+            "total_cost": 0.003108
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.HashSet;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        int n = Integer.parseInt(line.trim());\n        String[] s = new String[n];\n        int count = 0;\n        while (count < n) {\n            line = reader.readLine();\n            if (line == null) break;\n            StringTokenizer tokenizer = new StringTokenizer(line);\n            while (tokenizer.hasMoreTokens()) {\n                s[count++] = tokenizer.nextToken();\n            }\n        }\n\n        HashSet<String> allSubstrings = new HashSet<>(100000);\n        HashSet<String> suffixes = new HashSet<>(50000);\n        HashSet<String> prefixes = new HashSet<>(50000);\n\n        for (int k = 0; k < n; k++) {\n            String current = s[k];\n            int len = current.length();\n\n            if (k > 0) {\n                boolean invalid = false;\n\n                // Caso 1: current é substring de alguma string anterior\n                if (allSubstrings.contains(current)) {\n                    invalid = true;\n                }\n\n                // Caso 2: current cruza a junção de duas strings anteriores\n                if (!invalid) {\n                    for (int j = 1; j < len; j++) {\n                        String left = current.substring(0, j);\n                        String right = current.substring(j);\n                        if (suffixes.contains(left) && prefixes.contains(right)) {\n                            invalid = true;\n                            break;\n                        }\n                    }\n                }\n\n                if (invalid) {\n                    System.out.println(current);\n                    return;\n                }\n            }\n\n            // Adiciona prefixos\n            for (int i = 1; i <= len; i++) {\n                prefixes.add(current.substring(0, i));\n            }\n\n            // Adiciona sufixos\n            for (int i = 0; i < len; i++) {\n                suffixes.add(current.substring(i));\n            }\n\n            // Adiciona todas as substrings\n            for (int i = 0; i < len; i++) {\n                for (int j = i + 1; j <= len; j++) {\n                    allSubstrings.add(current.substring(i, j));\n                }\n            }\n        }\n\n        System.out.println(\"ok\");\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.HashSet;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        int n = Integer.parseInt(line.trim());\n        String[] s = new String[n];\n        int count = 0;\n        while (count < n) {\n            line = reader.readLine();\n            if (line == null) break;\n            StringTokenizer tokenizer = new StringTokenizer(line);\n            while (tokenizer.hasMoreTokens()) {\n                s[count++] = tokenizer.nextToken();\n            }\n        }\n\n        HashSet<String> allSubstrings = new HashSet<>(100000);\n        HashSet<String> suffixes = new HashSet<>(50000);\n        HashSet<String> prefixes = new HashSet<>(50000);\n\n        for (int k = 0; k < n; k++) {\n            String current = s[k];\n            int len = current.length();\n\n            if (k > 0) {\n                boolean invalid = false;\n\n                // Caso 1: current é substring de alguma string anterior\n                if (allSubstrings.contains(current)) {\n                    invalid = true;\n                }\n\n                // Caso 2: current cruza a junção de duas strings anteriores\n                if (!invalid) {\n                    for (int j = 1; j < len; j++) {\n                        String left = current.substring(0, j);\n                        String right = current.substring(j);\n                        if (suffixes.contains(left) && prefixes.contains(right)) {\n                            invalid = true;\n                            break;\n                        }\n                    }\n                }\n\n                if (invalid) {\n                    System.out.println(current);\n                    return;\n                }\n            }\n\n            // Adiciona prefixos\n            for (int i = 1; i <= len; i++) {\n                prefixes.add(current.substring(0, i));\n            }\n\n            // Adiciona sufixos\n            for (int i = 0; i < len; i++) {\n                suffixes.add(current.substring(i));\n            }\n\n            // Adiciona todas as substrings\n            for (int i = 0; i < len; i++) {\n                for (int j = i + 1; j <= len; j++) {\n                    allSubstrings.add(current.substring(i, j));\n                }\n            }\n        }\n\n        System.out.println(\"ok\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07705730001907796,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 27,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:39:47.639566+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 839,
+            "output_tokens": 414,
+            "total_tokens": 3285
+        },
+        "cost_usd": {
+            "input_cost": 0.000629,
+            "output_cost": 0.001552,
+            "total_cost": 0.002182
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nToken = nextToken();\n    if (!nToken) return;\n    const n = parseInt(nToken, 10);\n\n    const prefixes = new Set();\n    const suffixes = new Set();\n\n    for (let i = 0; i < n; i++) {\n        const s = nextToken();\n        if (!s) break;\n\n        const m = s.length;\n        let found = false;\n\n        for (let l = 0; l <= m; l++) {\n            const leftValid = (l === 0) || suffixes.has(s.slice(0, l));\n            const rightValid = (l === m) || prefixes.has(s.slice(l));\n\n            if (leftValid && rightValid) {\n                found = true;\n                break;\n            }\n        }\n\n        if (found) {\n            console.log(s);\n            return;\n        }\n\n        for (let len = 1; len <= m; len++) {\n            prefixes.add(s.slice(0, len));\n            suffixes.add(s.slice(m - len));\n        }\n    }\n\n    console.log(\"ok\");\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nToken = nextToken();\n    if (!nToken) return;\n    const n = parseInt(nToken, 10);\n\n    const prefixes = new Set();\n    const suffixes = new Set();\n\n    for (let i = 0; i < n; i++) {\n        const s = nextToken();\n        if (!s) break;\n\n        const m = s.length;\n        let found = false;\n\n        for (let l = 0; l <= m; l++) {\n            const leftValid = (l === 0) || suffixes.has(s.slice(0, l));\n            const rightValid = (l === m) || prefixes.has(s.slice(l));\n\n            if (leftValid && rightValid) {\n                found = true;\n                break;\n            }\n        }\n\n        if (found) {\n            console.log(s);\n            return;\n        }\n\n        for (let len = 1; len <= m; len++) {\n            prefixes.add(s.slice(0, len));\n            suffixes.add(s.slice(m - len));\n        }\n    }\n\n    console.log(\"ok\");\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0863029999891296,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:35:56.459903+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1160,
+            "output_tokens": 3604,
+            "total_tokens": 4764
+        },
+        "cost_usd": {
+            "input_cost": 0.000116,
+            "output_cost": 0.001802,
+            "total_cost": 0.001918
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n    b = data[2 + n:2 + 2 * n]\n\n    base = [max(a[i] - b[i], 0) for i in range(n)]\n    gains = [b[i] if a[i] > b[i] else a[i] for i in range(n)]\n    total_base = sum(base)\n\n    ranked = sorted((gains[i], i) for i in range(n - 1, -1, -1), reverse=True)\n    rank = [0] * n\n    sorted_gains = [0] * n\n    for pos, (value, idx) in enumerate(ranked):\n        rank[idx] = pos\n        sorted_gains[pos] = value\n\n    k = min(k, n - 1)\n    top_sum = sum(sorted_gains[:k])\n    next_gain = sorted_gains[k] if k < n else 0\n\n    answer = 0\n    for i in range(n):\n        chosen_gains = top_sum\n        if rank[i] < k:\n            chosen_gains += next_gain - gains[i]\n        value = total_base - base[i] + chosen_gains + a[i]\n        answer = max(answer, value)\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n    b = data[2 + n:2 + 2 * n]\n\n    base = [max(a[i] - b[i], 0) for i in range(n)]\n    gains = [b[i] if a[i] > b[i] else a[i] for i in range(n)]\n    total_base = sum(base)\n\n    ranked = sorted((gains[i], i) for i in range(n - 1, -1, -1), reverse=True)\n    rank = [0] * n\n    sorted_gains = [0] * n\n    for pos, (value, idx) in enumerate(ranked):\n        rank[idx] = pos\n        sorted_gains[pos] = value\n\n    k = min(k, n - 1)\n    top_sum = sum(sorted_gains[:k])\n    next_gain = sorted_gains[k] if k < n else 0\n\n    answer = 0\n    for i in range(n):\n        chosen_gains = top_sum\n        if rank[i] < k:\n            chosen_gains += next_gain - gains[i]\n        value = total_base - base[i] + chosen_gains + a[i]\n        answer = max(answer, value)\n\n    print(answer)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.14325760000065202,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 86,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

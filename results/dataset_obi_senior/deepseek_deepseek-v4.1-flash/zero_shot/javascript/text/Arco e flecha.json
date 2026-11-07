@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:15:28.629497+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 910,
+            "output_tokens": 11877,
+            "total_tokens": 12787
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.028505,
+            "total_cost": 0.028508
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst N = parseInt(data[0], 10);\n\nconst left = new Int32Array(N + 5);\nconst right = new Int32Array(N + 5);\nconst size = new Int32Array(N + 5);\nconst key = new Float64Array(N + 5);\nconst prio = new Uint32Array(N + 5);\n\nlet nodeCnt = 0;\n\nfunction rng() {\n  return (Math.random() * 0x100000000) >>> 0;\n}\n\nfunction update(t) {\n  size[t] = 1 + size[left[t]] + size[right[t]];\n}\n\nfunction insert(t, node) {\n  if (!t) return node;\n\n  if (key[node] <= key[t]) {\n    left[t] = insert(left[t], node);\n\n    if (prio[left[t]] > prio[t]) {\n      const l = left[t];\n      left[t] = right[l];\n      right[l] = t;\n      update(t);\n      update(l);\n      return l;\n    }\n  } else {\n    right[t] = insert(right[t], node);\n\n    if (prio[right[t]] > prio[t]) {\n      const r = right[t];\n      right[t] = left[r];\n      left[r] = t;\n      update(t);\n      update(r);\n      return r;\n    }\n  }\n\n  update(t);\n  return t;\n}\n\nfunction queryLE(t, k) {\n  let res = 0;\n\n  while (t) {\n    if (key[t] <= k) {\n      res += size[left[t]] + 1;\n      t = right[t];\n    } else {\n      t = left[t];\n    }\n  }\n\n  return res;\n}\n\nlet idx = 1;\nlet root = 0;\nlet prevPenalty = 0;\nconst out = [];\n\nfor (let i = 0; i < N; i++) {\n  let x = Number(data[idx++]);\n  let y = Number(data[idx++]);\n\n  x += prevPenalty;\n  y += prevPenalty;\n\n  const dist = x * x + y * y;\n  const p = queryLE(root, dist);\n\n  out.push(p);\n\n  nodeCnt++;\n  key[nodeCnt] = dist;\n  prio[nodeCnt] = rng();\n  left[nodeCnt] = 0;\n  right[nodeCnt] = 0;\n  size[nodeCnt] = 1;\n\n  root = insert(root, nodeCnt);\n  prevPenalty = p;\n}\n\nconsole.log(out.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst N = parseInt(data[0], 10);\n\nconst left = new Int32Array(N + 5);\nconst right = new Int32Array(N + 5);\nconst size = new Int32Array(N + 5);\nconst key = new Float64Array(N + 5);\nconst prio = new Uint32Array(N + 5);\n\nlet nodeCnt = 0;\n\nfunction rng() {\n  return (Math.random() * 0x100000000) >>> 0;\n}\n\nfunction update(t) {\n  size[t] = 1 + size[left[t]] + size[right[t]];\n}\n\nfunction insert(t, node) {\n  if (!t) return node;\n\n  if (key[node] <= key[t]) {\n    left[t] = insert(left[t], node);\n\n    if (prio[left[t]] > prio[t]) {\n      const l = left[t];\n      left[t] = right[l];\n      right[l] = t;\n      update(t);\n      update(l);\n      return l;\n    }\n  } else {\n    right[t] = insert(right[t], node);\n\n    if (prio[right[t]] > prio[t]) {\n      const r = right[t];\n      right[t] = left[r];\n      left[r] = t;\n      update(t);\n      update(r);\n      return r;\n    }\n  }\n\n  update(t);\n  return t;\n}\n\nfunction queryLE(t, k) {\n  let res = 0;\n\n  while (t) {\n    if (key[t] <= k) {\n      res += size[left[t]] + 1;\n      t = right[t];\n    } else {\n      t = left[t];\n    }\n  }\n\n  return res;\n}\n\nlet idx = 1;\nlet root = 0;\nlet prevPenalty = 0;\nconst out = [];\n\nfor (let i = 0; i < N; i++) {\n  let x = Number(data[idx++]);\n  let y = Number(data[idx++]);\n\n  x += prevPenalty;\n  y += prevPenalty;\n\n  const dist = x * x + y * y;\n  const p = queryLE(root, dist);\n\n  out.push(p);\n\n  nodeCnt++;\n  key[nodeCnt] = dist;\n  prio[nodeCnt] = rng();\n  left[nodeCnt] = 0;\n  right[nodeCnt] = 0;\n  size[nodeCnt] = 1;\n\n  root = insert(root, nodeCnt);\n  prevPenalty = p;\n}\n\nconsole.log(out.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15024809999158606,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

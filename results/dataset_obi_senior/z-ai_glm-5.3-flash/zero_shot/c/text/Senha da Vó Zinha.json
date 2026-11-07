@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T20:01:35.580440+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1123,
+            "output_tokens": 14007,
+            "total_tokens": 15130
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.007004,
+            "total_cost": 0.007028
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nstatic int cmpch(const void *a, const void *b) {\n    return (int)*(const unsigned char *)a - (int)*(const unsigned char *)b;\n}\n\n/*\n * Ideia: as posicoes normais sao fixas, entao a ordem lexicografica das\n * senhas equivale a ordem lexicografica das escolhas (c1..cM) dos indices\n * nas listas ordenadas. Isso e um sistema de numeracao de base mista:\n * o indice (P-1) codifica as escolhas, da cifra menos significativa\n * (ultima letra borrada) para a mais significativa (primeira letra borrada).\n */\nint main(void) {\n    int N, M, K;\n    if (scanf(\"%d %d %d\", &N, &M, &K) != 3) return 0;\n\n    static char senha[512];\n    if (scanf(\"%511s\", senha) != 1) return 0;\n\n    static char *dict[512];  /* letras ordenadas (e sem repeticao) de cada palavra */\n    static int dcnt[512];    /* quantidade de opcoes por posicao borrada */\n    static int pos[512];     /* posicoes borradas, da esquerda para a direita */\n\n    int m = 0;\n    for (int i = 0; i < N && m < M; i++)\n        if (senha[i] == '#') pos[m++] = i;\n\n    char word[64];\n    for (int i = 0; i < M; i++) {\n        if (scanf(\"%63s\", word) != 1) return 0;\n        qsort(word, (size_t)K, 1, cmpch);\n        int d = 0;\n        for (int j = 0; j < K; j++)          /* remove duplicatas, mantem ordem */\n            if (j == 0 || word[j] != word[j - 1])\n                word[d++] = word[j];\n        dcnt[i] = d;\n        dict[i] = (char *)malloc((size_t)d + 1);\n        memcpy(dict[i], word, (size_t)d);\n        dict[i][d] = '\\0';\n    }\n\n    long long P;\n    if (scanf(\"%lld\", &P) != 1) return 0;\n\n    long long X = P - 1;                     /* indice 0-based na lista ordenada */\n    for (int i = M - 1; i >= 0; i--) {       /* da ultima para a primeira borrada */\n        int c = (int)(X % dcnt[i]);\n        X /= dcnt[i];\n        senha[pos[i]] = dict[i][c];\n    }\n\n    senha[N] = '\\0';\n    fputs(senha, stdout);\n    fputc('\\n', stdout);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nstatic int cmpch(const void *a, const void *b) {\n    return (int)*(const unsigned char *)a - (int)*(const unsigned char *)b;\n}\n\n/*\n * Ideia: as posicoes normais sao fixas, entao a ordem lexicografica das\n * senhas equivale a ordem lexicografica das escolhas (c1..cM) dos indices\n * nas listas ordenadas. Isso e um sistema de numeracao de base mista:\n * o indice (P-1) codifica as escolhas, da cifra menos significativa\n * (ultima letra borrada) para a mais significativa (primeira letra borrada).\n */\nint main(void) {\n    int N, M, K;\n    if (scanf(\"%d %d %d\", &N, &M, &K) != 3) return 0;\n\n    static char senha[512];\n    if (scanf(\"%511s\", senha) != 1) return 0;\n\n    static char *dict[512];  /* letras ordenadas (e sem repeticao) de cada palavra */\n    static int dcnt[512];    /* quantidade de opcoes por posicao borrada */\n    static int pos[512];     /* posicoes borradas, da esquerda para a direita */\n\n    int m = 0;\n    for (int i = 0; i < N && m < M; i++)\n        if (senha[i] == '#') pos[m++] = i;\n\n    char word[64];\n    for (int i = 0; i < M; i++) {\n        if (scanf(\"%63s\", word) != 1) return 0;\n        qsort(word, (size_t)K, 1, cmpch);\n        int d = 0;\n        for (int j = 0; j < K; j++)          /* remove duplicatas, mantem ordem */\n            if (j == 0 || word[j] != word[j - 1])\n                word[d++] = word[j];\n        dcnt[i] = d;\n        dict[i] = (char *)malloc((size_t)d + 1);\n        memcpy(dict[i], word, (size_t)d);\n        dict[i][d] = '\\0';\n    }\n\n    long long P;\n    if (scanf(\"%lld\", &P) != 1) return 0;\n\n    long long X = P - 1;                     /* indice 0-based na lista ordenada */\n    for (int i = M - 1; i >= 0; i--) {       /* da ultima para a primeira borrada */\n        int c = (int)(X % dcnt[i]);\n        X /= dcnt[i];\n        senha[pos[i]] = dict[i][c];\n    }\n\n    senha[N] = '\\0';\n    fputs(senha, stdout);\n    fputc('\\n', stdout);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10550199999124743,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

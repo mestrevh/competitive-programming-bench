@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:54:36.442940+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 657,
+            "output_tokens": 1211,
+            "total_tokens": 1868
+        },
+        "cost_usd": {
+            "input_cost": 6.6e-05,
+            "output_cost": 0.000606,
+            "total_cost": 0.000671
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst n = nextInt();\nconst a = new Float64Array(n);\n\nfor (let i = 0; i < n; i++) {\n  a[i] = nextInt();\n}\n\nlet left = 0;\nlet right = n - 1;\nlet operations = 0;\n\nwhile (left < right) {\n  if (a[left] === a[right]) {\n    left++;\n    right--;\n  } else if (a[left] < a[right]) {\n    a[left + 1] += a[left];\n    left++;\n    operations++;\n  } else {\n    a[right - 1] += a[right];\n    right--;\n    operations++;\n  }\n}\n\nconsole.log(operations);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst n = nextInt();\nconst a = new Float64Array(n);\n\nfor (let i = 0; i < n; i++) {\n  a[i] = nextInt();\n}\n\nlet left = 0;\nlet right = n - 1;\nlet operations = 0;\n\nwhile (left < right) {\n  if (a[left] === a[right]) {\n    left++;\n    right--;\n  } else if (a[left] < a[right]) {\n    a[left + 1] += a[left];\n    left++;\n    operations++;\n  } else {\n    a[right - 1] += a[right];\n    right--;\n    operations++;\n  }\n}\n\nconsole.log(operations);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06459840000024997,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

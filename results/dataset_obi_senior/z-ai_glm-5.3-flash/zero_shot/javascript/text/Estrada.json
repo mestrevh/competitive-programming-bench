@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:40:15.197310+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 726,
+            "output_tokens": 696,
+            "total_tokens": 1422
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.000348,
+            "total_cost": 0.000364
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').split(/\\s+/).map(Number);\n  let idx = 0;\n  const T = data[idx++];\n  const N = data[idx++];\n  const xs = [];\n  for (let i = 0; i < N; i++) xs.push(data[idx++]);\n  xs.sort((a, b) => a - b);\n\n  // neighborhoods (lengths doubled to keep integers)\n  let min2 = Infinity;\n  // first city: from 0 to (x0+x1)/2\n  min2 = Math.min(min2, xs[0] + xs[1]);\n  // middle cities: from (x_{i-1}+x_i)/2 to (x_i+x_{i+1})/2\n  for (let i = 1; i < N - 1; i++) {\n    min2 = Math.min(min2, xs[i + 1] - xs[i - 1]);\n  }\n  // last city: from (x_{n-2}+x_{n-1})/2 to T\n  min2 = Math.min(min2, 2 * T - (xs[N - 2] + xs[N - 1]));\n\n  const ans = min2 / 2;\n  console.log(ans.toFixed(2));\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').split(/\\s+/).map(Number);\n  let idx = 0;\n  const T = data[idx++];\n  const N = data[idx++];\n  const xs = [];\n  for (let i = 0; i < N; i++) xs.push(data[idx++]);\n  xs.sort((a, b) => a - b);\n\n  // neighborhoods (lengths doubled to keep integers)\n  let min2 = Infinity;\n  // first city: from 0 to (x0+x1)/2\n  min2 = Math.min(min2, xs[0] + xs[1]);\n  // middle cities: from (x_{i-1}+x_i)/2 to (x_i+x_{i+1})/2\n  for (let i = 1; i < N - 1; i++) {\n    min2 = Math.min(min2, xs[i + 1] - xs[i - 1]);\n  }\n  // last city: from (x_{n-2}+x_{n-1})/2 to T\n  min2 = Math.min(min2, 2 * T - (xs[N - 2] + xs[N - 1]));\n\n  const ans = min2 / 2;\n  console.log(ans.toFixed(2));\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06274120003217831,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

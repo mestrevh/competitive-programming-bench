@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:44:58.253349+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1129,
+            "output_tokens": 617,
+            "total_tokens": 4651
+        },
+        "cost_usd": {
+            "input_cost": 0.000847,
+            "output_cost": 0.002314,
+            "total_cost": 0.003161
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    points = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        y1 = A * X1 + B\n        y2 = A * X2 + B\n        points.append((y1, y2))\n\n    # Compressão de coordenadas para y2\n    unique_y2 = sorted(list(set(p[1] for p in points)))\n    rank_y2 = {val: i + 1 for i, val in enumerate(unique_y2)}\n    m = len(unique_y2)\n\n    # Fenwick Tree (Binary Indexed Tree)\n    bit = [0] * (m + 1)\n\n    def add(idx, val):\n        while idx <= m:\n            bit[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    # Ordenar por y1\n    points.sort(key=lambda p: p[0])\n\n    # Contar pares com y1_i < y1_j e y2_i < y2_j\n    # Agrupamos por y1 para garantir desigualdade estrita em y1\n    non_intersecting = 0\n    i = 0\n    while i < N:\n        j = i\n        while j < N and points[j][0] == points[i][0]:\n            j += 1\n\n        # Para todos no grupo com mesmo y1, consultar a BIT antes de inserir\n        for k in range(i, j):\n            r = rank_y2[points[k][1]]\n            # Queremos y2 estritamente menor, então consultamos r - 1\n            non_intersecting += query(r - 1)\n\n        # Inserir todos do grupo na BIT\n        for k in range(i, j):\n            r = rank_y2[points[k][1]]\n            add(r, 1)\n\n        i = j\n\n    total_pairs = N * (N - 1) // 2\n    ans = total_pairs - non_intersecting\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    points = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        y1 = A * X1 + B\n        y2 = A * X2 + B\n        points.append((y1, y2))\n\n    # Compressão de coordenadas para y2\n    unique_y2 = sorted(list(set(p[1] for p in points)))\n    rank_y2 = {val: i + 1 for i, val in enumerate(unique_y2)}\n    m = len(unique_y2)\n\n    # Fenwick Tree (Binary Indexed Tree)\n    bit = [0] * (m + 1)\n\n    def add(idx, val):\n        while idx <= m:\n            bit[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    # Ordenar por y1\n    points.sort(key=lambda p: p[0])\n\n    # Contar pares com y1_i < y1_j e y2_i < y2_j\n    # Agrupamos por y1 para garantir desigualdade estrita em y1\n    non_intersecting = 0\n    i = 0\n    while i < N:\n        j = i\n        while j < N and points[j][0] == points[i][0]:\n            j += 1\n\n        # Para todos no grupo com mesmo y1, consultar a BIT antes de inserir\n        for k in range(i, j):\n            r = rank_y2[points[k][1]]\n            # Queremos y2 estritamente menor, então consultamos r - 1\n            non_intersecting += query(r - 1)\n\n        # Inserir todos do grupo na BIT\n        for k in range(i, j):\n            r = rank_y2[points[k][1]]\n            add(r, 1)\n\n        i = j\n\n    total_pairs = N * (N - 1) // 2\n    ans = total_pairs - non_intersecting\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.473570699999982,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

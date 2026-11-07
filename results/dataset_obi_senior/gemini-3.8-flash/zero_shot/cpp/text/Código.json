@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:25:45.835166+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 839,
+            "output_tokens": 1152,
+            "total_tokens": 5412
+        },
+        "cost_usd": {
+            "input_cost": 0.000629,
+            "output_cost": 0.00432,
+            "total_cost": 0.004949
+        },
+        "raw_response": "Para resolver este problema de forma eficiente, podemos analisar as condições sob as quais uma string $S_k$ pode ser substring da concatenação $S_a S_b$ ($a, b < k$):\n\n1. **$S_k$ está contida inteiramente em $S_a$ ou em $S_b$**: isso ocorre se $S_k$ for uma substring de alguma string anterior. Como as strings têm tamanho até 10, cada string anterior possui no máximo 55 substrings distintas.\n2. **$S_k$ cruza a fronteira entre $S_a$ e $S_b$**: isso ocorre se existir uma divisão de $S_k$ em duas partes não vazias, $P$ e $Q$ ($S_k = P + Q$), de modo que $P$ seja sufixo de alguma string anterior $S_a$ e $Q$ seja prefixo de alguma string anterior $S_b$. Note que a escolha de $S_a$ e $S_b$ é independente.\n\nComo todas as strings têm tamanho no máximo 10 letras minúsculas, podemos codificar qualquer substring de forma bijetiva (sem colisões) em um único inteiro de 64 bits (`uint64_t`), usando 5 bits por caractere ($10 \\times 5 = 50 \\text{ bits} \\le 64 \\text{ bits}$). Isso torna as operações de busca e inserção em tabelas hash extremamente rápidas.\n\nAbaixo está a solução completa em C++:\n\n```cpp\n#include <iostream>\n#include <vector>\n#include <string>\n#include <unordered_set>\n\nusing namespace std;\n\n// Codifica uma string de até 12 caracteres minúsculos em um uint64_t de forma bijetiva\nuint64_t encode(const string& s, int start, int len) {\n    uint64_t code = 0;\n    for (int i = 0; i < len; ++i) {\n        code = (code << 5) | (s[start + i] - 'a' + 1);\n    }\n    return code;\n}\n\nuint64_t encode(const string& s) {\n    return encode(s, 0, s.length());\n}\n\nint main() {\n    // Otimização de I/O\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<string> s(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> s[i];\n    }\n\n    unordered_set<uint64_t> prefixes;\n    unordered_set<uint64_t> suffixes;\n    unordered_set<uint64_t> all_substrings;\n\n    // Pré-reserva de espaço para evitar rehashes frequentes\n    prefixes.reserve(100000);\n    suffixes.reserve(100000);\n    all_substrings.reserve(600000);\n\n    for (int k = 0; k < n; ++k) {\n        int len = s[k].length();\n        bool invalid = false;\n\n        // Caso 1: S_k é substring de alguma string anterior\n        if (all_substrings.count(encode(s[k]))) {\n            invalid = true;\n        }\n\n        // Caso 2: S_k cruza a fronteira entre S_a e S_b\n        if (!invalid) {\n            for (int i = 1; i < len; ++i) {\n                uint64_t pref_part = encode(s[k], 0, i);\n                uint64_t suff_part = encode(s[k], i, len - i);\n\n                if (suffixes.count(pref_part) && prefixes.count(suff_part)) {\n                    invalid = true;\n                    break;\n                }\n            }\n        }\n\n        if (invalid) {\n            cout << s[k] << \"\\n\";\n            return 0;\n        }\n\n        // Adiciona todos os prefixos de s[k]\n        for (int i = 1; i <= len; ++i) {\n            prefixes.insert(encode(s[k], 0, i));\n        }\n\n        // Adiciona todos os sufixos de s[k]\n        for (int i = 1; i <= len; ++i) {\n            suffixes.insert(encode(s[k], len - i, i));\n        }\n\n        // Adiciona todas as substrings de s[k]\n        for (int i = 0; i < len; ++i) {\n            for (int l = 1; i + l <= len; ++l) {\n                all_substrings.insert(encode(s[k], i, l));\n            }\n        }\n    }\n\n    cout << \"ok\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <unordered_set>\n\nusing namespace std;\n\n// Codifica uma string de até 12 caracteres minúsculos em um uint64_t de forma bijetiva\nuint64_t encode(const string& s, int start, int len) {\n    uint64_t code = 0;\n    for (int i = 0; i < len; ++i) {\n        code = (code << 5) | (s[start + i] - 'a' + 1);\n    }\n    return code;\n}\n\nuint64_t encode(const string& s) {\n    return encode(s, 0, s.length());\n}\n\nint main() {\n    // Otimização de I/O\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<string> s(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> s[i];\n    }\n\n    unordered_set<uint64_t> prefixes;\n    unordered_set<uint64_t> suffixes;\n    unordered_set<uint64_t> all_substrings;\n\n    // Pré-reserva de espaço para evitar rehashes frequentes\n    prefixes.reserve(100000);\n    suffixes.reserve(100000);\n    all_substrings.reserve(600000);\n\n    for (int k = 0; k < n; ++k) {\n        int len = s[k].length();\n        bool invalid = false;\n\n        // Caso 1: S_k é substring de alguma string anterior\n        if (all_substrings.count(encode(s[k]))) {\n            invalid = true;\n        }\n\n        // Caso 2: S_k cruza a fronteira entre S_a e S_b\n        if (!invalid) {\n            for (int i = 1; i < len; ++i) {\n                uint64_t pref_part = encode(s[k], 0, i);\n                uint64_t suff_part = encode(s[k], i, len - i);\n\n                if (suffixes.count(pref_part) && prefixes.count(suff_part)) {\n                    invalid = true;\n                    break;\n                }\n            }\n        }\n\n        if (invalid) {\n            cout << s[k] << \"\\n\";\n            return 0;\n        }\n\n        // Adiciona todos os prefixos de s[k]\n        for (int i = 1; i <= len; ++i) {\n            prefixes.insert(encode(s[k], 0, i));\n        }\n\n        // Adiciona todos os sufixos de s[k]\n        for (int i = 1; i <= len; ++i) {\n            suffixes.insert(encode(s[k], len - i, i));\n        }\n\n        // Adiciona todas as substrings de s[k]\n        for (int i = 0; i < len; ++i) {\n            for (int l = 1; i + l <= len; ++l) {\n                all_substrings.insert(encode(s[k], i, l));\n            }\n        }\n    }\n\n    cout << \"ok\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12052650001714937,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

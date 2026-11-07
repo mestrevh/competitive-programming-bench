@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:36:45.301336+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 866,
+            "output_tokens": 9813,
+            "total_tokens": 10679
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.004907,
+            "total_cost": 0.004925
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    vector<string> s(n);\n    char buf[32];\n    for(int i=0;i<n;i++){ scanf(\"%31s\",buf); s[i]=buf; }\n\n    // suf[j-1]: sufixos de tamanho j (j=1..9) das strings ja inseridas\n    // pre[j-1]: prefixos de tamanho j (j=1..9) das strings ja inseridas\n    // full: strings inteiras ja inseridas (cobre casos j=0 e j=10, duplicatas)\n    array<unordered_set<string>,9> suf, pre;\n    size_t cap=(size_t)n*2+16;\n    for(int i=0;i<9;i++){ suf[i].reserve(cap); pre[i].reserve(cap); }\n    unordered_set<string> full;\n    full.reserve(cap);\n\n    for(int k=0;k<n;k++){\n        const string &cur=s[k];\n        bool bad=false;\n\n        // caso p=0 ou p=10 na concatenacao: S_k igual a alguma string anterior\n        if(k>0 && full.count(cur)>0) bad=true;\n\n        // caso 1<=p<=9 (j=10-p): prefixo de tamanho j de S_k igual ao\n        // sufixo de tamanho j de S_a, e sufixo de tamanho 10-j de S_k\n        // igual ao prefixo de tamanho 10-j de S_b (a==b permitido)\n        for(int j=1;j<=9 && !bad;j++){\n            if(suf[j-1].count(cur.substr(0,j))>0 &&\n               pre[9-j].count(cur.substr(j,10-j))>0) bad=true;\n        }\n\n        if(bad){ printf(\"%s\\n\", cur.c_str()); return 0; }\n\n        // insere dados de S_k (apenas depois de verifica-la)\n        full.insert(cur);\n        for(int j=1;j<=9;j++){\n            suf[j-1].insert(cur.substr(10-j,j));\n            pre[j-1].insert(cur.substr(0,j));\n        }\n    }\n    printf(\"ok\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    vector<string> s(n);\n    char buf[32];\n    for(int i=0;i<n;i++){ scanf(\"%31s\",buf); s[i]=buf; }\n\n    // suf[j-1]: sufixos de tamanho j (j=1..9) das strings ja inseridas\n    // pre[j-1]: prefixos de tamanho j (j=1..9) das strings ja inseridas\n    // full: strings inteiras ja inseridas (cobre casos j=0 e j=10, duplicatas)\n    array<unordered_set<string>,9> suf, pre;\n    size_t cap=(size_t)n*2+16;\n    for(int i=0;i<9;i++){ suf[i].reserve(cap); pre[i].reserve(cap); }\n    unordered_set<string> full;\n    full.reserve(cap);\n\n    for(int k=0;k<n;k++){\n        const string &cur=s[k];\n        bool bad=false;\n\n        // caso p=0 ou p=10 na concatenacao: S_k igual a alguma string anterior\n        if(k>0 && full.count(cur)>0) bad=true;\n\n        // caso 1<=p<=9 (j=10-p): prefixo de tamanho j de S_k igual ao\n        // sufixo de tamanho j de S_a, e sufixo de tamanho 10-j de S_k\n        // igual ao prefixo de tamanho 10-j de S_b (a==b permitido)\n        for(int j=1;j<=9 && !bad;j++){\n            if(suf[j-1].count(cur.substr(0,j))>0 &&\n               pre[9-j].count(cur.substr(j,10-j))>0) bad=true;\n        }\n\n        if(bad){ printf(\"%s\\n\", cur.c_str()); return 0; }\n\n        // insere dados de S_k (apenas depois de verifica-la)\n        full.insert(cur);\n        for(int j=1;j<=9;j++){\n            suf[j-1].insert(cur.substr(10-j,j));\n            pre[j-1].insert(cur.substr(0,j));\n        }\n    }\n    printf(\"ok\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1460159000052954,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

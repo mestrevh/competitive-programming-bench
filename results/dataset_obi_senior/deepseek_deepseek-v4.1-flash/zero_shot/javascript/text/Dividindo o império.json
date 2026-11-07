@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:40:41.232577+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 761,
+            "output_tokens": 1862,
+            "total_tokens": 2623
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.004469,
+            "total_cost": 0.004471
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (data.length === 0) process.exit(0);\n\nconst n = data[0];\nconst adj = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 1; i < data.length; i += 2) {\n  const a = data[i];\n  const b = data[i + 1];\n  adj[a].push(b);\n  adj[b].push(a);\n}\n\nconst parent = new Int32Array(n + 1);\nparent[1] = -1;\n\nconst order = new Int32Array(n);\nlet idx = 0;\n\nconst stack = [1];\nwhile (stack.length > 0) {\n  const v = stack.pop();\n  order[idx++] = v;\n\n  const p = parent[v];\n  for (let j = 0; j < adj[v].length; j++) {\n    const u = adj[v][j];\n    if (u !== p) {\n      parent[u] = v;\n      stack.push(u);\n    }\n  }\n}\n\nconst size = new Int32Array(n + 1);\nlet ans = n;\n\nfor (let i = n - 1; i >= 0; i--) {\n  const v = order[i];\n  size[v]++;\n\n  if (parent[v] > 0) {\n    const s = size[v];\n    const diff = Math.abs(n - 2 * s);\n    if (diff < ans) ans = diff;\n    size[parent[v]] += s;\n  }\n}\n\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (data.length === 0) process.exit(0);\n\nconst n = data[0];\nconst adj = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 1; i < data.length; i += 2) {\n  const a = data[i];\n  const b = data[i + 1];\n  adj[a].push(b);\n  adj[b].push(a);\n}\n\nconst parent = new Int32Array(n + 1);\nparent[1] = -1;\n\nconst order = new Int32Array(n);\nlet idx = 0;\n\nconst stack = [1];\nwhile (stack.length > 0) {\n  const v = stack.pop();\n  order[idx++] = v;\n\n  const p = parent[v];\n  for (let j = 0; j < adj[v].length; j++) {\n    const u = adj[v][j];\n    if (u !== p) {\n      parent[u] = v;\n      stack.push(u);\n    }\n  }\n}\n\nconst size = new Int32Array(n + 1);\nlet ans = n;\n\nfor (let i = n - 1; i >= 0; i--) {\n  const v = order[i];\n  size[v]++;\n\n  if (parent[v] > 0) {\n    const s = size[v];\n    const diff = Math.abs(n - 2 * s);\n    if (diff < ans) ans = diff;\n    size[parent[v]] += s;\n  }\n}\n\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1385951000265777,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

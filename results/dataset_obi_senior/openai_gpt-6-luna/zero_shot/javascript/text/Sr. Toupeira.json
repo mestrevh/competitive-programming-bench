@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T10:01:36.030470+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1033,
+            "output_tokens": 321,
+            "total_tokens": 1354
+        },
+        "cost_usd": {
+            "input_cost": 0.000103,
+            "output_cost": 0.00016,
+            "total_cost": 0.000264
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet i = 0;\nconst S = data[i++];\nconst T = data[i++];\n\nconst graph = Array.from({ length: S + 1 }, () => new Uint8Array(S + 1));\n\nfor (let j = 0; j < T; j++) {\n  const x = data[i++];\n  const y = data[i++];\n  graph[x][y] = 1;\n  graph[y][x] = 1;\n}\n\nconst P = data[i++];\nlet possible = 0;\n\nfor (let j = 0; j < P; j++) {\n  const N = data[i++];\n  let previous = data[i++];\n  let valid = true;\n\n  for (let k = 1; k < N; k++) {\n    const current = data[i++];\n    if (!graph[previous][current]) valid = false;\n    previous = current;\n  }\n\n  if (valid) possible++;\n}\n\nconsole.log(possible);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet i = 0;\nconst S = data[i++];\nconst T = data[i++];\n\nconst graph = Array.from({ length: S + 1 }, () => new Uint8Array(S + 1));\n\nfor (let j = 0; j < T; j++) {\n  const x = data[i++];\n  const y = data[i++];\n  graph[x][y] = 1;\n  graph[y][x] = 1;\n}\n\nconst P = data[i++];\nlet possible = 0;\n\nfor (let j = 0; j < P; j++) {\n  const N = data[i++];\n  let previous = data[i++];\n  let valid = true;\n\n  for (let k = 1; k < N; k++) {\n    const current = data[i++];\n    if (!graph[previous][current]) valid = false;\n    previous = current;\n  }\n\n  if (valid) possible++;\n}\n\nconsole.log(possible);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.25371849999646656,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

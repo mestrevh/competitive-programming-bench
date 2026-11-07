@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:44:25.425166+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1175,
+            "output_tokens": 13097,
+            "total_tokens": 14272
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.031433,
+            "total_cost": 0.031436
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 1000000001LL\n\nint cmp(const void *a, const void *b) {\n    char ca = *(const char*)a;\n    char cb = *(const char*)b;\n    return (ca > cb) - (ca < cb);\n}\n\nint main() {\n    int N, M, K;\n    scanf(\"%d %d %d\", &N, &M, &K);\n\n    char pattern[505];\n    scanf(\"%s\", pattern);\n\n    char words[505][27];\n    for (int i = 0; i < M; i++) {\n        scanf(\"%s\", words[i]);\n        qsort(words[i], K, sizeof(char), cmp);\n    }\n\n    long long P;\n    scanf(\"%lld\", &P);\n\n    long long powK[505];\n    powK[0] = 1;\n    for (int i = 1; i <= M; i++) {\n        if (powK[i - 1] > INF / K) {\n            powK[i] = INF;\n        } else {\n            powK[i] = powK[i - 1] * K;\n            if (powK[i] > INF) powK[i] = INF;\n        }\n    }\n\n    char result[505];\n    int pos = 0;\n    int idx = 0;\n\n    for (int i = 0; i < N; i++) {\n        if (pattern[i] == '#') {\n            long long block = powK[M - idx - 1];\n            char chosen = words[idx][K - 1];\n\n            for (int j = 0; j < K; j++) {\n                if (P > block) {\n                    P -= block;\n                } else {\n                    chosen = words[idx][j];\n                    break;\n                }\n            }\n\n            result[pos++] = chosen;\n            idx++;\n        } else {\n            result[pos++] = pattern[i];\n        }\n    }\n\n    result[pos] = '\\0';\n    printf(\"%s\\n\", result);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 1000000001LL\n\nint cmp(const void *a, const void *b) {\n    char ca = *(const char*)a;\n    char cb = *(const char*)b;\n    return (ca > cb) - (ca < cb);\n}\n\nint main() {\n    int N, M, K;\n    scanf(\"%d %d %d\", &N, &M, &K);\n\n    char pattern[505];\n    scanf(\"%s\", pattern);\n\n    char words[505][27];\n    for (int i = 0; i < M; i++) {\n        scanf(\"%s\", words[i]);\n        qsort(words[i], K, sizeof(char), cmp);\n    }\n\n    long long P;\n    scanf(\"%lld\", &P);\n\n    long long powK[505];\n    powK[0] = 1;\n    for (int i = 1; i <= M; i++) {\n        if (powK[i - 1] > INF / K) {\n            powK[i] = INF;\n        } else {\n            powK[i] = powK[i - 1] * K;\n            if (powK[i] > INF) powK[i] = INF;\n        }\n    }\n\n    char result[505];\n    int pos = 0;\n    int idx = 0;\n\n    for (int i = 0; i < N; i++) {\n        if (pattern[i] == '#') {\n            long long block = powK[M - idx - 1];\n            char chosen = words[idx][K - 1];\n\n            for (int j = 0; j < K; j++) {\n                if (P > block) {\n                    P -= block;\n                } else {\n                    chosen = words[idx][j];\n                    break;\n                }\n            }\n\n            result[pos++] = chosen;\n            idx++;\n        } else {\n            result[pos++] = pattern[i];\n        }\n    }\n\n    result[pos] = '\\0';\n    printf(\"%s\\n\", result);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11547520000021905,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

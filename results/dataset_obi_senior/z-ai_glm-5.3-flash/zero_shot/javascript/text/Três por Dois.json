@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:59:36.568673+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 628,
+            "output_tokens": 2427,
+            "total_tokens": 3055
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.001213,
+            "total_cost": 0.001227
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n  const n = data[0];\n  const prices = data.slice(1, 1 + n);\n\n  // Estratégia gulosa: ordenar em ordem decrescente e agrupar de 3 em 3.\n  // O chocolate mais barato de cada grupo (índices 2, 5, 8, ...) é grátis.\n  // Prova de otimalidade: em qualquer solução válida, o i-ésimo chocolate grátis\n  // (do maior para o menor) precisa de 2i chocolates pagos >= ele, logo\n  // f_i <= p[3i-1] na ordem decrescente; a gulosa atinge esse limite.\n  prices.sort((a, b) => b - a);\n\n  let total = 0;\n  for (let i = 0; i < n; i++) total += prices[i];\n  for (let i = 2; i < n; i += 3) total -= prices[i];\n\n  console.log(total);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n  const n = data[0];\n  const prices = data.slice(1, 1 + n);\n\n  // Estratégia gulosa: ordenar em ordem decrescente e agrupar de 3 em 3.\n  // O chocolate mais barato de cada grupo (índices 2, 5, 8, ...) é grátis.\n  // Prova de otimalidade: em qualquer solução válida, o i-ésimo chocolate grátis\n  // (do maior para o menor) precisa de 2i chocolates pagos >= ele, logo\n  // f_i <= p[3i-1] na ordem decrescente; a gulosa atinge esse limite.\n  prices.sort((a, b) => b - a);\n\n  let total = 0;\n  for (let i = 0; i < n; i++) total += prices[i];\n  for (let i = 2; i < n; i += 3) total -= prices[i];\n\n  console.log(total);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07168220001040027,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

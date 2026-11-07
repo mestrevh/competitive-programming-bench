@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:36:49.988760+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1006,
+            "output_tokens": 1361,
+            "total_tokens": 2367
+        },
+        "cost_usd": {
+            "input_cost": 0.000101,
+            "output_cost": 0.000681,
+            "total_cost": 0.000781
+        },
+        "raw_response": "```python\nimport sys\n\npoints = [tuple(map(int, line.split())) for line in sys.stdin.read().splitlines()]\np1, p2, p3, p4, p5, p6, p7 = points\n\nv12 = (p2[0] - p1[0], p2[1] - p1[1])\nv13 = (p3[0] - p1[0], p3[1] - p1[1])\ndot_apex = v12[0] * v13[0] + v12[1] * v13[1]\nlen12 = v12[0] ** 2 + v12[1] ** 2\nlen13 = v13[0] ** 2 + v13[1] ** 2\n\nd = (p3[0] - p2[0], p3[1] - p2[1])\n\ndef cross(a, b):\n    return a[0] * b[1] - a[1] * b[0]\n\ndef subtract(a, b):\n    return (a[0] - b[0], a[1] - b[1])\n\ncollinear = all(cross(d, subtract(p, p2)) == 0 for p in (p4, p5))\nsame_midpoint = p2[0] + p3[0] == p4[0] + p5[0] and p2[1] + p3[1] == p4[1] + p5[1]\n\nlen23 = d[0] ** 2 + d[1] ** 2\ne = subtract(p5, p4)\nlen45 = e[0] ** 2 + e[1] ** 2\n\nv46 = subtract(p6, p4)\nv57 = subtract(p7, p5)\nperpendicular = d[0] * v46[0] + d[1] * v46[1] == 0 and d[0] * v57[0] + d[1] * v57[1] == 0\nequal_branches = v46[0] ** 2 + v46[1] ** 2 == v57[0] ** 2 + v57[1] ** 2\n\nside1 = cross(d, subtract(p1, p2))\nside6 = cross(d, subtract(p6, p2))\nseparated = side1 * side6 < 0\n\nvalid = (\n    dot_apex > 0\n    and len12 == len13\n    and collinear\n    and same_midpoint\n    and len23 > len45\n    and perpendicular\n    and equal_branches\n    and separated\n)\n\nprint(\"S\" if valid else \"N\")\n```",
+        "extracted_code": "import sys\n\npoints = [tuple(map(int, line.split())) for line in sys.stdin.read().splitlines()]\np1, p2, p3, p4, p5, p6, p7 = points\n\nv12 = (p2[0] - p1[0], p2[1] - p1[1])\nv13 = (p3[0] - p1[0], p3[1] - p1[1])\ndot_apex = v12[0] * v13[0] + v12[1] * v13[1]\nlen12 = v12[0] ** 2 + v12[1] ** 2\nlen13 = v13[0] ** 2 + v13[1] ** 2\n\nd = (p3[0] - p2[0], p3[1] - p2[1])\n\ndef cross(a, b):\n    return a[0] * b[1] - a[1] * b[0]\n\ndef subtract(a, b):\n    return (a[0] - b[0], a[1] - b[1])\n\ncollinear = all(cross(d, subtract(p, p2)) == 0 for p in (p4, p5))\nsame_midpoint = p2[0] + p3[0] == p4[0] + p5[0] and p2[1] + p3[1] == p4[1] + p5[1]\n\nlen23 = d[0] ** 2 + d[1] ** 2\ne = subtract(p5, p4)\nlen45 = e[0] ** 2 + e[1] ** 2\n\nv46 = subtract(p6, p4)\nv57 = subtract(p7, p5)\nperpendicular = d[0] * v46[0] + d[1] * v46[1] == 0 and d[0] * v57[0] + d[1] * v57[1] == 0\nequal_branches = v46[0] ** 2 + v46[1] ** 2 == v57[0] ** 2 + v57[1] ** 2\n\nside1 = cross(d, subtract(p1, p2))\nside6 = cross(d, subtract(p6, p2))\nseparated = side1 * side6 < 0\n\nvalid = (\n    dot_apex > 0\n    and len12 == len13\n    and collinear\n    and same_midpoint\n    and len23 > len45\n    and perpendicular\n    and equal_branches\n    and separated\n)\n\nprint(\"S\" if valid else \"N\")",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06563849999656668,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

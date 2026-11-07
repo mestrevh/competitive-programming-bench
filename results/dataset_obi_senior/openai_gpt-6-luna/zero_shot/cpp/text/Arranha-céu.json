@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:02:17.108581+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 725,
+            "output_tokens": 338,
+            "total_tokens": 1063
+        },
+        "cost_usd": {
+            "input_cost": 7.3e-05,
+            "output_cost": 0.000169,
+            "total_cost": 0.000241
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> tree;\n\n    Fenwick(int n) : n(n), tree(n + 1, 0) {}\n\n    void add(int index, long long value) {\n        for (; index <= n; index += index & -index)\n            tree[index] += value;\n    }\n\n    long long sum(int index) const {\n        long long result = 0;\n        for (; index > 0; index -= index & -index)\n            result += tree[index];\n        return result;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, Q;\n    cin >> N >> Q;\n\n    Fenwick fenwick(N);\n    vector<long long> people(N + 1);\n\n    for (int i = 1; i <= N; ++i) {\n        cin >> people[i];\n        fenwick.add(i, people[i]);\n    }\n\n    while (Q--) {\n        int type, K;\n        cin >> type >> K;\n\n        if (type == 0) {\n            long long P;\n            cin >> P;\n            fenwick.add(K, P - people[K]);\n            people[K] = P;\n        } else {\n            cout << fenwick.sum(K) << '\\n';\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> tree;\n\n    Fenwick(int n) : n(n), tree(n + 1, 0) {}\n\n    void add(int index, long long value) {\n        for (; index <= n; index += index & -index)\n            tree[index] += value;\n    }\n\n    long long sum(int index) const {\n        long long result = 0;\n        for (; index > 0; index -= index & -index)\n            result += tree[index];\n        return result;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, Q;\n    cin >> N >> Q;\n\n    Fenwick fenwick(N);\n    vector<long long> people(N + 1);\n\n    for (int i = 1; i <= N; ++i) {\n        cin >> people[i];\n        fenwick.add(i, people[i]);\n    }\n\n    while (Q--) {\n        int type, K;\n        cin >> type >> K;\n\n        if (type == 0) {\n            long long P;\n            cin >> P;\n            fenwick.add(K, P - people[K]);\n            people[K] = P;\n        } else {\n            cout << fenwick.sum(K) << '\\n';\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14887059999455232,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

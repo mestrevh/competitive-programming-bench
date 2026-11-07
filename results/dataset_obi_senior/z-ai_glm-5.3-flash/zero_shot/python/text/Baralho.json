@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T03:00:34.043530+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 918,
+            "output_tokens": 628,
+            "total_tokens": 1546
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.000314,
+            "total_cost": 0.000334
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip()\n    suits = {'C': set(), 'E': set(), 'U': set(), 'P': set()}\n    for i in range(0, len(data), 3):\n        card = data[i:i+3]\n        num = int(card[:2])\n        suit = card[2]\n        suits[suit].add(num)\n    out = []\n    for s in 'CEUP':\n        cards = suits[s]\n        if len(cards) < len([c for c in data if c in 'CEUP']):\n            out.append(\"erro\")\n        else:\n            out.append(str(13 - len(cards)))\n    print('\\n'.join(out))\n\nmain()\n```\n\n**Correção** — versão mais limpa e sem o bug potencial do filtro de caracteres:\n\n```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip()\n    n = len(data) // 3\n    suits = {'C': [], 'E': [], 'U': [], 'P': []}\n    for i in range(n):\n        card = data[i*3:(i+1)*3]\n        num = int(card[:2])\n        suit = card[2]\n        suits[suit].append(num)\n    out = []\n    for s in 'CEUP':\n        cards = suits[s]\n        if len(cards) != len(set(cards)):\n            out.append(\"erro\")\n        else:\n            out.append(str(13 - len(cards)))\n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().strip()\n    n = len(data) // 3\n    suits = {'C': [], 'E': [], 'U': [], 'P': []}\n    for i in range(n):\n        card = data[i*3:(i+1)*3]\n        num = int(card[:2])\n        suit = card[2]\n        suits[suit].append(num)\n    out = []\n    for s in 'CEUP':\n        cards = suits[s]\n        if len(cards) != len(set(cards)):\n            out.append(\"erro\")\n        else:\n            out.append(str(13 - len(cards)))\n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06713759999911417,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

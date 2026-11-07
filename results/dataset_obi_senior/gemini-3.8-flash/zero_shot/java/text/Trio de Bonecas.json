@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:42:56.208639+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1056,
+            "output_tokens": 762,
+            "total_tokens": 4292
+        },
+        "cost_usd": {
+            "input_cost": 0.000792,
+            "output_cost": 0.002857,
+            "total_cost": 0.003649
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public int nextInt() {\n            int c = readByte();\n            while (c <= ' ' && c != -1) c = readByte();\n            if (c == -1) return -1;\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = readByte();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int k = scanner.nextInt();\n\n        int[] t = new int[n];\n        for (int i = 0; i < n; i++) {\n            t[i] = scanner.nextInt();\n        }\n\n        Arrays.sort(t);\n        // Inverte para ter ordem decrescente (1-indexed: tDec[1] >= tDec[2] >= ... >= tDec[n])\n        int[] tDec = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            tDec[i] = t[n - i];\n        }\n\n        final long INF = (long) 4e18;\n        long[] prev = new long[n + 1];\n        long[] curr = new long[n + 1];\n\n        // Para j = 0, custo é 0 para todo i >= 0\n        Arrays.fill(prev, 0);\n\n        for (int j = 1; j <= k; j++) {\n            int minI = 3 * j;\n            for (int i = 0; i < minI; i++) {\n                curr[i] = INF;\n            }\n            for (int i = minI; i <= n; i++) {\n                long diff = tDec[i - 1] - tDec[i];\n                long cost = diff * diff;\n                long take = prev[i - 2] + cost;\n                long notTake = curr[i - 1];\n                curr[i] = Math.min(notTake, take);\n            }\n\n            long[] temp = prev;\n            prev = curr;\n            curr = temp;\n        }\n\n        System.out.println(prev[n]);\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public int nextInt() {\n            int c = readByte();\n            while (c <= ' ' && c != -1) c = readByte();\n            if (c == -1) return -1;\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = readByte();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int k = scanner.nextInt();\n\n        int[] t = new int[n];\n        for (int i = 0; i < n; i++) {\n            t[i] = scanner.nextInt();\n        }\n\n        Arrays.sort(t);\n        // Inverte para ter ordem decrescente (1-indexed: tDec[1] >= tDec[2] >= ... >= tDec[n])\n        int[] tDec = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            tDec[i] = t[n - i];\n        }\n\n        final long INF = (long) 4e18;\n        long[] prev = new long[n + 1];\n        long[] curr = new long[n + 1];\n\n        // Para j = 0, custo é 0 para todo i >= 0\n        Arrays.fill(prev, 0);\n\n        for (int j = 1; j <= k; j++) {\n            int minI = 3 * j;\n            for (int i = 0; i < minI; i++) {\n                curr[i] = INF;\n            }\n            for (int i = minI; i <= n; i++) {\n                long diff = tDec[i - 1] - tDec[i];\n                long cost = diff * diff;\n                long take = prev[i - 2] + cost;\n                long notTake = curr[i - 1];\n                curr[i] = Math.min(notTake, take);\n            }\n\n            long[] temp = prev;\n            prev = curr;\n            curr = temp;\n        }\n\n        System.out.println(prev[n]);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10638129999279045,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

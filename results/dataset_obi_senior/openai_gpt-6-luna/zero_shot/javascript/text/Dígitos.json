@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:43:30.008124+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 576,
+            "output_tokens": 1225,
+            "total_tokens": 1801
+        },
+        "cost_usd": {
+            "input_cost": 5.8e-05,
+            "output_cost": 0.000612,
+            "total_cost": 0.00067
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = Number(input[0]);\nconst digits = input.slice(1).join('');\n\nfunction isValid(length) {\n  let pos = length;\n  let value = BigInt(digits.slice(0, length));\n\n  while (pos < n) {\n    value++;\n    const next = value.toString();\n\n    if (pos + next.length > n || !digits.startsWith(next, pos)) {\n      return false;\n    }\n    pos += next.length;\n  }\n\n  return true;\n}\n\nfor (let length = 1; length <= n; length++) {\n  if (digits[0] !== '0' && isValid(length)) {\n    console.log(digits.slice(0, length));\n    break;\n  }\n}\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = Number(input[0]);\nconst digits = input.slice(1).join('');\n\nfunction isValid(length) {\n  let pos = length;\n  let value = BigInt(digits.slice(0, length));\n\n  while (pos < n) {\n    value++;\n    const next = value.toString();\n\n    if (pos + next.length > n || !digits.startsWith(next, pos)) {\n      return false;\n    }\n    pos += next.length;\n  }\n\n  return true;\n}\n\nfor (let length = 1; length <= n; length++) {\n  if (digits[0] !== '0' && isValid(length)) {\n    console.log(digits.slice(0, length));\n    break;\n  }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05630720000772271,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

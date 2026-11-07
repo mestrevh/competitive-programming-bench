@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:49:52.289030+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 15.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1098,
+            "output_tokens": 844,
+            "total_tokens": 6338
+        },
+        "cost_usd": {
+            "input_cost": 0.000824,
+            "output_cost": 0.003165,
+            "total_cost": 0.003989
+        },
+        "raw_response": "Aqui está a solução completa e eficiente em Python para o problema.\n\n```python\nimport heapq\nimport sys\n\n\ndef solve():\n    # Aumenta o limite de recursão para suportar a DFS em grafos profundos\n    sys.setrecursionlimit(200000)\n    input = sys.stdin.read\n    data = input().split()\n\n    if not data:\n        return\n\n    it = iter(data)\n    E = int(next(it))\n    R = int(next(it))\n\n    adj = [[] for _ in range(E + 1)]\n    for _ in range(R):\n        u = int(next(it))\n        v = int(next(it))\n        w = int(next(it))\n        adj[u].append((v, w))\n        adj[v].append((u, w))\n\n    # Identificação dos ciclos (cada vértice pertence a no máximo 1 ciclo)\n    cycle_len = [0] * (E + 1)\n    visited = [0] * (E + 1)\n    parent = [0] * (E + 1)\n    parent_edge_weight = [0] * (E + 1)\n\n    def dfs(u, p):\n        visited[u] = 1\n        for v, w in adj[u]:\n            if v == p:\n                continue\n            if visited[v] == 1:\n                # Back-edge encontrada: u -> v\n                c_len = w\n                curr = u\n                cycle_nodes = []\n                while curr != v:\n                    cycle_nodes.append(curr)\n                    c_len += parent_edge_weight[curr]\n                    curr = parent[curr]\n                cycle_nodes.append(v)\n\n                for node in cycle_nodes:\n                    cycle_len[node] = c_len\n            elif visited[v] == 0:\n                parent[v] = u\n                parent_edge_weight[v] = w\n                dfs(v, u)\n        visited[u] = 2\n\n    for i in range(1, E + 1):\n        if visited[i] == 0:\n            dfs(i, 0)\n\n    K = int(next(it))\n    output = []\n\n    # Processamento das consultas\n    for _ in range(K):\n        X = int(next(it))\n        T = int(next(it))\n\n        ans = float(\"inf\")\n        dist = [float(\"inf\")] * (E + 1)\n        dist[X] = 0\n        pq = [(0, X)]\n\n        while pq:\n            d, u = heapq.heappop(pq)\n\n            if d > dist[u]:\n                continue\n\n            # Poda: se 2 * d já for maior ou igual à melhor resposta encontrada,\n            # nenhuma estação futura na fila resultará em distância menor\n            if 2 * d >= ans:\n                break\n\n            c_l = cycle_len[u]\n            if c_l >= T:\n                total_dist = 2 * d + c_l\n                if total_dist < ans:\n                    ans = total_dist\n\n            for v, w in adj[u]:\n                nd = d + w\n                if nd < dist[v]:\n                    dist[v] = nd\n                    heapq.heappush(pq, (nd, v))\n\n        if ans == float(\"inf\"):\n            output.append(\"-1\")\n        else:\n            output.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import heapq\nimport sys\n\n\ndef solve():\n    # Aumenta o limite de recursão para suportar a DFS em grafos profundos\n    sys.setrecursionlimit(200000)\n    input = sys.stdin.read\n    data = input().split()\n\n    if not data:\n        return\n\n    it = iter(data)\n    E = int(next(it))\n    R = int(next(it))\n\n    adj = [[] for _ in range(E + 1)]\n    for _ in range(R):\n        u = int(next(it))\n        v = int(next(it))\n        w = int(next(it))\n        adj[u].append((v, w))\n        adj[v].append((u, w))\n\n    # Identificação dos ciclos (cada vértice pertence a no máximo 1 ciclo)\n    cycle_len = [0] * (E + 1)\n    visited = [0] * (E + 1)\n    parent = [0] * (E + 1)\n    parent_edge_weight = [0] * (E + 1)\n\n    def dfs(u, p):\n        visited[u] = 1\n        for v, w in adj[u]:\n            if v == p:\n                continue\n            if visited[v] == 1:\n                # Back-edge encontrada: u -> v\n                c_len = w\n                curr = u\n                cycle_nodes = []\n                while curr != v:\n                    cycle_nodes.append(curr)\n                    c_len += parent_edge_weight[curr]\n                    curr = parent[curr]\n                cycle_nodes.append(v)\n\n                for node in cycle_nodes:\n                    cycle_len[node] = c_len\n            elif visited[v] == 0:\n                parent[v] = u\n                parent_edge_weight[v] = w\n                dfs(v, u)\n        visited[u] = 2\n\n    for i in range(1, E + 1):\n        if visited[i] == 0:\n            dfs(i, 0)\n\n    K = int(next(it))\n    output = []\n\n    # Processamento das consultas\n    for _ in range(K):\n        X = int(next(it))\n        T = int(next(it))\n\n        ans = float(\"inf\")\n        dist = [float(\"inf\")] * (E + 1)\n        dist[X] = 0\n        pq = [(0, X)]\n\n        while pq:\n            d, u = heapq.heappop(pq)\n\n            if d > dist[u]:\n                continue\n\n            # Poda: se 2 * d já for maior ou igual à melhor resposta encontrada,\n            # nenhuma estação futura na fila resultará em distância menor\n            if 2 * d >= ans:\n                break\n\n            c_l = cycle_len[u]\n            if c_l >= T:\n                total_dist = 2 * d + c_l\n                if total_dist < ans:\n                    ans = total_dist\n\n            for v, w in adj[u]:\n                nd = d + w\n                if nd < dist[v]:\n                    dist[v] = nd\n                    heapq.heappush(pq, (nd, v))\n\n        if ans == float(\"inf\"):\n            output.append(\"-1\")\n        else:\n            output.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3380864999999176,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

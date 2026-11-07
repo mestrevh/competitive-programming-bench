@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T23:39:50.919593+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 914,
+            "output_tokens": 3045,
+            "total_tokens": 3959
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.001522,
+            "total_cost": 0.001542
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst raw = fs.readFileSync(0, 'utf8').split('\\n').map(l => l.replace(/\\r/g, ''));\n\nconst first = (raw[0] || '').trim().split(/\\s+/);\nconst K = parseInt(first[0], 10);\nconst N = parseInt(first[1], 10);\n\n// Remove qualquer espaço em branco (funciona tanto com caracteres separados por espaço quanto colados)\nconst alphabet = (raw[1] || '').replace(/\\s/g, '');\nconst message = (raw[2] || '').replace(/\\s/g, '').slice(0, N);\n\nconst allowed = new Set(alphabet);\n\nlet ok = true;\nfor (let i = 0; i < message.length && ok; i++) {\n    if (!allowed.has(message[i])) ok = false;\n}\n\nconsole.log(ok ? 'S' : 'N');\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst raw = fs.readFileSync(0, 'utf8').split('\\n').map(l => l.replace(/\\r/g, ''));\n\nconst first = (raw[0] || '').trim().split(/\\s+/);\nconst K = parseInt(first[0], 10);\nconst N = parseInt(first[1], 10);\n\n// Remove qualquer espaço em branco (funciona tanto com caracteres separados por espaço quanto colados)\nconst alphabet = (raw[1] || '').replace(/\\s/g, '');\nconst message = (raw[2] || '').replace(/\\s/g, '').slice(0, N);\n\nconst allowed = new Set(alphabet);\n\nlet ok = true;\nfor (let i = 0; i < message.length && ok; i++) {\n    if (!allowed.has(message[i])) ok = false;\n}\n\nconsole.log(ok ? 'S' : 'N');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08379860001150519,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:37:29.831294+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 15.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 749,
+            "output_tokens": 4392,
+            "total_tokens": 5141
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.002196,
+            "total_cost": 0.002271
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet pos = 0;\n\nconst N = input[pos++];\nconst M = input[pos++];\nconst values = new Array(N);\nfor (let i = 0; i < N; i++) values[i] = input[pos++];\n\nfunction gcd(a, b) {\n  while (b !== 0) {\n    const t = a % b;\n    a = b;\n    b = t;\n  }\n  return a;\n}\n\nfunction leaf(value) {\n  return {\n    g: value,\n    good: value > 1 ? 1 : 0,\n    pg: [value],\n    pc: [1],\n    sg: [value],\n    sc: [1]\n  };\n}\n\nfunction appendGrouped(gs, cs, value, count) {\n  const last = gs.length - 1;\n  if (last >= 0 && gs[last] === value) {\n    cs[last] += count;\n  } else {\n    gs.push(value);\n    cs.push(count);\n  }\n}\n\nfunction merge(a, b) {\n  if (!a) return b;\n  if (!b) return a;\n\n  let cross = 0;\n  for (let i = 0; i < a.sg.length; i++) {\n    const x = a.sg[i];\n    for (let j = 0; j < b.pg.length; j++) {\n      const y = b.pg[j];\n      if (x > 1 && y > 1 && gcd(x, y) > 1) {\n        cross += a.sc[i] * b.pc[j];\n      }\n    }\n  }\n\n  const pg = a.pg.slice();\n  const pc = a.pc.slice();\n  for (let i = 0; i < b.pg.length; i++) {\n    appendGrouped(pg, pc, gcd(a.g, b.pg[i]), b.pc[i]);\n  }\n\n  const sg = b.sg.slice();\n  const sc = b.sc.slice();\n  for (let i = 0; i < a.sg.length; i++) {\n    appendGrouped(sg, sc, gcd(b.g, a.sg[i]), a.sc[i]);\n  }\n\n  return {\n    g: gcd(a.g, b.g),\n    good: a.good + b.good + cross,\n    pg,\n    pc,\n    sg,\n    sc\n  };\n}\n\nconst tree = new Array(4 * N);\n\nfunction build(node, left, right) {\n  if (left === right) {\n    tree[node] = leaf(values[left]);\n    return;\n  }\n  const mid = (left + right) >> 1;\n  build(node * 2, left, mid);\n  build(node * 2 + 1, mid + 1, right);\n  tree[node] = merge(tree[node * 2], tree[node * 2 + 1]);\n}\n\nfunction update(node, left, right, index, value) {\n  if (left === right) {\n    tree[node] = leaf(value);\n    return;\n  }\n  const mid = (left + right) >> 1;\n  if (index <= mid) update(node * 2, left, mid, index, value);\n  else update(node * 2 + 1, mid + 1, right, index, value);\n  tree[node] = merge(tree[node * 2], tree[node * 2 + 1]);\n}\n\nfunction query(node, left, right, ql, qr) {\n  if (ql <= left && right <= qr) return tree[node];\n  const mid = (left + right) >> 1;\n  if (qr <= mid) return query(node * 2, left, mid, ql, qr);\n  if (ql > mid) return query(node * 2 + 1, mid + 1, right, ql, qr);\n  return merge(\n    query(node * 2, left, mid, ql, qr),\n    query(node * 2 + 1, mid + 1, right, ql, qr)\n  );\n}\n\nbuild(1, 0, N - 1);\n\nconst output = [];\nfor (let i = 0; i < M; i++) {\n  const type = input[pos++];\n  const x = input[pos++];\n  const y = input[pos++];\n  if (type === 1) {\n    update(1, 0, N - 1, x - 1, y);\n  } else {\n    output.push(String(query(1, 0, N - 1, x - 1, y - 1).good));\n  }\n}\n\nprocess.stdout.write(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet pos = 0;\n\nconst N = input[pos++];\nconst M = input[pos++];\nconst values = new Array(N);\nfor (let i = 0; i < N; i++) values[i] = input[pos++];\n\nfunction gcd(a, b) {\n  while (b !== 0) {\n    const t = a % b;\n    a = b;\n    b = t;\n  }\n  return a;\n}\n\nfunction leaf(value) {\n  return {\n    g: value,\n    good: value > 1 ? 1 : 0,\n    pg: [value],\n    pc: [1],\n    sg: [value],\n    sc: [1]\n  };\n}\n\nfunction appendGrouped(gs, cs, value, count) {\n  const last = gs.length - 1;\n  if (last >= 0 && gs[last] === value) {\n    cs[last] += count;\n  } else {\n    gs.push(value);\n    cs.push(count);\n  }\n}\n\nfunction merge(a, b) {\n  if (!a) return b;\n  if (!b) return a;\n\n  let cross = 0;\n  for (let i = 0; i < a.sg.length; i++) {\n    const x = a.sg[i];\n    for (let j = 0; j < b.pg.length; j++) {\n      const y = b.pg[j];\n      if (x > 1 && y > 1 && gcd(x, y) > 1) {\n        cross += a.sc[i] * b.pc[j];\n      }\n    }\n  }\n\n  const pg = a.pg.slice();\n  const pc = a.pc.slice();\n  for (let i = 0; i < b.pg.length; i++) {\n    appendGrouped(pg, pc, gcd(a.g, b.pg[i]), b.pc[i]);\n  }\n\n  const sg = b.sg.slice();\n  const sc = b.sc.slice();\n  for (let i = 0; i < a.sg.length; i++) {\n    appendGrouped(sg, sc, gcd(b.g, a.sg[i]), a.sc[i]);\n  }\n\n  return {\n    g: gcd(a.g, b.g),\n    good: a.good + b.good + cross,\n    pg,\n    pc,\n    sg,\n    sc\n  };\n}\n\nconst tree = new Array(4 * N);\n\nfunction build(node, left, right) {\n  if (left === right) {\n    tree[node] = leaf(values[left]);\n    return;\n  }\n  const mid = (left + right) >> 1;\n  build(node * 2, left, mid);\n  build(node * 2 + 1, mid + 1, right);\n  tree[node] = merge(tree[node * 2], tree[node * 2 + 1]);\n}\n\nfunction update(node, left, right, index, value) {\n  if (left === right) {\n    tree[node] = leaf(value);\n    return;\n  }\n  const mid = (left + right) >> 1;\n  if (index <= mid) update(node * 2, left, mid, index, value);\n  else update(node * 2 + 1, mid + 1, right, index, value);\n  tree[node] = merge(tree[node * 2], tree[node * 2 + 1]);\n}\n\nfunction query(node, left, right, ql, qr) {\n  if (ql <= left && right <= qr) return tree[node];\n  const mid = (left + right) >> 1;\n  if (qr <= mid) return query(node * 2, left, mid, ql, qr);\n  if (ql > mid) return query(node * 2 + 1, mid + 1, right, ql, qr);\n  return merge(\n    query(node * 2, left, mid, ql, qr),\n    query(node * 2 + 1, mid + 1, right, ql, qr)\n  );\n}\n\nbuild(1, 0, N - 1);\n\nconst output = [];\nfor (let i = 0; i < M; i++) {\n  const type = input[pos++];\n  const x = input[pos++];\n  const y = input[pos++];\n  if (type === 1) {\n    update(1, 0, N - 1, x - 1, y);\n  } else {\n    output.push(String(query(1, 0, N - 1, x - 1, y - 1).good));\n  }\n}\n\nprocess.stdout.write(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "MLE",
+            "execution_time": 0.8545673999906285,
+            "counts": {
+                "AC": 17,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 3,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

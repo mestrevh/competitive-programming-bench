@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:28:24.284968+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 903,
+            "output_tokens": 1749,
+            "total_tokens": 2652
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.004198,
+            "total_cost": 0.0042
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<vector<pair<int, int>>> adj(N + 1);\n\n    for (int i = 0; i < M; i++) {\n        int A, B, C;\n        cin >> A >> B >> C;\n        adj[A].push_back({B, C});\n        adj[B].push_back({A, C});\n    }\n\n    const int INF = 1e9;\n    vector<int> dist(N + 1, INF);\n\n    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;\n\n    dist[1] = 0;\n    pq.push({0, 1});\n\n    while (!pq.empty()) {\n        auto [d, u] = pq.top();\n        pq.pop();\n\n        if (d != dist[u]) continue;\n\n        for (auto [v, w] : adj[u]) {\n            if (dist[v] > d + w) {\n                dist[v] = d + w;\n                pq.push({dist[v], v});\n            }\n        }\n    }\n\n    cout << dist[N] << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<vector<pair<int, int>>> adj(N + 1);\n\n    for (int i = 0; i < M; i++) {\n        int A, B, C;\n        cin >> A >> B >> C;\n        adj[A].push_back({B, C});\n        adj[B].push_back({A, C});\n    }\n\n    const int INF = 1e9;\n    vector<int> dist(N + 1, INF);\n\n    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;\n\n    dist[1] = 0;\n    pq.push({0, 1});\n\n    while (!pq.empty()) {\n        auto [d, u] = pq.top();\n        pq.pop();\n\n        if (d != dist[u]) continue;\n\n        for (auto [v, w] : adj[u]) {\n            if (dist[v] > d + w) {\n                dist[v] = d + w;\n                pq.push({dist[v], v});\n            }\n        }\n    }\n\n    cout << dist[N] << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.170768500000122,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

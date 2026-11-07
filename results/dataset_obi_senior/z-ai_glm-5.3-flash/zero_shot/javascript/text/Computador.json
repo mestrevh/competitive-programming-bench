@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T00:57:56.234330+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 835,
+            "output_tokens": 11755,
+            "total_tokens": 12590
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.005877,
+            "total_cost": 0.005895
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\n(function main() {\n  const tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  let ti = 0;\n  const n = +tokens[ti++];\n  const m = +tokens[ti++];\n  const size = n + 1; // BIT indices 1..n+1 (n+1 usado para o ponto R+1)\n\n  // FRENTE: f(p) = (V + L) - p para p em [L, R]\n  // TRAS:   f(p) = p + (V - i)   para p em [L', i]\n  // fc/fsm: contagem e soma de C=(V+L) das atualizações FRENTE que cobrem p\n  // tc/tsm: contagem e soma de D=(V-i) das atualizações TRAS que cobrem p\n  const fc = new Float64Array(size + 1);\n  const fsm = new Float64Array(size + 1);\n  const tc = new Float64Array(size + 1);\n  const tsm = new Float64Array(size + 1);\n  const out = [];\n\n  for (let k = 0; k < m; k++) {\n    const type = +tokens[ti++];\n    if (type === 3) {\n      const p = +tokens[ti++];\n      let cf = 0, sf = 0, ct = 0, st = 0;\n      for (let i = p; i > 0; i -= i & -i) {\n        cf += fc[i]; sf += fsm[i];\n        ct += tc[i]; st += tsm[i];\n      }\n      // resposta = (ΣC - p*cntF) + (p*cntT + ΣD)\n      out.push(String(Math.round(sf - p * cf + p * ct + st)));\n    } else if (type === 1) {\n      const i0 = +tokens[ti++];\n      const v = +tokens[ti++];\n      const C = v + i0;\n      for (let j = i0; j <= size; j += j & -j) { fc[j] += 1; fsm[j] += C; }\n      const r1 = i0 + v <= n + 1 ? i0 + v : n + 1; // R + 1, R = min(n, i0+v-1)\n      for (let j = r1; j <= size; j += j & -j) { fc[j] -= 1; fsm[j] -= C; }\n    } else {\n      const i0 = +tokens[ti++];\n      const v = +tokens[ti++];\n      const D = v - i0;\n      const l1 = i0 - v + 1 > 1 ? i0 - v + 1 : 1; // L' = max(1, i0-v+1)\n      for (let j = l1; j <= size; j += j & -j) { tc[j] += 1; tsm[j] += D; }\n      for (let j = i0 + 1; j <= size; j += j & -j) { tc[j] -= 1; tsm[j] -= D; }\n    }\n  }\n  process.stdout.write(out.join('\\n') + '\\n');\n})();\n```",
+        "extracted_code": "const fs = require('fs');\n\n(function main() {\n  const tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  let ti = 0;\n  const n = +tokens[ti++];\n  const m = +tokens[ti++];\n  const size = n + 1; // BIT indices 1..n+1 (n+1 usado para o ponto R+1)\n\n  // FRENTE: f(p) = (V + L) - p para p em [L, R]\n  // TRAS:   f(p) = p + (V - i)   para p em [L', i]\n  // fc/fsm: contagem e soma de C=(V+L) das atualizações FRENTE que cobrem p\n  // tc/tsm: contagem e soma de D=(V-i) das atualizações TRAS que cobrem p\n  const fc = new Float64Array(size + 1);\n  const fsm = new Float64Array(size + 1);\n  const tc = new Float64Array(size + 1);\n  const tsm = new Float64Array(size + 1);\n  const out = [];\n\n  for (let k = 0; k < m; k++) {\n    const type = +tokens[ti++];\n    if (type === 3) {\n      const p = +tokens[ti++];\n      let cf = 0, sf = 0, ct = 0, st = 0;\n      for (let i = p; i > 0; i -= i & -i) {\n        cf += fc[i]; sf += fsm[i];\n        ct += tc[i]; st += tsm[i];\n      }\n      // resposta = (ΣC - p*cntF) + (p*cntT + ΣD)\n      out.push(String(Math.round(sf - p * cf + p * ct + st)));\n    } else if (type === 1) {\n      const i0 = +tokens[ti++];\n      const v = +tokens[ti++];\n      const C = v + i0;\n      for (let j = i0; j <= size; j += j & -j) { fc[j] += 1; fsm[j] += C; }\n      const r1 = i0 + v <= n + 1 ? i0 + v : n + 1; // R + 1, R = min(n, i0+v-1)\n      for (let j = r1; j <= size; j += j & -j) { fc[j] -= 1; fsm[j] -= C; }\n    } else {\n      const i0 = +tokens[ti++];\n      const v = +tokens[ti++];\n      const D = v - i0;\n      const l1 = i0 - v + 1 > 1 ? i0 - v + 1 : 1; // L' = max(1, i0-v+1)\n      for (let j = l1; j <= size; j += j & -j) { tc[j] += 1; tsm[j] += D; }\n      for (let j = i0 + 1; j <= size; j += j & -j) { tc[j] -= 1; tsm[j] -= D; }\n    }\n  }\n  process.stdout.write(out.join('\\n') + '\\n');\n})();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2014498999924399,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

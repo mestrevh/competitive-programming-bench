@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:42:15.140409+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 868,
+            "output_tokens": 534,
+            "total_tokens": 1402
+        },
+        "cost_usd": {
+            "input_cost": 8.7e-05,
+            "output_cost": 0.000267,
+            "total_cost": 0.000354
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ');\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int n = fs.nextInt();\n        int k = fs.nextInt();\n        int u = fs.nextInt();\n\n        int[][] cards = new int[n][k];\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < k; j++) {\n                cards[i][j] = fs.nextInt();\n            }\n        }\n\n        int[] position = new int[u + 1];\n        for (int i = 1; i <= u; i++) {\n            position[fs.nextInt()] = i;\n        }\n\n        int[] completionTime = new int[n];\n        int earliest = Integer.MAX_VALUE;\n\n        for (int i = 0; i < n; i++) {\n            int latest = 0;\n            for (int number : cards[i]) {\n                latest = Math.max(latest, position[number]);\n            }\n            completionTime[i] = latest;\n            earliest = Math.min(earliest, latest);\n        }\n\n        StringBuilder out = new StringBuilder();\n        for (int i = 0; i < n; i++) {\n            if (completionTime[i] == earliest) {\n                if (out.length() > 0) out.append(' ');\n                out.append(i + 1);\n            }\n        }\n\n        System.out.println(out);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ');\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int n = fs.nextInt();\n        int k = fs.nextInt();\n        int u = fs.nextInt();\n\n        int[][] cards = new int[n][k];\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < k; j++) {\n                cards[i][j] = fs.nextInt();\n            }\n        }\n\n        int[] position = new int[u + 1];\n        for (int i = 1; i <= u; i++) {\n            position[fs.nextInt()] = i;\n        }\n\n        int[] completionTime = new int[n];\n        int earliest = Integer.MAX_VALUE;\n\n        for (int i = 0; i < n; i++) {\n            int latest = 0;\n            for (int number : cards[i]) {\n                latest = Math.max(latest, position[number]);\n            }\n            completionTime[i] = latest;\n            earliest = Math.min(earliest, latest);\n        }\n\n        StringBuilder out = new StringBuilder();\n        for (int i = 0; i < n; i++) {\n            if (completionTime[i] == earliest) {\n                if (out.length() > 0) out.append(' ');\n                out.append(i + 1);\n            }\n        }\n\n        System.out.println(out);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17595290000463137,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

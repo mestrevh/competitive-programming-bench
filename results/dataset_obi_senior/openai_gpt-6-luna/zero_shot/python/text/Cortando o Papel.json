@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:18:44.510112+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 476,
+            "output_tokens": 2310,
+            "total_tokens": 2786
+        },
+        "cost_usd": {
+            "input_cost": 4.8e-05,
+            "output_cost": 0.001155,
+            "total_cost": 0.001203
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\nheights = data[1:]\n\nevents = [(0, 1), (heights[0], -1)]\n\nfor i in range(1, n):\n    if heights[i] > heights[i - 1]:\n        events.append((heights[i - 1], 1))\n        events.append((heights[i], -1))\n\nevents.sort()\n\nactive = best = 0\ni = 0\nwhile i < len(events):\n    height = events[i][0]\n    delta = 0\n    while i < len(events) and events[i][0] == height:\n        delta += events[i][1]\n        i += 1\n    active += delta\n    best = max(best, active)\n\nprint(best + 1)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\nheights = data[1:]\n\nevents = [(0, 1), (heights[0], -1)]\n\nfor i in range(1, n):\n    if heights[i] > heights[i - 1]:\n        events.append((heights[i - 1], 1))\n        events.append((heights[i], -1))\n\nevents.sort()\n\nactive = best = 0\ni = 0\nwhile i < len(events):\n    height = events[i][0]\n    delta = 0\n    while i < len(events) and events[i][0] == height:\n        delta += events[i][1]\n        i += 1\n    active += delta\n    best = max(best, active)\n\nprint(best + 1)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.23742109999875538,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

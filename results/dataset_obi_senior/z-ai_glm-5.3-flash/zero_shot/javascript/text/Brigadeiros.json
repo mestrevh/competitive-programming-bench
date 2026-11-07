@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T23:57:55.084576+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1577,
+            "output_tokens": 82595,
+            "total_tokens": 84172
+        },
+        "cost_usd": {
+            "input_cost": 3.4e-05,
+            "output_cost": 0.041298,
+            "total_cost": 0.041331
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nlet raw = '';\ntry { raw = fs.readFileSync(0, 'utf8'); } catch (e) { raw = fs.readFileSync('/dev/stdin', 'utf8'); }\nconst data = raw.trim().split(/\\s+/).map(Number);\nconst N = data[0], K = data[1], T = data[2];\n\nconst P = new Int32Array(N + 1);\nfor (let j = 1; j <= N; j++) P[j] = data[2 + j];\n\nconst p = [];\nfor (let j = 1; j <= N; j++) if (data[2 + N + j] === 1) p.push(j);\n\n// Reduced problem: choose strictly increasing q_1<...<q_K maximizing sum P[q_i]\n// subject to sum |p_i - q_i| <= T (min adjacent swaps to reach a member-set Q).\nconst Vmax = 9 * K;\nconst W = Vmax + 1;\nconst INF = 2000000000;\n\n// F: raw values of current layer; M: prefix-min over rows (positions) of current layer.\nconst F = new Int32Array((N + 1) * W).fill(INF);\nconst M = new Int32Array((N + 1) * W).fill(INF);\nfor (let j = 0; j <= N; j++) M[j * W] = 0; // layer 0: cost 0 for value 0\n\nfor (let i = 1; i <= K; i++) {\n  const pi = p[i - 1];\n  const Wprev = 9 * (i - 1);\n  const Wi = 9 * i;\n  const hi = N - K + i;\n\n  for (let j = i; j <= hi; j++) {\n    const d = pi > j ? pi - j : j - pi;\n    const Pj = P[j];\n    const rf = j * W;\n    if (Pj > 0) F.fill(INF, rf, rf + Pj);\n    const mo = rf - W;\n    let fo = rf + Pj;\n    for (let u = 0; u <= Wprev; u++) F[fo++] = d + M[mo + u];\n    const s2 = rf + Wprev + Pj + 1;\n    const e2 = rf + Wi + 1;\n    if (s2 < e2) F.fill(INF, s2, e2);\n  }\n\n  // row i-1 becomes invalid for layer i: clean it in M\n  const rc = (i - 1) * W;\n  M.fill(INF, rc, rc + Wprev + 1);\n\n  // in-place prefix-min over rows i..hi (reads row j-1 already updated)\n  for (let j = i; j <= hi; j++) {\n    const rf = j * W;\n    const rm = rf - W;\n    for (let v = 0; v <= Wi; v++) {\n      const a = F[rf + v];\n      const b = M[rm + v];\n      M[rf + v] = b < a ? b : a;\n    }\n  }\n}\n\nconst base = N * W;\nlet ans = 0;\nfor (let v = Vmax; v >= 0; v--) {\n  if (M[base + v] <= T) { ans = v; break; }\n}\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nlet raw = '';\ntry { raw = fs.readFileSync(0, 'utf8'); } catch (e) { raw = fs.readFileSync('/dev/stdin', 'utf8'); }\nconst data = raw.trim().split(/\\s+/).map(Number);\nconst N = data[0], K = data[1], T = data[2];\n\nconst P = new Int32Array(N + 1);\nfor (let j = 1; j <= N; j++) P[j] = data[2 + j];\n\nconst p = [];\nfor (let j = 1; j <= N; j++) if (data[2 + N + j] === 1) p.push(j);\n\n// Reduced problem: choose strictly increasing q_1<...<q_K maximizing sum P[q_i]\n// subject to sum |p_i - q_i| <= T (min adjacent swaps to reach a member-set Q).\nconst Vmax = 9 * K;\nconst W = Vmax + 1;\nconst INF = 2000000000;\n\n// F: raw values of current layer; M: prefix-min over rows (positions) of current layer.\nconst F = new Int32Array((N + 1) * W).fill(INF);\nconst M = new Int32Array((N + 1) * W).fill(INF);\nfor (let j = 0; j <= N; j++) M[j * W] = 0; // layer 0: cost 0 for value 0\n\nfor (let i = 1; i <= K; i++) {\n  const pi = p[i - 1];\n  const Wprev = 9 * (i - 1);\n  const Wi = 9 * i;\n  const hi = N - K + i;\n\n  for (let j = i; j <= hi; j++) {\n    const d = pi > j ? pi - j : j - pi;\n    const Pj = P[j];\n    const rf = j * W;\n    if (Pj > 0) F.fill(INF, rf, rf + Pj);\n    const mo = rf - W;\n    let fo = rf + Pj;\n    for (let u = 0; u <= Wprev; u++) F[fo++] = d + M[mo + u];\n    const s2 = rf + Wprev + Pj + 1;\n    const e2 = rf + Wi + 1;\n    if (s2 < e2) F.fill(INF, s2, e2);\n  }\n\n  // row i-1 becomes invalid for layer i: clean it in M\n  const rc = (i - 1) * W;\n  M.fill(INF, rc, rc + Wprev + 1);\n\n  // in-place prefix-min over rows i..hi (reads row j-1 already updated)\n  for (let j = i; j <= hi; j++) {\n    const rf = j * W;\n    const rm = rf - W;\n    for (let v = 0; v <= Wi; v++) {\n      const a = F[rf + v];\n      const b = M[rm + v];\n      M[rf + v] = b < a ? b : a;\n    }\n  }\n}\n\nconst base = N * W;\nlet ans = 0;\nfor (let v = Vmax; v >= 0; v--) {\n  if (M[base + v] <= T) { ans = v; break; }\n}\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10190499998861924,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

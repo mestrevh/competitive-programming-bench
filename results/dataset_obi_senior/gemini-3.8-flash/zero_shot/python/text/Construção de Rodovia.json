@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:17:14.848928+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 794,
+            "output_tokens": 543,
+            "total_tokens": 2896
+        },
+        "cost_usd": {
+            "input_cost": 0.000596,
+            "output_cost": 0.002036,
+            "total_cost": 0.002632
+        },
+        "raw_response": "```python\nimport sys\n\n# Aumentar a recursão se necessário, embora BFS/iteração seja preferível\nsys.setrecursionlimit(300000)\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    visited = [False] * (N + 1)\n\n    for i in range(1, N + 1):\n        if not visited[i]:\n            comp = []\n            queue = [i]\n            visited[i] = True\n            \n            # BFS simples para coletar todos os vértices da componente\n            head = 0\n            while head < len(queue):\n                u = queue[head]\n                head += 1\n                comp.append(u)\n                for neighbor in adj[u]:\n                    if not visited[neighbor]:\n                        visited[neighbor] = True\n                        queue.append(neighbor)\n\n            V = len(comp)\n            if V <= 2:\n                continue\n\n            # Calcula 2 * E_comp\n            sum_deg = 0\n            for u in comp:\n                sum_deg += len(adj[u])\n\n            # Se a componente não é um clique\n            if sum_deg < V * (V - 1):\n                # Encontra um vértice com grau < V - 1\n                best_u = comp[0]\n                min_deg = len(adj[best_u])\n                for u in comp:\n                    if len(adj[u]) < min_deg:\n                        min_deg = len(adj[u])\n                        best_u = u\n\n                adj_set = set(adj[best_u])\n                for w in comp:\n                    if w != best_u and w not in adj_set:\n                        print(f\"{best_u} {w}\")\n                        return\n\n    print(-1)\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\n# Aumentar a recursão se necessário, embora BFS/iteração seja preferível\nsys.setrecursionlimit(300000)\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    visited = [False] * (N + 1)\n\n    for i in range(1, N + 1):\n        if not visited[i]:\n            comp = []\n            queue = [i]\n            visited[i] = True\n            \n            # BFS simples para coletar todos os vértices da componente\n            head = 0\n            while head < len(queue):\n                u = queue[head]\n                head += 1\n                comp.append(u)\n                for neighbor in adj[u]:\n                    if not visited[neighbor]:\n                        visited[neighbor] = True\n                        queue.append(neighbor)\n\n            V = len(comp)\n            if V <= 2:\n                continue\n\n            # Calcula 2 * E_comp\n            sum_deg = 0\n            for u in comp:\n                sum_deg += len(adj[u])\n\n            # Se a componente não é um clique\n            if sum_deg < V * (V - 1):\n                # Encontra um vértice com grau < V - 1\n                best_u = comp[0]\n                min_deg = len(adj[best_u])\n                for u in comp:\n                    if len(adj[u]) < min_deg:\n                        min_deg = len(adj[u])\n                        best_u = u\n\n                adj_set = set(adj[best_u])\n                for w in comp:\n                    if w != best_u and w not in adj_set:\n                        print(f\"{best_u} {w}\")\n                        return\n\n    print(-1)\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.603144999993674,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

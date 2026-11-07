@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:08:59.244327+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1408,
+            "output_tokens": 798,
+            "total_tokens": 2206
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.001915,
+            "total_cost": 0.001919
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet idx = 0;\nconst N = Number(data[idx++]);\nconst Q = Number(data[idx++]);\n\nlet grid = [];\nfor (let i = 0; i < N; i++) {\n  grid.push(data[idx++].split('').map(Number));\n}\n\nconst dirs = [\n  [-1, -1], [-1, 0], [-1, 1],\n  [0, -1],           [0, 1],\n  [1, -1],  [1, 0],  [1, 1]\n];\n\nfor (let step = 0; step < Q; step++) {\n  const next = Array.from({ length: N }, () => Array(N).fill(0));\n\n  for (let i = 0; i < N; i++) {\n    for (let j = 0; j < N; j++) {\n      let neighbors = 0;\n\n      for (const [di, dj] of dirs) {\n        const ni = i + di;\n        const nj = j + dj;\n\n        if (ni >= 0 && ni < N && nj >= 0 && nj < N && grid[ni][nj] === 1) {\n          neighbors++;\n        }\n      }\n\n      if (grid[i][j] === 1) {\n        if (neighbors === 2 || neighbors === 3) {\n          next[i][j] = 1;\n        }\n      } else {\n        if (neighbors === 3) {\n          next[i][j] = 1;\n        }\n      }\n    }\n  }\n\n  grid = next;\n}\n\nconsole.log(grid.map(row => row.join('')).join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet idx = 0;\nconst N = Number(data[idx++]);\nconst Q = Number(data[idx++]);\n\nlet grid = [];\nfor (let i = 0; i < N; i++) {\n  grid.push(data[idx++].split('').map(Number));\n}\n\nconst dirs = [\n  [-1, -1], [-1, 0], [-1, 1],\n  [0, -1],           [0, 1],\n  [1, -1],  [1, 0],  [1, 1]\n];\n\nfor (let step = 0; step < Q; step++) {\n  const next = Array.from({ length: N }, () => Array(N).fill(0));\n\n  for (let i = 0; i < N; i++) {\n    for (let j = 0; j < N; j++) {\n      let neighbors = 0;\n\n      for (const [di, dj] of dirs) {\n        const ni = i + di;\n        const nj = j + dj;\n\n        if (ni >= 0 && ni < N && nj >= 0 && nj < N && grid[ni][nj] === 1) {\n          neighbors++;\n        }\n      }\n\n      if (grid[i][j] === 1) {\n        if (neighbors === 2 || neighbors === 3) {\n          next[i][j] = 1;\n        }\n      } else {\n        if (neighbors === 3) {\n          next[i][j] = 1;\n        }\n      }\n    }\n  }\n\n  grid = next;\n}\n\nconsole.log(grid.map(row => row.join('')).join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09801850002259016,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

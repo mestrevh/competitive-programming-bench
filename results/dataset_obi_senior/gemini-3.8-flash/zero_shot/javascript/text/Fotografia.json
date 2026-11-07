@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:50:10.517922+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 714,
+            "output_tokens": 346,
+            "total_tokens": 1333
+        },
+        "cost_usd": {
+            "input_cost": 0.000535,
+            "output_cost": 0.001298,
+            "total_cost": 0.001833
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) {\n            return null;\n        }\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const A = nextInt();\n    if (A === null) return;\n    const L = nextInt();\n    const N = nextInt();\n\n    let bestId = -1;\n    let minArea = Infinity;\n\n    for (let i = 1; i <= N; i++) {\n        const X = nextInt();\n        const Y = nextInt();\n\n        const fitsNormal = (A <= X && L <= Y);\n        const fitsRotated = (A <= Y && L <= X);\n\n        if (fitsNormal || fitsRotated) {\n            const area = X * Y;\n            if (area < minArea) {\n                minArea = area;\n                bestId = i;\n            }\n        }\n    }\n\n    console.log(bestId);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) {\n            return null;\n        }\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const A = nextInt();\n    if (A === null) return;\n    const L = nextInt();\n    const N = nextInt();\n\n    let bestId = -1;\n    let minArea = Infinity;\n\n    for (let i = 1; i <= N; i++) {\n        const X = nextInt();\n        const Y = nextInt();\n\n        const fitsNormal = (A <= X && L <= Y);\n        const fitsRotated = (A <= Y && L <= X);\n\n        if (fitsNormal || fitsRotated) {\n            const area = X * Y;\n            if (area < minArea) {\n                minArea = area;\n                bestId = i;\n            }\n        }\n    }\n\n    console.log(bestId);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.04782870001508854,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

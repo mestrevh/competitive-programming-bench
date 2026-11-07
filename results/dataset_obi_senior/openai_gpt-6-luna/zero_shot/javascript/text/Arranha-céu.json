@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:32:51.036987+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 725,
+            "output_tokens": 330,
+            "total_tokens": 1055
+        },
+        "cost_usd": {
+            "input_cost": 7.3e-05,
+            "output_cost": 0.000165,
+            "total_cost": 0.000237
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst N = data[idx++];\nconst Q = data[idx++];\n\nconst values = new Array(N + 1).fill(0);\nconst tree = new Array(N + 1).fill(0);\n\nfunction add(pos, delta) {\n  for (let i = pos; i <= N; i += i & -i) {\n    tree[i] += delta;\n  }\n}\n\nfunction prefixSum(pos) {\n  let sum = 0;\n  for (let i = pos; i > 0; i -= i & -i) {\n    sum += tree[i];\n  }\n  return sum;\n}\n\nfor (let i = 1; i <= N; i++) {\n  values[i] = data[idx++];\n  add(i, values[i]);\n}\n\nconst output = [];\n\nfor (let i = 0; i < Q; i++) {\n  const type = data[idx++];\n  const k = data[idx++];\n\n  if (type === 0) {\n    const people = data[idx++];\n    add(k, people - values[k]);\n    values[k] = people;\n  } else {\n    output.push(String(prefixSum(k)));\n  }\n}\n\nprocess.stdout.write(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst N = data[idx++];\nconst Q = data[idx++];\n\nconst values = new Array(N + 1).fill(0);\nconst tree = new Array(N + 1).fill(0);\n\nfunction add(pos, delta) {\n  for (let i = pos; i <= N; i += i & -i) {\n    tree[i] += delta;\n  }\n}\n\nfunction prefixSum(pos) {\n  let sum = 0;\n  for (let i = pos; i > 0; i -= i & -i) {\n    sum += tree[i];\n  }\n  return sum;\n}\n\nfor (let i = 1; i <= N; i++) {\n  values[i] = data[idx++];\n  add(i, values[i]);\n}\n\nconst output = [];\n\nfor (let i = 0; i < Q; i++) {\n  const type = data[idx++];\n  const k = data[idx++];\n\n  if (type === 0) {\n    const people = data[idx++];\n    add(k, people - values[k]);\n    values[k] = people;\n  } else {\n    output.push(String(prefixSum(k)));\n  }\n}\n\nprocess.stdout.write(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1076621999964118,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

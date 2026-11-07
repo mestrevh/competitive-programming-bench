@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T09:55:13.898014+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1004,
+            "output_tokens": 18845,
+            "total_tokens": 19849
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.009423,
+            "total_cost": 0.009444
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    pos = 1\n    opps = []\n    gains = []\n    for _ in range(n):\n        a, b, c, d, e, f = (int(x) for x in data[pos:pos + 6])\n        pos += 6\n        opp = [0] * 7\n        opp[a] = f; opp[f] = a\n        opp[b] = d; opp[d] = b\n        opp[c] = e; opp[e] = c\n        opps.append(opp)\n        # ganho[u] = melhor face lateral possivel (maior valor) quando a face\n        # inferior tem valor u (a superior e o oposto; as 4 laterais sao o resto)\n        # como as faces sao exatamente 1..6, as laterais sao {1..6} \\ {u, opp[u]}\n        g = [0] * 7\n        for u in range(1, 7):\n            ou = opp[u]\n            m = 0\n            for v in range(1, 7):\n                if v != u and v != ou and v > m:\n                    m = v\n            g[u] = m\n        gains.append(g)\n\n    best = 0\n    for u0 in range(1, 7):\n        u = u0  # valor da face inferior do dado mais baixo\n        total = 0\n        for i in range(n):\n            total += gains[i][u]\n            # a face superior deste dado (oposto da inferior) vira a face\n            # inferior do dado seguinte\n            u = opps[i][u]\n        if total > best:\n            best = total\n    sys.stdout.write(str(best) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    pos = 1\n    opps = []\n    gains = []\n    for _ in range(n):\n        a, b, c, d, e, f = (int(x) for x in data[pos:pos + 6])\n        pos += 6\n        opp = [0] * 7\n        opp[a] = f; opp[f] = a\n        opp[b] = d; opp[d] = b\n        opp[c] = e; opp[e] = c\n        opps.append(opp)\n        # ganho[u] = melhor face lateral possivel (maior valor) quando a face\n        # inferior tem valor u (a superior e o oposto; as 4 laterais sao o resto)\n        # como as faces sao exatamente 1..6, as laterais sao {1..6} \\ {u, opp[u]}\n        g = [0] * 7\n        for u in range(1, 7):\n            ou = opp[u]\n            m = 0\n            for v in range(1, 7):\n                if v != u and v != ou and v > m:\n                    m = v\n            g[u] = m\n        gains.append(g)\n\n    best = 0\n    for u0 in range(1, 7):\n        u = u0  # valor da face inferior do dado mais baixo\n        total = 0\n        for i in range(n):\n            total += gains[i][u]\n            # a face superior deste dado (oposto da inferior) vira a face\n            # inferior do dado seguinte\n            u = opps[i][u]\n        if total > best:\n            best = total\n    sys.stdout.write(str(best) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07970550000027288,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

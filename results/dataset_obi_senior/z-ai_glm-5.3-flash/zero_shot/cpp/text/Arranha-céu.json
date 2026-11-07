@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T21:08:33.173468+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 799,
+            "output_tokens": 879,
+            "total_tokens": 1678
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.00044,
+            "total_cost": 0.000457
+        },
+        "raw_response": "```cpp\n#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint n, q;\nvector<long long> fenwick;\nvector<int> a;\n\nvoid update(int i, int delta) {\n    for (; i <= n; i += i & (-i))\n        fenwick[i] += delta;\n}\n\nlong long query(int i) {\n    long long s = 0;\n    for (; i > 0; i -= i & (-i))\n        s += fenwick[i];\n    return s;\n}\n\nint main() {\n    scanf(\"%d %d\", &n, &q);\n    fenwick.assign(n + 1, 0);\n    a.assign(n + 1, 0);\n\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%d\", &a[i]);\n        update(i, a[i]);\n    }\n\n    for (int i = 0; i < q; i++) {\n        int t;\n        scanf(\"%d\", &t);\n        if (t == 0) {\n            int k, p;\n            scanf(\"%d %d\", &k, &p);\n            update(k, p - a[k]);\n            a[k] = p;\n        } else {\n            int k;\n            scanf(\"%d\", &k);\n            printf(\"%lld\\n\", query(k));\n        }\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint n, q;\nvector<long long> fenwick;\nvector<int> a;\n\nvoid update(int i, int delta) {\n    for (; i <= n; i += i & (-i))\n        fenwick[i] += delta;\n}\n\nlong long query(int i) {\n    long long s = 0;\n    for (; i > 0; i -= i & (-i))\n        s += fenwick[i];\n    return s;\n}\n\nint main() {\n    scanf(\"%d %d\", &n, &q);\n    fenwick.assign(n + 1, 0);\n    a.assign(n + 1, 0);\n\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%d\", &a[i]);\n        update(i, a[i]);\n    }\n\n    for (int i = 0; i < q; i++) {\n        int t;\n        scanf(\"%d\", &t);\n        if (t == 0) {\n            int k, p;\n            scanf(\"%d %d\", &k, &p);\n            update(k, p - a[k]);\n            a[k] = p;\n        } else {\n            int k;\n            scanf(\"%d\", &k);\n            printf(\"%lld\\n\", query(k));\n        }\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17442380000284174,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

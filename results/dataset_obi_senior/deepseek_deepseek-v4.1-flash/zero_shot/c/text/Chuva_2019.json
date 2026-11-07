@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:52:44.011156+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 953,
+            "output_tokens": 14336,
+            "total_tokens": 15289
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.034406,
+            "total_cost": 0.034409
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    char **grid = (char **)malloc(N * sizeof(char *));\n    for (int i = 0; i < N; i++) {\n        grid[i] = (char *)malloc((M + 1) * sizeof(char));\n        scanf(\"%s\", grid[i]);\n    }\n\n    int *queue = (int *)malloc(N * M * sizeof(int));\n    int head = 0, tail = 0;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            if (grid[i][j] == 'o') {\n                queue[tail++] = i * M + j;\n            }\n        }\n    }\n\n    while (head < tail) {\n        int idx = queue[head++];\n        int i = idx / M;\n        int j = idx % M;\n\n        // Water falls vertically down\n        if (i + 1 < N && grid[i + 1][j] == '.') {\n            grid[i + 1][j] = 'o';\n            queue[tail++] = (i + 1) * M + j;\n        }\n\n        // Water spreads horizontally if there is a shelf below the current cell\n        if (i + 1 < N && grid[i + 1][j] == '#') {\n            if (j > 0 && grid[i][j - 1] == '.') {\n                grid[i][j - 1] = 'o';\n                queue[tail++] = i * M + (j - 1);\n            }\n            if (j + 1 < M && grid[i][j + 1] == '.') {\n                grid[i][j + 1] = 'o';\n                queue[tail++] = i * M + (j + 1);\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    for (int i = 0; i < N; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n    free(queue);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    char **grid = (char **)malloc(N * sizeof(char *));\n    for (int i = 0; i < N; i++) {\n        grid[i] = (char *)malloc((M + 1) * sizeof(char));\n        scanf(\"%s\", grid[i]);\n    }\n\n    int *queue = (int *)malloc(N * M * sizeof(int));\n    int head = 0, tail = 0;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            if (grid[i][j] == 'o') {\n                queue[tail++] = i * M + j;\n            }\n        }\n    }\n\n    while (head < tail) {\n        int idx = queue[head++];\n        int i = idx / M;\n        int j = idx % M;\n\n        // Water falls vertically down\n        if (i + 1 < N && grid[i + 1][j] == '.') {\n            grid[i + 1][j] = 'o';\n            queue[tail++] = (i + 1) * M + j;\n        }\n\n        // Water spreads horizontally if there is a shelf below the current cell\n        if (i + 1 < N && grid[i + 1][j] == '#') {\n            if (j > 0 && grid[i][j - 1] == '.') {\n                grid[i][j - 1] = 'o';\n                queue[tail++] = i * M + (j - 1);\n            }\n            if (j + 1 < M && grid[i][j + 1] == '.') {\n                grid[i][j + 1] = 'o';\n                queue[tail++] = i * M + (j + 1);\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    for (int i = 0; i < N; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n    free(queue);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1500182999880053,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

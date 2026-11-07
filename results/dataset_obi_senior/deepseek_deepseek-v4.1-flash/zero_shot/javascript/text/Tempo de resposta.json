@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:37:16.734068+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 5997,
+            "total_tokens": 7010
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.014393,
+            "total_cost": 0.014396
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst lines = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nconst n = parseInt(lines[0], 10);\n\nconst total = new Map();\nconst pendingTime = new Map();\nconst pending = new Set();\n\nlet time = 0;\nlet hasEvent = false;\nlet prevWasT = false;\n\nfor (let i = 1; i <= n; i++) {\n  const line = lines[i].trim();\n  if (!line) continue;\n\n  const [type, xs] = line.split(/\\s+/);\n  const x = parseInt(xs, 10);\n\n  if (type === 'T') {\n    time += x;\n    prevWasT = true;\n  } else {\n    if (hasEvent && !prevWasT) {\n      time += 1;\n    }\n\n    if (!total.has(x)) total.set(x, 0);\n\n    if (type === 'R') {\n      pendingTime.set(x, time);\n      pending.add(x);\n    } else {\n      if (pending.has(x)) {\n        total.set(x, total.get(x) + time - pendingTime.get(x));\n        pending.delete(x);\n        pendingTime.delete(x);\n      }\n    }\n\n    hasEvent = true;\n    prevWasT = false;\n  }\n}\n\nconst ids = Array.from(total.keys()).sort((a, b) => a - b);\nlet out = '';\n\nfor (const id of ids) {\n  const ans = pending.has(id) ? -1 : total.get(id);\n  out += `${id} ${ans}\\n`;\n}\n\nprocess.stdout.write(out);\n```",
+        "extracted_code": "const fs = require('fs');\nconst lines = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nconst n = parseInt(lines[0], 10);\n\nconst total = new Map();\nconst pendingTime = new Map();\nconst pending = new Set();\n\nlet time = 0;\nlet hasEvent = false;\nlet prevWasT = false;\n\nfor (let i = 1; i <= n; i++) {\n  const line = lines[i].trim();\n  if (!line) continue;\n\n  const [type, xs] = line.split(/\\s+/);\n  const x = parseInt(xs, 10);\n\n  if (type === 'T') {\n    time += x;\n    prevWasT = true;\n  } else {\n    if (hasEvent && !prevWasT) {\n      time += 1;\n    }\n\n    if (!total.has(x)) total.set(x, 0);\n\n    if (type === 'R') {\n      pendingTime.set(x, time);\n      pending.add(x);\n    } else {\n      if (pending.has(x)) {\n        total.set(x, total.get(x) + time - pendingTime.get(x));\n        pending.delete(x);\n        pendingTime.delete(x);\n      }\n    }\n\n    hasEvent = true;\n    prevWasT = false;\n  }\n}\n\nconst ids = Array.from(total.keys()).sort((a, b) => a - b);\nlet out = '';\n\nfor (const id of ids) {\n  const ans = pending.has(id) ? -1 : total.get(id);\n  out += `${id} ${ans}\\n`;\n}\n\nprocess.stdout.write(out);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.047306899999966845,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:59:52.653459+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 15.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1199,
+            "output_tokens": 40017,
+            "total_tokens": 41216
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.096041,
+            "total_cost": 0.096044
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst long long INF = 1e18;\n\nstruct Edge {\n    int to;\n    int len;\n};\n\nstruct Cycle {\n    long long len;\n    vector<int> vertices;\n};\n\nint E, R;\nvector<vector<Edge>> adj;\nvector<bool> visited;\nvector<int> parent;\nvector<int> depth;\nvector<long long> distRoot;\nvector<Cycle> cycles;\n\nvoid dfs(int u, int p, int d, long long dist) {\n    visited[u] = true;\n    parent[u] = p;\n    depth[u] = d;\n    distRoot[u] = dist;\n\n    for (const auto& e : adj[u]) {\n        int v = e.to;\n        int w = e.len;\n        if (v == p) continue;\n\n        if (!visited[v]) {\n            dfs(v, u, d + 1, dist + w);\n        } else {\n            if (depth[v] < depth[u]) {\n                vector<int> verts;\n                long long cycleLen = distRoot[u] - distRoot[v] + w;\n                int cur = u;\n                while (cur != v) {\n                    verts.push_back(cur);\n                    cur = parent[cur];\n                }\n                verts.push_back(v);\n                cycles.push_back({cycleLen, verts});\n            }\n        }\n    }\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    cin >> E >> R;\n    adj.assign(E + 1, {});\n\n    for (int i = 0; i < R; ++i) {\n        int A, B, C;\n        cin >> A >> B >> C;\n        adj[A].push_back({B, C});\n        adj[B].push_back({A, C});\n    }\n\n    visited.assign(E + 1, false);\n    parent.assign(E + 1, -1);\n    depth.assign(E + 1, 0);\n    distRoot.assign(E + 1, 0);\n\n    for (int i = 1; i <= E; ++i) {\n        if (!visited[i]) {\n            dfs(i, -1, 0, 0);\n        }\n    }\n\n    int K;\n    cin >> K;\n\n    while (K--) {\n        int X, T;\n        cin >> X >> T;\n\n        vector<long long> dist(E + 1, INF);\n        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;\n        dist[X] = 0;\n        pq.push({0, X});\n\n        while (!pq.empty()) {\n            auto [d, u] = pq.top();\n            pq.pop();\n            if (d > dist[u]) continue;\n\n            for (const auto& e : adj[u]) {\n                int v = e.to;\n                int w = e.len;\n                if (dist[v] > d + w) {\n                    dist[v] = d + w;\n                    pq.push({dist[v], v});\n                }\n            }\n        }\n\n        long long ans = INF;\n        for (const auto& cyc : cycles) {\n            if (cyc.len < T) continue;\n\n            long long minDist = INF;\n            for (int v : cyc.vertices) {\n                if (dist[v] < minDist) {\n                    minDist = dist[v];\n                }\n            }\n\n            if (minDist != INF) {\n                ans = min(ans, cyc.len + 2 * minDist);\n            }\n        }\n\n        if (ans == INF) {\n            cout << -1 << '\\n';\n        } else {\n            cout << ans << '\\n';\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst long long INF = 1e18;\n\nstruct Edge {\n    int to;\n    int len;\n};\n\nstruct Cycle {\n    long long len;\n    vector<int> vertices;\n};\n\nint E, R;\nvector<vector<Edge>> adj;\nvector<bool> visited;\nvector<int> parent;\nvector<int> depth;\nvector<long long> distRoot;\nvector<Cycle> cycles;\n\nvoid dfs(int u, int p, int d, long long dist) {\n    visited[u] = true;\n    parent[u] = p;\n    depth[u] = d;\n    distRoot[u] = dist;\n\n    for (const auto& e : adj[u]) {\n        int v = e.to;\n        int w = e.len;\n        if (v == p) continue;\n\n        if (!visited[v]) {\n            dfs(v, u, d + 1, dist + w);\n        } else {\n            if (depth[v] < depth[u]) {\n                vector<int> verts;\n                long long cycleLen = distRoot[u] - distRoot[v] + w;\n                int cur = u;\n                while (cur != v) {\n                    verts.push_back(cur);\n                    cur = parent[cur];\n                }\n                verts.push_back(v);\n                cycles.push_back({cycleLen, verts});\n            }\n        }\n    }\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    cin >> E >> R;\n    adj.assign(E + 1, {});\n\n    for (int i = 0; i < R; ++i) {\n        int A, B, C;\n        cin >> A >> B >> C;\n        adj[A].push_back({B, C});\n        adj[B].push_back({A, C});\n    }\n\n    visited.assign(E + 1, false);\n    parent.assign(E + 1, -1);\n    depth.assign(E + 1, 0);\n    distRoot.assign(E + 1, 0);\n\n    for (int i = 1; i <= E; ++i) {\n        if (!visited[i]) {\n            dfs(i, -1, 0, 0);\n        }\n    }\n\n    int K;\n    cin >> K;\n\n    while (K--) {\n        int X, T;\n        cin >> X >> T;\n\n        vector<long long> dist(E + 1, INF);\n        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;\n        dist[X] = 0;\n        pq.push({0, X});\n\n        while (!pq.empty()) {\n            auto [d, u] = pq.top();\n            pq.pop();\n            if (d > dist[u]) continue;\n\n            for (const auto& e : adj[u]) {\n                int v = e.to;\n                int w = e.len;\n                if (dist[v] > d + w) {\n                    dist[v] = d + w;\n                    pq.push({dist[v], v});\n                }\n            }\n        }\n\n        long long ans = INF;\n        for (const auto& cyc : cycles) {\n            if (cyc.len < T) continue;\n\n            long long minDist = INF;\n            for (int v : cyc.vertices) {\n                if (dist[v] < minDist) {\n                    minDist = dist[v];\n                }\n            }\n\n            if (minDist != INF) {\n                ans = min(ans, cyc.len + 2 * minDist);\n            }\n        }\n\n        if (ans == INF) {\n            cout << -1 << '\\n';\n        } else {\n            cout << ans << '\\n';\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.25054360000649467,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:42:31.597482+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 584,
+            "output_tokens": 476,
+            "total_tokens": 1817
+        },
+        "cost_usd": {
+            "input_cost": 0.000438,
+            "output_cost": 0.001785,
+            "total_cost": 0.002223
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    n = int(input_data[0])\n    p = input_data[1]\n\n    if n <= 1:\n        print('*')\n        return\n\n    # Total counts of each character\n    total_counts = [0] * 26\n    for ch in p:\n        total_counts[ord(ch) - 97] += 1\n\n    # Find all proper divisors of n\n    divisors = []\n    for i in range(1, int(n**0.5) + 1):\n        if n % i == 0:\n            divisors.append(i)\n            if i * i != n and i != 1:\n                divisors.append(n // i)\n    divisors.sort()\n\n    for L in divisors:\n        k = n // L\n        # Check if total counts are compatible with k identical anagram blocks\n        root = p[:L]\n        root_counts = [0] * 26\n        for ch in root:\n            root_counts[ord(ch) - 97] += 1\n\n        possible = True\n        for c in range(26):\n            if total_counts[c] != root_counts[c] * k:\n                possible = False\n                break\n        \n        if not possible:\n            continue\n\n        # Verify each of the remaining blocks\n        is_polygram = True\n        for i in range(1, k):\n            block = p[i * L : (i + 1) * L]\n            block_counts = [0] * 26\n            for ch in block:\n                block_counts[ord(ch) - 97] += 1\n            if block_counts != root_counts:\n                is_polygram = False\n                break\n\n        if is_polygram:\n            print(root)\n            return\n\n    print('*')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    n = int(input_data[0])\n    p = input_data[1]\n\n    if n <= 1:\n        print('*')\n        return\n\n    # Total counts of each character\n    total_counts = [0] * 26\n    for ch in p:\n        total_counts[ord(ch) - 97] += 1\n\n    # Find all proper divisors of n\n    divisors = []\n    for i in range(1, int(n**0.5) + 1):\n        if n % i == 0:\n            divisors.append(i)\n            if i * i != n and i != 1:\n                divisors.append(n // i)\n    divisors.sort()\n\n    for L in divisors:\n        k = n // L\n        # Check if total counts are compatible with k identical anagram blocks\n        root = p[:L]\n        root_counts = [0] * 26\n        for ch in root:\n            root_counts[ord(ch) - 97] += 1\n\n        possible = True\n        for c in range(26):\n            if total_counts[c] != root_counts[c] * k:\n                possible = False\n                break\n        \n        if not possible:\n            continue\n\n        # Verify each of the remaining blocks\n        is_polygram = True\n        for i in range(1, k):\n            block = p[i * L : (i + 1) * L]\n            block_counts = [0] * 26\n            for ch in block:\n                block_counts[ord(ch) - 97] += 1\n            if block_counts != root_counts:\n                is_polygram = False\n                break\n\n        if is_polygram:\n            print(root)\n            return\n\n    print('*')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1034081999969203,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

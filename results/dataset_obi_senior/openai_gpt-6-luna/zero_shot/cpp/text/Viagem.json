@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:39:32.893351+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1128,
+            "output_tokens": 684,
+            "total_tokens": 1812
+        },
+        "cost_usd": {
+            "input_cost": 0.000113,
+            "output_cost": 0.000342,
+            "total_cost": 0.000455
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    int to, time, cost;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int V, N, M;\n    cin >> V >> N >> M;\n\n    vector<vector<Edge>> graph(N);\n    for (int i = 0; i < M; ++i) {\n        int a, b, t, p;\n        cin >> a >> b >> t >> p;\n        --a;\n        --b;\n        graph[a].push_back({b, t, p});\n        graph[b].push_back({a, t, p});\n    }\n\n    int X, Y;\n    cin >> X >> Y;\n    --X;\n    --Y;\n\n    const long long INF = LLONG_MAX;\n    const int width = V + 1;\n    vector<long long> dist(static_cast<size_t>(N) * width, INF);\n\n    using State = tuple<long long, int, int>;\n    priority_queue<State, vector<State>, greater<State>> pq;\n\n    dist[X * width] = 0;\n    pq.emplace(0, X, 0);\n\n    while (!pq.empty()) {\n        auto [time, island, cost] = pq.top();\n        pq.pop();\n\n        if (time != dist[island * width + cost]) continue;\n        if (island == Y) {\n            cout << time << '\\n';\n            return 0;\n        }\n\n        for (const Edge& e : graph[island]) {\n            int nextCost = cost + e.cost;\n            if (nextCost > V) continue;\n\n            long long nextTime = time + e.time;\n            size_t index = static_cast<size_t>(e.to) * width + nextCost;\n            if (nextTime < dist[index]) {\n                dist[index] = nextTime;\n                pq.emplace(nextTime, e.to, nextCost);\n            }\n        }\n    }\n\n    cout << -1 << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    int to, time, cost;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int V, N, M;\n    cin >> V >> N >> M;\n\n    vector<vector<Edge>> graph(N);\n    for (int i = 0; i < M; ++i) {\n        int a, b, t, p;\n        cin >> a >> b >> t >> p;\n        --a;\n        --b;\n        graph[a].push_back({b, t, p});\n        graph[b].push_back({a, t, p});\n    }\n\n    int X, Y;\n    cin >> X >> Y;\n    --X;\n    --Y;\n\n    const long long INF = LLONG_MAX;\n    const int width = V + 1;\n    vector<long long> dist(static_cast<size_t>(N) * width, INF);\n\n    using State = tuple<long long, int, int>;\n    priority_queue<State, vector<State>, greater<State>> pq;\n\n    dist[X * width] = 0;\n    pq.emplace(0, X, 0);\n\n    while (!pq.empty()) {\n        auto [time, island, cost] = pq.top();\n        pq.pop();\n\n        if (time != dist[island * width + cost]) continue;\n        if (island == Y) {\n            cout << time << '\\n';\n            return 0;\n        }\n\n        for (const Edge& e : graph[island]) {\n            int nextCost = cost + e.cost;\n            if (nextCost > V) continue;\n\n            long long nextTime = time + e.time;\n            size_t index = static_cast<size_t>(e.to) * width + nextCost;\n            if (nextTime < dist[index]) {\n                dist[index] = nextTime;\n                pq.emplace(nextTime, e.to, nextCost);\n            }\n        }\n    }\n\n    cout << -1 << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20099829999526264,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

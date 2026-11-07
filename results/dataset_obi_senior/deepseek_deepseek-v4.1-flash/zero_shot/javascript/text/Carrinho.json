@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:29:50.195315+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 736,
+            "output_tokens": 2659,
+            "total_tokens": 3395
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.006382,
+            "total_cost": 0.006384
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet idx = 0;\nconst N = parseInt(data[idx++], 10);\nconst D = parseFloat(data[idx++]);\n\nconst P = new Array(N);\nconst C = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n    P[i] = parseFloat(data[idx++]);\n    C[i] = parseFloat(data[idx++]);\n}\n\nconst dp = new Array(N).fill(Infinity);\ndp[0] = 0;\n\nfor (let j = 1; j < N; j++) {\n    for (let i = 0; i < j; i++) {\n        const dist = P[j] - P[i];\n        const time = dp[i] + (dist * dist) / C[i];\n        if (time < dp[j]) dp[j] = time;\n    }\n}\n\nlet ans = Infinity;\nfor (let i = 0; i < N; i++) {\n    const dist = D - P[i];\n    const time = dp[i] + (dist * dist) / C[i];\n    if (time < ans) ans = time;\n}\n\nconsole.log(ans.toFixed(3));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet idx = 0;\nconst N = parseInt(data[idx++], 10);\nconst D = parseFloat(data[idx++]);\n\nconst P = new Array(N);\nconst C = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n    P[i] = parseFloat(data[idx++]);\n    C[i] = parseFloat(data[idx++]);\n}\n\nconst dp = new Array(N).fill(Infinity);\ndp[0] = 0;\n\nfor (let j = 1; j < N; j++) {\n    for (let i = 0; i < j; i++) {\n        const dist = P[j] - P[i];\n        const time = dp[i] + (dist * dist) / C[i];\n        if (time < dp[j]) dp[j] = time;\n    }\n}\n\nlet ans = Infinity;\nfor (let i = 0; i < N; i++) {\n    const dist = D - P[i];\n    const time = dp[i] + (dist * dist) / C[i];\n    if (time < ans) ans = time;\n}\n\nconsole.log(ans.toFixed(3));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09725469999830239,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

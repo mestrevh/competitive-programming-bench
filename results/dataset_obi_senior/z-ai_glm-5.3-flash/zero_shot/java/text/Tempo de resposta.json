@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T22:00:58.916212+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 967,
+            "output_tokens": 4411,
+            "total_tokens": 5378
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.002205,
+            "total_cost": 0.002226
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n\n        long time = 0;   // instante do último evento processado\n        long gap = 1;    // intervalo até o próximo evento (padrão: 1 segundo)\n        long[] pendingSince = new long[101];\n        boolean[] hasPending = new boolean[101];\n        long[] total = new long[101];\n        boolean[] seen = new boolean[101];\n\n        for (int i = 0; i < n; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            char type = st.nextToken().charAt(0);\n            int x = Integer.parseInt(st.nextToken());\n\n            if (type == 'T') {\n                gap = x;\n            } else {\n                // Um evento ocorre: aplica o intervalo registrado e restaura o padrão\n                time += gap;\n                gap = 1;\n                seen[x] = true;\n\n                if (type == 'R') {\n                    // Mensagem recebida: registra instante da mensagem pendente\n                    hasPending[x] = true;\n                    pendingSince[x] = time;\n                } else { // 'E'\n                    // Resposta enviada: acumula tempo de resposta\n                    if (hasPending[x]) {\n                        total[x] += time - pendingSince[x];\n                        hasPending[x] = false;\n                    }\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int f = 1; f <= 100; f++) {\n            if (seen[f]) {\n                sb.append(f).append(' ')\n                  .append(hasPending[f] ? -1 : total[f])\n                  .append('\\n');\n            }\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n\n        long time = 0;   // instante do último evento processado\n        long gap = 1;    // intervalo até o próximo evento (padrão: 1 segundo)\n        long[] pendingSince = new long[101];\n        boolean[] hasPending = new boolean[101];\n        long[] total = new long[101];\n        boolean[] seen = new boolean[101];\n\n        for (int i = 0; i < n; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            char type = st.nextToken().charAt(0);\n            int x = Integer.parseInt(st.nextToken());\n\n            if (type == 'T') {\n                gap = x;\n            } else {\n                // Um evento ocorre: aplica o intervalo registrado e restaura o padrão\n                time += gap;\n                gap = 1;\n                seen[x] = true;\n\n                if (type == 'R') {\n                    // Mensagem recebida: registra instante da mensagem pendente\n                    hasPending[x] = true;\n                    pendingSince[x] = time;\n                } else { // 'E'\n                    // Resposta enviada: acumula tempo de resposta\n                    if (hasPending[x]) {\n                        total[x] += time - pendingSince[x];\n                        hasPending[x] = false;\n                    }\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int f = 1; f <= 100; f++) {\n            if (seen[f]) {\n                sb.append(f).append(' ')\n                  .append(hasPending[f] ? -1 : total[f])\n                  .append('\\n');\n            }\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09657160000642762,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

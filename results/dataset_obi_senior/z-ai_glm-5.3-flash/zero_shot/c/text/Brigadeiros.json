@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T16:35:37.864240+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1577,
+            "output_tokens": 76248,
+            "total_tokens": 77825
+        },
+        "cost_usd": {
+            "input_cost": 3.4e-05,
+            "output_cost": 0.038124,
+            "total_cost": 0.038158
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdint.h>\n\nint main(void){\n    int N, K;\n    long long T;\n    if (scanf(\"%d %d %lld\", &N, &K, &T) != 3) return 0;\n    static int P[305], G[305], pre[305];\n    for (int i = 1; i <= N; i++) scanf(\"%d\", &P[i]);\n    for (int i = 1; i <= N; i++) scanf(\"%d\", &G[i]);\n    pre[0] = 0;\n    for (int i = 1; i <= N; i++) pre[i] = pre[i-1] + G[i];\n\n    int k = K;\n    /* minimo de trocas para qualquer configuracao alvo <= K*(N-K)\n       (cada troca util faz um membro cruzar um nao-membro, no maximo uma vez) */\n    long long lim = (long long)k * (long long)(N - k);\n    int cap = (int)(T < lim ? T : lim);\n    int VS = 9 * k + 1;\n    int FS = 2 * k + 1;\n    size_t tot = (size_t)FS * (size_t)VS;\n\n    uint16_t *cur = (uint16_t*)malloc(tot * sizeof(uint16_t));\n    uint16_t *nxt = (uint16_t*)malloc(tot * sizeof(uint16_t));\n    if (!cur || !nxt) return 1;\n    memset(cur, 0xFF, tot * sizeof(uint16_t));       /* 65535 = \"inalcançavel\" */\n    cur[(size_t)k * VS] = 0;                          /* F=0, valor 0, custo 0 */\n\n    /* DP varrendo posicoes; estado F = (membros em prefixo) - (alvos em prefixo).\n       Custo parcial = soma de |F_b| nas fronteiras = EMD = soma |s_j - t_j|.\n       Valor = soma dos P nos pratos escolhidos como alvos. */\n    for (int i = 1; i <= N; i++){\n        int m = G[i], p = P[i];\n        int ap = pre[i-1], ac = pre[i];\n        int lo = ac - k, hi = ac;\n        int wc = (i < N);\n        int im1 = i - 1;\n        for (int f = lo; f <= hi; f++)\n            memset(nxt + (size_t)(f + k) * VS, 0xFF, (size_t)VS * sizeof(uint16_t));\n        for (int f = ap - k; f <= ap; f++){\n            const uint16_t *pr = cur + (size_t)(f + k) * VS;\n            int B = ap - f;                            /* alvos ja escolhidos */\n            int vmax = 9 * (B < im1 ? B : im1);        /* valor <= 9*B, B <= i-1 */\n            int f1 = f + m, f2 = f1 - 1;\n            int ok0 = (f1 >= lo && f1 <= hi);\n            int ok1 = (f2 >= lo && f2 <= hi);\n            uint16_t *r0 = ok0 ? nxt + (size_t)(f1 + k) * VS : NULL;\n            uint16_t *r1 = ok1 ? nxt + (size_t)(f2 + k) * VS : NULL;\n            int w0 = 0, w1 = 0;\n            if (wc){\n                if (ok0) w0 = f1 < 0 ? -f1 : f1;\n                if (ok1) w1 = f2 < 0 ? -f2 : f2;\n            }\n            for (int v = 0; v <= vmax; v++){\n                unsigned c = pr[v];\n                if (c > cap) continue;\n                if (ok0){                              /* posicao i nao e alvo */\n                    unsigned nc = c + w0;\n                    if (nc <= cap && nc < r0[v]) r0[v] = (uint16_t)nc;\n                }\n                if (ok1){                              /* posicao i e alvo */\n                    unsigned nc = c + w1;\n                    int v2 = v + p;\n                    if (nc <= cap && nc < r1[v2]) r1[v2] = (uint16_t)nc;\n                }\n            }\n        }\n        uint16_t *tmp = cur; cur = nxt; nxt = tmp;\n    }\n\n    int ans = 0;\n    const uint16_t *fr = cur + (size_t)k * VS;        /* F = 0 no final */\n    for (int v = VS - 1; v >= 0; v--)\n        if (fr[v] != 0xFFFF){ ans = v; break; }\n    printf(\"%d\\n\", ans);\n    free(cur); free(nxt);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdint.h>\n\nint main(void){\n    int N, K;\n    long long T;\n    if (scanf(\"%d %d %lld\", &N, &K, &T) != 3) return 0;\n    static int P[305], G[305], pre[305];\n    for (int i = 1; i <= N; i++) scanf(\"%d\", &P[i]);\n    for (int i = 1; i <= N; i++) scanf(\"%d\", &G[i]);\n    pre[0] = 0;\n    for (int i = 1; i <= N; i++) pre[i] = pre[i-1] + G[i];\n\n    int k = K;\n    /* minimo de trocas para qualquer configuracao alvo <= K*(N-K)\n       (cada troca util faz um membro cruzar um nao-membro, no maximo uma vez) */\n    long long lim = (long long)k * (long long)(N - k);\n    int cap = (int)(T < lim ? T : lim);\n    int VS = 9 * k + 1;\n    int FS = 2 * k + 1;\n    size_t tot = (size_t)FS * (size_t)VS;\n\n    uint16_t *cur = (uint16_t*)malloc(tot * sizeof(uint16_t));\n    uint16_t *nxt = (uint16_t*)malloc(tot * sizeof(uint16_t));\n    if (!cur || !nxt) return 1;\n    memset(cur, 0xFF, tot * sizeof(uint16_t));       /* 65535 = \"inalcançavel\" */\n    cur[(size_t)k * VS] = 0;                          /* F=0, valor 0, custo 0 */\n\n    /* DP varrendo posicoes; estado F = (membros em prefixo) - (alvos em prefixo).\n       Custo parcial = soma de |F_b| nas fronteiras = EMD = soma |s_j - t_j|.\n       Valor = soma dos P nos pratos escolhidos como alvos. */\n    for (int i = 1; i <= N; i++){\n        int m = G[i], p = P[i];\n        int ap = pre[i-1], ac = pre[i];\n        int lo = ac - k, hi = ac;\n        int wc = (i < N);\n        int im1 = i - 1;\n        for (int f = lo; f <= hi; f++)\n            memset(nxt + (size_t)(f + k) * VS, 0xFF, (size_t)VS * sizeof(uint16_t));\n        for (int f = ap - k; f <= ap; f++){\n            const uint16_t *pr = cur + (size_t)(f + k) * VS;\n            int B = ap - f;                            /* alvos ja escolhidos */\n            int vmax = 9 * (B < im1 ? B : im1);        /* valor <= 9*B, B <= i-1 */\n            int f1 = f + m, f2 = f1 - 1;\n            int ok0 = (f1 >= lo && f1 <= hi);\n            int ok1 = (f2 >= lo && f2 <= hi);\n            uint16_t *r0 = ok0 ? nxt + (size_t)(f1 + k) * VS : NULL;\n            uint16_t *r1 = ok1 ? nxt + (size_t)(f2 + k) * VS : NULL;\n            int w0 = 0, w1 = 0;\n            if (wc){\n                if (ok0) w0 = f1 < 0 ? -f1 : f1;\n                if (ok1) w1 = f2 < 0 ? -f2 : f2;\n            }\n            for (int v = 0; v <= vmax; v++){\n                unsigned c = pr[v];\n                if (c > cap) continue;\n                if (ok0){                              /* posicao i nao e alvo */\n                    unsigned nc = c + w0;\n                    if (nc <= cap && nc < r0[v]) r0[v] = (uint16_t)nc;\n                }\n                if (ok1){                              /* posicao i e alvo */\n                    unsigned nc = c + w1;\n                    int v2 = v + p;\n                    if (nc <= cap && nc < r1[v2]) r1[v2] = (uint16_t)nc;\n                }\n            }\n        }\n        uint16_t *tmp = cur; cur = nxt; nxt = tmp;\n    }\n\n    int ans = 0;\n    const uint16_t *fr = cur + (size_t)k * VS;        /* F = 0 no final */\n    for (int v = VS - 1; v >= 0; v--)\n        if (fr[v] != 0xFFFF){ ans = v; break; }\n    printf(\"%d\\n\", ans);\n    free(cur); free(nxt);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14430029998766258,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

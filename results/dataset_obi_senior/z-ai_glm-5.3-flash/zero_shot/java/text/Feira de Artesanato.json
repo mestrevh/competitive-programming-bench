@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T19:41:28.377089+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1263,
+            "output_tokens": 10452,
+            "total_tokens": 11715
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.005226,
+            "total_cost": 0.005253
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    private static final int BUF = 1 << 16;\n    private static final byte[] buf = new byte[BUF];\n    private static int ptr = 0, len = 0;\n\n    private static int read() throws IOException {\n        if (ptr == len) {\n            len = System.in.read(buf, 0, BUF);\n            ptr = 0;\n            if (len <= 0) return -1;\n        }\n        return buf[ptr++];\n    }\n\n    private static int readInt() throws IOException {\n        int c = read();\n        while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t' || c == '\\f') c = read();\n        boolean neg = false;\n        if (c == '-') { neg = true; c = read(); }\n        int x = 0;\n        while (c >= '0' && c <= '9') {\n            x = x * 10 + (c - '0');\n            c = read();\n        }\n        return neg ? -x : x;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int n = readInt();\n        int t = readInt();\n        int[] typ = new int[n];\n        int[] prc = new int[n];\n        for (int i = 0; i < n; i++) typ[i] = readInt();\n        for (int i = 0; i < n; i++) prc[i] = readInt();\n        int c = readInt();\n\n        // Min-heap de preços por tipo (objetos disponíveis)\n        @SuppressWarnings(\"unchecked\")\n        PriorityQueue<Integer>[] heaps = new PriorityQueue[t + 1];\n        // Conjunto global ordenado por (preço, tipo) - um par por objeto disponível\n        TreeSet<Long> global = new TreeSet<>();\n\n        for (int i = 0; i < n; i++) {\n            int tt = typ[i], pp = prc[i];\n            PriorityQueue<Integer> h = heaps[tt];\n            if (h == null) { h = new PriorityQueue<>(); heaps[tt] = h; }\n            h.add(pp);\n            global.add((((long) pp) << 17) | (long) tt); // t < 2^17, p < 2^20\n        }\n\n        long total = 0;\n        for (int j = 0; j < c; j++) {\n            int u = readInt();\n            if (u != 0) {\n                // Cliente decidido: menor preço do tipo u\n                PriorityQueue<Integer> h = heaps[u];\n                if (h != null && !h.isEmpty()) {\n                    int p = h.poll();\n                    global.remove(((long) p << 17) | (long) u);\n                    total += p;\n                }\n            } else {\n                // Cliente indeciso: menor (preço, tipo) global\n                if (!global.isEmpty()) {\n                    long key = global.pollFirst();\n                    int p = (int) (key >>> 17);\n                    int tt = (int) (key & 131071L);\n                    heaps[tt].poll();\n                    total += p;\n                }\n            }\n        }\n        System.out.println(total);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    private static final int BUF = 1 << 16;\n    private static final byte[] buf = new byte[BUF];\n    private static int ptr = 0, len = 0;\n\n    private static int read() throws IOException {\n        if (ptr == len) {\n            len = System.in.read(buf, 0, BUF);\n            ptr = 0;\n            if (len <= 0) return -1;\n        }\n        return buf[ptr++];\n    }\n\n    private static int readInt() throws IOException {\n        int c = read();\n        while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t' || c == '\\f') c = read();\n        boolean neg = false;\n        if (c == '-') { neg = true; c = read(); }\n        int x = 0;\n        while (c >= '0' && c <= '9') {\n            x = x * 10 + (c - '0');\n            c = read();\n        }\n        return neg ? -x : x;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int n = readInt();\n        int t = readInt();\n        int[] typ = new int[n];\n        int[] prc = new int[n];\n        for (int i = 0; i < n; i++) typ[i] = readInt();\n        for (int i = 0; i < n; i++) prc[i] = readInt();\n        int c = readInt();\n\n        // Min-heap de preços por tipo (objetos disponíveis)\n        @SuppressWarnings(\"unchecked\")\n        PriorityQueue<Integer>[] heaps = new PriorityQueue[t + 1];\n        // Conjunto global ordenado por (preço, tipo) - um par por objeto disponível\n        TreeSet<Long> global = new TreeSet<>();\n\n        for (int i = 0; i < n; i++) {\n            int tt = typ[i], pp = prc[i];\n            PriorityQueue<Integer> h = heaps[tt];\n            if (h == null) { h = new PriorityQueue<>(); heaps[tt] = h; }\n            h.add(pp);\n            global.add((((long) pp) << 17) | (long) tt); // t < 2^17, p < 2^20\n        }\n\n        long total = 0;\n        for (int j = 0; j < c; j++) {\n            int u = readInt();\n            if (u != 0) {\n                // Cliente decidido: menor preço do tipo u\n                PriorityQueue<Integer> h = heaps[u];\n                if (h != null && !h.isEmpty()) {\n                    int p = h.poll();\n                    global.remove(((long) p << 17) | (long) u);\n                    total += p;\n                }\n            } else {\n                // Cliente indeciso: menor (preço, tipo) global\n                if (!global.isEmpty()) {\n                    long key = global.pollFirst();\n                    int p = (int) (key >>> 17);\n                    int tt = (int) (key & 131071L);\n                    heaps[tt].poll();\n                    total += p;\n                }\n            }\n        }\n        System.out.println(total);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.2364786999532953,
+            "counts": {
+                "AC": 41,
+                "WA": 11,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

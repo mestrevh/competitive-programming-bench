@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:45:13.969539+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 663,
+            "output_tokens": 14716,
+            "total_tokens": 15379
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.035318,
+            "total_cost": 0.03532
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, K;\n    if (scanf(\"%d %d\", &N, &K) != 2) return 0;\n\n    if (K == 0) {\n        long long ans = 0;\n        long long run = 0;\n        for (int i = 0; i < N; ++i) {\n            int x;\n            scanf(\"%d\", &x);\n            if (x == 0) {\n                ++run;\n            } else {\n                ans += run * (run + 1) / 2;\n                run = 0;\n            }\n        }\n        ans += run * (run + 1) / 2;\n        printf(\"%lld\\n\", ans);\n    } else {\n        int *pref = (int *)malloc((N + 1) * sizeof(int));\n        if (!pref) return 1;\n\n        pref[0] = 0;\n        for (int i = 1; i <= N; ++i) {\n            int x;\n            scanf(\"%d\", &x);\n            pref[i] = pref[i - 1] + x;\n        }\n\n        long long ans = 0;\n        int a = 0, b = -1;\n\n        for (int r = 1; r <= N; ++r) {\n            int target = pref[r] - K;\n            if (target < 0) continue;\n\n            while (a <= N && pref[a] < target) ++a;\n\n            if (a <= N && pref[a] == target) {\n                if (b < a) b = a - 1;\n                while (b + 1 <= N && pref[b + 1] == target) ++b;\n                ans += (long long)(b - a + 1);\n            }\n        }\n\n        printf(\"%lld\\n\", ans);\n        free(pref);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, K;\n    if (scanf(\"%d %d\", &N, &K) != 2) return 0;\n\n    if (K == 0) {\n        long long ans = 0;\n        long long run = 0;\n        for (int i = 0; i < N; ++i) {\n            int x;\n            scanf(\"%d\", &x);\n            if (x == 0) {\n                ++run;\n            } else {\n                ans += run * (run + 1) / 2;\n                run = 0;\n            }\n        }\n        ans += run * (run + 1) / 2;\n        printf(\"%lld\\n\", ans);\n    } else {\n        int *pref = (int *)malloc((N + 1) * sizeof(int));\n        if (!pref) return 1;\n\n        pref[0] = 0;\n        for (int i = 1; i <= N; ++i) {\n            int x;\n            scanf(\"%d\", &x);\n            pref[i] = pref[i - 1] + x;\n        }\n\n        long long ans = 0;\n        int a = 0, b = -1;\n\n        for (int r = 1; r <= N; ++r) {\n            int target = pref[r] - K;\n            if (target < 0) continue;\n\n            while (a <= N && pref[a] < target) ++a;\n\n            if (a <= N && pref[a] == target) {\n                if (b < a) b = a - 1;\n                while (b + 1 <= N && pref[b + 1] == target) ++b;\n                ans += (long long)(b - a + 1);\n            }\n        }\n\n        printf(\"%lld\\n\", ans);\n        free(pref);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3816460999951232,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

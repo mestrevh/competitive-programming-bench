@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:00:16.295029+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1288,
+            "output_tokens": 497,
+            "total_tokens": 1785
+        },
+        "cost_usd": {
+            "input_cost": 0.000129,
+            "output_cost": 0.000249,
+            "total_cost": 0.000377
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int n, q;\n    scanf(\"%d %d\", &n, &q);\n\n    int current[50][50] = {0};\n    int next[50][50];\n\n    for (int i = 0; i < n; i++) {\n        char row[55];\n        scanf(\"%s\", row);\n        for (int j = 0; j < n; j++) {\n            current[i][j] = row[j] - '0';\n        }\n    }\n\n    for (int step = 0; step < q; step++) {\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                int neighbors = 0;\n                for (int di = -1; di <= 1; di++) {\n                    for (int dj = -1; dj <= 1; dj++) {\n                        if (di == 0 && dj == 0) continue;\n                        int ni = i + di;\n                        int nj = j + dj;\n                        if (ni >= 0 && ni < n && nj >= 0 && nj < n) {\n                            neighbors += current[ni][nj];\n                        }\n                    }\n                }\n\n                next[i][j] = current[i][j]\n                    ? (neighbors == 2 || neighbors == 3)\n                    : (neighbors == 3);\n            }\n        }\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                current[i][j] = next[i][j];\n            }\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            putchar(current[i][j] ? '1' : '0');\n        }\n        putchar('\\n');\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int n, q;\n    scanf(\"%d %d\", &n, &q);\n\n    int current[50][50] = {0};\n    int next[50][50];\n\n    for (int i = 0; i < n; i++) {\n        char row[55];\n        scanf(\"%s\", row);\n        for (int j = 0; j < n; j++) {\n            current[i][j] = row[j] - '0';\n        }\n    }\n\n    for (int step = 0; step < q; step++) {\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                int neighbors = 0;\n                for (int di = -1; di <= 1; di++) {\n                    for (int dj = -1; dj <= 1; dj++) {\n                        if (di == 0 && dj == 0) continue;\n                        int ni = i + di;\n                        int nj = j + dj;\n                        if (ni >= 0 && ni < n && nj >= 0 && nj < n) {\n                            neighbors += current[ni][nj];\n                        }\n                    }\n                }\n\n                next[i][j] = current[i][j]\n                    ? (neighbors == 2 || neighbors == 3)\n                    : (neighbors == 3);\n            }\n        }\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                current[i][j] = next[i][j];\n            }\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            putchar(current[i][j] ? '1' : '0');\n        }\n        putchar('\\n');\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1750434999994468,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:43:08.848324+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 717,
+            "output_tokens": 5870,
+            "total_tokens": 6587
+        },
+        "cost_usd": {
+            "input_cost": 7.2e-05,
+            "output_cost": 0.002935,
+            "total_cost": 0.003007
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst K = nextInt();\n\nconst head = new Int32Array(N);\nhead.fill(-1);\nconst to = new Int32Array(2 * (N - 1));\nconst next = new Int32Array(2 * (N - 1));\nlet edgeCount = 0;\n\nfor (let i = 0; i < N - 1; i++) {\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n\n  to[edgeCount] = b;\n  next[edgeCount] = head[a];\n  head[a] = edgeCount++;\n\n  to[edgeCount] = a;\n  next[edgeCount] = head[b];\n  head[b] = edgeCount++;\n}\n\nconst parent = new Int32Array(N);\nparent.fill(-2);\nparent[0] = -1;\n\nconst order = new Int32Array(N);\nconst stack = new Int32Array(N);\nlet stackSize = 0;\nlet orderSize = 0;\nstack[stackSize++] = 0;\n\nwhile (stackSize > 0) {\n  const u = stack[--stackSize];\n  order[orderSize++] = u;\n\n  for (let e = head[u]; e !== -1; e = next[e]) {\n    const v = to[e];\n    if (v === parent[u]) continue;\n    parent[v] = u;\n    stack[stackSize++] = v;\n  }\n}\n\nconst uncovered = new Int32Array(N);\nconst nearestCenter = new Int32Array(N);\nconst INF = 1_000_000_000;\n\nfunction feasible(radius) {\n  let centers = 0;\n\n  for (let i = N - 1; i >= 0; i--) {\n    const u = order[i];\n    let best = INF;\n    let second = INF;\n    let bestChild = -1;\n\n    for (let e = head[u]; e !== -1; e = next[e]) {\n      const v = to[e];\n      if (parent[v] !== u) continue;\n\n      const d = nearestCenter[v] >= INF ? INF : nearestCenter[v] + 1;\n      if (d < best) {\n        second = best;\n        best = d;\n        bestChild = v;\n      } else if (d < second) {\n        second = d;\n      }\n    }\n\n    let deepest = best <= radius ? -1 : 0;\n\n    for (let e = head[u]; e !== -1; e = next[e]) {\n      const v = to[e];\n      if (parent[v] !== u || uncovered[v] < 0) continue;\n\n      const d = uncovered[v] + 1;\n      const externalCenter = v === bestChild ? second : best;\n\n      if (externalCenter >= INF || d + externalCenter > radius) {\n        if (d > deepest) deepest = d;\n      }\n    }\n\n    if (deepest === radius) {\n      centers++;\n      if (centers > K) return false;\n      uncovered[u] = -1;\n      nearestCenter[u] = 0;\n    } else {\n      uncovered[u] = deepest;\n      nearestCenter[u] = best;\n    }\n  }\n\n  if (uncovered[0] >= 0) centers++;\n  return centers <= K;\n}\n\nlet low = -1;\nlet high = N - 1;\n\nwhile (high - low > 1) {\n  const mid = (low + high) >> 1;\n  if (feasible(mid)) high = mid;\n  else low = mid;\n}\n\nconsole.log(high);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst K = nextInt();\n\nconst head = new Int32Array(N);\nhead.fill(-1);\nconst to = new Int32Array(2 * (N - 1));\nconst next = new Int32Array(2 * (N - 1));\nlet edgeCount = 0;\n\nfor (let i = 0; i < N - 1; i++) {\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n\n  to[edgeCount] = b;\n  next[edgeCount] = head[a];\n  head[a] = edgeCount++;\n\n  to[edgeCount] = a;\n  next[edgeCount] = head[b];\n  head[b] = edgeCount++;\n}\n\nconst parent = new Int32Array(N);\nparent.fill(-2);\nparent[0] = -1;\n\nconst order = new Int32Array(N);\nconst stack = new Int32Array(N);\nlet stackSize = 0;\nlet orderSize = 0;\nstack[stackSize++] = 0;\n\nwhile (stackSize > 0) {\n  const u = stack[--stackSize];\n  order[orderSize++] = u;\n\n  for (let e = head[u]; e !== -1; e = next[e]) {\n    const v = to[e];\n    if (v === parent[u]) continue;\n    parent[v] = u;\n    stack[stackSize++] = v;\n  }\n}\n\nconst uncovered = new Int32Array(N);\nconst nearestCenter = new Int32Array(N);\nconst INF = 1_000_000_000;\n\nfunction feasible(radius) {\n  let centers = 0;\n\n  for (let i = N - 1; i >= 0; i--) {\n    const u = order[i];\n    let best = INF;\n    let second = INF;\n    let bestChild = -1;\n\n    for (let e = head[u]; e !== -1; e = next[e]) {\n      const v = to[e];\n      if (parent[v] !== u) continue;\n\n      const d = nearestCenter[v] >= INF ? INF : nearestCenter[v] + 1;\n      if (d < best) {\n        second = best;\n        best = d;\n        bestChild = v;\n      } else if (d < second) {\n        second = d;\n      }\n    }\n\n    let deepest = best <= radius ? -1 : 0;\n\n    for (let e = head[u]; e !== -1; e = next[e]) {\n      const v = to[e];\n      if (parent[v] !== u || uncovered[v] < 0) continue;\n\n      const d = uncovered[v] + 1;\n      const externalCenter = v === bestChild ? second : best;\n\n      if (externalCenter >= INF || d + externalCenter > radius) {\n        if (d > deepest) deepest = d;\n      }\n    }\n\n    if (deepest === radius) {\n      centers++;\n      if (centers > K) return false;\n      uncovered[u] = -1;\n      nearestCenter[u] = 0;\n    } else {\n      uncovered[u] = deepest;\n      nearestCenter[u] = best;\n    }\n  }\n\n  if (uncovered[0] >= 0) centers++;\n  return centers <= K;\n}\n\nlet low = -1;\nlet high = N - 1;\n\nwhile (high - low > 1) {\n  const mid = (low + high) >> 1;\n  if (feasible(mid)) high = mid;\n  else low = mid;\n}\n\nconsole.log(high);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3468377999961376,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

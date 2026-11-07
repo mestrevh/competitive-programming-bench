@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:14:29.870563+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1261,
+            "output_tokens": 1078,
+            "total_tokens": 2656
+        },
+        "cost_usd": {
+            "input_cost": 0.000946,
+            "output_cost": 0.004043,
+            "total_cost": 0.004988
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Edge {\n    int u, v, w;\n    bool operator<(const Edge& other) const {\n        return w > other.w;\n    }\n};\n\nstruct DSU {\n    vector<int> parent;\n    DSU(int n) {\n        parent.resize(n + 1);\n        for (int i = 1; i <= n; ++i) parent[i] = i;\n    }\n    int find(int i) {\n        if (parent[i] == i)\n            return i;\n        return parent[i] = find(parent[i]);\n    }\n    bool unite(int i, int j) {\n        int root_i = find(i);\n        int root_j = find(j);\n        if (root_i != root_j) {\n            parent[root_i] = root_j;\n            return true;\n        }\n        return false;\n    }\n};\n\nconst int MAXN = 100005;\nconst int LOGN = 18;\nconst int INF = 1e9;\n\nvector<pair<int, int>> adj[MAXN];\nint up[MAXN][LOGN];\nint min_edge[MAXN][LOGN];\nint depth[MAXN];\n\nvoid dfs(int u, int p, int w, int d) {\n    depth[u] = d;\n    up[u][0] = p;\n    min_edge[u][0] = w;\n\n    for (int i = 1; i < LOGN; ++i) {\n        up[u][i] = up[up[u][i - 1]][i - 1];\n        min_edge[u][i] = min(min_edge[u][i - 1], min_edge[up[u][i - 1]][i - 1]);\n    }\n\n    for (auto& edge : adj[u]) {\n        int v = edge.first;\n        int weight = edge.second;\n        if (v != p) {\n            dfs(v, u, weight, d + 1);\n        }\n    }\n}\n\nint query(int u, int v) {\n    int ans = INF;\n    if (depth[u] < depth[v]) swap(u, v);\n\n    for (int i = LOGN - 1; i >= 0; --i) {\n        if (depth[u] - (1 << i) >= depth[v]) {\n            ans = min(ans, min_edge[u][i]);\n            u = up[u][i];\n        }\n    }\n\n    if (u == v) return ans;\n\n    for (int i = LOGN - 1; i >= 0; --i) {\n        if (up[u][i] != up[v][i]) {\n            ans = min({ans, min_edge[u][i], min_edge[v][i]});\n            u = up[u][i];\n            v = up[v][i];\n        }\n    }\n\n    ans = min({ans, min_edge[u][0], min_edge[v][0]});\n    return ans;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, b;\n    if (!(cin >> n >> b)) return 0;\n\n    vector<Edge> edges(b);\n    for (int i = 0; i < b; ++i) {\n        cin >> edges[i].u >> edges[i].v >> edges[i].w;\n    }\n\n    sort(edges.begin(), edges.end());\n\n    DSU dsu(n);\n    int edges_count = 0;\n    for (const auto& edge : edges) {\n        if (dsu.unite(edge.u, edge.v)) {\n            adj[edge.u].push_back({edge.v, edge.w});\n            adj[edge.v].push_back({edge.u, edge.w});\n            edges_count++;\n            if (edges_count == n - 1) break;\n        }\n    }\n\n    dfs(1, 1, INF, 0);\n\n    int c;\n    if (cin >> c) {\n        while (c--) {\n            int x, y;\n            cin >> x >> y;\n            cout << query(x, y) << \"\\n\";\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Edge {\n    int u, v, w;\n    bool operator<(const Edge& other) const {\n        return w > other.w;\n    }\n};\n\nstruct DSU {\n    vector<int> parent;\n    DSU(int n) {\n        parent.resize(n + 1);\n        for (int i = 1; i <= n; ++i) parent[i] = i;\n    }\n    int find(int i) {\n        if (parent[i] == i)\n            return i;\n        return parent[i] = find(parent[i]);\n    }\n    bool unite(int i, int j) {\n        int root_i = find(i);\n        int root_j = find(j);\n        if (root_i != root_j) {\n            parent[root_i] = root_j;\n            return true;\n        }\n        return false;\n    }\n};\n\nconst int MAXN = 100005;\nconst int LOGN = 18;\nconst int INF = 1e9;\n\nvector<pair<int, int>> adj[MAXN];\nint up[MAXN][LOGN];\nint min_edge[MAXN][LOGN];\nint depth[MAXN];\n\nvoid dfs(int u, int p, int w, int d) {\n    depth[u] = d;\n    up[u][0] = p;\n    min_edge[u][0] = w;\n\n    for (int i = 1; i < LOGN; ++i) {\n        up[u][i] = up[up[u][i - 1]][i - 1];\n        min_edge[u][i] = min(min_edge[u][i - 1], min_edge[up[u][i - 1]][i - 1]);\n    }\n\n    for (auto& edge : adj[u]) {\n        int v = edge.first;\n        int weight = edge.second;\n        if (v != p) {\n            dfs(v, u, weight, d + 1);\n        }\n    }\n}\n\nint query(int u, int v) {\n    int ans = INF;\n    if (depth[u] < depth[v]) swap(u, v);\n\n    for (int i = LOGN - 1; i >= 0; --i) {\n        if (depth[u] - (1 << i) >= depth[v]) {\n            ans = min(ans, min_edge[u][i]);\n            u = up[u][i];\n        }\n    }\n\n    if (u == v) return ans;\n\n    for (int i = LOGN - 1; i >= 0; --i) {\n        if (up[u][i] != up[v][i]) {\n            ans = min({ans, min_edge[u][i], min_edge[v][i]});\n            u = up[u][i];\n            v = up[v][i];\n        }\n    }\n\n    ans = min({ans, min_edge[u][0], min_edge[v][0]});\n    return ans;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, b;\n    if (!(cin >> n >> b)) return 0;\n\n    vector<Edge> edges(b);\n    for (int i = 0; i < b; ++i) {\n        cin >> edges[i].u >> edges[i].v >> edges[i].w;\n    }\n\n    sort(edges.begin(), edges.end());\n\n    DSU dsu(n);\n    int edges_count = 0;\n    for (const auto& edge : edges) {\n        if (dsu.unite(edge.u, edge.v)) {\n            adj[edge.u].push_back({edge.v, edge.w});\n            adj[edge.v].push_back({edge.u, edge.w});\n            edges_count++;\n            if (edges_count == n - 1) break;\n        }\n    }\n\n    dfs(1, 1, INF, 0);\n\n    int c;\n    if (cin >> c) {\n        while (c--) {\n            int x, y;\n            cin >> x >> y;\n            cout << query(x, y) << \"\\n\";\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16271590001997538,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

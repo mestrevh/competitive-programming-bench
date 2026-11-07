@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:33:24.988550+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 868,
+            "output_tokens": 332,
+            "total_tokens": 1200
+        },
+        "cost_usd": {
+            "input_cost": 8.7e-05,
+            "output_cost": 0.000166,
+            "total_cost": 0.000253
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst N = data[idx++];\nconst K = data[idx++];\nconst U = data[idx++];\n\nconst cards = new Array(N);\nfor (let i = 0; i < N; i++) {\n  cards[i] = data.slice(idx, idx + K);\n  idx += K;\n}\n\nconst position = new Int32Array(U + 1);\nfor (let i = 0; i < U; i++) {\n  position[data[idx++]] = i + 1;\n}\n\nlet earliest = Infinity;\nconst winners = [];\n\nfor (let i = 0; i < N; i++) {\n  let completedAt = 0;\n  for (const number of cards[i]) {\n    if (position[number] > completedAt) completedAt = position[number];\n  }\n\n  if (completedAt < earliest) {\n    earliest = completedAt;\n    winners.length = 0;\n    winners.push(i + 1);\n  } else if (completedAt === earliest) {\n    winners.push(i + 1);\n  }\n}\n\nconsole.log(winners.join(' '));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst N = data[idx++];\nconst K = data[idx++];\nconst U = data[idx++];\n\nconst cards = new Array(N);\nfor (let i = 0; i < N; i++) {\n  cards[i] = data.slice(idx, idx + K);\n  idx += K;\n}\n\nconst position = new Int32Array(U + 1);\nfor (let i = 0; i < U; i++) {\n  position[data[idx++]] = i + 1;\n}\n\nlet earliest = Infinity;\nconst winners = [];\n\nfor (let i = 0; i < N; i++) {\n  let completedAt = 0;\n  for (const number of cards[i]) {\n    if (position[number] > completedAt) completedAt = position[number];\n  }\n\n  if (completedAt < earliest) {\n    earliest = completedAt;\n    winners.length = 0;\n    winners.push(i + 1);\n  } else if (completedAt === earliest) {\n    winners.push(i + 1);\n  }\n}\n\nconsole.log(winners.join(' '));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22154779999982566,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

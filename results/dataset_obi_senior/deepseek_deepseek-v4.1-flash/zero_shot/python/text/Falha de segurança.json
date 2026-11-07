@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:52:57.746792+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 721,
+            "output_tokens": 2680,
+            "total_tokens": 3401
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.006432,
+            "total_cost": 0.006434
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    passwords = data[1:1 + n]\n    freq = Counter(passwords)\n\n    ans = 0\n    get_freq = freq.get\n\n    for s, count_s in freq.items():\n        length = len(s)\n        substrings = set()\n\n        for i in range(length):\n            for j in range(i + 1, length + 1):\n                substrings.add(s[i:j])\n\n        total = 0\n        for sub in substrings:\n            total += get_freq(sub, 0)\n\n        ans += count_s * total - count_s\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    passwords = data[1:1 + n]\n    freq = Counter(passwords)\n\n    ans = 0\n    get_freq = freq.get\n\n    for s, count_s in freq.items():\n        length = len(s)\n        substrings = set()\n\n        for i in range(length):\n            for j in range(i + 1, length + 1):\n                substrings.add(s[i:j])\n\n        total = 0\n        for sub in substrings:\n            total += get_freq(sub, 0)\n\n        ans += count_s * total - count_s\n\n    sys.stdout.write(str(ans))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12127759999566479,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

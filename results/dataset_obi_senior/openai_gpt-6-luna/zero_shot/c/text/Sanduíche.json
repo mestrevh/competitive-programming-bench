@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:12:31.576553+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 750,
+            "output_tokens": 439,
+            "total_tokens": 1189
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.000219,
+            "total_cost": 0.000295
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    unsigned int adj[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        --x;\n        --y;\n        adj[x] |= 1u << y;\n        adj[y] |= 1u << x;\n    }\n\n    int limit = 1 << N;\n    unsigned char independent[1 << 20] = {0};\n    independent[0] = 1;\n\n    int count = 0;\n    for (int mask = 1; mask < limit; mask++) {\n        int bit = mask & -mask;\n        int vertex = __builtin_ctz((unsigned int)bit);\n        int rest = mask ^ bit;\n\n        if (independent[rest] && !(adj[vertex] & (unsigned int)rest)) {\n            independent[mask] = 1;\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    unsigned int adj[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        --x;\n        --y;\n        adj[x] |= 1u << y;\n        adj[y] |= 1u << x;\n    }\n\n    int limit = 1 << N;\n    unsigned char independent[1 << 20] = {0};\n    independent[0] = 1;\n\n    int count = 0;\n    for (int mask = 1; mask < limit; mask++) {\n        int bit = mask & -mask;\n        int vertex = __builtin_ctz((unsigned int)bit);\n        int rest = mask ^ bit;\n\n        if (independent[rest] && !(adj[vertex] & (unsigned int)rest)) {\n            independent[mask] = 1;\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16345300000102725,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

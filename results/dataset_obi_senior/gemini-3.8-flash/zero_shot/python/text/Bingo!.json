@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:06:29.522845+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 335,
+            "total_tokens": 1869
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.001256,
+            "total_cost": 0.001951
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    K = int(next(iterator))\n    U = int(next(iterator))\n    \n    # cartelas_por_num[x] conterá a lista de índices das cartelas que possuem o número x\n    cartelas_por_num = [[] for _ in range(U + 1)]\n    \n    for i in range(1, N + 1):\n        for _ in range(K):\n            num = int(next(iterator))\n            cartelas_por_num[num].append(i)\n            \n    # restantes[i] conta quantos números faltam para a cartela i ser completada\n    restantes = [K] * (N + 1)\n    \n    vencedores = []\n    for _ in range(U):\n        sorteado = int(next(iterator))\n        for cartela in cartelas_por_num[sorteado]:\n            restantes[cartela] -= 1\n            if restantes[cartela] == 0:\n                vencedores.append(cartela)\n        if vencedores:\n            break\n            \n    vencedores.sort()\n    print(*(vencedores))\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    K = int(next(iterator))\n    U = int(next(iterator))\n    \n    # cartelas_por_num[x] conterá a lista de índices das cartelas que possuem o número x\n    cartelas_por_num = [[] for _ in range(U + 1)]\n    \n    for i in range(1, N + 1):\n        for _ in range(K):\n            num = int(next(iterator))\n            cartelas_por_num[num].append(i)\n            \n    # restantes[i] conta quantos números faltam para a cartela i ser completada\n    restantes = [K] * (N + 1)\n    \n    vencedores = []\n    for _ in range(U):\n        sorteado = int(next(iterator))\n        for cartela in cartelas_por_num[sorteado]:\n            restantes[cartela] -= 1\n            if restantes[cartela] == 0:\n                vencedores.append(cartela)\n        if vencedores:\n            break\n            \n    vencedores.sort()\n    print(*(vencedores))\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3055134000023827,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:22:35.401233+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 804,
+            "output_tokens": 723,
+            "total_tokens": 2053
+        },
+        "cost_usd": {
+            "input_cost": 0.000603,
+            "output_cost": 0.002711,
+            "total_cost": 0.003314
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.PriorityQueue;\n\npublic class Main {\n    static class Edge {\n        int to;\n        int weight;\n\n        Edge(int to, int weight) {\n            this.to = to;\n            this.weight = weight;\n        }\n    }\n\n    static class Node implements Comparable<Node> {\n        int id;\n        int dist;\n\n        Node(int id, int dist) {\n            this.id = id;\n            this.dist = dist;\n        }\n\n        @Override\n        public int compareTo(Node other) {\n            return Integer.compare(this.dist, other.dist);\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer tokenizer = null;\n\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        tokenizer = new StringTokenizer(line);\n        int n = Integer.parseInt(tokenizer.nextToken());\n        int m = Integer.parseInt(tokenizer.nextToken());\n\n        ArrayList<Edge>[] adj = new ArrayList[n + 1];\n        for (int i = 1; i <= n; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < m; i++) {\n            while (tokenizer == null || !tokenizer.hasMoreTokens()) {\n                line = reader.readLine();\n                if (line == null) break;\n                tokenizer = new StringTokenizer(line);\n            }\n            int u = Integer.parseInt(tokenizer.nextToken());\n            int v = Integer.parseInt(tokenizer.nextToken());\n            int c = Integer.parseInt(tokenizer.nextToken());\n\n            adj[u].add(new Edge(v, c));\n            adj[v].add(new Edge(u, c));\n        }\n\n        int[] dist = new int[n + 1];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[1] = 0;\n\n        PriorityQueue<Node> pq = new PriorityQueue<>();\n        pq.add(new Node(1, 0));\n\n        while (!pq.isEmpty()) {\n            Node current = pq.poll();\n            int u = current.id;\n            int d = current.dist;\n\n            if (d > dist[u]) continue;\n            if (u == n) break;\n\n            for (Edge edge : adj[u]) {\n                if (dist[u] + edge.weight < dist[edge.to]) {\n                    dist[edge.to] = dist[u] + edge.weight;\n                    pq.add(new Node(edge.to, dist[edge.to]));\n                }\n            }\n        }\n\n        System.out.println(dist[n]);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.PriorityQueue;\n\npublic class Main {\n    static class Edge {\n        int to;\n        int weight;\n\n        Edge(int to, int weight) {\n            this.to = to;\n            this.weight = weight;\n        }\n    }\n\n    static class Node implements Comparable<Node> {\n        int id;\n        int dist;\n\n        Node(int id, int dist) {\n            this.id = id;\n            this.dist = dist;\n        }\n\n        @Override\n        public int compareTo(Node other) {\n            return Integer.compare(this.dist, other.dist);\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer tokenizer = null;\n\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        tokenizer = new StringTokenizer(line);\n        int n = Integer.parseInt(tokenizer.nextToken());\n        int m = Integer.parseInt(tokenizer.nextToken());\n\n        ArrayList<Edge>[] adj = new ArrayList[n + 1];\n        for (int i = 1; i <= n; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < m; i++) {\n            while (tokenizer == null || !tokenizer.hasMoreTokens()) {\n                line = reader.readLine();\n                if (line == null) break;\n                tokenizer = new StringTokenizer(line);\n            }\n            int u = Integer.parseInt(tokenizer.nextToken());\n            int v = Integer.parseInt(tokenizer.nextToken());\n            int c = Integer.parseInt(tokenizer.nextToken());\n\n            adj[u].add(new Edge(v, c));\n            adj[v].add(new Edge(u, c));\n        }\n\n        int[] dist = new int[n + 1];\n        Arrays.fill(dist, Integer.MAX_VALUE);\n        dist[1] = 0;\n\n        PriorityQueue<Node> pq = new PriorityQueue<>();\n        pq.add(new Node(1, 0));\n\n        while (!pq.isEmpty()) {\n            Node current = pq.poll();\n            int u = current.id;\n            int d = current.dist;\n\n            if (d > dist[u]) continue;\n            if (u == n) break;\n\n            for (Edge edge : adj[u]) {\n                if (dist[u] + edge.weight < dist[edge.to]) {\n                    dist[edge.to] = dist[u] + edge.weight;\n                    pq.add(new Node(edge.to, dist[edge.to]));\n                }\n            }\n        }\n\n        System.out.println(dist[n]);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09403819998260587,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

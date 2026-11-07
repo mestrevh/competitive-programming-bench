@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:13:45.119111+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1145,
+            "output_tokens": 1258,
+            "total_tokens": 5898
+        },
+        "cost_usd": {
+            "input_cost": 0.000859,
+            "output_cost": 0.004718,
+            "total_cost": 0.005576
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 300005\n#define INF 2000000000000000000LL\n\ntypedef struct {\n    long long u;\n    long long v;\n} Point;\n\nPoint pts[MAXN];\nint N;\nlong long min_u_all, max_u_all;\nlong long min_v_all, max_v_all;\n\nint check(long long D) {\n    // Caso 1: B1 cobre o canto (min_u, min_v)\n    // B1: u in [min_u_all, min_u_all + D], v in [min_v_all, min_v_all + D]\n    long long lim_u1 = min_u_all + D;\n    long long lim_v1 = min_v_all + D;\n    \n    long long b_min_u = INF, b_max_u = -INF;\n    long long b_min_v = INF, b_max_v = -INF;\n    \n    for (int i = 0; i < N; i++) {\n        if (pts[i].u > lim_u1 || pts[i].v > lim_v1) {\n            if (pts[i].u < b_min_u) b_min_u = pts[i].u;\n            if (pts[i].u > b_max_u) b_max_u = pts[i].u;\n            if (pts[i].v < b_min_v) b_min_v = pts[i].v;\n            if (pts[i].v > b_max_v) b_max_v = pts[i].v;\n        }\n    }\n    \n    if (b_min_u == INF || (b_max_u - b_min_u <= D && b_max_v - b_min_v <= D)) {\n        return 1;\n    }\n\n    // Caso 2: B1 cobre o canto (min_u, max_v)\n    // B1: u in [min_u_all, min_u_all + D], v in [max_v_all - D, max_v_all]\n    long long lim_u2 = min_u_all + D;\n    long long lim_v2 = max_v_all - D;\n    \n    b_min_u = INF; b_max_u = -INF;\n    b_min_v = INF; b_max_v = -INF;\n    \n    for (int i = 0; i < N; i++) {\n        if (pts[i].u > lim_u2 || pts[i].v < lim_v2) {\n            if (pts[i].u < b_min_u) b_min_u = pts[i].u;\n            if (pts[i].u > b_max_u) b_max_u = pts[i].u;\n            if (pts[i].v < b_min_v) b_min_v = pts[i].v;\n            if (pts[i].v > b_max_v) b_max_v = pts[i].v;\n        }\n    }\n    \n    if (b_min_u == INF || (b_max_u - b_min_u <= D && b_max_v - b_min_v <= D)) {\n        return 1;\n    }\n\n    return 0;\n}\n\nstatic long long X[MAXN];\n\nint main() {\n    if (scanf(\"%d\", &N) != 1) return 0;\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &X[i]);\n    }\n    \n    min_u_all = INF; max_u_all = -INF;\n    min_v_all = INF; max_v_all = -INF;\n    \n    for (int i = 0; i < N; i++) {\n        long long y;\n        scanf(\"%lld\", &y);\n        pts[i].u = X[i] + y;\n        pts[i].v = X[i] - y;\n        \n        if (pts[i].u < min_u_all) min_u_all = pts[i].u;\n        if (pts[i].u > max_u_all) max_u_all = pts[i].u;\n        if (pts[i].v < min_v_all) min_v_all = pts[i].v;\n        if (pts[i].v > max_v_all) max_v_all = pts[i].v;\n    }\n    \n    long long low = 0, high = 2000000000LL;\n    long long ans = high;\n    \n    while (low <= high) {\n        long long mid = low + (high - low) / 2;\n        if (check(mid)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n    \n    printf(\"%lld\\n\", ans);\n    \n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 300005\n#define INF 2000000000000000000LL\n\ntypedef struct {\n    long long u;\n    long long v;\n} Point;\n\nPoint pts[MAXN];\nint N;\nlong long min_u_all, max_u_all;\nlong long min_v_all, max_v_all;\n\nint check(long long D) {\n    // Caso 1: B1 cobre o canto (min_u, min_v)\n    // B1: u in [min_u_all, min_u_all + D], v in [min_v_all, min_v_all + D]\n    long long lim_u1 = min_u_all + D;\n    long long lim_v1 = min_v_all + D;\n    \n    long long b_min_u = INF, b_max_u = -INF;\n    long long b_min_v = INF, b_max_v = -INF;\n    \n    for (int i = 0; i < N; i++) {\n        if (pts[i].u > lim_u1 || pts[i].v > lim_v1) {\n            if (pts[i].u < b_min_u) b_min_u = pts[i].u;\n            if (pts[i].u > b_max_u) b_max_u = pts[i].u;\n            if (pts[i].v < b_min_v) b_min_v = pts[i].v;\n            if (pts[i].v > b_max_v) b_max_v = pts[i].v;\n        }\n    }\n    \n    if (b_min_u == INF || (b_max_u - b_min_u <= D && b_max_v - b_min_v <= D)) {\n        return 1;\n    }\n\n    // Caso 2: B1 cobre o canto (min_u, max_v)\n    // B1: u in [min_u_all, min_u_all + D], v in [max_v_all - D, max_v_all]\n    long long lim_u2 = min_u_all + D;\n    long long lim_v2 = max_v_all - D;\n    \n    b_min_u = INF; b_max_u = -INF;\n    b_min_v = INF; b_max_v = -INF;\n    \n    for (int i = 0; i < N; i++) {\n        if (pts[i].u > lim_u2 || pts[i].v < lim_v2) {\n            if (pts[i].u < b_min_u) b_min_u = pts[i].u;\n            if (pts[i].u > b_max_u) b_max_u = pts[i].u;\n            if (pts[i].v < b_min_v) b_min_v = pts[i].v;\n            if (pts[i].v > b_max_v) b_max_v = pts[i].v;\n        }\n    }\n    \n    if (b_min_u == INF || (b_max_u - b_min_u <= D && b_max_v - b_min_v <= D)) {\n        return 1;\n    }\n\n    return 0;\n}\n\nstatic long long X[MAXN];\n\nint main() {\n    if (scanf(\"%d\", &N) != 1) return 0;\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &X[i]);\n    }\n    \n    min_u_all = INF; max_u_all = -INF;\n    min_v_all = INF; max_v_all = -INF;\n    \n    for (int i = 0; i < N; i++) {\n        long long y;\n        scanf(\"%lld\", &y);\n        pts[i].u = X[i] + y;\n        pts[i].v = X[i] - y;\n        \n        if (pts[i].u < min_u_all) min_u_all = pts[i].u;\n        if (pts[i].u > max_u_all) max_u_all = pts[i].u;\n        if (pts[i].v < min_v_all) min_v_all = pts[i].v;\n        if (pts[i].v > max_v_all) max_v_all = pts[i].v;\n    }\n    \n    long long low = 0, high = 2000000000LL;\n    long long ans = high;\n    \n    while (low <= high) {\n        long long mid = low + (high - low) / 2;\n        if (check(mid)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n    \n    printf(\"%lld\\n\", ans);\n    \n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21442249999381602,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

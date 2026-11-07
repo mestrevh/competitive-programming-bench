@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:55:05.344367+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 834,
+            "output_tokens": 1205,
+            "total_tokens": 2039
+        },
+        "cost_usd": {
+            "input_cost": 8.3e-05,
+            "output_cost": 0.000602,
+            "total_cost": 0.000686
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst L = Number(input[0]);\nconst C = Number(input[1]);\nconst grid = input.slice(2, 2 + L);\n\nlet startR = -1;\nlet startC = -1;\n\nfor (let r = 0; r < L; r++) {\n  const c = grid[r].indexOf('o');\n  if (c !== -1) {\n    startR = r;\n    startC = c;\n    break;\n  }\n}\n\nconst directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];\nlet previousR = startR;\nlet previousC = startC;\nlet currentR = -1;\nlet currentC = -1;\n\nfor (const [dr, dc] of directions) {\n  const nr = startR + dr;\n  const nc = startC + dc;\n  if (nr >= 0 && nr < L && nc >= 0 && nc < C && grid[nr][nc] === 'H') {\n    currentR = nr;\n    currentC = nc;\n    break;\n  }\n}\n\nwhile (true) {\n  let nextR = -1;\n  let nextC = -1;\n\n  for (const [dr, dc] of directions) {\n    const nr = currentR + dr;\n    const nc = currentC + dc;\n    if (\n      nr >= 0 && nr < L && nc >= 0 && nc < C &&\n      grid[nr][nc] === 'H' &&\n      (nr !== previousR || nc !== previousC)\n    ) {\n      nextR = nr;\n      nextC = nc;\n      break;\n    }\n  }\n\n  if (nextR === -1) break;\n\n  previousR = currentR;\n  previousC = currentC;\n  currentR = nextR;\n  currentC = nextC;\n}\n\nconsole.log(`${currentR + 1} ${currentC + 1}`);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst L = Number(input[0]);\nconst C = Number(input[1]);\nconst grid = input.slice(2, 2 + L);\n\nlet startR = -1;\nlet startC = -1;\n\nfor (let r = 0; r < L; r++) {\n  const c = grid[r].indexOf('o');\n  if (c !== -1) {\n    startR = r;\n    startC = c;\n    break;\n  }\n}\n\nconst directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];\nlet previousR = startR;\nlet previousC = startC;\nlet currentR = -1;\nlet currentC = -1;\n\nfor (const [dr, dc] of directions) {\n  const nr = startR + dr;\n  const nc = startC + dc;\n  if (nr >= 0 && nr < L && nc >= 0 && nc < C && grid[nr][nc] === 'H') {\n    currentR = nr;\n    currentC = nc;\n    break;\n  }\n}\n\nwhile (true) {\n  let nextR = -1;\n  let nextC = -1;\n\n  for (const [dr, dc] of directions) {\n    const nr = currentR + dr;\n    const nc = currentC + dc;\n    if (\n      nr >= 0 && nr < L && nc >= 0 && nc < C &&\n      grid[nr][nc] === 'H' &&\n      (nr !== previousR || nc !== previousC)\n    ) {\n      nextR = nr;\n      nextC = nc;\n      break;\n    }\n  }\n\n  if (nextR === -1) break;\n\n  previousR = currentR;\n  previousC = currentC;\n  currentR = nextR;\n  currentC = nextC;\n}\n\nconsole.log(`${currentR + 1} ${currentC + 1}`);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06512430000293534,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:13:52.643971+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1200,
+            "output_tokens": 17854,
+            "total_tokens": 19054
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.04285,
+            "total_cost": 0.042853
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet ptr = 0;\nconst N = data[ptr++];\nconst M = data[ptr++];\nconst V = N * M;\n\nconst maxNodes = 2 * V + 5;\nconst T = new Int32Array(maxNodes);\nconst W = new Float64Array(maxNodes);\nconst dsu = new Int32Array(maxNodes);\nconst parent = new Int32Array(maxNodes);\nparent.fill(-1);\n\nfor (let i = 0; i < V; i++) {\n    const val = data[ptr++];\n    T[i] = val;\n    W[i] = val;\n    dsu[i] = i;\n}\n\nconst order = new Array(V);\nfor (let i = 0; i < V; i++) order[i] = i;\norder.sort((a, b) => T[a] - T[b]);\n\nconst active = new Uint8Array(V);\nlet nodeCount = V;\n\nfunction find(x) {\n    while (dsu[x] !== x) {\n        dsu[x] = dsu[dsu[x]];\n        x = dsu[x];\n    }\n    return x;\n}\n\nfunction addRoot(roots, r) {\n    for (let i = 0; i < roots.length; i++) {\n        if (roots[i] === r) return;\n    }\n    roots.push(r);\n}\n\nfor (let oi = 0; oi < V; oi++) {\n    const idx = order[oi];\n    const row = Math.floor(idx / M);\n    const col = idx % M;\n\n    const roots = [];\n\n    if (col > 0 && active[idx - 1]) addRoot(roots, find(idx - 1));\n    if (col + 1 < M && active[idx + 1]) addRoot(roots, find(idx + 1));\n    if (row > 0 && active[idx - M]) addRoot(roots, find(idx - M));\n    if (row + 1 < N && active[idx + M]) addRoot(roots, find(idx + M));\n\n    const newNode = nodeCount++;\n    T[newNode] = T[idx];\n\n    let sum = W[idx];\n\n    parent[idx] = newNode;\n    dsu[idx] = newNode;\n\n    for (let i = 0; i < roots.length; i++) {\n        const r = roots[i];\n        parent[r] = newNode;\n        sum += W[r];\n        dsu[r] = newNode;\n    }\n\n    W[newNode] = sum;\n    dsu[newNode] = newNode;\n    active[idx] = 1;\n}\n\nconst out = new Float64Array(nodeCount);\n\nfor (let u = nodeCount - 1; u >= 0; u--) {\n    const p = parent[u];\n    if (p === -1) {\n        out[u] = W[u];\n    } else {\n        if (W[u] >= T[p]) {\n            out[u] = out[p];\n        } else {\n            out[u] = W[u];\n        }\n    }\n}\n\nconst lines = [];\nfor (let i = 0; i < N; i++) {\n    const row = [];\n    for (let j = 0; j < M; j++) {\n        row.push(out[i * M + j]);\n    }\n    lines.push(row.join(' '));\n}\n\nconsole.log(lines.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet ptr = 0;\nconst N = data[ptr++];\nconst M = data[ptr++];\nconst V = N * M;\n\nconst maxNodes = 2 * V + 5;\nconst T = new Int32Array(maxNodes);\nconst W = new Float64Array(maxNodes);\nconst dsu = new Int32Array(maxNodes);\nconst parent = new Int32Array(maxNodes);\nparent.fill(-1);\n\nfor (let i = 0; i < V; i++) {\n    const val = data[ptr++];\n    T[i] = val;\n    W[i] = val;\n    dsu[i] = i;\n}\n\nconst order = new Array(V);\nfor (let i = 0; i < V; i++) order[i] = i;\norder.sort((a, b) => T[a] - T[b]);\n\nconst active = new Uint8Array(V);\nlet nodeCount = V;\n\nfunction find(x) {\n    while (dsu[x] !== x) {\n        dsu[x] = dsu[dsu[x]];\n        x = dsu[x];\n    }\n    return x;\n}\n\nfunction addRoot(roots, r) {\n    for (let i = 0; i < roots.length; i++) {\n        if (roots[i] === r) return;\n    }\n    roots.push(r);\n}\n\nfor (let oi = 0; oi < V; oi++) {\n    const idx = order[oi];\n    const row = Math.floor(idx / M);\n    const col = idx % M;\n\n    const roots = [];\n\n    if (col > 0 && active[idx - 1]) addRoot(roots, find(idx - 1));\n    if (col + 1 < M && active[idx + 1]) addRoot(roots, find(idx + 1));\n    if (row > 0 && active[idx - M]) addRoot(roots, find(idx - M));\n    if (row + 1 < N && active[idx + M]) addRoot(roots, find(idx + M));\n\n    const newNode = nodeCount++;\n    T[newNode] = T[idx];\n\n    let sum = W[idx];\n\n    parent[idx] = newNode;\n    dsu[idx] = newNode;\n\n    for (let i = 0; i < roots.length; i++) {\n        const r = roots[i];\n        parent[r] = newNode;\n        sum += W[r];\n        dsu[r] = newNode;\n    }\n\n    W[newNode] = sum;\n    dsu[newNode] = newNode;\n    active[idx] = 1;\n}\n\nconst out = new Float64Array(nodeCount);\n\nfor (let u = nodeCount - 1; u >= 0; u--) {\n    const p = parent[u];\n    if (p === -1) {\n        out[u] = W[u];\n    } else {\n        if (W[u] >= T[p]) {\n            out[u] = out[p];\n        } else {\n            out[u] = W[u];\n        }\n    }\n}\n\nconst lines = [];\nfor (let i = 0; i < N; i++) {\n    const row = [];\n    for (let j = 0; j < M; j++) {\n        row.push(out[i * M + j]);\n    }\n    lines.push(row.join(' '));\n}\n\nconsole.log(lines.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16060529998503625,
+            "counts": {
+                "AC": 150,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 150
+        }
+    }
+]

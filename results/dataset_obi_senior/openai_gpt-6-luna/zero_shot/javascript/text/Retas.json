@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:59:20.841157+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1065,
+            "output_tokens": 1687,
+            "total_tokens": 2752
+        },
+        "cost_usd": {
+            "input_cost": 0.000107,
+            "output_cost": 0.000843,
+            "total_cost": 0.00095
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet pos = 0;\nconst n = Number(input[pos++]);\nconst x1 = BigInt(input[pos++]);\nconst x2 = BigInt(input[pos++]);\n\nconst lines = [];\nfor (let i = 0; i < n; i++) {\n  const a = BigInt(input[pos++]);\n  const b = BigInt(input[pos++]);\n  lines.push({\n    id: i,\n    a,\n    y1: a * x1 + b,\n    y2: a * x2 + b\n  });\n}\n\nconst order1 = lines.slice().sort((u, v) => {\n  if (u.y1 < v.y1) return -1;\n  if (u.y1 > v.y1) return 1;\n  if (u.a > v.a) return -1;\n  if (u.a < v.a) return 1;\n  return 0;\n});\n\nconst order2 = lines.slice().sort((u, v) => {\n  if (u.y2 < v.y2) return -1;\n  if (u.y2 > v.y2) return 1;\n  if (u.a < v.a) return -1;\n  if (u.a > v.a) return 1;\n  return 0;\n});\n\nconst rank = new Array(n);\nfor (let i = 0; i < n; i++) {\n  rank[order2[i].id] = i;\n}\n\nconst bit = new Int32Array(n + 1);\nfunction add(index) {\n  for (let i = index + 1; i <= n; i += i & -i) bit[i]++;\n}\nfunction sum(count) {\n  let result = 0;\n  for (let i = count; i > 0; i -= i & -i) result += bit[i];\n  return result;\n}\n\nlet answer = 0;\nfor (let i = 0; i < n; i++) {\n  const r = rank[order1[i].id];\n  answer += i - sum(r + 1);\n  add(r);\n}\n\nconsole.log(answer.toString());\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet pos = 0;\nconst n = Number(input[pos++]);\nconst x1 = BigInt(input[pos++]);\nconst x2 = BigInt(input[pos++]);\n\nconst lines = [];\nfor (let i = 0; i < n; i++) {\n  const a = BigInt(input[pos++]);\n  const b = BigInt(input[pos++]);\n  lines.push({\n    id: i,\n    a,\n    y1: a * x1 + b,\n    y2: a * x2 + b\n  });\n}\n\nconst order1 = lines.slice().sort((u, v) => {\n  if (u.y1 < v.y1) return -1;\n  if (u.y1 > v.y1) return 1;\n  if (u.a > v.a) return -1;\n  if (u.a < v.a) return 1;\n  return 0;\n});\n\nconst order2 = lines.slice().sort((u, v) => {\n  if (u.y2 < v.y2) return -1;\n  if (u.y2 > v.y2) return 1;\n  if (u.a < v.a) return -1;\n  if (u.a > v.a) return 1;\n  return 0;\n});\n\nconst rank = new Array(n);\nfor (let i = 0; i < n; i++) {\n  rank[order2[i].id] = i;\n}\n\nconst bit = new Int32Array(n + 1);\nfunction add(index) {\n  for (let i = index + 1; i <= n; i += i & -i) bit[i]++;\n}\nfunction sum(count) {\n  let result = 0;\n  for (let i = count; i > 0; i -= i & -i) result += bit[i];\n  return result;\n}\n\nlet answer = 0;\nfor (let i = 0; i < n; i++) {\n  const r = rank[order1[i].id];\n  answer += i - sum(r + 1);\n  add(r);\n}\n\nconsole.log(answer.toString());",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16811900000902824,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

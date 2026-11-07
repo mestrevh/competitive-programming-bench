@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:11:24.229977+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 789,
+            "output_tokens": 1910,
+            "total_tokens": 2699
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000955,
+            "total_cost": 0.001034
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    unordered_set<string> prefixes, suffixes, substrings;\n    prefixes.reserve(N * 10);\n    suffixes.reserve(N * 10);\n    substrings.reserve(N * 50);\n\n    for (int i = 0; i < N; ++i) {\n        string s;\n        cin >> s;\n        int len = static_cast<int>(s.size());\n\n        bool invalid = substrings.count(s);\n\n        for (int split = 1; !invalid && split < len; ++split) {\n            string left = s.substr(0, split);\n            string right = s.substr(split);\n            if (suffixes.count(left) && prefixes.count(right)) {\n                invalid = true;\n            }\n        }\n\n        if (invalid) {\n            cout << s << '\\n';\n            return 0;\n        }\n\n        for (int l = 0; l < len; ++l) {\n            prefixes.insert(s.substr(0, l + 1));\n            suffixes.insert(s.substr(len - l - 1, l + 1));\n            for (int r = l; r < len; ++r) {\n                substrings.insert(s.substr(l, r - l + 1));\n            }\n        }\n    }\n\n    cout << \"ok\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    unordered_set<string> prefixes, suffixes, substrings;\n    prefixes.reserve(N * 10);\n    suffixes.reserve(N * 10);\n    substrings.reserve(N * 50);\n\n    for (int i = 0; i < N; ++i) {\n        string s;\n        cin >> s;\n        int len = static_cast<int>(s.size());\n\n        bool invalid = substrings.count(s);\n\n        for (int split = 1; !invalid && split < len; ++split) {\n            string left = s.substr(0, split);\n            string right = s.substr(split);\n            if (suffixes.count(left) && prefixes.count(right)) {\n                invalid = true;\n            }\n        }\n\n        if (invalid) {\n            cout << s << '\\n';\n            return 0;\n        }\n\n        for (int l = 0; l < len; ++l) {\n            prefixes.insert(s.substr(0, l + 1));\n            suffixes.insert(s.substr(len - l - 1, l + 1));\n            for (int r = l; r < len; ++r) {\n                substrings.insert(s.substr(l, r - l + 1));\n            }\n        }\n    }\n\n    cout << \"ok\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17307859999709763,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

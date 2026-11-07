@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:33:37.626038+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1937,
+            "output_tokens": 434,
+            "total_tokens": 2728
+        },
+        "cost_usd": {
+            "input_cost": 0.001453,
+            "output_cost": 0.001627,
+            "total_cost": 0.00308
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    Q = int(input_data[1])\n\n    grid = [[1 if c == \"1\" else 0 for c in row] for row in input_data[2 : 2 + N]]\n\n    for _ in range(Q):\n        next_grid = [[0] * N for _ in range(N)]\n        for r in range(N):\n            r_min = max(0, r - 1)\n            r_max = min(N, r + 2)\n            for c in range(N):\n                c_min = max(0, c - 1)\n                c_max = min(N, c + 2)\n\n                live_neighbors = 0\n                for nr in range(r_min, r_max):\n                    for nc in range(c_min, c_max):\n                        if nr == r and nc == c:\n                            continue\n                        live_neighbors += grid[nr][nc]\n\n                if grid[r][c] == 1:\n                    if live_neighbors == 2 or live_neighbors == 3:\n                        next_grid[r][c] = 1\n                    else:\n                        next_grid[r][c] = 0\n                else:\n                    if live_neighbors == 3:\n                        next_grid[r][c] = 1\n                    else:\n                        next_grid[r][c] = 0\n        grid = next_grid\n\n    output = []\n    for row in grid:\n        output.append(\"\".join(\"1\" if cell == 1 else \"0\" for cell in row))\n    print(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    Q = int(input_data[1])\n\n    grid = [[1 if c == \"1\" else 0 for c in row] for row in input_data[2 : 2 + N]]\n\n    for _ in range(Q):\n        next_grid = [[0] * N for _ in range(N)]\n        for r in range(N):\n            r_min = max(0, r - 1)\n            r_max = min(N, r + 2)\n            for c in range(N):\n                c_min = max(0, c - 1)\n                c_max = min(N, c + 2)\n\n                live_neighbors = 0\n                for nr in range(r_min, r_max):\n                    for nc in range(c_min, c_max):\n                        if nr == r and nc == c:\n                            continue\n                        live_neighbors += grid[nr][nc]\n\n                if grid[r][c] == 1:\n                    if live_neighbors == 2 or live_neighbors == 3:\n                        next_grid[r][c] = 1\n                    else:\n                        next_grid[r][c] = 0\n                else:\n                    if live_neighbors == 3:\n                        next_grid[r][c] = 1\n                    else:\n                        next_grid[r][c] = 0\n        grid = next_grid\n\n    output = []\n    for row in grid:\n        output.append(\"\".join(\"1\" if cell == 1 else \"0\" for cell in row))\n    print(\"\\n\".join(output))\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2419173000016599,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

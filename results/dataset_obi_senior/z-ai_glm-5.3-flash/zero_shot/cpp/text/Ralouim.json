@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T00:18:43.702292+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 763,
+            "output_tokens": 18818,
+            "total_tokens": 19581
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.009409,
+            "total_cost": 0.009425
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    vector<long long> x(n), y(n);\n    for(int i=0;i<n;i++){\n        long long a,b; scanf(\"%lld %lld\",&a,&b);\n        x[i]=a; y[i]=b;\n    }\n    const int O=n; // no origem como no extra\n\n    // chave: d2 (30 bits) | a (11 bits) | b (11 bits)\n    vector<unsigned long long> keys;\n    keys.reserve((size_t)(n+1)*n/2);\n    for(int i=0;i<n;i++){\n        for(int j=i+1;j<=n;j++){\n            long long xj,yj;\n            if(j==n){xj=0;yj=0;}else{xj=x[j];yj=y[j];}\n            long long dx=x[i]-xj, dy=y[i]-yj;\n            long long d2=dx*dx+dy*dy;\n            unsigned long long k=((unsigned long long)d2<<22)|((unsigned long long)i<<11)|(unsigned long long)j;\n            keys.push_back(k);\n        }\n    }\n    sort(keys.begin(),keys.end());\n\n    vector<int> g(n+1,0), cand(n+1,0), stamp(n+1,-1);\n    int grp=0;\n    size_t i=0, m=keys.size();\n    while(i<m){\n        unsigned long long lvl=keys[i]>>22;\n        size_t e=i;\n        while(e<m && (keys[e]>>22)==lvl) e++;\n        ++grp;\n        // fase 1: acumula candidatos usando valores antigos de g\n        for(size_t k=i;k<e;k++){\n            int a=(int)((keys[k]>>11)&2047);\n            int b=(int)(keys[k]&2047);\n            if(stamp[a]!=grp){stamp[a]=grp;cand[a]=0;}\n            if(stamp[b]!=grp){stamp[b]=grp;cand[b]=0;}\n            if(b==O){\n                int c=1+g[a];\n                if(c>cand[O])cand[O]=c;\n            }else{\n                int c=1+g[b];\n                if(c>cand[a])cand[a]=c;\n                c=1+g[a];\n                if(c>cand[b])cand[b]=c;\n            }\n        }\n        // fase 2: aplica atualizações do nível\n        for(size_t k=i;k<e;k++){\n            int a=(int)((keys[k]>>11)&2047);\n            int b=(int)(keys[k]&2047);\n            if(stamp[a]==grp && cand[a]>g[a]) g[a]=cand[a];\n            if(stamp[b]==grp && cand[b]>g[b]) g[b]=cand[b];\n        }\n        i=e;\n    }\n    printf(\"%d\\n\",g[O]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    vector<long long> x(n), y(n);\n    for(int i=0;i<n;i++){\n        long long a,b; scanf(\"%lld %lld\",&a,&b);\n        x[i]=a; y[i]=b;\n    }\n    const int O=n; // no origem como no extra\n\n    // chave: d2 (30 bits) | a (11 bits) | b (11 bits)\n    vector<unsigned long long> keys;\n    keys.reserve((size_t)(n+1)*n/2);\n    for(int i=0;i<n;i++){\n        for(int j=i+1;j<=n;j++){\n            long long xj,yj;\n            if(j==n){xj=0;yj=0;}else{xj=x[j];yj=y[j];}\n            long long dx=x[i]-xj, dy=y[i]-yj;\n            long long d2=dx*dx+dy*dy;\n            unsigned long long k=((unsigned long long)d2<<22)|((unsigned long long)i<<11)|(unsigned long long)j;\n            keys.push_back(k);\n        }\n    }\n    sort(keys.begin(),keys.end());\n\n    vector<int> g(n+1,0), cand(n+1,0), stamp(n+1,-1);\n    int grp=0;\n    size_t i=0, m=keys.size();\n    while(i<m){\n        unsigned long long lvl=keys[i]>>22;\n        size_t e=i;\n        while(e<m && (keys[e]>>22)==lvl) e++;\n        ++grp;\n        // fase 1: acumula candidatos usando valores antigos de g\n        for(size_t k=i;k<e;k++){\n            int a=(int)((keys[k]>>11)&2047);\n            int b=(int)(keys[k]&2047);\n            if(stamp[a]!=grp){stamp[a]=grp;cand[a]=0;}\n            if(stamp[b]!=grp){stamp[b]=grp;cand[b]=0;}\n            if(b==O){\n                int c=1+g[a];\n                if(c>cand[O])cand[O]=c;\n            }else{\n                int c=1+g[b];\n                if(c>cand[a])cand[a]=c;\n                c=1+g[a];\n                if(c>cand[b])cand[b]=c;\n            }\n        }\n        // fase 2: aplica atualizações do nível\n        for(size_t k=i;k<e;k++){\n            int a=(int)((keys[k]>>11)&2047);\n            int b=(int)(keys[k]&2047);\n            if(stamp[a]==grp && cand[a]>g[a]) g[a]=cand[a];\n            if(stamp[b]==grp && cand[b]>g[b]) g[b]=cand[b];\n        }\n        i=e;\n    }\n    printf(\"%d\\n\",g[O]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18512000000919215,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:08:43.644893+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 910,
+            "output_tokens": 6804,
+            "total_tokens": 7714
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.01633,
+            "total_cost": 0.016332
+        },
+        "raw_response": "```python\nimport sys\nimport random\n\nsys.setrecursionlimit(1_000_000)\n\n\nclass Node:\n    __slots__ = ('key', 'prio', 'left', 'right', 'cnt', 'sz')\n\n    def __init__(self, key):\n        self.key = key\n        self.prio = random.getrandbits(64)\n        self.left = None\n        self.right = None\n        self.cnt = 1\n        self.sz = 1\n\n\ndef upd(t):\n    l = t.left\n    r = t.right\n    t.sz = t.cnt + (l.sz if l else 0) + (r.sz if r else 0)\n\n\ndef rotate_right(t):\n    x = t.left\n    t.left = x.right\n    x.right = t\n    upd(t)\n    upd(x)\n    return x\n\n\ndef rotate_left(t):\n    x = t.right\n    t.right = x.left\n    x.left = t\n    upd(t)\n    upd(x)\n    return x\n\n\ndef insert(t, key):\n    if t is None:\n        return Node(key)\n\n    if key == t.key:\n        t.cnt += 1\n        t.sz += 1\n        return t\n\n    if key < t.key:\n        t.left = insert(t.left, key)\n        if t.left.prio < t.prio:\n            t = rotate_right(t)\n    else:\n        t.right = insert(t.right, key)\n        if t.right.prio < t.prio:\n            t = rotate_left(t)\n\n    upd(t)\n    return t\n\n\ndef count_le(t, key):\n    res = 0\n    while t is not None:\n        if key < t.key:\n            t = t.left\n        else:\n            l = t.left\n            res += t.cnt + (l.sz if l else 0)\n            t = t.right\n    return res\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    out = []\n    root = None\n    prev = 0\n    idx = 1\n\n    for _ in range(n):\n        x = int(data[idx]) + prev\n        y = int(data[idx + 1]) + prev\n        idx += 2\n\n        dist = x * x + y * y\n        penalty = count_le(root, dist)\n        out.append(str(penalty))\n\n        root = insert(root, dist)\n        prev = penalty\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport random\n\nsys.setrecursionlimit(1_000_000)\n\n\nclass Node:\n    __slots__ = ('key', 'prio', 'left', 'right', 'cnt', 'sz')\n\n    def __init__(self, key):\n        self.key = key\n        self.prio = random.getrandbits(64)\n        self.left = None\n        self.right = None\n        self.cnt = 1\n        self.sz = 1\n\n\ndef upd(t):\n    l = t.left\n    r = t.right\n    t.sz = t.cnt + (l.sz if l else 0) + (r.sz if r else 0)\n\n\ndef rotate_right(t):\n    x = t.left\n    t.left = x.right\n    x.right = t\n    upd(t)\n    upd(x)\n    return x\n\n\ndef rotate_left(t):\n    x = t.right\n    t.right = x.left\n    x.left = t\n    upd(t)\n    upd(x)\n    return x\n\n\ndef insert(t, key):\n    if t is None:\n        return Node(key)\n\n    if key == t.key:\n        t.cnt += 1\n        t.sz += 1\n        return t\n\n    if key < t.key:\n        t.left = insert(t.left, key)\n        if t.left.prio < t.prio:\n            t = rotate_right(t)\n    else:\n        t.right = insert(t.right, key)\n        if t.right.prio < t.prio:\n            t = rotate_left(t)\n\n    upd(t)\n    return t\n\n\ndef count_le(t, key):\n    res = 0\n    while t is not None:\n        if key < t.key:\n            t = t.left\n        else:\n            l = t.left\n            res += t.cnt + (l.sz if l else 0)\n            t = t.right\n    return res\n\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    out = []\n    root = None\n    prev = 0\n    idx = 1\n\n    for _ in range(n):\n        x = int(data[idx]) + prev\n        y = int(data[idx + 1]) + prev\n        idx += 2\n\n        dist = x * x + y * y\n        penalty = count_le(root, dist)\n        out.append(str(penalty))\n\n        root = insert(root, dist)\n        prev = penalty\n\n    sys.stdout.write(\"\\n\".join(out))\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.6802344999960042,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

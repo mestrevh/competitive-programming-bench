@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T18:19:31.538020+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 528,
+            "output_tokens": 2728,
+            "total_tokens": 3256
+        },
+        "cost_usd": {
+            "input_cost": 1.1e-05,
+            "output_cost": 0.001364,
+            "total_cost": 0.001375
+        },
+        "raw_response": "```java\nimport java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        final int[] a = new int[n];\n        for (int i = 0; i < n; i++) a[i] = Integer.parseInt(st.nextToken());\n\n        Integer[] idx = new Integer[n];\n        for (int i = 0; i < n; i++) idx[i] = i;\n        Arrays.sort(idx, (x, y) -> a[y] - a[x]);\n\n        boolean[] act = new boolean[n];\n        int runs = 0;\n        int ans = 1;\n        int i = 0;\n        while (i < n) {\n            int v = a[idx[i]];\n            int j = i;\n            while (j < n && a[idx[j]] == v) j++;\n            for (int k = i; k < j; k++) {\n                int p = idx[k];\n                act[p] = true;\n                boolean L = p > 0 && act[p - 1];\n                boolean R = p < n - 1 && act[p + 1];\n                if (!L && !R) runs++;\n                else if (L && R) runs--;\n            }\n            if (runs + 1 > ans) ans = runs + 1;\n            i = j;\n        }\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        final int[] a = new int[n];\n        for (int i = 0; i < n; i++) a[i] = Integer.parseInt(st.nextToken());\n\n        Integer[] idx = new Integer[n];\n        for (int i = 0; i < n; i++) idx[i] = i;\n        Arrays.sort(idx, (x, y) -> a[y] - a[x]);\n\n        boolean[] act = new boolean[n];\n        int runs = 0;\n        int ans = 1;\n        int i = 0;\n        while (i < n) {\n            int v = a[idx[i]];\n            int j = i;\n            while (j < n && a[idx[j]] == v) j++;\n            for (int k = i; k < j; k++) {\n                int p = idx[k];\n                act[p] = true;\n                boolean L = p > 0 && act[p - 1];\n                boolean R = p < n - 1 && act[p + 1];\n                if (!L && !R) runs++;\n                else if (L && R) runs--;\n            }\n            if (runs + 1 > ans) ans = runs + 1;\n            i = j;\n        }\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20695510000223294,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

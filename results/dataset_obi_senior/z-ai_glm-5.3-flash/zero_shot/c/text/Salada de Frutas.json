@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:58:37.557376+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 957,
+            "output_tokens": 1345,
+            "total_tokens": 2302
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.000673,
+            "total_cost": 0.000693
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nstatic int cmp(const void *a, const void *b) {\n    int x = *(const int *)a, y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int R, N;\n    if (scanf(\"%d %d\", &R, &N) != 2) return 0;\n\n    int minprice[101];\n    int present[101];\n    memset(present, 0, sizeof(present));\n    for (int i = 1; i <= 100; i++) minprice[i] = 101; /* preco maximo = 100 */\n\n    for (int i = 0; i < N; i++) {\n        int T, P;\n        if (scanf(\"%d %d\", &T, &P) != 2) return 0;\n        if (!present[T] || P < minprice[T]) {\n            present[T] = 1;\n            minprice[T] = P;\n        }\n    }\n\n    int prices[100], cnt = 0;\n    for (int i = 1; i <= 100; i++) {\n        if (present[i]) prices[cnt++] = minprice[i];\n    }\n\n    /* Para maximizar a QUANTIDADE de tipos distintos, basta comprar\n       cada tipo pelo menor preco e escolher gulosamente os mais baratos. */\n    qsort(prices, cnt, sizeof(int), cmp);\n\n    int sum = 0, ans = 0;\n    for (int i = 0; i < cnt; i++) {\n        if (sum + prices[i] <= R) {\n            sum += prices[i];\n            ans++;\n        } else {\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nstatic int cmp(const void *a, const void *b) {\n    int x = *(const int *)a, y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int R, N;\n    if (scanf(\"%d %d\", &R, &N) != 2) return 0;\n\n    int minprice[101];\n    int present[101];\n    memset(present, 0, sizeof(present));\n    for (int i = 1; i <= 100; i++) minprice[i] = 101; /* preco maximo = 100 */\n\n    for (int i = 0; i < N; i++) {\n        int T, P;\n        if (scanf(\"%d %d\", &T, &P) != 2) return 0;\n        if (!present[T] || P < minprice[T]) {\n            present[T] = 1;\n            minprice[T] = P;\n        }\n    }\n\n    int prices[100], cnt = 0;\n    for (int i = 1; i <= 100; i++) {\n        if (present[i]) prices[cnt++] = minprice[i];\n    }\n\n    /* Para maximizar a QUANTIDADE de tipos distintos, basta comprar\n       cada tipo pelo menor preco e escolher gulosamente os mais baratos. */\n    qsort(prices, cnt, sizeof(int), cmp);\n\n    int sum = 0, ans = 0;\n    for (int i = 0; i < cnt; i++) {\n        if (sum + prices[i] <= R) {\n            sum += prices[i];\n            ans++;\n        } else {\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12511389999417588,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

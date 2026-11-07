@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:55:16.016801+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 927,
+            "output_tokens": 780,
+            "total_tokens": 2929
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.002925,
+            "total_cost": 0.00362
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\n// Pares de faces opostas:\n// A (0) com F (5)\n// B (1) com D (3)\n// C (2) com E (4)\nint get_opposite(int face_idx) {\n    switch (face_idx) {\n        case 0: return 5;\n        case 1: return 3;\n        case 2: return 4;\n        case 3: return 1;\n        case 4: return 2;\n        case 5: return 0;\n    }\n    return -1;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<vector<int>> dice(n, vector<int>(6));\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < 6; ++j) {\n            cin >> dice[i][j];\n        }\n    }\n\n    int max_total_sum = 0;\n\n    // O primeiro dado tem 6 possíveis orientações para a face inferior (índice 0 a 5)\n    for (int bottom_face_idx = 0; bottom_face_idx < 6; ++bottom_face_idx) {\n        int current_sum = 0;\n        int current_top_val = 0;\n\n        // Processa o primeiro dado\n        int b_idx = bottom_face_idx;\n        int t_idx = get_opposite(b_idx);\n        current_top_val = dice[0][t_idx];\n\n        int best_side = 0;\n        for (int j = 0; j < 6; ++j) {\n            if (j != b_idx && j != t_idx) {\n                best_side = max(best_side, dice[0][j]);\n            }\n        }\n        current_sum += best_side;\n\n        // Processa os dados seguintes\n        for (int i = 1; i < n; ++i) {\n            // A base do dado i deve ter valor igual a current_top_val\n            int next_b_idx = -1;\n            for (int j = 0; j < 6; ++j) {\n                if (dice[i][j] == current_top_val) {\n                    next_b_idx = j;\n                    break;\n                }\n            }\n            int next_t_idx = get_opposite(next_b_idx);\n            current_top_val = dice[i][next_t_idx];\n\n            best_side = 0;\n            for (int j = 0; j < 6; ++j) {\n                if (j != next_b_idx && j != next_t_idx) {\n                    best_side = max(best_side, dice[i][j]);\n                }\n            }\n            current_sum += best_side;\n        }\n\n        max_total_sum = max(max_total_sum, current_sum);\n    }\n\n    cout << max_total_sum << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\n// Pares de faces opostas:\n// A (0) com F (5)\n// B (1) com D (3)\n// C (2) com E (4)\nint get_opposite(int face_idx) {\n    switch (face_idx) {\n        case 0: return 5;\n        case 1: return 3;\n        case 2: return 4;\n        case 3: return 1;\n        case 4: return 2;\n        case 5: return 0;\n    }\n    return -1;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<vector<int>> dice(n, vector<int>(6));\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < 6; ++j) {\n            cin >> dice[i][j];\n        }\n    }\n\n    int max_total_sum = 0;\n\n    // O primeiro dado tem 6 possíveis orientações para a face inferior (índice 0 a 5)\n    for (int bottom_face_idx = 0; bottom_face_idx < 6; ++bottom_face_idx) {\n        int current_sum = 0;\n        int current_top_val = 0;\n\n        // Processa o primeiro dado\n        int b_idx = bottom_face_idx;\n        int t_idx = get_opposite(b_idx);\n        current_top_val = dice[0][t_idx];\n\n        int best_side = 0;\n        for (int j = 0; j < 6; ++j) {\n            if (j != b_idx && j != t_idx) {\n                best_side = max(best_side, dice[0][j]);\n            }\n        }\n        current_sum += best_side;\n\n        // Processa os dados seguintes\n        for (int i = 1; i < n; ++i) {\n            // A base do dado i deve ter valor igual a current_top_val\n            int next_b_idx = -1;\n            for (int j = 0; j < 6; ++j) {\n                if (dice[i][j] == current_top_val) {\n                    next_b_idx = j;\n                    break;\n                }\n            }\n            int next_t_idx = get_opposite(next_b_idx);\n            current_top_val = dice[i][next_t_idx];\n\n            best_side = 0;\n            for (int j = 0; j < 6; ++j) {\n                if (j != next_b_idx && j != next_t_idx) {\n                    best_side = max(best_side, dice[i][j]);\n                }\n            }\n            current_sum += best_side;\n        }\n\n        max_total_sum = max(max_total_sum, current_sum);\n    }\n\n    cout << max_total_sum << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1826582000066992,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

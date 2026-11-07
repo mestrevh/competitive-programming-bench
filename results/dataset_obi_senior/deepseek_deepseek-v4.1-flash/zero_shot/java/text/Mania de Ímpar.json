@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:18:18.358618+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1215,
+            "output_tokens": 6527,
+            "total_tokens": 7742
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.015665,
+            "total_cost": 0.015668
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        int[][] g = new int[N][M];\n        int costA = 0;\n        int costB = 0;\n\n        for (int i = 0; i < N; i++) {\n            st = new StringTokenizer(br.readLine());\n            for (int j = 0; j < M; j++) {\n                int v = Integer.parseInt(st.nextToken());\n                g[i][j] = v;\n\n                int p = v & 1;\n                int targetA = (i + j) & 1;\n\n                if (p != targetA) {\n                    costA++;\n                } else {\n                    costB++;\n                }\n            }\n        }\n\n        int pattern;\n        int minCost;\n\n        if (costA < costB) {\n            pattern = 0;\n            minCost = costA;\n        } else {\n            pattern = 1;\n            minCost = costB;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(minCost).append('\\n');\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                int target = ((i + j) & 1) ^ pattern;\n                int finalValue = g[i][j];\n\n                if ((finalValue & 1) != target) {\n                    finalValue++;\n                }\n\n                if (j > 0) sb.append(' ');\n                sb.append(finalValue);\n            }\n            sb.append('\\n');\n        }\n\n        System.out.print(sb.toString());\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        int[][] g = new int[N][M];\n        int costA = 0;\n        int costB = 0;\n\n        for (int i = 0; i < N; i++) {\n            st = new StringTokenizer(br.readLine());\n            for (int j = 0; j < M; j++) {\n                int v = Integer.parseInt(st.nextToken());\n                g[i][j] = v;\n\n                int p = v & 1;\n                int targetA = (i + j) & 1;\n\n                if (p != targetA) {\n                    costA++;\n                } else {\n                    costB++;\n                }\n            }\n        }\n\n        int pattern;\n        int minCost;\n\n        if (costA < costB) {\n            pattern = 0;\n            minCost = costA;\n        } else {\n            pattern = 1;\n            minCost = costB;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(minCost).append('\\n');\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                int target = ((i + j) & 1) ^ pattern;\n                int finalValue = g[i][j];\n\n                if ((finalValue & 1) != target) {\n                    finalValue++;\n                }\n\n                if (j > 0) sb.append(' ');\n                sb.append(finalValue);\n            }\n            sb.append('\\n');\n        }\n\n        System.out.print(sb.toString());\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09950490001938306,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

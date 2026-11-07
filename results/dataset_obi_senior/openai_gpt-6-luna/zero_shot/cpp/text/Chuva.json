@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:07:52.386693+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 612,
+            "output_tokens": 640,
+            "total_tokens": 1252
+        },
+        "cost_usd": {
+            "input_cost": 6.1e-05,
+            "output_cost": 0.00032,
+            "total_cost": 0.000381
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<long long> H(N), leftMax(N), rightMax(N);\n    for (auto& h : H) cin >> h;\n\n    leftMax[0] = H[0];\n    for (int i = 1; i < N; ++i)\n        leftMax[i] = max(leftMax[i - 1], H[i]);\n\n    rightMax[N - 1] = H[N - 1];\n    for (int i = N - 2; i >= 0; --i)\n        rightMax[i] = max(rightMax[i + 1], H[i]);\n\n    int answer = 0;\n    for (int i = 0; i < N; ++i) {\n        long long waterLevel = min(leftMax[i], rightMax[i]);\n        if (waterLevel - H[i] >= 1)\n            ++answer;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<long long> H(N), leftMax(N), rightMax(N);\n    for (auto& h : H) cin >> h;\n\n    leftMax[0] = H[0];\n    for (int i = 1; i < N; ++i)\n        leftMax[i] = max(leftMax[i - 1], H[i]);\n\n    rightMax[N - 1] = H[N - 1];\n    for (int i = N - 2; i >= 0; --i)\n        rightMax[i] = max(rightMax[i + 1], H[i]);\n\n    int answer = 0;\n    for (int i = 0; i < N; ++i) {\n        long long waterLevel = min(leftMax[i], rightMax[i]);\n        if (waterLevel - H[i] >= 1)\n            ++answer;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1775811999978032,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

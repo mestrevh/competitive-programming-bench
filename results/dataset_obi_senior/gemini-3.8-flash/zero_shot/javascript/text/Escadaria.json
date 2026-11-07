@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:47:03.974277+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1123,
+            "output_tokens": 478,
+            "total_tokens": 4730
+        },
+        "cost_usd": {
+            "input_cost": 0.000842,
+            "output_cost": 0.001793,
+            "total_cost": 0.002635
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res * sign;\n    }\n\n    const n = readInt();\n    if (n === null) return;\n\n    const a = new Int32Array(n);\n    for (let i = 0; i < n; i++) {\n        a[i] = readInt();\n    }\n\n    const INF = 2000000000;\n    const L = new Int32Array(n);\n\n    let cur = INF;\n    for (let i = 0; i < n; i++) {\n        if (cur !== INF) cur++;\n        if (a[i] !== -1) {\n            cur = Math.min(cur, a[i]);\n        }\n        L[i] = cur;\n    }\n\n    const ans = new Int32Array(n);\n    cur = INF;\n    for (let i = n - 1; i >= 0; i--) {\n        if (cur !== INF) cur++;\n        if (a[i] !== -1) {\n            cur = Math.min(cur, a[i]);\n        }\n        ans[i] = Math.min(L[i], cur);\n    }\n\n    console.log(ans.join(' '));\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res * sign;\n    }\n\n    const n = readInt();\n    if (n === null) return;\n\n    const a = new Int32Array(n);\n    for (let i = 0; i < n; i++) {\n        a[i] = readInt();\n    }\n\n    const INF = 2000000000;\n    const L = new Int32Array(n);\n\n    let cur = INF;\n    for (let i = 0; i < n; i++) {\n        if (cur !== INF) cur++;\n        if (a[i] !== -1) {\n            cur = Math.min(cur, a[i]);\n        }\n        L[i] = cur;\n    }\n\n    const ans = new Int32Array(n);\n    cur = INF;\n    for (let i = n - 1; i >= 0; i--) {\n        if (cur !== INF) cur++;\n        if (a[i] !== -1) {\n            cur = Math.min(cur, a[i]);\n        }\n        ans[i] = Math.min(L[i], cur);\n    }\n\n    console.log(ans.join(' '));\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10002070001792163,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

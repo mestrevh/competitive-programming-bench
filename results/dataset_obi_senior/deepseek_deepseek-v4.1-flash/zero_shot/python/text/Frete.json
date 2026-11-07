@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:57:22.130738+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 903,
+            "output_tokens": 1961,
+            "total_tokens": 2864
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.004706,
+            "total_cost": 0.004709
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    it = iter(data)\n    n = int(next(it))\n    m = int(next(it))\n\n    adj = [[] for _ in range(n + 1)]\n\n    for _ in range(m):\n        a = int(next(it))\n        b = int(next(it))\n        c = int(next(it))\n        adj[a].append((b, c))\n        adj[b].append((a, c))\n\n    INF = 10**18\n    dist = [INF] * (n + 1)\n    dist[1] = 0\n\n    pq = [(0, 1)]\n\n    while pq:\n        d, u = heapq.heappop(pq)\n\n        if d != dist[u]:\n            continue\n\n        if u == n:\n            break\n\n        for v, w in adj[u]:\n            nd = d + w\n            if nd < dist[v]:\n                dist[v] = nd\n                heapq.heappush(pq, (nd, v))\n\n    print(dist[n])\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    it = iter(data)\n    n = int(next(it))\n    m = int(next(it))\n\n    adj = [[] for _ in range(n + 1)]\n\n    for _ in range(m):\n        a = int(next(it))\n        b = int(next(it))\n        c = int(next(it))\n        adj[a].append((b, c))\n        adj[b].append((a, c))\n\n    INF = 10**18\n    dist = [INF] * (n + 1)\n    dist[1] = 0\n\n    pq = [(0, 1)]\n\n    while pq:\n        d, u = heapq.heappop(pq)\n\n        if d != dist[u]:\n            continue\n\n        if u == n:\n            break\n\n        for v, w in adj[u]:\n            nd = d + w\n            if nd < dist[v]:\n                dist[v] = nd\n                heapq.heappush(pq, (nd, v))\n\n    print(dist[n])\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08431850000488339,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

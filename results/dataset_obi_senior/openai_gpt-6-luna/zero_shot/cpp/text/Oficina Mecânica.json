@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:30:46.349461+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 921,
+            "output_tokens": 2199,
+            "total_tokens": 3120
+        },
+        "cost_usd": {
+            "input_cost": 9.2e-05,
+            "output_cost": 0.001099,
+            "total_cost": 0.001192
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<long long> T(N), F(M);\n    for (auto &x : T) cin >> x;\n    for (auto &x : F) cin >> x;\n\n    sort(T.rbegin(), T.rend());\n\n    priority_queue<pair<long long, int>,\n                   vector<pair<long long, int>>,\n                   greater<pair<long long, int>>> pq;\n\n    for (int j = 0; j < M; ++j) {\n        pq.push({0, j});\n    }\n\n    long long answer = 0;\n    for (int i = 0; i < N; ++i) {\n        auto [coefficient, j] = pq.top();\n        pq.pop();\n\n        answer += T[i] * coefficient;\n        pq.push({coefficient + F[j], j});\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<long long> T(N), F(M);\n    for (auto &x : T) cin >> x;\n    for (auto &x : F) cin >> x;\n\n    sort(T.rbegin(), T.rend());\n\n    priority_queue<pair<long long, int>,\n                   vector<pair<long long, int>>,\n                   greater<pair<long long, int>>> pq;\n\n    for (int j = 0; j < M; ++j) {\n        pq.push({0, j});\n    }\n\n    long long answer = 0;\n    for (int i = 0; i < N; ++i) {\n        auto [coefficient, j] = pq.top();\n        pq.pop();\n\n        answer += T[i] * coefficient;\n        pq.push({coefficient + F[j], j});\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19556500000180677,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:36:51.811013+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 956,
+            "output_tokens": 13003,
+            "total_tokens": 13959
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.031207,
+            "total_cost": 0.03121
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdbool.h>\n\n#define MAXV 676\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int grid[100][100];\n    long long rowSum[100], colSum[100];\n    bool used[MAXV] = {false};\n    long long value[MAXV];\n    bool known[MAXV] = {false};\n\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            char name[4];\n            scanf(\"%s\", name);\n            int id = (name[0] - 'a') * 26 + (name[1] - 'a');\n            grid[i][j] = id;\n            used[id] = true;\n        }\n        scanf(\"%lld\", &rowSum[i]);\n    }\n\n    for (int j = 0; j < C; j++) {\n        scanf(\"%lld\", &colSum[j]);\n    }\n\n    int remaining = 0;\n    for (int id = 0; id < MAXV; id++) {\n        if (used[id]) remaining++;\n    }\n\n    while (remaining > 0) {\n        bool progress = false;\n\n        for (int i = 0; i < L && !progress; i++) {\n            long long knownSum = 0;\n            int uniqueVar = -1;\n            int unknownCount = 0;\n            bool multiple = false;\n\n            for (int j = 0; j < C; j++) {\n                int id = grid[i][j];\n                if (known[id]) {\n                    knownSum += value[id];\n                } else {\n                    if (uniqueVar == -1) uniqueVar = id;\n                    else if (uniqueVar != id) multiple = true;\n                    unknownCount++;\n                }\n            }\n\n            if (!multiple && uniqueVar != -1) {\n                long long rem = rowSum[i] - knownSum;\n                value[uniqueVar] = rem / unknownCount;\n                known[uniqueVar] = true;\n                remaining--;\n                progress = true;\n                break;\n            }\n        }\n\n        if (progress) continue;\n\n        for (int j = 0; j < C && !progress; j++) {\n            long long knownSum = 0;\n            int uniqueVar = -1;\n            int unknownCount = 0;\n            bool multiple = false;\n\n            for (int i = 0; i < L; i++) {\n                int id = grid[i][j];\n                if (known[id]) {\n                    knownSum += value[id];\n                } else {\n                    if (uniqueVar == -1) uniqueVar = id;\n                    else if (uniqueVar != id) multiple = true;\n                    unknownCount++;\n                }\n            }\n\n            if (!multiple && uniqueVar != -1) {\n                long long rem = colSum[j] - knownSum;\n                value[uniqueVar] = rem / unknownCount;\n                known[uniqueVar] = true;\n                remaining--;\n                progress = true;\n                break;\n            }\n        }\n\n        if (!progress) break;\n    }\n\n    for (int id = 0; id < MAXV; id++) {\n        if (used[id]) {\n            char a = 'a' + id / 26;\n            char b = 'a' + id % 26;\n            printf(\"%c%c %lld\\n\", a, b, value[id]);\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define MAXV 676\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int grid[100][100];\n    long long rowSum[100], colSum[100];\n    bool used[MAXV] = {false};\n    long long value[MAXV];\n    bool known[MAXV] = {false};\n\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            char name[4];\n            scanf(\"%s\", name);\n            int id = (name[0] - 'a') * 26 + (name[1] - 'a');\n            grid[i][j] = id;\n            used[id] = true;\n        }\n        scanf(\"%lld\", &rowSum[i]);\n    }\n\n    for (int j = 0; j < C; j++) {\n        scanf(\"%lld\", &colSum[j]);\n    }\n\n    int remaining = 0;\n    for (int id = 0; id < MAXV; id++) {\n        if (used[id]) remaining++;\n    }\n\n    while (remaining > 0) {\n        bool progress = false;\n\n        for (int i = 0; i < L && !progress; i++) {\n            long long knownSum = 0;\n            int uniqueVar = -1;\n            int unknownCount = 0;\n            bool multiple = false;\n\n            for (int j = 0; j < C; j++) {\n                int id = grid[i][j];\n                if (known[id]) {\n                    knownSum += value[id];\n                } else {\n                    if (uniqueVar == -1) uniqueVar = id;\n                    else if (uniqueVar != id) multiple = true;\n                    unknownCount++;\n                }\n            }\n\n            if (!multiple && uniqueVar != -1) {\n                long long rem = rowSum[i] - knownSum;\n                value[uniqueVar] = rem / unknownCount;\n                known[uniqueVar] = true;\n                remaining--;\n                progress = true;\n                break;\n            }\n        }\n\n        if (progress) continue;\n\n        for (int j = 0; j < C && !progress; j++) {\n            long long knownSum = 0;\n            int uniqueVar = -1;\n            int unknownCount = 0;\n            bool multiple = false;\n\n            for (int i = 0; i < L; i++) {\n                int id = grid[i][j];\n                if (known[id]) {\n                    knownSum += value[id];\n                } else {\n                    if (uniqueVar == -1) uniqueVar = id;\n                    else if (uniqueVar != id) multiple = true;\n                    unknownCount++;\n                }\n            }\n\n            if (!multiple && uniqueVar != -1) {\n                long long rem = colSum[j] - knownSum;\n                value[uniqueVar] = rem / unknownCount;\n                known[uniqueVar] = true;\n                remaining--;\n                progress = true;\n                break;\n            }\n        }\n\n        if (!progress) break;\n    }\n\n    for (int id = 0; id < MAXV; id++) {\n        if (used[id]) {\n            char a = 'a' + id / 26;\n            char b = 'a' + id % 26;\n            printf(\"%c%c %lld\\n\", a, b, value[id]);\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1051904000050854,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

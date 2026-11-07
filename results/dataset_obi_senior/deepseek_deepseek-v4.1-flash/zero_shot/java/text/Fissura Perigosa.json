@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:03:57.639014+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 951,
+            "output_tokens": 1351,
+            "total_tokens": 2302
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003242,
+            "total_cost": 0.003245
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int F = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[N][];\n        for (int i = 0; i < N; i++) {\n            grid[i] = br.readLine().toCharArray();\n        }\n\n        if (grid[0][0] - '0' <= F) {\n            boolean[][] visited = new boolean[N][N];\n            int[] queueR = new int[N * N];\n            int[] queueC = new int[N * N];\n\n            int head = 0, tail = 0;\n            queueR[tail] = 0;\n            queueC[tail] = 0;\n            tail++;\n            visited[0][0] = true;\n            grid[0][0] = '*';\n\n            int[] dr = {-1, 1, 0, 0};\n            int[] dc = {0, 0, -1, 1};\n\n            while (head < tail) {\n                int r = queueR[head];\n                int c = queueC[head];\n                head++;\n\n                for (int k = 0; k < 4; k++) {\n                    int nr = r + dr[k];\n                    int nc = c + dc[k];\n\n                    if (nr >= 0 && nr < N && nc >= 0 && nc < N &&\n                        !visited[nr][nc] && grid[nr][nc] - '0' <= F) {\n                        visited[nr][nc] = true;\n                        grid[nr][nc] = '*';\n                        queueR[tail] = nr;\n                        queueC[tail] = nc;\n                        tail++;\n                    }\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < N; i++) {\n            sb.append(grid[i]).append('\\n');\n        }\n\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int F = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[N][];\n        for (int i = 0; i < N; i++) {\n            grid[i] = br.readLine().toCharArray();\n        }\n\n        if (grid[0][0] - '0' <= F) {\n            boolean[][] visited = new boolean[N][N];\n            int[] queueR = new int[N * N];\n            int[] queueC = new int[N * N];\n\n            int head = 0, tail = 0;\n            queueR[tail] = 0;\n            queueC[tail] = 0;\n            tail++;\n            visited[0][0] = true;\n            grid[0][0] = '*';\n\n            int[] dr = {-1, 1, 0, 0};\n            int[] dc = {0, 0, -1, 1};\n\n            while (head < tail) {\n                int r = queueR[head];\n                int c = queueC[head];\n                head++;\n\n                for (int k = 0; k < 4; k++) {\n                    int nr = r + dr[k];\n                    int nc = c + dc[k];\n\n                    if (nr >= 0 && nr < N && nc >= 0 && nc < N &&\n                        !visited[nr][nc] && grid[nr][nc] - '0' <= F) {\n                        visited[nr][nc] = true;\n                        grid[nr][nc] = '*';\n                        queueR[tail] = nr;\n                        queueC[tail] = nc;\n                        tail++;\n                    }\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < N; i++) {\n            sb.append(grid[i]).append('\\n');\n        }\n\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10959279999951832,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

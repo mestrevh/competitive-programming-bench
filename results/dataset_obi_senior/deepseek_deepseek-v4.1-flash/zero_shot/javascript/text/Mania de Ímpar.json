@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:15:26.678434+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1236,
+            "output_tokens": 4152,
+            "total_tokens": 5388
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.009965,
+            "total_cost": 0.009969
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet p = 0;\nconst N = data[p++];\nconst M = data[p++];\n\nconst G = Array.from({ length: N }, () => Array(M));\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < M; j++) {\n    G[i][j] = data[p++];\n  }\n}\n\nlet costA = 0;\nlet costB = 0;\n\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < M; j++) {\n    const parity = (i + j) & 1;\n    const gParity = G[i][j] & 1;\n\n    if (gParity !== parity) costA++;\n    if (gParity !== (1 - parity)) costB++;\n  }\n}\n\nconst useA = costA <= costB;\nconst minCost = useA ? costA : costB;\n\nconst out = [String(minCost)];\n\nfor (let i = 0; i < N; i++) {\n  const row = [];\n  for (let j = 0; j < M; j++) {\n    const required = useA ? ((i + j) & 1) : (1 - ((i + j) & 1));\n    let v = G[i][j];\n    if ((v & 1) !== required) v++;\n    row.push(v);\n  }\n  out.push(row.join(' '));\n}\n\nconsole.log(out.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet p = 0;\nconst N = data[p++];\nconst M = data[p++];\n\nconst G = Array.from({ length: N }, () => Array(M));\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < M; j++) {\n    G[i][j] = data[p++];\n  }\n}\n\nlet costA = 0;\nlet costB = 0;\n\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < M; j++) {\n    const parity = (i + j) & 1;\n    const gParity = G[i][j] & 1;\n\n    if (gParity !== parity) costA++;\n    if (gParity !== (1 - parity)) costB++;\n  }\n}\n\nconst useA = costA <= costB;\nconst minCost = useA ? costA : costB;\n\nconst out = [String(minCost)];\n\nfor (let i = 0; i < N; i++) {\n  const row = [];\n  for (let j = 0; j < M; j++) {\n    const required = useA ? ((i + j) & 1) : (1 - ((i + j) & 1));\n    let v = G[i][j];\n    if ((v & 1) !== required) v++;\n    row.push(v);\n  }\n  out.push(row.join(' '));\n}\n\nconsole.log(out.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11255409999284893,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

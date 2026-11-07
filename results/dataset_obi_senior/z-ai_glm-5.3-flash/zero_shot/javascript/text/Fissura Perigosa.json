@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:53:18.290635+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 948,
+            "output_tokens": 341,
+            "total_tokens": 1289
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.00017,
+            "total_cost": 0.000191
+        },
+        "raw_response": "```javascript\nconst lines = require('fs').readFileSync(0, 'utf8').split('\\n');\nconst first = lines[0].split(' ');\nconst N = parseInt(first[0]);\nconst F = parseInt(first[1]);\nconst grid = [];\nfor (let i = 1; i <= N; i++) grid.push(lines[i].split(''));\n\nif (parseInt(grid[0][0]) <= F) {\n  const visited = Array.from({length: N}, () => new Array(N).fill(false));\n  const queue = [[0, 0]];\n  visited[0][0] = true;\n  grid[0][0] = '*';\n  while (queue.length) {\n    const [r, c] = queue.shift();\n    const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];\n    for (const [dr, dc] of dirs) {\n      const nr = r + dr, nc = c + dc;\n      if (nr >= 0 && nr < N && nc >= 0 && nc < N && !visited[nr][nc] && parseInt(grid[nr][nc]) <= F) {\n        visited[nr][nc] = true;\n        grid[nr][nc] = '*';\n        queue.push([nr, nc]);\n      }\n    }\n  }\n}\n\nlet out = '';\nfor (let i = 0; i < N; i++) out += grid[i].join('') + '\\n';\nprocess.stdout.write(out);\n```",
+        "extracted_code": "const lines = require('fs').readFileSync(0, 'utf8').split('\\n');\nconst first = lines[0].split(' ');\nconst N = parseInt(first[0]);\nconst F = parseInt(first[1]);\nconst grid = [];\nfor (let i = 1; i <= N; i++) grid.push(lines[i].split(''));\n\nif (parseInt(grid[0][0]) <= F) {\n  const visited = Array.from({length: N}, () => new Array(N).fill(false));\n  const queue = [[0, 0]];\n  visited[0][0] = true;\n  grid[0][0] = '*';\n  while (queue.length) {\n    const [r, c] = queue.shift();\n    const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];\n    for (const [dr, dc] of dirs) {\n      const nr = r + dr, nc = c + dc;\n      if (nr >= 0 && nr < N && nc >= 0 && nc < N && !visited[nr][nc] && parseInt(grid[nr][nc]) <= F) {\n        visited[nr][nc] = true;\n        grid[nr][nc] = '*';\n        queue.push([nr, nc]);\n      }\n    }\n  }\n}\n\nlet out = '';\nfor (let i = 0; i < N; i++) out += grid[i].join('') + '\\n';\nprocess.stdout.write(out);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08950479998020455,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

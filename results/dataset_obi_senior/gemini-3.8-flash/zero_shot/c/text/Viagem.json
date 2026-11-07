@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:38:38.292743+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1201,
+            "output_tokens": 990,
+            "total_tokens": 3702
+        },
+        "cost_usd": {
+            "input_cost": 0.000901,
+            "output_cost": 0.003713,
+            "total_cost": 0.004613
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 10005\n#define MAXM 4005\n#define MAXV 205\n#define HEAP_SIZE 3000000\n\ntypedef struct {\n    int to;\n    int t;\n    int p;\n    int next;\n} Edge;\n\nEdge edges[MAXM];\nint head[MAXN];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v, int t, int p) {\n    edges[edge_cnt].to = v;\n    edges[edge_cnt].t = t;\n    edges[edge_cnt].p = p;\n    edges[edge_cnt].next = head[u];\n    head[u] = edge_cnt++;\n}\n\ntypedef struct {\n    int u;\n    int c;\n    long long t;\n} HeapNode;\n\nHeapNode heap[HEAP_SIZE];\nint heap_size = 0;\n\nvoid heap_push(int u, int c, long long t) {\n    int i = heap_size++;\n    while (i > 0) {\n        int p = (i - 1) / 2;\n        if (heap[p].t <= t) break;\n        heap[i] = heap[p];\n        i = p;\n    }\n    heap[i].u = u;\n    heap[i].c = c;\n    heap[i].t = t;\n}\n\nHeapNode heap_pop() {\n    HeapNode min_node = heap[0];\n    HeapNode last = heap[--heap_size];\n    if (heap_size == 0) return min_node;\n\n    int i = 0;\n    while (i * 2 + 1 < heap_size) {\n        int left = i * 2 + 1;\n        int right = i * 2 + 2;\n        int best = left;\n        if (right < heap_size && heap[right].t < heap[left].t) {\n            best = right;\n        }\n        if (last.t <= heap[best].t) break;\n        heap[i] = heap[best];\n        i = best;\n    }\n    heap[i] = last;\n    return min_node;\n}\n\nint min_cost[MAXN];\n\nint main() {\n    int V, N, M;\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n\n    for (int i = 1; i <= N; i++) {\n        head[i] = -1;\n        min_cost[i] = V + 1;\n    }\n\n    for (int i = 0; i < M; i++) {\n        int u, v, t, p;\n        scanf(\"%d %d %d %d\", &u, &v, &t, &p);\n        add_edge(u, v, t, p);\n        add_edge(v, u, t, p);\n    }\n\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n\n    heap_push(X, 0, 0);\n\n    long long ans = -1;\n\n    while (heap_size > 0) {\n        HeapNode cur = heap_pop();\n        int u = cur.u;\n        int c = cur.c;\n        long long t = cur.t;\n\n        if (c >= min_cost[u]) continue;\n        min_cost[u] = c;\n\n        if (u == Y) {\n            ans = t;\n            break;\n        }\n\n        for (int e = head[u]; e != -1; e = edges[e].next) {\n            int v = edges[e].to;\n            int nc = c + edges[e].p;\n            long long nt = t + edges[e].t;\n\n            if (nc <= V && nc < min_cost[v]) {\n                heap_push(v, nc, nt);\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 10005\n#define MAXM 4005\n#define MAXV 205\n#define HEAP_SIZE 3000000\n\ntypedef struct {\n    int to;\n    int t;\n    int p;\n    int next;\n} Edge;\n\nEdge edges[MAXM];\nint head[MAXN];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v, int t, int p) {\n    edges[edge_cnt].to = v;\n    edges[edge_cnt].t = t;\n    edges[edge_cnt].p = p;\n    edges[edge_cnt].next = head[u];\n    head[u] = edge_cnt++;\n}\n\ntypedef struct {\n    int u;\n    int c;\n    long long t;\n} HeapNode;\n\nHeapNode heap[HEAP_SIZE];\nint heap_size = 0;\n\nvoid heap_push(int u, int c, long long t) {\n    int i = heap_size++;\n    while (i > 0) {\n        int p = (i - 1) / 2;\n        if (heap[p].t <= t) break;\n        heap[i] = heap[p];\n        i = p;\n    }\n    heap[i].u = u;\n    heap[i].c = c;\n    heap[i].t = t;\n}\n\nHeapNode heap_pop() {\n    HeapNode min_node = heap[0];\n    HeapNode last = heap[--heap_size];\n    if (heap_size == 0) return min_node;\n\n    int i = 0;\n    while (i * 2 + 1 < heap_size) {\n        int left = i * 2 + 1;\n        int right = i * 2 + 2;\n        int best = left;\n        if (right < heap_size && heap[right].t < heap[left].t) {\n            best = right;\n        }\n        if (last.t <= heap[best].t) break;\n        heap[i] = heap[best];\n        i = best;\n    }\n    heap[i] = last;\n    return min_node;\n}\n\nint min_cost[MAXN];\n\nint main() {\n    int V, N, M;\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n\n    for (int i = 1; i <= N; i++) {\n        head[i] = -1;\n        min_cost[i] = V + 1;\n    }\n\n    for (int i = 0; i < M; i++) {\n        int u, v, t, p;\n        scanf(\"%d %d %d %d\", &u, &v, &t, &p);\n        add_edge(u, v, t, p);\n        add_edge(v, u, t, p);\n    }\n\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n\n    heap_push(X, 0, 0);\n\n    long long ans = -1;\n\n    while (heap_size > 0) {\n        HeapNode cur = heap_pop();\n        int u = cur.u;\n        int c = cur.c;\n        long long t = cur.t;\n\n        if (c >= min_cost[u]) continue;\n        min_cost[u] = c;\n\n        if (u == Y) {\n            ans = t;\n            break;\n        }\n\n        for (int e = head[u]; e != -1; e = edges[e].next) {\n            int v = edges[e].to;\n            int nc = c + edges[e].p;\n            long long nt = t + edges[e].t;\n\n            if (nc <= V && nc < min_cost[v]) {\n                heap_push(v, nc, nt);\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12479090000852011,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

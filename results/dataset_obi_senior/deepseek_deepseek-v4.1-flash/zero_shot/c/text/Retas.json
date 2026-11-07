@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:42:05.922098+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1156,
+            "output_tokens": 20809,
+            "total_tokens": 21965
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.049942,
+            "total_cost": 0.049945
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long A, B, P, Q;\n} Line;\n\ntypedef struct {\n    long long P;\n    int rank;\n} Item;\n\nint cmpLine(const void *a, const void *b) {\n    const Line *x = (const Line*)a;\n    const Line *y = (const Line*)b;\n    if (x->A < y->A) return -1;\n    if (x->A > y->A) return 1;\n    if (x->B < y->B) return -1;\n    if (x->B > y->B) return 1;\n    return 0;\n}\n\nint cmpLL(const void *a, const void *b) {\n    long long x = *(const long long*)a;\n    long long y = *(const long long*)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nint lowerBound(long long *arr, int n, long long val) {\n    int lo = 0, hi = n;\n    while (lo < hi) {\n        int mid = (lo + hi) / 2;\n        if (arr[mid] < val) lo = mid + 1;\n        else hi = mid;\n    }\n    return lo;\n}\n\n#define MAXN 100005\n\nItem a[MAXN], temp[MAXN];\nint bit[MAXN];\nint uniq_cnt;\n\nvoid bitAdd(int idx, int val) {\n    for (; idx <= uniq_cnt; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nint bitSum(int idx) {\n    int s = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        s += bit[idx];\n    }\n    return s;\n}\n\nlong long cdq(int l, int r) {\n    if (l >= r) return 0;\n\n    int mid = (l + r) / 2;\n    long long ans = cdq(l, mid) + cdq(mid + 1, r);\n\n    int ptr = l;\n    for (int j = mid + 1; j <= r; j++) {\n        while (ptr <= mid && a[ptr].P >= a[j].P) {\n            bitAdd(a[ptr].rank, 1);\n            ptr++;\n        }\n        ans += bitSum(a[j].rank);\n    }\n\n    for (int i = l; i < ptr; i++) {\n        bitAdd(a[i].rank, -1);\n    }\n\n    int i = l, j = mid + 1, k = l;\n    while (i <= mid && j <= r) {\n        if (a[i].P >= a[j].P) {\n            temp[k++] = a[i++];\n        } else {\n            temp[k++] = a[j++];\n        }\n    }\n    while (i <= mid) temp[k++] = a[i++];\n    while (j <= r) temp[k++] = a[j++];\n    for (i = l; i <= r; i++) a[i] = temp[i];\n\n    return ans;\n}\n\nint main() {\n    int N;\n    long long X1, X2;\n\n    if (scanf(\"%d %lld %lld\", &N, &X1, &X2) != 3) return 0;\n\n    Line *lines = (Line*)malloc(N * sizeof(Line));\n    long long *qs = (long long*)malloc(N * sizeof(long long));\n    if (!lines || !qs) return 0;\n\n    for (int i = 0; i < N; i++) {\n        long long A, B;\n        scanf(\"%lld %lld\", &A, &B);\n        lines[i].A = A;\n        lines[i].B = B;\n        lines[i].P = A * X1 + B;\n        lines[i].Q = A * X2 + B;\n    }\n\n    qsort(lines, N, sizeof(Line), cmpLine);\n\n    for (int i = 0; i < N; i++) {\n        a[i].P = lines[i].P;\n        qs[i] = lines[i].Q;\n    }\n\n    qsort(qs, N, sizeof(long long), cmpLL);\n\n    uniq_cnt = 0;\n    for (int i = 0; i < N; i++) {\n        if (i == 0 || qs[i] != qs[uniq_cnt - 1]) {\n            qs[uniq_cnt++] = qs[i];\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        int idx = lowerBound(qs, uniq_cnt, lines[i].Q);\n        a[i].rank = idx + 1;\n    }\n\n    long long ans = cdq(0, N - 1);\n    printf(\"%lld\\n\", ans);\n\n    free(lines);\n    free(qs);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long A, B, P, Q;\n} Line;\n\ntypedef struct {\n    long long P;\n    int rank;\n} Item;\n\nint cmpLine(const void *a, const void *b) {\n    const Line *x = (const Line*)a;\n    const Line *y = (const Line*)b;\n    if (x->A < y->A) return -1;\n    if (x->A > y->A) return 1;\n    if (x->B < y->B) return -1;\n    if (x->B > y->B) return 1;\n    return 0;\n}\n\nint cmpLL(const void *a, const void *b) {\n    long long x = *(const long long*)a;\n    long long y = *(const long long*)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nint lowerBound(long long *arr, int n, long long val) {\n    int lo = 0, hi = n;\n    while (lo < hi) {\n        int mid = (lo + hi) / 2;\n        if (arr[mid] < val) lo = mid + 1;\n        else hi = mid;\n    }\n    return lo;\n}\n\n#define MAXN 100005\n\nItem a[MAXN], temp[MAXN];\nint bit[MAXN];\nint uniq_cnt;\n\nvoid bitAdd(int idx, int val) {\n    for (; idx <= uniq_cnt; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nint bitSum(int idx) {\n    int s = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        s += bit[idx];\n    }\n    return s;\n}\n\nlong long cdq(int l, int r) {\n    if (l >= r) return 0;\n\n    int mid = (l + r) / 2;\n    long long ans = cdq(l, mid) + cdq(mid + 1, r);\n\n    int ptr = l;\n    for (int j = mid + 1; j <= r; j++) {\n        while (ptr <= mid && a[ptr].P >= a[j].P) {\n            bitAdd(a[ptr].rank, 1);\n            ptr++;\n        }\n        ans += bitSum(a[j].rank);\n    }\n\n    for (int i = l; i < ptr; i++) {\n        bitAdd(a[i].rank, -1);\n    }\n\n    int i = l, j = mid + 1, k = l;\n    while (i <= mid && j <= r) {\n        if (a[i].P >= a[j].P) {\n            temp[k++] = a[i++];\n        } else {\n            temp[k++] = a[j++];\n        }\n    }\n    while (i <= mid) temp[k++] = a[i++];\n    while (j <= r) temp[k++] = a[j++];\n    for (i = l; i <= r; i++) a[i] = temp[i];\n\n    return ans;\n}\n\nint main() {\n    int N;\n    long long X1, X2;\n\n    if (scanf(\"%d %lld %lld\", &N, &X1, &X2) != 3) return 0;\n\n    Line *lines = (Line*)malloc(N * sizeof(Line));\n    long long *qs = (long long*)malloc(N * sizeof(long long));\n    if (!lines || !qs) return 0;\n\n    for (int i = 0; i < N; i++) {\n        long long A, B;\n        scanf(\"%lld %lld\", &A, &B);\n        lines[i].A = A;\n        lines[i].B = B;\n        lines[i].P = A * X1 + B;\n        lines[i].Q = A * X2 + B;\n    }\n\n    qsort(lines, N, sizeof(Line), cmpLine);\n\n    for (int i = 0; i < N; i++) {\n        a[i].P = lines[i].P;\n        qs[i] = lines[i].Q;\n    }\n\n    qsort(qs, N, sizeof(long long), cmpLL);\n\n    uniq_cnt = 0;\n    for (int i = 0; i < N; i++) {\n        if (i == 0 || qs[i] != qs[uniq_cnt - 1]) {\n            qs[uniq_cnt++] = qs[i];\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        int idx = lowerBound(qs, uniq_cnt, lines[i].Q);\n        a[i].rank = idx + 1;\n    }\n\n    long long ans = cdq(0, N - 1);\n    printf(\"%lld\\n\", ans);\n\n    free(lines);\n    free(qs);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14627580001251772,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:51:58.268336+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1093,
+            "output_tokens": 53984,
+            "total_tokens": 55077
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.129562,
+            "total_cost": 0.129565
+        },
+        "raw_response": "```javascript\nfunction solve() {\n  const fs = require('fs');\n  const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split(/\\s+/);\n  const N = parseInt(input[0], 10);\n  const K = parseInt(input[1], 10);\n  const T = input.slice(2, 2 + N).map(Number);\n  T.sort((a, b) => a - b);\n\n  const INF = 1e15;\n  const dp = new Array(N);\n  const prev_pref = new Array(N);\n  prev_pref.fill(0);\n\n  const stack = [];\n\n  for (let t = 1; t <= K; t++) {\n    const limit = N - 3 * (K - t) - 2;\n    dp.fill(INF);\n\n    stack.length = 0;\n    stack.push(N - 1); // optR\n    stack.push(0);     // optL\n    stack.push(limit); // r\n    stack.push(0);     // l\n\n    while (stack.length > 0) {\n      const l = stack.pop();\n      const r = stack.pop();\n      const optL = stack.pop();\n      const optR = stack.pop();\n      if (l > r) continue;\n\n      const mid = (l + r) >> 1;\n      let best_i = -1;\n      let best_val = INF;\n      const start = optL;\n      const end = Math.min(mid - 1, optR);\n      const Tmid = T[mid];\n\n      for (let i = start; i <= end; i++) {\n        let prevCost;\n        if (i === 0) {\n          prevCost = (t === 1) ? 0 : INF;\n        } else {\n          prevCost = prev_pref[i - 1];\n        }\n        if (prevCost >= INF) continue;\n        const diff = Tmid - T[i];\n        const val = prevCost + diff * diff;\n        if (val < best_val) {\n          best_val = val;\n          best_i = i;\n        }\n      }\n\n      dp[mid] = best_val;\n      if (best_i === -1) best_i = start;\n\n      // push right child: (mid+1, r, best_i, optR)\n      stack.push(optR);\n      stack.push(best_i);\n      stack.push(r);\n      stack.push(mid + 1);\n\n      // push left child: (l, mid-1, optL, best_i)\n      stack.push(best_i);\n      stack.push(optL);\n      stack.push(mid - 1);\n      stack.push(l);\n    }\n\n    if (t === K) {\n      let ans = INF;\n      for (let j = 0; j <= limit; j++) {\n        if (dp[j] < ans) ans = dp[j];\n      }\n      console.log(ans);\n      return;\n    }\n\n    let min_val = INF;\n    for (let i = 0; i < N; i++) {\n      if (dp[i] < min_val) min_val = dp[i];\n      prev_pref[i] = min_val;\n    }\n  }\n}\n\nsolve();\n```",
+        "extracted_code": "function solve() {\n  const fs = require('fs');\n  const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split(/\\s+/);\n  const N = parseInt(input[0], 10);\n  const K = parseInt(input[1], 10);\n  const T = input.slice(2, 2 + N).map(Number);\n  T.sort((a, b) => a - b);\n\n  const INF = 1e15;\n  const dp = new Array(N);\n  const prev_pref = new Array(N);\n  prev_pref.fill(0);\n\n  const stack = [];\n\n  for (let t = 1; t <= K; t++) {\n    const limit = N - 3 * (K - t) - 2;\n    dp.fill(INF);\n\n    stack.length = 0;\n    stack.push(N - 1); // optR\n    stack.push(0);     // optL\n    stack.push(limit); // r\n    stack.push(0);     // l\n\n    while (stack.length > 0) {\n      const l = stack.pop();\n      const r = stack.pop();\n      const optL = stack.pop();\n      const optR = stack.pop();\n      if (l > r) continue;\n\n      const mid = (l + r) >> 1;\n      let best_i = -1;\n      let best_val = INF;\n      const start = optL;\n      const end = Math.min(mid - 1, optR);\n      const Tmid = T[mid];\n\n      for (let i = start; i <= end; i++) {\n        let prevCost;\n        if (i === 0) {\n          prevCost = (t === 1) ? 0 : INF;\n        } else {\n          prevCost = prev_pref[i - 1];\n        }\n        if (prevCost >= INF) continue;\n        const diff = Tmid - T[i];\n        const val = prevCost + diff * diff;\n        if (val < best_val) {\n          best_val = val;\n          best_i = i;\n        }\n      }\n\n      dp[mid] = best_val;\n      if (best_i === -1) best_i = start;\n\n      // push right child: (mid+1, r, best_i, optR)\n      stack.push(optR);\n      stack.push(best_i);\n      stack.push(r);\n      stack.push(mid + 1);\n\n      // push left child: (l, mid-1, optL, best_i)\n      stack.push(best_i);\n      stack.push(optL);\n      stack.push(mid - 1);\n      stack.push(l);\n    }\n\n    if (t === K) {\n      let ans = INF;\n      for (let j = 0; j <= limit; j++) {\n        if (dp[j] < ans) ans = dp[j];\n      }\n      console.log(ans);\n      return;\n    }\n\n    let min_val = INF;\n    for (let i = 0; i < N; i++) {\n      if (dp[i] < min_val) min_val = dp[i];\n      prev_pref[i] = min_val;\n    }\n  }\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07467170001473278,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 76,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

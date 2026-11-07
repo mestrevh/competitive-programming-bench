@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:16:56.900329+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 899,
+            "output_tokens": 5751,
+            "total_tokens": 6650
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.002876,
+            "total_cost": 0.002965
+        },
+        "raw_response": "```python\nimport sys\n\ninput = sys.stdin.buffer.readline\n\nn, m = map(int, input().split())\nadj = [[] for _ in range(n + 1)]\n\nfor _ in range(m):\n    a, b = map(int, input().split())\n    adj[a].append(b)\n    adj[b].append(a)\n\nfor neighbors in adj:\n    neighbors.sort()\n\nbest = [0] * (n + 1)\nanswer = [1] * (n + 1)\n\nfor u in range(n, 0, -1):\n    neighbors = adj[u]\n    values = [2 + best[v] for v in neighbors]\n\n    if values:\n        answer[u] = max(values)\n\n    suffix = 1\n    for i in range(len(neighbors) - 1, -1, -1):\n        v = neighbors[i]\n        if suffix > best[v]:\n            best[v] = suffix\n        if values[i] > suffix:\n            suffix = values[i]\n\nsys.stdout.write(\" \".join(map(str, answer[1:])))\n```",
+        "extracted_code": "import sys\n\ninput = sys.stdin.buffer.readline\n\nn, m = map(int, input().split())\nadj = [[] for _ in range(n + 1)]\n\nfor _ in range(m):\n    a, b = map(int, input().split())\n    adj[a].append(b)\n    adj[b].append(a)\n\nfor neighbors in adj:\n    neighbors.sort()\n\nbest = [0] * (n + 1)\nanswer = [1] * (n + 1)\n\nfor u in range(n, 0, -1):\n    neighbors = adj[u]\n    values = [2 + best[v] for v in neighbors]\n\n    if values:\n        answer[u] = max(values)\n\n    suffix = 1\n    for i in range(len(neighbors) - 1, -1, -1):\n        v = neighbors[i]\n        if suffix > best[v]:\n            best[v] = suffix\n        if values[i] > suffix:\n            suffix = values[i]\n\nsys.stdout.write(\" \".join(map(str, answer[1:])))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.8527127999986988,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

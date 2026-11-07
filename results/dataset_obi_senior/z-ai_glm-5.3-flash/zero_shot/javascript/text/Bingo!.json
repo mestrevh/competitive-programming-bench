@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T23:44:10.832381+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 940,
+            "output_tokens": 2993,
+            "total_tokens": 3933
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.001497,
+            "total_cost": 0.001517
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst buf = fs.readFileSync(0, 'utf8');\nconst len = buf.length;\nlet p = 0;\n\nfunction readInt() {\n  while (p < len) {\n    const c = buf.charCodeAt(p);\n    if (c >= 48 && c <= 57) break;\n    p++;\n  }\n  let x = 0;\n  while (p < len) {\n    const c = buf.charCodeAt(p);\n    if (c < 48 || c > 57) break;\n    x = x * 10 + (c - 48);\n    p++;\n  }\n  return x;\n}\n\nconst N = readInt(), K = readInt(), U = readInt();\n\n// pos[v] = posição (1-based) em que o número v é sorteado\nconst pos = new Int32Array(U + 1);\nfor (let i = 1; i <= U; i++) {\n  pos[readInt()] = i;\n}\n\n// Para cada cartela, o instante em que é completada é o máximo\n// das posições de sorteio dos seus números.\nconst times = new Int32Array(N);\nlet minT = 2147483647;\nfor (let c = 0; c < N; c++) {\n  let t = 0;\n  for (let j = 0; j < K; j++) {\n    const q = pos[readInt()];\n    if (q > t) t = q;\n  }\n  times[c] = t;\n  if (t < minT) minT = t;\n}\n\nlet out = '';\nlet first = true;\nfor (let c = 0; c < N; c++) {\n  if (times[c] === minT) {\n    if (!first) out += ' ';\n    out += (c + 1);\n    first = false;\n  }\n}\nprocess.stdout.write(out + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\nconst buf = fs.readFileSync(0, 'utf8');\nconst len = buf.length;\nlet p = 0;\n\nfunction readInt() {\n  while (p < len) {\n    const c = buf.charCodeAt(p);\n    if (c >= 48 && c <= 57) break;\n    p++;\n  }\n  let x = 0;\n  while (p < len) {\n    const c = buf.charCodeAt(p);\n    if (c < 48 || c > 57) break;\n    x = x * 10 + (c - 48);\n    p++;\n  }\n  return x;\n}\n\nconst N = readInt(), K = readInt(), U = readInt();\n\n// pos[v] = posição (1-based) em que o número v é sorteado\nconst pos = new Int32Array(U + 1);\nfor (let i = 1; i <= U; i++) {\n  pos[readInt()] = i;\n}\n\n// Para cada cartela, o instante em que é completada é o máximo\n// das posições de sorteio dos seus números.\nconst times = new Int32Array(N);\nlet minT = 2147483647;\nfor (let c = 0; c < N; c++) {\n  let t = 0;\n  for (let j = 0; j < K; j++) {\n    const q = pos[readInt()];\n    if (q > t) t = q;\n  }\n  times[c] = t;\n  if (t < minT) minT = t;\n}\n\nlet out = '';\nlet first = true;\nfor (let c = 0; c < N; c++) {\n  if (times[c] === minT) {\n    if (!first) out += ' ';\n    out += (c + 1);\n    first = false;\n  }\n}\nprocess.stdout.write(out + '\\n');",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.11888640001416206,
+            "counts": {
+                "AC": 0,
+                "WA": 35,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

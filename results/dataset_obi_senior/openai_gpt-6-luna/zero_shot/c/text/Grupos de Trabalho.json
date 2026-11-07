@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:58:20.893126+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 898,
+            "output_tokens": 610,
+            "total_tokens": 1508
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.000305,
+            "total_cost": 0.000395
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int a, b;\n} Pair;\n\nstatic inline int next_int(void) {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n\n    int value = 0;\n    while (c > ' ') {\n        value = value * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return value;\n}\n\nint main(void) {\n    int E = next_int();\n    int M = next_int();\n    int D = next_int();\n\n    Pair *likes = malloc((size_t)M * sizeof(Pair));\n    Pair *dislikes = malloc((size_t)D * sizeof(Pair));\n    int *group = calloc((size_t)E + 1, sizeof(int));\n\n    for (int i = 0; i < M; ++i) {\n        likes[i].a = next_int();\n        likes[i].b = next_int();\n    }\n\n    for (int i = 0; i < D; ++i) {\n        dislikes[i].a = next_int();\n        dislikes[i].b = next_int();\n    }\n\n    for (int g = 1; g <= E / 3; ++g) {\n        int a = next_int();\n        int b = next_int();\n        int c = next_int();\n        group[a] = group[b] = group[c] = g;\n    }\n\n    int violations = 0;\n\n    for (int i = 0; i < M; ++i) {\n        if (group[likes[i].a] != group[likes[i].b])\n            ++violations;\n    }\n\n    for (int i = 0; i < D; ++i) {\n        if (group[dislikes[i].a] == group[dislikes[i].b])\n            ++violations;\n    }\n\n    printf(\"%d\\n\", violations);\n\n    free(likes);\n    free(dislikes);\n    free(group);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int a, b;\n} Pair;\n\nstatic inline int next_int(void) {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n\n    int value = 0;\n    while (c > ' ') {\n        value = value * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return value;\n}\n\nint main(void) {\n    int E = next_int();\n    int M = next_int();\n    int D = next_int();\n\n    Pair *likes = malloc((size_t)M * sizeof(Pair));\n    Pair *dislikes = malloc((size_t)D * sizeof(Pair));\n    int *group = calloc((size_t)E + 1, sizeof(int));\n\n    for (int i = 0; i < M; ++i) {\n        likes[i].a = next_int();\n        likes[i].b = next_int();\n    }\n\n    for (int i = 0; i < D; ++i) {\n        dislikes[i].a = next_int();\n        dislikes[i].b = next_int();\n    }\n\n    for (int g = 1; g <= E / 3; ++g) {\n        int a = next_int();\n        int b = next_int();\n        int c = next_int();\n        group[a] = group[b] = group[c] = g;\n    }\n\n    int violations = 0;\n\n    for (int i = 0; i < M; ++i) {\n        if (group[likes[i].a] != group[likes[i].b])\n            ++violations;\n    }\n\n    for (int i = 0; i < D; ++i) {\n        if (group[dislikes[i].a] == group[dislikes[i].b])\n            ++violations;\n    }\n\n    printf(\"%d\\n\", violations);\n\n    free(likes);\n    free(dislikes);\n    free(group);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 25
+            },
+            "total_test_cases": 25
+        }
+    }
+]

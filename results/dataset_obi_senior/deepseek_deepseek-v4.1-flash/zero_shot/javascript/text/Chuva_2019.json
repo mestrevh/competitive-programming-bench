@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:32:25.697340+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 953,
+            "output_tokens": 16890,
+            "total_tokens": 17843
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.040536,
+            "total_cost": 0.040539
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nconst [N, M] = data[0].split(' ').map(Number);\nconst grid = [];\nfor (let i = 0; i < N; i++) {\n  grid.push(data[i + 1].split(''));\n}\n\nconst queue = [];\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < M; j++) {\n    if (grid[i][j] === 'o') {\n      queue.push(i * M + j);\n    }\n  }\n}\n\nlet head = 0;\nwhile (head < queue.length) {\n  const idx = queue[head++];\n  const r = Math.floor(idx / M);\n  const c = idx % M;\n\n  // Water falls straight down\n  if (r + 1 < N && grid[r + 1][c] === '.') {\n    grid[r + 1][c] = 'o';\n    queue.push((r + 1) * M + c);\n  }\n\n  // Water spreads horizontally if there is a shelf directly below\n  if (r + 1 < N && grid[r + 1][c] === '#') {\n    if (c - 1 >= 0 && grid[r][c - 1] === '.') {\n      grid[r][c - 1] = 'o';\n      queue.push(r * M + (c - 1));\n    }\n    if (c + 1 < M && grid[r][c + 1] === '.') {\n      grid[r][c + 1] = 'o';\n      queue.push(r * M + (c + 1));\n    }\n  }\n}\n\nconsole.log(grid.map(row => row.join('')).join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nconst [N, M] = data[0].split(' ').map(Number);\nconst grid = [];\nfor (let i = 0; i < N; i++) {\n  grid.push(data[i + 1].split(''));\n}\n\nconst queue = [];\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < M; j++) {\n    if (grid[i][j] === 'o') {\n      queue.push(i * M + j);\n    }\n  }\n}\n\nlet head = 0;\nwhile (head < queue.length) {\n  const idx = queue[head++];\n  const r = Math.floor(idx / M);\n  const c = idx % M;\n\n  // Water falls straight down\n  if (r + 1 < N && grid[r + 1][c] === '.') {\n    grid[r + 1][c] = 'o';\n    queue.push((r + 1) * M + c);\n  }\n\n  // Water spreads horizontally if there is a shelf directly below\n  if (r + 1 < N && grid[r + 1][c] === '#') {\n    if (c - 1 >= 0 && grid[r][c - 1] === '.') {\n      grid[r][c - 1] = 'o';\n      queue.push(r * M + (c - 1));\n    }\n    if (c + 1 < M && grid[r][c + 1] === '.') {\n      grid[r][c + 1] = 'o';\n      queue.push(r * M + (c + 1));\n    }\n  }\n}\n\nconsole.log(grid.map(row => row.join('')).join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1266790000081528,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

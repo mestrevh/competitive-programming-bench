@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:16:20.089657+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 616,
+            "total_tokens": 2596
+        },
+        "cost_usd": {
+            "input_cost": 0.000606,
+            "output_cost": 0.00231,
+            "total_cost": 0.002916
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    M = int(next(iterator))\n    \n    # Duas Fenwick Trees (BIT) para manter a soma de a * x + b\n    # bit_a armazena as diferenças do coeficiente linear 'a'\n    # bit_b armazena as diferenças do termo constante 'b'\n    bit_a = [0] * (N + 2)\n    bit_b = [0] * (N + 2)\n    \n    def add(idx, a, b):\n        while idx <= N:\n            bit_a[idx] += a\n            bit_b[idx] += b\n            idx += idx & (-idx)\n            \n    def range_add(l, r, a, b):\n        if l > r:\n            return\n        add(l, a, b)\n        if r + 1 <= N:\n            add(r + 1, -a, -b)\n\n    def query(idx):\n        cur_a = 0\n        cur_b = 0\n        x = idx\n        while x > 0:\n            cur_a += bit_a[x]\n            cur_b += bit_b[x]\n            x -= x & (-x)\n        return cur_a * idx + cur_b\n\n    output = []\n    \n    for _ in range(M):\n        op = next(iterator)\n        if op == '1':\n            i = int(next(iterator))\n            v = int(next(iterator))\n            l = i\n            r = min(N, i + v - 1)\n            # Adiciona: (v + i) - x => a = -1, b = v + i\n            range_add(l, r, -1, v + i)\n        elif op == '2':\n            i = int(next(iterator))\n            v = int(next(iterator))\n            l = max(1, i - v + 1)\n            r = i\n            # Adiciona: (v - i) + x => a = 1, b = v - i\n            range_add(l, r, 1, v - i)\n        else: # op == '3'\n            i = int(next(iterator))\n            output.append(str(query(i)))\n            \n    sys.stdout.write('\\n'.join(output) + '\\n')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    M = int(next(iterator))\n    \n    # Duas Fenwick Trees (BIT) para manter a soma de a * x + b\n    # bit_a armazena as diferenças do coeficiente linear 'a'\n    # bit_b armazena as diferenças do termo constante 'b'\n    bit_a = [0] * (N + 2)\n    bit_b = [0] * (N + 2)\n    \n    def add(idx, a, b):\n        while idx <= N:\n            bit_a[idx] += a\n            bit_b[idx] += b\n            idx += idx & (-idx)\n            \n    def range_add(l, r, a, b):\n        if l > r:\n            return\n        add(l, a, b)\n        if r + 1 <= N:\n            add(r + 1, -a, -b)\n\n    def query(idx):\n        cur_a = 0\n        cur_b = 0\n        x = idx\n        while x > 0:\n            cur_a += bit_a[x]\n            cur_b += bit_b[x]\n            x -= x & (-x)\n        return cur_a * idx + cur_b\n\n    output = []\n    \n    for _ in range(M):\n        op = next(iterator)\n        if op == '1':\n            i = int(next(iterator))\n            v = int(next(iterator))\n            l = i\n            r = min(N, i + v - 1)\n            # Adiciona: (v + i) - x => a = -1, b = v + i\n            range_add(l, r, -1, v + i)\n        elif op == '2':\n            i = int(next(iterator))\n            v = int(next(iterator))\n            l = max(1, i - v + 1)\n            r = i\n            # Adiciona: (v - i) + x => a = 1, b = v - i\n            range_add(l, r, 1, v - i)\n        else: # op == '3'\n            i = int(next(iterator))\n            output.append(str(query(i)))\n            \n    sys.stdout.write('\\n'.join(output) + '\\n')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.7458557999998447,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

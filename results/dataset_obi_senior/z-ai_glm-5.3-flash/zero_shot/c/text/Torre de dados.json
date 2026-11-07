@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T20:10:51.938136+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1004,
+            "output_tokens": 11647,
+            "total_tokens": 12651
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.005823,
+            "total_cost": 0.005845
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 1000\n\n/* opp[i][t] = valor da face oposta (base) quando o topo da die i vale t\n   lat[i][t] = melhor contribuição lateral da die i com topo t\n               (máximo das 4 faces laterais restantes)            */\nstatic int opp[MAXN][7];\nstatic int lat[MAXN][7];\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        int a, b, c, d, e, f;\n        if (scanf(\"%d %d %d %d %d %d\", &a, &b, &c, &d, &e, &f) != 6) return 0;\n\n        /* faces opostas: A-F, B-D, C-E */\n        int o[7] = {0, 0, 0, 0, 0, 0, 0};\n        o[a] = f; o[f] = a;\n        o[b] = d; o[d] = b;\n        o[c] = e; o[e] = c;\n\n        for (int t = 1; t <= 6; t++) {\n            int m = 0;\n            for (int u = 1; u <= 6; u++)\n                if (u != t && u != o[t] && u > m) m = u;\n            opp[i][t] = o[t];\n            lat[i][t] = m;\n        }\n    }\n\n    /* dp[t] = melhor soma do lado considerando os dados processados,\n       com o dado atual tendo topo t.\n       Como cada die gira horizontalmente de forma independente,\n       o melhor lado recebe max(face lateral) de cada die.          */\n    long long dp[7], ndp[7];\n    for (int t = 1; t <= 6; t++) dp[t] = lat[0][t];\n\n    for (int i = 1; i < n; i++) {\n        /* base da die i (opp[i][t]) deve valer o topo da die i-1 */\n        for (int t = 1; t <= 6; t++)\n            ndp[t] = (long long)lat[i][t] + dp[opp[i][t]];\n        for (int t = 1; t <= 6; t++) dp[t] = ndp[t];\n    }\n\n    long long ans = dp[1];\n    for (int t = 2; t <= 6; t++)\n        if (dp[t] > ans) ans = dp[t];\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 1000\n\n/* opp[i][t] = valor da face oposta (base) quando o topo da die i vale t\n   lat[i][t] = melhor contribuição lateral da die i com topo t\n               (máximo das 4 faces laterais restantes)            */\nstatic int opp[MAXN][7];\nstatic int lat[MAXN][7];\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        int a, b, c, d, e, f;\n        if (scanf(\"%d %d %d %d %d %d\", &a, &b, &c, &d, &e, &f) != 6) return 0;\n\n        /* faces opostas: A-F, B-D, C-E */\n        int o[7] = {0, 0, 0, 0, 0, 0, 0};\n        o[a] = f; o[f] = a;\n        o[b] = d; o[d] = b;\n        o[c] = e; o[e] = c;\n\n        for (int t = 1; t <= 6; t++) {\n            int m = 0;\n            for (int u = 1; u <= 6; u++)\n                if (u != t && u != o[t] && u > m) m = u;\n            opp[i][t] = o[t];\n            lat[i][t] = m;\n        }\n    }\n\n    /* dp[t] = melhor soma do lado considerando os dados processados,\n       com o dado atual tendo topo t.\n       Como cada die gira horizontalmente de forma independente,\n       o melhor lado recebe max(face lateral) de cada die.          */\n    long long dp[7], ndp[7];\n    for (int t = 1; t <= 6; t++) dp[t] = lat[0][t];\n\n    for (int i = 1; i < n; i++) {\n        /* base da die i (opp[i][t]) deve valer o topo da die i-1 */\n        for (int t = 1; t <= 6; t++)\n            ndp[t] = (long long)lat[i][t] + dp[opp[i][t]];\n        for (int t = 1; t <= 6; t++) dp[t] = ndp[t];\n    }\n\n    long long ans = dp[1];\n    for (int t = 2; t <= 6; t++)\n        if (dp[t] > ans) ans = dp[t];\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2520035000052303,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

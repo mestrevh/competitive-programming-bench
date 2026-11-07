@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:35:45.837792+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 809,
+            "output_tokens": 1227,
+            "total_tokens": 2036
+        },
+        "cost_usd": {
+            "input_cost": 8.1e-05,
+            "output_cost": 0.000614,
+            "total_cost": 0.000694
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100000\n\ntypedef struct {\n    long long key;\n    int priority;\n    int count;\n    int size;\n    int left;\n    int right;\n} Node;\n\nNode tree[MAXN + 1];\nint nodes_used = 0;\n\nunsigned int rng_state = 123456789u;\n\nunsigned int next_random(void) {\n    rng_state ^= rng_state << 13;\n    rng_state ^= rng_state >> 17;\n    rng_state ^= rng_state << 5;\n    return rng_state;\n}\n\nint subtree_size(int node) {\n    return node ? tree[node].size : 0;\n}\n\nvoid update(int node) {\n    tree[node].size = tree[node].count\n                    + subtree_size(tree[node].left)\n                    + subtree_size(tree[node].right);\n}\n\nint rotate_right(int root) {\n    int child = tree[root].left;\n    tree[root].left = tree[child].right;\n    tree[child].right = root;\n    update(root);\n    update(child);\n    return child;\n}\n\nint rotate_left(int root) {\n    int child = tree[root].right;\n    tree[root].right = tree[child].left;\n    tree[child].left = root;\n    update(root);\n    update(child);\n    return child;\n}\n\nint insert(int root, long long key) {\n    if (!root) {\n        int node = ++nodes_used;\n        tree[node].key = key;\n        tree[node].priority = (int)next_random();\n        tree[node].count = 1;\n        tree[node].size = 1;\n        tree[node].left = tree[node].right = 0;\n        return node;\n    }\n\n    if (key == tree[root].key) {\n        tree[root].count++;\n    } else if (key < tree[root].key) {\n        tree[root].left = insert(tree[root].left, key);\n        if ((unsigned int)tree[tree[root].left].priority >\n            (unsigned int)tree[root].priority) {\n            root = rotate_right(root);\n        }\n    } else {\n        tree[root].right = insert(tree[root].right, key);\n        if ((unsigned int)tree[tree[root].right].priority >\n            (unsigned int)tree[root].priority) {\n            root = rotate_left(root);\n        }\n    }\n\n    update(root);\n    return root;\n}\n\nint count_at_most(int root, long long key) {\n    int result = 0;\n\n    while (root) {\n        if (key < tree[root].key) {\n            root = tree[root].left;\n        } else {\n            result += subtree_size(tree[root].left) + tree[root].count;\n            root = tree[root].right;\n        }\n    }\n\n    return result;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int root = 0;\n    int previous_penalty = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n\n        x += previous_penalty;\n        y += previous_penalty;\n\n        long long distance_squared = x * x + y * y;\n        int penalty = count_at_most(root, distance_squared);\n\n        printf(\"%d\\n\", penalty);\n        root = insert(root, distance_squared);\n        previous_penalty = penalty;\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100000\n\ntypedef struct {\n    long long key;\n    int priority;\n    int count;\n    int size;\n    int left;\n    int right;\n} Node;\n\nNode tree[MAXN + 1];\nint nodes_used = 0;\n\nunsigned int rng_state = 123456789u;\n\nunsigned int next_random(void) {\n    rng_state ^= rng_state << 13;\n    rng_state ^= rng_state >> 17;\n    rng_state ^= rng_state << 5;\n    return rng_state;\n}\n\nint subtree_size(int node) {\n    return node ? tree[node].size : 0;\n}\n\nvoid update(int node) {\n    tree[node].size = tree[node].count\n                    + subtree_size(tree[node].left)\n                    + subtree_size(tree[node].right);\n}\n\nint rotate_right(int root) {\n    int child = tree[root].left;\n    tree[root].left = tree[child].right;\n    tree[child].right = root;\n    update(root);\n    update(child);\n    return child;\n}\n\nint rotate_left(int root) {\n    int child = tree[root].right;\n    tree[root].right = tree[child].left;\n    tree[child].left = root;\n    update(root);\n    update(child);\n    return child;\n}\n\nint insert(int root, long long key) {\n    if (!root) {\n        int node = ++nodes_used;\n        tree[node].key = key;\n        tree[node].priority = (int)next_random();\n        tree[node].count = 1;\n        tree[node].size = 1;\n        tree[node].left = tree[node].right = 0;\n        return node;\n    }\n\n    if (key == tree[root].key) {\n        tree[root].count++;\n    } else if (key < tree[root].key) {\n        tree[root].left = insert(tree[root].left, key);\n        if ((unsigned int)tree[tree[root].left].priority >\n            (unsigned int)tree[root].priority) {\n            root = rotate_right(root);\n        }\n    } else {\n        tree[root].right = insert(tree[root].right, key);\n        if ((unsigned int)tree[tree[root].right].priority >\n            (unsigned int)tree[root].priority) {\n            root = rotate_left(root);\n        }\n    }\n\n    update(root);\n    return root;\n}\n\nint count_at_most(int root, long long key) {\n    int result = 0;\n\n    while (root) {\n        if (key < tree[root].key) {\n            root = tree[root].left;\n        } else {\n            result += subtree_size(tree[root].left) + tree[root].count;\n            root = tree[root].right;\n        }\n    }\n\n    return result;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int root = 0;\n    int previous_penalty = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n\n        x += previous_penalty;\n        y += previous_penalty;\n\n        long long distance_squared = x * x + y * y;\n        int penalty = count_at_most(root, distance_squared);\n\n        printf(\"%d\\n\", penalty);\n        root = insert(root, distance_squared);\n        previous_penalty = penalty;\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18066830000316259,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

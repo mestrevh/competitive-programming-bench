@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:12:53.641797+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 647,
+            "output_tokens": 488,
+            "total_tokens": 2442
+        },
+        "cost_usd": {
+            "input_cost": 0.000485,
+            "output_cost": 0.00183,
+            "total_cost": 0.002315
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    N = int(input_data[0])\n    V = [int(x) for x in input_data[1 : N + 1]]\n\n    if N == 1:\n        print(1)\n        return\n\n    from collections import defaultdict\n\n    pos = defaultdict(list)\n    for i, v in enumerate(V):\n        pos[v].append(i)\n\n    distinct_vals = list(pos.keys())\n\n    if len(distinct_vals) <= 1:\n        print(1)\n        return\n\n    max_len = 1\n\n    for i in range(len(distinct_vals)):\n        u = distinct_vals[i]\n        pos_u = pos[u]\n        n1 = len(pos_u)\n        for j in range(i + 1, len(distinct_vals)):\n            v = distinct_vals[j]\n            pos_v = pos[v]\n            n2 = len(pos_v)\n\n            p1 = 0\n            p2 = 0\n            last = None\n            curr_len = 0\n\n            while p1 < n1 and p2 < n2:\n                if pos_u[p1] < pos_v[p2]:\n                    if last != u:\n                        curr_len += 1\n                        last = u\n                    p1 += 1\n                else:\n                    if last != v:\n                        curr_len += 1\n                        last = v\n                    p2 += 1\n\n            while p1 < n1:\n                if last != u:\n                    curr_len += 1\n                    last = u\n                p1 += 1\n\n            while p2 < n2:\n                if last != v:\n                    curr_len += 1\n                    last = v\n                p2 += 1\n\n            if curr_len > max_len:\n                max_len = curr_len\n\n    print(max_len)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    N = int(input_data[0])\n    V = [int(x) for x in input_data[1 : N + 1]]\n\n    if N == 1:\n        print(1)\n        return\n\n    from collections import defaultdict\n\n    pos = defaultdict(list)\n    for i, v in enumerate(V):\n        pos[v].append(i)\n\n    distinct_vals = list(pos.keys())\n\n    if len(distinct_vals) <= 1:\n        print(1)\n        return\n\n    max_len = 1\n\n    for i in range(len(distinct_vals)):\n        u = distinct_vals[i]\n        pos_u = pos[u]\n        n1 = len(pos_u)\n        for j in range(i + 1, len(distinct_vals)):\n            v = distinct_vals[j]\n            pos_v = pos[v]\n            n2 = len(pos_v)\n\n            p1 = 0\n            p2 = 0\n            last = None\n            curr_len = 0\n\n            while p1 < n1 and p2 < n2:\n                if pos_u[p1] < pos_v[p2]:\n                    if last != u:\n                        curr_len += 1\n                        last = u\n                    p1 += 1\n                else:\n                    if last != v:\n                        curr_len += 1\n                        last = v\n                    p2 += 1\n\n            while p1 < n1:\n                if last != u:\n                    curr_len += 1\n                    last = u\n                p1 += 1\n\n            while p2 < n2:\n                if last != v:\n                    curr_len += 1\n                    last = v\n                p2 += 1\n\n            if curr_len > max_len:\n                max_len = curr_len\n\n    print(max_len)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07909499999368563,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

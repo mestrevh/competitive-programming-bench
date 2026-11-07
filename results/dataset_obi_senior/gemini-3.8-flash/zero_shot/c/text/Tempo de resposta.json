@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:34:31.361891+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 918,
+            "output_tokens": 495,
+            "total_tokens": 2916
+        },
+        "cost_usd": {
+            "input_cost": 0.000688,
+            "output_cost": 0.001856,
+            "total_cost": 0.002545
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdbool.h>\n\ntypedef struct {\n    char type;\n    int x;\n} Record;\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    Record records[30];\n    for (int i = 0; i < n; i++) {\n        scanf(\" %c %d\", &records[i].type, &records[i].x);\n    }\n\n    int total_time[105] = {0};\n    int last_received[105] = {0};\n    bool waiting[105] = {false};\n    bool present[105] = {false};\n\n    int current_time = 0;\n\n    for (int i = 0; i < n; i++) {\n        char type = records[i].type;\n        int x = records[i].x;\n\n        if (type == 'R') {\n            present[x] = true;\n            waiting[x] = true;\n            last_received[x] = current_time;\n        } else if (type == 'E') {\n            present[x] = true;\n            waiting[x] = false;\n            total_time[x] += (current_time - last_received[x]);\n        }\n\n        if (type == 'R' || type == 'E') {\n            if (i + 1 < n) {\n                if (records[i + 1].type == 'T') {\n                    current_time += records[i + 1].x;\n                } else {\n                    current_time += 1;\n                }\n            }\n        }\n    }\n\n    for (int i = 1; i <= 100; i++) {\n        if (present[i]) {\n            if (waiting[i]) {\n                printf(\"%d -1\\n\", i);\n            } else {\n                printf(\"%d %d\\n\", i, total_time[i]);\n            }\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdbool.h>\n\ntypedef struct {\n    char type;\n    int x;\n} Record;\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    Record records[30];\n    for (int i = 0; i < n; i++) {\n        scanf(\" %c %d\", &records[i].type, &records[i].x);\n    }\n\n    int total_time[105] = {0};\n    int last_received[105] = {0};\n    bool waiting[105] = {false};\n    bool present[105] = {false};\n\n    int current_time = 0;\n\n    for (int i = 0; i < n; i++) {\n        char type = records[i].type;\n        int x = records[i].x;\n\n        if (type == 'R') {\n            present[x] = true;\n            waiting[x] = true;\n            last_received[x] = current_time;\n        } else if (type == 'E') {\n            present[x] = true;\n            waiting[x] = false;\n            total_time[x] += (current_time - last_received[x]);\n        }\n\n        if (type == 'R' || type == 'E') {\n            if (i + 1 < n) {\n                if (records[i + 1].type == 'T') {\n                    current_time += records[i + 1].x;\n                } else {\n                    current_time += 1;\n                }\n            }\n        }\n    }\n\n    for (int i = 1; i <= 100; i++) {\n        if (present[i]) {\n            if (waiting[i]) {\n                printf(\"%d -1\\n\", i);\n            } else {\n                printf(\"%d %d\\n\", i, total_time[i]);\n            }\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13541810002061538,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

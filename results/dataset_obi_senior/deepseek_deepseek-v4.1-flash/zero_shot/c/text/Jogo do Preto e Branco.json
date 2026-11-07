@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:29:13.687146+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 841,
+            "output_tokens": 3865,
+            "total_tokens": 4706
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.009276,
+            "total_cost": 0.009279
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\nint L, C, P;\nint black[6][6];\nint leftIndex[6][6], rightIndex[6][6];\nbool adj[36][36];\nint matchR[36];\nbool seen[36];\n\nbool dfs(int u, int rightCount) {\n    for (int v = 0; v < rightCount; v++) {\n        if (adj[u][v] && !seen[v]) {\n            seen[v] = true;\n            if (matchR[v] == -1 || dfs(matchR[v], rightCount)) {\n                matchR[v] = u;\n                return true;\n            }\n        }\n    }\n    return false;\n}\n\nint main() {\n    scanf(\"%d %d\", &L, &C);\n    scanf(\"%d\", &P);\n\n    memset(black, 0, sizeof(black));\n\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    memset(leftIndex, -1, sizeof(leftIndex));\n    memset(rightIndex, -1, sizeof(rightIndex));\n\n    int leftCount = 0, rightCount = 0;\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            bool hasBlackNeighbor = false;\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    hasBlackNeighbor = true;\n                    break;\n                }\n            }\n\n            if (hasBlackNeighbor) {\n                if ((r + c) % 2 == 0) {\n                    leftIndex[r][c] = leftCount++;\n                } else {\n                    rightIndex[r][c] = rightCount++;\n                }\n            }\n        }\n    }\n\n    memset(adj, 0, sizeof(adj));\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            int u = leftIndex[r][c];\n            if (u == -1) continue;\n\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C) {\n                    int v = rightIndex[nr][nc];\n                    if (v != -1) {\n                        adj[u][v] = true;\n                    }\n                }\n            }\n        }\n    }\n\n    memset(matchR, -1, sizeof(matchR));\n\n    int matching = 0;\n    for (int u = 0; u < leftCount; u++) {\n        memset(seen, 0, sizeof(seen));\n        if (dfs(u, rightCount)) {\n            matching++;\n        }\n    }\n\n    int answer = leftCount + rightCount - matching;\n    printf(\"%d\\n\", answer);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\nint L, C, P;\nint black[6][6];\nint leftIndex[6][6], rightIndex[6][6];\nbool adj[36][36];\nint matchR[36];\nbool seen[36];\n\nbool dfs(int u, int rightCount) {\n    for (int v = 0; v < rightCount; v++) {\n        if (adj[u][v] && !seen[v]) {\n            seen[v] = true;\n            if (matchR[v] == -1 || dfs(matchR[v], rightCount)) {\n                matchR[v] = u;\n                return true;\n            }\n        }\n    }\n    return false;\n}\n\nint main() {\n    scanf(\"%d %d\", &L, &C);\n    scanf(\"%d\", &P);\n\n    memset(black, 0, sizeof(black));\n\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    memset(leftIndex, -1, sizeof(leftIndex));\n    memset(rightIndex, -1, sizeof(rightIndex));\n\n    int leftCount = 0, rightCount = 0;\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            bool hasBlackNeighbor = false;\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    hasBlackNeighbor = true;\n                    break;\n                }\n            }\n\n            if (hasBlackNeighbor) {\n                if ((r + c) % 2 == 0) {\n                    leftIndex[r][c] = leftCount++;\n                } else {\n                    rightIndex[r][c] = rightCount++;\n                }\n            }\n        }\n    }\n\n    memset(adj, 0, sizeof(adj));\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            int u = leftIndex[r][c];\n            if (u == -1) continue;\n\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C) {\n                    int v = rightIndex[nr][nc];\n                    if (v != -1) {\n                        adj[u][v] = true;\n                    }\n                }\n            }\n        }\n    }\n\n    memset(matchR, -1, sizeof(matchR));\n\n    int matching = 0;\n    for (int u = 0; u < leftCount; u++) {\n        memset(seen, 0, sizeof(seen));\n        if (dfs(u, rightCount)) {\n            matching++;\n        }\n    }\n\n    int answer = leftCount + rightCount - matching;\n    printf(\"%d\\n\", answer);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13441040000179783,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

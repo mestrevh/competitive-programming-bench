@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:55:02.409964+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 497,
+            "output_tokens": 1683,
+            "total_tokens": 2180
+        },
+        "cost_usd": {
+            "input_cost": 5e-05,
+            "output_cost": 0.000842,
+            "total_cost": 0.000891
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int compare_ints(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int N, K, C;\n    if (scanf(\"%d %d %d\", &N, &K, &C) != 3) return 0;\n\n    int *A = malloc((size_t)N * sizeof(int));\n    long long total = 0;\n\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &A[i]);\n        total += A[i];\n    }\n\n    long long min_covered;\n\n    if (C == 1) {\n        qsort(A, (size_t)N, sizeof(int), compare_ints);\n        min_covered = 0;\n        for (int i = 0; i < K; ++i) min_covered += A[i];\n    } else {\n        long long *prefix = malloc((size_t)(N + 1) * sizeof(long long));\n        for (int i = 0; i < N; ++i)\n            prefix[i + 1] = prefix[i] + A[i];\n\n        const long long INF = 1LL << 60;\n        long long *prev = malloc((size_t)(N + 1) * sizeof(long long));\n        long long *curr = malloc((size_t)(N + 1) * sizeof(long long));\n\n        for (int i = 0; i <= N; ++i) prev[i] = 0;\n\n        for (int k = 1; k <= K; ++k) {\n            for (int i = 0; i <= N; ++i) curr[i] = INF;\n\n            for (int i = k * C; i <= N; ++i) {\n                curr[i] = curr[i - 1];\n\n                long long segment = prefix[i] - prefix[i - C];\n                long long candidate = prev[i - C] + segment;\n                if (candidate < curr[i]) curr[i] = candidate;\n            }\n\n            long long *tmp = prev;\n            prev = curr;\n            curr = tmp;\n        }\n\n        min_covered = prev[N];\n        free(prefix);\n        free(prev);\n        free(curr);\n    }\n\n    printf(\"%lld\\n\", total - min_covered);\n    free(A);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int compare_ints(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int N, K, C;\n    if (scanf(\"%d %d %d\", &N, &K, &C) != 3) return 0;\n\n    int *A = malloc((size_t)N * sizeof(int));\n    long long total = 0;\n\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &A[i]);\n        total += A[i];\n    }\n\n    long long min_covered;\n\n    if (C == 1) {\n        qsort(A, (size_t)N, sizeof(int), compare_ints);\n        min_covered = 0;\n        for (int i = 0; i < K; ++i) min_covered += A[i];\n    } else {\n        long long *prefix = malloc((size_t)(N + 1) * sizeof(long long));\n        for (int i = 0; i < N; ++i)\n            prefix[i + 1] = prefix[i] + A[i];\n\n        const long long INF = 1LL << 60;\n        long long *prev = malloc((size_t)(N + 1) * sizeof(long long));\n        long long *curr = malloc((size_t)(N + 1) * sizeof(long long));\n\n        for (int i = 0; i <= N; ++i) prev[i] = 0;\n\n        for (int k = 1; k <= K; ++k) {\n            for (int i = 0; i <= N; ++i) curr[i] = INF;\n\n            for (int i = k * C; i <= N; ++i) {\n                curr[i] = curr[i - 1];\n\n                long long segment = prefix[i] - prefix[i - C];\n                long long candidate = prev[i - C] + segment;\n                if (candidate < curr[i]) curr[i] = candidate;\n            }\n\n            long long *tmp = prev;\n            prev = curr;\n            curr = tmp;\n        }\n\n        min_covered = prev[N];\n        free(prefix);\n        free(prev);\n        free(curr);\n    }\n\n    printf(\"%lld\\n\", total - min_covered);\n    free(A);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10316820000298321,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

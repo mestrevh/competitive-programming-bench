@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:54:52.213084+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1070,
+            "output_tokens": 584,
+            "total_tokens": 1654
+        },
+        "cost_usd": {
+            "input_cost": 0.000107,
+            "output_cost": 0.000292,
+            "total_cost": 0.000399
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet pos = 0;\nconst N = input[pos++];\nconst M = input[pos++];\n\nconst grid = [];\nfor (let i = 0; i < N; i++) {\n  grid.push(input.slice(pos, pos + M));\n  pos += M;\n}\n\nlet cost = [0, 0];\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < M; j++) {\n    const parity = grid[i][j] % 2;\n    for (let start = 0; start <= 1; start++) {\n      if (parity !== ((start + i + j) % 2)) cost[start]++;\n    }\n  }\n}\n\nconst start = cost[0] <= cost[1] ? 0 : 1;\nconst output = [String(cost[start])];\n\nfor (let i = 0; i < N; i++) {\n  const row = [];\n  for (let j = 0; j < M; j++) {\n    const targetParity = (start + i + j) % 2;\n    row.push(String(grid[i][j] + (grid[i][j] % 2 !== targetParity ? 1 : 0)));\n  }\n  output.push(row.join(' '));\n}\n\nconsole.log(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet pos = 0;\nconst N = input[pos++];\nconst M = input[pos++];\n\nconst grid = [];\nfor (let i = 0; i < N; i++) {\n  grid.push(input.slice(pos, pos + M));\n  pos += M;\n}\n\nlet cost = [0, 0];\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < M; j++) {\n    const parity = grid[i][j] % 2;\n    for (let start = 0; start <= 1; start++) {\n      if (parity !== ((start + i + j) % 2)) cost[start]++;\n    }\n  }\n}\n\nconst start = cost[0] <= cost[1] ? 0 : 1;\nconst output = [String(cost[start])];\n\nfor (let i = 0; i < N; i++) {\n  const row = [];\n  for (let j = 0; j < M; j++) {\n    const targetParity = (start + i + j) % 2;\n    row.push(String(grid[i][j] + (grid[i][j] % 2 !== targetParity ? 1 : 0)));\n  }\n  output.push(row.join(' '));\n}\n\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06283819999953266,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:40:58.008847+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1262,
+            "output_tokens": 1355,
+            "total_tokens": 2617
+        },
+        "cost_usd": {
+            "input_cost": 0.000126,
+            "output_cost": 0.000678,
+            "total_cost": 0.000804
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < input.length && input[pos] > 32) {\n    value = value * 10 + input[pos++] - 48;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst P = nextInt();\n\nconst rows = new Int32Array(N);\nconst cols = new Int32Array(M);\n\nfor (let i = 0; i < N; i++) rows[i] = i + 1;\nfor (let i = 0; i < M; i++) cols[i] = i + 1;\n\nfor (let i = 0; i < P; i++) {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  const op = input[pos++];\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n\n  const perm = op === 76 ? rows : cols;\n  const temp = perm[a];\n  perm[a] = perm[b];\n  perm[b] = temp;\n}\n\nconst outputChunks = [];\nlet lineBatch = [];\n\nfor (let i = 0; i < N; i++) {\n  const base = (rows[i] - 1) * M;\n  const values = new Array(M);\n\n  for (let j = 0; j < M; j++) {\n    values[j] = base + cols[j];\n  }\n\n  lineBatch.push(values.join(' '));\n\n  if (lineBatch.length === 1000) {\n    outputChunks.push(lineBatch.join('\\n'));\n    lineBatch = [];\n  }\n}\n\nif (lineBatch.length > 0) outputChunks.push(lineBatch.join('\\n'));\n\nprocess.stdout.write(outputChunks.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < input.length && input[pos] > 32) {\n    value = value * 10 + input[pos++] - 48;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst P = nextInt();\n\nconst rows = new Int32Array(N);\nconst cols = new Int32Array(M);\n\nfor (let i = 0; i < N; i++) rows[i] = i + 1;\nfor (let i = 0; i < M; i++) cols[i] = i + 1;\n\nfor (let i = 0; i < P; i++) {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  const op = input[pos++];\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n\n  const perm = op === 76 ? rows : cols;\n  const temp = perm[a];\n  perm[a] = perm[b];\n  perm[b] = temp;\n}\n\nconst outputChunks = [];\nlet lineBatch = [];\n\nfor (let i = 0; i < N; i++) {\n  const base = (rows[i] - 1) * M;\n  const values = new Array(M);\n\n  for (let j = 0; j < M; j++) {\n    values[j] = base + cols[j];\n  }\n\n  lineBatch.push(values.join(' '));\n\n  if (lineBatch.length === 1000) {\n    outputChunks.push(lineBatch.join('\\n'));\n    lineBatch = [];\n  }\n}\n\nif (lineBatch.length > 0) outputChunks.push(lineBatch.join('\\n'));\n\nprocess.stdout.write(outputChunks.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1803871000010986,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

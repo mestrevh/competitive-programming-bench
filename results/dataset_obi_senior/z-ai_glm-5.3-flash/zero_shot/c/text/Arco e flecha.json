@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T16:27:08.965316+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 894,
+            "output_tokens": 7743,
+            "total_tokens": 8637
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.003871,
+            "total_cost": 0.003891
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define CAP 1024\n#define MAXBLK 210\n\nstatic long long pool[205000];\nstatic int poolTop = 0;\n\ntypedef struct { long long *ptr; int size; } Block;\nstatic Block blocks[MAXBLK];\nstatic int nblocks = 0;\n\nstatic char inbuf[1 << 22];\nstatic int inPos = 0, inLen = 0;\n\nstatic inline void readLL(long long *out) {\n    while (inPos < inLen && (inbuf[inPos] < '0' || inbuf[inPos] > '9') && inbuf[inPos] != '-') inPos++;\n    int neg = 0;\n    if (inPos < inLen && inbuf[inPos] == '-') { neg = 1; inPos++; }\n    long long v = 0;\n    while (inPos < inLen && inbuf[inPos] >= '0' && inbuf[inPos] <= '9') {\n        v = v * 10 + (inbuf[inPos] - '0');\n        inPos++;\n    }\n    *out = neg ? -v : v;\n}\n\nstatic inline int upperBound(const long long *a, int n, long long x) {\n    int lo = 0, hi = n;\n    while (lo < hi) {\n        int mid = (lo + hi) >> 1;\n        if (a[mid] <= x) lo = mid + 1; else hi = mid;\n    }\n    return lo;\n}\n\nstatic int rankLE(long long x) {\n    int cnt = 0;\n    for (int i = 0; i < nblocks; i++) {\n        Block *b = &blocks[i];\n        if (b->ptr[b->size - 1] <= x) {\n            cnt += b->size;\n        } else {\n            cnt += upperBound(b->ptr, b->size, x);\n            break;\n        }\n    }\n    return cnt;\n}\n\nstatic void insertVal(long long x) {\n    if (nblocks == 0) {\n        blocks[0].ptr = pool;\n        poolTop = CAP;\n        blocks[0].ptr[0] = x;\n        blocks[0].size = 1;\n        nblocks = 1;\n        return;\n    }\n    int bi = 0;\n    while (bi < nblocks - 1 && blocks[bi].ptr[blocks[bi].size - 1] < x) bi++;\n    Block *b = &blocks[bi];\n    if (b->size == CAP) {\n        long long *np = pool + poolTop;\n        poolTop += CAP;\n        int half = CAP / 2;\n        memcpy(np, b->ptr + half, (size_t)(CAP - half) * sizeof(long long));\n        Block nb;\n        nb.ptr = np;\n        nb.size = CAP - half;\n        b->size = half;\n        memmove(&blocks[bi + 2], &blocks[bi + 1], (size_t)(nblocks - bi - 1) * sizeof(Block));\n        blocks[bi + 1] = nb;\n        nblocks++;\n        b = &blocks[bi];\n        if (x > b->ptr[b->size - 1]) b = &blocks[bi + 1];\n    }\n    int pos = upperBound(b->ptr, b->size, x);\n    memmove(b->ptr + pos + 1, b->ptr + pos, (size_t)(b->size - pos) * sizeof(long long));\n    b->ptr[pos] = x;\n    b->size++;\n}\n\nstatic char out[1 << 22];\n\nint main(void) {\n    inLen = (int)fread(inbuf, 1, sizeof(inbuf), stdin);\n    long long n;\n    readLL(&n);\n    long long prevP = 0;\n    int outPos = 0;\n    for (long long k = 0; k < n; k++) {\n        long long X, Y;\n        readLL(&X);\n        readLL(&Y);\n        long long xr = X + prevP;\n        long long yr = Y + prevP;\n        long long d = xr * xr + yr * yr;\n        long long p = rankLE(d);\n        insertVal(d);\n        prevP = p;\n        if (p == 0) {\n            out[outPos++] = '0';\n        } else {\n            char tmp[24];\n            int t = 0;\n            long long v = p;\n            while (v > 0) { tmp[t++] = (char)('0' + (v % 10)); v /= 10; }\n            while (t > 0) out[outPos++] = tmp[--t];\n        }\n        out[outPos++] = '\\n';\n    }\n    fwrite(out, 1, (size_t)outPos, stdout);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define CAP 1024\n#define MAXBLK 210\n\nstatic long long pool[205000];\nstatic int poolTop = 0;\n\ntypedef struct { long long *ptr; int size; } Block;\nstatic Block blocks[MAXBLK];\nstatic int nblocks = 0;\n\nstatic char inbuf[1 << 22];\nstatic int inPos = 0, inLen = 0;\n\nstatic inline void readLL(long long *out) {\n    while (inPos < inLen && (inbuf[inPos] < '0' || inbuf[inPos] > '9') && inbuf[inPos] != '-') inPos++;\n    int neg = 0;\n    if (inPos < inLen && inbuf[inPos] == '-') { neg = 1; inPos++; }\n    long long v = 0;\n    while (inPos < inLen && inbuf[inPos] >= '0' && inbuf[inPos] <= '9') {\n        v = v * 10 + (inbuf[inPos] - '0');\n        inPos++;\n    }\n    *out = neg ? -v : v;\n}\n\nstatic inline int upperBound(const long long *a, int n, long long x) {\n    int lo = 0, hi = n;\n    while (lo < hi) {\n        int mid = (lo + hi) >> 1;\n        if (a[mid] <= x) lo = mid + 1; else hi = mid;\n    }\n    return lo;\n}\n\nstatic int rankLE(long long x) {\n    int cnt = 0;\n    for (int i = 0; i < nblocks; i++) {\n        Block *b = &blocks[i];\n        if (b->ptr[b->size - 1] <= x) {\n            cnt += b->size;\n        } else {\n            cnt += upperBound(b->ptr, b->size, x);\n            break;\n        }\n    }\n    return cnt;\n}\n\nstatic void insertVal(long long x) {\n    if (nblocks == 0) {\n        blocks[0].ptr = pool;\n        poolTop = CAP;\n        blocks[0].ptr[0] = x;\n        blocks[0].size = 1;\n        nblocks = 1;\n        return;\n    }\n    int bi = 0;\n    while (bi < nblocks - 1 && blocks[bi].ptr[blocks[bi].size - 1] < x) bi++;\n    Block *b = &blocks[bi];\n    if (b->size == CAP) {\n        long long *np = pool + poolTop;\n        poolTop += CAP;\n        int half = CAP / 2;\n        memcpy(np, b->ptr + half, (size_t)(CAP - half) * sizeof(long long));\n        Block nb;\n        nb.ptr = np;\n        nb.size = CAP - half;\n        b->size = half;\n        memmove(&blocks[bi + 2], &blocks[bi + 1], (size_t)(nblocks - bi - 1) * sizeof(Block));\n        blocks[bi + 1] = nb;\n        nblocks++;\n        b = &blocks[bi];\n        if (x > b->ptr[b->size - 1]) b = &blocks[bi + 1];\n    }\n    int pos = upperBound(b->ptr, b->size, x);\n    memmove(b->ptr + pos + 1, b->ptr + pos, (size_t)(b->size - pos) * sizeof(long long));\n    b->ptr[pos] = x;\n    b->size++;\n}\n\nstatic char out[1 << 22];\n\nint main(void) {\n    inLen = (int)fread(inbuf, 1, sizeof(inbuf), stdin);\n    long long n;\n    readLL(&n);\n    long long prevP = 0;\n    int outPos = 0;\n    for (long long k = 0; k < n; k++) {\n        long long X, Y;\n        readLL(&X);\n        readLL(&Y);\n        long long xr = X + prevP;\n        long long yr = Y + prevP;\n        long long d = xr * xr + yr * yr;\n        long long p = rankLE(d);\n        insertVal(d);\n        prevP = p;\n        if (p == 0) {\n            out[outPos++] = '0';\n        } else {\n            char tmp[24];\n            int t = 0;\n            long long v = p;\n            while (v > 0) { tmp[t++] = (char)('0' + (v % 10)); v /= 10; }\n            while (t > 0) out[outPos++] = tmp[--t];\n        }\n        out[outPos++] = '\\n';\n    }\n    fwrite(out, 1, (size_t)outPos, stdout);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18740409999736585,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

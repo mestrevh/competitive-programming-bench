@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T23:31:07.712456+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1263,
+            "output_tokens": 4000,
+            "total_tokens": 5263
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.002,
+            "total_cost": 0.002027
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n, T;\n    if (scanf(\"%d %d\", &n, &T) != 2) return 0;\n    vector<pair<int,int>> v(n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &v[i].first);   // tipo\n    for (int i = 0; i < n; i++) scanf(\"%d\", &v[i].second);  // preco\n    sort(v.begin(), v.end());\n    \n    vector<int> pos(T+1, 0), st(T+1, 0), en(T+1, 0);\n    for (int i = 0; i < n; i++){\n        if (i == 0 || v[i].first != v[i-1].first) st[v[i].first] = i;\n        if (i == n-1 || v[i].first != v[i+1].first) en[v[i].first] = i+1;\n    }\n    \n    const int INF = INT_MAX;\n    vector<int> cur(T+1, INF);\n    set<pair<int,int>> s;\n    for (int ty = 1; ty <= T; ty++){\n        if (st[ty] < en[ty]){\n            cur[ty] = v[st[ty]].second;\n            s.insert({cur[ty], ty});\n        }\n    }\n    \n    long long ans = 0;\n    int C; scanf(\"%d\", &C);\n    while (C--){\n        int u; scanf(\"%d\", &u);\n        if (u == 0){\n            if (!s.empty()){\n                auto it = s.begin();\n                int price = it->first, ty = it->second;\n                ans += price;\n                s.erase(it);\n                pos[ty]++;\n                if (pos[ty] < en[ty]){\n                    cur[ty] = v[pos[ty]].second;\n                    s.insert({cur[ty], ty});\n                } else cur[ty] = INF;\n            }\n        } else {\n            if (pos[u] < en[u]){\n                ans += v[pos[u]].second;\n                s.erase({cur[u], u});\n                pos[u]++;\n                if (pos[u] < en[u]){\n                    cur[u] = v[pos[u]].second;\n                    s.insert({cur[u], u});\n                } else cur[u] = INF;\n            }\n        }\n    }\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n, T;\n    if (scanf(\"%d %d\", &n, &T) != 2) return 0;\n    vector<pair<int,int>> v(n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &v[i].first);   // tipo\n    for (int i = 0; i < n; i++) scanf(\"%d\", &v[i].second);  // preco\n    sort(v.begin(), v.end());\n    \n    vector<int> pos(T+1, 0), st(T+1, 0), en(T+1, 0);\n    for (int i = 0; i < n; i++){\n        if (i == 0 || v[i].first != v[i-1].first) st[v[i].first] = i;\n        if (i == n-1 || v[i].first != v[i+1].first) en[v[i].first] = i+1;\n    }\n    \n    const int INF = INT_MAX;\n    vector<int> cur(T+1, INF);\n    set<pair<int,int>> s;\n    for (int ty = 1; ty <= T; ty++){\n        if (st[ty] < en[ty]){\n            cur[ty] = v[st[ty]].second;\n            s.insert({cur[ty], ty});\n        }\n    }\n    \n    long long ans = 0;\n    int C; scanf(\"%d\", &C);\n    while (C--){\n        int u; scanf(\"%d\", &u);\n        if (u == 0){\n            if (!s.empty()){\n                auto it = s.begin();\n                int price = it->first, ty = it->second;\n                ans += price;\n                s.erase(it);\n                pos[ty]++;\n                if (pos[ty] < en[ty]){\n                    cur[ty] = v[pos[ty]].second;\n                    s.insert({cur[ty], ty});\n                } else cur[ty] = INF;\n            }\n        } else {\n            if (pos[u] < en[u]){\n                ans += v[pos[u]].second;\n                s.erase({cur[u], u});\n                pos[u]++;\n                if (pos[u] < en[u]){\n                    cur[u] = v[pos[u]].second;\n                    s.insert({cur[u], u});\n                } else cur[u] = INF;\n            }\n        }\n    }\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.21329379999951925,
+            "counts": {
+                "AC": 9,
+                "WA": 43,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

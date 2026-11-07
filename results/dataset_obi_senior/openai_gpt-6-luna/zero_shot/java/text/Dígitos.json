@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:56:22.045686+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 576,
+            "output_tokens": 1597,
+            "total_tokens": 2173
+        },
+        "cost_usd": {
+            "input_cost": 5.8e-05,
+            "output_cost": 0.000798,
+            "total_cost": 0.000856
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.math.BigInteger;\n\npublic class Main {\n    private static int nextInt(BufferedInputStream in) throws Exception {\n        int c;\n        do {\n            c = in.read();\n        } while (c <= ' ' && c != -1);\n\n        int value = 0;\n        while (c > ' ') {\n            value = value * 10 + (c - '0');\n            c = in.read();\n        }\n        return value;\n    }\n\n    public static void main(String[] args) throws Exception {\n        BufferedInputStream in = new BufferedInputStream(System.in);\n        int n = nextInt(in);\n\n        StringBuilder digits = new StringBuilder(n);\n        for (int i = 0; i < n; i++) {\n            digits.append((char) ('0' + nextInt(in)));\n        }\n\n        String sequence = digits.toString();\n\n        for (int length = 1; length <= n; length++) {\n            if (sequence.charAt(0) == '0') {\n                break;\n            }\n\n            BigInteger start = new BigInteger(sequence.substring(0, length));\n            BigInteger current = start;\n            int position = 0;\n            boolean valid = true;\n\n            while (position < n) {\n                String number = current.toString();\n                if (position + number.length() > n\n                        || !sequence.regionMatches(position, number, 0, number.length())) {\n                    valid = false;\n                    break;\n                }\n\n                position += number.length();\n                current = current.add(BigInteger.ONE);\n            }\n\n            if (valid) {\n                System.out.println(start);\n                return;\n            }\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.math.BigInteger;\n\npublic class Main {\n    private static int nextInt(BufferedInputStream in) throws Exception {\n        int c;\n        do {\n            c = in.read();\n        } while (c <= ' ' && c != -1);\n\n        int value = 0;\n        while (c > ' ') {\n            value = value * 10 + (c - '0');\n            c = in.read();\n        }\n        return value;\n    }\n\n    public static void main(String[] args) throws Exception {\n        BufferedInputStream in = new BufferedInputStream(System.in);\n        int n = nextInt(in);\n\n        StringBuilder digits = new StringBuilder(n);\n        for (int i = 0; i < n; i++) {\n            digits.append((char) ('0' + nextInt(in)));\n        }\n\n        String sequence = digits.toString();\n\n        for (int length = 1; length <= n; length++) {\n            if (sequence.charAt(0) == '0') {\n                break;\n            }\n\n            BigInteger start = new BigInteger(sequence.substring(0, length));\n            BigInteger current = start;\n            int position = 0;\n            boolean valid = true;\n\n            while (position < n) {\n                String number = current.toString();\n                if (position + number.length() > n\n                        || !sequence.regionMatches(position, number, 0, number.length())) {\n                    valid = false;\n                    break;\n                }\n\n                position += number.length();\n                current = current.add(BigInteger.ONE);\n            }\n\n            if (valid) {\n                System.out.println(start);\n                return;\n            }\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15114470000116853,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

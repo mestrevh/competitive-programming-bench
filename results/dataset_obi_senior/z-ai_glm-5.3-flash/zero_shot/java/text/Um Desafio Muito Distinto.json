@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T23:10:35.629667+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1242,
+            "output_tokens": 27433,
+            "total_tokens": 28675
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.013716,
+            "total_cost": 0.013743
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    static InputStream in = System.in;\n    static byte[] buf = new byte[1 << 16];\n    static int len = 0, pos = 0;\n\n    static int readByte() throws IOException {\n        if (pos == len) {\n            len = in.read(buf, 0, buf.length);\n            pos = 0;\n            if (len <= 0) return -1;\n        }\n        return buf[pos++];\n    }\n\n    static long nextLong() throws IOException {\n        int c = readByte();\n        while (c != -1 && (c < '0' || c > '9') && c != '-') c = readByte();\n        boolean neg = (c == '-');\n        if (neg) c = readByte();\n        long x = 0;\n        while (c >= '0' && c <= '9') {\n            x = x * 10 + (c - '0');\n            c = readByte();\n        }\n        return neg ? -x : x;\n    }\n\n    // True iff k*(2*A + k - 1) >= twoL, i.e. sum of the k smallest values in [A,B] (k*(2A+k-1)/2) >= L.\n    // Overflow-safe: the product can reach ~8*10^20, which exceeds Long.MAX_VALUE.\n    static boolean enough(long k, long A, long twoL) {\n        long m = 2 * A + k - 1; // m <= A + B <= 4*10^10, m >= 2\n        if (k > Long.MAX_VALUE / m) return true; // exact product overflows long -> certainly >= twoL (<= 2*10^13)\n        return k * m >= twoL;\n    }\n\n    static long solve(long L, long A, long B) {\n        long n = B - A + 1; // number of distinct available values\n        long twoL = 2 * L;\n        // If even using all values the total stays below L, João plays all n rounds.\n        if (!enough(n, A, twoL)) return n;\n        // Otherwise the game must cross L at some point; picking smallest values first\n        // keeps partial sums pointwise minimal, delaying the crossing as much as possible.\n        // Answer: minimal k in [1, n] with k*(2A+k-1)/2 >= L.\n        long lo = 1, hi = n;\n        while (lo < hi) {\n            long mid = (lo + hi) >>> 1;\n            if (enough(mid, A, twoL)) hi = mid;\n            else lo = mid + 1;\n        }\n        return lo;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int P = (int) nextLong();\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < P; i++) {\n            long L = nextLong(), A = nextLong(), B = nextLong();\n            sb.append(solve(L, A, B)).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    static InputStream in = System.in;\n    static byte[] buf = new byte[1 << 16];\n    static int len = 0, pos = 0;\n\n    static int readByte() throws IOException {\n        if (pos == len) {\n            len = in.read(buf, 0, buf.length);\n            pos = 0;\n            if (len <= 0) return -1;\n        }\n        return buf[pos++];\n    }\n\n    static long nextLong() throws IOException {\n        int c = readByte();\n        while (c != -1 && (c < '0' || c > '9') && c != '-') c = readByte();\n        boolean neg = (c == '-');\n        if (neg) c = readByte();\n        long x = 0;\n        while (c >= '0' && c <= '9') {\n            x = x * 10 + (c - '0');\n            c = readByte();\n        }\n        return neg ? -x : x;\n    }\n\n    // True iff k*(2*A + k - 1) >= twoL, i.e. sum of the k smallest values in [A,B] (k*(2A+k-1)/2) >= L.\n    // Overflow-safe: the product can reach ~8*10^20, which exceeds Long.MAX_VALUE.\n    static boolean enough(long k, long A, long twoL) {\n        long m = 2 * A + k - 1; // m <= A + B <= 4*10^10, m >= 2\n        if (k > Long.MAX_VALUE / m) return true; // exact product overflows long -> certainly >= twoL (<= 2*10^13)\n        return k * m >= twoL;\n    }\n\n    static long solve(long L, long A, long B) {\n        long n = B - A + 1; // number of distinct available values\n        long twoL = 2 * L;\n        // If even using all values the total stays below L, João plays all n rounds.\n        if (!enough(n, A, twoL)) return n;\n        // Otherwise the game must cross L at some point; picking smallest values first\n        // keeps partial sums pointwise minimal, delaying the crossing as much as possible.\n        // Answer: minimal k in [1, n] with k*(2A+k-1)/2 >= L.\n        long lo = 1, hi = n;\n        while (lo < hi) {\n            long mid = (lo + hi) >>> 1;\n            if (enough(mid, A, twoL)) hi = mid;\n            else lo = mid + 1;\n        }\n        return lo;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int P = (int) nextLong();\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < P; i++) {\n            long L = nextLong(), A = nextLong(), B = nextLong();\n            sb.append(solve(L, A, B)).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12214220000896603,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

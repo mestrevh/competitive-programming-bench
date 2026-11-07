@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:51:18.400353+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 899,
+            "total_tokens": 1656
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.000449,
+            "total_cost": 0.000525
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    static class Fenwick {\n        private final long[] tree;\n\n        Fenwick(int n) {\n            tree = new long[n + 2];\n        }\n\n        void add(int index, long value) {\n            for (int i = index; i < tree.length; i += i & -i) {\n                tree[i] += value;\n            }\n        }\n\n        long sum(int index) {\n            long result = 0;\n            for (int i = index; i > 0; i -= i & -i) {\n                result += tree[i];\n            }\n            return result;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        Fenwick slopes = new Fenwick(n + 1);\n        Fenwick intercepts = new Fenwick(n + 1);\n        StringBuilder out = new StringBuilder();\n\n        for (int q = 0; q < m; q++) {\n            int type = fs.nextInt();\n            int i = fs.nextInt();\n\n            if (type == 3) {\n                long slope = slopes.sum(i);\n                long intercept = intercepts.sum(i);\n                out.append(slope * i + intercept).append('\\n');\n            } else {\n                int v = fs.nextInt();\n                int left, right;\n                long slope, intercept;\n\n                if (type == 1) {\n                    left = i;\n                    right = (int) Math.min((long) n, (long) i + v - 1);\n                    slope = -1;\n                    intercept = (long) v + i;\n                } else {\n                    left = (int) Math.max(1L, (long) i - v + 1);\n                    right = i;\n                    slope = 1;\n                    intercept = (long) v - i;\n                }\n\n                slopes.add(left, slope);\n                intercepts.add(left, intercept);\n\n                if (right + 1 <= n) {\n                    slopes.add(right + 1, -slope);\n                    intercepts.add(right + 1, -intercept);\n                }\n            }\n        }\n\n        System.out.print(out);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    static class Fenwick {\n        private final long[] tree;\n\n        Fenwick(int n) {\n            tree = new long[n + 2];\n        }\n\n        void add(int index, long value) {\n            for (int i = index; i < tree.length; i += i & -i) {\n                tree[i] += value;\n            }\n        }\n\n        long sum(int index) {\n            long result = 0;\n            for (int i = index; i > 0; i -= i & -i) {\n                result += tree[i];\n            }\n            return result;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        Fenwick slopes = new Fenwick(n + 1);\n        Fenwick intercepts = new Fenwick(n + 1);\n        StringBuilder out = new StringBuilder();\n\n        for (int q = 0; q < m; q++) {\n            int type = fs.nextInt();\n            int i = fs.nextInt();\n\n            if (type == 3) {\n                long slope = slopes.sum(i);\n                long intercept = intercepts.sum(i);\n                out.append(slope * i + intercept).append('\\n');\n            } else {\n                int v = fs.nextInt();\n                int left, right;\n                long slope, intercept;\n\n                if (type == 1) {\n                    left = i;\n                    right = (int) Math.min((long) n, (long) i + v - 1);\n                    slope = -1;\n                    intercept = (long) v + i;\n                } else {\n                    left = (int) Math.max(1L, (long) i - v + 1);\n                    right = i;\n                    slope = 1;\n                    intercept = (long) v - i;\n                }\n\n                slopes.add(left, slope);\n                intercepts.add(left, intercept);\n\n                if (right + 1 <= n) {\n                    slopes.add(right + 1, -slope);\n                    intercepts.add(right + 1, -intercept);\n                }\n            }\n        }\n\n        System.out.print(out);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1412558000010904,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

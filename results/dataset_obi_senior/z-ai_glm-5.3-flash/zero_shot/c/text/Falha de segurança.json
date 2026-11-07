@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:21:24.860216+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 684,
+            "output_tokens": 19022,
+            "total_tokens": 19706
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.009511,
+            "total_cost": 0.009526
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\n#define MAXN 20005\n#define ALPHA 36\n#define MAXNODES 200052\n\nstatic int child_[MAXNODES][ALPHA];\nstatic int cnt_[MAXNODES];\nstatic int vis_[MAXNODES];\n\nstatic char pw[MAXN][12];\nstatic int plen[MAXN];\nstatic int nodeCount = 1;\n\nstatic inline int idx(char c) {\n    return (c >= '0' && c <= '9') ? (26 + (c - '0')) : (c - 'a');\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        if (scanf(\"%11s\", pw[i]) != 1) return 0;\n        int len = (int)strlen(pw[i]);\n        plen[i] = len;\n        int cur = 0;\n        for (int k = 0; k < len; k++) {\n            int c = idx(pw[i][k]);\n            int nx = child_[cur][c];\n            if (!nx) {\n                nx = ++nodeCount;\n                child_[cur][c] = nx;\n            }\n            cur = nx;\n        }\n        cnt_[cur]++;\n    }\n\n    long long total = 0;\n    for (int j = 0; j < n; j++) {\n        const char *s = pw[j];\n        int L = plen[j];\n        int stamp = j + 1;\n        for (int i = 0; i < L; i++) {\n            int cur = 0;\n            for (int k = i; k < L; k++) {\n                cur = child_[cur][idx(s[k])];\n                if (!cur) break;\n                if (cnt_[cur] && vis_[cur] != stamp) {\n                    vis_[cur] = stamp;\n                    total += cnt_[cur];\n                }\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", total - (long long)n);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\n#define MAXN 20005\n#define ALPHA 36\n#define MAXNODES 200052\n\nstatic int child_[MAXNODES][ALPHA];\nstatic int cnt_[MAXNODES];\nstatic int vis_[MAXNODES];\n\nstatic char pw[MAXN][12];\nstatic int plen[MAXN];\nstatic int nodeCount = 1;\n\nstatic inline int idx(char c) {\n    return (c >= '0' && c <= '9') ? (26 + (c - '0')) : (c - 'a');\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        if (scanf(\"%11s\", pw[i]) != 1) return 0;\n        int len = (int)strlen(pw[i]);\n        plen[i] = len;\n        int cur = 0;\n        for (int k = 0; k < len; k++) {\n            int c = idx(pw[i][k]);\n            int nx = child_[cur][c];\n            if (!nx) {\n                nx = ++nodeCount;\n                child_[cur][c] = nx;\n            }\n            cur = nx;\n        }\n        cnt_[cur]++;\n    }\n\n    long long total = 0;\n    for (int j = 0; j < n; j++) {\n        const char *s = pw[j];\n        int L = plen[j];\n        int stamp = j + 1;\n        for (int i = 0; i < L; i++) {\n            int cur = 0;\n            for (int k = i; k < L; k++) {\n                cur = child_[cur][idx(s[k])];\n                if (!cur) break;\n                if (cnt_[cur] && vis_[cur] != stamp) {\n                    vis_[cur] = stamp;\n                    total += cnt_[cur];\n                }\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", total - (long long)n);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11602839999250136,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

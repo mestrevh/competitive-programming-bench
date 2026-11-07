@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:20:52.603500+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1323,
+            "output_tokens": 7039,
+            "total_tokens": 8362
+        },
+        "cost_usd": {
+            "input_cost": 2.8e-05,
+            "output_cost": 0.00352,
+            "total_cost": 0.003548
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int[] dsu;\n\n    static int find(int x) {\n        int r = x;\n        while (dsu[r] != r) r = dsu[r];\n        while (dsu[x] != r) {\n            int nx = dsu[x];\n            dsu[x] = r;\n            x = nx;\n        }\n        return r;\n    }\n\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer st = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        st.nextToken(); int N = (int) st.nval;\n        st.nextToken(); int B = (int) st.nval;\n\n        int[] ei = new int[B], ej = new int[B], ep = new int[B];\n        Integer[] ord = new Integer[B];\n        for (int i = 0; i < B; i++) {\n            st.nextToken(); ei[i] = (int) st.nval;\n            st.nextToken(); ej[i] = (int) st.nval;\n            st.nextToken(); ep[i] = (int) st.nval;\n            ord[i] = i;\n        }\n        Arrays.sort(ord, (a, b) -> Integer.compare(ep[b], ep[a]));\n\n        int M = N + B + 2;\n        int[] par = new int[M];\n        int[] wt = new int[M];\n        int[] dep = new int[M];\n        dsu = new int[M];\n        for (int i = 1; i <= N; i++) dsu[i] = i;\n\n        int cnt = N + 1;\n        for (int k = 0; k < B; k++) {\n            int e = ord[k];\n            int a = find(ei[e]);\n            int b = find(ej[e]);\n            if (a == b) continue;\n            int v = cnt++;\n            par[a] = v;\n            par[b] = v;\n            wt[v] = ep[e];\n            dsu[a] = v;\n            dsu[b] = v;\n        }\n\n        int R = cnt;\n        for (int t = 1; t < cnt; t++) {\n            if (dsu[t] == t) par[t] = R;\n        }\n        par[R] = R;\n\n        // depth: every parent has a larger index than its child (creation order)\n        for (int t = cnt - 1; t >= 1; t--) {\n            dep[t] = dep[par[t]] + 1;\n        }\n\n        int LOG = 1;\n        while ((1 << LOG) < M) LOG++;\n\n        int[][] up = new int[LOG][M];\n        for (int t = 1; t <= R; t++) up[0][t] = par[t];\n        for (int k = 1; k < LOG; k++) {\n            int[] upk = up[k];\n            int[] upk1 = up[k - 1];\n            for (int t = 1; t <= R; t++) upk[t] = upk1[upk1[t]];\n        }\n\n        st.nextToken(); int C = (int) st.nval;\n        StringBuilder sb = new StringBuilder();\n        for (int q = 0; q < C; q++) {\n            st.nextToken(); int x = (int) st.nval;\n            st.nextToken(); int y = (int) st.nval;\n\n            int a = x, b = y;\n            if (dep[a] < dep[b]) { int t = a; a = b; b = t; }\n            int d = dep[a] - dep[b];\n            for (int k = 0; k < LOG; k++) {\n                if ((d & (1 << k)) != 0) a = up[k][a];\n            }\n            if (a == b) {\n                sb.append(wt[a]).append('\\n');\n            } else {\n                for (int k = LOG - 1; k >= 0; k--) {\n                    if (up[k][a] != up[k][b]) {\n                        a = up[k][a];\n                        b = up[k][b];\n                    }\n                }\n                sb.append(wt[up[0][a]]).append('\\n');\n            }\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int[] dsu;\n\n    static int find(int x) {\n        int r = x;\n        while (dsu[r] != r) r = dsu[r];\n        while (dsu[x] != r) {\n            int nx = dsu[x];\n            dsu[x] = r;\n            x = nx;\n        }\n        return r;\n    }\n\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer st = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        st.nextToken(); int N = (int) st.nval;\n        st.nextToken(); int B = (int) st.nval;\n\n        int[] ei = new int[B], ej = new int[B], ep = new int[B];\n        Integer[] ord = new Integer[B];\n        for (int i = 0; i < B; i++) {\n            st.nextToken(); ei[i] = (int) st.nval;\n            st.nextToken(); ej[i] = (int) st.nval;\n            st.nextToken(); ep[i] = (int) st.nval;\n            ord[i] = i;\n        }\n        Arrays.sort(ord, (a, b) -> Integer.compare(ep[b], ep[a]));\n\n        int M = N + B + 2;\n        int[] par = new int[M];\n        int[] wt = new int[M];\n        int[] dep = new int[M];\n        dsu = new int[M];\n        for (int i = 1; i <= N; i++) dsu[i] = i;\n\n        int cnt = N + 1;\n        for (int k = 0; k < B; k++) {\n            int e = ord[k];\n            int a = find(ei[e]);\n            int b = find(ej[e]);\n            if (a == b) continue;\n            int v = cnt++;\n            par[a] = v;\n            par[b] = v;\n            wt[v] = ep[e];\n            dsu[a] = v;\n            dsu[b] = v;\n        }\n\n        int R = cnt;\n        for (int t = 1; t < cnt; t++) {\n            if (dsu[t] == t) par[t] = R;\n        }\n        par[R] = R;\n\n        // depth: every parent has a larger index than its child (creation order)\n        for (int t = cnt - 1; t >= 1; t--) {\n            dep[t] = dep[par[t]] + 1;\n        }\n\n        int LOG = 1;\n        while ((1 << LOG) < M) LOG++;\n\n        int[][] up = new int[LOG][M];\n        for (int t = 1; t <= R; t++) up[0][t] = par[t];\n        for (int k = 1; k < LOG; k++) {\n            int[] upk = up[k];\n            int[] upk1 = up[k - 1];\n            for (int t = 1; t <= R; t++) upk[t] = upk1[upk1[t]];\n        }\n\n        st.nextToken(); int C = (int) st.nval;\n        StringBuilder sb = new StringBuilder();\n        for (int q = 0; q < C; q++) {\n            st.nextToken(); int x = (int) st.nval;\n            st.nextToken(); int y = (int) st.nval;\n\n            int a = x, b = y;\n            if (dep[a] < dep[b]) { int t = a; a = b; b = t; }\n            int d = dep[a] - dep[b];\n            for (int k = 0; k < LOG; k++) {\n                if ((d & (1 << k)) != 0) a = up[k][a];\n            }\n            if (a == b) {\n                sb.append(wt[a]).append('\\n');\n            } else {\n                for (int k = LOG - 1; k >= 0; k--) {\n                    if (up[k][a] != up[k][b]) {\n                        a = up[k][a];\n                        b = up[k][b];\n                    }\n                }\n                sb.append(wt[up[0][a]]).append('\\n');\n            }\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "TLE",
+            "execution_time": 5.0,
+            "counts": {
+                "AC": 0,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 49,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

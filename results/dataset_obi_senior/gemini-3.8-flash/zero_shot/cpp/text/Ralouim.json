@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:50:39.842033+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 707,
+            "output_tokens": 715,
+            "total_tokens": 3075
+        },
+        "cost_usd": {
+            "input_cost": 0.00053,
+            "output_cost": 0.002681,
+            "total_cost": 0.003211
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Edge {\n    long long dist_sq;\n    int u, v;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<long long> x(n + 1), y(n + 1);\n    x[0] = 0;\n    y[0] = 0;\n\n    for (int i = 1; i <= n; ++i) {\n        cin >> x[i] >> y[i];\n    }\n\n    size_t total_edges = (size_t)n * (n + 1) / 2;\n    vector<Edge> edges;\n    edges.reserve(total_edges);\n\n    for (int i = 0; i <= n; ++i) {\n        for (int j = i + 1; j <= n; ++j) {\n            long long dx = x[i] - x[j];\n            long long dy = y[i] - y[j];\n            edges.push_back({dx * dx + dy * dy, i, j});\n        }\n    }\n\n    sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b) {\n        return a.dist_sq > b.dist_sq;\n    });\n\n    vector<int> dp(n + 1, -1);\n    dp[0] = 0;\n\n    int ans = 0;\n    vector<pair<int, int>> updates;\n\n    size_t m = edges.size();\n    for (size_t i = 0; i < m; ) {\n        size_t j = i;\n        while (j < m && edges[j].dist_sq == edges[i].dist_sq) {\n            int u = edges[j].u;\n            int v = edges[j].v;\n\n            if (u == 0) {\n                if (dp[0] != -1) {\n                    updates.push_back({v, dp[0] + 1});\n                }\n            } else {\n                if (dp[u] > 0) {\n                    updates.push_back({v, dp[u] + 1});\n                }\n                if (dp[v] > 0) {\n                    updates.push_back({u, dp[v] + 1});\n                }\n            }\n            j++;\n        }\n\n        for (const auto& upd : updates) {\n            if (upd.second > dp[upd.first]) {\n                dp[upd.first] = upd.second;\n                if (dp[upd.first] > ans) {\n                    ans = dp[upd.first];\n                }\n            }\n        }\n        updates.clear();\n        i = j;\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Edge {\n    long long dist_sq;\n    int u, v;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<long long> x(n + 1), y(n + 1);\n    x[0] = 0;\n    y[0] = 0;\n\n    for (int i = 1; i <= n; ++i) {\n        cin >> x[i] >> y[i];\n    }\n\n    size_t total_edges = (size_t)n * (n + 1) / 2;\n    vector<Edge> edges;\n    edges.reserve(total_edges);\n\n    for (int i = 0; i <= n; ++i) {\n        for (int j = i + 1; j <= n; ++j) {\n            long long dx = x[i] - x[j];\n            long long dy = y[i] - y[j];\n            edges.push_back({dx * dx + dy * dy, i, j});\n        }\n    }\n\n    sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b) {\n        return a.dist_sq > b.dist_sq;\n    });\n\n    vector<int> dp(n + 1, -1);\n    dp[0] = 0;\n\n    int ans = 0;\n    vector<pair<int, int>> updates;\n\n    size_t m = edges.size();\n    for (size_t i = 0; i < m; ) {\n        size_t j = i;\n        while (j < m && edges[j].dist_sq == edges[i].dist_sq) {\n            int u = edges[j].u;\n            int v = edges[j].v;\n\n            if (u == 0) {\n                if (dp[0] != -1) {\n                    updates.push_back({v, dp[0] + 1});\n                }\n            } else {\n                if (dp[u] > 0) {\n                    updates.push_back({v, dp[u] + 1});\n                }\n                if (dp[v] > 0) {\n                    updates.push_back({u, dp[v] + 1});\n                }\n            }\n            j++;\n        }\n\n        for (const auto& upd : updates) {\n            if (upd.second > dp[upd.first]) {\n                dp[upd.first] = upd.second;\n                if (dp[upd.first] > ans) {\n                    ans = dp[upd.first];\n                }\n            }\n        }\n        updates.clear();\n        i = j;\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15708540001651272,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

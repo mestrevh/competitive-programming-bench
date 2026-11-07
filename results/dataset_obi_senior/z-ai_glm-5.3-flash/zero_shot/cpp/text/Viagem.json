@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T01:07:58.599459+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1234,
+            "output_tokens": 729,
+            "total_tokens": 1963
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.000365,
+            "total_cost": 0.000391
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int V, N, M;\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n\n    vector<int> ea(M), eb(M), et(M), ep(M);\n    for (int i = 0; i < M; i++) {\n        scanf(\"%d %d %d %d\", &ea[i], &eb[i], &et[i], &ep[i]);\n        ea[i]--; eb[i]--;\n    }\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n    X--; Y--;\n\n    const int INF = INT_MAX;\n    int C = V + 1;\n    vector<vector<int>> dist(N, vector<int>(C, INF));\n\n    priority_queue<tuple<int,int,int>, vector<tuple<int,int,int>>, greater<tuple<int,int,int>>> pq;\n    dist[X][0] = 0;\n    pq.push({0, X, 0});\n\n    while (!pq.empty()) {\n        auto [d, u, c] = pq.top(); pq.pop();\n        if (d > dist[u][c]) continue;\n        for (int i = 0; i < M; i++) {\n            int v, t, p;\n            if (ea[i] == u) { v = eb[i]; t = et[i]; p = ep[i]; }\n            else if (eb[i] == u) { v = ea[i]; t = et[i]; p = ep[i]; }\n            else continue;\n            int nc = c + p;\n            if (nc > V) continue;\n            int nd = d + t;\n            if (nd < dist[v][nc]) {\n                dist[v][nc] = nd;\n                pq.push({nd, v, nc});\n            }\n        }\n    }\n\n    int ans = INF;\n    for (int c = 0; c <= V; c++) ans = min(ans, dist[Y][c]);\n    if (ans == INF) ans = -1;\n    printf(\"%d\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int V, N, M;\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n\n    vector<int> ea(M), eb(M), et(M), ep(M);\n    for (int i = 0; i < M; i++) {\n        scanf(\"%d %d %d %d\", &ea[i], &eb[i], &et[i], &ep[i]);\n        ea[i]--; eb[i]--;\n    }\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n    X--; Y--;\n\n    const int INF = INT_MAX;\n    int C = V + 1;\n    vector<vector<int>> dist(N, vector<int>(C, INF));\n\n    priority_queue<tuple<int,int,int>, vector<tuple<int,int,int>>, greater<tuple<int,int,int>>> pq;\n    dist[X][0] = 0;\n    pq.push({0, X, 0});\n\n    while (!pq.empty()) {\n        auto [d, u, c] = pq.top(); pq.pop();\n        if (d > dist[u][c]) continue;\n        for (int i = 0; i < M; i++) {\n            int v, t, p;\n            if (ea[i] == u) { v = eb[i]; t = et[i]; p = ep[i]; }\n            else if (eb[i] == u) { v = ea[i]; t = et[i]; p = ep[i]; }\n            else continue;\n            int nc = c + p;\n            if (nc > V) continue;\n            int nd = d + t;\n            if (nd < dist[v][nc]) {\n                dist[v][nc] = nd;\n                pq.push({nd, v, nc});\n            }\n        }\n    }\n\n    int ans = INF;\n    for (int c = 0; c <= V; c++) ans = min(ans, dist[Y][c]);\n    if (ans == INF) ans = -1;\n    printf(\"%d\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.29940379998879507,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

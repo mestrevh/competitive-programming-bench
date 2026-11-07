@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T10:06:52.593064+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1117,
+            "output_tokens": 3368,
+            "total_tokens": 4485
+        },
+        "cost_usd": {
+            "input_cost": 0.000112,
+            "output_cost": 0.001684,
+            "total_cost": 0.001796
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst P = Number(input[0]);\nconst output = [];\nconst LIMIT = 5_000_000n;\n\nlet index = 1;\n\nfor (let q = 0; q < P; q++) {\n  const L = BigInt(input[index++]);\n  const A = BigInt(input[index++]);\n  const B = BigInt(input[index++]);\n\n  const count = B - A + 1n;\n  const cap = count < LIMIT ? count : LIMIT;\n\n  let low = 0n;\n  let high = cap + 1n;\n\n  while (low + 1n < high) {\n    const mid = (low + high) / 2n;\n    const sum = mid * (2n * A + mid - 1n) / 2n;\n\n    if (sum < L) low = mid;\n    else high = mid;\n  }\n\n  const rounds = low + 1n < count ? low + 1n : count;\n  output.push(rounds.toString());\n}\n\nprocess.stdout.write(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst P = Number(input[0]);\nconst output = [];\nconst LIMIT = 5_000_000n;\n\nlet index = 1;\n\nfor (let q = 0; q < P; q++) {\n  const L = BigInt(input[index++]);\n  const A = BigInt(input[index++]);\n  const B = BigInt(input[index++]);\n\n  const count = B - A + 1n;\n  const cap = count < LIMIT ? count : LIMIT;\n\n  let low = 0n;\n  let high = cap + 1n;\n\n  while (low + 1n < high) {\n    const mid = (low + high) / 2n;\n    const sum = mid * (2n * A + mid - 1n) / 2n;\n\n    if (sum < L) low = mid;\n    else high = mid;\n  }\n\n  const rounds = low + 1n < count ? low + 1n : count;\n  output.push(rounds.toString());\n}\n\nprocess.stdout.write(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1079094000015175,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

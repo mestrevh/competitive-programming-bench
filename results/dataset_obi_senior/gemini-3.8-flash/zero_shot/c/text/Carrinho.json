@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T11:58:46.918712+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 655,
+            "output_tokens": 346,
+            "total_tokens": 1996
+        },
+        "cost_usd": {
+            "input_cost": 0.000491,
+            "output_cost": 0.001298,
+            "total_cost": 0.001789
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 1005\n#define INF 1e18\n\ntypedef struct {\n    double p;\n    double c;\n} Bateria;\n\nBateria b[MAXN];\ndouble dp[MAXN];\n\nint main() {\n    int n;\n    double d;\n\n    if (scanf(\"%d %lf\", &n, &d) != 2) {\n        return 0;\n    }\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &b[i].p, &b[i].c);\n    }\n\n    b[n].p = d;\n    b[n].c = 0.0;\n\n    for (int i = 1; i <= n; i++) {\n        dp[i] = INF;\n    }\n    dp[0] = 0.0;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j <= n; j++) {\n            double dist = b[j].p - b[i].p;\n            double cost = (dist * dist) / b[i].c;\n            if (dp[i] + cost < dp[j]) {\n                dp[j] = dp[i] + cost;\n            }\n        }\n    }\n\n    printf(\"%.3f\\n\", dp[n]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 1005\n#define INF 1e18\n\ntypedef struct {\n    double p;\n    double c;\n} Bateria;\n\nBateria b[MAXN];\ndouble dp[MAXN];\n\nint main() {\n    int n;\n    double d;\n\n    if (scanf(\"%d %lf\", &n, &d) != 2) {\n        return 0;\n    }\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &b[i].p, &b[i].c);\n    }\n\n    b[n].p = d;\n    b[n].c = 0.0;\n\n    for (int i = 1; i <= n; i++) {\n        dp[i] = INF;\n    }\n    dp[0] = 0.0;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j <= n; j++) {\n            double dist = b[j].p - b[i].p;\n            double cost = (dist * dist) / b[i].c;\n            if (dp[i] + cost < dp[j]) {\n                dp[j] = dp[i] + cost;\n            }\n        }\n    }\n\n    printf(\"%.3f\\n\", dp[n]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1153067999985069,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

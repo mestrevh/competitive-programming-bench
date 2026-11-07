@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:49:10.665442+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 750,
+            "output_tokens": 821,
+            "total_tokens": 1571
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.000411,
+            "total_cost": 0.000486
+        },
+        "raw_response": "```python\nimport sys\nfrom array import array\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\n\nadj = [0] * n\npos = 2\nfor _ in range(m):\n    x, y = data[pos] - 1, data[pos + 1] - 1\n    pos += 2\n    adj[x] |= 1 << y\n    adj[y] |= 1 << x\n\nsize = 1 << n\ndp = array('I', [0]) * size\ndp[0] = 1\n\nfor mask in range(1, size):\n    bit = mask & -mask\n    rest = mask ^ bit\n    v = bit.bit_length() - 1\n    dp[mask] = dp[rest] + dp[rest & ~adj[v]]\n\nprint(dp[-1] - 1)\n```",
+        "extracted_code": "import sys\nfrom array import array\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\n\nadj = [0] * n\npos = 2\nfor _ in range(m):\n    x, y = data[pos] - 1, data[pos + 1] - 1\n    pos += 2\n    adj[x] |= 1 << y\n    adj[y] |= 1 << x\n\nsize = 1 << n\ndp = array('I', [0]) * size\ndp[0] = 1\n\nfor mask in range(1, size):\n    bit = mask & -mask\n    rest = mask ^ bit\n    v = bit.bit_length() - 1\n    dp[mask] = dp[rest] + dp[rest & ~adj[v]]\n\nprint(dp[-1] - 1)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.33636069999920437,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

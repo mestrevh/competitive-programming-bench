@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:06:29.093479+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 845,
+            "output_tokens": 995,
+            "total_tokens": 3706
+        },
+        "cost_usd": {
+            "input_cost": 0.000634,
+            "output_cost": 0.003731,
+            "total_cost": 0.004365
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0);\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input[pos] <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input[pos] > 32) {\n            res = res * 10 + (input[pos] - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const xi = nextInt();\n    if (xi === null) return;\n    const yi = nextInt();\n    const xf = nextInt();\n    const yf = nextInt();\n    const n = nextInt();\n\n    const total = n + 2;\n    const x1 = new Int32Array(total);\n    const x2 = new Int32Array(total);\n    const y1 = new Int32Array(total);\n    const y2 = new Int32Array(total);\n\n    // Vértice 0: Ponto inicial\n    x1[0] = xi; x2[0] = xi;\n    y1[0] = yi; y2[0] = yi;\n\n    // Vértice 1: Ponto final\n    x1[1] = xf; x2[1] = xf;\n    y1[1] = yf; y2[1] = yf;\n\n    // Vértices 2 a n + 1: Retângulos cobertos\n    for (let i = 0; i < n; i++) {\n        let rx1 = nextInt();\n        let ry1 = nextInt();\n        let rx2 = nextInt();\n        let ry2 = nextInt();\n\n        if (rx1 > rx2) { const t = rx1; rx1 = rx2; rx2 = t; }\n        if (ry1 > ry2) { const t = ry1; ry1 = ry2; ry2 = t; }\n\n        x1[i + 2] = rx1;\n        x2[i + 2] = rx2;\n        y1[i + 2] = ry1;\n        y2[i + 2] = ry2;\n    }\n\n    function dist(u, v) {\n        let dx = 0;\n        if (x1[u] > x2[v]) {\n            dx = x1[u] - x2[v];\n        } else if (x1[v] > x2[u]) {\n            dx = x1[v] - x2[u];\n        }\n\n        let dy = 0;\n        if (y1[u] > y2[v]) {\n            dy = y1[u] - y2[v];\n        } else if (y1[v] > y2[u]) {\n            dy = y1[v] - y2[u];\n        }\n\n        return dx + dy;\n    }\n\n    const INF = 2000000000;\n    const d = new Int32Array(total);\n    d.fill(INF);\n    const visited = new Uint8Array(total);\n\n    d[0] = 0;\n\n    for (let step = 0; step < total; step++) {\n        let u = -1;\n        let minDist = INF;\n\n        for (let i = 0; i < total; i++) {\n            if (!visited[i] && d[i] < minDist) {\n                minDist = d[i];\n                u = i;\n            }\n        }\n\n        if (u === -1 || u === 1) {\n            break;\n        }\n\n        visited[u] = 1;\n\n        for (let v = 0; v < total; v++) {\n            if (!visited[v]) {\n                const w = dist(u, v);\n                if (d[u] + w < d[v]) {\n                    d[v] = d[u] + w;\n                }\n            }\n        }\n    }\n\n    console.log(d[1]);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0);\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input[pos] <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input[pos] > 32) {\n            res = res * 10 + (input[pos] - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const xi = nextInt();\n    if (xi === null) return;\n    const yi = nextInt();\n    const xf = nextInt();\n    const yf = nextInt();\n    const n = nextInt();\n\n    const total = n + 2;\n    const x1 = new Int32Array(total);\n    const x2 = new Int32Array(total);\n    const y1 = new Int32Array(total);\n    const y2 = new Int32Array(total);\n\n    // Vértice 0: Ponto inicial\n    x1[0] = xi; x2[0] = xi;\n    y1[0] = yi; y2[0] = yi;\n\n    // Vértice 1: Ponto final\n    x1[1] = xf; x2[1] = xf;\n    y1[1] = yf; y2[1] = yf;\n\n    // Vértices 2 a n + 1: Retângulos cobertos\n    for (let i = 0; i < n; i++) {\n        let rx1 = nextInt();\n        let ry1 = nextInt();\n        let rx2 = nextInt();\n        let ry2 = nextInt();\n\n        if (rx1 > rx2) { const t = rx1; rx1 = rx2; rx2 = t; }\n        if (ry1 > ry2) { const t = ry1; ry1 = ry2; ry2 = t; }\n\n        x1[i + 2] = rx1;\n        x2[i + 2] = rx2;\n        y1[i + 2] = ry1;\n        y2[i + 2] = ry2;\n    }\n\n    function dist(u, v) {\n        let dx = 0;\n        if (x1[u] > x2[v]) {\n            dx = x1[u] - x2[v];\n        } else if (x1[v] > x2[u]) {\n            dx = x1[v] - x2[u];\n        }\n\n        let dy = 0;\n        if (y1[u] > y2[v]) {\n            dy = y1[u] - y2[v];\n        } else if (y1[v] > y2[u]) {\n            dy = y1[v] - y2[u];\n        }\n\n        return dx + dy;\n    }\n\n    const INF = 2000000000;\n    const d = new Int32Array(total);\n    d.fill(INF);\n    const visited = new Uint8Array(total);\n\n    d[0] = 0;\n\n    for (let step = 0; step < total; step++) {\n        let u = -1;\n        let minDist = INF;\n\n        for (let i = 0; i < total; i++) {\n            if (!visited[i] && d[i] < minDist) {\n                minDist = d[i];\n                u = i;\n            }\n        }\n\n        if (u === -1 || u === 1) {\n            break;\n        }\n\n        visited[u] = 1;\n\n        for (let v = 0; v < total; v++) {\n            if (!visited[v]) {\n                const w = dist(u, v);\n                if (d[u] + w < d[v]) {\n                    d[v] = d[u] + w;\n                }\n            }\n        }\n    }\n\n    console.log(d[1]);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06766440000501461,
+            "counts": {
+                "AC": 37,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 37
+        }
+    }
+]

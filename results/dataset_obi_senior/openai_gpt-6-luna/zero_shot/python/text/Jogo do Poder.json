@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:41:17.123855+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1077,
+            "output_tokens": 6922,
+            "total_tokens": 7999
+        },
+        "cost_usd": {
+            "input_cost": 0.000108,
+            "output_cost": 0.003461,
+            "total_cost": 0.003569
+        },
+        "raw_response": "```python\nimport sys\nfrom array import array\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\nsize = n * m\npower = data[2:]\n\norder = sorted(range(size), key=power.__getitem__)\n\ndsu = [-1] * size\ndsu_size = [0] * size\ncomponent_node = [-1] * size\nactive = bytearray(size)\n\nlevels = power.copy()\nmass = power.copy()\ntree_parent = array('i', [-1]) * size\n\n\ndef find(x):\n    while dsu[x] != x:\n        dsu[x] = dsu[dsu[x]]\n        x = dsu[x]\n    return x\n\n\ndef unite(a, b, current_weight):\n    ra = find(a)\n    rb = find(b)\n    if ra == rb:\n        return\n\n    node = len(levels)\n    left = component_node[ra]\n    right = component_node[rb]\n    levels.append(current_weight)\n    mass.append(mass[left] + mass[right])\n    tree_parent.append(-1)\n    tree_parent[left] = node\n    tree_parent[right] = node\n\n    if dsu_size[ra] < dsu_size[rb]:\n        ra, rb = rb, ra\n    dsu[rb] = ra\n    dsu_size[ra] += dsu_size[rb]\n    component_node[ra] = node\n\n\nfor v in order:\n    active[v] = 1\n    dsu[v] = v\n    dsu_size[v] = 1\n    component_node[v] = v\n    r, c = divmod(v, m)\n    w = power[v]\n\n    if r > 0 and active[v - m]:\n        unite(v, v - m, w)\n    if r + 1 < n and active[v + m]:\n        unite(v, v + m, w)\n    if c > 0 and active[v - 1]:\n        unite(v, v - 1, w)\n    if c + 1 < m and active[v + 1]:\n        unite(v, v + 1, w)\n\nnode_count = len(levels)\nlog = node_count.bit_length()\nancestors = [tree_parent]\n\nfor _ in range(1, log):\n    prev = ancestors[-1]\n    cur = array('i', [-1]) * node_count\n    for i, p in enumerate(prev):\n        if p != -1:\n            cur[i] = prev[p]\n    ancestors.append(cur)\n\n\ndef climb(node, threshold):\n    for k in range(log - 1, -1, -1):\n        p = ancestors[k][node]\n        if p != -1 and levels[p] <= threshold:\n            node = p\n    return node\n\n\nnxt = array('i', [0]) * node_count\nfor node in range(node_count):\n    nxt[node] = climb(node, mass[node])\n\nterminal = array('i', [-1]) * node_count\nfor start in range(node_count):\n    if terminal[start] != -1:\n        continue\n    path = []\n    node = start\n    while terminal[node] == -1:\n        if nxt[node] == node:\n            terminal[node] = node\n            break\n        path.append(node)\n        node = nxt[node]\n    result = terminal[node]\n    for x in path:\n        terminal[x] = result\n\nanswers = [mass[terminal[nxt[i]]] for i in range(size)]\nout = []\nfor r in range(n):\n    begin = r * m\n    out.append(' '.join(map(str, answers[begin:begin + m])))\nsys.stdout.write('\\n'.join(out))\n```",
+        "extracted_code": "import sys\nfrom array import array\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\nsize = n * m\npower = data[2:]\n\norder = sorted(range(size), key=power.__getitem__)\n\ndsu = [-1] * size\ndsu_size = [0] * size\ncomponent_node = [-1] * size\nactive = bytearray(size)\n\nlevels = power.copy()\nmass = power.copy()\ntree_parent = array('i', [-1]) * size\n\n\ndef find(x):\n    while dsu[x] != x:\n        dsu[x] = dsu[dsu[x]]\n        x = dsu[x]\n    return x\n\n\ndef unite(a, b, current_weight):\n    ra = find(a)\n    rb = find(b)\n    if ra == rb:\n        return\n\n    node = len(levels)\n    left = component_node[ra]\n    right = component_node[rb]\n    levels.append(current_weight)\n    mass.append(mass[left] + mass[right])\n    tree_parent.append(-1)\n    tree_parent[left] = node\n    tree_parent[right] = node\n\n    if dsu_size[ra] < dsu_size[rb]:\n        ra, rb = rb, ra\n    dsu[rb] = ra\n    dsu_size[ra] += dsu_size[rb]\n    component_node[ra] = node\n\n\nfor v in order:\n    active[v] = 1\n    dsu[v] = v\n    dsu_size[v] = 1\n    component_node[v] = v\n    r, c = divmod(v, m)\n    w = power[v]\n\n    if r > 0 and active[v - m]:\n        unite(v, v - m, w)\n    if r + 1 < n and active[v + m]:\n        unite(v, v + m, w)\n    if c > 0 and active[v - 1]:\n        unite(v, v - 1, w)\n    if c + 1 < m and active[v + 1]:\n        unite(v, v + 1, w)\n\nnode_count = len(levels)\nlog = node_count.bit_length()\nancestors = [tree_parent]\n\nfor _ in range(1, log):\n    prev = ancestors[-1]\n    cur = array('i', [-1]) * node_count\n    for i, p in enumerate(prev):\n        if p != -1:\n            cur[i] = prev[p]\n    ancestors.append(cur)\n\n\ndef climb(node, threshold):\n    for k in range(log - 1, -1, -1):\n        p = ancestors[k][node]\n        if p != -1 and levels[p] <= threshold:\n            node = p\n    return node\n\n\nnxt = array('i', [0]) * node_count\nfor node in range(node_count):\n    nxt[node] = climb(node, mass[node])\n\nterminal = array('i', [-1]) * node_count\nfor start in range(node_count):\n    if terminal[start] != -1:\n        continue\n    path = []\n    node = start\n    while terminal[node] == -1:\n        if nxt[node] == node:\n            terminal[node] = node\n            break\n        path.append(node)\n        node = nxt[node]\n    result = terminal[node]\n    for x in path:\n        terminal[x] = result\n\nanswers = [mass[terminal[nxt[i]]] for i in range(size)]\nout = []\nfor r in range(n):\n    begin = r * m\n    out.append(' '.join(map(str, answers[begin:begin + m])))\nsys.stdout.write('\\n'.join(out))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.1524174000005587,
+            "counts": {
+                "AC": 150,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 150
+        }
+    }
+]

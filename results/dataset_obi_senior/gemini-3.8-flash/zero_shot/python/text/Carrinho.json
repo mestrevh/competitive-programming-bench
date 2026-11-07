@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:14:15.543548+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 655,
+            "output_tokens": 338,
+            "total_tokens": 2273
+        },
+        "cost_usd": {
+            "input_cost": 0.000491,
+            "output_cost": 0.001267,
+            "total_cost": 0.001759
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    D = float(data[1])\n\n    P = [0.0] * N\n    C = [0.0] * N\n    idx = 2\n    for i in range(N):\n        P[i] = float(data[idx])\n        C[i] = float(data[idx + 1])\n        idx += 2\n\n    # Adicionamos o ponto final D\n    # As posições das baterias são P[0] a P[N-1], e P[N] = D\n    # O tamanho total de pontos é N + 1\n    P.append(D)\n\n    dp = [float('inf')] * (N + 1)\n    dp[0] = 0.0\n\n    for j in range(1, N + 1):\n        pj = P[j]\n        min_time = float('inf')\n        for i in range(j):\n            dist = pj - P[i]\n            cost = dp[i] + (dist * dist) / C[i]\n            if cost < min_time:\n                min_time = cost\n        dp[j] = min_time\n\n    print(f\"{dp[N]:.3f}\")\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    D = float(data[1])\n\n    P = [0.0] * N\n    C = [0.0] * N\n    idx = 2\n    for i in range(N):\n        P[i] = float(data[idx])\n        C[i] = float(data[idx + 1])\n        idx += 2\n\n    # Adicionamos o ponto final D\n    # As posições das baterias são P[0] a P[N-1], e P[N] = D\n    # O tamanho total de pontos é N + 1\n    P.append(D)\n\n    dp = [float('inf')] * (N + 1)\n    dp[0] = 0.0\n\n    for j in range(1, N + 1):\n        pj = P[j]\n        min_time = float('inf')\n        for i in range(j):\n            dist = pj - P[i]\n            cost = dp[i] + (dist * dist) / C[i]\n            if cost < min_time:\n                min_time = cost\n        dp[j] = min_time\n\n    print(f\"{dp[N]:.3f}\")\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10335820000182139,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

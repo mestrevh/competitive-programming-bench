@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T18:42:35.240160+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 876,
+            "output_tokens": 12757,
+            "total_tokens": 13633
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.006378,
+            "total_cost": 0.006397
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder all = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            all.append(line).append(' ');\n        }\n        StringTokenizer tok = new StringTokenizer(all.toString());\n\n        int S = Integer.parseInt(tok.nextToken());\n        int T = Integer.parseInt(tok.nextToken());\n        int P = Integer.parseInt(tok.nextToken());\n\n        int[] h = new int[S + 1];\n        for (int i = 1; i <= S; i++) {\n            h[i] = Integer.parseInt(tok.nextToken());\n        }\n\n        List<List<Integer>> adj = new ArrayList<>();\n        for (int i = 0; i <= S; i++) adj.add(new ArrayList<>());\n\n        // Um túnel (i, j) só pode ser usado no sentido de maior altura para menor altura\n        for (int t = 0; t < T; t++) {\n            int i = Integer.parseInt(tok.nextToken());\n            int j = Integer.parseInt(tok.nextToken());\n            if (h[i] > h[j]) {\n                adj.get(i).add(j);\n            } else if (h[j] > h[i]) {\n                adj.get(j).add(i);\n            }\n        }\n\n        // BFS a partir de P contando salões alcançáveis (excluindo P)\n        boolean[] vis = new boolean[S + 1];\n        ArrayDeque<Integer> q = new ArrayDeque<>();\n        q.add(P);\n        vis[P] = true;\n        int count = 0;\n        while (!q.isEmpty()) {\n            int u = q.poll();\n            for (int v : adj.get(u)) {\n                if (!vis[v]) {\n                    vis[v] = true;\n                    count++;\n                    q.add(v);\n                }\n            }\n        }\n\n        System.out.println(count);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder all = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            all.append(line).append(' ');\n        }\n        StringTokenizer tok = new StringTokenizer(all.toString());\n\n        int S = Integer.parseInt(tok.nextToken());\n        int T = Integer.parseInt(tok.nextToken());\n        int P = Integer.parseInt(tok.nextToken());\n\n        int[] h = new int[S + 1];\n        for (int i = 1; i <= S; i++) {\n            h[i] = Integer.parseInt(tok.nextToken());\n        }\n\n        List<List<Integer>> adj = new ArrayList<>();\n        for (int i = 0; i <= S; i++) adj.add(new ArrayList<>());\n\n        // Um túnel (i, j) só pode ser usado no sentido de maior altura para menor altura\n        for (int t = 0; t < T; t++) {\n            int i = Integer.parseInt(tok.nextToken());\n            int j = Integer.parseInt(tok.nextToken());\n            if (h[i] > h[j]) {\n                adj.get(i).add(j);\n            } else if (h[j] > h[i]) {\n                adj.get(j).add(i);\n            }\n        }\n\n        // BFS a partir de P contando salões alcançáveis (excluindo P)\n        boolean[] vis = new boolean[S + 1];\n        ArrayDeque<Integer> q = new ArrayDeque<>();\n        q.add(P);\n        vis[P] = true;\n        int count = 0;\n        while (!q.isEmpty()) {\n            int u = q.poll();\n            for (int v : adj.get(u)) {\n                if (!vis[v]) {\n                    vis[v] = true;\n                    count++;\n                    q.add(v);\n                }\n            }\n        }\n\n        System.out.println(count);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.11352610000176355,
+            "counts": {
+                "AC": 10,
+                "WA": 12,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

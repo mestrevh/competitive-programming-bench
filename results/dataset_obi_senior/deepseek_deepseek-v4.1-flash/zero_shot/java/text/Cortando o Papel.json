@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:45:00.889637+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 544,
+            "output_tokens": 22238,
+            "total_tokens": 22782
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.053371,
+            "total_cost": 0.053373
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n        int N = fs.nextInt();\n\n        long[] order = new long[N];\n        for (int i = 0; i < N; i++) {\n            int h = fs.nextInt();\n            order[i] = ((long) h << 32) | i;\n        }\n\n        Arrays.sort(order);\n\n        boolean[] active = new boolean[N];\n        int current = 0;\n        int max = 0;\n        int idx = N - 1;\n\n        while (idx >= 0) {\n            int h = (int) (order[idx] >>> 32);\n\n            if (current > max) max = current;\n\n            while (idx >= 0 && (int) (order[idx] >>> 32) == h) {\n                int pos = (int) (order[idx] & 0xffffffffL);\n\n                boolean left = pos > 0 && active[pos - 1];\n                boolean right = pos + 1 < N && active[pos + 1];\n\n                if (left && right) {\n                    current--;\n                } else if (!left && !right) {\n                    current++;\n                }\n\n                active[pos] = true;\n                idx--;\n            }\n\n            if (current > max) max = current;\n        }\n\n        System.out.println(max + 1);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n        int N = fs.nextInt();\n\n        long[] order = new long[N];\n        for (int i = 0; i < N; i++) {\n            int h = fs.nextInt();\n            order[i] = ((long) h << 32) | i;\n        }\n\n        Arrays.sort(order);\n\n        boolean[] active = new boolean[N];\n        int current = 0;\n        int max = 0;\n        int idx = N - 1;\n\n        while (idx >= 0) {\n            int h = (int) (order[idx] >>> 32);\n\n            if (current > max) max = current;\n\n            while (idx >= 0 && (int) (order[idx] >>> 32) == h) {\n                int pos = (int) (order[idx] & 0xffffffffL);\n\n                boolean left = pos > 0 && active[pos - 1];\n                boolean right = pos + 1 < N && active[pos + 1];\n\n                if (left && right) {\n                    current--;\n                } else if (!left && !right) {\n                    current++;\n                }\n\n                active[pos] = true;\n                idx--;\n            }\n\n            if (current > max) max = current;\n        }\n\n        System.out.println(max + 1);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16775950000737794,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:52:50.585722+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 626,
+            "output_tokens": 291,
+            "total_tokens": 1932
+        },
+        "cost_usd": {
+            "input_cost": 0.00047,
+            "output_cost": 0.001091,
+            "total_cost": 0.001561
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    long long k;\n    if (!(cin >> n >> k)) return 0;\n\n    vector<long long> pref(n + 1, 0);\n    for (int i = 1; i <= n; ++i) {\n        long long x;\n        cin >> x;\n        pref[i] = pref[i - 1] + x;\n    }\n\n    long long ans = 0;\n    int p1 = 0, p2 = 0;\n\n    for (int i = 1; i <= n; ++i) {\n        long long target = pref[i] - k;\n        if (target >= 0) {\n            while (p1 <= i && pref[p1] < target) {\n                p1++;\n            }\n            while (p2 <= i && pref[p2] <= target) {\n                p2++;\n            }\n            ans += (p2 - p1);\n        }\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    long long k;\n    if (!(cin >> n >> k)) return 0;\n\n    vector<long long> pref(n + 1, 0);\n    for (int i = 1; i <= n; ++i) {\n        long long x;\n        cin >> x;\n        pref[i] = pref[i - 1] + x;\n    }\n\n    long long ans = 0;\n    int p1 = 0, p2 = 0;\n\n    for (int i = 1; i <= n; ++i) {\n        long long target = pref[i] - k;\n        if (target >= 0) {\n            while (p1 <= i && pref[p1] < target) {\n                p1++;\n            }\n            while (p2 <= i && pref[p2] <= target) {\n                p2++;\n            }\n            ans += (p2 - p1);\n        }\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.16211390000535175,
+            "counts": {
+                "AC": 40,
+                "WA": 6,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

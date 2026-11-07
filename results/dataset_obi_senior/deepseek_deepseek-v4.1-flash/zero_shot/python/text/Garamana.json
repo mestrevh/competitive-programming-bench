@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:57:42.926487+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 607,
+            "output_tokens": 2307,
+            "total_tokens": 2914
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.005537,
+            "total_cost": 0.005539
+        },
+        "raw_response": "```python\nimport sys\nimport unicodedata\nfrom collections import Counter\n\ndef normalize(s):\n    return ''.join(\n        c for c in unicodedata.normalize('NFD', s)\n        if unicodedata.category(c) != 'Mn'\n    )\n\ndef main():\n    lines = sys.stdin.read().splitlines()\n    if len(lines) < 2:\n        return\n\n    p = normalize(lines[0].strip())\n    a = normalize(lines[1].strip())\n\n    count_p = Counter(p)\n    count_a = Counter(c for c in a if c != '*')\n\n    for c, cnt in count_a.items():\n        if count_p.get(c, 0) < cnt:\n            print('N')\n            return\n\n    print('S')\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nimport unicodedata\nfrom collections import Counter\n\ndef normalize(s):\n    return ''.join(\n        c for c in unicodedata.normalize('NFD', s)\n        if unicodedata.category(c) != 'Mn'\n    )\n\ndef main():\n    lines = sys.stdin.read().splitlines()\n    if len(lines) < 2:\n        return\n\n    p = normalize(lines[0].strip())\n    a = normalize(lines[1].strip())\n\n    count_p = Counter(p)\n    count_a = Counter(c for c in a if c != '*')\n\n    for c, cnt in count_a.items():\n        if count_p.get(c, 0) < cnt:\n            print('N')\n            return\n\n    print('S')\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09568279999803053,
+            "counts": {
+                "AC": 49,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 49
+        }
+    }
+]

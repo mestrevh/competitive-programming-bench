@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:33:20.064800+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1065,
+            "output_tokens": 1840,
+            "total_tokens": 2905
+        },
+        "cost_usd": {
+            "input_cost": 0.000107,
+            "output_cost": 0.00092,
+            "total_cost": 0.001027
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> bit;\n\n    Fenwick(int n) : n(n), bit(n + 1, 0) {}\n\n    void add(int i, long long value) {\n        for (; i <= n; i += i & -i)\n            bit[i] += value;\n    }\n\n    long long sum(int i) const {\n        long long result = 0;\n        for (; i > 0; i -= i & -i)\n            result += bit[i];\n        return result;\n    }\n};\n\nstruct LineValues {\n    long long atLeft;\n    long long atRight;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    long long X1, X2;\n    cin >> N >> X1 >> X2;\n\n    vector<LineValues> lines(N);\n    vector<long long> rightValues;\n    rightValues.reserve(N);\n\n    for (int i = 0; i < N; ++i) {\n        long long A, B;\n        cin >> A >> B;\n        lines[i] = {A * X1 + B, A * X2 + B};\n        rightValues.push_back(lines[i].atRight);\n    }\n\n    sort(lines.begin(), lines.end(), [](const LineValues& a, const LineValues& b) {\n        return a.atLeft < b.atLeft;\n    });\n\n    sort(rightValues.begin(), rightValues.end());\n    rightValues.erase(unique(rightValues.begin(), rightValues.end()), rightValues.end());\n\n    Fenwick fenwick(static_cast<int>(rightValues.size()));\n    long long inserted = 0;\n    long long answer = 0;\n\n    for (int i = 0; i < N;) {\n        int j = i + 1;\n        while (j < N && lines[j].atLeft == lines[i].atLeft)\n            ++j;\n\n        long long groupSize = j - i;\n        answer += groupSize * (groupSize - 1) / 2;\n\n        for (int k = i; k < j; ++k) {\n            int index = lower_bound(rightValues.begin(), rightValues.end(),\n                                    lines[k].atRight) - rightValues.begin() + 1;\n            answer += inserted - fenwick.sum(index - 1);\n        }\n\n        for (int k = i; k < j; ++k) {\n            int index = lower_bound(rightValues.begin(), rightValues.end(),\n                                    lines[k].atRight) - rightValues.begin() + 1;\n            fenwick.add(index, 1);\n            ++inserted;\n        }\n\n        i = j;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> bit;\n\n    Fenwick(int n) : n(n), bit(n + 1, 0) {}\n\n    void add(int i, long long value) {\n        for (; i <= n; i += i & -i)\n            bit[i] += value;\n    }\n\n    long long sum(int i) const {\n        long long result = 0;\n        for (; i > 0; i -= i & -i)\n            result += bit[i];\n        return result;\n    }\n};\n\nstruct LineValues {\n    long long atLeft;\n    long long atRight;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    long long X1, X2;\n    cin >> N >> X1 >> X2;\n\n    vector<LineValues> lines(N);\n    vector<long long> rightValues;\n    rightValues.reserve(N);\n\n    for (int i = 0; i < N; ++i) {\n        long long A, B;\n        cin >> A >> B;\n        lines[i] = {A * X1 + B, A * X2 + B};\n        rightValues.push_back(lines[i].atRight);\n    }\n\n    sort(lines.begin(), lines.end(), [](const LineValues& a, const LineValues& b) {\n        return a.atLeft < b.atLeft;\n    });\n\n    sort(rightValues.begin(), rightValues.end());\n    rightValues.erase(unique(rightValues.begin(), rightValues.end()), rightValues.end());\n\n    Fenwick fenwick(static_cast<int>(rightValues.size()));\n    long long inserted = 0;\n    long long answer = 0;\n\n    for (int i = 0; i < N;) {\n        int j = i + 1;\n        while (j < N && lines[j].atLeft == lines[i].atLeft)\n            ++j;\n\n        long long groupSize = j - i;\n        answer += groupSize * (groupSize - 1) / 2;\n\n        for (int k = i; k < j; ++k) {\n            int index = lower_bound(rightValues.begin(), rightValues.end(),\n                                    lines[k].atRight) - rightValues.begin() + 1;\n            answer += inserted - fenwick.sum(index - 1);\n        }\n\n        for (int k = i; k < j; ++k) {\n            int index = lower_bound(rightValues.begin(), rightValues.end(),\n                                    lines[k].atRight) - rightValues.begin() + 1;\n            fenwick.add(index, 1);\n            ++inserted;\n        }\n\n        i = j;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16926709999825107,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

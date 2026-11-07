@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:43:07.492427+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 910,
+            "output_tokens": 4508,
+            "total_tokens": 5418
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.010819,
+            "total_cost": 0.010822
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdint.h>\n\n#define MAXN 100005\n\ntypedef struct {\n    long long key;\n    uint32_t pri;\n    int cnt, sz, l, r;\n} Node;\n\nNode tr[MAXN];\nint nodes = 0;\nuint32_t seed = 2463534242u;\n\nuint32_t rng(void) {\n    seed ^= seed << 13;\n    seed ^= seed >> 17;\n    seed ^= seed << 5;\n    return seed;\n}\n\nint sz(int t) {\n    return t ? tr[t].sz : 0;\n}\n\nvoid upd(int t) {\n    tr[t].sz = tr[t].cnt + sz(tr[t].l) + sz(tr[t].r);\n}\n\nint new_node(long long key) {\n    ++nodes;\n    tr[nodes].key = key;\n    tr[nodes].pri = rng();\n    tr[nodes].cnt = 1;\n    tr[nodes].sz = 1;\n    tr[nodes].l = 0;\n    tr[nodes].r = 0;\n    return nodes;\n}\n\nint rotate_right(int y) {\n    int x = tr[y].l;\n    tr[y].l = tr[x].r;\n    tr[x].r = y;\n    upd(y);\n    upd(x);\n    return x;\n}\n\nint rotate_left(int x) {\n    int y = tr[x].r;\n    tr[x].r = tr[y].l;\n    tr[y].l = x;\n    upd(x);\n    upd(y);\n    return y;\n}\n\nint insert(int t, long long key) {\n    if (!t) return new_node(key);\n\n    if (key == tr[t].key) {\n        tr[t].cnt++;\n        upd(t);\n        return t;\n    }\n\n    if (key < tr[t].key) {\n        tr[t].l = insert(tr[t].l, key);\n        if (tr[tr[t].l].pri < tr[t].pri) {\n            t = rotate_right(t);\n        }\n    } else {\n        tr[t].r = insert(tr[t].r, key);\n        if (tr[tr[t].r].pri < tr[t].pri) {\n            t = rotate_left(t);\n        }\n    }\n\n    upd(t);\n    return t;\n}\n\nint count_le(int t, long long key) {\n    int res = 0;\n    while (t) {\n        if (key < tr[t].key) {\n            t = tr[t].l;\n        } else {\n            res += sz(tr[t].l) + tr[t].cnt;\n            t = tr[t].r;\n        }\n    }\n    return res;\n}\n\nint main(void) {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    int root = 0;\n    int prev_penalty = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n\n        long long X = x + prev_penalty;\n        long long Y = y + prev_penalty;\n        long long dist = X * X + Y * Y;\n\n        int penalty = count_le(root, dist);\n        printf(\"%d\\n\", penalty);\n\n        root = insert(root, dist);\n        prev_penalty = penalty;\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdint.h>\n\n#define MAXN 100005\n\ntypedef struct {\n    long long key;\n    uint32_t pri;\n    int cnt, sz, l, r;\n} Node;\n\nNode tr[MAXN];\nint nodes = 0;\nuint32_t seed = 2463534242u;\n\nuint32_t rng(void) {\n    seed ^= seed << 13;\n    seed ^= seed >> 17;\n    seed ^= seed << 5;\n    return seed;\n}\n\nint sz(int t) {\n    return t ? tr[t].sz : 0;\n}\n\nvoid upd(int t) {\n    tr[t].sz = tr[t].cnt + sz(tr[t].l) + sz(tr[t].r);\n}\n\nint new_node(long long key) {\n    ++nodes;\n    tr[nodes].key = key;\n    tr[nodes].pri = rng();\n    tr[nodes].cnt = 1;\n    tr[nodes].sz = 1;\n    tr[nodes].l = 0;\n    tr[nodes].r = 0;\n    return nodes;\n}\n\nint rotate_right(int y) {\n    int x = tr[y].l;\n    tr[y].l = tr[x].r;\n    tr[x].r = y;\n    upd(y);\n    upd(x);\n    return x;\n}\n\nint rotate_left(int x) {\n    int y = tr[x].r;\n    tr[x].r = tr[y].l;\n    tr[y].l = x;\n    upd(x);\n    upd(y);\n    return y;\n}\n\nint insert(int t, long long key) {\n    if (!t) return new_node(key);\n\n    if (key == tr[t].key) {\n        tr[t].cnt++;\n        upd(t);\n        return t;\n    }\n\n    if (key < tr[t].key) {\n        tr[t].l = insert(tr[t].l, key);\n        if (tr[tr[t].l].pri < tr[t].pri) {\n            t = rotate_right(t);\n        }\n    } else {\n        tr[t].r = insert(tr[t].r, key);\n        if (tr[tr[t].r].pri < tr[t].pri) {\n            t = rotate_left(t);\n        }\n    }\n\n    upd(t);\n    return t;\n}\n\nint count_le(int t, long long key) {\n    int res = 0;\n    while (t) {\n        if (key < tr[t].key) {\n            t = tr[t].l;\n        } else {\n            res += sz(tr[t].l) + tr[t].cnt;\n            t = tr[t].r;\n        }\n    }\n    return res;\n}\n\nint main(void) {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    int root = 0;\n    int prev_penalty = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n\n        long long X = x + prev_penalty;\n        long long Y = y + prev_penalty;\n        long long dist = X * X + Y * Y;\n\n        int penalty = count_le(root, dist);\n        printf(\"%d\\n\", penalty);\n\n        root = insert(root, dist);\n        prev_penalty = penalty;\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3765811000193935,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

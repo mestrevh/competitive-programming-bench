@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:25:01.318311+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1870,
+            "output_tokens": 35383,
+            "total_tokens": 37253
+        },
+        "cost_usd": {
+            "input_cost": 6e-06,
+            "output_cost": 0.084919,
+            "total_cost": 0.084925
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nconst tokens = data.split(/\\s+/).filter(s => s.length > 0);\nlet ptr = 0;\nconst N = parseInt(tokens[ptr++]);\nconst p = new Int32Array(N + 1);\nfor (let i = 2; i <= N; i++) {\n    p[i] = parseInt(tokens[ptr++]);\n}\n\n// Build children lists\nconst children = Array.from({ length: N + 1 }, () => []);\nfor (let i = 2; i <= N; i++) {\n    children[p[i]].push(i);\n}\n\n// Binary lifting table\nconst LOG = 18;\nconst up = new Array(LOG);\nfor (let j = 0; j < LOG; j++) up[j] = new Int32Array(N + 1);\nup[0][1] = 0;\nfor (let i = 2; i <= N; i++) up[0][i] = p[i];\nfor (let j = 1; j < LOG; j++) {\n    for (let i = 1; i <= N; i++) {\n        const mid = up[j - 1][i];\n        up[j][i] = mid === 0 ? 0 : up[j - 1][mid];\n    }\n}\n\n// Euler tour\nconst tin = new Int32Array(N + 1);\nconst tout = new Int32Array(N + 1);\nconst nodeAtTin = new Int32Array(N + 1);\nlet timer = 0;\nconst stack = [[1, 0]];\nwhile (stack.length > 0) {\n    const [u, state] = stack.pop();\n    if (state === 0) {\n        timer++;\n        tin[u] = timer;\n        nodeAtTin[timer] = u;\n        stack.push([u, 1]);\n        const ch = children[u];\n        for (let i = ch.length - 1; i >= 0; i--) {\n            stack.push([ch[i], 0]);\n        }\n    } else {\n        tout[u] = timer;\n    }\n}\n\n// Fenwick tree\nconst bit = new Int32Array(N + 2);\nfunction bitAdd(i, delta) {\n    while (i <= N) {\n        bit[i] += delta;\n        i += i & -i;\n    }\n}\nfunction bitSum(i) {\n    let s = 0;\n    while (i > 0) {\n        s += bit[i];\n        i -= i & -i;\n    }\n    return s;\n}\nfunction bitFindKth(k) {\n    let idx = 0;\n    let bitMask = 1 << (Math.floor(Math.log2(N)));\n    while (bitMask !== 0) {\n        const t = idx + bitMask;\n        if (t <= N && bit[t] < k) {\n            idx = t;\n            k -= bit[t];\n        }\n        bitMask >>= 1;\n    }\n    return idx + 1;\n}\n\nfunction cover(v) {\n    const pos = tin[v];\n    const cnt = bitSum(pos);\n    if (cnt === 0) return 0;\n    const idx = bitFindKth(cnt);\n    const u = nodeAtTin[idx];\n    if (tout[u] >= pos) return u;\n    return 0;\n}\n\nfunction kthAncestor(v, k) {\n    for (let j = 0; j < LOG; j++) {\n        if (k & (1 << j)) {\n            v = up[j][v];\n        }\n    }\n    return v;\n}\n\nconst Q = parseInt(tokens[ptr++]);\nconst output = [];\nfor (let q = 0; q < Q; q++) {\n    const type = parseInt(tokens[ptr++]);\n    if (type === 1) {\n        const v = parseInt(tokens[ptr++]);\n        const k = parseInt(tokens[ptr++]);\n        const r = cover(v);\n        let ans;\n        if (r !== 0 && r !== v) {\n            if (k === 1) ans = r;\n            else ans = kthAncestor(r, k - 1);\n        } else {\n            ans = kthAncestor(v, k);\n        }\n        output.push(ans);\n    } else {\n        const v = parseInt(tokens[ptr++]);\n        const r = cover(v);\n        if (r !== 0) continue;\n        let cntBefore = bitSum(tin[v] - 1);\n        while (true) {\n            const total = bitSum(N);\n            if (cntBefore >= total) break;\n            const idx = bitFindKth(cntBefore + 1);\n            if (idx > tout[v]) break;\n            bitAdd(idx, -1);\n        }\n        bitAdd(tin[v], 1);\n    }\n}\nconsole.log(output.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nconst tokens = data.split(/\\s+/).filter(s => s.length > 0);\nlet ptr = 0;\nconst N = parseInt(tokens[ptr++]);\nconst p = new Int32Array(N + 1);\nfor (let i = 2; i <= N; i++) {\n    p[i] = parseInt(tokens[ptr++]);\n}\n\n// Build children lists\nconst children = Array.from({ length: N + 1 }, () => []);\nfor (let i = 2; i <= N; i++) {\n    children[p[i]].push(i);\n}\n\n// Binary lifting table\nconst LOG = 18;\nconst up = new Array(LOG);\nfor (let j = 0; j < LOG; j++) up[j] = new Int32Array(N + 1);\nup[0][1] = 0;\nfor (let i = 2; i <= N; i++) up[0][i] = p[i];\nfor (let j = 1; j < LOG; j++) {\n    for (let i = 1; i <= N; i++) {\n        const mid = up[j - 1][i];\n        up[j][i] = mid === 0 ? 0 : up[j - 1][mid];\n    }\n}\n\n// Euler tour\nconst tin = new Int32Array(N + 1);\nconst tout = new Int32Array(N + 1);\nconst nodeAtTin = new Int32Array(N + 1);\nlet timer = 0;\nconst stack = [[1, 0]];\nwhile (stack.length > 0) {\n    const [u, state] = stack.pop();\n    if (state === 0) {\n        timer++;\n        tin[u] = timer;\n        nodeAtTin[timer] = u;\n        stack.push([u, 1]);\n        const ch = children[u];\n        for (let i = ch.length - 1; i >= 0; i--) {\n            stack.push([ch[i], 0]);\n        }\n    } else {\n        tout[u] = timer;\n    }\n}\n\n// Fenwick tree\nconst bit = new Int32Array(N + 2);\nfunction bitAdd(i, delta) {\n    while (i <= N) {\n        bit[i] += delta;\n        i += i & -i;\n    }\n}\nfunction bitSum(i) {\n    let s = 0;\n    while (i > 0) {\n        s += bit[i];\n        i -= i & -i;\n    }\n    return s;\n}\nfunction bitFindKth(k) {\n    let idx = 0;\n    let bitMask = 1 << (Math.floor(Math.log2(N)));\n    while (bitMask !== 0) {\n        const t = idx + bitMask;\n        if (t <= N && bit[t] < k) {\n            idx = t;\n            k -= bit[t];\n        }\n        bitMask >>= 1;\n    }\n    return idx + 1;\n}\n\nfunction cover(v) {\n    const pos = tin[v];\n    const cnt = bitSum(pos);\n    if (cnt === 0) return 0;\n    const idx = bitFindKth(cnt);\n    const u = nodeAtTin[idx];\n    if (tout[u] >= pos) return u;\n    return 0;\n}\n\nfunction kthAncestor(v, k) {\n    for (let j = 0; j < LOG; j++) {\n        if (k & (1 << j)) {\n            v = up[j][v];\n        }\n    }\n    return v;\n}\n\nconst Q = parseInt(tokens[ptr++]);\nconst output = [];\nfor (let q = 0; q < Q; q++) {\n    const type = parseInt(tokens[ptr++]);\n    if (type === 1) {\n        const v = parseInt(tokens[ptr++]);\n        const k = parseInt(tokens[ptr++]);\n        const r = cover(v);\n        let ans;\n        if (r !== 0 && r !== v) {\n            if (k === 1) ans = r;\n            else ans = kthAncestor(r, k - 1);\n        } else {\n            ans = kthAncestor(v, k);\n        }\n        output.push(ans);\n    } else {\n        const v = parseInt(tokens[ptr++]);\n        const r = cover(v);\n        if (r !== 0) continue;\n        let cntBefore = bitSum(tin[v] - 1);\n        while (true) {\n            const total = bitSum(N);\n            if (cntBefore >= total) break;\n            const idx = bitFindKth(cntBefore + 1);\n            if (idx > tout[v]) break;\n            bitAdd(idx, -1);\n        }\n        bitAdd(tin[v], 1);\n    }\n}\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17184360002283938,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

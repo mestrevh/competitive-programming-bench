@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:08:55.689821+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1141,
+            "output_tokens": 1330,
+            "total_tokens": 2471
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.000665,
+            "total_cost": 0.000689
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8');\nconst tokens = data.split(/\\s+/);\nlet idx = 0;\n\nconst nextInt = () => parseInt(tokens[idx++], 10);\n\nconst S = nextInt();\nconst T = nextInt();\n\n// Matriz de adjacência compacta (S <= 1000 => no máximo 10^6 bytes)\nconst adj = new Uint8Array(S * S);\n\nfor (let i = 0; i < T; i++) {\n  const x = nextInt() - 1;\n  const y = nextInt() - 1;\n  adj[x * S + y] = 1;\n  adj[y * S + x] = 1;\n}\n\nconst P = nextInt();\nlet possible = 0;\n\nfor (let p = 0; p < P; p++) {\n  const N = nextInt();\n  let prev = nextInt() - 1;\n  let ok = true;\n  for (let i = 1; i < N; i++) {\n    const cur = nextInt() - 1;\n    if (ok && !adj[prev * S + cur]) {\n      ok = false;\n    }\n    prev = cur;\n  }\n  if (ok) possible++;\n}\n\nprocess.stdout.write(String(possible) + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8');\nconst tokens = data.split(/\\s+/);\nlet idx = 0;\n\nconst nextInt = () => parseInt(tokens[idx++], 10);\n\nconst S = nextInt();\nconst T = nextInt();\n\n// Matriz de adjacência compacta (S <= 1000 => no máximo 10^6 bytes)\nconst adj = new Uint8Array(S * S);\n\nfor (let i = 0; i < T; i++) {\n  const x = nextInt() - 1;\n  const y = nextInt() - 1;\n  adj[x * S + y] = 1;\n  adj[y * S + x] = 1;\n}\n\nconst P = nextInt();\nlet possible = 0;\n\nfor (let p = 0; p < P; p++) {\n  const N = nextInt();\n  let prev = nextInt() - 1;\n  let ok = true;\n  for (let i = 1; i < N; i++) {\n    const cur = nextInt() - 1;\n    if (ok && !adj[prev * S + cur]) {\n      ok = false;\n    }\n    prev = cur;\n  }\n  if (ok) possible++;\n}\n\nprocess.stdout.write(String(possible) + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20018489996436983,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

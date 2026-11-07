@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:01:27.713112+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 877,
+            "output_tokens": 818,
+            "total_tokens": 2757
+        },
+        "cost_usd": {
+            "input_cost": 0.000658,
+            "output_cost": 0.003068,
+            "total_cost": 0.003725
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const M = nextInt();\n\n    function findCenter(n, numEdges) {\n        // Forward star representation for the tree\n        const head = new Int32Array(n + 1).fill(-1);\n        const to = new Int32Array(2 * numEdges);\n        const next = new Int32Array(2 * numEdges);\n        let edgeCount = 0;\n\n        function addEdge(u, v) {\n            to[edgeCount] = v;\n            next[edgeCount] = head[u];\n            head[u] = edgeCount++;\n\n            to[edgeCount] = u;\n            next[edgeCount] = head[v];\n            head[v] = edgeCount++;\n        }\n\n        for (let i = 0; i < numEdges; i++) {\n            const u = nextInt();\n            const v = nextInt();\n            addEdge(u, v);\n        }\n\n        const dist = new Int32Array(n + 1);\n        const parent = new Int32Array(n + 1);\n        const queue = new Int32Array(n + 1);\n\n        // First BFS from node 1\n        function bfs(startNode) {\n            dist.fill(-1);\n            let headQ = 0, tailQ = 0;\n            queue[tailQ++] = startNode;\n            dist[startNode] = 0;\n            parent[startNode] = 0;\n\n            let farthestNode = startNode;\n\n            while (headQ < tailQ) {\n                const u = queue[headQ++];\n                if (dist[u] > dist[farthestNode]) {\n                    farthestNode = u;\n                }\n\n                for (let e = head[u]; e !== -1; e = next[e]) {\n                    const v = to[e];\n                    if (dist[v] === -1) {\n                        dist[v] = dist[u] + 1;\n                        parent[v] = u;\n                        queue[tailQ++] = v;\n                    }\n                }\n            }\n\n            return farthestNode;\n        }\n\n        const nodeA = bfs(1);\n        const nodeB = bfs(nodeA);\n\n        // Path length is dist[nodeB]\n        const pathLen = dist[nodeB];\n        const stepsToCenter = Math.floor(pathLen / 2);\n\n        let curr = nodeB;\n        for (let i = 0; i < stepsToCenter; i++) {\n            curr = parent[curr];\n        }\n\n        return curr;\n    }\n\n    const c1 = findCenter(N, N - 1);\n    const c2 = findCenter(M, M - 1);\n\n    process.stdout.write(c1 + \" \" + c2 + \"\\n\");\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const M = nextInt();\n\n    function findCenter(n, numEdges) {\n        // Forward star representation for the tree\n        const head = new Int32Array(n + 1).fill(-1);\n        const to = new Int32Array(2 * numEdges);\n        const next = new Int32Array(2 * numEdges);\n        let edgeCount = 0;\n\n        function addEdge(u, v) {\n            to[edgeCount] = v;\n            next[edgeCount] = head[u];\n            head[u] = edgeCount++;\n\n            to[edgeCount] = u;\n            next[edgeCount] = head[v];\n            head[v] = edgeCount++;\n        }\n\n        for (let i = 0; i < numEdges; i++) {\n            const u = nextInt();\n            const v = nextInt();\n            addEdge(u, v);\n        }\n\n        const dist = new Int32Array(n + 1);\n        const parent = new Int32Array(n + 1);\n        const queue = new Int32Array(n + 1);\n\n        // First BFS from node 1\n        function bfs(startNode) {\n            dist.fill(-1);\n            let headQ = 0, tailQ = 0;\n            queue[tailQ++] = startNode;\n            dist[startNode] = 0;\n            parent[startNode] = 0;\n\n            let farthestNode = startNode;\n\n            while (headQ < tailQ) {\n                const u = queue[headQ++];\n                if (dist[u] > dist[farthestNode]) {\n                    farthestNode = u;\n                }\n\n                for (let e = head[u]; e !== -1; e = next[e]) {\n                    const v = to[e];\n                    if (dist[v] === -1) {\n                        dist[v] = dist[u] + 1;\n                        parent[v] = u;\n                        queue[tailQ++] = v;\n                    }\n                }\n            }\n\n            return farthestNode;\n        }\n\n        const nodeA = bfs(1);\n        const nodeB = bfs(nodeA);\n\n        // Path length is dist[nodeB]\n        const pathLen = dist[nodeB];\n        const stepsToCenter = Math.floor(pathLen / 2);\n\n        let curr = nodeB;\n        for (let i = 0; i < stepsToCenter; i++) {\n            curr = parent[curr];\n        }\n\n        return curr;\n    }\n\n    const c1 = findCenter(N, N - 1);\n    const c2 = findCenter(M, M - 1);\n\n    process.stdout.write(c1 + \" \" + c2 + \"\\n\");\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.08346770002390258,
+            "counts": {
+                "AC": 6,
+                "WA": 32,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

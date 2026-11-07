@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:29:09.921169+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 727,
+            "output_tokens": 25590,
+            "total_tokens": 26317
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.012795,
+            "total_cost": 0.012811
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\n(function main() {\n  const buf = fs.readFileSync(0, 'utf8');\n  const len = buf.length;\n  let pos = 0;\n\n  function readInt() {\n    while (pos < len) {\n      const c = buf.charCodeAt(pos);\n      if (c >= 48 && c <= 57) break;\n      pos++;\n    }\n    let x = 0;\n    while (pos < len) {\n      const c = buf.charCodeAt(pos);\n      if (c < 48 || c > 57) break;\n      x = x * 10 + (c - 48);\n      pos++;\n    }\n    return x;\n  }\n\n  const n = readInt();\n  const a = new Float64Array(n);\n  for (let k = 0; k < n; k++) a[k] = readInt();\n\n  // Dois ponteiros: cada contração corresponde a estender um bloco.\n  // O resultado final é obtido particionando a lista em blocos contíguos\n  // cujas somas formam um palíndromo. O número de contrações é N - nº de blocos.\n  // Estratégia gulosa ótima: compare as somas correntes dos blocos das pontas;\n  // se iguais, fixe os dois blocos; se menores/maiores, mescle o lado menor\n  // com o vizinho interno (conta 1 operação). Como todos os valores são\n  // positivos, essa gulosa maximiza o número de blocos.\n\n  let ops = 0;\n  let i = 0, j = n - 1;\n  while (i < j) {\n    const lv = a[i], rv = a[j];\n    if (lv === rv) {\n      i++;\n      j--;\n    } else {\n      ops++;\n      if (lv < rv) {\n        a[i + 1] += lv;\n        i++;\n      } else {\n        a[j - 1] += rv;\n        j--;\n      }\n    }\n  }\n\n  process.stdout.write(ops + '\\n');\n})();\n```",
+        "extracted_code": "const fs = require('fs');\n\n(function main() {\n  const buf = fs.readFileSync(0, 'utf8');\n  const len = buf.length;\n  let pos = 0;\n\n  function readInt() {\n    while (pos < len) {\n      const c = buf.charCodeAt(pos);\n      if (c >= 48 && c <= 57) break;\n      pos++;\n    }\n    let x = 0;\n    while (pos < len) {\n      const c = buf.charCodeAt(pos);\n      if (c < 48 || c > 57) break;\n      x = x * 10 + (c - 48);\n      pos++;\n    }\n    return x;\n  }\n\n  const n = readInt();\n  const a = new Float64Array(n);\n  for (let k = 0; k < n; k++) a[k] = readInt();\n\n  // Dois ponteiros: cada contração corresponde a estender um bloco.\n  // O resultado final é obtido particionando a lista em blocos contíguos\n  // cujas somas formam um palíndromo. O número de contrações é N - nº de blocos.\n  // Estratégia gulosa ótima: compare as somas correntes dos blocos das pontas;\n  // se iguais, fixe os dois blocos; se menores/maiores, mescle o lado menor\n  // com o vizinho interno (conta 1 operação). Como todos os valores são\n  // positivos, essa gulosa maximiza o número de blocos.\n\n  let ops = 0;\n  let i = 0, j = n - 1;\n  while (i < j) {\n    const lv = a[i], rv = a[j];\n    if (lv === rv) {\n      i++;\n      j--;\n    } else {\n      ops++;\n      if (lv < rv) {\n        a[i + 1] += lv;\n        i++;\n      } else {\n        a[j - 1] += rv;\n        j--;\n      }\n    }\n  }\n\n  process.stdout.write(ops + '\\n');\n})();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07022270001471043,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

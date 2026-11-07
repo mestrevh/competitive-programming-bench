@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:59:40.389334+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1292,
+            "output_tokens": 16196,
+            "total_tokens": 17488
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.03887,
+            "total_cost": 0.038874
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0], 10);\n\nconst X = new Int32Array(n);\nfor (let i = 0; i < n; ++i) {\n  X[i] = parseInt(data[i + 1], 10);\n}\n\nconst U = new Int32Array(n);\nconst V = new Int32Array(n);\n\nlet minU = Infinity, maxU = -Infinity;\nlet minV = Infinity, maxV = -Infinity;\n\nfor (let i = 0; i < n; ++i) {\n  const x = X[i];\n  const y = parseInt(data[i + 1 + n], 10);\n  const u = x + y;\n  const v = x - y;\n\n  U[i] = u;\n  V[i] = v;\n\n  if (u < minU) minU = u;\n  if (u > maxU) maxU = u;\n  if (v < minV) minV = v;\n  if (v > maxV) maxV = v;\n}\n\nfunction feasible(D) {\n  if (maxU - minU <= D && maxV - minV <= D) return true;\n\n  const leftMax = minU + D;\n  const rightMin = maxU - D;\n  const bottomMax = minV + D;\n  const topMin = maxV - D;\n\n  let rMinU, rMaxU, rMinV, rMaxV;\n\n  rMinU = Infinity; rMaxU = -Infinity; rMinV = Infinity; rMaxV = -Infinity;\n  for (let i = 0; i < n; ++i) {\n    const u = U[i], v = V[i];\n    if (u <= leftMax && v <= bottomMax) continue;\n    if (u < rMinU) rMinU = u;\n    if (u > rMaxU) rMaxU = u;\n    if (v < rMinV) rMinV = v;\n    if (v > rMaxV) rMaxV = v;\n  }\n  if (rMaxU === -Infinity || (rMaxU - rMinU <= D && rMaxV - rMinV <= D)) return true;\n\n  rMinU = Infinity; rMaxU = -Infinity; rMinV = Infinity; rMaxV = -Infinity;\n  for (let i = 0; i < n; ++i) {\n    const u = U[i], v = V[i];\n    if (u <= leftMax && v >= topMin) continue;\n    if (u < rMinU) rMinU = u;\n    if (u > rMaxU) rMaxU = u;\n    if (v < rMinV) rMinV = v;\n    if (v > rMaxV) rMaxV = v;\n  }\n  if (rMaxU === -Infinity || (rMaxU - rMinU <= D && rMaxV - rMinV <= D)) return true;\n\n  rMinU = Infinity; rMaxU = -Infinity; rMinV = Infinity; rMaxV = -Infinity;\n  for (let i = 0; i < n; ++i) {\n    const u = U[i], v = V[i];\n    if (u >= rightMin && v <= bottomMax) continue;\n    if (u < rMinU) rMinU = u;\n    if (u > rMaxU) rMaxU = u;\n    if (v < rMinV) rMinV = v;\n    if (v > rMaxV) rMaxV = v;\n  }\n  if (rMaxU === -Infinity || (rMaxU - rMinU <= D && rMaxV - rMinV <= D)) return true;\n\n  rMinU = Infinity; rMaxU = -Infinity; rMinV = Infinity; rMaxV = -Infinity;\n  for (let i = 0; i < n; ++i) {\n    const u = U[i], v = V[i];\n    if (u >= rightMin && v >= topMin) continue;\n    if (u < rMinU) rMinU = u;\n    if (u > rMaxU) rMaxU = u;\n    if (v < rMinV) rMinV = v;\n    if (v > rMaxV) rMaxV = v;\n  }\n  if (rMaxU === -Infinity || (rMaxU - rMinU <= D && rMaxV - rMinV <= D)) return true;\n\n  return false;\n}\n\nlet lo = 0;\nlet hi = Math.max(maxU - minU, maxV - minV);\n\nwhile (lo < hi) {\n  const mid = Math.floor((lo + hi) / 2);\n  if (feasible(mid)) {\n    hi = mid;\n  } else {\n    lo = mid + 1;\n  }\n}\n\nconsole.log(lo);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0], 10);\n\nconst X = new Int32Array(n);\nfor (let i = 0; i < n; ++i) {\n  X[i] = parseInt(data[i + 1], 10);\n}\n\nconst U = new Int32Array(n);\nconst V = new Int32Array(n);\n\nlet minU = Infinity, maxU = -Infinity;\nlet minV = Infinity, maxV = -Infinity;\n\nfor (let i = 0; i < n; ++i) {\n  const x = X[i];\n  const y = parseInt(data[i + 1 + n], 10);\n  const u = x + y;\n  const v = x - y;\n\n  U[i] = u;\n  V[i] = v;\n\n  if (u < minU) minU = u;\n  if (u > maxU) maxU = u;\n  if (v < minV) minV = v;\n  if (v > maxV) maxV = v;\n}\n\nfunction feasible(D) {\n  if (maxU - minU <= D && maxV - minV <= D) return true;\n\n  const leftMax = minU + D;\n  const rightMin = maxU - D;\n  const bottomMax = minV + D;\n  const topMin = maxV - D;\n\n  let rMinU, rMaxU, rMinV, rMaxV;\n\n  rMinU = Infinity; rMaxU = -Infinity; rMinV = Infinity; rMaxV = -Infinity;\n  for (let i = 0; i < n; ++i) {\n    const u = U[i], v = V[i];\n    if (u <= leftMax && v <= bottomMax) continue;\n    if (u < rMinU) rMinU = u;\n    if (u > rMaxU) rMaxU = u;\n    if (v < rMinV) rMinV = v;\n    if (v > rMaxV) rMaxV = v;\n  }\n  if (rMaxU === -Infinity || (rMaxU - rMinU <= D && rMaxV - rMinV <= D)) return true;\n\n  rMinU = Infinity; rMaxU = -Infinity; rMinV = Infinity; rMaxV = -Infinity;\n  for (let i = 0; i < n; ++i) {\n    const u = U[i], v = V[i];\n    if (u <= leftMax && v >= topMin) continue;\n    if (u < rMinU) rMinU = u;\n    if (u > rMaxU) rMaxU = u;\n    if (v < rMinV) rMinV = v;\n    if (v > rMaxV) rMaxV = v;\n  }\n  if (rMaxU === -Infinity || (rMaxU - rMinU <= D && rMaxV - rMinV <= D)) return true;\n\n  rMinU = Infinity; rMaxU = -Infinity; rMinV = Infinity; rMaxV = -Infinity;\n  for (let i = 0; i < n; ++i) {\n    const u = U[i], v = V[i];\n    if (u >= rightMin && v <= bottomMax) continue;\n    if (u < rMinU) rMinU = u;\n    if (u > rMaxU) rMaxU = u;\n    if (v < rMinV) rMinV = v;\n    if (v > rMaxV) rMaxV = v;\n  }\n  if (rMaxU === -Infinity || (rMaxU - rMinU <= D && rMaxV - rMinV <= D)) return true;\n\n  rMinU = Infinity; rMaxU = -Infinity; rMinV = Infinity; rMaxV = -Infinity;\n  for (let i = 0; i < n; ++i) {\n    const u = U[i], v = V[i];\n    if (u >= rightMin && v >= topMin) continue;\n    if (u < rMinU) rMinU = u;\n    if (u > rMaxU) rMaxU = u;\n    if (v < rMinV) rMinV = v;\n    if (v > rMaxV) rMaxV = v;\n  }\n  if (rMaxU === -Infinity || (rMaxU - rMinU <= D && rMaxV - rMinV <= D)) return true;\n\n  return false;\n}\n\nlet lo = 0;\nlet hi = Math.max(maxU - minU, maxV - minV);\n\nwhile (lo < hi) {\n  const mid = Math.floor((lo + hi) / 2);\n  if (feasible(mid)) {\n    hi = mid;\n  } else {\n    lo = mid + 1;\n  }\n}\n\nconsole.log(lo);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.27695060000405647,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

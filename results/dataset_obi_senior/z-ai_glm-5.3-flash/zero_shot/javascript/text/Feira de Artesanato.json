@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:49:33.351381+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1279,
+            "output_tokens": 2437,
+            "total_tokens": 3716
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.001218,
+            "total_cost": 0.001246
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split(/\\s+/);\nlet idx = 0;\nconst N = +data[idx++];\nconst T = +data[idx++];\nconst tArr = new Array(N);\nconst pArr = new Array(N);\nfor (let i = 0; i < N; i++) tArr[i] = +data[idx++];\nfor (let i = 0; i < N; i++) pArr[i] = +data[idx++];\nconst C = +data[idx++];\nconst clients = new Array(C);\nfor (let j = 0; j < C; j++) clients[j] = +data[idx++];\n\n// Min-heap genérico (armazena índices de objetos, com função de comparação)\nfunction makeHeap(cmp) {\n  const a = [];\n  return {\n    size: () => a.length,\n    push(x) {\n      a.push(x);\n      let i = a.length - 1;\n      while (i > 0) {\n        const p = (i - 1) >> 1;\n        if (cmp(a[i], a[p]) < 0) {\n          const tmp = a[i]; a[i] = a[p]; a[p] = tmp;\n          i = p;\n        } else break;\n      }\n    },\n    pop() {\n      if (a.length === 0) return -1;\n      const top = a[0];\n      const last = a.pop();\n      if (a.length > 0) {\n        a[0] = last;\n        let i = 0;\n        for (;;) {\n          const l = 2 * i + 1, r = l + 1;\n          let m = i;\n          if (l < a.length && cmp(a[l], a[m]) < 0) m = l;\n          if (r < a.length && cmp(a[r], a[m]) < 0) m = r;\n          if (m === i) break;\n          const tmp = a[i]; a[i] = a[m]; a[m] = tmp;\n          i = m;\n        }\n      }\n      return top;\n    }\n  };\n}\n\n// Heap por tipo: mínimo preço\nconst byPrice = (x, y) => pArr[x] - pArr[y];\nconst typeHeaps = new Array(T + 1);\nfor (let t = 1; t <= T; t++) typeHeaps[t] = makeHeap(byPrice);\n\n// Heap global: mínimo (preço, tipo) para clientes indecisos\nconst byPriceType = (x, y) => (pArr[x] - pArr[y]) || (tArr[x] - tArr[y]);\nconst globalHeap = makeHeap(byPriceType);\n\nfor (let i = 0; i < N; i++) {\n  typeHeaps[tArr[i]].push(i);\n  globalHeap.push(i);\n}\n\nconst sold = new Uint8Array(N);\nlet total = 0;\n\nfor (let j = 0; j < C; j++) {\n  const u = clients[j];\n  if (u === 0) {\n    // indeciso: menor preço global, desempate menor tipo\n    let obj = globalHeap.pop();\n    while (obj !== -1 && sold[obj]) obj = globalHeap.pop();\n    if (obj !== -1) {\n      sold[obj] = 1;\n      total += pArr[obj];\n    }\n  } else {\n    // decidido: menor preço do tipo desejado\n    const h = typeHeaps[u];\n    let obj = h.pop();\n    while (obj !== -1 && sold[obj]) obj = h.pop();\n    if (obj !== -1) {\n      sold[obj] = 1;\n      total += pArr[obj];\n    }\n  }\n}\n\nconsole.log(total);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').split(/\\s+/);\nlet idx = 0;\nconst N = +data[idx++];\nconst T = +data[idx++];\nconst tArr = new Array(N);\nconst pArr = new Array(N);\nfor (let i = 0; i < N; i++) tArr[i] = +data[idx++];\nfor (let i = 0; i < N; i++) pArr[i] = +data[idx++];\nconst C = +data[idx++];\nconst clients = new Array(C);\nfor (let j = 0; j < C; j++) clients[j] = +data[idx++];\n\n// Min-heap genérico (armazena índices de objetos, com função de comparação)\nfunction makeHeap(cmp) {\n  const a = [];\n  return {\n    size: () => a.length,\n    push(x) {\n      a.push(x);\n      let i = a.length - 1;\n      while (i > 0) {\n        const p = (i - 1) >> 1;\n        if (cmp(a[i], a[p]) < 0) {\n          const tmp = a[i]; a[i] = a[p]; a[p] = tmp;\n          i = p;\n        } else break;\n      }\n    },\n    pop() {\n      if (a.length === 0) return -1;\n      const top = a[0];\n      const last = a.pop();\n      if (a.length > 0) {\n        a[0] = last;\n        let i = 0;\n        for (;;) {\n          const l = 2 * i + 1, r = l + 1;\n          let m = i;\n          if (l < a.length && cmp(a[l], a[m]) < 0) m = l;\n          if (r < a.length && cmp(a[r], a[m]) < 0) m = r;\n          if (m === i) break;\n          const tmp = a[i]; a[i] = a[m]; a[m] = tmp;\n          i = m;\n        }\n      }\n      return top;\n    }\n  };\n}\n\n// Heap por tipo: mínimo preço\nconst byPrice = (x, y) => pArr[x] - pArr[y];\nconst typeHeaps = new Array(T + 1);\nfor (let t = 1; t <= T; t++) typeHeaps[t] = makeHeap(byPrice);\n\n// Heap global: mínimo (preço, tipo) para clientes indecisos\nconst byPriceType = (x, y) => (pArr[x] - pArr[y]) || (tArr[x] - tArr[y]);\nconst globalHeap = makeHeap(byPriceType);\n\nfor (let i = 0; i < N; i++) {\n  typeHeaps[tArr[i]].push(i);\n  globalHeap.push(i);\n}\n\nconst sold = new Uint8Array(N);\nlet total = 0;\n\nfor (let j = 0; j < C; j++) {\n  const u = clients[j];\n  if (u === 0) {\n    // indeciso: menor preço global, desempate menor tipo\n    let obj = globalHeap.pop();\n    while (obj !== -1 && sold[obj]) obj = globalHeap.pop();\n    if (obj !== -1) {\n      sold[obj] = 1;\n      total += pArr[obj];\n    }\n  } else {\n    // decidido: menor preço do tipo desejado\n    const h = typeHeaps[u];\n    let obj = h.pop();\n    while (obj !== -1 && sold[obj]) obj = h.pop();\n    if (obj !== -1) {\n      sold[obj] = 1;\n      total += pArr[obj];\n    }\n  }\n}\n\nconsole.log(total);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19297909998567775,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

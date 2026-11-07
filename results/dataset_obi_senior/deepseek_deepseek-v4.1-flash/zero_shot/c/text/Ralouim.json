@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:40:27.041195+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 765,
+            "output_tokens": 22439,
+            "total_tokens": 23204
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.053854,
+            "total_cost": 0.053856
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n\n#define SHIFT 22\n#define MASK 0x7FF\n#define NEG -1000000000\n\nstatic int cmp(const void *a, const void *b) {\n    uint64_t x = *(const uint64_t *)a;\n    uint64_t y = *(const uint64_t *)b;\n    if (x < y) return 1;\n    if (x > y) return -1;\n    return 0;\n}\n\nint main(void) {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    int *x = (int *)malloc((size_t)N * sizeof(int));\n    int *y = (int *)malloc((size_t)N * sizeof(int));\n\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d %d\", &x[i], &y[i]);\n    }\n\n    int E = N * N;\n    uint64_t *edges = (uint64_t *)malloc((size_t)E * sizeof(uint64_t));\n    int idx = 0;\n\n    for (int v = 1; v <= N; ++v) {\n        int xx = x[v - 1];\n        int yy = y[v - 1];\n        int len = xx * xx + yy * yy;\n        edges[idx++] = ((uint64_t)len << SHIFT) | (uint64_t)v;\n    }\n\n    for (int u = 1; u <= N; ++u) {\n        int xu = x[u - 1];\n        int yu = y[u - 1];\n        for (int v = 1; v <= N; ++v) {\n            if (u == v) continue;\n            int dx = xu - x[v - 1];\n            int dy = yu - y[v - 1];\n            int len = dx * dx + dy * dy;\n            edges[idx++] = ((uint64_t)len << SHIFT) | ((uint64_t)u << 11) | (uint64_t)v;\n        }\n    }\n\n    qsort(edges, (size_t)E, sizeof(uint64_t), cmp);\n\n    int *best = (int *)malloc((size_t)(N + 1) * sizeof(int));\n    int *upd = (int *)malloc((size_t)(N + 1) * sizeof(int));\n    int *touched = (int *)malloc((size_t)(N + 1) * sizeof(int));\n\n    for (int i = 0; i <= N; ++i) {\n        best[i] = NEG;\n        upd[i] = NEG;\n    }\n    best[0] = 0;\n\n    int ans = 0;\n    int i = 0;\n\n    while (i < E) {\n        int curLen = (int)(edges[i] >> SHIFT);\n        int j = i;\n        int tcnt = 0;\n\n        while (j < E && (int)(edges[j] >> SHIFT) == curLen) {\n            uint64_t e = edges[j];\n            int u = (int)((e >> 11) & MASK);\n            int v = (int)(e & MASK);\n\n            int bu = best[u];\n            if (bu >= 0) {\n                int dp = bu + 1;\n                if (dp > ans) ans = dp;\n                if (dp > upd[v]) {\n                    if (upd[v] == NEG) touched[tcnt++] = v;\n                    upd[v] = dp;\n                }\n            }\n            ++j;\n        }\n\n        for (int k = 0; k < tcnt; ++k) {\n            int v = touched[k];\n            if (upd[v] > best[v]) best[v] = upd[v];\n            upd[v] = NEG;\n        }\n\n        i = j;\n    }\n\n    printf(\"%d\\n\", ans);\n\n    free(x);\n    free(y);\n    free(edges);\n    free(best);\n    free(upd);\n    free(touched);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n\n#define SHIFT 22\n#define MASK 0x7FF\n#define NEG -1000000000\n\nstatic int cmp(const void *a, const void *b) {\n    uint64_t x = *(const uint64_t *)a;\n    uint64_t y = *(const uint64_t *)b;\n    if (x < y) return 1;\n    if (x > y) return -1;\n    return 0;\n}\n\nint main(void) {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    int *x = (int *)malloc((size_t)N * sizeof(int));\n    int *y = (int *)malloc((size_t)N * sizeof(int));\n\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d %d\", &x[i], &y[i]);\n    }\n\n    int E = N * N;\n    uint64_t *edges = (uint64_t *)malloc((size_t)E * sizeof(uint64_t));\n    int idx = 0;\n\n    for (int v = 1; v <= N; ++v) {\n        int xx = x[v - 1];\n        int yy = y[v - 1];\n        int len = xx * xx + yy * yy;\n        edges[idx++] = ((uint64_t)len << SHIFT) | (uint64_t)v;\n    }\n\n    for (int u = 1; u <= N; ++u) {\n        int xu = x[u - 1];\n        int yu = y[u - 1];\n        for (int v = 1; v <= N; ++v) {\n            if (u == v) continue;\n            int dx = xu - x[v - 1];\n            int dy = yu - y[v - 1];\n            int len = dx * dx + dy * dy;\n            edges[idx++] = ((uint64_t)len << SHIFT) | ((uint64_t)u << 11) | (uint64_t)v;\n        }\n    }\n\n    qsort(edges, (size_t)E, sizeof(uint64_t), cmp);\n\n    int *best = (int *)malloc((size_t)(N + 1) * sizeof(int));\n    int *upd = (int *)malloc((size_t)(N + 1) * sizeof(int));\n    int *touched = (int *)malloc((size_t)(N + 1) * sizeof(int));\n\n    for (int i = 0; i <= N; ++i) {\n        best[i] = NEG;\n        upd[i] = NEG;\n    }\n    best[0] = 0;\n\n    int ans = 0;\n    int i = 0;\n\n    while (i < E) {\n        int curLen = (int)(edges[i] >> SHIFT);\n        int j = i;\n        int tcnt = 0;\n\n        while (j < E && (int)(edges[j] >> SHIFT) == curLen) {\n            uint64_t e = edges[j];\n            int u = (int)((e >> 11) & MASK);\n            int v = (int)(e & MASK);\n\n            int bu = best[u];\n            if (bu >= 0) {\n                int dp = bu + 1;\n                if (dp > ans) ans = dp;\n                if (dp > upd[v]) {\n                    if (upd[v] == NEG) touched[tcnt++] = v;\n                    upd[v] = dp;\n                }\n            }\n            ++j;\n        }\n\n        for (int k = 0; k < tcnt; ++k) {\n            int v = touched[k];\n            if (upd[v] > best[v]) best[v] = upd[v];\n            upd[v] = NEG;\n        }\n\n        i = j;\n    }\n\n    printf(\"%d\\n\", ans);\n\n    free(x);\n    free(y);\n    free(edges);\n    free(best);\n    free(upd);\n    free(touched);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.5369505999842659,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

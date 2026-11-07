@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:39:32.505793+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1424,
+            "output_tokens": 2296,
+            "total_tokens": 3720
+        },
+        "cost_usd": {
+            "input_cost": 0.000142,
+            "output_cost": 0.001148,
+            "total_cost": 0.00129
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, K;\n    long long T;\n\n    if (scanf(\"%d %d %lld\", &N, &K, &T) != 3) {\n        return 0;\n    }\n\n    int P[300];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &P[i]);\n    }\n\n    int initial[300];\n    int count = 0;\n    for (int i = 1; i <= N; i++) {\n        int G;\n        scanf(\"%d\", &G);\n        if (G) {\n            initial[count++] = i;\n        }\n    }\n\n    int width = 9 * K + 1;\n    int *dp = malloc((size_t)(K + 1) * width * sizeof(int));\n    if (dp == NULL) {\n        return 0;\n    }\n\n    const int INF = 1000000000;\n    for (int i = 0; i <= K; i++) {\n        for (int s = 0; s < width; s++) {\n            dp[i * width + s] = INF;\n        }\n    }\n    dp[0] = 0;\n\n    for (int j = 1; j <= N; j++) {\n        int maxSelected = j < K ? j : K;\n        for (int i = maxSelected; i >= 1; i--) {\n            int distance = initial[i - 1] - j;\n            if (distance < 0) distance = -distance;\n\n            for (int s = 0; s <= 9 * (i - 1); s++) {\n                int cost = dp[(i - 1) * width + s];\n                if (cost == INF) continue;\n\n                int newCost = cost + distance;\n                int *destination = &dp[i * width + s + P[j - 1]];\n                if (newCost < *destination) {\n                    *destination = newCost;\n                }\n            }\n        }\n    }\n\n    int answer = 0;\n    for (int s = 0; s < width; s++) {\n        if ((long long)dp[K * width + s] <= T) {\n            answer = s;\n        }\n    }\n\n    printf(\"%d\\n\", answer);\n    free(dp);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, K;\n    long long T;\n\n    if (scanf(\"%d %d %lld\", &N, &K, &T) != 3) {\n        return 0;\n    }\n\n    int P[300];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &P[i]);\n    }\n\n    int initial[300];\n    int count = 0;\n    for (int i = 1; i <= N; i++) {\n        int G;\n        scanf(\"%d\", &G);\n        if (G) {\n            initial[count++] = i;\n        }\n    }\n\n    int width = 9 * K + 1;\n    int *dp = malloc((size_t)(K + 1) * width * sizeof(int));\n    if (dp == NULL) {\n        return 0;\n    }\n\n    const int INF = 1000000000;\n    for (int i = 0; i <= K; i++) {\n        for (int s = 0; s < width; s++) {\n            dp[i * width + s] = INF;\n        }\n    }\n    dp[0] = 0;\n\n    for (int j = 1; j <= N; j++) {\n        int maxSelected = j < K ? j : K;\n        for (int i = maxSelected; i >= 1; i--) {\n            int distance = initial[i - 1] - j;\n            if (distance < 0) distance = -distance;\n\n            for (int s = 0; s <= 9 * (i - 1); s++) {\n                int cost = dp[(i - 1) * width + s];\n                if (cost == INF) continue;\n\n                int newCost = cost + distance;\n                int *destination = &dp[i * width + s + P[j - 1]];\n                if (newCost < *destination) {\n                    *destination = newCost;\n                }\n            }\n        }\n    }\n\n    int answer = 0;\n    for (int s = 0; s < width; s++) {\n        if ((long long)dp[K * width + s] <= T) {\n            answer = s;\n        }\n    }\n\n    printf(\"%d\\n\", answer);\n    free(dp);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.11345530000107829,
+            "counts": {
+                "AC": 65,
+                "WA": 2,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

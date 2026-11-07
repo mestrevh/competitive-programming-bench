@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:08:38.251420+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 918,
+            "output_tokens": 525,
+            "total_tokens": 2279
+        },
+        "cost_usd": {
+            "input_cost": 0.000688,
+            "output_cost": 0.001969,
+            "total_cost": 0.002657
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length === 0 || input[0] === '') return;\n\n    const N = parseInt(input[0], 10);\n    let idx = 1;\n\n    const events = [];\n    for (let i = 0; i < N; i++) {\n        const type = input[idx++];\n        const x = parseInt(input[idx++], 10);\n        events.push({ type, x });\n    }\n\n    const friends = new Set();\n    const lastReceived = {};\n    const totalTime = {};\n    const pending = {};\n\n    let currentTime = 0;\n    let firstEvent = true;\n\n    for (let i = 0; i < events.length; i++) {\n        const ev = events[i];\n\n        if (ev.type === 'T') {\n            currentTime += ev.x;\n        } else {\n            if (!firstEvent) {\n                // If the previous record was not 'T', exactly 1 second has passed\n                if (events[i - 1].type !== 'T') {\n                    currentTime += 1;\n                }\n            } else {\n                firstEvent = false;\n            }\n\n            const friend = ev.x;\n            friends.add(friend);\n            if (totalTime[friend] === undefined) {\n                totalTime[friend] = 0;\n                pending[friend] = false;\n            }\n\n            if (ev.type === 'R') {\n                lastReceived[friend] = currentTime;\n                pending[friend] = true;\n            } else if (ev.type === 'E') {\n                totalTime[friend] += (currentTime - lastReceived[friend]);\n                pending[friend] = false;\n            }\n        }\n    }\n\n    const sortedFriends = Array.from(friends).sort((a, b) => a - b);\n    for (const friend of sortedFriends) {\n        if (pending[friend]) {\n            console.log(`${friend} -1`);\n        } else {\n            console.log(`${friend} ${totalTime[friend]}`);\n        }\n    }\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length === 0 || input[0] === '') return;\n\n    const N = parseInt(input[0], 10);\n    let idx = 1;\n\n    const events = [];\n    for (let i = 0; i < N; i++) {\n        const type = input[idx++];\n        const x = parseInt(input[idx++], 10);\n        events.push({ type, x });\n    }\n\n    const friends = new Set();\n    const lastReceived = {};\n    const totalTime = {};\n    const pending = {};\n\n    let currentTime = 0;\n    let firstEvent = true;\n\n    for (let i = 0; i < events.length; i++) {\n        const ev = events[i];\n\n        if (ev.type === 'T') {\n            currentTime += ev.x;\n        } else {\n            if (!firstEvent) {\n                // If the previous record was not 'T', exactly 1 second has passed\n                if (events[i - 1].type !== 'T') {\n                    currentTime += 1;\n                }\n            } else {\n                firstEvent = false;\n            }\n\n            const friend = ev.x;\n            friends.add(friend);\n            if (totalTime[friend] === undefined) {\n                totalTime[friend] = 0;\n                pending[friend] = false;\n            }\n\n            if (ev.type === 'R') {\n                lastReceived[friend] = currentTime;\n                pending[friend] = true;\n            } else if (ev.type === 'E') {\n                totalTime[friend] += (currentTime - lastReceived[friend]);\n                pending[friend] = false;\n            }\n        }\n    }\n\n    const sortedFriends = Array.from(friends).sort((a, b) => a - b);\n    for (const friend of sortedFriends) {\n        if (pending[friend]) {\n            console.log(`${friend} -1`);\n        } else {\n            console.log(`${friend} ${totalTime[friend]}`);\n        }\n    }\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.04650589998345822,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

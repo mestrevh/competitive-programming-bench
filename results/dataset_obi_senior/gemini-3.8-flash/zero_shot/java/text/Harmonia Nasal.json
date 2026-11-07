@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:24:25.737076+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1258,
+            "output_tokens": 1051,
+            "total_tokens": 8462
+        },
+        "cost_usd": {
+            "input_cost": 0.000944,
+            "output_cost": 0.003941,
+            "total_cost": 0.004885
+        },
+        "raw_response": "Uma solução correta e eficiente em **Java** para o problema **Harmonia Nasal**.\n\n### Análise do Problema\n\nQuando Jonas forma uma palavra usando uma sequência de sílabas $p_1, p_2, \\ldots, p_m$:\n- A nasalidade final será:\n  $$A = \\sum_{j=1}^m a_{p_j} - \\sum_{j=1}^{m-1} b_{p_j}$$\n- A resistência da última sílaba $p_m$ nunca é subtraída do total.\n- Além disso, Jonas pode zerar a resistência de até $K$ sílabas.\n\nPortanto, até $\\min(N, K + 1)$ sílabas não terão suas resistências $b$ subtraídas: uma pela última posição da palavra e até $K$ por terem sido zeradas. \n\nPara qualquer sílaba $i$:\n- Se a sua resistência for subtraída, ela só vale a pena ser incluída se $a_i - b_i > 0$, contribuindo com $\\max(0, a_i - b_i)$.\n- Se a sua resistência for isenta (não subtraída), ela contribui com $a_i$.\n- A vantagem de isentar a sílaba $i$ é:\n  $$a_i - \\max(0, a_i - b_i) = \\min(a_i, b_i)$$\n\nComo $\\min(a_i, b_i) \\ge 1 > 0$ para toda sílaba, é sempre ótimo isentar as $\\min(N, K + 1)$ sílabas que possuem os maiores valores de $\\min(a_i, b_i)$. Como o ganho líquido de cada sílaba intermediária é $\\ge 0$, sempre existe uma ordenação válida que satisfaz todas as condições a cada passo.\n\nA resposta máxima é dada por:\n$$\\sum_{i=1}^N \\max(0, a_i - b_i) + \\sum \\left(\\text{os } \\min(N, K + 1) \\text{ maiores valores de } \\min(a_i, b_i)\\right)$$\n\n### Código em Java\n\n```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st;\n\n        String next() {\n            while (st == null || !st.hasMoreTokens()) {\n                try {\n                    String line = br.readLine();\n                    if (line == null) return null;\n                    st = new StringTokenizer(line);\n                } catch (IOException e) {\n                    e.printStackTrace();\n                }\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() {\n            return Integer.parseInt(next());\n        }\n\n        long nextLong() {\n            return Long.parseLong(next());\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner fs = new FastScanner();\n        String tokenN = fs.next();\n        if (tokenN == null) return;\n        \n        int n = Integer.parseInt(tokenN);\n        int k = fs.nextInt();\n\n        long[] a = new long[n];\n        for (int i = 0; i < n; i++) {\n            a[i] = fs.nextLong();\n        }\n\n        long[] b = new long[n];\n        for (int i = 0; i < n; i++) {\n            b[i] = fs.nextLong();\n        }\n\n        long totalNasalidade = 0;\n        long[] beneficioIsencao = new long[n];\n\n        for (int i = 0; i < n; i++) {\n            totalNasalidade += Math.max(0L, a[i] - b[i]);\n            beneficioIsencao[i] = Math.min(a[i], b[i]);\n        }\n\n        Arrays.sort(beneficioIsencao);\n\n        // Podemos isentar até min(n, k + 1) sílabas\n        int isencoes = Math.min(n, k + 1);\n        for (int i = 0; i < isencoes; i++) {\n            totalNasalidade += beneficioIsencao[n - 1 - i];\n        }\n\n        System.out.println(totalNasalidade);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st;\n\n        String next() {\n            while (st == null || !st.hasMoreTokens()) {\n                try {\n                    String line = br.readLine();\n                    if (line == null) return null;\n                    st = new StringTokenizer(line);\n                } catch (IOException e) {\n                    e.printStackTrace();\n                }\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() {\n            return Integer.parseInt(next());\n        }\n\n        long nextLong() {\n            return Long.parseLong(next());\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner fs = new FastScanner();\n        String tokenN = fs.next();\n        if (tokenN == null) return;\n        \n        int n = Integer.parseInt(tokenN);\n        int k = fs.nextInt();\n\n        long[] a = new long[n];\n        for (int i = 0; i < n; i++) {\n            a[i] = fs.nextLong();\n        }\n\n        long[] b = new long[n];\n        for (int i = 0; i < n; i++) {\n            b[i] = fs.nextLong();\n        }\n\n        long totalNasalidade = 0;\n        long[] beneficioIsencao = new long[n];\n\n        for (int i = 0; i < n; i++) {\n            totalNasalidade += Math.max(0L, a[i] - b[i]);\n            beneficioIsencao[i] = Math.min(a[i], b[i]);\n        }\n\n        Arrays.sort(beneficioIsencao);\n\n        // Podemos isentar até min(n, k + 1) sílabas\n        int isencoes = Math.min(n, k + 1);\n        for (int i = 0; i < isencoes; i++) {\n            totalNasalidade += beneficioIsencao[n - 1 - i];\n        }\n\n        System.out.println(totalNasalidade);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18356639999547042,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:51:01.925780+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1510,
+            "output_tokens": 2287,
+            "total_tokens": 3797
+        },
+        "cost_usd": {
+            "input_cost": 3.2e-05,
+            "output_cost": 0.001143,
+            "total_cost": 0.001176
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int par[100005];\n\nstatic int find(int x){\n    int r = x;\n    while (par[r] != r) r = par[r];\n    while (par[x] != r) { int nx = par[x]; par[x] = r; x = nx; }\n    return r;\n}\n\nint main(void){\n    int n, m;\n    long long k;\n    if (scanf(\"%d %d %lld\", &n, &m, &k) != 3) return 0;\n\n    int *ea = (int*)malloc(sizeof(int) * m);\n    int *eb = (int*)malloc(sizeof(int) * m);\n    int *et = (int*)malloc(sizeof(int) * m);\n\n    for (int i = 0; i < m; i++)\n        scanf(\"%d %d %d\", &ea[i], &eb[i], &et[i]);\n\n    for (int i = 1; i <= n; i++) par[i] = i;\n\n    int impossible = 0;\n\n    /* Primeiro adiciona todas as hidrovias: elas existiam há K anos e não podem ser removidas.\n       Se duas hidrovias fecharem um ciclo, é impossível tornar a rede simples. */\n    for (int i = 0; i < m; i++){\n        if (et[i] == 1){\n            int ra = find(ea[i]), rb = find(eb[i]);\n            if (ra == rb){ impossible = 1; break; }\n            par[ra] = rb;\n        }\n    }\n\n    long long removed = 0;\n    if (!impossible){\n        /* Rodovias: mantém as que conectam componentes distintas,\n           remove (conta) as que fechariam ciclo. */\n        for (int i = 0; i < m; i++){\n            if (et[i] == 2){\n                int ra = find(ea[i]), rb = find(eb[i]);\n                if (ra == rb) removed++;\n                else par[ra] = rb;\n            }\n        }\n    }\n\n    printf(\"%c\\n\", (impossible || removed > k) ? 'N' : 'S');\n\n    free(ea); free(eb); free(et);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int par[100005];\n\nstatic int find(int x){\n    int r = x;\n    while (par[r] != r) r = par[r];\n    while (par[x] != r) { int nx = par[x]; par[x] = r; x = nx; }\n    return r;\n}\n\nint main(void){\n    int n, m;\n    long long k;\n    if (scanf(\"%d %d %lld\", &n, &m, &k) != 3) return 0;\n\n    int *ea = (int*)malloc(sizeof(int) * m);\n    int *eb = (int*)malloc(sizeof(int) * m);\n    int *et = (int*)malloc(sizeof(int) * m);\n\n    for (int i = 0; i < m; i++)\n        scanf(\"%d %d %d\", &ea[i], &eb[i], &et[i]);\n\n    for (int i = 1; i <= n; i++) par[i] = i;\n\n    int impossible = 0;\n\n    /* Primeiro adiciona todas as hidrovias: elas existiam há K anos e não podem ser removidas.\n       Se duas hidrovias fecharem um ciclo, é impossível tornar a rede simples. */\n    for (int i = 0; i < m; i++){\n        if (et[i] == 1){\n            int ra = find(ea[i]), rb = find(eb[i]);\n            if (ra == rb){ impossible = 1; break; }\n            par[ra] = rb;\n        }\n    }\n\n    long long removed = 0;\n    if (!impossible){\n        /* Rodovias: mantém as que conectam componentes distintas,\n           remove (conta) as que fechariam ciclo. */\n        for (int i = 0; i < m; i++){\n            if (et[i] == 2){\n                int ra = find(ea[i]), rb = find(eb[i]);\n                if (ra == rb) removed++;\n                else par[ra] = rb;\n            }\n        }\n    }\n\n    printf(\"%c\\n\", (impossible || removed > k) ? 'N' : 'S');\n\n    free(ea); free(eb); free(et);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1364010999968741,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

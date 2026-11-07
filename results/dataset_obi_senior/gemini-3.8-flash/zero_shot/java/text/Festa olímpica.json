@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:21:32.612605+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 925,
+            "output_tokens": 539,
+            "total_tokens": 3290
+        },
+        "cost_usd": {
+            "input_cost": 0.000694,
+            "output_cost": 0.002021,
+            "total_cost": 0.002715
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\nimport java.io.PrintWriter;\n\npublic class Main {\n    static class FastReader {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastReader(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = in.read(buffer, 0, buffer.length);\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() throws IOException {\n            byte c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastReader reader = new FastReader(System.in);\n        int N = reader.nextInt();\n        if (N == -1) return;\n        int M = reader.nextInt();\n\n        int[] T = new int[M];\n        for (int i = 0; i < M; i++) {\n            T[i] = reader.nextInt();\n        }\n\n        PrintWriter out = new PrintWriter(System.out);\n\n        for (int p = 1; p <= 10000; p++) {\n            long cur = p;\n            boolean valid = true;\n\n            for (int i = M - 1; i >= 0; i--) {\n                cur += (cur - 1) / (T[i] - 1);\n                if (cur > N) {\n                    valid = false;\n                    break;\n                }\n            }\n\n            if (!valid) {\n                break;\n            }\n\n            out.println(cur);\n        }\n\n        out.flush();\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\nimport java.io.PrintWriter;\n\npublic class Main {\n    static class FastReader {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastReader(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = in.read(buffer, 0, buffer.length);\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() throws IOException {\n            byte c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastReader reader = new FastReader(System.in);\n        int N = reader.nextInt();\n        if (N == -1) return;\n        int M = reader.nextInt();\n\n        int[] T = new int[M];\n        for (int i = 0; i < M; i++) {\n            T[i] = reader.nextInt();\n        }\n\n        PrintWriter out = new PrintWriter(System.out);\n\n        for (int p = 1; p <= 10000; p++) {\n            long cur = p;\n            boolean valid = true;\n\n            for (int i = M - 1; i >= 0; i--) {\n                cur += (cur - 1) / (T[i] - 1);\n                if (cur > N) {\n                    valid = false;\n                    break;\n                }\n            }\n\n            if (!valid) {\n                break;\n            }\n\n            out.println(cur);\n        }\n\n        out.flush();\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2793831000162754,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

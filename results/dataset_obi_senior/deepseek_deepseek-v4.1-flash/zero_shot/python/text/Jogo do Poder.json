@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:10:20.541253+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1201,
+            "output_tokens": 37311,
+            "total_tokens": 38512
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.089546,
+            "total_cost": 0.08955
+        },
+        "raw_response": "s will be ```python\nimport sys\nimport heapq\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M = data[0], data[1]\n    K = N * M\n    P = data[2:2 + K]\n\n    order = sorted(range(K), key=P.__getitem__)\n\n    parent = [-1] * K\n    comp_sum = [0] * K\n    unfil = [None] * K\n    ans = [0] * K\n    active = [False] * K\n\n    heap = []\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def finalize_less(th):\n        while heap and heap[0][0] < th:\n            s, r = heapq.heappop(heap)\n            if parent[r] != r or comp_sum[r] != s:\n                continue\n            lst = unfil[r]\n            if not lst:\n                continue\n            if comp_sum[r] < th:\n                val = comp_sum[r]\n                for v in lst:\n                    ans[v] = val\n                unfil[r] = []\n\n    def finalize_leq(th):\n        while heap and heap[0][0] <= th:\n            s, r = heapq.heappop(heap)\n            if parent[r] != r or comp_sum[r] != s:\n                continue\n            lst = unfil[r]\n            if not lst:\n                continue\n            if comp_sum[r] <= th:\n                val = comp_sum[r]\n                for v in lst:\n                    ans[v] = val\n                unfil[r] = []\n\n    def union(a, b):\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n\n        la = unfil[ra]\n        lb = unfil[rb]\n        len_a = len(la) if la else 0\n        len_b = len(lb) if lb else 0\n\n        if len_a < len_b:\n            ra, rb = rb, ra\n            la, lb = lb, la\n\n        parent[rb] = ra\n        comp_sum[ra] += comp_sum[rb]\n\n        if lb:\n            if la:\n                la.extend(lb)\n                unfil[ra] = la\n            else:\n                unfil[ra] = lb\n            unfil[rb] = []\n\n        if unfil[ra]:\n            heapq.heappush(heap, (comp_sum[ra], ra))\n\n    i = 0\n    while i < K:\n        p = P[order[i]]\n        finalize_less(p)\n\n        j = i\n        group = []\n        while j < K and P[order[j]] == p:\n            idx = order[j]\n            group.append(idx)\n            parent[idx] = idx\n            comp_sum[idx] = p\n            unfil[idx] = [idx]\n            active[idx] = True\n            heapq.heappush(heap, (p, idx))\n            j += 1\n\n        for idx in group:\n            r = idx // M\n            c = idx % M\n\n            if r > 0:\n                nb = idx - M\n                if active[nb]:\n                    union(idx, nb)\n            if r + 1 < N:\n                nb = idx + M\n                if active[nb]:\n                    union(idx, nb)\n            if c > 0:\n                nb = idx - 1\n                if active[nb]:\n                    union(idx, nb)\n            if c + 1 < M:\n                nb = idx + 1\n                if active[nb]:\n                    union(idx, nb)\n\n        finalize_leq(p)\n        i = j\n\n    finalize_less(10**30)\n\n    out = []\n    for r in range(N):\n        out.append(' '.join(map(str, ans[r * M:(r + 1) * M])))\n    sys.stdout.write('\\n'.join(out))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M = data[0], data[1]\n    K = N * M\n    P = data[2:2 + K]\n\n    order = sorted(range(K), key=P.__getitem__)\n\n    parent = [-1] * K\n    comp_sum = [0] * K\n    unfil = [None] * K\n    ans = [0] * K\n    active = [False] * K\n\n    heap = []\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def finalize_less(th):\n        while heap and heap[0][0] < th:\n            s, r = heapq.heappop(heap)\n            if parent[r] != r or comp_sum[r] != s:\n                continue\n            lst = unfil[r]\n            if not lst:\n                continue\n            if comp_sum[r] < th:\n                val = comp_sum[r]\n                for v in lst:\n                    ans[v] = val\n                unfil[r] = []\n\n    def finalize_leq(th):\n        while heap and heap[0][0] <= th:\n            s, r = heapq.heappop(heap)\n            if parent[r] != r or comp_sum[r] != s:\n                continue\n            lst = unfil[r]\n            if not lst:\n                continue\n            if comp_sum[r] <= th:\n                val = comp_sum[r]\n                for v in lst:\n                    ans[v] = val\n                unfil[r] = []\n\n    def union(a, b):\n        ra = find(a)\n        rb = find(b)\n        if ra == rb:\n            return\n\n        la = unfil[ra]\n        lb = unfil[rb]\n        len_a = len(la) if la else 0\n        len_b = len(lb) if lb else 0\n\n        if len_a < len_b:\n            ra, rb = rb, ra\n            la, lb = lb, la\n\n        parent[rb] = ra\n        comp_sum[ra] += comp_sum[rb]\n\n        if lb:\n            if la:\n                la.extend(lb)\n                unfil[ra] = la\n            else:\n                unfil[ra] = lb\n            unfil[rb] = []\n\n        if unfil[ra]:\n            heapq.heappush(heap, (comp_sum[ra], ra))\n\n    i = 0\n    while i < K:\n        p = P[order[i]]\n        finalize_less(p)\n\n        j = i\n        group = []\n        while j < K and P[order[j]] == p:\n            idx = order[j]\n            group.append(idx)\n            parent[idx] = idx\n            comp_sum[idx] = p\n            unfil[idx] = [idx]\n            active[idx] = True\n            heapq.heappush(heap, (p, idx))\n            j += 1\n\n        for idx in group:\n            r = idx // M\n            c = idx % M\n\n            if r > 0:\n                nb = idx - M\n                if active[nb]:\n                    union(idx, nb)\n            if r + 1 < N:\n                nb = idx + M\n                if active[nb]:\n                    union(idx, nb)\n            if c > 0:\n                nb = idx - 1\n                if active[nb]:\n                    union(idx, nb)\n            if c + 1 < M:\n                nb = idx + 1\n                if active[nb]:\n                    union(idx, nb)\n\n        finalize_leq(p)\n        i = j\n\n    finalize_less(10**30)\n\n    out = []\n    for r in range(N):\n        out.append(' '.join(map(str, ans[r * M:(r + 1) * M])))\n    sys.stdout.write('\\n'.join(out))\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4633881999980076,
+            "counts": {
+                "AC": 150,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 150
+        }
+    }
+]

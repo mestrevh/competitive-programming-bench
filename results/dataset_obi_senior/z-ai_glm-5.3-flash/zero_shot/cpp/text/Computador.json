@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:22:30.052708+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 835,
+            "output_tokens": 3673,
+            "total_tokens": 4508
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.001837,
+            "total_cost": 0.001854
+        },
+        "raw_response": "```cpp\n#include <cstdio>\n#include <algorithm>\nusing namespace std;\n\nconst int MAXN = 200005;\nint N, M;\nlong long bitB[MAXN], bitA[MAXN];\n\n// BIT de diferenças: range add, point query via prefixo\nvoid upd(long long *bit, int idx, long long val) {\n    for (; idx <= N; idx += idx & (-idx)) bit[idx] += val;\n}\n\nlong long qry(long long *bit, int idx) {\n    long long s = 0;\n    for (; idx > 0; idx -= idx & (-idx)) s += bit[idx];\n    return s;\n}\n\n// Adiciona (alpha * p + beta) a cada posicao p no intervalo [l, r]\nvoid rangeAdd(int l, int r, long long alpha, long long beta) {\n    upd(bitB, l, beta);\n    if (r + 1 <= N) upd(bitB, r + 1, -beta);\n    upd(bitA, l, alpha);\n    if (r + 1 <= N) upd(bitA, r + 1, -alpha);\n}\n\nint main() {\n    scanf(\"%d %d\", &N, &M);\n    while (M--) {\n        int type;\n        scanf(\"%d\", &type);\n        if (type == 3) {\n            int i;\n            scanf(\"%d\", &i);\n            long long ans = qry(bitB, i) + qry(bitA, i) * (long long)i;\n            printf(\"%lld\\n\", ans);\n        } else {\n            int i, v;\n            scanf(\"%d %d\", &i, &v);\n            if (type == 1) {\n                // FRENTE i V: posicao p (i..min(N, i+V-1)) recebe V + i - p\n                int r = (int)min((long long)N, (long long)i + v - 1);\n                rangeAdd(i, r, -1, (long long)v + i);\n            } else {\n                // TRAS i V: posicao p (max(1, i-V+1)..i) recebe p + V - i\n                int l = max(1, i - v + 1);\n                rangeAdd(l, i, 1, (long long)v - i);\n            }\n        }\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <cstdio>\n#include <algorithm>\nusing namespace std;\n\nconst int MAXN = 200005;\nint N, M;\nlong long bitB[MAXN], bitA[MAXN];\n\n// BIT de diferenças: range add, point query via prefixo\nvoid upd(long long *bit, int idx, long long val) {\n    for (; idx <= N; idx += idx & (-idx)) bit[idx] += val;\n}\n\nlong long qry(long long *bit, int idx) {\n    long long s = 0;\n    for (; idx > 0; idx -= idx & (-idx)) s += bit[idx];\n    return s;\n}\n\n// Adiciona (alpha * p + beta) a cada posicao p no intervalo [l, r]\nvoid rangeAdd(int l, int r, long long alpha, long long beta) {\n    upd(bitB, l, beta);\n    if (r + 1 <= N) upd(bitB, r + 1, -beta);\n    upd(bitA, l, alpha);\n    if (r + 1 <= N) upd(bitA, r + 1, -alpha);\n}\n\nint main() {\n    scanf(\"%d %d\", &N, &M);\n    while (M--) {\n        int type;\n        scanf(\"%d\", &type);\n        if (type == 3) {\n            int i;\n            scanf(\"%d\", &i);\n            long long ans = qry(bitB, i) + qry(bitA, i) * (long long)i;\n            printf(\"%lld\\n\", ans);\n        } else {\n            int i, v;\n            scanf(\"%d %d\", &i, &v);\n            if (type == 1) {\n                // FRENTE i V: posicao p (i..min(N, i+V-1)) recebe V + i - p\n                int r = (int)min((long long)N, (long long)i + v - 1);\n                rangeAdd(i, r, -1, (long long)v + i);\n            } else {\n                // TRAS i V: posicao p (max(1, i-V+1)..i) recebe p + V - i\n                int l = max(1, i - v + 1);\n                rangeAdd(l, i, 1, (long long)v - i);\n            }\n        }\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.610293300000194,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

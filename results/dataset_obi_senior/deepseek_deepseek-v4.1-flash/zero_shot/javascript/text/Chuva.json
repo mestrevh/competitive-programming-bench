@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:30:15.918074+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 703,
+            "output_tokens": 2039,
+            "total_tokens": 2742
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.004894,
+            "total_cost": 0.004896
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (data.length === 0) process.exit(0);\n\nconst n = data[0];\nconst h = data.slice(1, n + 1);\n\nconst leftMax = new Array(n);\nlet max = 0;\n\nfor (let i = 0; i < n; i++) {\n    if (h[i] > max) max = h[i];\n    leftMax[i] = max;\n}\n\nlet rightMax = 0;\nlet answer = 0;\n\nfor (let i = n - 1; i >= 0; i--) {\n    if (h[i] > rightMax) rightMax = h[i];\n    const waterLevel = Math.min(leftMax[i], rightMax);\n    if (waterLevel - h[i] >= 1) answer++;\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (data.length === 0) process.exit(0);\n\nconst n = data[0];\nconst h = data.slice(1, n + 1);\n\nconst leftMax = new Array(n);\nlet max = 0;\n\nfor (let i = 0; i < n; i++) {\n    if (h[i] > max) max = h[i];\n    leftMax[i] = max;\n}\n\nlet rightMax = 0;\nlet answer = 0;\n\nfor (let i = n - 1; i >= 0; i--) {\n    if (h[i] > rightMax) rightMax = h[i];\n    const waterLevel = Math.min(leftMax[i], rightMax);\n    if (waterLevel - h[i] >= 1) answer++;\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0926677999959793,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

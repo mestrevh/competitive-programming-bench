@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:56:56.462520+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 731,
+            "output_tokens": 4187,
+            "total_tokens": 4918
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.002093,
+            "total_cost": 0.002109
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long pos[100005];\n\nstatic int find(const long long *arr, int n, long long key) {\n    int lo = 0, hi = n - 1;\n    while (lo <= hi) {\n        int mid = lo + ((hi - lo) >> 1);\n        if (arr[mid] == key) return 1;\n        else if (arr[mid] < key) lo = mid + 1;\n        else hi = mid - 1;\n    }\n    return 0;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *L = (long long *)malloc((size_t)n * sizeof(long long));\n    long long S = 0;\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &L[i]);\n        S += L[i];\n    }\n\n    /* Um retangulo inscrito no circulo tem diagonais que sao diametros.\n       Logo, precisamos de pelo menos dois pares de arvores antipodais. */\n\n    /* Se o perimetro total e impar, metade nao e inteira: impossivel */\n    if (S % 2 != 0) {\n        printf(\"N\\n\");\n        free(L);\n        return 0;\n    }\n\n    /* Posicoes acumuladas das arvores na circunferencia (ja ordenadas) */\n    pos[0] = 0;\n    for (int i = 1; i < n; i++) pos[i] = pos[i - 1] + L[i - 1];\n\n    long long half = S / 2;\n    int cnt = 0;\n    for (int i = 0; i < n; i++) {\n        long long t = pos[i] + half;\n        if (t >= S) t -= S;\n        if (find(pos, n, t)) cnt++;  /* cada par antipodal conta 2 vezes */\n    }\n\n    printf(cnt >= 4 ? \"S\\n\" : \"N\\n\");\n    free(L);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long pos[100005];\n\nstatic int find(const long long *arr, int n, long long key) {\n    int lo = 0, hi = n - 1;\n    while (lo <= hi) {\n        int mid = lo + ((hi - lo) >> 1);\n        if (arr[mid] == key) return 1;\n        else if (arr[mid] < key) lo = mid + 1;\n        else hi = mid - 1;\n    }\n    return 0;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *L = (long long *)malloc((size_t)n * sizeof(long long));\n    long long S = 0;\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &L[i]);\n        S += L[i];\n    }\n\n    /* Um retangulo inscrito no circulo tem diagonais que sao diametros.\n       Logo, precisamos de pelo menos dois pares de arvores antipodais. */\n\n    /* Se o perimetro total e impar, metade nao e inteira: impossivel */\n    if (S % 2 != 0) {\n        printf(\"N\\n\");\n        free(L);\n        return 0;\n    }\n\n    /* Posicoes acumuladas das arvores na circunferencia (ja ordenadas) */\n    pos[0] = 0;\n    for (int i = 1; i < n; i++) pos[i] = pos[i - 1] + L[i - 1];\n\n    long long half = S / 2;\n    int cnt = 0;\n    for (int i = 0; i < n; i++) {\n        long long t = pos[i] + half;\n        if (t >= S) t -= S;\n        if (find(pos, n, t)) cnt++;  /* cada par antipodal conta 2 vezes */\n    }\n\n    printf(cnt >= 4 ? \"S\\n\" : \"N\\n\");\n    free(L);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1239083000109531,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

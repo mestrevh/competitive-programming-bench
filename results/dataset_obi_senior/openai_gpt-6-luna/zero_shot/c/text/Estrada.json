@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:54:41.941720+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 621,
+            "output_tokens": 527,
+            "total_tokens": 1148
+        },
+        "cost_usd": {
+            "input_cost": 6.2e-05,
+            "output_cost": 0.000264,
+            "total_cost": 0.000326
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int T, N;\n    scanf(\"%d%d\", &T, &N);\n\n    int x[10000];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &x[i]);\n    }\n\n    qsort(x, N, sizeof(int), compare);\n\n    double minimum = T;\n    for (int i = 0; i < N; i++) {\n        double left = (i == 0) ? 0.0 : (x[i - 1] + x[i]) / 2.0;\n        double right = (i == N - 1) ? (double)T : (x[i] + x[i + 1]) / 2.0;\n        double neighborhood = right - left;\n        if (neighborhood < minimum) {\n            minimum = neighborhood;\n        }\n    }\n\n    printf(\"%.2f\\n\", minimum);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int T, N;\n    scanf(\"%d%d\", &T, &N);\n\n    int x[10000];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &x[i]);\n    }\n\n    qsort(x, N, sizeof(int), compare);\n\n    double minimum = T;\n    for (int i = 0; i < N; i++) {\n        double left = (i == 0) ? 0.0 : (x[i - 1] + x[i]) / 2.0;\n        double right = (i == N - 1) ? (double)T : (x[i] + x[i + 1]) / 2.0;\n        double neighborhood = right - left;\n        if (neighborhood < minimum) {\n            minimum = neighborhood;\n        }\n    }\n\n    printf(\"%.2f\\n\", minimum);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1720082999963779,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

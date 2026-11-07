@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:44:48.328401+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 846,
+            "output_tokens": 20630,
+            "total_tokens": 21476
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.049512,
+            "total_cost": 0.049515
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    k = data[1]\n\n    adj = [[] for _ in range(n)]\n    idx = 2\n    for _ in range(n - 1):\n        a = data[idx] - 1\n        b = data[idx + 1] - 1\n        idx += 2\n        adj[a].append(b)\n        adj[b].append(a)\n\n    del data\n\n    parent = [-2] * n\n    parent[0] = -1\n    order = [0]\n\n    pos = 0\n    while pos < len(order):\n        u = order[pos]\n        pos += 1\n        for v in adj[u]:\n            if v != parent[u]:\n                parent[v] = u\n                order.append(v)\n\n    rev_order = order[::-1]\n    INF = 10**9\n\n    def feasible(radius):\n        max_uncovered = [-1] * n\n        min_center = [INF] * n\n        centers = 0\n\n        par = parent\n        md = max_uncovered\n        mc = min_center\n        K = k\n        R = radius\n\n        for u in rev_order:\n            d = md[u]\n            if d < 0:\n                d = 0\n                md[u] = 0\n\n            c = mc[u]\n\n            if c != INF and d + c <= R:\n                d = -1\n                md[u] = -1\n\n            if d == R:\n                centers += 1\n                if centers > K:\n                    return False\n                md[u] = -1\n                mc[u] = 0\n\n            p = par[u]\n            if p != -1:\n                d = md[u]\n                if d >= 0:\n                    nd = d + 1\n                    if nd > md[p]:\n                        md[p] = nd\n\n                c = mc[u]\n                if c != INF:\n                    nc = c + 1\n                    if nc <= R and nc < mc[p]:\n                        mc[p] = nc\n\n        if md[0] != -1:\n            centers += 1\n            if centers > K:\n                return False\n\n        return centers <= K\n\n    lo = 0\n    hi = n - 1\n\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if feasible(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    sys.stdout.write(str(lo))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    k = data[1]\n\n    adj = [[] for _ in range(n)]\n    idx = 2\n    for _ in range(n - 1):\n        a = data[idx] - 1\n        b = data[idx + 1] - 1\n        idx += 2\n        adj[a].append(b)\n        adj[b].append(a)\n\n    del data\n\n    parent = [-2] * n\n    parent[0] = -1\n    order = [0]\n\n    pos = 0\n    while pos < len(order):\n        u = order[pos]\n        pos += 1\n        for v in adj[u]:\n            if v != parent[u]:\n                parent[v] = u\n                order.append(v)\n\n    rev_order = order[::-1]\n    INF = 10**9\n\n    def feasible(radius):\n        max_uncovered = [-1] * n\n        min_center = [INF] * n\n        centers = 0\n\n        par = parent\n        md = max_uncovered\n        mc = min_center\n        K = k\n        R = radius\n\n        for u in rev_order:\n            d = md[u]\n            if d < 0:\n                d = 0\n                md[u] = 0\n\n            c = mc[u]\n\n            if c != INF and d + c <= R:\n                d = -1\n                md[u] = -1\n\n            if d == R:\n                centers += 1\n                if centers > K:\n                    return False\n                md[u] = -1\n                mc[u] = 0\n\n            p = par[u]\n            if p != -1:\n                d = md[u]\n                if d >= 0:\n                    nd = d + 1\n                    if nd > md[p]:\n                        md[p] = nd\n\n                c = mc[u]\n                if c != INF:\n                    nc = c + 1\n                    if nc <= R and nc < mc[p]:\n                        mc[p] = nc\n\n        if md[0] != -1:\n            centers += 1\n            if centers > K:\n                return False\n\n        return centers <= K\n\n    lo = 0\n    hi = n - 1\n\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if feasible(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    sys.stdout.write(str(lo))\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.5246887000030256,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

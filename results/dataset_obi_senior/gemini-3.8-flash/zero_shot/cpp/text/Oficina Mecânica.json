@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:47:59.005269+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 992,
+            "output_tokens": 506,
+            "total_tokens": 3619
+        },
+        "cost_usd": {
+            "input_cost": 0.000744,
+            "output_cost": 0.001898,
+            "total_cost": 0.002642
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <queue>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<long long> t(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> t[i];\n    }\n\n    vector<long long> f(m);\n    for (int j = 0; j < m; ++j) {\n        cin >> f[j];\n    }\n\n    // Ordenar os mecânicos e considerar no máximo os min(n, m) mais rápidos\n    sort(f.begin(), f.end());\n    int k = min(n, m);\n\n    // Min-heap de pares: {custo_atual, indice_do_mecanico}\n    // Para evitar recalcular coeficientes, guardamos {custo, j}\n    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;\n    for (int j = 0; j < k; ++j) {\n        pq.push({0LL, j});\n    }\n\n    vector<long long> slot_costs(n);\n    for (int i = 0; i < n; ++i) {\n        auto [cost, j] = pq.top();\n        pq.pop();\n        slot_costs[i] = cost;\n        pq.push({cost + f[j], j});\n    }\n\n    // Ordenar tempos base dos carros em ordem decrescente\n    sort(t.begin(), t.end(), greater<long long>());\n\n    // Calcular a soma mínima dos tempos de espera\n    long long total_wait_time = 0;\n    for (int i = 0; i < n; ++i) {\n        total_wait_time += t[i] * slot_costs[i];\n    }\n\n    cout << total_wait_time << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <queue>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<long long> t(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> t[i];\n    }\n\n    vector<long long> f(m);\n    for (int j = 0; j < m; ++j) {\n        cin >> f[j];\n    }\n\n    // Ordenar os mecânicos e considerar no máximo os min(n, m) mais rápidos\n    sort(f.begin(), f.end());\n    int k = min(n, m);\n\n    // Min-heap de pares: {custo_atual, indice_do_mecanico}\n    // Para evitar recalcular coeficientes, guardamos {custo, j}\n    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;\n    for (int j = 0; j < k; ++j) {\n        pq.push({0LL, j});\n    }\n\n    vector<long long> slot_costs(n);\n    for (int i = 0; i < n; ++i) {\n        auto [cost, j] = pq.top();\n        pq.pop();\n        slot_costs[i] = cost;\n        pq.push({cost + f[j], j});\n    }\n\n    // Ordenar tempos base dos carros em ordem decrescente\n    sort(t.begin(), t.end(), greater<long long>());\n\n    // Calcular a soma mínima dos tempos de espera\n    long long total_wait_time = 0;\n    for (int i = 0; i < n; ++i) {\n        total_wait_time += t[i] * slot_costs[i];\n    }\n\n    cout << total_wait_time << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17678139999043196,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

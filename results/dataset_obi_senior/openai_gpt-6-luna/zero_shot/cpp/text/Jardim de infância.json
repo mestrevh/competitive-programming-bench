@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:24:21.255192+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1006,
+            "output_tokens": 1167,
+            "total_tokens": 2173
+        },
+        "cost_usd": {
+            "input_cost": 0.000101,
+            "output_cost": 0.000584,
+            "total_cost": 0.000684
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Point {\n    long long x, y;\n};\n\nPoint operator-(const Point& a, const Point& b) {\n    return {a.x - b.x, a.y - b.y};\n}\n\nlong long dot(const Point& a, const Point& b) {\n    return a.x * b.x + a.y * b.y;\n}\n\nlong long cross(const Point& a, const Point& b) {\n    return a.x * b.y - a.y * b.x;\n}\n\nlong long norm2(const Point& a) {\n    return dot(a, a);\n}\n\nint main() {\n    Point p[7];\n    for (auto& point : p) {\n        cin >> point.x >> point.y;\n    }\n\n    Point base = p[2] - p[1];\n    Point v12 = p[1] - p[0];\n    Point v13 = p[2] - p[0];\n\n    bool valid = dot(v12, v13) > 0;\n    valid &= norm2(p[1] - p[0]) == norm2(p[2] - p[0]);\n\n    for (int i : {3, 4}) {\n        valid &= cross(base, p[i] - p[1]) == 0;\n    }\n\n    valid &= p[1].x + p[2].x == p[3].x + p[4].x;\n    valid &= p[1].y + p[2].y == p[3].y + p[4].y;\n    valid &= norm2(base) > norm2(p[4] - p[3]);\n\n    Point v46 = p[5] - p[3];\n    Point v57 = p[6] - p[4];\n    valid &= dot(base, v46) == 0;\n    valid &= dot(base, v57) == 0;\n    valid &= norm2(v46) == norm2(v57);\n\n    long long side1 = cross(base, p[0] - p[1]);\n    long long side6 = cross(base, p[5] - p[1]);\n    valid &= side1 * side6 < 0;\n\n    cout << (valid ? 'S' : 'N') << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Point {\n    long long x, y;\n};\n\nPoint operator-(const Point& a, const Point& b) {\n    return {a.x - b.x, a.y - b.y};\n}\n\nlong long dot(const Point& a, const Point& b) {\n    return a.x * b.x + a.y * b.y;\n}\n\nlong long cross(const Point& a, const Point& b) {\n    return a.x * b.y - a.y * b.x;\n}\n\nlong long norm2(const Point& a) {\n    return dot(a, a);\n}\n\nint main() {\n    Point p[7];\n    for (auto& point : p) {\n        cin >> point.x >> point.y;\n    }\n\n    Point base = p[2] - p[1];\n    Point v12 = p[1] - p[0];\n    Point v13 = p[2] - p[0];\n\n    bool valid = dot(v12, v13) > 0;\n    valid &= norm2(p[1] - p[0]) == norm2(p[2] - p[0]);\n\n    for (int i : {3, 4}) {\n        valid &= cross(base, p[i] - p[1]) == 0;\n    }\n\n    valid &= p[1].x + p[2].x == p[3].x + p[4].x;\n    valid &= p[1].y + p[2].y == p[3].y + p[4].y;\n    valid &= norm2(base) > norm2(p[4] - p[3]);\n\n    Point v46 = p[5] - p[3];\n    Point v57 = p[6] - p[4];\n    valid &= dot(base, v46) == 0;\n    valid &= dot(base, v57) == 0;\n    valid &= norm2(v46) == norm2(v57);\n\n    long long side1 = cross(base, p[0] - p[1]);\n    long long side6 = cross(base, p[5] - p[1]);\n    valid &= side1 * side6 < 0;\n\n    cout << (valid ? 'S' : 'N') << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18021259999659378,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

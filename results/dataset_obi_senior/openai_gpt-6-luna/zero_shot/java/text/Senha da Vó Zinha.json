@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:15:49.749197+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 1441,
+            "total_tokens": 2454
+        },
+        "cost_usd": {
+            "input_cost": 0.000101,
+            "output_cost": 0.000721,
+            "total_cost": 0.000822
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    private static final class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        String next() throws IOException {\n            StringBuilder sb = new StringBuilder();\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n            while (c > ' ' && c != -1) {\n                sb.append((char) c);\n                c = read();\n            }\n            return sb.toString();\n        }\n\n        long nextLong() throws IOException {\n            return Long.parseLong(next());\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int n = Integer.parseInt(fs.next());\n        int m = Integer.parseInt(fs.next());\n        int k = Integer.parseInt(fs.next());\n\n        char[] password = fs.next().toCharArray();\n        char[][] choices = new char[m][];\n        for (int i = 0; i < m; i++) {\n            choices[i] = fs.next().toCharArray();\n            Arrays.sort(choices[i]);\n        }\n\n        long p = fs.nextLong();\n        long[] suffixWays = new long[m];\n        if (m > 0) {\n            suffixWays[m - 1] = 1;\n            for (int i = m - 2; i >= 0; i--) {\n                suffixWays[i] = Math.min(p, suffixWays[i + 1] * k);\n            }\n        }\n\n        long rank = p - 1;\n        int index = 0;\n        for (int i = 0; i < n; i++) {\n            if (password[i] == '#') {\n                long choiceIndex = rank / suffixWays[index];\n                rank %= suffixWays[index];\n                password[i] = choices[index][(int) choiceIndex];\n                index++;\n            }\n        }\n\n        System.out.println(new String(password));\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    private static final class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        String next() throws IOException {\n            StringBuilder sb = new StringBuilder();\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n            while (c > ' ' && c != -1) {\n                sb.append((char) c);\n                c = read();\n            }\n            return sb.toString();\n        }\n\n        long nextLong() throws IOException {\n            return Long.parseLong(next());\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int n = Integer.parseInt(fs.next());\n        int m = Integer.parseInt(fs.next());\n        int k = Integer.parseInt(fs.next());\n\n        char[] password = fs.next().toCharArray();\n        char[][] choices = new char[m][];\n        for (int i = 0; i < m; i++) {\n            choices[i] = fs.next().toCharArray();\n            Arrays.sort(choices[i]);\n        }\n\n        long p = fs.nextLong();\n        long[] suffixWays = new long[m];\n        if (m > 0) {\n            suffixWays[m - 1] = 1;\n            for (int i = m - 2; i >= 0; i--) {\n                suffixWays[i] = Math.min(p, suffixWays[i + 1] * k);\n            }\n        }\n\n        long rank = p - 1;\n        int index = 0;\n        for (int i = 0; i < n; i++) {\n            if (password[i] == '#') {\n                long choiceIndex = rank / suffixWays[index];\n                rank %= suffixWays[index];\n                password[i] = choices[index][(int) choiceIndex];\n                index++;\n            }\n        }\n\n        System.out.println(new String(password));\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08836090000113472,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

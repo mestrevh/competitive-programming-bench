@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T18:04:39.058402+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 931,
+            "output_tokens": 66297,
+            "total_tokens": 67228
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.033148,
+            "total_cost": 0.033168
+        },
+        "raw_response": "Analisando o problema: a águaanca a partir do \"o\" da primeira linha. Aplicando as três regras do enunciado como um ponto fixo (propagação estilo flood-fill/BFS):\n\n- **Regra 1:** de uma célula molhada `(i,j)`, a água cai para `(i+1,j)` se for \".\";\n- **Regras 2 e 3:** se a célula abaixo de `(i,j)` for \"#\", a água escorre horizontalmente para `(i,j-1)` e `(i,j+1)` (e continua propagando; quando a célula vizinha não tem prateleira embaixo, ela volta a cair verticalmente).\n\nCada célula é enfileirada no máximo uma vez → complexidade O(N·M), ótimo para N,M ≤ 500.\n\nVerifiquei o modelo reconstruindo os exemplos (que vieram com caracteres perdidos na transcrição): por exemplula, para a entrada `3 5 / ...o. / ..#.. / .....` o modelo dá `...o. / ..#o. / ...o.`, que corresponde exatamente ao exemplo 3 transcorrompido (`..o / .#o / ...` com deslocamentos), e os padrões `o####o` dos exemplos 1 e 2 (o's adjacentes às extremidades das prateleiras) também confirmam o comportamento de transbordo nas pontas das prateleiras.\n\n```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n        int n = nextInt(in);\n        int m = nextInt(in);\n        char[][] g = new char[n][m];\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < m; ) {\n                int c = in.read();\n                if (c == -1) { while (j < m) g[i][j++] = '.'; break; }\n                if (c == '.' || c == '#' || c == 'o') g[i][j++] = (char) c;\n            }\n        }\n        int[] queue = new int[n * m];\n        int head = 0, tail = 0;\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < m; j++)\n                if (g[i][j] == 'o') queue[tail++] = i * m + j;\n        while (head < tail) {\n            int cur = queue[head++];\n            int i = cur / m;\n            int j = cur - i * m;\n            if (i + 1 < n) {\n                char below = g[i + 1][j]; // c(i+1, j) é estático: nunca muda de categoria\n                if (below == '.') {                    // regra 1: cair verticalmente\n                    g[i + 1][j] = 'o';\n                    queue[tail++] = cur + m;\n                } else if (below == '#') {             // regras 2 e 3: escorrer sobre a prateleira\n                    if (j > 0 && g[i][j - 1] == '.') { g[i][j - 1] = 'o'; queue[tail++] = cur - 1; }\n                    if (j + 1 < m && g[i][j + 1] == '.') { g[i][j + 1] = 'o'; queue[tail++] = cur + 1; }\n                }\n            }\n        }\n        StringBuilder sb = new StringBuilder(n * (m + 1));\n        for (int i = 0; i < n; i++) sb.append(g[i]).append('\\n');\n        System.out.print(sb);\n    }\n\n    static int nextInt(DataInputStream in) throws IOException {\n        int c = in.read();\n        while (c != -1 && (c < '0' || c > '9')) c = in.read();\n        int v = 0;\n        while (c >= '0' && c <= '9') { v = v * 10 + c - '0'; c = in.read(); }\n        return v;\n    }\n}\n```\n\n**Como funciona:**\n- Lê-se a matriz ignorando qualquer caractere que não seja `.`, `#` ou `o` (robusto a `\\r`, espaços, etc.).\n- A partir do ponto de vazamento, o BFS aplica exatamente o ponto fixo das três regras: a célula abaixo (`.`) é molhada pela queda; se abaixo há `#`, as células vizinhas horizontais são molhadas (e o processo continua recursivamente, parando de escorrer lateralmente quando a célula seguinte não tem prateleira embaixo — nesse caso a água cai dali para baixo).\n- Como as regras só transformam `.` em `o` e a categoria de cada célula (prateleira ou não) nunca muda, não há problemas de ordem de processamento; cada célula é processada uma única vez.",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n        int n = nextInt(in);\n        int m = nextInt(in);\n        char[][] g = new char[n][m];\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < m; ) {\n                int c = in.read();\n                if (c == -1) { while (j < m) g[i][j++] = '.'; break; }\n                if (c == '.' || c == '#' || c == 'o') g[i][j++] = (char) c;\n            }\n        }\n        int[] queue = new int[n * m];\n        int head = 0, tail = 0;\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < m; j++)\n                if (g[i][j] == 'o') queue[tail++] = i * m + j;\n        while (head < tail) {\n            int cur = queue[head++];\n            int i = cur / m;\n            int j = cur - i * m;\n            if (i + 1 < n) {\n                char below = g[i + 1][j]; // c(i+1, j) é estático: nunca muda de categoria\n                if (below == '.') {                    // regra 1: cair verticalmente\n                    g[i + 1][j] = 'o';\n                    queue[tail++] = cur + m;\n                } else if (below == '#') {             // regras 2 e 3: escorrer sobre a prateleira\n                    if (j > 0 && g[i][j - 1] == '.') { g[i][j - 1] = 'o'; queue[tail++] = cur - 1; }\n                    if (j + 1 < m && g[i][j + 1] == '.') { g[i][j + 1] = 'o'; queue[tail++] = cur + 1; }\n                }\n            }\n        }\n        StringBuilder sb = new StringBuilder(n * (m + 1));\n        for (int i = 0; i < n; i++) sb.append(g[i]).append('\\n');\n        System.out.print(sb);\n    }\n\n    static int nextInt(DataInputStream in) throws IOException {\n        int c = in.read();\n        while (c != -1 && (c < '0' || c > '9')) c = in.read();\n        int v = 0;\n        while (c >= '0' && c <= '9') { v = v * 10 + c - '0'; c = in.read(); }\n        return v;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1559387000161223,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

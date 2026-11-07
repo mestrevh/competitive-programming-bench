@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:44:34.563298+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1041,
+            "output_tokens": 35737,
+            "total_tokens": 36778
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.017868,
+            "total_cost": 0.017891
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic char ibuf[1 << 16];\nstatic int ipos = 0, ilen = 0;\n\nstatic int gc(void) {\n    if (ipos == ilen) {\n        ilen = (int)fread(ibuf, 1, sizeof(ibuf), stdin);\n        ipos = 0;\n        if (ilen <= 0) return -1;\n    }\n    return (unsigned char)ibuf[ipos++];\n}\n\nstatic long long readInt(void) {\n    int c = gc();\n    while (c != -1 && (c < '0' || c > '9')) c = gc();\n    long long x = 0;\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = gc();\n    }\n    return x;\n}\n\n#define MAXN 100005\n\nstatic long long fval[MAXN];\nstatic int tval[MAXN];\n\ntypedef struct {\n    long long key;\n    int idx;\n} HN;\n\nstatic HN heapArr[MAXN];\nstatic int hn;\n\nstatic void hpush(long long key, int idx) {\n    int i = ++hn;\n    heapArr[i].key = key;\n    heapArr[i].idx = idx;\n    while (i > 1) {\n        int p = i >> 1;\n        if (heapArr[p].key <= heapArr[i].key) break;\n        HN tmp = heapArr[p]; heapArr[p] = heapArr[i]; heapArr[i] = tmp;\n        i = p;\n    }\n}\n\nstatic void hpop(HN *out) {\n    *out = heapArr[1];\n    heapArr[1] = heapArr[hn--];\n    int i = 1;\n    for (;;) {\n        int l = i << 1, r = l | 1, m = i;\n        if (l <= hn && heapArr[l].key < heapArr[m].key) m = l;\n        if (r <= hn && heapArr[r].key < heapArr[m].key) m = r;\n        if (m == i) break;\n        HN tmp = heapArr[m]; heapArr[m] = heapArr[i]; heapArr[i] = tmp;\n        i = m;\n    }\n}\n\nstatic int cmp_desc(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x < y) - (x > y);\n}\n\n/*\n * Se um carro com tempo t entra em uma fila com c carros atras dele\n * (ele vai para a frente da fila, pois processamos carros em ordem\n * DECRESCENTE de t), cada carro atras dele espera t*F_j: custo imediato\n * = c * F_j. Apos inserir a oferta da maquina vira (c+1)*F_j.\n * Escolher sempre a menor oferta disponivel produz (provavel por troca),\n * elemento a elemento, o menor multiplicado valido; emparelhado com\n * tempos em ordem decrescente (rearranjo), da o otimo global.\n */\nint main(void) {\n    int n = (int)readInt();\n    int m = (int)readInt();\n    for (int i = 0; i < n; i++) tval[i] = (int)readInt();\n    for (int j = 0; j < m; j++) fval[j] = readInt();\n\n    qsort(tval, (size_t)n, sizeof(int), cmp_desc);\n\n    for (int j = 0; j < m; j++) hpush(0, j);\n\n    long long ans = 0;\n    for (int i = 0; i < n; i++) {\n        HN top;\n        hpop(&top);\n        ans += (long long)tval[i] * top.key;\n        hpush(top.key + fval[top.idx], top.idx);\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic char ibuf[1 << 16];\nstatic int ipos = 0, ilen = 0;\n\nstatic int gc(void) {\n    if (ipos == ilen) {\n        ilen = (int)fread(ibuf, 1, sizeof(ibuf), stdin);\n        ipos = 0;\n        if (ilen <= 0) return -1;\n    }\n    return (unsigned char)ibuf[ipos++];\n}\n\nstatic long long readInt(void) {\n    int c = gc();\n    while (c != -1 && (c < '0' || c > '9')) c = gc();\n    long long x = 0;\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = gc();\n    }\n    return x;\n}\n\n#define MAXN 100005\n\nstatic long long fval[MAXN];\nstatic int tval[MAXN];\n\ntypedef struct {\n    long long key;\n    int idx;\n} HN;\n\nstatic HN heapArr[MAXN];\nstatic int hn;\n\nstatic void hpush(long long key, int idx) {\n    int i = ++hn;\n    heapArr[i].key = key;\n    heapArr[i].idx = idx;\n    while (i > 1) {\n        int p = i >> 1;\n        if (heapArr[p].key <= heapArr[i].key) break;\n        HN tmp = heapArr[p]; heapArr[p] = heapArr[i]; heapArr[i] = tmp;\n        i = p;\n    }\n}\n\nstatic void hpop(HN *out) {\n    *out = heapArr[1];\n    heapArr[1] = heapArr[hn--];\n    int i = 1;\n    for (;;) {\n        int l = i << 1, r = l | 1, m = i;\n        if (l <= hn && heapArr[l].key < heapArr[m].key) m = l;\n        if (r <= hn && heapArr[r].key < heapArr[m].key) m = r;\n        if (m == i) break;\n        HN tmp = heapArr[m]; heapArr[m] = heapArr[i]; heapArr[i] = tmp;\n        i = m;\n    }\n}\n\nstatic int cmp_desc(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x < y) - (x > y);\n}\n\n/*\n * Se um carro com tempo t entra em uma fila com c carros atras dele\n * (ele vai para a frente da fila, pois processamos carros em ordem\n * DECRESCENTE de t), cada carro atras dele espera t*F_j: custo imediato\n * = c * F_j. Apos inserir a oferta da maquina vira (c+1)*F_j.\n * Escolher sempre a menor oferta disponivel produz (provavel por troca),\n * elemento a elemento, o menor multiplicado valido; emparelhado com\n * tempos em ordem decrescente (rearranjo), da o otimo global.\n */\nint main(void) {\n    int n = (int)readInt();\n    int m = (int)readInt();\n    for (int i = 0; i < n; i++) tval[i] = (int)readInt();\n    for (int j = 0; j < m; j++) fval[j] = readInt();\n\n    qsort(tval, (size_t)n, sizeof(int), cmp_desc);\n\n    for (int j = 0; j < m; j++) hpush(0, j);\n\n    long long ans = 0;\n    for (int i = 0; i < n; i++) {\n        HN top;\n        hpop(&top);\n        ans += (long long)tval[i] * top.key;\n        hpush(top.key + fval[top.idx], top.idx);\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13044740000623278,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

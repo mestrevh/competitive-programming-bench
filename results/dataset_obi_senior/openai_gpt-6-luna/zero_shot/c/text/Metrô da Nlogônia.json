@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:06:10.711668+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 862,
+            "output_tokens": 1548,
+            "total_tokens": 2410
+        },
+        "cost_usd": {
+            "input_cost": 8.6e-05,
+            "output_cost": 0.000774,
+            "total_cost": 0.00086
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int n;\n    int *head;\n    int *to;\n    int *next;\n    int edge_count;\n} Tree;\n\nvoid add_edge(Tree *tree, int a, int b) {\n    tree->to[tree->edge_count] = b;\n    tree->next[tree->edge_count] = tree->head[a];\n    tree->head[a] = tree->edge_count++;\n\n    tree->to[tree->edge_count] = a;\n    tree->next[tree->edge_count] = tree->head[b];\n    tree->head[b] = tree->edge_count++;\n}\n\nint bfs(Tree *tree, int start, int *dist, int *parent, int *queue) {\n    for (int i = 0; i < tree->n; i++) {\n        dist[i] = -1;\n    }\n\n    int front = 0, back = 0;\n    queue[back++] = start;\n    dist[start] = 0;\n    if (parent != NULL) parent[start] = -1;\n\n    int farthest = start;\n    while (front < back) {\n        int u = queue[front++];\n        if (dist[u] > dist[farthest]) farthest = u;\n\n        for (int e = tree->head[u]; e != -1; e = tree->next[e]) {\n            int v = tree->to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                if (parent != NULL) parent[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n    return farthest;\n}\n\nint find_center(Tree *tree) {\n    int *dist = malloc((size_t)tree->n * sizeof(int));\n    int *parent = malloc((size_t)tree->n * sizeof(int));\n    int *queue = malloc((size_t)tree->n * sizeof(int));\n\n    int endpoint = bfs(tree, 0, dist, NULL, queue);\n    int other = bfs(tree, endpoint, dist, parent, queue);\n\n    int steps = dist[other] / 2;\n    int center = other;\n    while (steps--) center = parent[center];\n\n    free(dist);\n    free(parent);\n    free(queue);\n    return center;\n}\n\nvoid init_tree(Tree *tree, int n) {\n    tree->n = n;\n    tree->edge_count = 0;\n    tree->head = malloc((size_t)n * sizeof(int));\n    tree->to = malloc((size_t)(2 * (n - 1)) * sizeof(int));\n    tree->next = malloc((size_t)(2 * (n - 1)) * sizeof(int));\n\n    for (int i = 0; i < n; i++) tree->head[i] = -1;\n}\n\nint main(void) {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    Tree circle, square;\n    init_tree(&circle, n);\n    init_tree(&square, m);\n\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        add_edge(&circle, a - 1, b - 1);\n    }\n\n    for (int i = 0; i < m - 1; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        add_edge(&square, x - 1, y - 1);\n    }\n\n    int circle_center = find_center(&circle);\n    int square_center = find_center(&square);\n\n    printf(\"%d %d\\n\", circle_center + 1, square_center + 1);\n\n    free(circle.head);\n    free(circle.to);\n    free(circle.next);\n    free(square.head);\n    free(square.to);\n    free(square.next);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int n;\n    int *head;\n    int *to;\n    int *next;\n    int edge_count;\n} Tree;\n\nvoid add_edge(Tree *tree, int a, int b) {\n    tree->to[tree->edge_count] = b;\n    tree->next[tree->edge_count] = tree->head[a];\n    tree->head[a] = tree->edge_count++;\n\n    tree->to[tree->edge_count] = a;\n    tree->next[tree->edge_count] = tree->head[b];\n    tree->head[b] = tree->edge_count++;\n}\n\nint bfs(Tree *tree, int start, int *dist, int *parent, int *queue) {\n    for (int i = 0; i < tree->n; i++) {\n        dist[i] = -1;\n    }\n\n    int front = 0, back = 0;\n    queue[back++] = start;\n    dist[start] = 0;\n    if (parent != NULL) parent[start] = -1;\n\n    int farthest = start;\n    while (front < back) {\n        int u = queue[front++];\n        if (dist[u] > dist[farthest]) farthest = u;\n\n        for (int e = tree->head[u]; e != -1; e = tree->next[e]) {\n            int v = tree->to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                if (parent != NULL) parent[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n    return farthest;\n}\n\nint find_center(Tree *tree) {\n    int *dist = malloc((size_t)tree->n * sizeof(int));\n    int *parent = malloc((size_t)tree->n * sizeof(int));\n    int *queue = malloc((size_t)tree->n * sizeof(int));\n\n    int endpoint = bfs(tree, 0, dist, NULL, queue);\n    int other = bfs(tree, endpoint, dist, parent, queue);\n\n    int steps = dist[other] / 2;\n    int center = other;\n    while (steps--) center = parent[center];\n\n    free(dist);\n    free(parent);\n    free(queue);\n    return center;\n}\n\nvoid init_tree(Tree *tree, int n) {\n    tree->n = n;\n    tree->edge_count = 0;\n    tree->head = malloc((size_t)n * sizeof(int));\n    tree->to = malloc((size_t)(2 * (n - 1)) * sizeof(int));\n    tree->next = malloc((size_t)(2 * (n - 1)) * sizeof(int));\n\n    for (int i = 0; i < n; i++) tree->head[i] = -1;\n}\n\nint main(void) {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    Tree circle, square;\n    init_tree(&circle, n);\n    init_tree(&square, m);\n\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        add_edge(&circle, a - 1, b - 1);\n    }\n\n    for (int i = 0; i < m - 1; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        add_edge(&square, x - 1, y - 1);\n    }\n\n    int circle_center = find_center(&circle);\n    int square_center = find_center(&square);\n\n    printf(\"%d %d\\n\", circle_center + 1, square_center + 1);\n\n    free(circle.head);\n    free(circle.to);\n    free(circle.next);\n    free(square.head);\n    free(square.to);\n    free(square.next);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.12039599999843631,
+            "counts": {
+                "AC": 6,
+                "WA": 32,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

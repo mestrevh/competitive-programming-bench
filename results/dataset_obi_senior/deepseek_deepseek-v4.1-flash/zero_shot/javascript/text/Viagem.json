@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:55:06.850189+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1266,
+            "output_tokens": 14138,
+            "total_tokens": 15404
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.033931,
+            "total_cost": 0.033935
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n  let ptr = 0;\n\n  const V = data[ptr++];\n  const N = data[ptr++];\n  const M = data[ptr++];\n\n  const head = new Int32Array(N + 1).fill(-1);\n  const to = new Int32Array(2 * M);\n  const tm = new Int32Array(2 * M);\n  const pc = new Int32Array(2 * M);\n  const nxt = new Int32Array(2 * M);\n\n  let idx = 0;\n  for (let i = 0; i < M; i++) {\n    const a = data[ptr++];\n    const b = data[ptr++];\n    const t = data[ptr++];\n    const p = data[ptr++];\n\n    to[idx] = b;\n    tm[idx] = t;\n    pc[idx] = p;\n    nxt[idx] = head[a];\n    head[a] = idx++;\n\n    to[idx] = a;\n    tm[idx] = t;\n    pc[idx] = p;\n    nxt[idx] = head[b];\n    head[b] = idx++;\n  }\n\n  const X = data[ptr++];\n  const Y = data[ptr++];\n\n  const C = V + 1;\n  const INF = 0x3f3f3f3f;\n  const dist = new Int32Array((N + 1) * C).fill(INF);\n\n  const heapS = [];\n  const heapD = [];\n\n  function push(s, d) {\n    let i = heapS.length;\n    heapS.push(s);\n    heapD.push(d);\n\n    while (i > 0) {\n      const parent = (i - 1) >> 1;\n      if (heapD[parent] <= d) break;\n      heapS[i] = heapS[parent];\n      heapD[i] = heapD[parent];\n      i = parent;\n    }\n\n    heapS[i] = s;\n    heapD[i] = d;\n  }\n\n  const start = X * C;\n  dist[start] = 0;\n  push(start, 0);\n\n  while (heapS.length > 0) {\n    const rootS = heapS[0];\n    const rootD = heapD[0];\n\n    const lastS = heapS.pop();\n    const lastD = heapD.pop();\n    const n = heapS.length;\n\n    if (n > 0) {\n      let i = 0;\n      while (true) {\n        const left = i * 2 + 1;\n        if (left >= n) break;\n\n        const right = left + 1;\n        let child = left;\n\n        if (right < n && heapD[right] < heapD[left]) {\n          child = right;\n        }\n\n        if (heapD[child] >= lastD) break;\n\n        heapS[i] = heapS[child];\n        heapD[i] = heapD[child];\n        i = child;\n      }\n\n      heapS[i] = lastS;\n      heapD[i] = lastD;\n    }\n\n    if (rootD !== dist[rootS]) continue;\n\n    const u = (rootS / C) | 0;\n    const c = rootS - u * C;\n\n    if (u === Y) {\n      console.log(rootD);\n      return;\n    }\n\n    for (let e = head[u]; e !== -1; e = nxt[e]) {\n      const nc = c + pc[e];\n      if (nc > V) continue;\n\n      const v = to[e];\n      const ns = v * C + nc;\n      const nd = rootD + tm[e];\n\n      if (nd < dist[ns]) {\n        dist[ns] = nd;\n        push(ns, nd);\n      }\n    }\n  }\n\n  console.log(-1);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n  let ptr = 0;\n\n  const V = data[ptr++];\n  const N = data[ptr++];\n  const M = data[ptr++];\n\n  const head = new Int32Array(N + 1).fill(-1);\n  const to = new Int32Array(2 * M);\n  const tm = new Int32Array(2 * M);\n  const pc = new Int32Array(2 * M);\n  const nxt = new Int32Array(2 * M);\n\n  let idx = 0;\n  for (let i = 0; i < M; i++) {\n    const a = data[ptr++];\n    const b = data[ptr++];\n    const t = data[ptr++];\n    const p = data[ptr++];\n\n    to[idx] = b;\n    tm[idx] = t;\n    pc[idx] = p;\n    nxt[idx] = head[a];\n    head[a] = idx++;\n\n    to[idx] = a;\n    tm[idx] = t;\n    pc[idx] = p;\n    nxt[idx] = head[b];\n    head[b] = idx++;\n  }\n\n  const X = data[ptr++];\n  const Y = data[ptr++];\n\n  const C = V + 1;\n  const INF = 0x3f3f3f3f;\n  const dist = new Int32Array((N + 1) * C).fill(INF);\n\n  const heapS = [];\n  const heapD = [];\n\n  function push(s, d) {\n    let i = heapS.length;\n    heapS.push(s);\n    heapD.push(d);\n\n    while (i > 0) {\n      const parent = (i - 1) >> 1;\n      if (heapD[parent] <= d) break;\n      heapS[i] = heapS[parent];\n      heapD[i] = heapD[parent];\n      i = parent;\n    }\n\n    heapS[i] = s;\n    heapD[i] = d;\n  }\n\n  const start = X * C;\n  dist[start] = 0;\n  push(start, 0);\n\n  while (heapS.length > 0) {\n    const rootS = heapS[0];\n    const rootD = heapD[0];\n\n    const lastS = heapS.pop();\n    const lastD = heapD.pop();\n    const n = heapS.length;\n\n    if (n > 0) {\n      let i = 0;\n      while (true) {\n        const left = i * 2 + 1;\n        if (left >= n) break;\n\n        const right = left + 1;\n        let child = left;\n\n        if (right < n && heapD[right] < heapD[left]) {\n          child = right;\n        }\n\n        if (heapD[child] >= lastD) break;\n\n        heapS[i] = heapS[child];\n        heapD[i] = heapD[child];\n        i = child;\n      }\n\n      heapS[i] = lastS;\n      heapD[i] = lastD;\n    }\n\n    if (rootD !== dist[rootS]) continue;\n\n    const u = (rootS / C) | 0;\n    const c = rootS - u * C;\n\n    if (u === Y) {\n      console.log(rootD);\n      return;\n    }\n\n    for (let e = head[u]; e !== -1; e = nxt[e]) {\n      const nc = c + pc[e];\n      if (nc > V) continue;\n\n      const v = to[e];\n      const ns = v * C + nc;\n      const nd = rootD + tm[e];\n\n      if (nd < dist[ns]) {\n        dist[ns] = nd;\n        push(ns, nd);\n      }\n    }\n  }\n\n  console.log(-1);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08885430000373162,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

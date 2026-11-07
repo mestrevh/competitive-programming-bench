@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:09:43.721401+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 805,
+            "total_tokens": 1562
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.000403,
+            "total_cost": 0.000478
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> bit;\n\n    Fenwick(int n) : n(n), bit(n + 1, 0) {}\n\n    void add(int i, long long value) {\n        for (; i <= n; i += i & -i) bit[i] += value;\n    }\n\n    long long sum(int i) const {\n        long long result = 0;\n        for (; i > 0; i -= i & -i) result += bit[i];\n        return result;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    Fenwick slope(N), intercept(N);\n\n    auto rangeAdd = [&](int l, int r, long long a, long long b) {\n        slope.add(l, a);\n        intercept.add(l, b);\n        if (r < N) {\n            slope.add(r + 1, -a);\n            intercept.add(r + 1, -b);\n        }\n    };\n\n    while (M--) {\n        int type, i;\n        cin >> type >> i;\n\n        if (type == 1 || type == 2) {\n            long long V;\n            cin >> V;\n\n            if (type == 1) {\n                int r = min<long long>(N, i + V - 1);\n                rangeAdd(i, r, -1, V + i);\n            } else {\n                int l = max<long long>(1, i - V + 1);\n                rangeAdd(l, i, 1, V - i);\n            }\n        } else {\n            long long a = slope.sum(i);\n            long long b = intercept.sum(i);\n            cout << a * i + b << '\\n';\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> bit;\n\n    Fenwick(int n) : n(n), bit(n + 1, 0) {}\n\n    void add(int i, long long value) {\n        for (; i <= n; i += i & -i) bit[i] += value;\n    }\n\n    long long sum(int i) const {\n        long long result = 0;\n        for (; i > 0; i -= i & -i) result += bit[i];\n        return result;\n    }\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    Fenwick slope(N), intercept(N);\n\n    auto rangeAdd = [&](int l, int r, long long a, long long b) {\n        slope.add(l, a);\n        intercept.add(l, b);\n        if (r < N) {\n            slope.add(r + 1, -a);\n            intercept.add(r + 1, -b);\n        }\n    };\n\n    while (M--) {\n        int type, i;\n        cin >> type >> i;\n\n        if (type == 1 || type == 2) {\n            long long V;\n            cin >> V;\n\n            if (type == 1) {\n                int r = min<long long>(N, i + V - 1);\n                rangeAdd(i, r, -1, V + i);\n            } else {\n                int l = max<long long>(1, i - V + 1);\n                rangeAdd(l, i, 1, V - i);\n            }\n        } else {\n            long long a = slope.sum(i);\n            long long b = intercept.sum(i);\n            cout << a * i + b << '\\n';\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18432160000520526,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

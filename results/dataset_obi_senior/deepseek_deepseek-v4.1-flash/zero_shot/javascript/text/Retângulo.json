@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:26:17.373615+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 731,
+            "output_tokens": 4685,
+            "total_tokens": 5416
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.011244,
+            "total_cost": 0.011246
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\nconst L = data.slice(1, 1 + N);\n\nlet circumference = 0;\nfor (let i = 0; i < N; i++) {\n  circumference += L[i];\n}\n\nif (circumference % 2 !== 0) {\n  process.stdout.write('N\\n');\n  process.exit(0);\n}\n\nconst target = circumference / 2;\n\nconst pos = new Array(N);\nlet cur = 0;\nfor (let i = 0; i < N; i++) {\n  pos[i] = cur;\n  cur += L[i];\n}\n\nconst doubled = new Array(2 * N);\nfor (let i = 0; i < N; i++) {\n  doubled[i] = pos[i];\n  doubled[i + N] = pos[i] + circumference;\n}\n\nfunction lowerBound(arr, value, left, right) {\n  while (left < right) {\n    const mid = (left + right) >> 1;\n    if (arr[mid] < value) left = mid + 1;\n    else right = mid;\n  }\n  return left;\n}\n\nlet orderedPairs = 0;\n\nfor (let i = 0; i < N; i++) {\n  const value = pos[i] + target;\n  const idx = lowerBound(doubled, value, 0, 2 * N);\n  if (idx < 2 * N && doubled[idx] === value) {\n    orderedPairs++;\n  }\n}\n\nprocess.stdout.write(orderedPairs >= 4 ? 'S\\n' : 'N\\n');\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\nconst L = data.slice(1, 1 + N);\n\nlet circumference = 0;\nfor (let i = 0; i < N; i++) {\n  circumference += L[i];\n}\n\nif (circumference % 2 !== 0) {\n  process.stdout.write('N\\n');\n  process.exit(0);\n}\n\nconst target = circumference / 2;\n\nconst pos = new Array(N);\nlet cur = 0;\nfor (let i = 0; i < N; i++) {\n  pos[i] = cur;\n  cur += L[i];\n}\n\nconst doubled = new Array(2 * N);\nfor (let i = 0; i < N; i++) {\n  doubled[i] = pos[i];\n  doubled[i + N] = pos[i] + circumference;\n}\n\nfunction lowerBound(arr, value, left, right) {\n  while (left < right) {\n    const mid = (left + right) >> 1;\n    if (arr[mid] < value) left = mid + 1;\n    else right = mid;\n  }\n  return left;\n}\n\nlet orderedPairs = 0;\n\nfor (let i = 0; i < N; i++) {\n  const value = pos[i] + target;\n  const idx = lowerBound(doubled, value, 0, 2 * N);\n  if (idx < 2 * N && doubled[idx] === value) {\n    orderedPairs++;\n  }\n}\n\nprocess.stdout.write(orderedPairs >= 4 ? 'S\\n' : 'N\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09492370000225492,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

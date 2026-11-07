@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:03:23.152295+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 878,
+            "output_tokens": 393,
+            "total_tokens": 1544
+        },
+        "cost_usd": {
+            "input_cost": 0.000659,
+            "output_cost": 0.001474,
+            "total_cost": 0.002132
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number);\n    if (input.length < 6) return;\n\n    const totalWeight = input.reduce((acc, val) => acc + val, 0);\n\n    if (totalWeight % 3 !== 0) {\n        console.log('N');\n        return;\n    }\n\n    const target = totalWeight / 3;\n\n    // O terceiro andar tem exatamente 1 cubo, que deve ter peso igual a target\n    // Os outros dois andares têm 2 cubos e 3 cubos, ambos somando target.\n    let possible = false;\n\n    for (let i = 0; i < 6; i++) {\n        if (input[i] === target) {\n            // O cubo i fica no terceiro andar.\n            // Agora verificamos se entre os outros 5 cubos, existe um par que soma target.\n            const remaining = [];\n            for (let j = 0; j < 6; j++) {\n                if (j !== i) remaining.push(input[j]);\n            }\n\n            for (let a = 0; a < remaining.length; a++) {\n                for (let b = a + 1; b < remaining.length; b++) {\n                    if (remaining[a] + remaining[b] === target) {\n                        possible = true;\n                        break;\n                    }\n                }\n                if (possible) break;\n            }\n        }\n        if (possible) break;\n    }\n\n    console.log(possible ? 'S' : 'N');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number);\n    if (input.length < 6) return;\n\n    const totalWeight = input.reduce((acc, val) => acc + val, 0);\n\n    if (totalWeight % 3 !== 0) {\n        console.log('N');\n        return;\n    }\n\n    const target = totalWeight / 3;\n\n    // O terceiro andar tem exatamente 1 cubo, que deve ter peso igual a target\n    // Os outros dois andares têm 2 cubos e 3 cubos, ambos somando target.\n    let possible = false;\n\n    for (let i = 0; i < 6; i++) {\n        if (input[i] === target) {\n            // O cubo i fica no terceiro andar.\n            // Agora verificamos se entre os outros 5 cubos, existe um par que soma target.\n            const remaining = [];\n            for (let j = 0; j < 6; j++) {\n                if (j !== i) remaining.push(input[j]);\n            }\n\n            for (let a = 0; a < remaining.length; a++) {\n                for (let b = a + 1; b < remaining.length; b++) {\n                    if (remaining[a] + remaining[b] === target) {\n                        possible = true;\n                        break;\n                    }\n                }\n                if (possible) break;\n            }\n        }\n        if (possible) break;\n    }\n\n    console.log(possible ? 'S' : 'N');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.058340199990198016,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

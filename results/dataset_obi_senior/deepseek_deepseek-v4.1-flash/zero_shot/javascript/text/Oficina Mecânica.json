@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:20:22.523412+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1079,
+            "output_tokens": 12221,
+            "total_tokens": 13300
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.02933,
+            "total_cost": 0.029334
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nclass MinHeap {\n  constructor() {\n    this.h = [];\n  }\n  push(key, f) {\n    const h = this.h;\n    h.push([key, f]);\n    let i = h.length - 1;\n    while (i > 0) {\n      const p = (i - 1) >> 1;\n      if (h[p][0] <= h[i][0]) break;\n      const tmp = h[p];\n      h[p] = h[i];\n      h[i] = tmp;\n      i = p;\n    }\n  }\n  pop() {\n    const h = this.h;\n    const top = h[0];\n    const last = h.pop();\n    if (h.length > 0) {\n      h[0] = last;\n      let i = 0;\n      const n = h.length;\n      while (true) {\n        const l = 2 * i + 1;\n        const r = 2 * i + 2;\n        let smallest = i;\n        if (l < n && h[l][0] < h[smallest][0]) smallest = l;\n        if (r < n && h[r][0] < h[smallest][0]) smallest = r;\n        if (smallest === i) break;\n        const tmp = h[i];\n        h[i] = h[smallest];\n        h[smallest] = tmp;\n        i = smallest;\n      }\n    }\n    return top;\n  }\n}\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  const N = parseInt(data[0], 10);\n  const M = parseInt(data[1], 10);\n  const T = data.slice(2, 2 + N).map(Number);\n  const F = data.slice(2 + N, 2 + N + M).map(Number);\n\n  T.sort((a, b) => b - a);\n\n  const heap = new MinHeap();\n  for (let i = 0; i < M; i++) {\n    heap.push(0, F[i]);\n  }\n\n  let total = 0n;\n  for (let i = 0; i < N; i++) {\n    const t = T[i];\n    const [key, f] = heap.pop();\n    total += BigInt(t * key);\n    heap.push(key + f, f);\n  }\n\n  console.log(total.toString());\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nclass MinHeap {\n  constructor() {\n    this.h = [];\n  }\n  push(key, f) {\n    const h = this.h;\n    h.push([key, f]);\n    let i = h.length - 1;\n    while (i > 0) {\n      const p = (i - 1) >> 1;\n      if (h[p][0] <= h[i][0]) break;\n      const tmp = h[p];\n      h[p] = h[i];\n      h[i] = tmp;\n      i = p;\n    }\n  }\n  pop() {\n    const h = this.h;\n    const top = h[0];\n    const last = h.pop();\n    if (h.length > 0) {\n      h[0] = last;\n      let i = 0;\n      const n = h.length;\n      while (true) {\n        const l = 2 * i + 1;\n        const r = 2 * i + 2;\n        let smallest = i;\n        if (l < n && h[l][0] < h[smallest][0]) smallest = l;\n        if (r < n && h[r][0] < h[smallest][0]) smallest = r;\n        if (smallest === i) break;\n        const tmp = h[i];\n        h[i] = h[smallest];\n        h[smallest] = tmp;\n        i = smallest;\n      }\n    }\n    return top;\n  }\n}\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  const N = parseInt(data[0], 10);\n  const M = parseInt(data[1], 10);\n  const T = data.slice(2, 2 + N).map(Number);\n  const F = data.slice(2 + N, 2 + N + M).map(Number);\n\n  T.sort((a, b) => b - a);\n\n  const heap = new MinHeap();\n  for (let i = 0; i < M; i++) {\n    heap.push(0, F[i]);\n  }\n\n  let total = 0n;\n  for (let i = 0; i < N; i++) {\n    const t = T[i];\n    const [key, f] = heap.pop();\n    total += BigInt(t * key);\n    heap.push(key + f, f);\n  }\n\n  console.log(total.toString());\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13945350001449697,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:29:14.725223+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 804,
+            "output_tokens": 330,
+            "total_tokens": 1331
+        },
+        "cost_usd": {
+            "input_cost": 0.000603,
+            "output_cost": 0.001237,
+            "total_cost": 0.00184
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    m = int(data[1])\n    \n    adj = [[] for _ in range(n + 1)]\n    idx = 2\n    for _ in range(m):\n        u = int(data[idx])\n        v = int(data[idx+1])\n        c = int(data[idx+2])\n        idx += 3\n        adj[u].append((v, c))\n        adj[v].append((u, c))\n        \n    dist = [float('inf')] * (n + 1)\n    dist[1] = 0\n    pq = [(0, 1)]\n    \n    while pq:\n        d, u = heapq.heappop(pq)\n        \n        if d > dist[u]:\n            continue\n            \n        if u == n:\n            print(d)\n            return\n            \n        for v, weight in adj[u]:\n            if dist[u] + weight < dist[v]:\n                dist[v] = dist[u] + weight\n                heapq.heappush(pq, (dist[v], v))\n                \n    print(dist[n])\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    m = int(data[1])\n    \n    adj = [[] for _ in range(n + 1)]\n    idx = 2\n    for _ in range(m):\n        u = int(data[idx])\n        v = int(data[idx+1])\n        c = int(data[idx+2])\n        idx += 3\n        adj[u].append((v, c))\n        adj[v].append((u, c))\n        \n    dist = [float('inf')] * (n + 1)\n    dist[1] = 0\n    pq = [(0, 1)]\n    \n    while pq:\n        d, u = heapq.heappop(pq)\n        \n        if d > dist[u]:\n            continue\n            \n        if u == n:\n            print(d)\n            return\n            \n        for v, weight in adj[u]:\n            if dist[u] + weight < dist[v]:\n                dist[v] = dist[u] + weight\n                heapq.heappush(pq, (dist[v], v))\n                \n    print(dist[n])\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10187759999826085,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

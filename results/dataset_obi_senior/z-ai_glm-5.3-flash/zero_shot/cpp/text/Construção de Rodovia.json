@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:33:31.870629+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 856,
+            "output_tokens": 10973,
+            "total_tokens": 11829
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.005487,
+            "total_cost": 0.005505
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstatic int par[200005];\n\nstatic inline int gc() {\n    static char buf[1 << 16];\n    static int len = 0, pos = 0;\n    if (pos == len) {\n        len = (int)fread(buf, 1, sizeof(buf), stdin);\n        pos = 0;\n        if (len <= 0) return -1;\n    }\n    return buf[pos++];\n}\n\nstatic inline int readInt() {\n    int c = gc();\n    while (c != -1 && (c < '0' || c > '9')) c = gc();\n    int x = 0;\n    while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = gc(); }\n    return x;\n}\n\nstatic int findp(int x) {\n    int r = x;\n    while (par[r] != r) r = par[r];\n    while (par[x] != r) { int nx = par[x]; par[x] = r; x = nx; }\n    return r;\n}\n\nint main() {\n    int n = readInt(), m = readInt();\n    vector<int> deg(n + 2, 0);\n    vector<int> ex(m), ey(m);\n    for (int i = 1; i <= n; i++) par[i] = i;\n    for (int i = 0; i < m; i++) {\n        int x = readInt(), y = readInt();\n        ex[i] = x; ey[i] = y;\n        deg[x]++; deg[y]++;\n        int a = findp(x), b = findp(y);\n        if (a != b) par[a] = b;\n    }\n    // CSR adjacency\n    vector<int> start(n + 2, 0);\n    for (int v = 1; v <= n; v++) start[v + 1] = start[v] + deg[v];\n    vector<int> to(2 * (size_t)m);\n    {\n        vector<int> fill(n + 1);\n        for (int v = 1; v <= n; v++) fill[v] = start[v];\n        for (int i = 0; i < m; i++) {\n            to[fill[ex[i]]++] = ey[i];\n            to[fill[ey[i]]++] = ex[i];\n        }\n    }\n    // Group vertices by component root (counting sort by root)\n    vector<int> root(n + 1), cnt(n + 2, 0);\n    for (int v = 1; v <= n; v++) { root[v] = findp(v); cnt[root[v]]++; }\n    vector<int> cstart(n + 2, 0);\n    for (int r = 1; r <= n; r++) cstart[r + 1] = cstart[r] + cnt[r];\n    vector<int> members(n);\n    {\n        vector<int> fill(n + 1);\n        for (int r = 1; r <= n; r++) fill[r] = cstart[r];\n        for (int v = 1; v <= n; v++) members[fill[root[v]]++] = v;\n    }\n    vector<int> stamp(n + 1, 0);\n    int cur = 0;\n    for (int r = 1; r <= n; r++) {\n        int lo = cstart[r], hi = cstart[r + 1];\n        int s = hi - lo;\n        if (s == 0) continue;\n        int u = members[lo];\n        for (int i = lo; i < hi; i++) {\n            int v = members[i];\n            if (deg[v] < deg[u]) u = v;\n        }\n        // all edges are inside the component, so deg <= s-1 always;\n        // if the minimum degree equals s-1, every vertex has degree s-1 -> complete graph\n        if (deg[u] == s - 1) continue;\n        ++cur;\n        for (int e = start[u]; e < start[u + 1]; e++) stamp[to[e]] = cur;\n        for (int i = lo; i < hi; i++) {\n            int v = members[i];\n            if (v != u && stamp[v] != cur) {\n                printf(\"%d %d\\n\", u, v);\n                return 0;\n            }\n        }\n    }\n    printf(\"-1\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstatic int par[200005];\n\nstatic inline int gc() {\n    static char buf[1 << 16];\n    static int len = 0, pos = 0;\n    if (pos == len) {\n        len = (int)fread(buf, 1, sizeof(buf), stdin);\n        pos = 0;\n        if (len <= 0) return -1;\n    }\n    return buf[pos++];\n}\n\nstatic inline int readInt() {\n    int c = gc();\n    while (c != -1 && (c < '0' || c > '9')) c = gc();\n    int x = 0;\n    while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = gc(); }\n    return x;\n}\n\nstatic int findp(int x) {\n    int r = x;\n    while (par[r] != r) r = par[r];\n    while (par[x] != r) { int nx = par[x]; par[x] = r; x = nx; }\n    return r;\n}\n\nint main() {\n    int n = readInt(), m = readInt();\n    vector<int> deg(n + 2, 0);\n    vector<int> ex(m), ey(m);\n    for (int i = 1; i <= n; i++) par[i] = i;\n    for (int i = 0; i < m; i++) {\n        int x = readInt(), y = readInt();\n        ex[i] = x; ey[i] = y;\n        deg[x]++; deg[y]++;\n        int a = findp(x), b = findp(y);\n        if (a != b) par[a] = b;\n    }\n    // CSR adjacency\n    vector<int> start(n + 2, 0);\n    for (int v = 1; v <= n; v++) start[v + 1] = start[v] + deg[v];\n    vector<int> to(2 * (size_t)m);\n    {\n        vector<int> fill(n + 1);\n        for (int v = 1; v <= n; v++) fill[v] = start[v];\n        for (int i = 0; i < m; i++) {\n            to[fill[ex[i]]++] = ey[i];\n            to[fill[ey[i]]++] = ex[i];\n        }\n    }\n    // Group vertices by component root (counting sort by root)\n    vector<int> root(n + 1), cnt(n + 2, 0);\n    for (int v = 1; v <= n; v++) { root[v] = findp(v); cnt[root[v]]++; }\n    vector<int> cstart(n + 2, 0);\n    for (int r = 1; r <= n; r++) cstart[r + 1] = cstart[r] + cnt[r];\n    vector<int> members(n);\n    {\n        vector<int> fill(n + 1);\n        for (int r = 1; r <= n; r++) fill[r] = cstart[r];\n        for (int v = 1; v <= n; v++) members[fill[root[v]]++] = v;\n    }\n    vector<int> stamp(n + 1, 0);\n    int cur = 0;\n    for (int r = 1; r <= n; r++) {\n        int lo = cstart[r], hi = cstart[r + 1];\n        int s = hi - lo;\n        if (s == 0) continue;\n        int u = members[lo];\n        for (int i = lo; i < hi; i++) {\n            int v = members[i];\n            if (deg[v] < deg[u]) u = v;\n        }\n        // all edges are inside the component, so deg <= s-1 always;\n        // if the minimum degree equals s-1, every vertex has degree s-1 -> complete graph\n        if (deg[u] == s - 1) continue;\n        ++cur;\n        for (int e = start[u]; e < start[u + 1]; e++) stamp[to[e]] = cur;\n        for (int i = lo; i < hi; i++) {\n            int v = members[i];\n            if (v != u && stamp[v] != cur) {\n                printf(\"%d %d\\n\", u, v);\n                return 0;\n            }\n        }\n    }\n    printf(\"-1\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.20759710000129417,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

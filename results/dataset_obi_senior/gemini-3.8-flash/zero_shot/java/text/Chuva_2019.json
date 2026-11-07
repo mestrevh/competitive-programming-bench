@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:07:44.803716+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 636,
+            "total_tokens": 2761
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.002385,
+            "total_cost": 0.003079
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.BufferedWriter;\nimport java.io.OutputStreamWriter;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayDeque;\nimport java.util.Queue;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));\n\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int n = Integer.parseInt(st.nextToken());\n        int m = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[n][m];\n        Queue<int[]> queue = new ArrayDeque<>();\n\n        for (int i = 0; i < n; i++) {\n            String row = reader.readLine();\n            for (int j = 0; j < m; j++) {\n                grid[i][j] = row.charAt(j);\n                if (grid[i][j] == 'o') {\n                    queue.offer(new int[]{i, j});\n                }\n            }\n        }\n\n        while (!queue.isEmpty()) {\n            int[] curr = queue.poll();\n            int r = curr[0];\n            int c = curr[1];\n\n            // Propagação para baixo\n            if (r + 1 < n && grid[r + 1][c] == '.') {\n                grid[r + 1][c] = 'o';\n                queue.offer(new int[]{r + 1, c});\n            }\n\n            // Propagação para os lados se houver prateleira embaixo\n            if (r + 1 < n && grid[r + 1][c] == '#') {\n                if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                    grid[r][c - 1] = 'o';\n                    queue.offer(new int[]{r, c - 1});\n                }\n                if (c + 1 < m && grid[r][c + 1] == '.') {\n                    grid[r][c + 1] = 'o';\n                    queue.offer(new int[]{r, c + 1});\n                }\n            }\n        }\n\n        for (int i = 0; i < n; i++) {\n            writer.write(grid[i]);\n            writer.newLine();\n        }\n        writer.flush();\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.BufferedWriter;\nimport java.io.OutputStreamWriter;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayDeque;\nimport java.util.Queue;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));\n\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int n = Integer.parseInt(st.nextToken());\n        int m = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[n][m];\n        Queue<int[]> queue = new ArrayDeque<>();\n\n        for (int i = 0; i < n; i++) {\n            String row = reader.readLine();\n            for (int j = 0; j < m; j++) {\n                grid[i][j] = row.charAt(j);\n                if (grid[i][j] == 'o') {\n                    queue.offer(new int[]{i, j});\n                }\n            }\n        }\n\n        while (!queue.isEmpty()) {\n            int[] curr = queue.poll();\n            int r = curr[0];\n            int c = curr[1];\n\n            // Propagação para baixo\n            if (r + 1 < n && grid[r + 1][c] == '.') {\n                grid[r + 1][c] = 'o';\n                queue.offer(new int[]{r + 1, c});\n            }\n\n            // Propagação para os lados se houver prateleira embaixo\n            if (r + 1 < n && grid[r + 1][c] == '#') {\n                if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                    grid[r][c - 1] = 'o';\n                    queue.offer(new int[]{r, c - 1});\n                }\n                if (c + 1 < m && grid[r][c + 1] == '.') {\n                    grid[r][c + 1] = 'o';\n                    queue.offer(new int[]{r, c + 1});\n                }\n            }\n        }\n\n        for (int i = 0; i < n; i++) {\n            writer.write(grid[i]);\n            writer.newLine();\n        }\n        writer.flush();\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11345870001241565,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

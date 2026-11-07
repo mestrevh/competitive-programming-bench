@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T16:27:22.743591+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 799,
+            "output_tokens": 1169,
+            "total_tokens": 1968
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.000584,
+            "total_cost": 0.000602
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 100005\n\nstatic int N, Q;\nstatic long long bit[MAXN];\nstatic int val[MAXN];\n\nstatic void update(int i, long long delta) {\n    for (; i <= N; i += i & (-i))\n        bit[i] += delta;\n}\n\nstatic long long query(int i) {\n    long long s = 0;\n    for (; i > 0; i -= i & (-i))\n        s += bit[i];\n    return s;\n}\n\nint main(void) {\n    if (scanf(\"%d %d\", &N, &Q) != 2) return 0;\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &val[i]);\n        update(i, val[i]);\n    }\n    for (int q = 0; q < Q; q++) {\n        int type;\n        scanf(\"%d\", &type);\n        if (type == 0) {\n            int k, p;\n            scanf(\"%d %d\", &k, &p);\n            update(k, (long long)p - val[k]);\n            val[k] = p;\n        } else {\n            int k;\n            scanf(\"%d\", &k);\n            printf(\"%lld\\n\", query(k));\n        }\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 100005\n\nstatic int N, Q;\nstatic long long bit[MAXN];\nstatic int val[MAXN];\n\nstatic void update(int i, long long delta) {\n    for (; i <= N; i += i & (-i))\n        bit[i] += delta;\n}\n\nstatic long long query(int i) {\n    long long s = 0;\n    for (; i > 0; i -= i & (-i))\n        s += bit[i];\n    return s;\n}\n\nint main(void) {\n    if (scanf(\"%d %d\", &N, &Q) != 2) return 0;\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &val[i]);\n        update(i, val[i]);\n    }\n    for (int q = 0; q < Q; q++) {\n        int type;\n        scanf(\"%d\", &type);\n        if (type == 0) {\n            int k, p;\n            scanf(\"%d %d\", &k, &p);\n            update(k, (long long)p - val[k]);\n            val[k] = p;\n        } else {\n            int k;\n            scanf(\"%d\", &k);\n            printf(\"%lld\\n\", query(k));\n        }\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2482284999859985,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

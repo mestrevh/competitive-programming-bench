@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:03:47.077848+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 584,
+            "output_tokens": 696,
+            "total_tokens": 2208
+        },
+        "cost_usd": {
+            "input_cost": 0.000438,
+            "output_cost": 0.00261,
+            "total_cost": 0.003048
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length < 2) return;\n\n    const N = parseInt(input[0], 10);\n    const P = input[1];\n\n    // Contagem total de cada caractere\n    const totalCount = new Int32Array(26);\n    for (let i = 0; i < N; i++) {\n        totalCount[P.charCodeAt(i) - 97]++;\n    }\n\n    // Encontrar divisores próprios de N em ordem crescente\n    const divisors = [];\n    for (let d = 1; d * d <= N; d++) {\n        if (N % d === 0) {\n            divisors.push(d);\n            if (d * d !== N && d !== 1) {\n                divisors.push(N / d);\n            }\n        }\n    }\n    divisors.sort((a, b) => a - b);\n\n    const rootCount = new Int32Array(26);\n    const blockCount = new Int32Array(26);\n\n    for (let i = 0; i < divisors.length; i++) {\n        const L = divisors[i];\n        if (L === N) continue; // poligrama deve ter pelo menos 2 partes\n\n        const k = N / L;\n\n        // Contar frequência do primeiro bloco (raiz candidata)\n        rootCount.fill(0);\n        for (let j = 0; j < L; j++) {\n            rootCount[P.charCodeAt(j) - 97]++;\n        }\n\n        // Verificação rápida: totalCount[c] deve ser exatamente k * rootCount[c]\n        let possible = true;\n        for (let c = 0; c < 26; c++) {\n            if (totalCount[c] !== rootCount[c] * k) {\n                possible = false;\n                break;\n            }\n        }\n\n        if (!possible) continue;\n\n        // Se passou no teste rápido, verificar todos os outros blocos\n        let allMatch = true;\n        for (let b = 1; b < k; b++) {\n            blockCount.fill(0);\n            const start = b * L;\n            const end = start + L;\n            for (let j = start; j < end; j++) {\n                blockCount[P.charCodeAt(j) - 97]++;\n            }\n\n            for (let c = 0; c < 26; c++) {\n                if (blockCount[c] !== rootCount[c]) {\n                    allMatch = false;\n                    break;\n                }\n            }\n\n            if (!allMatch) break;\n        }\n\n        if (allMatch) {\n            console.log(P.substring(0, L));\n            return;\n        }\n    }\n\n    console.log('*');\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length < 2) return;\n\n    const N = parseInt(input[0], 10);\n    const P = input[1];\n\n    // Contagem total de cada caractere\n    const totalCount = new Int32Array(26);\n    for (let i = 0; i < N; i++) {\n        totalCount[P.charCodeAt(i) - 97]++;\n    }\n\n    // Encontrar divisores próprios de N em ordem crescente\n    const divisors = [];\n    for (let d = 1; d * d <= N; d++) {\n        if (N % d === 0) {\n            divisors.push(d);\n            if (d * d !== N && d !== 1) {\n                divisors.push(N / d);\n            }\n        }\n    }\n    divisors.sort((a, b) => a - b);\n\n    const rootCount = new Int32Array(26);\n    const blockCount = new Int32Array(26);\n\n    for (let i = 0; i < divisors.length; i++) {\n        const L = divisors[i];\n        if (L === N) continue; // poligrama deve ter pelo menos 2 partes\n\n        const k = N / L;\n\n        // Contar frequência do primeiro bloco (raiz candidata)\n        rootCount.fill(0);\n        for (let j = 0; j < L; j++) {\n            rootCount[P.charCodeAt(j) - 97]++;\n        }\n\n        // Verificação rápida: totalCount[c] deve ser exatamente k * rootCount[c]\n        let possible = true;\n        for (let c = 0; c < 26; c++) {\n            if (totalCount[c] !== rootCount[c] * k) {\n                possible = false;\n                break;\n            }\n        }\n\n        if (!possible) continue;\n\n        // Se passou no teste rápido, verificar todos os outros blocos\n        let allMatch = true;\n        for (let b = 1; b < k; b++) {\n            blockCount.fill(0);\n            const start = b * L;\n            const end = start + L;\n            for (let j = start; j < end; j++) {\n                blockCount[P.charCodeAt(j) - 97]++;\n            }\n\n            for (let c = 0; c < 26; c++) {\n                if (blockCount[c] !== rootCount[c]) {\n                    allMatch = false;\n                    break;\n                }\n            }\n\n            if (!allMatch) break;\n        }\n\n        if (allMatch) {\n            console.log(P.substring(0, L));\n            return;\n        }\n    }\n\n    console.log('*');\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.058626500016544014,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

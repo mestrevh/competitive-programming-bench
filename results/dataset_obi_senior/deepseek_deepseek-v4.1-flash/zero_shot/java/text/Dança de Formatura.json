@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:46:29.060287+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1399,
+            "output_tokens": 6350,
+            "total_tokens": 7749
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.01524,
+            "total_cost": 0.015244
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        int P = Integer.parseInt(st.nextToken());\n\n        int[] rows = new int[N + 1];\n        int[] cols = new int[M + 1];\n\n        for (int i = 1; i <= N; i++) rows[i] = i;\n        for (int j = 1; j <= M; j++) cols[j] = j;\n\n        for (int p = 0; p < P; p++) {\n            st = new StringTokenizer(br.readLine());\n            char op = st.nextToken().charAt(0);\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n\n            if (op == 'L') {\n                int tmp = rows[a];\n                rows[a] = rows[b];\n                rows[b] = tmp;\n            } else {\n                int tmp = cols[a];\n                cols[a] = cols[b];\n                cols[b] = tmp;\n            }\n        }\n\n        FastOutput out = new FastOutput(System.out);\n\n        for (int i = 1; i <= N; i++) {\n            int base = (rows[i] - 1) * M;\n            for (int j = 1; j <= M; j++) {\n                out.writeInt(base + cols[j]);\n                if (j < M) out.writeByte(' ');\n            }\n            out.writeByte('\\n');\n        }\n\n        out.flush();\n    }\n\n    static class FastOutput {\n        private final OutputStream os;\n        private final byte[] buf = new byte[1 << 16];\n        private int idx = 0;\n\n        FastOutput(OutputStream os) {\n            this.os = os;\n        }\n\n        private void flushBuffer() throws IOException {\n            if (idx > 0) {\n                os.write(buf, 0, idx);\n                idx = 0;\n            }\n        }\n\n        void writeInt(int x) throws IOException {\n            if (x == 0) {\n                writeByte('0');\n                return;\n            }\n\n            if (x < 0) {\n                writeByte('-');\n                x = -x;\n            }\n\n            if (idx + 12 >= buf.length) flushBuffer();\n\n            int pos = idx + 11;\n            int end = pos;\n\n            while (x > 0) {\n                buf[pos--] = (byte) ('0' + (x % 10));\n                x /= 10;\n            }\n\n            int start = pos + 1;\n            int len = end - start + 1;\n            System.arraycopy(buf, start, buf, idx, len);\n            idx += len;\n        }\n\n        void writeByte(int c) throws IOException {\n            if (idx == buf.length) flushBuffer();\n            buf[idx++] = (byte) c;\n        }\n\n        void flush() throws IOException {\n            flushBuffer();\n            os.flush();\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        int P = Integer.parseInt(st.nextToken());\n\n        int[] rows = new int[N + 1];\n        int[] cols = new int[M + 1];\n\n        for (int i = 1; i <= N; i++) rows[i] = i;\n        for (int j = 1; j <= M; j++) cols[j] = j;\n\n        for (int p = 0; p < P; p++) {\n            st = new StringTokenizer(br.readLine());\n            char op = st.nextToken().charAt(0);\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n\n            if (op == 'L') {\n                int tmp = rows[a];\n                rows[a] = rows[b];\n                rows[b] = tmp;\n            } else {\n                int tmp = cols[a];\n                cols[a] = cols[b];\n                cols[b] = tmp;\n            }\n        }\n\n        FastOutput out = new FastOutput(System.out);\n\n        for (int i = 1; i <= N; i++) {\n            int base = (rows[i] - 1) * M;\n            for (int j = 1; j <= M; j++) {\n                out.writeInt(base + cols[j]);\n                if (j < M) out.writeByte(' ');\n            }\n            out.writeByte('\\n');\n        }\n\n        out.flush();\n    }\n\n    static class FastOutput {\n        private final OutputStream os;\n        private final byte[] buf = new byte[1 << 16];\n        private int idx = 0;\n\n        FastOutput(OutputStream os) {\n            this.os = os;\n        }\n\n        private void flushBuffer() throws IOException {\n            if (idx > 0) {\n                os.write(buf, 0, idx);\n                idx = 0;\n            }\n        }\n\n        void writeInt(int x) throws IOException {\n            if (x == 0) {\n                writeByte('0');\n                return;\n            }\n\n            if (x < 0) {\n                writeByte('-');\n                x = -x;\n            }\n\n            if (idx + 12 >= buf.length) flushBuffer();\n\n            int pos = idx + 11;\n            int end = pos;\n\n            while (x > 0) {\n                buf[pos--] = (byte) ('0' + (x % 10));\n                x /= 10;\n            }\n\n            int start = pos + 1;\n            int len = end - start + 1;\n            System.arraycopy(buf, start, buf, idx, len);\n            idx += len;\n        }\n\n        void writeByte(int c) throws IOException {\n            if (idx == buf.length) flushBuffer();\n            buf[idx++] = (byte) c;\n        }\n\n        void flush() throws IOException {\n            flushBuffer();\n            os.flush();\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3363482999848202,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

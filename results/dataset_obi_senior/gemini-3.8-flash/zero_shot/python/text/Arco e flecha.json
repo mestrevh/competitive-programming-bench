@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:05:31.187799+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 844,
+            "output_tokens": 649,
+            "total_tokens": 3447
+        },
+        "cost_usd": {
+            "input_cost": 0.000633,
+            "output_cost": 0.002434,
+            "total_cost": 0.003067
+        },
+        "raw_response": "```python\nimport bisect\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n\n    # Usaremos uma estrutura de blocos ordenados (Square Root Decomposition)\n    # B é o tamanho máximo de cada bloco antes da divisão\n    B = 1000\n\n    blocks = [[]]\n    block_sizes = [0]\n    block_maxs = [float(\"inf\")]\n\n    prev_p = 0\n    out = []\n\n    it = iter(input_data[1:])\n\n    for _ in range(N):\n        x = int(next(it)) + prev_p\n        y = int(next(it)) + prev_p\n\n        dist_sq = x * x + y * y\n\n        # Contar quantos elementos já inseridos são <= dist_sq\n        idx = bisect.bisect_right(block_maxs, dist_sq)\n\n        # Blocos de 0 a idx - 1 têm todos os elementos <= dist_sq\n        count = sum(block_sizes[:idx])\n\n        # O bloco idx pode conter elementos <= dist_sq\n        if idx < len(blocks):\n            count += bisect.bisect_right(blocks[idx], dist_sq)\n\n        prev_p = count\n        out.append(str(count))\n\n        # Inserir dist_sq\n        # Encontra o primeiro bloco cujo valor máximo é >= dist_sq\n        ins_idx = bisect.bisect_left(block_maxs, dist_sq)\n        if ins_idx == len(blocks):\n            ins_idx -= 1\n\n        target_block = blocks[ins_idx]\n        pos = bisect.bisect_right(target_block, dist_sq)\n        target_block.insert(pos, dist_sq)\n        block_sizes[ins_idx] += 1\n        block_maxs[ins_idx] = target_block[-1]\n\n        # Divide o bloco se ficar muito grande\n        if len(target_block) > B:\n            mid = len(target_block) // 2\n            new_block = target_block[mid:]\n            del target_block[mid:]\n\n            block_sizes[ins_idx] = len(target_block)\n            block_maxs[ins_idx] = target_block[-1]\n\n            blocks.insert(ins_idx + 1, new_block)\n            block_sizes.insert(ins_idx + 1, len(new_block))\n            block_maxs.insert(ins_idx + 1, new_block[-1])\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import bisect\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n\n    # Usaremos uma estrutura de blocos ordenados (Square Root Decomposition)\n    # B é o tamanho máximo de cada bloco antes da divisão\n    B = 1000\n\n    blocks = [[]]\n    block_sizes = [0]\n    block_maxs = [float(\"inf\")]\n\n    prev_p = 0\n    out = []\n\n    it = iter(input_data[1:])\n\n    for _ in range(N):\n        x = int(next(it)) + prev_p\n        y = int(next(it)) + prev_p\n\n        dist_sq = x * x + y * y\n\n        # Contar quantos elementos já inseridos são <= dist_sq\n        idx = bisect.bisect_right(block_maxs, dist_sq)\n\n        # Blocos de 0 a idx - 1 têm todos os elementos <= dist_sq\n        count = sum(block_sizes[:idx])\n\n        # O bloco idx pode conter elementos <= dist_sq\n        if idx < len(blocks):\n            count += bisect.bisect_right(blocks[idx], dist_sq)\n\n        prev_p = count\n        out.append(str(count))\n\n        # Inserir dist_sq\n        # Encontra o primeiro bloco cujo valor máximo é >= dist_sq\n        ins_idx = bisect.bisect_left(block_maxs, dist_sq)\n        if ins_idx == len(blocks):\n            ins_idx -= 1\n\n        target_block = blocks[ins_idx]\n        pos = bisect.bisect_right(target_block, dist_sq)\n        target_block.insert(pos, dist_sq)\n        block_sizes[ins_idx] += 1\n        block_maxs[ins_idx] = target_block[-1]\n\n        # Divide o bloco se ficar muito grande\n        if len(target_block) > B:\n            mid = len(target_block) // 2\n            new_block = target_block[mid:]\n            del target_block[mid:]\n\n            block_sizes[ins_idx] = len(target_block)\n            block_maxs[ins_idx] = target_block[-1]\n\n            blocks.insert(ins_idx + 1, new_block)\n            block_sizes.insert(ins_idx + 1, len(new_block))\n            block_maxs.insert(ins_idx + 1, new_block[-1])\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.24130760000116425,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:53:28.003891+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 742,
+            "output_tokens": 1539,
+            "total_tokens": 2281
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.00077,
+            "total_cost": 0.000785
+        },
+        "raw_response": "```javascript\nconst input = require('fs').readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst A = input[0];\nconst L = input[1];\nconst N = input[2];\n\nlet bestId = -1;\nlet bestArea = Infinity;\n\nfor (let i = 0; i < N; i++) {\n  const X = input[3 + 2 * i];\n  const Y = input[4 + 2 * i];\n\n  // A foto cabe (considerando rotação da moldura / foto) se:\n  // (A <= X e L <= Y) ou (A <= Y e L <= X)\n  if ((A <= X && L <= Y) || (A <= Y && L <= X)) {\n    const area = X * Y;\n    // área desperdiçada = X*Y - A*L; como A*L é fixo, basta minimizar X*Y.\n    // Percorrendo em ordem de identificador, \"<\" garante o menor id em empates.\n    if (area < bestArea) {\n      bestArea = area;\n      bestId = i + 1;\n    }\n  }\n}\n\nconsole.log(bestId);\n```",
+        "extracted_code": "const input = require('fs').readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst A = input[0];\nconst L = input[1];\nconst N = input[2];\n\nlet bestId = -1;\nlet bestArea = Infinity;\n\nfor (let i = 0; i < N; i++) {\n  const X = input[3 + 2 * i];\n  const Y = input[4 + 2 * i];\n\n  // A foto cabe (considerando rotação da moldura / foto) se:\n  // (A <= X e L <= Y) ou (A <= Y e L <= X)\n  if ((A <= X && L <= Y) || (A <= Y && L <= X)) {\n    const area = X * Y;\n    // área desperdiçada = X*Y - A*L; como A*L é fixo, basta minimizar X*Y.\n    // Percorrendo em ordem de identificador, \"<\" garante o menor id em empates.\n    if (area < bestArea) {\n      bestArea = area;\n      bestId = i + 1;\n    }\n  }\n}\n\nconsole.log(bestId);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.04748810001183301,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

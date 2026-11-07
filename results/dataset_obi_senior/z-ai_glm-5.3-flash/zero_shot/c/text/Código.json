@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:45:57.797086+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 866,
+            "output_tokens": 15262,
+            "total_tokens": 16128
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.007631,
+            "total_cost": 0.00765
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdint.h>\n\n#define HBITS 20\n#define HSIZE (1u << HBITS)\n#define HMASK (HSIZE - 1u)\n\nstatic uint64_t table[HSIZE];\nstatic char S[10000][12];\n\n/*\n * Codificacao exata (injetiva) de uma string curta + tipo, em 64 bits:\n *   tag (5 bits efetivos): 0 = string completa (len 10);\n *                          1..9  = PREFIXO de comprimento L (tag = L);\n *                          10..18 = SUFIXO de comprimento L (tag = 9 + L).\n *   len (bits 50..53): comprimento da subcadeia (1..10);\n *   val (bits 0..49): 5 bits por letra ('a'..'z' -> 0..25), ate 10 letras.\n */\nstatic inline uint64_t make_key(int tag, int len, const char *s) {\n    uint64_t val = 0;\n    for (int i = 0; i < len; i++)\n        val = (val << 5) | (uint64_t)(s[i] - 'a');\n    return ((((uint64_t)tag << 4) | (uint64_t)len) << 50) | val;\n}\n\n/* Sondagem linear; retorna 1 se presente. Se insert=1 e ausente, insere. */\nstatic inline int probe(uint64_t key, int insert) {\n    uint64_t h = key * 0x9E3779B97F4A7C15ull;\n    uint32_t idx = (uint32_t)(h >> (64 - HBITS));\n    for (;;) {\n        uint64_t cur = table[idx];\n        if (cur == key) return 1;\n        if (cur == 0) {\n            if (insert) table[idx] = key;\n            return 0;\n        }\n        idx = (idx + 1) & HMASK;\n    }\n}\n\nint main(void) {\n    int n, i, k, p, L;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    for (i = 0; i < n; i++) {\n        if (scanf(\"%11s\", S[i]) != 1) return 0;\n    }\n\n    for (k = 0; k < n; k++) {\n        int bad = 0;\n\n        /* Caso q = 0 ou q = 10: S_k coincide com alguma string anterior. */\n        if (probe(make_key(0, 10, S[k]), 0))\n            bad = 1;\n\n        /* Caso 1 <= q <= 9: S_k cruza a fronteira de S_a S_b.\n         * Com recorte q = p:\n         *   - o prefixo de S_k de comprimento 10-p deve igualar o SUFIXO\n         *     de comprimento 10-p de alguma string anterior (S_a);\n         *   - o sufixo de S_k de comprimento p deve igualar o PREFIXO\n         *     de comprimento p de alguma string anterior (S_b).\n         * Ambas as verificacoes usam o mesmo recorte p (necessario e suficiente).\n         */\n        for (p = 1; p <= 9 && !bad; p++) {\n            if (probe(make_key(9 + (10 - p), 10 - p, S[k]), 0) &&   /* tag de sufixo len 10-p */\n                probe(make_key(p, p, S[k] + (10 - p)), 0))          /* tag de prefixo len p   */\n                bad = 1;\n        }\n\n        if (bad) {\n            puts(S[k]);\n            return 0;\n        }\n\n        /* Insere S_k e todos os seus prefixos/sufixos proprios nos conjuntos. */\n        probe(make_key(0, 10, S[k]), 1);\n        for (L = 1; L <= 9; L++) {\n            probe(make_key(L, L, S[k]), 1);                /* prefixo de comprimento L */\n            probe(make_key(9 + L, L, S[k] + (10 - L)), 1); /* sufixo  de comprimento L */\n        }\n    }\n\n    puts(\"ok\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdint.h>\n\n#define HBITS 20\n#define HSIZE (1u << HBITS)\n#define HMASK (HSIZE - 1u)\n\nstatic uint64_t table[HSIZE];\nstatic char S[10000][12];\n\n/*\n * Codificacao exata (injetiva) de uma string curta + tipo, em 64 bits:\n *   tag (5 bits efetivos): 0 = string completa (len 10);\n *                          1..9  = PREFIXO de comprimento L (tag = L);\n *                          10..18 = SUFIXO de comprimento L (tag = 9 + L).\n *   len (bits 50..53): comprimento da subcadeia (1..10);\n *   val (bits 0..49): 5 bits por letra ('a'..'z' -> 0..25), ate 10 letras.\n */\nstatic inline uint64_t make_key(int tag, int len, const char *s) {\n    uint64_t val = 0;\n    for (int i = 0; i < len; i++)\n        val = (val << 5) | (uint64_t)(s[i] - 'a');\n    return ((((uint64_t)tag << 4) | (uint64_t)len) << 50) | val;\n}\n\n/* Sondagem linear; retorna 1 se presente. Se insert=1 e ausente, insere. */\nstatic inline int probe(uint64_t key, int insert) {\n    uint64_t h = key * 0x9E3779B97F4A7C15ull;\n    uint32_t idx = (uint32_t)(h >> (64 - HBITS));\n    for (;;) {\n        uint64_t cur = table[idx];\n        if (cur == key) return 1;\n        if (cur == 0) {\n            if (insert) table[idx] = key;\n            return 0;\n        }\n        idx = (idx + 1) & HMASK;\n    }\n}\n\nint main(void) {\n    int n, i, k, p, L;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    for (i = 0; i < n; i++) {\n        if (scanf(\"%11s\", S[i]) != 1) return 0;\n    }\n\n    for (k = 0; k < n; k++) {\n        int bad = 0;\n\n        /* Caso q = 0 ou q = 10: S_k coincide com alguma string anterior. */\n        if (probe(make_key(0, 10, S[k]), 0))\n            bad = 1;\n\n        /* Caso 1 <= q <= 9: S_k cruza a fronteira de S_a S_b.\n         * Com recorte q = p:\n         *   - o prefixo de S_k de comprimento 10-p deve igualar o SUFIXO\n         *     de comprimento 10-p de alguma string anterior (S_a);\n         *   - o sufixo de S_k de comprimento p deve igualar o PREFIXO\n         *     de comprimento p de alguma string anterior (S_b).\n         * Ambas as verificacoes usam o mesmo recorte p (necessario e suficiente).\n         */\n        for (p = 1; p <= 9 && !bad; p++) {\n            if (probe(make_key(9 + (10 - p), 10 - p, S[k]), 0) &&   /* tag de sufixo len 10-p */\n                probe(make_key(p, p, S[k] + (10 - p)), 0))          /* tag de prefixo len p   */\n                bad = 1;\n        }\n\n        if (bad) {\n            puts(S[k]);\n            return 0;\n        }\n\n        /* Insere S_k e todos os seus prefixos/sufixos proprios nos conjuntos. */\n        probe(make_key(0, 10, S[k]), 1);\n        for (L = 1; L <= 9; L++) {\n            probe(make_key(L, L, S[k]), 1);                /* prefixo de comprimento L */\n            probe(make_key(9 + L, L, S[k] + (10 - L)), 1); /* sufixo  de comprimento L */\n        }\n    }\n\n    puts(\"ok\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11235969999688677,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

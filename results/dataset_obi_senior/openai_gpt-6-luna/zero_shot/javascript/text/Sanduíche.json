@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T10:01:07.483490+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 750,
+            "output_tokens": 473,
+            "total_tokens": 1223
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.000237,
+            "total_cost": 0.000312
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = data[0];\nconst M = data[1];\nconst conflicts = new Int32Array(N);\n\nlet pos = 2;\nfor (let i = 0; i < M; i++) {\n  const x = data[pos++] - 1;\n  const y = data[pos++] - 1;\n  conflicts[x] |= 1 << y;\n  conflicts[y] |= 1 << x;\n}\n\nconst limit = 1 << N;\nconst valid = new Uint8Array(limit);\nvalid[0] = 1;\n\nlet count = 0;\nfor (let mask = 1; mask < limit; mask++) {\n  const bit = mask & -mask;\n  const vertex = 31 - Math.clz32(bit);\n  const rest = mask ^ bit;\n\n  if (valid[rest] && (conflicts[vertex] & rest) === 0) {\n    valid[mask] = 1;\n    count++;\n  }\n}\n\nconsole.log(count.toString());\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = data[0];\nconst M = data[1];\nconst conflicts = new Int32Array(N);\n\nlet pos = 2;\nfor (let i = 0; i < M; i++) {\n  const x = data[pos++] - 1;\n  const y = data[pos++] - 1;\n  conflicts[x] |= 1 << y;\n  conflicts[y] |= 1 << x;\n}\n\nconst limit = 1 << N;\nconst valid = new Uint8Array(limit);\nvalid[0] = 1;\n\nlet count = 0;\nfor (let mask = 1; mask < limit; mask++) {\n  const bit = mask & -mask;\n  const vertex = 31 - Math.clz32(bit);\n  const rest = mask ^ bit;\n\n  if (valid[rest] && (conflicts[vertex] & rest) === 0) {\n    valid[mask] = 1;\n    count++;\n  }\n}\n\nconsole.log(count.toString());",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05854340000951197,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

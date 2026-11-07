@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:54:36.290456+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 918,
+            "output_tokens": 535,
+            "total_tokens": 2615
+        },
+        "cost_usd": {
+            "input_cost": 0.000688,
+            "output_cost": 0.002006,
+            "total_cost": 0.002695
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <map>\n#include <set>\n\nusing namespace std;\n\nstruct Record {\n    char type;\n    int x;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<Record> records(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> records[i].type >> records[i].x;\n    }\n\n    set<int> friends;\n    map<int, int> total_time;\n    map<int, int> last_received;\n    map<int, bool> waiting;\n\n    int current_time = 0;\n    bool has_previous_event = false;\n\n    for (int i = 0; i < n; ++i) {\n        if (records[i].type == 'T') {\n            continue;\n        }\n\n        // Se há um evento anterior, calcula o tempo passado até este evento\n        if (has_previous_event) {\n            if (i > 0 && records[i - 1].type == 'T') {\n                current_time += records[i - 1].x;\n            } else {\n                current_time += 1;\n            }\n        }\n\n        has_previous_event = true;\n        int friend_id = records[i].x;\n        friends.insert(friend_id);\n\n        if (records[i].type == 'R') {\n            last_received[friend_id] = current_time;\n            waiting[friend_id] = true;\n        } else if (records[i].type == 'E') {\n            total_time[friend_id] += (current_time - last_received[friend_id]);\n            waiting[friend_id] = false;\n        }\n    }\n\n    for (int friend_id : friends) {\n        if (waiting[friend_id]) {\n            cout << friend_id << \" -1\\n\";\n        } else {\n            cout << friend_id << \" \" << total_time[friend_id] << \"\\n\";\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <map>\n#include <set>\n\nusing namespace std;\n\nstruct Record {\n    char type;\n    int x;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    vector<Record> records(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> records[i].type >> records[i].x;\n    }\n\n    set<int> friends;\n    map<int, int> total_time;\n    map<int, int> last_received;\n    map<int, bool> waiting;\n\n    int current_time = 0;\n    bool has_previous_event = false;\n\n    for (int i = 0; i < n; ++i) {\n        if (records[i].type == 'T') {\n            continue;\n        }\n\n        // Se há um evento anterior, calcula o tempo passado até este evento\n        if (has_previous_event) {\n            if (i > 0 && records[i - 1].type == 'T') {\n                current_time += records[i - 1].x;\n            } else {\n                current_time += 1;\n            }\n        }\n\n        has_previous_event = true;\n        int friend_id = records[i].x;\n        friends.insert(friend_id);\n\n        if (records[i].type == 'R') {\n            last_received[friend_id] = current_time;\n            waiting[friend_id] = true;\n        } else if (records[i].type == 'E') {\n            total_time[friend_id] += (current_time - last_received[friend_id]);\n            waiting[friend_id] = false;\n        }\n    }\n\n    for (int friend_id : friends) {\n        if (waiting[friend_id]) {\n            cout << friend_id << \" -1\\n\";\n        } else {\n            cout << friend_id << \" \" << total_time[friend_id] << \"\\n\";\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19710789999226108,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

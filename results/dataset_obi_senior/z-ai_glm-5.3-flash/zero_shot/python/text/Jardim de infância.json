@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T07:08:32.790841+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1135,
+            "output_tokens": 4387,
+            "total_tokens": 5522
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.002194,
+            "total_cost": 0.002218
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    pts = []\n    idx = 0\n    for i in range(7):\n        x = int(data[idx]); y = int(data[idx + 1]); idx += 2\n        pts.append((x, y))\n    P1, P2, P3, P4, P5, P6, P7 = pts\n\n    # 1) Angulo P2P1P3 agudo (vertice em P1): produto escalar > 0\n    dot = ((P2[0] - P1[0]) * (P3[0] - P1[0]) +\n           (P2[1] - P1[1]) * (P3[1] - P1[1]))\n    if dot <= 0:\n        print('N'); return\n\n    # 2) |P1P2| == |P1P3|\n    d12 = (P2[0] - P1[0]) ** 2 + (P2[1] - P1[1]) ** 2\n    d13 = (P3[0] - P1[0]) ** 2 + (P3[1] - P1[1]) ** 2\n    if d12 != d13:\n        print('N'); return\n\n    dx = P3[0] - P2[0]\n    dy = P3[1] - P2[1]\n\n    # 3) P2, P3, P4, P5 colineares\n    if dx * (P4[1] - P2[1]) - dy * (P4[0] - P2[0]) != 0:\n        print('N'); return\n    if dx * (P5[1] - P2[1]) - dy * (P5[0] - P2[0]) != 0:\n        print('N'); return\n\n    # 4) Pontos medios de P2P3 e P4P5 coincidentes\n    if P2[0] + P3[0] != P4[0] + P5[0] or P2[1] + P3[1] != P4[1] + P5[1]:\n        print('N'); return\n\n    # 5) |P2P3| > |P4P5|\n    len23 = dx * dx + dy * dy\n    ex = P5[0] - P4[0]; ey = P5[1] - P4[1]\n    len45 = ex * ex + ey * ey\n    if len23 <= len45:\n        print('N'); return\n\n    # 6) P4P6 e P5P7 perpendiculares a P2P3\n    f4x = P6[0] - P4[0]; f4y = P6[1] - P4[1]\n    f5x = P7[0] - P5[0]; f5y = P7[1] - P5[1]\n    if f4x * dx + f4y * dy != 0:\n        print('N'); return\n    if f5x * dx + f5y * dy != 0:\n        print('N'); return\n\n    # 7) |P4P6| == |P5P7|\n    if f4x * f4x + f4y * f4y != f5x * f5x + f5y * f5y:\n        print('N'); return\n\n    # 8) P1 e P6 em lados opostos da reta P2P3 (intersecao unica do segmento P1P6)\n    c1 = dx * (P1[1] - P2[1]) - dy * (P1[0] - P2[0])\n    c6 = dx * (P6[1] - P2[1]) - dy * (P6[0] - P2[0])\n    if c1 == 0 or c6 == 0 or (c1 > 0) == (c6 > 0):\n        print('N'); return\n\n    print('S')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    pts = []\n    idx = 0\n    for i in range(7):\n        x = int(data[idx]); y = int(data[idx + 1]); idx += 2\n        pts.append((x, y))\n    P1, P2, P3, P4, P5, P6, P7 = pts\n\n    # 1) Angulo P2P1P3 agudo (vertice em P1): produto escalar > 0\n    dot = ((P2[0] - P1[0]) * (P3[0] - P1[0]) +\n           (P2[1] - P1[1]) * (P3[1] - P1[1]))\n    if dot <= 0:\n        print('N'); return\n\n    # 2) |P1P2| == |P1P3|\n    d12 = (P2[0] - P1[0]) ** 2 + (P2[1] - P1[1]) ** 2\n    d13 = (P3[0] - P1[0]) ** 2 + (P3[1] - P1[1]) ** 2\n    if d12 != d13:\n        print('N'); return\n\n    dx = P3[0] - P2[0]\n    dy = P3[1] - P2[1]\n\n    # 3) P2, P3, P4, P5 colineares\n    if dx * (P4[1] - P2[1]) - dy * (P4[0] - P2[0]) != 0:\n        print('N'); return\n    if dx * (P5[1] - P2[1]) - dy * (P5[0] - P2[0]) != 0:\n        print('N'); return\n\n    # 4) Pontos medios de P2P3 e P4P5 coincidentes\n    if P2[0] + P3[0] != P4[0] + P5[0] or P2[1] + P3[1] != P4[1] + P5[1]:\n        print('N'); return\n\n    # 5) |P2P3| > |P4P5|\n    len23 = dx * dx + dy * dy\n    ex = P5[0] - P4[0]; ey = P5[1] - P4[1]\n    len45 = ex * ex + ey * ey\n    if len23 <= len45:\n        print('N'); return\n\n    # 6) P4P6 e P5P7 perpendiculares a P2P3\n    f4x = P6[0] - P4[0]; f4y = P6[1] - P4[1]\n    f5x = P7[0] - P5[0]; f5y = P7[1] - P5[1]\n    if f4x * dx + f4y * dy != 0:\n        print('N'); return\n    if f5x * dx + f5y * dy != 0:\n        print('N'); return\n\n    # 7) |P4P6| == |P5P7|\n    if f4x * f4x + f4y * f4y != f5x * f5x + f5y * f5y:\n        print('N'); return\n\n    # 8) P1 e P6 em lados opostos da reta P2P3 (intersecao unica do segmento P1P6)\n    c1 = dx * (P1[1] - P2[1]) - dy * (P1[0] - P2[0])\n    c6 = dx * (P6[1] - P2[1]) - dy * (P6[0] - P2[0])\n    if c1 == 0 or c6 == 0 or (c1 > 0) == (c6 > 0):\n        print('N'); return\n\n    print('S')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05746490000092308,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

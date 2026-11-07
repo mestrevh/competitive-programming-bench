@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:24:50.745437+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 765,
+            "output_tokens": 21495,
+            "total_tokens": 22260
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.051588,
+            "total_cost": 0.05159
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\n\nconst x = new Int32Array(N + 1);\nconst y = new Int32Array(N + 1);\nlet pos = 1;\nfor (let i = 1; i <= N; i++) {\n    x[i] = data[pos++];\n    y[i] = data[pos++];\n}\n\nconst M = 4194304;\nconst E = N * N;\nconst keys = new Float64Array(E);\n\nlet idx = 0;\nfor (let v = 1; v <= N; v++) {\n    const xv = x[v];\n    const yv = y[v];\n    const base = (v - 1) * 2048;\n    for (let u = 0; u <= N; u++) {\n        if (u === v) continue;\n        const dx = x[u] - xv;\n        const dy = y[u] - yv;\n        const dist = dx * dx + dy * dy;\n        keys[idx++] = dist * M + base + u;\n    }\n}\n\nkeys.sort();\n\nconst best = new Int32Array(N + 1);\nconst groupBest = new Int32Array(N + 1);\nconst touched = new Int32Array(N + 1);\n\nlet ans = 0;\nlet i = E - 1;\n\nwhile (i >= 0) {\n    const w = Math.floor(keys[i] / M);\n    const minKey = w * M;\n    let tptr = 0;\n\n    while (i >= 0 && keys[i] >= minKey) {\n        const code = keys[i] - minKey;\n        const v = (code >>> 11) + 1;\n        const u = code & 2047;\n\n        let dp = 0;\n        if (u === 0) {\n            dp = 1;\n        } else {\n            const prev = best[u];\n            if (prev > 0) dp = prev + 1;\n        }\n\n        if (dp > 0) {\n            if (dp > groupBest[v]) {\n                if (groupBest[v] === 0) touched[tptr++] = v;\n                groupBest[v] = dp;\n            }\n            if (dp > ans) ans = dp;\n        }\n\n        i--;\n    }\n\n    for (let t = 0; t < tptr; t++) {\n        const v = touched[t];\n        const gb = groupBest[v];\n        if (gb > best[v]) best[v] = gb;\n        groupBest[v] = 0;\n    }\n}\n\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\n\nconst x = new Int32Array(N + 1);\nconst y = new Int32Array(N + 1);\nlet pos = 1;\nfor (let i = 1; i <= N; i++) {\n    x[i] = data[pos++];\n    y[i] = data[pos++];\n}\n\nconst M = 4194304;\nconst E = N * N;\nconst keys = new Float64Array(E);\n\nlet idx = 0;\nfor (let v = 1; v <= N; v++) {\n    const xv = x[v];\n    const yv = y[v];\n    const base = (v - 1) * 2048;\n    for (let u = 0; u <= N; u++) {\n        if (u === v) continue;\n        const dx = x[u] - xv;\n        const dy = y[u] - yv;\n        const dist = dx * dx + dy * dy;\n        keys[idx++] = dist * M + base + u;\n    }\n}\n\nkeys.sort();\n\nconst best = new Int32Array(N + 1);\nconst groupBest = new Int32Array(N + 1);\nconst touched = new Int32Array(N + 1);\n\nlet ans = 0;\nlet i = E - 1;\n\nwhile (i >= 0) {\n    const w = Math.floor(keys[i] / M);\n    const minKey = w * M;\n    let tptr = 0;\n\n    while (i >= 0 && keys[i] >= minKey) {\n        const code = keys[i] - minKey;\n        const v = (code >>> 11) + 1;\n        const u = code & 2047;\n\n        let dp = 0;\n        if (u === 0) {\n            dp = 1;\n        } else {\n            const prev = best[u];\n            if (prev > 0) dp = prev + 1;\n        }\n\n        if (dp > 0) {\n            if (dp > groupBest[v]) {\n                if (groupBest[v] === 0) touched[tptr++] = v;\n                groupBest[v] = dp;\n            }\n            if (dp > ans) ans = dp;\n        }\n\n        i--;\n    }\n\n    for (let t = 0; t < tptr; t++) {\n        const v = touched[t];\n        const gb = groupBest[v];\n        if (gb > best[v]) best[v] = gb;\n        groupBest[v] = 0;\n    }\n}\n\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.6356799000059254,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

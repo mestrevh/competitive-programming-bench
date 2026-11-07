@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:45:36.208166+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 845,
+            "output_tokens": 708,
+            "total_tokens": 3556
+        },
+        "cost_usd": {
+            "input_cost": 0.000634,
+            "output_cost": 0.002655,
+            "total_cost": 0.003289
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    xi = int(input_data[0])\n    yi = int(input_data[1])\n    xf = int(input_data[2])\n    yf = int(input_data[3])\n    n = int(input_data[4])\n\n    # Lista de retângulos: formato (x1, y1, x2, y2) com x1 <= x2 e y1 <= y2\n    # Vértice 0: ponto de partida\n    # Vértice 1: ponto de destino\n    rects = [\n        (xi, yi, xi, yi),\n        (xf, yf, xf, yf)\n    ]\n\n    idx = 5\n    for _ in range(n):\n        x1 = int(input_data[idx])\n        y1 = int(input_data[idx+1])\n        x2 = int(input_data[idx+2])\n        y2 = int(input_data[idx+3])\n        idx += 4\n        if x1 > x2:\n            x1, x2 = x2, x1\n        if y1 > y2:\n            y1, y2 = y2, y1\n        rects.append((x1, y1, x2, y2))\n\n    num_v = len(rects)\n\n    # Dijkstra em O(V^2)\n    dist = [float('inf')] * num_v\n    visited = [False] * num_v\n    dist[0] = 0\n\n    for _ in range(num_v):\n        # Encontra o vértice não visitado com menor distância\n        u = -1\n        min_d = float('inf')\n        for i in range(num_v):\n            if not visited[i] and dist[i] < min_d:\n                min_d = dist[i]\n                u = i\n\n        if u == -1 or u == 1:\n            break\n\n        visited[u] = True\n        ux1, uy1, ux2, uy2 = rects[u]\n\n        # Atualiza a distância para todos os outros vértices\n        for v in range(num_v):\n            if not visited[v]:\n                vx1, vy1, vx2, vy2 = rects[v]\n                \n                # Distância Manhattan entre os retângulos u e v\n                dx = (ux1 - vx2) if ux1 > vx2 else ((vx1 - ux2) if vx1 > ux2 else 0)\n                dy = (uy1 - vy2) if uy1 > vy2 else ((vy1 - uy2) if vy1 > uy2 else 0)\n                w = dx + dy\n\n                if dist[u] + w < dist[v]:\n                    dist[v] = dist[u] + w\n\n    print(dist[1])\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    xi = int(input_data[0])\n    yi = int(input_data[1])\n    xf = int(input_data[2])\n    yf = int(input_data[3])\n    n = int(input_data[4])\n\n    # Lista de retângulos: formato (x1, y1, x2, y2) com x1 <= x2 e y1 <= y2\n    # Vértice 0: ponto de partida\n    # Vértice 1: ponto de destino\n    rects = [\n        (xi, yi, xi, yi),\n        (xf, yf, xf, yf)\n    ]\n\n    idx = 5\n    for _ in range(n):\n        x1 = int(input_data[idx])\n        y1 = int(input_data[idx+1])\n        x2 = int(input_data[idx+2])\n        y2 = int(input_data[idx+3])\n        idx += 4\n        if x1 > x2:\n            x1, x2 = x2, x1\n        if y1 > y2:\n            y1, y2 = y2, y1\n        rects.append((x1, y1, x2, y2))\n\n    num_v = len(rects)\n\n    # Dijkstra em O(V^2)\n    dist = [float('inf')] * num_v\n    visited = [False] * num_v\n    dist[0] = 0\n\n    for _ in range(num_v):\n        # Encontra o vértice não visitado com menor distância\n        u = -1\n        min_d = float('inf')\n        for i in range(num_v):\n            if not visited[i] and dist[i] < min_d:\n                min_d = dist[i]\n                u = i\n\n        if u == -1 or u == 1:\n            break\n\n        visited[u] = True\n        ux1, uy1, ux2, uy2 = rects[u]\n\n        # Atualiza a distância para todos os outros vértices\n        for v in range(num_v):\n            if not visited[v]:\n                vx1, vy1, vx2, vy2 = rects[v]\n                \n                # Distância Manhattan entre os retângulos u e v\n                dx = (ux1 - vx2) if ux1 > vx2 else ((vx1 - ux2) if vx1 > ux2 else 0)\n                dy = (uy1 - vy2) if uy1 > vy2 else ((vy1 - uy2) if vy1 > uy2 else 0)\n                w = dx + dy\n\n                if dist[u] + w < dist[v]:\n                    dist[v] = dist[u] + w\n\n    print(dist[1])\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.24463269999978365,
+            "counts": {
+                "AC": 37,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 37
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:46:06.498788+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 497,
+            "output_tokens": 1565,
+            "total_tokens": 2062
+        },
+        "cost_usd": {
+            "input_cost": 5e-05,
+            "output_cost": 0.000782,
+            "total_cost": 0.000832
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = input[0];\nconst K = input[1];\nconst C = input[2];\nconst values = input.slice(3);\n\nif (K * C === N) {\n  console.log(0);\n} else if (C === 1) {\n  values.sort((a, b) => a - b);\n  let covered = 0;\n  for (let i = 0; i < K; i++) covered += values[i];\n  console.log(values.reduce((sum, value) => sum + value, 0) - covered);\n} else {\n  const prefix = new Array(N + 1).fill(0);\n  for (let i = 0; i < N; i++) prefix[i + 1] = prefix[i] + values[i];\n\n  let previous = new Array(N + 1).fill(0);\n  let current = new Array(N + 1);\n\n  for (let count = 1; count <= K; count++) {\n    const first = count * C;\n    current[first - 1] = Infinity;\n\n    for (let end = first; end <= N; end++) {\n      const intervalSum = prefix[end] - prefix[end - C];\n      current[end] = Math.min(\n        current[end - 1],\n        previous[end - C] + intervalSum\n      );\n    }\n\n    [previous, current] = [current, previous];\n  }\n\n  console.log(prefix[N] - previous[N]);\n}\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = input[0];\nconst K = input[1];\nconst C = input[2];\nconst values = input.slice(3);\n\nif (K * C === N) {\n  console.log(0);\n} else if (C === 1) {\n  values.sort((a, b) => a - b);\n  let covered = 0;\n  for (let i = 0; i < K; i++) covered += values[i];\n  console.log(values.reduce((sum, value) => sum + value, 0) - covered);\n} else {\n  const prefix = new Array(N + 1).fill(0);\n  for (let i = 0; i < N; i++) prefix[i + 1] = prefix[i] + values[i];\n\n  let previous = new Array(N + 1).fill(0);\n  let current = new Array(N + 1);\n\n  for (let count = 1; count <= K; count++) {\n    const first = count * C;\n    current[first - 1] = Infinity;\n\n    for (let end = first; end <= N; end++) {\n      const intervalSum = prefix[end] - prefix[end - C];\n      current[end] = Math.min(\n        current[end - 1],\n        previous[end - C] + intervalSum\n      );\n    }\n\n    [previous, current] = [current, previous];\n  }\n\n  console.log(prefix[N] - previous[N]);\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09181790000002366,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

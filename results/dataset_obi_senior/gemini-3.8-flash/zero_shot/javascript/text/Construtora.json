@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:05:21.208577+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1154,
+            "output_tokens": 383,
+            "total_tokens": 4284
+        },
+        "cost_usd": {
+            "input_cost": 0.000866,
+            "output_cost": 0.001436,
+            "total_cost": 0.002302
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        \n        int n = Integer.parseInt(line.trim());\n        int[] a = new int[n];\n        \n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int minH = Integer.MAX_VALUE;\n        int maxH = Integer.MIN_VALUE;\n        \n        for (int i = 0; i < n; i++) {\n            a[i] = Integer.parseInt(st.nextToken());\n            if (a[i] < minH) minH = a[i];\n            if (a[i] > maxH) maxH = a[i];\n        }\n        \n        int totalFases = 0;\n        for (int h = minH; h < maxH; h++) {\n            int componentes = 0;\n            boolean noSegmento = false;\n            for (int i = 0; i < n; i++) {\n                if (a[i] <= h) {\n                    if (!noSegmento) {\n                        componentes++;\n                        noSegmento = true;\n                    }\n                } else {\n                    noSegmento = false;\n                }\n            }\n            totalFases += componentes;\n        }\n        \n        System.out.println(totalFases);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        \n        int n = Integer.parseInt(line.trim());\n        int[] a = new int[n];\n        \n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int minH = Integer.MAX_VALUE;\n        int maxH = Integer.MIN_VALUE;\n        \n        for (int i = 0; i < n; i++) {\n            a[i] = Integer.parseInt(st.nextToken());\n            if (a[i] < minH) minH = a[i];\n            if (a[i] > maxH) maxH = a[i];\n        }\n        \n        int totalFases = 0;\n        for (int h = minH; h < maxH; h++) {\n            int componentes = 0;\n            boolean noSegmento = false;\n            for (int i = 0; i < n; i++) {\n                if (a[i] <= h) {\n                    if (!noSegmento) {\n                        componentes++;\n                        noSegmento = true;\n                    }\n                } else {\n                    noSegmento = false;\n                }\n            }\n            totalFases += componentes;\n        }\n        \n        System.out.println(totalFases);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07425399997737259,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 38,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:38:34.118288+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1154,
+            "output_tokens": 360,
+            "total_tokens": 2860
+        },
+        "cost_usd": {
+            "input_cost": 0.000866,
+            "output_cost": 0.00135,
+            "total_cost": 0.002216
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length < 2) return;\n\n    const n = parseInt(input[0], 10);\n    const a = [];\n    for (let i = 0; i < n; i++) {\n        a.push(parseInt(input[1 + i], 10));\n    }\n\n    let maxVal = -Infinity;\n    for (let i = 0; i < n; i++) {\n        if (a[i] > maxVal) {\n            maxVal = a[i];\n        }\n    }\n\n    let ans = 0;\n\n    while (true) {\n        let minVal = Infinity;\n        for (let i = 0; i < n; i++) {\n            if (a[i] < minVal) {\n                minVal = a[i];\n            }\n        }\n\n        if (minVal === maxVal) {\n            break;\n        }\n\n        let i = 0;\n        while (i < n) {\n            if (a[i] === minVal) {\n                let j = i;\n                while (j < n && a[j] === minVal) {\n                    a[j]++;\n                    j++;\n                }\n                ans++;\n                i = j;\n            } else {\n                i++;\n            }\n        }\n    }\n\n    console.log(ans);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length < 2) return;\n\n    const n = parseInt(input[0], 10);\n    const a = [];\n    for (let i = 0; i < n; i++) {\n        a.push(parseInt(input[1 + i], 10));\n    }\n\n    let maxVal = -Infinity;\n    for (let i = 0; i < n; i++) {\n        if (a[i] > maxVal) {\n            maxVal = a[i];\n        }\n    }\n\n    let ans = 0;\n\n    while (true) {\n        let minVal = Infinity;\n        for (let i = 0; i < n; i++) {\n            if (a[i] < minVal) {\n                minVal = a[i];\n            }\n        }\n\n        if (minVal === maxVal) {\n            break;\n        }\n\n        let i = 0;\n        while (i < n) {\n            if (a[i] === minVal) {\n                let j = i;\n                while (j < n && a[j] === minVal) {\n                    a[j]++;\n                    j++;\n                }\n                ans++;\n                i = j;\n            } else {\n                i++;\n            }\n        }\n    }\n\n    console.log(ans);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.046929000003729016,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

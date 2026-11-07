@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:14:16.830184+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 706,
+            "output_tokens": 18808,
+            "total_tokens": 19514
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.045139,
+            "total_cost": 0.045141
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input = sys.stdin.buffer.readline\n    L, C = map(int, input().split())\n    prev = list(map(int, input().split()))\n    m = C - 1\n    heights = [0] * m\n    ans = 0\n\n    for _ in range(L - 1):\n        cur = list(map(int, input().split()))\n\n        for j in range(m):\n            if prev[j] + cur[j + 1] <= prev[j + 1] + cur[j]:\n                heights[j] += 1\n            else:\n                heights[j] = 0\n\n        stack = []\n        for j in range(m + 1):\n            cur_h = heights[j] if j < m else 0\n            start = j\n\n            while stack and stack[-1][1] > cur_h:\n                idx, h = stack.pop()\n                width = j - idx\n                if h > 0:\n                    area = (h + 1) * (width + 1)\n                    if area > ans:\n                        ans = area\n                start = idx\n\n            if cur_h > 0 and (not stack or stack[-1][1] < cur_h):\n                stack.append((start, cur_h))\n\n        prev = cur\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input = sys.stdin.buffer.readline\n    L, C = map(int, input().split())\n    prev = list(map(int, input().split()))\n    m = C - 1\n    heights = [0] * m\n    ans = 0\n\n    for _ in range(L - 1):\n        cur = list(map(int, input().split()))\n\n        for j in range(m):\n            if prev[j] + cur[j + 1] <= prev[j + 1] + cur[j]:\n                heights[j] += 1\n            else:\n                heights[j] = 0\n\n        stack = []\n        for j in range(m + 1):\n            cur_h = heights[j] if j < m else 0\n            start = j\n\n            while stack and stack[-1][1] > cur_h:\n                idx, h = stack.pop()\n                width = j - idx\n                if h > 0:\n                    area = (h + 1) * (width + 1)\n                    if area > ans:\n                        ans = area\n                start = idx\n\n            if cur_h > 0 and (not stack or stack[-1][1] < cur_h):\n                stack.append((start, cur_h))\n\n        prev = cur\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.3336956999992253,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

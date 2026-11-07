@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:52:01.555410+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1201,
+            "output_tokens": 505,
+            "total_tokens": 3112
+        },
+        "cost_usd": {
+            "input_cost": 0.000901,
+            "output_cost": 0.001894,
+            "total_cost": 0.002795
+        },
+        "raw_response": "Uma solução eficiente em Python utilizando o algoritmo de Dijkstra com poda baseada em dominância de estados (tempo e custo).\n\n### Código\n\n```python\nimport sys\nimport heapq\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    V = int(data[0])\n    N = int(data[1])\n    M = int(data[2])\n\n    idx = 3\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        t = int(data[idx + 2])\n        p = int(data[idx + 3])\n        idx += 4\n        adj[u].append((v, t, p))\n        adj[v].append((u, t, p))\n\n    X = int(data[idx])\n    Y = int(data[idx + 1])\n\n    if X == Y:\n        print(0)\n        return\n\n    # min_cost[u] armazena o menor custo com o qual o vértice u já foi expandido.\n    # Como o Dijkstra retira estados em ordem não-decrescente de tempo,\n    # qualquer estado futuro que chegue a u com custo >= min_cost[u] é dominado.\n    min_cost = [V + 1] * (N + 1)\n\n    # heap guarda: (tempo, custo, vertice)\n    pq = [(0, 0, X)]\n\n    ans = -1\n    while pq:\n        t, c, u = heapq.heappop(pq)\n\n        if c >= min_cost[u]:\n            continue\n        min_cost[u] = c\n\n        if u == Y:\n            ans = t\n            break\n\n        for v, wt, wp in adj[u]:\n            nc = c + wp\n            if nc <= V and nc < min_cost[v]:\n                heapq.heappush(pq, (t + wt, nc, v))\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    V = int(data[0])\n    N = int(data[1])\n    M = int(data[2])\n\n    idx = 3\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        t = int(data[idx + 2])\n        p = int(data[idx + 3])\n        idx += 4\n        adj[u].append((v, t, p))\n        adj[v].append((u, t, p))\n\n    X = int(data[idx])\n    Y = int(data[idx + 1])\n\n    if X == Y:\n        print(0)\n        return\n\n    # min_cost[u] armazena o menor custo com o qual o vértice u já foi expandido.\n    # Como o Dijkstra retira estados em ordem não-decrescente de tempo,\n    # qualquer estado futuro que chegue a u com custo >= min_cost[u] é dominado.\n    min_cost = [V + 1] * (N + 1)\n\n    # heap guarda: (tempo, custo, vertice)\n    pq = [(0, 0, X)]\n\n    ans = -1\n    while pq:\n        t, c, u = heapq.heappop(pq)\n\n        if c >= min_cost[u]:\n            continue\n        min_cost[u] = c\n\n        if u == Y:\n            ans = t\n            break\n\n        for v, wt, wp in adj[u]:\n            nc = c + wp\n            if nc <= V and nc < min_cost[v]:\n                heapq.heappush(pq, (t + wt, nc, v))\n\n    print(ans)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08721089999744436,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

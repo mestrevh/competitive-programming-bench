@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T20:01:00.692570+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1510,
+            "output_tokens": 4960,
+            "total_tokens": 6470
+        },
+        "cost_usd": {
+            "input_cost": 3.2e-05,
+            "output_cost": 0.00248,
+            "total_cost": 0.002512
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    static int[] parent;\n\n    static int find(int x) {\n        int root = x;\n        while (parent[root] != root) root = parent[root];\n        while (parent[x] != root) {\n            int next = parent[x];\n            parent[x] = root;\n            x = next;\n        }\n        return root;\n    }\n\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in, 1 << 16));\n        in.nextToken(); int n = (int) in.nval;\n        in.nextToken(); int m = (int) in.nval;\n        in.nextToken(); int k = (int) in.nval;\n\n        int[] a = new int[m], b = new int[m], t = new int[m];\n        for (int i = 0; i < m; i++) {\n            in.nextToken(); a[i] = (int) in.nval;\n            in.nextToken(); b[i] = (int) in.nval;\n            in.nextToken(); t[i] = (int) in.nval;\n        }\n\n        parent = new int[n + 1];\n        int[] rnk = new int[n + 1];\n        for (int i = 1; i <= n; i++) parent[i] = i;\n\n        // Passo 1: hidrovias devem permanecer — o subgrafo delas precisa ser floresta.\n        for (int i = 0; i < m; i++) {\n            if (t[i] != 1) continue;\n            int ra = find(a[i]), rb = find(b[i]);\n            if (ra == rb) { // ciclo formado apenas por hidrovias: impossível\n                System.out.println(\"N\");\n                return;\n            }\n            if (rnk[ra] < rnk[rb]) { int tmp = ra; ra = rb; rb = tmp; }\n            parent[rb] = ra;\n            if (rnk[ra] == rnk[rb]) rnk[ra]++;\n        }\n\n        // Passo 2: rodovias entre componentes distintas podem ser mantidas (floresta máxima\n        // no multigrafo contraído); rodovias que criam ciclo precisam ser removidas\n        // (o ciclo usa caminho de hidrovias, que não pode ser removido, então a rodovia é obrigatoriamente removida).\n        long removals = 0;\n        for (int i = 0; i < m; i++) {\n            if (t[i] != 2) continue;\n            int ra = find(a[i]), rb = find(b[i]);\n            if (ra == rb) {\n                removals++;\n            } else {\n                if (rnk[ra] < rnk[rb]) { int tmp = ra; ra = rb; rb = tmp; }\n                parent[rb] = ra;\n                if (rnk[ra] == rnk[rb]) rnk[ra]++;\n            }\n        }\n\n        System.out.println(removals <= k ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    static int[] parent;\n\n    static int find(int x) {\n        int root = x;\n        while (parent[root] != root) root = parent[root];\n        while (parent[x] != root) {\n            int next = parent[x];\n            parent[x] = root;\n            x = next;\n        }\n        return root;\n    }\n\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in, 1 << 16));\n        in.nextToken(); int n = (int) in.nval;\n        in.nextToken(); int m = (int) in.nval;\n        in.nextToken(); int k = (int) in.nval;\n\n        int[] a = new int[m], b = new int[m], t = new int[m];\n        for (int i = 0; i < m; i++) {\n            in.nextToken(); a[i] = (int) in.nval;\n            in.nextToken(); b[i] = (int) in.nval;\n            in.nextToken(); t[i] = (int) in.nval;\n        }\n\n        parent = new int[n + 1];\n        int[] rnk = new int[n + 1];\n        for (int i = 1; i <= n; i++) parent[i] = i;\n\n        // Passo 1: hidrovias devem permanecer — o subgrafo delas precisa ser floresta.\n        for (int i = 0; i < m; i++) {\n            if (t[i] != 1) continue;\n            int ra = find(a[i]), rb = find(b[i]);\n            if (ra == rb) { // ciclo formado apenas por hidrovias: impossível\n                System.out.println(\"N\");\n                return;\n            }\n            if (rnk[ra] < rnk[rb]) { int tmp = ra; ra = rb; rb = tmp; }\n            parent[rb] = ra;\n            if (rnk[ra] == rnk[rb]) rnk[ra]++;\n        }\n\n        // Passo 2: rodovias entre componentes distintas podem ser mantidas (floresta máxima\n        // no multigrafo contraído); rodovias que criam ciclo precisam ser removidas\n        // (o ciclo usa caminho de hidrovias, que não pode ser removido, então a rodovia é obrigatoriamente removida).\n        long removals = 0;\n        for (int i = 0; i < m; i++) {\n            if (t[i] != 2) continue;\n            int ra = find(a[i]), rb = find(b[i]);\n            if (ra == rb) {\n                removals++;\n            } else {\n                if (rnk[ra] < rnk[rb]) { int tmp = ra; ra = rb; rb = tmp; }\n                parent[rb] = ra;\n                if (rnk[ra] == rnk[rb]) rnk[ra]++;\n            }\n        }\n\n        System.out.println(removals <= k ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16796559997601435,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

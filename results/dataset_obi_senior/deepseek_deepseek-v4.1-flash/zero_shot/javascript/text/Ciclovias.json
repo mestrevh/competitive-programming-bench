@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:35:57.597766+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1018,
+            "output_tokens": 27164,
+            "total_tokens": 28182
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.065194,
+            "total_cost": 0.065197
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\nfunction nextInt() {\n  while (idx < data.length && data.charCodeAt(idx) <= 32) idx++;\n  let num = 0;\n  while (idx < data.length && data.charCodeAt(idx) > 32) {\n    num = num * 10 + (data.charCodeAt(idx) - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst M = nextInt();\n\nconst U = new Int32Array(M);\nconst V = new Int32Array(M);\nconst nxt = new Int32Array(M);\nconst maxSum = 2 * N + 2;\nconst head = new Int32Array(maxSum).fill(-1);\n\nfor (let i = 0; i < M; i++) {\n  const u = nextInt();\n  const v = nextInt();\n  U[i] = u;\n  V[i] = v;\n  const s = u + v;\n  nxt[i] = head[s];\n  head[s] = i;\n}\n\nconst maxA = new Int32Array(N + 1).fill(-1);\nconst maxB = new Int32Array(N + 1).fill(-1);\n\nfor (let s = maxSum - 1; s >= 2; s--) {\n  for (let i = head[s]; i !== -1; i = nxt[i]) {\n    const u = U[i];\n    const v = V[i];\n\n    const A_uv = maxB[u] >= 0 ? maxB[u] + 1 : 0;\n    const B_vu = maxA[v] >= 0 ? maxA[v] + 1 : 0;\n    const A_vu = maxB[v] >= 0 ? maxB[v] + 1 : 0;\n    const B_uv = maxA[u] >= 0 ? maxA[u] + 1 : 0;\n\n    if (A_uv > maxA[v]) maxA[v] = A_uv;\n    if (B_vu > maxB[u]) maxB[u] = B_vu;\n    if (A_vu > maxA[u]) maxA[u] = A_vu;\n    if (B_uv > maxB[v]) maxB[v] = B_uv;\n  }\n}\n\nconst out = [];\nfor (let i = 1; i <= N; i++) {\n  out.push(maxB[i] + 2);\n}\nconsole.log(out.join(' '));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\nfunction nextInt() {\n  while (idx < data.length && data.charCodeAt(idx) <= 32) idx++;\n  let num = 0;\n  while (idx < data.length && data.charCodeAt(idx) > 32) {\n    num = num * 10 + (data.charCodeAt(idx) - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst M = nextInt();\n\nconst U = new Int32Array(M);\nconst V = new Int32Array(M);\nconst nxt = new Int32Array(M);\nconst maxSum = 2 * N + 2;\nconst head = new Int32Array(maxSum).fill(-1);\n\nfor (let i = 0; i < M; i++) {\n  const u = nextInt();\n  const v = nextInt();\n  U[i] = u;\n  V[i] = v;\n  const s = u + v;\n  nxt[i] = head[s];\n  head[s] = i;\n}\n\nconst maxA = new Int32Array(N + 1).fill(-1);\nconst maxB = new Int32Array(N + 1).fill(-1);\n\nfor (let s = maxSum - 1; s >= 2; s--) {\n  for (let i = head[s]; i !== -1; i = nxt[i]) {\n    const u = U[i];\n    const v = V[i];\n\n    const A_uv = maxB[u] >= 0 ? maxB[u] + 1 : 0;\n    const B_vu = maxA[v] >= 0 ? maxA[v] + 1 : 0;\n    const A_vu = maxB[v] >= 0 ? maxB[v] + 1 : 0;\n    const B_uv = maxA[u] >= 0 ? maxA[u] + 1 : 0;\n\n    if (A_uv > maxA[v]) maxA[v] = A_uv;\n    if (B_vu > maxB[u]) maxB[u] = B_vu;\n    if (A_vu > maxA[u]) maxA[u] = A_vu;\n    if (B_uv > maxB[v]) maxB[v] = B_uv;\n  }\n}\n\nconst out = [];\nfor (let i = 1; i <= N; i++) {\n  out.push(maxB[i] + 2);\n}\nconsole.log(out.join(' '));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18110439999145456,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:50:04.524478+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 971,
+            "output_tokens": 735,
+            "total_tokens": 1963
+        },
+        "cost_usd": {
+            "input_cost": 0.000728,
+            "output_cost": 0.002756,
+            "total_cost": 0.003484
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    // Função rápida para pular espaços em branco e ler inteiros\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const n = nextInt();\n    const f = nextInt();\n    if (n === null) return;\n\n    // Ler as N strings da matriz\n    const grid = [];\n    for (let i = 0; i < n; i++) {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        let start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        grid.push(input.slice(start, pos).split(''));\n    }\n\n    // Se o ponto de início (0,0) tiver altitude maior que a força F, nada é invadido\n    if (Number(grid[0][0]) <= f) {\n        // BFS\n        const totalCells = n * n;\n        const queueR = new Int16Array(totalCells);\n        const queueC = new Int16Array(totalCells);\n        let head = 0;\n        let tail = 0;\n\n        queueR[tail] = 0;\n        queueC[tail] = 0;\n        tail++;\n        grid[0][0] = '*';\n\n        const dr = [-1, 1, 0, 0];\n        const dc = [0, 0, -1, 1];\n\n        while (head < tail) {\n            const r = queueR[head];\n            const c = queueC[head];\n            head++;\n\n            for (let i = 0; i < 4; i++) {\n                const nr = r + dr[i];\n                const nc = c + dc[i];\n\n                if (nr >= 0 && nr < n && nc >= 0 && nc < n) {\n                    const char = grid[nr][nc];\n                    if (char !== '*') {\n                        if (char.charCodeAt(0) - 48 <= f) {\n                            grid[nr][nc] = '*';\n                            queueR[tail] = nr;\n                            queueC[tail] = nc;\n                            tail++;\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    // Gerar saída\n    let out = '';\n    for (let i = 0; i < n; i++) {\n        out += grid[i].join('') + '\\n';\n    }\n    process.stdout.write(out);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    // Função rápida para pular espaços em branco e ler inteiros\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const n = nextInt();\n    const f = nextInt();\n    if (n === null) return;\n\n    // Ler as N strings da matriz\n    const grid = [];\n    for (let i = 0; i < n; i++) {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        let start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        grid.push(input.slice(start, pos).split(''));\n    }\n\n    // Se o ponto de início (0,0) tiver altitude maior que a força F, nada é invadido\n    if (Number(grid[0][0]) <= f) {\n        // BFS\n        const totalCells = n * n;\n        const queueR = new Int16Array(totalCells);\n        const queueC = new Int16Array(totalCells);\n        let head = 0;\n        let tail = 0;\n\n        queueR[tail] = 0;\n        queueC[tail] = 0;\n        tail++;\n        grid[0][0] = '*';\n\n        const dr = [-1, 1, 0, 0];\n        const dc = [0, 0, -1, 1];\n\n        while (head < tail) {\n            const r = queueR[head];\n            const c = queueC[head];\n            head++;\n\n            for (let i = 0; i < 4; i++) {\n                const nr = r + dr[i];\n                const nc = c + dc[i];\n\n                if (nr >= 0 && nr < n && nc >= 0 && nc < n) {\n                    const char = grid[nr][nc];\n                    if (char !== '*') {\n                        if (char.charCodeAt(0) - 48 <= f) {\n                            grid[nr][nc] = '*';\n                            queueR[tail] = nr;\n                            queueC[tail] = nc;\n                            tail++;\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    // Gerar saída\n    let out = '';\n    for (let i = 0; i < n; i++) {\n        out += grid[i].join('') + '\\n';\n    }\n    process.stdout.write(out);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07466879999265075,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

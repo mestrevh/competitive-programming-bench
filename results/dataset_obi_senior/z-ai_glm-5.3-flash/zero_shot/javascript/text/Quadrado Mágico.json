@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:46:14.979562+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 616,
+            "output_tokens": 2556,
+            "total_tokens": 3172
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.001278,
+            "total_cost": 0.001291
+        },
+        "raw_response": "```javascript\nlet data = '';\nprocess.stdin.setEncoding('utf8');\nprocess.stdin.on('data', chunk => { data += chunk; });\nprocess.stdin.on('end', () => {\n    const tokens = data.trim().split(/\\s+/).map(Number);\n    const n = tokens[0];\n    const grid = [];\n    let idx = 1;\n    for (let i = 0; i < n; i++) {\n        grid.push(tokens.slice(idx, idx + n));\n        idx += n;\n    }\n\n    // Localiza a posição do número ilegível (marcado com 0)\n    let r = -1, c = -1;\n    for (let i = 0; i < n; i++) {\n        for (let j = 0; j < n; j++) {\n            if (grid[i][j] === 0) {\n                r = i;\n                c = j;\n            }\n        }\n    }\n\n    // A constante mágica é a soma de qualquer linha completa (sem o 0)\n    let S = 0;\n    for (let i = 0; i < n; i++) {\n        if (i !== r) {\n            S = grid[i].reduce((a, b) => a + b, 0);\n            break;\n        }\n    }\n\n    // O valor faltante completa a linha do 0 até a constante mágica\n    const rowSum = grid[r].reduce((a, b) => a + b, 0);\n    const value = S - rowSum;\n\n    console.log(value);\n    console.log(r + 1);\n    console.log(c + 1);\n});\n```",
+        "extracted_code": "let data = '';\nprocess.stdin.setEncoding('utf8');\nprocess.stdin.on('data', chunk => { data += chunk; });\nprocess.stdin.on('end', () => {\n    const tokens = data.trim().split(/\\s+/).map(Number);\n    const n = tokens[0];\n    const grid = [];\n    let idx = 1;\n    for (let i = 0; i < n; i++) {\n        grid.push(tokens.slice(idx, idx + n));\n        idx += n;\n    }\n\n    // Localiza a posição do número ilegível (marcado com 0)\n    let r = -1, c = -1;\n    for (let i = 0; i < n; i++) {\n        for (let j = 0; j < n; j++) {\n            if (grid[i][j] === 0) {\n                r = i;\n                c = j;\n            }\n        }\n    }\n\n    // A constante mágica é a soma de qualquer linha completa (sem o 0)\n    let S = 0;\n    for (let i = 0; i < n; i++) {\n        if (i !== r) {\n            S = grid[i].reduce((a, b) => a + b, 0);\n            break;\n        }\n    }\n\n    // O valor faltante completa a linha do 0 até a constante mágica\n    const rowSum = grid[r].reduce((a, b) => a + b, 0);\n    const value = S - rowSum;\n\n    console.log(value);\n    console.log(r + 1);\n    console.log(c + 1);\n});",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05049059999873862,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

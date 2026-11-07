@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:04:18.121897+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 809,
+            "output_tokens": 1466,
+            "total_tokens": 2275
+        },
+        "cost_usd": {
+            "input_cost": 8.1e-05,
+            "output_cost": 0.000733,
+            "total_cost": 0.000814
+        },
+        "raw_response": "```python\nimport sys\nimport random\n\nsys.setrecursionlimit(1_000_000)\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\n\nkeys = [0]\npriorities = [0]\nleft = [0]\nright = [0]\ncounts = [0]\nsizes = [0]\n\ndef update(node):\n    sizes[node] = sizes[left[node]] + sizes[right[node]] + counts[node]\n\ndef insert(root, key):\n    if root == 0:\n        node = len(keys)\n        keys.append(key)\n        priorities.append(random.getrandbits(64))\n        left.append(0)\n        right.append(0)\n        counts.append(1)\n        sizes.append(1)\n        return node\n\n    if key == keys[root]:\n        counts[root] += 1\n        sizes[root] += 1\n        return root\n\n    if key < keys[root]:\n        left[root] = insert(left[root], key)\n        child = left[root]\n        if priorities[child] > priorities[root]:\n            left[root] = right[child]\n            right[child] = root\n            update(root)\n            update(child)\n            return child\n    else:\n        right[root] = insert(right[root], key)\n        child = right[root]\n        if priorities[child] > priorities[root]:\n            right[root] = left[child]\n            left[child] = root\n            update(root)\n            update(child)\n            return child\n\n    update(root)\n    return root\n\ndef count_at_most(root, key):\n    result = 0\n    while root:\n        if key < keys[root]:\n            root = left[root]\n        else:\n            result += sizes[left[root]] + counts[root]\n            root = right[root]\n    return result\n\nroot = 0\nprevious_penalty = 0\nanswers = []\n\nfor i in range(n):\n    x = data[1 + 2 * i] + previous_penalty\n    y = data[2 + 2 * i] + previous_penalty\n    distance_squared = x * x + y * y\n\n    previous_penalty = count_at_most(root, distance_squared)\n    answers.append(str(previous_penalty))\n    root = insert(root, distance_squared)\n\nsys.stdout.write(\"\\n\".join(answers))\n```",
+        "extracted_code": "import sys\nimport random\n\nsys.setrecursionlimit(1_000_000)\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\n\nkeys = [0]\npriorities = [0]\nleft = [0]\nright = [0]\ncounts = [0]\nsizes = [0]\n\ndef update(node):\n    sizes[node] = sizes[left[node]] + sizes[right[node]] + counts[node]\n\ndef insert(root, key):\n    if root == 0:\n        node = len(keys)\n        keys.append(key)\n        priorities.append(random.getrandbits(64))\n        left.append(0)\n        right.append(0)\n        counts.append(1)\n        sizes.append(1)\n        return node\n\n    if key == keys[root]:\n        counts[root] += 1\n        sizes[root] += 1\n        return root\n\n    if key < keys[root]:\n        left[root] = insert(left[root], key)\n        child = left[root]\n        if priorities[child] > priorities[root]:\n            left[root] = right[child]\n            right[child] = root\n            update(root)\n            update(child)\n            return child\n    else:\n        right[root] = insert(right[root], key)\n        child = right[root]\n        if priorities[child] > priorities[root]:\n            right[root] = left[child]\n            left[child] = root\n            update(root)\n            update(child)\n            return child\n\n    update(root)\n    return root\n\ndef count_at_most(root, key):\n    result = 0\n    while root:\n        if key < keys[root]:\n            root = left[root]\n        else:\n            result += sizes[left[root]] + counts[root]\n            root = right[root]\n    return result\n\nroot = 0\nprevious_penalty = 0\nanswers = []\n\nfor i in range(n):\n    x = data[1 + 2 * i] + previous_penalty\n    y = data[2 + 2 * i] + previous_penalty\n    distance_squared = x * x + y * y\n\n    previous_penalty = count_at_most(root, distance_squared)\n    answers.append(str(previous_penalty))\n    root = insert(root, distance_squared)\n\nsys.stdout.write(\"\\n\".join(answers))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.2075726999973995,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:48:11.390694+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1065,
+            "output_tokens": 1515,
+            "total_tokens": 2580
+        },
+        "cost_usd": {
+            "input_cost": 0.000107,
+            "output_cost": 0.000758,
+            "total_cost": 0.000864
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, x1, x2 = data[:3]\n\nlines = []\nfor i in range(n):\n    a, b = data[3 + 2 * i], data[4 + 2 * i]\n    lines.append((a, b, a * x1 + b, a * x2 + b))\n\nif x1 == x2:\n    from collections import Counter\n    counts = Counter(line[2] for line in lines)\n    print(sum(c * (c - 1) // 2 for c in counts.values()))\n    raise SystemExit\n\norder1 = sorted(range(n), key=lambda i: (lines[i][2], lines[i][0]))\norder2 = sorted(range(n), key=lambda i: (lines[i][3], -lines[i][0]))\n\nrank = [0] * n\nfor pos, i in enumerate(order1):\n    rank[i] = pos\n\n# Count inversions in the order at x2 relative to the order at x1.\nfenwick = [0] * (n + 1)\ninversions = 0\nseen = 0\n\nfor i in order2:\n    value = rank[i]\n    idx = value + 1\n    count_le = 0\n    while idx:\n        count_le += fenwick[idx]\n        idx -= idx & -idx\n\n    inversions += seen - count_le\n\n    idx = value + 1\n    while idx <= n:\n        fenwick[idx] += 1\n        idx += idx & -idx\n    seen += 1\n\ndef equal_pairs(values):\n    values.sort()\n    total = 0\n    run = 1\n    for i in range(1, len(values)):\n        if values[i] == values[i - 1]:\n            run += 1\n        else:\n            total += run * (run - 1) // 2\n            run = 1\n    return total + run * (run - 1) // 2\n\nat_x1 = equal_pairs([line[2] for line in lines])\nat_x2 = equal_pairs([line[3] for line in lines])\n\nprint(inversions + at_x1 + at_x2)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, x1, x2 = data[:3]\n\nlines = []\nfor i in range(n):\n    a, b = data[3 + 2 * i], data[4 + 2 * i]\n    lines.append((a, b, a * x1 + b, a * x2 + b))\n\nif x1 == x2:\n    from collections import Counter\n    counts = Counter(line[2] for line in lines)\n    print(sum(c * (c - 1) // 2 for c in counts.values()))\n    raise SystemExit\n\norder1 = sorted(range(n), key=lambda i: (lines[i][2], lines[i][0]))\norder2 = sorted(range(n), key=lambda i: (lines[i][3], -lines[i][0]))\n\nrank = [0] * n\nfor pos, i in enumerate(order1):\n    rank[i] = pos\n\n# Count inversions in the order at x2 relative to the order at x1.\nfenwick = [0] * (n + 1)\ninversions = 0\nseen = 0\n\nfor i in order2:\n    value = rank[i]\n    idx = value + 1\n    count_le = 0\n    while idx:\n        count_le += fenwick[idx]\n        idx -= idx & -idx\n\n    inversions += seen - count_le\n\n    idx = value + 1\n    while idx <= n:\n        fenwick[idx] += 1\n        idx += idx & -idx\n    seen += 1\n\ndef equal_pairs(values):\n    values.sort()\n    total = 0\n    run = 1\n    for i in range(1, len(values)):\n        if values[i] == values[i - 1]:\n            run += 1\n        else:\n            total += run * (run - 1) // 2\n            run = 1\n    return total + run * (run - 1) // 2\n\nat_x1 = equal_pairs([line[2] for line in lines])\nat_x2 = equal_pairs([line[3] for line in lines])\n\nprint(inversions + at_x1 + at_x2)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.575879600000917,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:48:32.387234+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 740,
+            "output_tokens": 2139,
+            "total_tokens": 2879
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.005134,
+            "total_cost": 0.005136
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int n = Integer.parseInt(st.nextToken());\n\n        ArrayList<Integer>[] adj = new ArrayList[n + 1];\n        for (int i = 1; i <= n; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < n - 1; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            adj[a].add(b);\n            adj[b].add(a);\n        }\n\n        int[] parent = new int[n + 1];\n        int[] order = new int[n];\n        int head = 0, tail = 0;\n\n        parent[1] = -1;\n        order[tail++] = 1;\n\n        while (head < tail) {\n            int v = order[head++];\n            for (int u : adj[v]) {\n                if (u != parent[v]) {\n                    parent[u] = v;\n                    order[tail++] = u;\n                }\n            }\n        }\n\n        int[] sz = new int[n + 1];\n        Arrays.fill(sz, 1);\n\n        for (int i = n - 1; i > 0; i--) {\n            int v = order[i];\n            sz[parent[v]] += sz[v];\n        }\n\n        int ans = Integer.MAX_VALUE;\n\n        for (int v = 2; v <= n; v++) {\n            int diff = Math.abs(n - 2 * sz[v]);\n            if (diff < ans) {\n                ans = diff;\n            }\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int n = Integer.parseInt(st.nextToken());\n\n        ArrayList<Integer>[] adj = new ArrayList[n + 1];\n        for (int i = 1; i <= n; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < n - 1; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            adj[a].add(b);\n            adj[b].add(a);\n        }\n\n        int[] parent = new int[n + 1];\n        int[] order = new int[n];\n        int head = 0, tail = 0;\n\n        parent[1] = -1;\n        order[tail++] = 1;\n\n        while (head < tail) {\n            int v = order[head++];\n            for (int u : adj[v]) {\n                if (u != parent[v]) {\n                    parent[u] = v;\n                    order[tail++] = u;\n                }\n            }\n        }\n\n        int[] sz = new int[n + 1];\n        Arrays.fill(sz, 1);\n\n        for (int i = n - 1; i > 0; i--) {\n            int v = order[i];\n            sz[parent[v]] += sz[v];\n        }\n\n        int ans = Integer.MAX_VALUE;\n\n        for (int v = 2; v <= n; v++) {\n            int diff = Math.abs(n - 2 * sz[v]);\n            if (diff < ans) {\n                ans = diff;\n            }\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16019249998498708,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

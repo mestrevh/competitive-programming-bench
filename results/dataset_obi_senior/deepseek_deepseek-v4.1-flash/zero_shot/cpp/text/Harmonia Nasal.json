@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:30:59.818243+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1278,
+            "output_tokens": 22311,
+            "total_tokens": 23589
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.053546,
+            "total_cost": 0.05355
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    cin >> N >> K;\n\n    vector<long long> a(N), b(N), u(N);\n    for (int i = 0; i < N; i++) cin >> a[i];\n    for (int i = 0; i < N; i++) cin >> b[i];\n\n    long long base = 0;\n    long long sum_u = 0;\n    vector<pair<long long, int>> sorted_u;\n    sorted_u.reserve(N);\n\n    for (int i = 0; i < N; i++) {\n        if (a[i] >= b[i]) {\n            base += a[i] - b[i];\n            u[i] = b[i];\n        } else {\n            u[i] = a[i];\n        }\n        sum_u += u[i];\n        sorted_u.push_back({u[i], i});\n    }\n\n    sort(sorted_u.begin(), sorted_u.end(), [](const auto& x, const auto& y) {\n        if (x.first != y.first) return x.first > y.first;\n        return x.second < y.second;\n    });\n\n    vector<int> rank(N);\n    for (int i = 0; i < N; i++) {\n        rank[sorted_u[i].second] = i;\n    }\n\n    long long ans = 0;\n\n    if (K == 0) {\n        for (int f = 0; f < N; f++) {\n            long long score = a[f] + base;\n            if (a[f] >= b[f]) score -= (a[f] - b[f]);\n            ans = max(ans, score);\n        }\n    } else if (K >= N - 1) {\n        for (int f = 0; f < N; f++) {\n            long long score = a[f] + base;\n            if (a[f] >= b[f]) score -= (a[f] - b[f]);\n            score += sum_u - u[f];\n            ans = max(ans, score);\n        }\n    } else {\n        int kk = K;\n        long long topK = 0;\n        for (int i = 0; i < kk; i++) {\n            topK += sorted_u[i].first;\n        }\n        long long nextVal = sorted_u[kk].first;\n\n        for (int f = 0; f < N; f++) {\n            long long score = a[f] + base;\n            if (a[f] >= b[f]) score -= (a[f] - b[f]);\n\n            if (rank[f] < kk) {\n                score += topK - u[f] + nextVal;\n            } else {\n                score += topK;\n            }\n\n            ans = max(ans, score);\n        }\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    cin >> N >> K;\n\n    vector<long long> a(N), b(N), u(N);\n    for (int i = 0; i < N; i++) cin >> a[i];\n    for (int i = 0; i < N; i++) cin >> b[i];\n\n    long long base = 0;\n    long long sum_u = 0;\n    vector<pair<long long, int>> sorted_u;\n    sorted_u.reserve(N);\n\n    for (int i = 0; i < N; i++) {\n        if (a[i] >= b[i]) {\n            base += a[i] - b[i];\n            u[i] = b[i];\n        } else {\n            u[i] = a[i];\n        }\n        sum_u += u[i];\n        sorted_u.push_back({u[i], i});\n    }\n\n    sort(sorted_u.begin(), sorted_u.end(), [](const auto& x, const auto& y) {\n        if (x.first != y.first) return x.first > y.first;\n        return x.second < y.second;\n    });\n\n    vector<int> rank(N);\n    for (int i = 0; i < N; i++) {\n        rank[sorted_u[i].second] = i;\n    }\n\n    long long ans = 0;\n\n    if (K == 0) {\n        for (int f = 0; f < N; f++) {\n            long long score = a[f] + base;\n            if (a[f] >= b[f]) score -= (a[f] - b[f]);\n            ans = max(ans, score);\n        }\n    } else if (K >= N - 1) {\n        for (int f = 0; f < N; f++) {\n            long long score = a[f] + base;\n            if (a[f] >= b[f]) score -= (a[f] - b[f]);\n            score += sum_u - u[f];\n            ans = max(ans, score);\n        }\n    } else {\n        int kk = K;\n        long long topK = 0;\n        for (int i = 0; i < kk; i++) {\n            topK += sorted_u[i].first;\n        }\n        long long nextVal = sorted_u[kk].first;\n\n        for (int f = 0; f < N; f++) {\n            long long score = a[f] + base;\n            if (a[f] >= b[f]) score -= (a[f] - b[f]);\n\n            if (rank[f] < kk) {\n                score += topK - u[f] + nextVal;\n            } else {\n                score += topK;\n            }\n\n            ans = max(ans, score);\n        }\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17392429999745218,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

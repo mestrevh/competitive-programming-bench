@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:12:13.711930+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 558,
+            "output_tokens": 1352,
+            "total_tokens": 1910
+        },
+        "cost_usd": {
+            "input_cost": 5.6e-05,
+            "output_cost": 0.000676,
+            "total_cost": 0.000732
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        String next() throws IOException {\n            StringBuilder sb = new StringBuilder();\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            while (c > ' ') {\n                sb.append((char) c);\n                c = read();\n            }\n            return sb.toString();\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = Integer.parseInt(fs.next());\n        String p = fs.next();\n\n        for (int size = 1; size <= n / 2; size++) {\n            if (n % size != 0) continue;\n\n            int[] rootCount = new int[26];\n            for (int i = 0; i < size; i++) {\n                rootCount[p.charAt(i) - 'a']++;\n            }\n\n            boolean valid = true;\n            int[] count = new int[26];\n\n            for (int start = size; start < n && valid; start += size) {\n                Arrays.fill(count, 0);\n                for (int i = start; i < start + size; i++) {\n                    count[p.charAt(i) - 'a']++;\n                }\n                if (!Arrays.equals(rootCount, count)) {\n                    valid = false;\n                }\n            }\n\n            if (valid) {\n                System.out.println(p.substring(0, size));\n                return;\n            }\n        }\n\n        System.out.println(\"*\");\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        String next() throws IOException {\n            StringBuilder sb = new StringBuilder();\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            while (c > ' ') {\n                sb.append((char) c);\n                c = read();\n            }\n            return sb.toString();\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = Integer.parseInt(fs.next());\n        String p = fs.next();\n\n        for (int size = 1; size <= n / 2; size++) {\n            if (n % size != 0) continue;\n\n            int[] rootCount = new int[26];\n            for (int i = 0; i < size; i++) {\n                rootCount[p.charAt(i) - 'a']++;\n            }\n\n            boolean valid = true;\n            int[] count = new int[26];\n\n            for (int start = size; start < n && valid; start += size) {\n                Arrays.fill(count, 0);\n                for (int i = start; i < start + size; i++) {\n                    count[p.charAt(i) - 'a']++;\n                }\n                if (!Arrays.equals(rootCount, count)) {\n                    valid = false;\n                }\n            }\n\n            if (valid) {\n                System.out.println(p.substring(0, size));\n                return;\n            }\n        }\n\n        System.out.println(\"*\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09028650000254856,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

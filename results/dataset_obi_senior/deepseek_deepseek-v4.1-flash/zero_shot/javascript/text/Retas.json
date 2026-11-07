@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:25:45.830824+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1156,
+            "output_tokens": 8730,
+            "total_tokens": 9886
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.020952,
+            "total_cost": 0.020955
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet idx = 0;\nconst N = Number(data[idx++]);\nconst X1 = BigInt(data[idx++]);\nconst X2 = BigInt(data[idx++]);\n\nconst pts = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n  const A = BigInt(data[idx++]);\n  const B = BigInt(data[idx++]);\n  pts[i] = {\n    u: A * X1 + B,\n    v: A * X2 + B\n  };\n}\n\npts.sort((p, q) => {\n  if (p.u < q.u) return -1;\n  if (p.u > q.u) return 1;\n  if (p.v > q.v) return -1;\n  if (p.v < q.v) return 1;\n  return 0;\n});\n\nconst vals = pts.map(p => p.v).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));\nconst uniq = [];\n\nfor (let i = 0; i < vals.length; i++) {\n  if (i === 0 || vals[i] !== vals[i - 1]) uniq.push(vals[i]);\n}\n\nconst rank = new Map();\nfor (let i = 0; i < uniq.length; i++) {\n  rank.set(uniq[i], i + 1);\n}\n\nconst M = uniq.length;\nconst bit = new Array(M + 1).fill(0);\n\nfunction add(i) {\n  for (; i <= M; i += i & -i) bit[i]++;\n}\n\nfunction sum(i) {\n  let s = 0;\n  for (; i > 0; i -= i & -i) s += bit[i];\n  return s;\n}\n\nlet ans = 0;\n\nfor (let i = 0; i < N; i++) {\n  const r = rank.get(pts[i].v);\n  ans += i - sum(r - 1);\n  add(r);\n}\n\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet idx = 0;\nconst N = Number(data[idx++]);\nconst X1 = BigInt(data[idx++]);\nconst X2 = BigInt(data[idx++]);\n\nconst pts = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n  const A = BigInt(data[idx++]);\n  const B = BigInt(data[idx++]);\n  pts[i] = {\n    u: A * X1 + B,\n    v: A * X2 + B\n  };\n}\n\npts.sort((p, q) => {\n  if (p.u < q.u) return -1;\n  if (p.u > q.u) return 1;\n  if (p.v > q.v) return -1;\n  if (p.v < q.v) return 1;\n  return 0;\n});\n\nconst vals = pts.map(p => p.v).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));\nconst uniq = [];\n\nfor (let i = 0; i < vals.length; i++) {\n  if (i === 0 || vals[i] !== vals[i - 1]) uniq.push(vals[i]);\n}\n\nconst rank = new Map();\nfor (let i = 0; i < uniq.length; i++) {\n  rank.set(uniq[i], i + 1);\n}\n\nconst M = uniq.length;\nconst bit = new Array(M + 1).fill(0);\n\nfunction add(i) {\n  for (; i <= M; i += i & -i) bit[i]++;\n}\n\nfunction sum(i) {\n  let s = 0;\n  for (; i > 0; i -= i & -i) s += bit[i];\n  return s;\n}\n\nlet ans = 0;\n\nfor (let i = 0; i < N; i++) {\n  const r = rank.get(pts[i].v);\n  ans += i - sum(r - 1);\n  add(r);\n}\n\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20087649999186397,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

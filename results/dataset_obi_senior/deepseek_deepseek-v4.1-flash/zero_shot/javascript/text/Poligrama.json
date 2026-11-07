@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:22:35.343399+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 657,
+            "output_tokens": 3274,
+            "total_tokens": 3931
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.007858,
+            "total_cost": 0.00786
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(input[0], 10);\nconst p = input[1];\n\nif (n < 2) {\n  process.stdout.write('*\\n');\n} else {\n  const BASE = 97;\n\n  function isValid(len) {\n    const target = new Int32Array(26);\n    for (let i = 0; i < len; i++) {\n      target[p.charCodeAt(i) - BASE]++;\n    }\n\n    const count = new Int32Array(26);\n\n    for (let start = len; start < n; start += len) {\n      count.fill(0);\n\n      const end = start + len;\n      for (let i = start; i < end; i++) {\n        count[p.charCodeAt(i) - BASE]++;\n      }\n\n      for (let c = 0; c < 26; c++) {\n        if (count[c] !== target[c]) {\n          return false;\n        }\n      }\n    }\n\n    return true;\n  }\n\n  let answer = '*';\n\n  for (let len = 1; len <= Math.floor(n / 2); len++) {\n    if (n % len !== 0) continue;\n\n    if (isValid(len)) {\n      answer = p.substring(0, len);\n      break;\n    }\n  }\n\n  process.stdout.write(answer + '\\n');\n}\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(input[0], 10);\nconst p = input[1];\n\nif (n < 2) {\n  process.stdout.write('*\\n');\n} else {\n  const BASE = 97;\n\n  function isValid(len) {\n    const target = new Int32Array(26);\n    for (let i = 0; i < len; i++) {\n      target[p.charCodeAt(i) - BASE]++;\n    }\n\n    const count = new Int32Array(26);\n\n    for (let start = len; start < n; start += len) {\n      count.fill(0);\n\n      const end = start + len;\n      for (let i = start; i < end; i++) {\n        count[p.charCodeAt(i) - BASE]++;\n      }\n\n      for (let c = 0; c < 26; c++) {\n        if (count[c] !== target[c]) {\n          return false;\n        }\n      }\n    }\n\n    return true;\n  }\n\n  let answer = '*';\n\n  for (let len = 1; len <= Math.floor(n / 2); len++) {\n    if (n % len !== 0) continue;\n\n    if (isValid(len)) {\n      answer = p.substring(0, len);\n      break;\n    }\n  }\n\n  process.stdout.write(answer + '\\n');\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10209989998838864,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

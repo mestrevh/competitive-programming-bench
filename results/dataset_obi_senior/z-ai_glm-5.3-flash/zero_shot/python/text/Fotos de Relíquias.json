@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T06:59:00.686880+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 361,
+            "total_tokens": 1374
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.00018,
+            "total_cost": 0.000202
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    a = data[1:1+n]\n    ans = 0\n    i = 0\n    # for each '1', count zeros at left run and right run\n    # find positions of ones efficiently\n    # approach: iterate, tracking length of current zero run\n    left_zeros = 0\n    for x in a:\n        if x == '1':\n            # ones separated by left_zeros zeros on the left\n            ans += left_zeros + 1  # temporary, will multiply by right below\n            left_zeros = 0\n            ans -= 1  # we need (L+1)*(R+1), handle via pairing: record position\n            left_zeros += 1  # dummy to keep structure simple? No — redo properly\n        else:\n            left_zeros += 1\n    # Simpler correct approach below\n    ans = 0\n    positions = [i for i, x in enumerate(a) if x == '1']\n    m = len(positions)\n    boundaries = [-1] + positions + [n]\n    for j in range(m):\n        L = positions[j] - boundaries[j] - 1  # zeros to the left\n        R = boundaries[j+1] - positions[j] - 1  # zeros to the right\n        ans += (L + 1) * (R + 1)\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    a = data[1:1+n]\n    ans = 0\n    i = 0\n    # for each '1', count zeros at left run and right run\n    # find positions of ones efficiently\n    # approach: iterate, tracking length of current zero run\n    left_zeros = 0\n    for x in a:\n        if x == '1':\n            # ones separated by left_zeros zeros on the left\n            ans += left_zeros + 1  # temporary, will multiply by right below\n            left_zeros = 0\n            ans -= 1  # we need (L+1)*(R+1), handle via pairing: record position\n            left_zeros += 1  # dummy to keep structure simple? No — redo properly\n        else:\n            left_zeros += 1\n    # Simpler correct approach below\n    ans = 0\n    positions = [i for i, x in enumerate(a) if x == '1']\n    m = len(positions)\n    boundaries = [-1] + positions + [n]\n    for j in range(m):\n        L = positions[j] - boundaries[j] - 1  # zeros to the left\n        R = boundaries[j+1] - positions[j] - 1  # zeros to the right\n        ans += (L + 1) * (R + 1)\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.07390660000237403,
+            "counts": {
+                "AC": 3,
+                "WA": 40,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

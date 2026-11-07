@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:03:47.570293+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1119,
+            "output_tokens": 13720,
+            "total_tokens": 14839
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.032928,
+            "total_cost": 0.032931
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    pts = [tuple(map(int, data[i:i+2])) for i in range(0, 14, 2)]\n    P1, P2, P3, P4, P5, P6, P7 = pts\n\n    def dot(ax, ay, bx, by):\n        return ax * bx + ay * by\n\n    def cross(ax, ay, bx, by):\n        return ax * by - ay * bx\n\n    def dist2(p, q):\n        dx = p[0] - q[0]\n        dy = p[1] - q[1]\n        return dx * dx + dy * dy\n\n    # Ângulo P2 P1 P3 agudo\n    if dot(P2[0] - P1[0], P2[1] - P1[1],\n           P3[0] - P1[0], P3[1] - P1[1]) <= 0:\n        print('N')\n        return\n\n    # P1P2 == P1P3\n    if dist2(P1, P2) != dist2(P1, P3):\n        print('N')\n        return\n\n    dx = P3[0] - P2[0]\n    dy = P3[1] - P2[1]\n\n    # P4 e P5 colineares com P2 e P3\n    if cross(dx, dy, P4[0] - P2[0], P4[1] - P2[1]) != 0:\n        print('N')\n        return\n    if cross(dx, dy, P5[0] - P2[0], P5[1] - P2[1]) != 0:\n        print('N')\n        return\n\n    # Pontos médios de P2P3 e P4P5 coincidem\n    if P2[0] + P3[0] != P4[0] + P5[0] or P2[1] + P3[1] != P4[1] + P5[1]:\n        print('N')\n        return\n\n    # P2P3 > P4P5\n    if dist2(P2, P3) <= dist2(P4, P5):\n        print('N')\n        return\n\n    # P4P6 e P5P7 perpendiculares a P2P3\n    if dot(P6[0] - P4[0], P6[1] - P4[1], dx, dy) != 0:\n        print('N')\n        return\n    if dot(P7[0] - P5[0], P7[1] - P5[1], dx, dy) != 0:\n        print('N')\n        return\n\n    # P4P6 == P5P7\n    if dist2(P4, P6) != dist2(P5, P7):\n        print('N')\n        return\n\n    # P1 e P6 separados pela reta P2P3\n    s1 = cross(dx, dy, P1[0] - P2[0], P1[1] - P2[1])\n    s6 = cross(dx, dy, P6[0] - P2[0], P6[1] - P2[1])\n    if s1 * s6 >= 0:\n        print('N')\n        return\n\n    print('S')\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    pts = [tuple(map(int, data[i:i+2])) for i in range(0, 14, 2)]\n    P1, P2, P3, P4, P5, P6, P7 = pts\n\n    def dot(ax, ay, bx, by):\n        return ax * bx + ay * by\n\n    def cross(ax, ay, bx, by):\n        return ax * by - ay * bx\n\n    def dist2(p, q):\n        dx = p[0] - q[0]\n        dy = p[1] - q[1]\n        return dx * dx + dy * dy\n\n    # Ângulo P2 P1 P3 agudo\n    if dot(P2[0] - P1[0], P2[1] - P1[1],\n           P3[0] - P1[0], P3[1] - P1[1]) <= 0:\n        print('N')\n        return\n\n    # P1P2 == P1P3\n    if dist2(P1, P2) != dist2(P1, P3):\n        print('N')\n        return\n\n    dx = P3[0] - P2[0]\n    dy = P3[1] - P2[1]\n\n    # P4 e P5 colineares com P2 e P3\n    if cross(dx, dy, P4[0] - P2[0], P4[1] - P2[1]) != 0:\n        print('N')\n        return\n    if cross(dx, dy, P5[0] - P2[0], P5[1] - P2[1]) != 0:\n        print('N')\n        return\n\n    # Pontos médios de P2P3 e P4P5 coincidem\n    if P2[0] + P3[0] != P4[0] + P5[0] or P2[1] + P3[1] != P4[1] + P5[1]:\n        print('N')\n        return\n\n    # P2P3 > P4P5\n    if dist2(P2, P3) <= dist2(P4, P5):\n        print('N')\n        return\n\n    # P4P6 e P5P7 perpendiculares a P2P3\n    if dot(P6[0] - P4[0], P6[1] - P4[1], dx, dy) != 0:\n        print('N')\n        return\n    if dot(P7[0] - P5[0], P7[1] - P5[1], dx, dy) != 0:\n        print('N')\n        return\n\n    # P4P6 == P5P7\n    if dist2(P4, P6) != dist2(P5, P7):\n        print('N')\n        return\n\n    # P1 e P6 separados pela reta P2P3\n    s1 = cross(dx, dy, P1[0] - P2[0], P1[1] - P2[1])\n    s6 = cross(dx, dy, P6[0] - P2[0], P6[1] - P2[1])\n    if s1 * s6 >= 0:\n        print('N')\n        return\n\n    print('S')\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07860749999963446,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

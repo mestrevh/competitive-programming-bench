@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:48:06.517806+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 646,
+            "output_tokens": 447,
+            "total_tokens": 2076
+        },
+        "cost_usd": {
+            "input_cost": 0.000485,
+            "output_cost": 0.001676,
+            "total_cost": 0.002161
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nStr = nextToken();\n    if (!nStr) return;\n    const n = parseInt(nStr, 10);\n\n    const passwords = new Array(n);\n    const freq = new Map();\n\n    for (let i = 0; i < n; i++) {\n        const s = nextToken();\n        passwords[i] = s;\n        freq.set(s, (freq.get(s) || 0) + 1);\n    }\n\n    let totalPairs = 0;\n\n    for (let i = 0; i < n; i++) {\n        const s = passwords[i];\n        const len = s.length;\n        const substrings = new Set();\n\n        for (let start = 0; start < len; start++) {\n            for (let end = start + 1; end <= len; end++) {\n                substrings.add(s.slice(start, end));\n            }\n        }\n\n        for (const sub of substrings) {\n            const count = freq.get(sub);\n            if (count !== undefined) {\n                if (sub === s) {\n                    totalPairs += count - 1;\n                } else {\n                    totalPairs += count;\n                }\n            }\n        }\n    }\n\n    console.log(totalPairs);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nStr = nextToken();\n    if (!nStr) return;\n    const n = parseInt(nStr, 10);\n\n    const passwords = new Array(n);\n    const freq = new Map();\n\n    for (let i = 0; i < n; i++) {\n        const s = nextToken();\n        passwords[i] = s;\n        freq.set(s, (freq.get(s) || 0) + 1);\n    }\n\n    let totalPairs = 0;\n\n    for (let i = 0; i < n; i++) {\n        const s = passwords[i];\n        const len = s.length;\n        const substrings = new Set();\n\n        for (let start = 0; start < len; start++) {\n            for (let end = start + 1; end <= len; end++) {\n                substrings.add(s.slice(start, end));\n            }\n        }\n\n        for (const sub of substrings) {\n            const count = freq.get(sub);\n            if (count !== undefined) {\n                if (sub === s) {\n                    totalPairs += count - 1;\n                } else {\n                    totalPairs += count;\n                }\n            }\n        }\n    }\n\n    console.log(totalPairs);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10185499998624437,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

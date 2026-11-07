@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:56:27.523997+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 763,
+            "output_tokens": 67312,
+            "total_tokens": 68075
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.033656,
+            "total_cost": 0.033672
+        },
+        "raw_response": "Analisando o problema: precisamos da maior sequência de visitas a tendas começando no palácio (0,0), onde as distâncias percorridas consecutivamente são estritamente decrescentes e a mesma tenda não pode ser visitada em movimentos consecutivos (revisitas não consecutivas são permitidas — o Exemplo 1 exige isso, e o Exemplo 3 mostra que não é permitido parar no palácio no meio do caminho).\n\n**Abordagem:** DP sobre arestas dirigidas. Estado f(u→v) = máximo de visitas terminando com o movimento u→v. Recorrência: f(u→v) = 1 + max{f(x→u) : w(x,u) > w(u,v)} com caso base f(palácio→v) = 1. Ordenamos todos os pares por distância (decrescente), processamos em grupos de pesos iguais (atualizações do grupo são adiadas para impor a desigualdade estrita), mantendo `best[v]` = melhor valor de f chegando em v. Usamos distâncias ao quadrado (inteiros exatos) e chaves empacotadas em doubles (peso×2²² + payload, exato < 2⁵³) para uma ordenação nativa rápida. Complexidade O(N² log N), memória ~40MB, rápido para N=2000.\n\n```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n  const N = tokens[0];\n  if (!(N >= 1)) {\n    console.log(0);\n    return;\n  }\n\n  const xs = new Float64Array(N);\n  const ys = new Float64Array(N);\n  for (let i = 0; i < N; i++) {\n    xs[i] = tokens[1 + 2 * i];\n    ys[i] = tokens[2 + 2 * i];\n  }\n\n  const BASE = 4194304; // 2^22\n  const INV = 1 / BASE; // exato (2^-22)\n  const ORI = 4192256;  // 2047*2048, marca de aresta saindo do palácio\n\n  const E = (N * (N - 1)) / 2 + N;\n  const keys = new Float64Array(E);\n\n  let idx = 0;\n  for (let i = 0; i < N; i++) {\n    const xi = xs[i], yi = ys[i], bi = i * 2048;\n    for (let j = i + 1; j < N; j++) {\n      const dx = xi - xs[j], dy = yi - ys[j];\n      keys[idx++] = (dx * dx + dy * dy) * BASE + (bi + j);\n    }\n  }\n  for (let i = 0; i < N; i++) {\n    keys[idx++] = (xs[i] * xs[i] + ys[i] * ys[i]) * BASE + (ORI + i);\n  }\n\n  keys.sort(); // ordenação numérica ascendente (padrão de TypedArray)\n\n  // best[v] = melhor f entre arestas dirigidas que chegam em v já processadas\n  // (todas com peso estritamente maior que o grupo atual); 0 = nenhuma ainda\n  const best = new Int32Array(N);\n  const TCAP = N * (N - 1) + N + 2;\n  const tmpV = new Uint16Array(TCAP);\n  const tmpF = new Int32Array(TCAP);\n\n  let ans = 1; // sempre é possível visitar 1 tenda\n  let cnt = 0;\n  let prevW = -1;\n\n  for (let k = E - 1; k >= 0; k--) {\n    const key = keys[k];\n    const w = (key * INV) | 0;\n    if (w !== prevW) {\n      // aplica atualizações do grupo anterior (peso estritamente maior)\n      for (let t = 0; t < cnt; t++) {\n        const f = tmpF[t], v = tmpV[t];\n        if (f > best[v]) best[v] = f;\n      }\n      cnt = 0;\n      prevW = w;\n    }\n    const payload = key - w * BASE;\n    if (payload >= ORI) {\n      // palácio -> tenda v: primeira visita, f = 1\n      tmpV[cnt] = payload - ORI;\n      tmpF[cnt] = 1;\n      cnt++;\n    } else {\n      const u = (payload / 2048) | 0;\n      const v = payload - u * 2048;\n      const bu = best[u];\n      if (bu > 0) {\n        const f = bu + 1; // ... -> u -> v\n        tmpV[cnt] = v; tmpF[cnt] = f; cnt++;\n        if (f > ans) ans = f;\n      }\n      const bv = best[v];\n      if (bv > 0) {\n        const f = bv + 1; // ... -> v -> u\n        tmpV[cnt] = u; tmpF[cnt] = f; cnt++;\n        if (f > ans) ans = f;\n      }\n    }\n  }\n  for (let t = 0; t < cnt; t++) {\n    const f = tmpF[t], v = tmpV[t];\n    if (f > best[v]) best[v] = f;\n  }\n\n  console.log(ans);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n  const N = tokens[0];\n  if (!(N >= 1)) {\n    console.log(0);\n    return;\n  }\n\n  const xs = new Float64Array(N);\n  const ys = new Float64Array(N);\n  for (let i = 0; i < N; i++) {\n    xs[i] = tokens[1 + 2 * i];\n    ys[i] = tokens[2 + 2 * i];\n  }\n\n  const BASE = 4194304; // 2^22\n  const INV = 1 / BASE; // exato (2^-22)\n  const ORI = 4192256;  // 2047*2048, marca de aresta saindo do palácio\n\n  const E = (N * (N - 1)) / 2 + N;\n  const keys = new Float64Array(E);\n\n  let idx = 0;\n  for (let i = 0; i < N; i++) {\n    const xi = xs[i], yi = ys[i], bi = i * 2048;\n    for (let j = i + 1; j < N; j++) {\n      const dx = xi - xs[j], dy = yi - ys[j];\n      keys[idx++] = (dx * dx + dy * dy) * BASE + (bi + j);\n    }\n  }\n  for (let i = 0; i < N; i++) {\n    keys[idx++] = (xs[i] * xs[i] + ys[i] * ys[i]) * BASE + (ORI + i);\n  }\n\n  keys.sort(); // ordenação numérica ascendente (padrão de TypedArray)\n\n  // best[v] = melhor f entre arestas dirigidas que chegam em v já processadas\n  // (todas com peso estritamente maior que o grupo atual); 0 = nenhuma ainda\n  const best = new Int32Array(N);\n  const TCAP = N * (N - 1) + N + 2;\n  const tmpV = new Uint16Array(TCAP);\n  const tmpF = new Int32Array(TCAP);\n\n  let ans = 1; // sempre é possível visitar 1 tenda\n  let cnt = 0;\n  let prevW = -1;\n\n  for (let k = E - 1; k >= 0; k--) {\n    const key = keys[k];\n    const w = (key * INV) | 0;\n    if (w !== prevW) {\n      // aplica atualizações do grupo anterior (peso estritamente maior)\n      for (let t = 0; t < cnt; t++) {\n        const f = tmpF[t], v = tmpV[t];\n        if (f > best[v]) best[v] = f;\n      }\n      cnt = 0;\n      prevW = w;\n    }\n    const payload = key - w * BASE;\n    if (payload >= ORI) {\n      // palácio -> tenda v: primeira visita, f = 1\n      tmpV[cnt] = payload - ORI;\n      tmpF[cnt] = 1;\n      cnt++;\n    } else {\n      const u = (payload / 2048) | 0;\n      const v = payload - u * 2048;\n      const bu = best[u];\n      if (bu > 0) {\n        const f = bu + 1; // ... -> u -> v\n        tmpV[cnt] = v; tmpF[cnt] = f; cnt++;\n        if (f > ans) ans = f;\n      }\n      const bv = best[v];\n      if (bv > 0) {\n        const f = bv + 1; // ... -> v -> u\n        tmpV[cnt] = u; tmpF[cnt] = f; cnt++;\n        if (f > ans) ans = f;\n      }\n    }\n  }\n  for (let t = 0; t < cnt; t++) {\n    const f = tmpF[t], v = tmpV[t];\n    if (f > best[v]) best[v] = f;\n  }\n\n  console.log(ans);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.377860700013116,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

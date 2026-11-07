@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:52:15.569776+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1743,
+            "output_tokens": 3919,
+            "total_tokens": 5662
+        },
+        "cost_usd": {
+            "input_cost": 0.000174,
+            "output_cost": 0.001959,
+            "total_cost": 0.002134
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nit = iter(data)\n\nN = next(it)\nM = next(it)\nK = next(it)\n\nprices = [next(it) for _ in range(K)]\n\nids = {}\nkeys = []\nparent = []\n\ndef find(x):\n    while parent[x] >= 0:\n        p = parent[x]\n        if parent[p] >= 0:\n            parent[x] = parent[p]\n        x = p\n    return x\n\nfor _ in range(M):\n    v = next(it) - 1\n    u = next(it) - 1\n    t = next(it) - 1\n\n    key_v = v * K + t\n    a = ids.get(key_v)\n    if a is None:\n        a = len(parent)\n        ids[key_v] = a\n        keys.append(key_v)\n        parent.append(-1)\n\n    key_u = u * K + t\n    b = ids.get(key_u)\n    if b is None:\n        b = len(parent)\n        ids[key_u] = b\n        keys.append(key_u)\n        parent.append(-1)\n\n    ra = find(a)\n    rb = find(b)\n    if ra != rb:\n        if parent[ra] > parent[rb]:\n            ra, rb = rb, ra\n        parent[ra] += parent[rb]\n        parent[rb] = ra\n\nA = next(it) - 1\nB = next(it) - 1\n\nadj = [[] for _ in range(N)]\ncomponent_prices = []\nroot_to_component = {}\n\nfor idx, key in enumerate(keys):\n    root = find(idx)\n    cid = root_to_component.get(root)\n    if cid is None:\n        cid = len(component_prices)\n        root_to_component[root] = cid\n        component_prices.append(prices[key % K])\n        adj.append([])\n\n    station = key // K\n    component_node = N + cid\n    adj[station].append(component_node)\n    adj[component_node].append(station)\n\ndist = [10**30] * len(adj)\ndist[A] = 0\nheap = [(0, A)]\n\nwhile heap:\n    cost, node = heapq.heappop(heap)\n    if cost != dist[node]:\n        continue\n    if node == B:\n        print(cost)\n        break\n\n    if node < N:\n        for nxt in adj[node]:\n            new_cost = cost + component_prices[nxt - N]\n            if new_cost < dist[nxt]:\n                dist[nxt] = new_cost\n                heapq.heappush(heap, (new_cost, nxt))\n    else:\n        for nxt in adj[node]:\n            if cost < dist[nxt]:\n                dist[nxt] = cost\n                heapq.heappush(heap, (cost, nxt))\nelse:\n    print(-1)\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nit = iter(data)\n\nN = next(it)\nM = next(it)\nK = next(it)\n\nprices = [next(it) for _ in range(K)]\n\nids = {}\nkeys = []\nparent = []\n\ndef find(x):\n    while parent[x] >= 0:\n        p = parent[x]\n        if parent[p] >= 0:\n            parent[x] = parent[p]\n        x = p\n    return x\n\nfor _ in range(M):\n    v = next(it) - 1\n    u = next(it) - 1\n    t = next(it) - 1\n\n    key_v = v * K + t\n    a = ids.get(key_v)\n    if a is None:\n        a = len(parent)\n        ids[key_v] = a\n        keys.append(key_v)\n        parent.append(-1)\n\n    key_u = u * K + t\n    b = ids.get(key_u)\n    if b is None:\n        b = len(parent)\n        ids[key_u] = b\n        keys.append(key_u)\n        parent.append(-1)\n\n    ra = find(a)\n    rb = find(b)\n    if ra != rb:\n        if parent[ra] > parent[rb]:\n            ra, rb = rb, ra\n        parent[ra] += parent[rb]\n        parent[rb] = ra\n\nA = next(it) - 1\nB = next(it) - 1\n\nadj = [[] for _ in range(N)]\ncomponent_prices = []\nroot_to_component = {}\n\nfor idx, key in enumerate(keys):\n    root = find(idx)\n    cid = root_to_component.get(root)\n    if cid is None:\n        cid = len(component_prices)\n        root_to_component[root] = cid\n        component_prices.append(prices[key % K])\n        adj.append([])\n\n    station = key // K\n    component_node = N + cid\n    adj[station].append(component_node)\n    adj[component_node].append(station)\n\ndist = [10**30] * len(adj)\ndist[A] = 0\nheap = [(0, A)]\n\nwhile heap:\n    cost, node = heapq.heappop(heap)\n    if cost != dist[node]:\n        continue\n    if node == B:\n        print(cost)\n        break\n\n    if node < N:\n        for nxt in adj[node]:\n            new_cost = cost + component_prices[nxt - N]\n            if new_cost < dist[nxt]:\n                dist[nxt] = new_cost\n                heapq.heappush(heap, (new_cost, nxt))\n    else:\n        for nxt in adj[node]:\n            if cost < dist[nxt]:\n                dist[nxt] = cost\n                heapq.heappush(heap, (cost, nxt))\nelse:\n    print(-1)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.8172608999957447,
+            "counts": {
+                "AC": 107,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

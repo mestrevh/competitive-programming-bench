@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:47:52.884142+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 543,
+            "output_tokens": 563,
+            "total_tokens": 3080
+        },
+        "cost_usd": {
+            "input_cost": 0.000407,
+            "output_cost": 0.002111,
+            "total_cost": 0.002519
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res * sign;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    const K = readInt();\n    const C = readInt();\n\n    const pref = new Int32Array(N + 1);\n    let totalSum = 0;\n    for (let i = 1; i <= N; i++) {\n        const val = readInt();\n        totalSum += val;\n        pref[i] = pref[i - 1] + val;\n    }\n\n    let prev = new Int32Array(N + 1);\n    let curr = new Int32Array(N + 1);\n\n    for (let j = 1; j <= K; j++) {\n        const min_i = j * C;\n        const max_i = N - (K - j) * C;\n\n        let best = prev[min_i - C] + (pref[min_i] - pref[min_i - C]);\n        curr[min_i] = best;\n\n        for (let i = min_i + 1; i <= max_i; i++) {\n            const cand = prev[i - C] + (pref[i] - pref[i - C]);\n            if (cand < best) {\n                best = cand;\n            }\n            curr[i] = best;\n        }\n\n        const temp = prev;\n        prev = curr;\n        curr = temp;\n    }\n\n    const minCovered = prev[N];\n    const maxUncovered = totalSum - minCovered;\n\n    console.log(maxUncovered);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res * sign;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    const K = readInt();\n    const C = readInt();\n\n    const pref = new Int32Array(N + 1);\n    let totalSum = 0;\n    for (let i = 1; i <= N; i++) {\n        const val = readInt();\n        totalSum += val;\n        pref[i] = pref[i - 1] + val;\n    }\n\n    let prev = new Int32Array(N + 1);\n    let curr = new Int32Array(N + 1);\n\n    for (let j = 1; j <= K; j++) {\n        const min_i = j * C;\n        const max_i = N - (K - j) * C;\n\n        let best = prev[min_i - C] + (pref[min_i] - pref[min_i - C]);\n        curr[min_i] = best;\n\n        for (let i = min_i + 1; i <= max_i; i++) {\n            const cand = prev[i - C] + (pref[i] - pref[i - C]);\n            if (cand < best) {\n                best = cand;\n            }\n            curr[i] = best;\n        }\n\n        const temp = prev;\n        prev = curr;\n        curr = temp;\n    }\n\n    const minCovered = prev[N];\n    const maxUncovered = totalSum - minCovered;\n\n    console.log(maxUncovered);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09218080001301132,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

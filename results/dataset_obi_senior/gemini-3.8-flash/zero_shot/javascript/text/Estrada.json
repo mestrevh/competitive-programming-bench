@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:47:25.001038+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 656,
+            "output_tokens": 394,
+            "total_tokens": 1632
+        },
+        "cost_usd": {
+            "input_cost": 0.000492,
+            "output_cost": 0.001477,
+            "total_cost": 0.001969
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const T = nextInt();\n    if (T === null) return;\n    const N = nextInt();\n\n    const X = new Float64Array(N);\n    for (let i = 0; i < N; i++) {\n        X[i] = nextInt();\n    }\n\n    X.sort();\n\n    let minNeighborhood = (X[0] + X[1]) / 2.0;\n\n    for (let i = 1; i < N - 1; i++) {\n        const size = (X[i + 1] - X[i - 1]) / 2.0;\n        if (size < minNeighborhood) {\n            minNeighborhood = size;\n        }\n    }\n\n    const lastSize = T - (X[N - 2] + X[N - 1]) / 2.0;\n    if (lastSize < minNeighborhood) {\n        minNeighborhood = lastSize;\n    }\n\n    console.log(minNeighborhood.toFixed(2));\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const T = nextInt();\n    if (T === null) return;\n    const N = nextInt();\n\n    const X = new Float64Array(N);\n    for (let i = 0; i < N; i++) {\n        X[i] = nextInt();\n    }\n\n    X.sort();\n\n    let minNeighborhood = (X[0] + X[1]) / 2.0;\n\n    for (let i = 1; i < N - 1; i++) {\n        const size = (X[i + 1] - X[i - 1]) / 2.0;\n        if (size < minNeighborhood) {\n            minNeighborhood = size;\n        }\n    }\n\n    const lastSize = T - (X[N - 2] + X[N - 1]) / 2.0;\n    if (lastSize < minNeighborhood) {\n        minNeighborhood = lastSize;\n    }\n\n    console.log(minNeighborhood.toFixed(2));\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05642049998277798,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

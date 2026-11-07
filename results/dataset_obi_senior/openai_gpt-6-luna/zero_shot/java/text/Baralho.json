@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:41:49.211034+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 809,
+            "output_tokens": 392,
+            "total_tokens": 1201
+        },
+        "cost_usd": {
+            "input_cost": 8.1e-05,
+            "output_cost": 0.000196,
+            "total_cost": 0.000277
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        String cards = new BufferedReader(new InputStreamReader(System.in)).readLine().trim();\n\n        boolean[][] seen = new boolean[4][14];\n        boolean[] duplicate = new boolean[4];\n        char[] suits = {'C', 'E', 'U', 'P'};\n\n        for (int i = 0; i < cards.length(); i += 3) {\n            int value = Integer.parseInt(cards.substring(i, i + 2));\n            char suit = cards.charAt(i + 2);\n\n            int suitIndex = 0;\n            while (suits[suitIndex] != suit) suitIndex++;\n\n            if (seen[suitIndex][value]) {\n                duplicate[suitIndex] = true;\n            } else {\n                seen[suitIndex][value] = true;\n            }\n        }\n\n        StringBuilder output = new StringBuilder();\n        for (int s = 0; s < 4; s++) {\n            if (duplicate[s]) {\n                output.append(\"erro\");\n            } else {\n                int missing = 0;\n                for (int value = 1; value <= 13; value++) {\n                    if (!seen[s][value]) missing++;\n                }\n                output.append(missing);\n            }\n            output.append('\\n');\n        }\n\n        System.out.print(output);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        String cards = new BufferedReader(new InputStreamReader(System.in)).readLine().trim();\n\n        boolean[][] seen = new boolean[4][14];\n        boolean[] duplicate = new boolean[4];\n        char[] suits = {'C', 'E', 'U', 'P'};\n\n        for (int i = 0; i < cards.length(); i += 3) {\n            int value = Integer.parseInt(cards.substring(i, i + 2));\n            char suit = cards.charAt(i + 2);\n\n            int suitIndex = 0;\n            while (suits[suitIndex] != suit) suitIndex++;\n\n            if (seen[suitIndex][value]) {\n                duplicate[suitIndex] = true;\n            } else {\n                seen[suitIndex][value] = true;\n            }\n        }\n\n        StringBuilder output = new StringBuilder();\n        for (int s = 0; s < 4; s++) {\n            if (duplicate[s]) {\n                output.append(\"erro\");\n            } else {\n                int missing = 0;\n                for (int value = 1; value <= 13; value++) {\n                    if (!seen[s][value]) missing++;\n                }\n                output.append(missing);\n            }\n            output.append('\\n');\n        }\n\n        System.out.print(output);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07487389999732841,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:32:24.531685+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 923,
+            "output_tokens": 378,
+            "total_tokens": 1757
+        },
+        "cost_usd": {
+            "input_cost": 0.000692,
+            "output_cost": 0.001418,
+            "total_cost": 0.00211
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main() {\n    int R, N;\n    if (scanf(\"%d %d\", &R, &N) != 2) return 0;\n\n    int min_price[101];\n    for (int i = 0; i <= 100; i++) {\n        min_price[i] = -1;\n    }\n\n    for (int i = 0; i < N; i++) {\n        int t, p;\n        scanf(\"%d %d\", &t, &p);\n        if (min_price[t] == -1 || p < min_price[t]) {\n            min_price[t] = p;\n        }\n    }\n\n    int prices[101];\n    int count = 0;\n    for (int i = 1; i <= 100; i++) {\n        if (min_price[i] != -1) {\n            prices[count++] = min_price[i];\n        }\n    }\n\n    qsort(prices, count, sizeof(int), cmp);\n\n    int ans = 0;\n    for (int i = 0; i < count; i++) {\n        if (R >= prices[i]) {\n            R -= prices[i];\n            ans++;\n        } else {\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main() {\n    int R, N;\n    if (scanf(\"%d %d\", &R, &N) != 2) return 0;\n\n    int min_price[101];\n    for (int i = 0; i <= 100; i++) {\n        min_price[i] = -1;\n    }\n\n    for (int i = 0; i < N; i++) {\n        int t, p;\n        scanf(\"%d %d\", &t, &p);\n        if (min_price[t] == -1 || p < min_price[t]) {\n            min_price[t] = p;\n        }\n    }\n\n    int prices[101];\n    int count = 0;\n    for (int i = 1; i <= 100; i++) {\n        if (min_price[i] != -1) {\n            prices[count++] = min_price[i];\n        }\n    }\n\n    qsort(prices, count, sizeof(int), cmp);\n\n    int ans = 0;\n    for (int i = 0; i < count; i++) {\n        if (R >= prices[i]) {\n            R -= prices[i];\n            ans++;\n        } else {\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13658689998555928,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

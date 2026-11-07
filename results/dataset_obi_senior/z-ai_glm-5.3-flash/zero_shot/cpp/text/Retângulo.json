@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T00:20:54.952254+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 731,
+            "output_tokens": 1011,
+            "total_tokens": 1742
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.000505,
+            "total_cost": 0.000521
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n;\n    if (!(cin >> n)) return 0;\n    \n    vector<long long> L(n);\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        cin >> L[i];\n        total += L[i];\n    }\n    \n    if (total % 2 != 0) {\n        cout << 'N' << '\\n';\n        return 0;\n    }\n    \n    long long half = total / 2;\n    \n    // prefix[i] = arco cumulativo até a árvore i (árvore 0 tem prefixo 0)\n    vector<long long> pref(n);\n    pref[0] = 0;\n    for (int i = 1; i < n; i++) pref[i] = pref[i-1] + L[i-1];\n    \n    unordered_set<long long> s;\n    s.reserve(n * 2);\n    s.max_load_factor(0.7);\n    for (int i = 0; i < n; i++) s.insert(pref[i]);\n    \n    long long countPairs = 0;\n    for (int i = 0; i < n; i++) {\n        long long want = pref[i] + half;\n        if (want >= total) want -= total;\n        if (s.count(want)) countPairs++;\n    }\n    \n    // cada par de árvores antipodais é contado duas vezes;\n    // um retângulo precisa de dois pares diametrais distintos (4 árvores)\n    cout << (countPairs >= 4 ? 'S' : 'N') << '\\n';\n    \n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n;\n    if (!(cin >> n)) return 0;\n    \n    vector<long long> L(n);\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        cin >> L[i];\n        total += L[i];\n    }\n    \n    if (total % 2 != 0) {\n        cout << 'N' << '\\n';\n        return 0;\n    }\n    \n    long long half = total / 2;\n    \n    // prefix[i] = arco cumulativo até a árvore i (árvore 0 tem prefixo 0)\n    vector<long long> pref(n);\n    pref[0] = 0;\n    for (int i = 1; i < n; i++) pref[i] = pref[i-1] + L[i-1];\n    \n    unordered_set<long long> s;\n    s.reserve(n * 2);\n    s.max_load_factor(0.7);\n    for (int i = 0; i < n; i++) s.insert(pref[i]);\n    \n    long long countPairs = 0;\n    for (int i = 0; i < n; i++) {\n        long long want = pref[i] + half;\n        if (want >= total) want -= total;\n        if (s.count(want)) countPairs++;\n    }\n    \n    // cada par de árvores antipodais é contado duas vezes;\n    // um retângulo precisa de dois pares diametrais distintos (4 árvores)\n    cout << (countPairs >= 4 ? 'S' : 'N') << '\\n';\n    \n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.269528500008164,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

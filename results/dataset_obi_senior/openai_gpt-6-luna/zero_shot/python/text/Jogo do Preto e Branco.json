@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:41:28.702434+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 722,
+            "output_tokens": 612,
+            "total_tokens": 1334
+        },
+        "cost_usd": {
+            "input_cost": 7.2e-05,
+            "output_cost": 0.000306,
+            "total_cost": 0.000378
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nL, C = data[0], data[1]\nP = data[2]\n\nblack = set()\nindex = 3\nfor _ in range(P):\n    x, y = data[index] - 1, data[index + 1] - 1\n    black.add((x, y))\n    index += 2\n\ndirections = ((1, 0), (-1, 0), (0, 1), (0, -1))\ncandidates = set()\n\nfor x, y in black:\n    for dx, dy in directions:\n        nx, ny = x + dx, y + dy\n        if 0 <= nx < L and 0 <= ny < C and (nx, ny) not in black:\n            candidates.add((nx, ny))\n\nleft = [cell for cell in candidates if (cell[0] + cell[1]) % 2 == 0]\nadj = {}\n\nfor x, y in left:\n    neighbors = []\n    for dx, dy in directions:\n        cell = (x + dx, y + dy)\n        if cell in candidates:\n            neighbors.append(cell)\n    adj[(x, y)] = neighbors\n\nmatched = {}\n\ndef augment(cell, seen):\n    for neighbor in adj[cell]:\n        if neighbor in seen:\n            continue\n        seen.add(neighbor)\n        if neighbor not in matched or augment(matched[neighbor], seen):\n            matched[neighbor] = cell\n            return True\n    return False\n\nmatching = 0\nfor cell in left:\n    if augment(cell, set()):\n        matching += 1\n\nprint(len(candidates) - matching)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nL, C = data[0], data[1]\nP = data[2]\n\nblack = set()\nindex = 3\nfor _ in range(P):\n    x, y = data[index] - 1, data[index + 1] - 1\n    black.add((x, y))\n    index += 2\n\ndirections = ((1, 0), (-1, 0), (0, 1), (0, -1))\ncandidates = set()\n\nfor x, y in black:\n    for dx, dy in directions:\n        nx, ny = x + dx, y + dy\n        if 0 <= nx < L and 0 <= ny < C and (nx, ny) not in black:\n            candidates.add((nx, ny))\n\nleft = [cell for cell in candidates if (cell[0] + cell[1]) % 2 == 0]\nadj = {}\n\nfor x, y in left:\n    neighbors = []\n    for dx, dy in directions:\n        cell = (x + dx, y + dy)\n        if cell in candidates:\n            neighbors.append(cell)\n    adj[(x, y)] = neighbors\n\nmatched = {}\n\ndef augment(cell, seen):\n    for neighbor in adj[cell]:\n        if neighbor in seen:\n            continue\n        seen.add(neighbor)\n        if neighbor not in matched or augment(matched[neighbor], seen):\n            matched[neighbor] = cell\n            return True\n    return False\n\nmatching = 0\nfor cell in left:\n    if augment(cell, set()):\n        matching += 1\n\nprint(len(candidates) - matching)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07988089999707881,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

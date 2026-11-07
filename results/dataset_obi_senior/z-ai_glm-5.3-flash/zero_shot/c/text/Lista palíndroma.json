@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:20:11.075157+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 727,
+            "output_tokens": 680,
+            "total_tokens": 1407
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.00034,
+            "total_cost": 0.000356
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int read_int(void) {\n    int c = getchar_unlocked();\n    while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = getchar_unlocked();\n    int sgn = 1;\n    if (c == '-') { sgn = -1; c = getchar_unlocked(); }\n    int x = 0;\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return x * sgn;\n}\n\nint main(void) {\n    int n = read_int();\n    long long *a = (long long *)malloc(sizeof(long long) * (size_t)n);\n    for (int i = 0; i < n; i++) a[i] = read_int();\n\n    int i = 0, j = n - 1;\n    long long ops = 0;\n    while (i < j) {\n        if (a[i] == a[j]) {\n            i++;\n            j--;\n        } else if (a[i] < a[j]) {\n            a[i + 1] += a[i];\n            i++;\n            ops++;\n        } else {\n            a[j - 1] += a[j];\n            j--;\n            ops++;\n        }\n    }\n\n    printf(\"%lld\\n\", ops);\n    free(a);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int read_int(void) {\n    int c = getchar_unlocked();\n    while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = getchar_unlocked();\n    int sgn = 1;\n    if (c == '-') { sgn = -1; c = getchar_unlocked(); }\n    int x = 0;\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return x * sgn;\n}\n\nint main(void) {\n    int n = read_int();\n    long long *a = (long long *)malloc(sizeof(long long) * (size_t)n);\n    for (int i = 0; i < n; i++) a[i] = read_int();\n\n    int i = 0, j = n - 1;\n    long long ops = 0;\n    while (i < j) {\n        if (a[i] == a[j]) {\n            i++;\n            j--;\n        } else if (a[i] < a[j]) {\n            a[i + 1] += a[i];\n            i++;\n            ops++;\n        } else {\n            a[j - 1] += a[j];\n            j--;\n            ops++;\n        }\n    }\n\n    printf(\"%lld\\n\", ops);\n    free(a);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 20
+            },
+            "total_test_cases": 20
+        }
+    }
+]

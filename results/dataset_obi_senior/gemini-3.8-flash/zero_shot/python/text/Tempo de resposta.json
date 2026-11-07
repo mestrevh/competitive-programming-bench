@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:47:50.160633+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 918,
+            "output_tokens": 404,
+            "total_tokens": 2690
+        },
+        "cost_usd": {
+            "input_cost": 0.000688,
+            "output_cost": 0.001515,
+            "total_cost": 0.002204
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n\n    records = []\n    idx = 1\n    for _ in range(n):\n        tipo = input_data[idx]\n        x = int(input_data[idx + 1])\n        records.append((tipo, x))\n        idx += 2\n\n    current_time = 0\n    first_event = True\n    pending_time = None\n\n    last_received = {}\n    total_time = {}\n    is_waiting = {}\n    friends = set()\n\n    for tipo, x in records:\n        if tipo == \"T\":\n            pending_time = x\n        else:\n            friends.add(x)\n            if first_event:\n                first_event = False\n            else:\n                if pending_time is not None:\n                    current_time += pending_time\n                    pending_time = None\n                else:\n                    current_time += 1\n\n            if tipo == \"R\":\n                last_received[x] = current_time\n                is_waiting[x] = True\n                if x not in total_time:\n                    total_time[x] = 0\n            elif tipo == \"E\":\n                total_time[x] += current_time - last_received[x]\n                is_waiting[x] = False\n\n    for friend in sorted(friends):\n        if is_waiting.get(friend, False):\n            print(f\"{friend} -1\")\n        else:\n            print(f\"{friend} {total_time[friend]}\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n\n    records = []\n    idx = 1\n    for _ in range(n):\n        tipo = input_data[idx]\n        x = int(input_data[idx + 1])\n        records.append((tipo, x))\n        idx += 2\n\n    current_time = 0\n    first_event = True\n    pending_time = None\n\n    last_received = {}\n    total_time = {}\n    is_waiting = {}\n    friends = set()\n\n    for tipo, x in records:\n        if tipo == \"T\":\n            pending_time = x\n        else:\n            friends.add(x)\n            if first_event:\n                first_event = False\n            else:\n                if pending_time is not None:\n                    current_time += pending_time\n                    pending_time = None\n                else:\n                    current_time += 1\n\n            if tipo == \"R\":\n                last_received[x] = current_time\n                is_waiting[x] = True\n                if x not in total_time:\n                    total_time[x] = 0\n            elif tipo == \"E\":\n                total_time[x] += current_time - last_received[x]\n                is_waiting[x] = False\n\n    for friend in sorted(friends):\n        if is_waiting.get(friend, False):\n            print(f\"{friend} -1\")\n        else:\n            print(f\"{friend} {total_time[friend]}\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0835019000005559,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

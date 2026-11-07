@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:36:59.035670+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 696,
+            "output_tokens": 1224,
+            "total_tokens": 1920
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.002938,
+            "total_cost": 0.00294
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nif (data.length === 0) process.exit(0);\n\nconst N = data[0].trim();\nconst M = parseInt(data[1], 10);\n\nconst groups = ['abc', 'def', 'ghi', 'jkl', 'mno', 'pqrs', 'tuv', 'wxyz'];\nconst map = new Array(26);\n\nfor (let d = 2; d <= 9; d++) {\n  const digit = String(d);\n  for (const ch of groups[d - 2]) {\n    map[ch.charCodeAt(0) - 97] = digit;\n  }\n}\n\nlet answer = 0;\n\nfor (let i = 0; i < M; i++) {\n  const s = data[2 + i].trim();\n\n  if (s.length !== N.length) continue;\n\n  let ok = true;\n\n  for (let j = 0; j < s.length; j++) {\n    const digit = map[s.charCodeAt(j) - 97];\n    if (digit !== N[j]) {\n      ok = false;\n      break;\n    }\n  }\n\n  if (ok) answer++;\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nif (data.length === 0) process.exit(0);\n\nconst N = data[0].trim();\nconst M = parseInt(data[1], 10);\n\nconst groups = ['abc', 'def', 'ghi', 'jkl', 'mno', 'pqrs', 'tuv', 'wxyz'];\nconst map = new Array(26);\n\nfor (let d = 2; d <= 9; d++) {\n  const digit = String(d);\n  for (const ch of groups[d - 2]) {\n    map[ch.charCodeAt(0) - 97] = digit;\n  }\n}\n\nlet answer = 0;\n\nfor (let i = 0; i < M; i++) {\n  const s = data[2 + i].trim();\n\n  if (s.length !== N.length) continue;\n\n  let ok = true;\n\n  for (let j = 0; j < s.length; j++) {\n    const digit = map[s.charCodeAt(j) - 97];\n    if (digit !== N[j]) {\n      ok = false;\n      break;\n    }\n  }\n\n  if (ok) answer++;\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07046039999113418,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

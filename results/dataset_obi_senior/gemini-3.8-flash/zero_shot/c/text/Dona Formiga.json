@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:06:23.126774+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 860,
+            "output_tokens": 415,
+            "total_tokens": 1945
+        },
+        "cost_usd": {
+            "input_cost": 0.000645,
+            "output_cost": 0.001556,
+            "total_cost": 0.002201
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\n#define MAXS 205\n\nint S, T, P;\nint A[MAXS];\nint adj[MAXS][MAXS];\nint deg[MAXS];\nint memo[MAXS];\n\nint dfs(int u) {\n    if (memo[u] != -1) {\n        return memo[u];\n    }\n    \n    int max_dist = 0;\n    for (int i = 0; i < deg[u]; i++) {\n        int v = adj[u][i];\n        int dist = 1 + dfs(v);\n        if (dist > max_dist) {\n            max_dist = dist;\n        }\n    }\n    \n    return memo[u] = max_dist;\n}\n\nint main() {\n    if (scanf(\"%d %d %d\", &S, &T, &P) != 3) {\n        return 0;\n    }\n    \n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &A[i]);\n        deg[i] = 0;\n        memo[i] = -1;\n    }\n    \n    for (int k = 0; k < T; k++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        if (A[u] > A[v]) {\n            adj[u][deg[u]++] = v;\n        } else if (A[v] > A[u]) {\n            adj[v][deg[v]++] = u;\n        }\n    }\n    \n    printf(\"%d\\n\", dfs(P));\n    \n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\n#define MAXS 205\n\nint S, T, P;\nint A[MAXS];\nint adj[MAXS][MAXS];\nint deg[MAXS];\nint memo[MAXS];\n\nint dfs(int u) {\n    if (memo[u] != -1) {\n        return memo[u];\n    }\n    \n    int max_dist = 0;\n    for (int i = 0; i < deg[u]; i++) {\n        int v = adj[u][i];\n        int dist = 1 + dfs(v);\n        if (dist > max_dist) {\n            max_dist = dist;\n        }\n    }\n    \n    return memo[u] = max_dist;\n}\n\nint main() {\n    if (scanf(\"%d %d %d\", &S, &T, &P) != 3) {\n        return 0;\n    }\n    \n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &A[i]);\n        deg[i] = 0;\n        memo[i] = -1;\n    }\n    \n    for (int k = 0; k < T; k++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        if (A[u] > A[v]) {\n            adj[u][deg[u]++] = v;\n        } else if (A[v] > A[u]) {\n            adj[v][deg[v]++] = u;\n        }\n    }\n    \n    printf(\"%d\\n\", dfs(P));\n    \n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10971170000266284,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

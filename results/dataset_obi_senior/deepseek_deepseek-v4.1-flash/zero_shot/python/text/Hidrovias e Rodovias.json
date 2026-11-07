@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:02:36.661993+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1534,
+            "output_tokens": 9610,
+            "total_tokens": 11144
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.023064,
+            "total_cost": 0.023069
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    M = next(it)\n    K = next(it)\n\n    parent = list(range(N + 1))\n    rank = [0] * (N + 1)\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(x: int, y: int) -> bool:\n        rx = find(x)\n        ry = find(y)\n        if rx == ry:\n            return False\n        if rank[rx] < rank[ry]:\n            rx, ry = ry, rx\n        parent[ry] = rx\n        if rank[rx] == rank[ry]:\n            rank[rx] += 1\n        return True\n\n    water_cycle = False\n    roads = []\n\n    for _ in range(M):\n        a = next(it)\n        b = next(it)\n        t = next(it)\n        if t == 1:\n            if not union(a, b):\n                water_cycle = True\n        else:\n            roads.append((a, b))\n\n    if water_cycle:\n        print(\"N\")\n        return\n\n    for a, b in roads:\n        union(a, b)\n\n    roots = set()\n    for i in range(1, N + 1):\n        roots.add(find(i))\n    c = len(roots)\n\n    if M - (N - c) <= K:\n        print(\"S\")\n    else:\n        print(\"N\")\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    M = next(it)\n    K = next(it)\n\n    parent = list(range(N + 1))\n    rank = [0] * (N + 1)\n\n    def find(x: int) -> int:\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(x: int, y: int) -> bool:\n        rx = find(x)\n        ry = find(y)\n        if rx == ry:\n            return False\n        if rank[rx] < rank[ry]:\n            rx, ry = ry, rx\n        parent[ry] = rx\n        if rank[rx] == rank[ry]:\n            rank[rx] += 1\n        return True\n\n    water_cycle = False\n    roads = []\n\n    for _ in range(M):\n        a = next(it)\n        b = next(it)\n        t = next(it)\n        if t == 1:\n            if not union(a, b):\n                water_cycle = True\n        else:\n            roads.append((a, b))\n\n    if water_cycle:\n        print(\"N\")\n        return\n\n    for a, b in roads:\n        union(a, b)\n\n    roots = set()\n    for i in range(1, N + 1):\n        roots.add(find(i))\n    c = len(roots)\n\n    if M - (N - c) <= K:\n        print(\"S\")\n    else:\n        print(\"N\")\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13624260000506183,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

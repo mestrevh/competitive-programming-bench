@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:08:49.509125+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1070,
+            "output_tokens": 981,
+            "total_tokens": 2051
+        },
+        "cost_usd": {
+            "input_cost": 0.000107,
+            "output_cost": 0.000491,
+            "total_cost": 0.000598
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int pointer = 0, length = 0;\n\n        private int read() throws IOException {\n            if (pointer >= length) {\n                length = in.read(buffer);\n                pointer = 0;\n                if (length <= 0) return -1;\n            }\n            return buffer[pointer++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n        int[][] grid = new int[n][m];\n\n        int mismatches = 0;\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < m; j++) {\n                grid[i][j] = fs.nextInt();\n                int expectedParity = (i + j) & 1;\n                if ((grid[i][j] & 1) != expectedParity) {\n                    mismatches++;\n                }\n            }\n        }\n\n        int total = n * m;\n        boolean usePattern = mismatches <= total - mismatches;\n        int answer = Math.min(mismatches, total - mismatches);\n\n        StringBuilder out = new StringBuilder();\n        out.append(answer).append('\\n');\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < m; j++) {\n                int expectedParity = (i + j) & 1;\n                if (!usePattern) expectedParity ^= 1;\n                if ((grid[i][j] & 1) != expectedParity) grid[i][j]++;\n                if (j > 0) out.append(' ');\n                out.append(grid[i][j]);\n            }\n            out.append('\\n');\n        }\n\n        System.out.print(out);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int pointer = 0, length = 0;\n\n        private int read() throws IOException {\n            if (pointer >= length) {\n                length = in.read(buffer);\n                pointer = 0;\n                if (length <= 0) return -1;\n            }\n            return buffer[pointer++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n        int[][] grid = new int[n][m];\n\n        int mismatches = 0;\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < m; j++) {\n                grid[i][j] = fs.nextInt();\n                int expectedParity = (i + j) & 1;\n                if ((grid[i][j] & 1) != expectedParity) {\n                    mismatches++;\n                }\n            }\n        }\n\n        int total = n * m;\n        boolean usePattern = mismatches <= total - mismatches;\n        int answer = Math.min(mismatches, total - mismatches);\n\n        StringBuilder out = new StringBuilder();\n        out.append(answer).append('\\n');\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < m; j++) {\n                int expectedParity = (i + j) & 1;\n                if (!usePattern) expectedParity ^= 1;\n                if ((grid[i][j] & 1) != expectedParity) grid[i][j]++;\n                if (j > 0) out.append(' ');\n                out.append(grid[i][j]);\n            }\n            out.append('\\n');\n        }\n\n        System.out.print(out);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07819230000313837,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

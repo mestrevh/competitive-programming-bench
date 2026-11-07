@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:06:52.247848+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 794,
+            "output_tokens": 453,
+            "total_tokens": 2252
+        },
+        "cost_usd": {
+            "input_cost": 0.000596,
+            "output_cost": 0.001699,
+            "total_cost": 0.002294
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const M = nextInt();\n\n    const adj = new Int32Array(N);\n\n    for (let i = 0; i < M; i++) {\n        const u = nextInt() - 1;\n        const v = nextInt() - 1;\n        adj[u] |= (1 << v);\n        adj[v] |= (1 << u);\n    }\n\n    let count = 0;\n\n    function dfs(i, allowedMask) {\n        if (i === N) {\n            count++;\n            return;\n        }\n\n        // Opção 1: Não incluir o ingrediente i\n        dfs(i + 1, allowedMask);\n\n        // Opção 2: Incluir o ingrediente i (se for compatível com os anteriores)\n        if ((allowedMask & (1 << i)) !== 0) {\n            dfs(i + 1, allowedMask & ~adj[i]);\n        }\n    }\n\n    const initialAllowed = (1 << N) - 1;\n    dfs(0, initialAllowed);\n\n    // Subtrai o conjunto vazio, pois o sanduíche deve conter ao menos um ingrediente\n    console.log(count - 1);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const M = nextInt();\n\n    const adj = new Int32Array(N);\n\n    for (let i = 0; i < M; i++) {\n        const u = nextInt() - 1;\n        const v = nextInt() - 1;\n        adj[u] |= (1 << v);\n        adj[v] |= (1 << u);\n    }\n\n    let count = 0;\n\n    function dfs(i, allowedMask) {\n        if (i === N) {\n            count++;\n            return;\n        }\n\n        // Opção 1: Não incluir o ingrediente i\n        dfs(i + 1, allowedMask);\n\n        // Opção 2: Incluir o ingrediente i (se for compatível com os anteriores)\n        if ((allowedMask & (1 << i)) !== 0) {\n            dfs(i + 1, allowedMask & ~adj[i]);\n        }\n    }\n\n    const initialAllowed = (1 << N) - 1;\n    dfs(0, initialAllowed);\n\n    // Subtrai o conjunto vazio, pois o sanduíche deve conter ao menos um ingrediente\n    console.log(count - 1);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0579174000013154,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:50:10.920582+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 678,
+            "output_tokens": 258,
+            "total_tokens": 936
+        },
+        "cost_usd": {
+            "input_cost": 6.8e-05,
+            "output_cost": 0.000129,
+            "total_cost": 0.000197
+        },
+        "raw_response": "```python\nimport sys\nfrom decimal import Decimal, ROUND_HALF_UP\n\ndata = sys.stdin.read().split()\nn = int(data[0])\n\nbest = None\nfor i in range(n):\n    price = Decimal(data[1 + 2 * i])\n    grams = int(data[2 + 2 * i])\n    cost = price * 1000 / grams\n    if best is None or cost < best:\n        best = cost\n\nprint(best.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))\n```",
+        "extracted_code": "import sys\nfrom decimal import Decimal, ROUND_HALF_UP\n\ndata = sys.stdin.read().split()\nn = int(data[0])\n\nbest = None\nfor i in range(n):\n    price = Decimal(data[1 + 2 * i])\n    grams = int(data[2 + 2 * i])\n    cost = price * 1000 / grams\n    if best is None or cost < best:\n        best = cost\n\nprint(best.quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07915309999953024,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

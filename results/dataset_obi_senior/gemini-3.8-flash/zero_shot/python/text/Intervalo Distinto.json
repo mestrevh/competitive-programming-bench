@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:32:18.593629+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 574,
+            "output_tokens": 204,
+            "total_tokens": 1103
+        },
+        "cost_usd": {
+            "input_cost": 0.000431,
+            "output_cost": 0.000765,
+            "total_cost": 0.001195
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    elements = [int(x) for x in input_data[1:n+1]]\n    \n    last_pos = {}\n    max_len = 0\n    left = 0\n    \n    for right, val in enumerate(elements):\n        if val in last_pos and last_pos[val] >= left:\n            left = last_pos[val] + 1\n        last_pos[val] = right\n        current_len = right - left + 1\n        if current_len > max_len:\n            max_len = current_len\n            \n    print(max_len)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    elements = [int(x) for x in input_data[1:n+1]]\n    \n    last_pos = {}\n    max_len = 0\n    left = 0\n    \n    for right, val in enumerate(elements):\n        if val in last_pos and last_pos[val] >= left:\n            left = last_pos[val] + 1\n        last_pos[val] = right\n        current_len = right - left + 1\n        if current_len > max_len:\n            max_len = current_len\n            \n    print(max_len)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09669530000246596,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

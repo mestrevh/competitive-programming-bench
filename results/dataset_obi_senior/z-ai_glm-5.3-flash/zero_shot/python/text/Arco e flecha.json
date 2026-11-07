@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T03:00:14.138921+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 910,
+            "output_tokens": 7130,
+            "total_tokens": 8040
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.003565,
+            "total_cost": 0.003584
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    BITS = 42  # dist^2 <= 2*(10^6+10^5)^2 < 2^42\n    cnt = {}\n    get = cnt.get\n    out = []\n    prev_p = 0\n    pos = 1\n    for _ in range(n):\n        x = int(data[pos]) + prev_p\n        y = int(data[pos + 1]) + prev_p\n        pos += 2\n        v = x * x + y * y\n\n        c = 0\n        prefix = 0\n        level = 1\n        for i in range(BITS - 1, -1, -1):\n            b = (v >> i) & 1\n            p2 = prefix << 1\n            if b:\n                # valores na sub-arvore da esquerda sao todos menores que v\n                c += get((p2 << 6) | level, 0)\n            nk = ((p2 | b) << 6) | level\n            if level == BITS:\n                # no exato de v (conta valores iguais) - ler antes de inserir\n                c += get(nk, 0)\n            cnt[nk] = get(nk, 0) + 1\n            prefix = p2 | b\n            level += 1\n\n        prev_p = c\n        out.append(c)\n\n    sys.stdout.write('\\n'.join(map(str, out)) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    BITS = 42  # dist^2 <= 2*(10^6+10^5)^2 < 2^42\n    cnt = {}\n    get = cnt.get\n    out = []\n    prev_p = 0\n    pos = 1\n    for _ in range(n):\n        x = int(data[pos]) + prev_p\n        y = int(data[pos + 1]) + prev_p\n        pos += 2\n        v = x * x + y * y\n\n        c = 0\n        prefix = 0\n        level = 1\n        for i in range(BITS - 1, -1, -1):\n            b = (v >> i) & 1\n            p2 = prefix << 1\n            if b:\n                # valores na sub-arvore da esquerda sao todos menores que v\n                c += get((p2 << 6) | level, 0)\n            nk = ((p2 | b) << 6) | level\n            if level == BITS:\n                # no exato de v (conta valores iguais) - ler antes de inserir\n                c += get(nk, 0)\n            cnt[nk] = get(nk, 0) + 1\n            prefix = p2 | b\n            level += 1\n\n        prev_p = c\n        out.append(c)\n\n    sys.stdout.write('\\n'.join(map(str, out)) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 2.418616299999485,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:05:18.181596+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1849,
+            "output_tokens": 21344,
+            "total_tokens": 23193
+        },
+        "cost_usd": {
+            "input_cost": 6e-06,
+            "output_cost": 0.051226,
+            "total_cost": 0.051231
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<int> p(N + 1, 0);\n    vector<vector<int>> children(N + 1);\n\n    for (int i = 2; i <= N; i++) {\n        cin >> p[i];\n        children[p[i]].push_back(i);\n    }\n\n    const int LOG = 18;\n    vector<vector<int>> up(LOG, vector<int>(N + 1, 0));\n\n    for (int i = 2; i <= N; i++) up[0][i] = p[i];\n\n    for (int j = 1; j < LOG; j++) {\n        for (int i = 1; i <= N; i++) {\n            up[j][i] = up[j - 1][up[j - 1][i]];\n        }\n    }\n\n    vector<int> tin(N + 1), tout(N + 1);\n    int timer = 0;\n\n    stack<pair<int, int>> st;\n    st.push({1, 0});\n\n    while (!st.empty()) {\n        auto [v, state] = st.top();\n        st.pop();\n\n        if (state == 0) {\n            tin[v] = ++timer;\n            st.push({v, 1});\n\n            for (int i = (int)children[v].size() - 1; i >= 0; i--) {\n                st.push({children[v][i], 0});\n            }\n        } else {\n            tout[v] = timer;\n        }\n    }\n\n    auto kth_ancestor = [&](int u, int k) {\n        for (int j = 0; j < LOG; j++) {\n            if (k & (1 << j)) u = up[j][u];\n        }\n        return u;\n    };\n\n    vector<int> node_at_tin(N + 1, 0);\n    for (int v = 1; v <= N; v++) {\n        node_at_tin[tin[v]] = v;\n    }\n\n    set<int> active;\n\n    int Q;\n    cin >> Q;\n\n    while (Q--) {\n        int type;\n        cin >> type;\n\n        if (type == 1) {\n            int v, k;\n            cin >> v >> k;\n\n            int active_ancestor = 0;\n\n            auto it = active.upper_bound(tin[v]);\n            if (it != active.begin()) {\n                --it;\n                int cand_tin = *it;\n                int cand = node_at_tin[cand_tin];\n\n                if (tout[cand] >= tin[v]) {\n                    if (cand != v) active_ancestor = cand;\n                }\n            }\n\n            int ans;\n\n            if (active_ancestor != 0) {\n                if (k == 1) ans = active_ancestor;\n                else ans = kth_ancestor(active_ancestor, k - 1);\n            } else {\n                ans = kth_ancestor(v, k);\n            }\n\n            cout << ans << '\\n';\n        } else {\n            int v;\n            cin >> v;\n\n            bool has_active_ancestor = false;\n\n            auto it = active.upper_bound(tin[v]);\n            if (it != active.begin()) {\n                --it;\n                int cand_tin = *it;\n                int cand = node_at_tin[cand_tin];\n\n                if (tout[cand] >= tin[v]) {\n                    has_active_ancestor = true;\n                }\n            }\n\n            if (has_active_ancestor) continue;\n\n            auto itL = active.lower_bound(tin[v]);\n            auto itR = active.upper_bound(tout[v]);\n            active.erase(itL, itR);\n\n            active.insert(tin[v]);\n            node_at_tin[tin[v]] = v;\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<int> p(N + 1, 0);\n    vector<vector<int>> children(N + 1);\n\n    for (int i = 2; i <= N; i++) {\n        cin >> p[i];\n        children[p[i]].push_back(i);\n    }\n\n    const int LOG = 18;\n    vector<vector<int>> up(LOG, vector<int>(N + 1, 0));\n\n    for (int i = 2; i <= N; i++) up[0][i] = p[i];\n\n    for (int j = 1; j < LOG; j++) {\n        for (int i = 1; i <= N; i++) {\n            up[j][i] = up[j - 1][up[j - 1][i]];\n        }\n    }\n\n    vector<int> tin(N + 1), tout(N + 1);\n    int timer = 0;\n\n    stack<pair<int, int>> st;\n    st.push({1, 0});\n\n    while (!st.empty()) {\n        auto [v, state] = st.top();\n        st.pop();\n\n        if (state == 0) {\n            tin[v] = ++timer;\n            st.push({v, 1});\n\n            for (int i = (int)children[v].size() - 1; i >= 0; i--) {\n                st.push({children[v][i], 0});\n            }\n        } else {\n            tout[v] = timer;\n        }\n    }\n\n    auto kth_ancestor = [&](int u, int k) {\n        for (int j = 0; j < LOG; j++) {\n            if (k & (1 << j)) u = up[j][u];\n        }\n        return u;\n    };\n\n    vector<int> node_at_tin(N + 1, 0);\n    for (int v = 1; v <= N; v++) {\n        node_at_tin[tin[v]] = v;\n    }\n\n    set<int> active;\n\n    int Q;\n    cin >> Q;\n\n    while (Q--) {\n        int type;\n        cin >> type;\n\n        if (type == 1) {\n            int v, k;\n            cin >> v >> k;\n\n            int active_ancestor = 0;\n\n            auto it = active.upper_bound(tin[v]);\n            if (it != active.begin()) {\n                --it;\n                int cand_tin = *it;\n                int cand = node_at_tin[cand_tin];\n\n                if (tout[cand] >= tin[v]) {\n                    if (cand != v) active_ancestor = cand;\n                }\n            }\n\n            int ans;\n\n            if (active_ancestor != 0) {\n                if (k == 1) ans = active_ancestor;\n                else ans = kth_ancestor(active_ancestor, k - 1);\n            } else {\n                ans = kth_ancestor(v, k);\n            }\n\n            cout << ans << '\\n';\n        } else {\n            int v;\n            cin >> v;\n\n            bool has_active_ancestor = false;\n\n            auto it = active.upper_bound(tin[v]);\n            if (it != active.begin()) {\n                --it;\n                int cand_tin = *it;\n                int cand = node_at_tin[cand_tin];\n\n                if (tout[cand] >= tin[v]) {\n                    has_active_ancestor = true;\n                }\n            }\n\n            if (has_active_ancestor) continue;\n\n            auto itL = active.lower_bound(tin[v]);\n            auto itR = active.upper_bound(tout[v]);\n            active.erase(itL, itR);\n\n            active.insert(tin[v]);\n            node_at_tin[tin[v]] = v;\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14131820000329753,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:17:51.968611+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 896,
+            "output_tokens": 1476,
+            "total_tokens": 2372
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.000738,
+            "total_cost": 0.000828
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    private static final int[] OPPOSITE = {5, 3, 4, 1, 2, 0};\n\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner(System.in);\n        int n = fs.nextInt();\n\n        int[][] faces = new int[n][6];\n        int[][] position = new int[n][7];\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < 6; j++) {\n                faces[i][j] = fs.nextInt();\n                position[i][faces[i][j]] = j;\n            }\n        }\n\n        int answer = 0;\n        for (int startingBottom = 1; startingBottom <= 6; startingBottom++) {\n            int bottom = startingBottom;\n            int sum = 0;\n\n            for (int i = 0; i < n; i++) {\n                int bottomIndex = position[i][bottom];\n                int topIndex = OPPOSITE[bottomIndex];\n                int top = faces[i][topIndex];\n\n                int bestSide = 0;\n                for (int j = 0; j < 6; j++) {\n                    if (j != bottomIndex && j != topIndex) {\n                        bestSide = Math.max(bestSide, faces[i][j]);\n                    }\n                }\n\n                sum += bestSide;\n                bottom = top;\n            }\n\n            answer = Math.max(answer, sum);\n        }\n\n        System.out.println(answer);\n    }\n\n    private static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    private static final int[] OPPOSITE = {5, 3, 4, 1, 2, 0};\n\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner(System.in);\n        int n = fs.nextInt();\n\n        int[][] faces = new int[n][6];\n        int[][] position = new int[n][7];\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < 6; j++) {\n                faces[i][j] = fs.nextInt();\n                position[i][faces[i][j]] = j;\n            }\n        }\n\n        int answer = 0;\n        for (int startingBottom = 1; startingBottom <= 6; startingBottom++) {\n            int bottom = startingBottom;\n            int sum = 0;\n\n            for (int i = 0; i < n; i++) {\n                int bottomIndex = position[i][bottom];\n                int topIndex = OPPOSITE[bottomIndex];\n                int top = faces[i][topIndex];\n\n                int bestSide = 0;\n                for (int j = 0; j < 6; j++) {\n                    if (j != bottomIndex && j != topIndex) {\n                        bestSide = Math.max(bestSide, faces[i][j]);\n                    }\n                }\n\n                sum += bestSide;\n                bottom = top;\n            }\n\n            answer = Math.max(answer, sum);\n        }\n\n        System.out.println(answer);\n    }\n\n    private static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09041330000036396,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

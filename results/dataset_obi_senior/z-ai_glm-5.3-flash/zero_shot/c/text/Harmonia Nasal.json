@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:50:34.274107+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1280,
+            "output_tokens": 67460,
+            "total_tokens": 68740
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.03373,
+            "total_cost": 0.033757
+        },
+        "raw_response": "Análise: escrevendo a palavra como sequência i₀, i₁, …, iₘ (última = ℓ), a nasalidade final é\n\nA = Σ aᵢ − Σ_{i≠ℓ} bᵢ,\n\npois cada sílaba anexada subtrai a resistência da **anterior**. A condição de anexar i_t vira Σ_{s≤t} a ≥ Σ_{s<t} b, ou seja, Σ_{s≤t} d_s + b_{i_t} ≥ 0 com d = a−b. Escrevendo aᵢ = pᵢ + gᵢ (com pᵢ = max(0, aᵢ−bᵢ) e gᵢ = min(aᵢ,bᵢ)), tem‑se bᵢ = aᵢ − pᵢ, e o valor da palavra = Σ_{usadas} pᵢ + g_ℓ (a última sílaba \"promove\" ganho g_ℓ; zerar b de uma sílaba usada no meio também a promove em gᵢ).\n\nArgumentos de troca mostram que na solução ótima toda sílaba do meio (exceto a última) tem a ≥ b (após zeragens) — e nesse caso **qualquer** ordem é válida, pois cada condição vira (soma de d's do prefixo ≥ 0) + b ≥ 0. Logo a resposta é:\n\n**Σ max(0, aᵢ−bᵢ) + soma dos min(K+1, N) maiores valores de min(aᵢ,bᵢ)** (K+1 =  sílaba final promovida + K zeragens).\n\nVerificado nos 4 exemplos (13, 12, 10, 10) e em força bruta manual em vários casos.\n\n```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int cmp_desc(const void *x, const void *y){\n    long long a = *(const long long *)x;\n    long long b = *(const long long *)y;\n    if (a > b) return -1;\n    if (a < b) return 1;\n    return 0;\n}\n\nint main(void){\n    int n;\n    long long k;\n    if (scanf(\"%d %lld\", &n, &k) != 2) return 0;\n\n    long long *a = malloc((size_t)n * sizeof(long long));\n    long long *b = malloc((size_t)n * sizeof(long long));\n    long long *g = malloc((size_t)n * sizeof(long long));\n    if (!a || !b || !g) return 0;\n\n    for (int i = 0; i < n; i++) scanf(\"%lld\", &a[i]);\n    for (int i = 0; i < n; i++) scanf(\"%lld\", &b[i]);\n\n    long long sump = 0;\n    for (int i = 0; i < n; i++){\n        long long d = a[i] - b[i];\n        if (d > 0) sump += d;\n        g[i] = a[i] < b[i] ? a[i] : b[i];\n    }\n\n    qsort(g, (size_t)n, sizeof(long long), cmp_desc);\n\n    long long t = k + 1;\n    if (t > (long long)n) t = n;\n\n    long long add = 0;\n    for (long long i = 0; i < t; i++) add += g[i];\n\n    printf(\"%lld\\n\", sump + add);\n\n    free(a); free(b); free(g);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int cmp_desc(const void *x, const void *y){\n    long long a = *(const long long *)x;\n    long long b = *(const long long *)y;\n    if (a > b) return -1;\n    if (a < b) return 1;\n    return 0;\n}\n\nint main(void){\n    int n;\n    long long k;\n    if (scanf(\"%d %lld\", &n, &k) != 2) return 0;\n\n    long long *a = malloc((size_t)n * sizeof(long long));\n    long long *b = malloc((size_t)n * sizeof(long long));\n    long long *g = malloc((size_t)n * sizeof(long long));\n    if (!a || !b || !g) return 0;\n\n    for (int i = 0; i < n; i++) scanf(\"%lld\", &a[i]);\n    for (int i = 0; i < n; i++) scanf(\"%lld\", &b[i]);\n\n    long long sump = 0;\n    for (int i = 0; i < n; i++){\n        long long d = a[i] - b[i];\n        if (d > 0) sump += d;\n        g[i] = a[i] < b[i] ? a[i] : b[i];\n    }\n\n    qsort(g, (size_t)n, sizeof(long long), cmp_desc);\n\n    long long t = k + 1;\n    if (t > (long long)n) t = n;\n\n    long long add = 0;\n    for (long long i = 0; i < t; i++) add += g[i];\n\n    printf(\"%lld\\n\", sump + add);\n\n    free(a); free(b); free(g);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2962977999995928,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

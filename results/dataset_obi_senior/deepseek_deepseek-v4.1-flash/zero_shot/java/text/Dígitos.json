@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:52:52.285812+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 648,
+            "output_tokens": 8335,
+            "total_tokens": 8983
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.020004,
+            "total_cost": 0.020006
+        },
+        "raw_response": "```java\nimport java.util.*;\nimport java.math.BigInteger;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < N; i++) {\n            sb.append(sc.nextInt());\n        }\n        String s = sb.toString();\n        BigInteger ONE = BigInteger.ONE;\n\n        for (int len = 1; len <= N; len++) {\n            String pref = s.substring(0, len);\n            if (pref.charAt(0) == '0') continue;\n\n            BigInteger cur = new BigInteger(pref);\n            int pos = 0;\n            boolean ok = true;\n\n            while (pos < N) {\n                String cs = cur.toString();\n                int clen = cs.length();\n\n                if (pos + clen > N) {\n                    ok = false;\n                    break;\n                }\n\n                if (!s.regionMatches(pos, cs, 0, clen)) {\n                    ok = false;\n                    break;\n                }\n\n                pos += clen;\n                cur = cur.add(ONE);\n            }\n\n            if (ok && pos == N) {\n                System.out.println(pref);\n                return;\n            }\n        }\n    }\n}\n```",
+        "extracted_code": "import java.util.*;\nimport java.math.BigInteger;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < N; i++) {\n            sb.append(sc.nextInt());\n        }\n        String s = sb.toString();\n        BigInteger ONE = BigInteger.ONE;\n\n        for (int len = 1; len <= N; len++) {\n            String pref = s.substring(0, len);\n            if (pref.charAt(0) == '0') continue;\n\n            BigInteger cur = new BigInteger(pref);\n            int pos = 0;\n            boolean ok = true;\n\n            while (pos < N) {\n                String cs = cur.toString();\n                int clen = cs.length();\n\n                if (pos + clen > N) {\n                    ok = false;\n                    break;\n                }\n\n                if (!s.regionMatches(pos, cs, 0, clen)) {\n                    ok = false;\n                    break;\n                }\n\n                pos += clen;\n                cur = cur.add(ONE);\n            }\n\n            if (ok && pos == N) {\n                System.out.println(pref);\n                return;\n            }\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17925039998954162,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

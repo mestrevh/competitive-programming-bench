@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:38:57.744730+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 758,
+            "output_tokens": 1693,
+            "total_tokens": 2451
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.000847,
+            "total_cost": 0.000863
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int readInt(int *out) {\n    int c = getchar();\n    while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = getchar();\n    if (c == EOF) return 0;\n    int sign = 1;\n    long x = 0;\n    if (c == '-') { sign = -1; c = getchar(); }\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = getchar();\n    }\n    *out = (int)(sign * x);\n    return 1;\n}\n\nint main(void) {\n    int n, m;\n    readInt(&n);\n    readInt(&m);\n\n    long long *col = (long long *)calloc((size_t)m, sizeof(long long));\n    if (!col) return 1;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < m; j++) {\n            int v;\n            readInt(&v);\n            col[j] += v;\n        }\n    }\n\n    long long best = col[0];\n    for (int j = 1; j < m; j++) {\n        if (col[j] < best) best = col[j];\n    }\n\n    printf(\"%lld\\n\", best);\n\n    free(col);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int readInt(int *out) {\n    int c = getchar();\n    while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = getchar();\n    if (c == EOF) return 0;\n    int sign = 1;\n    long x = 0;\n    if (c == '-') { sign = -1; c = getchar(); }\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = getchar();\n    }\n    *out = (int)(sign * x);\n    return 1;\n}\n\nint main(void) {\n    int n, m;\n    readInt(&n);\n    readInt(&m);\n\n    long long *col = (long long *)calloc((size_t)m, sizeof(long long));\n    if (!col) return 1;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < m; j++) {\n            int v;\n            readInt(&v);\n            col[j] += v;\n        }\n    }\n\n    long long best = col[0];\n    for (int j = 1; j < m; j++) {\n        if (col[j] < best) best = col[j];\n    }\n\n    printf(\"%lld\\n\", best);\n\n    free(col);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12583740000263788,
+            "counts": {
+                "AC": 12,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 12
+        }
+    }
+]

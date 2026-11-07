@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:26:53.706983+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1937,
+            "output_tokens": 666,
+            "total_tokens": 2833
+        },
+        "cost_usd": {
+            "input_cost": 0.001453,
+            "output_cost": 0.002498,
+            "total_cost": 0.00395
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int N = Integer.parseInt(st.nextToken());\n        int Q = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[N][N];\n        for (int i = 0; i < N; i++) {\n            String row = reader.readLine().trim();\n            while (row.isEmpty()) {\n                row = reader.readLine().trim();\n            }\n            grid[i] = row.toCharArray();\n        }\n\n        int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};\n        int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1};\n\n        char[][] nextGrid = new char[N][N];\n\n        for (int step = 0; step < Q; step++) {\n            for (int r = 0; r < N; r++) {\n                for (int c = 0; c < N; c++) {\n                    int liveNeighbors = 0;\n                    for (int d = 0; d < 8; d++) {\n                        int nr = r + dr[d];\n                        int nc = c + dc[d];\n                        if (nr >= 0 && nr < N && nc >= 0 && nc < N) {\n                            if (grid[nr][nc] == '1') {\n                                liveNeighbors++;\n                            }\n                        }\n                    }\n\n                    if (grid[r][c] == '1') {\n                        if (liveNeighbors == 2 || liveNeighbors == 3) {\n                            nextGrid[r][c] = '1';\n                        } else {\n                            nextGrid[r][c] = '0';\n                        }\n                    } else {\n                        if (liveNeighbors == 3) {\n                            nextGrid[r][c] = '1';\n                        } else {\n                            nextGrid[r][c] = '0';\n                        }\n                    }\n                }\n            }\n\n            char[][] temp = grid;\n            grid = nextGrid;\n            nextGrid = temp;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < N; i++) {\n            sb.append(grid[i]).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int N = Integer.parseInt(st.nextToken());\n        int Q = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[N][N];\n        for (int i = 0; i < N; i++) {\n            String row = reader.readLine().trim();\n            while (row.isEmpty()) {\n                row = reader.readLine().trim();\n            }\n            grid[i] = row.toCharArray();\n        }\n\n        int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};\n        int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1};\n\n        char[][] nextGrid = new char[N][N];\n\n        for (int step = 0; step < Q; step++) {\n            for (int r = 0; r < N; r++) {\n                for (int c = 0; c < N; c++) {\n                    int liveNeighbors = 0;\n                    for (int d = 0; d < 8; d++) {\n                        int nr = r + dr[d];\n                        int nc = c + dc[d];\n                        if (nr >= 0 && nr < N && nc >= 0 && nc < N) {\n                            if (grid[nr][nc] == '1') {\n                                liveNeighbors++;\n                            }\n                        }\n                    }\n\n                    if (grid[r][c] == '1') {\n                        if (liveNeighbors == 2 || liveNeighbors == 3) {\n                            nextGrid[r][c] = '1';\n                        } else {\n                            nextGrid[r][c] = '0';\n                        }\n                    } else {\n                        if (liveNeighbors == 3) {\n                            nextGrid[r][c] = '1';\n                        } else {\n                            nextGrid[r][c] = '0';\n                        }\n                    }\n                }\n            }\n\n            char[][] temp = grid;\n            grid = nextGrid;\n            nextGrid = temp;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < N; i++) {\n            sb.append(grid[i]).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10016729999915697,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

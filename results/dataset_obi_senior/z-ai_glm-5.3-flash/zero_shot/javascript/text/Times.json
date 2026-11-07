@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:11:11.164042+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 850,
+            "output_tokens": 1268,
+            "total_tokens": 2118
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.000634,
+            "total_cost": 0.000652
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst buf = fs.readFileSync(0);\nconst len = buf.length;\nlet pos = 0;\n\nfunction readInt() {\n  while (pos < len && (buf[pos] < 48 || buf[pos] > 57) && buf[pos] !== 45) pos++;\n  let sign = 1, x = 0;\n  if (buf[pos] === 45) { sign = -1; pos++; }\n  while (pos < len && buf[pos] >= 48 && buf[pos] <= 57) {\n    x = x * 10 + (buf[pos] - 48);\n    pos++;\n  }\n  return x * sign;\n}\n\nconst N = readInt();\nconst adj = new Array(N + 1);\nfor (let i = 1; i <= N; i++) {\n  const m = readInt();\n  const a = new Array(m);\n  for (let j = 0; j < m; j++) a[j] = readInt();\n  adj[i] = a;\n}\n\nconst color = new Int8Array(N + 1).fill(-1);\nconst queue = new Int32Array(N + 1);\nlet head = 0, tail = 0;\ncolor[1] = 0;\nqueue[tail++] = 1;\n\nwhile (head < tail) {\n  const u = queue[head++];\n  const cu = color[u];\n  const nb = adj[u];\n  for (let j = 0; j < nb.length; j++) {\n    const v = nb[j];\n    if (color[v] === -1) {\n      color[v] = cu ^ 1;\n      queue[tail++] = v;\n    }\n  }\n}\n\nconst team1 = [];\nconst team2 = [];\nfor (let i = 1; i <= N; i++) {\n  if (color[i] === 0) team1.push(i);\n  else team2.push(i);\n}\n\nconst cmp = (a, b) => a - b;\nteam1.sort(cmp);\nteam2.sort(cmp);\n\nprocess.stdout.write(team1.join(' ') + '\\n' + team2.join(' ') + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\nconst buf = fs.readFileSync(0);\nconst len = buf.length;\nlet pos = 0;\n\nfunction readInt() {\n  while (pos < len && (buf[pos] < 48 || buf[pos] > 57) && buf[pos] !== 45) pos++;\n  let sign = 1, x = 0;\n  if (buf[pos] === 45) { sign = -1; pos++; }\n  while (pos < len && buf[pos] >= 48 && buf[pos] <= 57) {\n    x = x * 10 + (buf[pos] - 48);\n    pos++;\n  }\n  return x * sign;\n}\n\nconst N = readInt();\nconst adj = new Array(N + 1);\nfor (let i = 1; i <= N; i++) {\n  const m = readInt();\n  const a = new Array(m);\n  for (let j = 0; j < m; j++) a[j] = readInt();\n  adj[i] = a;\n}\n\nconst color = new Int8Array(N + 1).fill(-1);\nconst queue = new Int32Array(N + 1);\nlet head = 0, tail = 0;\ncolor[1] = 0;\nqueue[tail++] = 1;\n\nwhile (head < tail) {\n  const u = queue[head++];\n  const cu = color[u];\n  const nb = adj[u];\n  for (let j = 0; j < nb.length; j++) {\n    const v = nb[j];\n    if (color[v] === -1) {\n      color[v] = cu ^ 1;\n      queue[tail++] = v;\n    }\n  }\n}\n\nconst team1 = [];\nconst team2 = [];\nfor (let i = 1; i <= N; i++) {\n  if (color[i] === 0) team1.push(i);\n  else team2.push(i);\n}\n\nconst cmp = (a, b) => a - b;\nteam1.sort(cmp);\nteam2.sort(cmp);\n\nprocess.stdout.write(team1.join(' ') + '\\n' + team2.join(' ') + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11770689999684691,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

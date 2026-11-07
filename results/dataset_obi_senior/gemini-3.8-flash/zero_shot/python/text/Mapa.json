@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:39:26.790409+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 883,
+            "output_tokens": 457,
+            "total_tokens": 3223
+        },
+        "cost_usd": {
+            "input_cost": 0.000662,
+            "output_cost": 0.001714,
+            "total_cost": 0.002376
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    L = int(data[0])\n    C = int(data[1])\n    grid = data[2:]\n    \n    start_r, start_c = -1, -1\n    for r in range(L):\n        for c in range(C):\n            if grid[r][c] == 'o':\n                start_r, start_c = r, c\n                break\n        if start_r != -1:\n            break\n            \n    visited = [[False] * C for _ in range(L)]\n    visited[start_r][start_c] = True\n    \n    curr_r, curr_c = start_r, start_c\n    \n    # 4 direções: cima, baixo, esquerda, direita\n    dr = [-1, 1, 0, 0]\n    dc = [0, 0, -1, 1]\n    \n    while True:\n        next_r, next_c = -1, -1\n        for i in range(4):\n            nr = curr_r + dr[i]\n            nc = curr_c + dc[i]\n            if 0 <= nr < L and 0 <= nc < C:\n                if not visited[nr][nc] and grid[nr][nc] == 'H':\n                    next_r, next_c = nr, nc\n                    break\n        \n        if next_r == -1:\n            # Não há próximo passo, chegamos ao destino final\n            break\n            \n        visited[next_r][next_c] = True\n        curr_r, curr_c = next_r, next_c\n\n    # Imprime 1-indexed\n    print(f\"{curr_r + 1} {curr_c + 1}\")\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    L = int(data[0])\n    C = int(data[1])\n    grid = data[2:]\n    \n    start_r, start_c = -1, -1\n    for r in range(L):\n        for c in range(C):\n            if grid[r][c] == 'o':\n                start_r, start_c = r, c\n                break\n        if start_r != -1:\n            break\n            \n    visited = [[False] * C for _ in range(L)]\n    visited[start_r][start_c] = True\n    \n    curr_r, curr_c = start_r, start_c\n    \n    # 4 direções: cima, baixo, esquerda, direita\n    dr = [-1, 1, 0, 0]\n    dc = [0, 0, -1, 1]\n    \n    while True:\n        next_r, next_c = -1, -1\n        for i in range(4):\n            nr = curr_r + dr[i]\n            nc = curr_c + dc[i]\n            if 0 <= nr < L and 0 <= nc < C:\n                if not visited[nr][nc] and grid[nr][nc] == 'H':\n                    next_r, next_c = nr, nc\n                    break\n        \n        if next_r == -1:\n            # Não há próximo passo, chegamos ao destino final\n            break\n            \n        visited[next_r][next_c] = True\n        curr_r, curr_c = next_r, next_c\n\n    # Imprime 1-indexed\n    print(f\"{curr_r + 1} {curr_c + 1}\")\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08346619999792892,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:35:07.348035+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 870,
+            "output_tokens": 1409,
+            "total_tokens": 2279
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.000705,
+            "total_cost": 0.000723
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define INF 1000000000\n\nint adj[105][105];\nint dist[105];\nint used[105];\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 1; i <= N; i++)\n        for (int j = 1; j <= N; j++)\n            adj[i][j] = INF;\n\n    for (int i = 0; i < M; i++) {\n        int a, b, c;\n        scanf(\"%d %d %d\", &a, &b, &c);\n        if (c < adj[a][b]) {\n            adj[a][b] = c;\n            adj[b][a] = c;\n        }\n    }\n\n    for (int i = 1; i <= N; i++) dist[i] = INF;\n    dist[1] = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int u = -1;\n        for (int j = 1; j <= N; j++)\n            if (!used[j] && (u == -1 || dist[j] < dist[u]))\n                u = j;\n        if (u == -1 || dist[u] == INF) break;\n        used[u] = 1;\n        if (u == N) break;\n        for (int v = 1; v <= N; v++)\n            if (!used[v] && adj[u][v] != INF && dist[u] + adj[u][v] < dist[v])\n                dist[v] = dist[u] + adj[u][v];\n    }\n\n    printf(\"%d\\n\", dist[N]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define INF 1000000000\n\nint adj[105][105];\nint dist[105];\nint used[105];\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 1; i <= N; i++)\n        for (int j = 1; j <= N; j++)\n            adj[i][j] = INF;\n\n    for (int i = 0; i < M; i++) {\n        int a, b, c;\n        scanf(\"%d %d %d\", &a, &b, &c);\n        if (c < adj[a][b]) {\n            adj[a][b] = c;\n            adj[b][a] = c;\n        }\n    }\n\n    for (int i = 1; i <= N; i++) dist[i] = INF;\n    dist[1] = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int u = -1;\n        for (int j = 1; j <= N; j++)\n            if (!used[j] && (u == -1 || dist[j] < dist[u]))\n                u = j;\n        if (u == -1 || dist[u] == INF) break;\n        used[u] = 1;\n        if (u == N) break;\n        for (int v = 1; v <= N; v++)\n            if (!used[v] && adj[u][v] != INF && dist[u] + adj[u][v] < dist[v])\n                dist[v] = dist[u] + adj[u][v];\n    }\n\n    printf(\"%d\\n\", dist[N]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15474309999262914,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

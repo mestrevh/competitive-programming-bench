@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T00:32:11.088893+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 700,
+            "output_tokens": 1512,
+            "total_tokens": 2212
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.000756,
+            "total_cost": 0.000771
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(Boolean);\n\nconst n = +input[0];\nconst s = +input[1];\n\n// Soma total máxima: 100000 * 10 = 1.000.000, então prefixos cabem no array\nconst freq = new Uint32Array(1000002);\nfreq[0] = 1; // prefixo vazio (soma 0)\n\nlet prefix = 0;\nlet ans = 0;\n\nfor (let i = 0; i < n; i++) {\n  prefix += +input[2 + i];\n  const target = prefix - s;\n  if (target >= 0) ans += freq[target];\n  freq[prefix]++;\n}\n\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(Boolean);\n\nconst n = +input[0];\nconst s = +input[1];\n\n// Soma total máxima: 100000 * 10 = 1.000.000, então prefixos cabem no array\nconst freq = new Uint32Array(1000002);\nfreq[0] = 1; // prefixo vazio (soma 0)\n\nlet prefix = 0;\nlet ans = 0;\n\nfor (let i = 0; i < n; i++) {\n  prefix += +input[2 + i];\n  const target = prefix - s;\n  if (target >= 0) ans += freq[target];\n  freq[prefix]++;\n}\n\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12427740002749488,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

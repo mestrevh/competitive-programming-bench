@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T23:25:56.691282+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 700,
+            "output_tokens": 2219,
+            "total_tokens": 2919
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.00111,
+            "total_cost": 0.001124
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    vector<string> s(n);\n    unordered_map<string,int> cnt;\n    cnt.reserve(n*2);\n    char buf[16];\n    for(int i=0;i<n;i++){\n        scanf(\"%s\",buf);\n        s[i]=buf;\n        cnt[s[i]]++;\n    }\n    long long ans=0;\n    for(int i=0;i<n;i++){\n        const string &x=s[i];\n        int L=(int)x.size();\n        static vector<string> subs;\n        subs.clear();\n        subs.reserve(55);\n        for(int a=0;a<L;a++)\n            for(int len=1;len<=L-a;len++)\n                subs.push_back(x.substr(a,len));\n        sort(subs.begin(),subs.end());\n        subs.erase(unique(subs.begin(),subs.end()),subs.end());\n        long long c=0;\n        for(auto &t:subs){\n            auto it=cnt.find(t);\n            if(it!=cnt.end()) c+=it->second;\n        }\n        c-=1; // remove o próprio par (A,A): a senha de A sempre é sub-cadeia de si mesma\n        ans+=c;\n    }\n    printf(\"%lld\\n\",ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    vector<string> s(n);\n    unordered_map<string,int> cnt;\n    cnt.reserve(n*2);\n    char buf[16];\n    for(int i=0;i<n;i++){\n        scanf(\"%s\",buf);\n        s[i]=buf;\n        cnt[s[i]]++;\n    }\n    long long ans=0;\n    for(int i=0;i<n;i++){\n        const string &x=s[i];\n        int L=(int)x.size();\n        static vector<string> subs;\n        subs.clear();\n        subs.reserve(55);\n        for(int a=0;a<L;a++)\n            for(int len=1;len<=L-a;len++)\n                subs.push_back(x.substr(a,len));\n        sort(subs.begin(),subs.end());\n        subs.erase(unique(subs.begin(),subs.end()),subs.end());\n        long long c=0;\n        for(auto &t:subs){\n            auto it=cnt.find(t);\n            if(it!=cnt.end()) c+=it->second;\n        }\n        c-=1; // remove o próprio par (A,A): a senha de A sempre é sub-cadeia de si mesma\n        ans+=c;\n    }\n    printf(\"%lld\\n\",ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2257517000034568,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

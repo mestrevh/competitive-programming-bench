@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:05:47.397087+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 649,
+            "output_tokens": 2949,
+            "total_tokens": 3598
+        },
+        "cost_usd": {
+            "input_cost": 6.5e-05,
+            "output_cost": 0.001474,
+            "total_cost": 0.001539
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int read_int(void) {\n    int ch = getchar_unlocked();\n    while (ch != EOF && ch <= ' ') ch = getchar_unlocked();\n\n    int sign = 1;\n    if (ch == '-') {\n        sign = -1;\n        ch = getchar_unlocked();\n    }\n\n    int value = 0;\n    while (ch >= '0' && ch <= '9') {\n        value = value * 10 + (ch - '0');\n        ch = getchar_unlocked();\n    }\n    return sign * value;\n}\n\nint main(void) {\n    int L = read_int();\n    int C = read_int();\n\n    int *prev = malloc((size_t)C * sizeof(int));\n    int *curr = malloc((size_t)C * sizeof(int));\n    int K = C - 1;\n    int *height = calloc((size_t)K, sizeof(int));\n    int *stack = malloc((size_t)(K + 1) * sizeof(int));\n\n    for (int j = 0; j < C; ++j) {\n        prev[j] = read_int();\n    }\n\n    long long answer = L > C ? L : C;\n\n    for (int i = 1; i < L; ++i) {\n        for (int j = 0; j < C; ++j) {\n            curr[j] = read_int();\n        }\n\n        for (int j = 0; j < K; ++j) {\n            int left_diff = curr[j] - prev[j];\n            int right_diff = curr[j + 1] - prev[j + 1];\n\n            if (left_diff < right_diff)\n                height[j] = 0;\n            else\n                ++height[j];\n        }\n\n        int top = -1;\n        for (int j = 0; j <= K; ++j) {\n            int current_height = (j == K) ? 0 : height[j];\n\n            while (top >= 0 && height[stack[top]] > current_height) {\n                int h = height[stack[top--]];\n                int left = (top < 0) ? 0 : stack[top] + 1;\n                int width = j - left;\n                long long area = (long long)(h + 1) * (width + 1);\n                if (area > answer) answer = area;\n            }\n\n            stack[++top] = j;\n        }\n\n        int *tmp = prev;\n        prev = curr;\n        curr = tmp;\n    }\n\n    printf(\"%lld\\n\", answer);\n\n    free(prev);\n    free(curr);\n    free(height);\n    free(stack);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int read_int(void) {\n    int ch = getchar_unlocked();\n    while (ch != EOF && ch <= ' ') ch = getchar_unlocked();\n\n    int sign = 1;\n    if (ch == '-') {\n        sign = -1;\n        ch = getchar_unlocked();\n    }\n\n    int value = 0;\n    while (ch >= '0' && ch <= '9') {\n        value = value * 10 + (ch - '0');\n        ch = getchar_unlocked();\n    }\n    return sign * value;\n}\n\nint main(void) {\n    int L = read_int();\n    int C = read_int();\n\n    int *prev = malloc((size_t)C * sizeof(int));\n    int *curr = malloc((size_t)C * sizeof(int));\n    int K = C - 1;\n    int *height = calloc((size_t)K, sizeof(int));\n    int *stack = malloc((size_t)(K + 1) * sizeof(int));\n\n    for (int j = 0; j < C; ++j) {\n        prev[j] = read_int();\n    }\n\n    long long answer = L > C ? L : C;\n\n    for (int i = 1; i < L; ++i) {\n        for (int j = 0; j < C; ++j) {\n            curr[j] = read_int();\n        }\n\n        for (int j = 0; j < K; ++j) {\n            int left_diff = curr[j] - prev[j];\n            int right_diff = curr[j + 1] - prev[j + 1];\n\n            if (left_diff < right_diff)\n                height[j] = 0;\n            else\n                ++height[j];\n        }\n\n        int top = -1;\n        for (int j = 0; j <= K; ++j) {\n            int current_height = (j == K) ? 0 : height[j];\n\n            while (top >= 0 && height[stack[top]] > current_height) {\n                int h = height[stack[top--]];\n                int left = (top < 0) ? 0 : stack[top] + 1;\n                int width = j - left;\n                long long area = (long long)(h + 1) * (width + 1);\n                if (area > answer) answer = area;\n            }\n\n            stack[++top] = j;\n        }\n\n        int *tmp = prev;\n        prev = curr;\n        curr = tmp;\n    }\n\n    printf(\"%lld\\n\", answer);\n\n    free(prev);\n    free(curr);\n    free(height);\n    free(stack);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 25
+            },
+            "total_test_cases": 25
+        }
+    }
+]

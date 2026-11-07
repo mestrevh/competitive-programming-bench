@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:16:54.384595+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1154,
+            "output_tokens": 492,
+            "total_tokens": 3515
+        },
+        "cost_usd": {
+            "input_cost": 0.000866,
+            "output_cost": 0.001845,
+            "total_cost": 0.002711
+        },
+        "raw_response": "Para resolver este problema, podemos analisar o processo de construção nível por nível, da menor altura até a maior altura ($\\max(a_i)$).\n\nPara cada altura $h < \\max(a_i)$:\n- Um prédio que começou com altura inicial maior que $h$ nunca terá altura igual a $h$, atuando como uma barreira que impede que prédios à sua esquerda e à sua direita sejam incrementados juntos na altura $h$.\n- Prédios com altura inicial menor ou igual a $h$ obrigatoriamente passam pela altura $h$.\n- É sempre possível sincronizar os incrementos de baixo para cima de forma que todos os prédios de um mesmo bloco contíguo (com $a_i \\le h$) atinjam a altura $h$ juntos e sejam elevados para $h+1$ em uma única fase por bloco.\n\nPortanto, o número mínimo de fases é exatamente a soma, para cada nível $h$ de $\\min(a_i)$ até $\\max(a_i) - 1$, da quantidade de blocos contíguos (componentes conexas) de prédios que possuem altura inicial $a_i \\le h$.\n\nAbaixo está a implementação eficiente em Python:\n\n```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    a = [int(x) for x in data[1 : n + 1]]\n\n    min_h = min(a)\n    max_h = max(a)\n\n    total_fases = 0\n\n    for h in range(min_h, max_h):\n        # Conta a quantidade de blocos contíguos de prédios com a_i <= h\n        blocos = 0\n        em_bloco = False\n        for x in a:\n            if x <= h:\n                if not em_bloco:\n                    blocos += 1\n                    em_bloco = True\n            else:\n                em_bloco = False\n        total_fases += blocos\n\n    print(total_fases)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    a = [int(x) for x in data[1 : n + 1]]\n\n    min_h = min(a)\n    max_h = max(a)\n\n    total_fases = 0\n\n    for h in range(min_h, max_h):\n        # Conta a quantidade de blocos contíguos de prédios com a_i <= h\n        blocos = 0\n        em_bloco = False\n        for x in a:\n            if x <= h:\n                if not em_bloco:\n                    blocos += 1\n                    em_bloco = True\n            else:\n                em_bloco = False\n        total_fases += blocos\n\n    print(total_fases)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07874079999601236,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

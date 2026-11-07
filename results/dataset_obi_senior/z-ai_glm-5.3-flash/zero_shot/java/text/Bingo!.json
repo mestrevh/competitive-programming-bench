@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:21:49.372229+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 940,
+            "output_tokens": 7894,
+            "total_tokens": 8834
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.003947,
+            "total_cost": 0.003967
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static byte[] buf;\n    static int pos;\n\n    static int nextInt() {\n        while (pos < buf.length && (buf[pos] < '0' || buf[pos] > '9')) pos++;\n        if (pos >= buf.length) return -1;\n        int ret = 0;\n        while (pos < buf.length && buf[pos] >= '0' && buf[pos] <= '9') {\n            ret = ret * 10 + (buf[pos++] - '0');\n        }\n        return ret;\n    }\n\n    public static void main(String[] args) throws IOException {\n        ByteArrayOutputStream bos = new ByteArrayOutputStream(1 << 22);\n        byte[] chunk = new byte[1 << 16];\n        int r;\n        while ((r = System.in.read(chunk)) != -1) {\n            bos.write(chunk, 0, r);\n        }\n        buf = bos.toByteArray();\n        pos = 0;\n\n        int N = nextInt();\n        int K = nextInt();\n        int U = nextInt();\n\n        int total = N * K;\n        int[] cardNums = new int[total];\n        int[] cnt = new int[U + 1];\n\n        int p = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < K; j++) {\n                int x = nextInt();\n                cardNums[p++] = x;\n                cnt[x]++;\n            }\n        }\n\n        // Índice invertido: números v ocupam o segmento [segStart[v], segStart[v+1]) em lists\n        int[] segStart = new int[U + 2];\n        for (int v = 1; v <= U; v++) segStart[v + 1] = segStart[v] + cnt[v];\n\n        int[] lists = new int[total];\n        int[] ptr = new int[U + 1];\n        for (int v = 1; v <= U; v++) ptr[v] = segStart[v];\n\n        p = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < K; j++) {\n                int x = cardNums[p++];\n                lists[ptr[x]++] = i;\n            }\n        }\n\n        int[] done = new int[N];\n        ArrayList<Integer> winners = new ArrayList<>();\n\n        for (int t = 0; t < U && winners.isEmpty(); t++) {\n            int x = nextInt();\n            for (int idx = segStart[x], end = segStart[x + 1]; idx < end; idx++) {\n                int c = lists[idx];\n                if (++done[c] == K) winners.add(c);\n            }\n        }\n\n        Collections.sort(winners);\n        StringBuilder sb = new StringBuilder();\n        boolean first = true;\n        for (int w : winners) {\n            if (!first) sb.append(' ');\n            sb.append(w + 1);\n            first = false;\n        }\n        System.out.println(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static byte[] buf;\n    static int pos;\n\n    static int nextInt() {\n        while (pos < buf.length && (buf[pos] < '0' || buf[pos] > '9')) pos++;\n        if (pos >= buf.length) return -1;\n        int ret = 0;\n        while (pos < buf.length && buf[pos] >= '0' && buf[pos] <= '9') {\n            ret = ret * 10 + (buf[pos++] - '0');\n        }\n        return ret;\n    }\n\n    public static void main(String[] args) throws IOException {\n        ByteArrayOutputStream bos = new ByteArrayOutputStream(1 << 22);\n        byte[] chunk = new byte[1 << 16];\n        int r;\n        while ((r = System.in.read(chunk)) != -1) {\n            bos.write(chunk, 0, r);\n        }\n        buf = bos.toByteArray();\n        pos = 0;\n\n        int N = nextInt();\n        int K = nextInt();\n        int U = nextInt();\n\n        int total = N * K;\n        int[] cardNums = new int[total];\n        int[] cnt = new int[U + 1];\n\n        int p = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < K; j++) {\n                int x = nextInt();\n                cardNums[p++] = x;\n                cnt[x]++;\n            }\n        }\n\n        // Índice invertido: números v ocupam o segmento [segStart[v], segStart[v+1]) em lists\n        int[] segStart = new int[U + 2];\n        for (int v = 1; v <= U; v++) segStart[v + 1] = segStart[v] + cnt[v];\n\n        int[] lists = new int[total];\n        int[] ptr = new int[U + 1];\n        for (int v = 1; v <= U; v++) ptr[v] = segStart[v];\n\n        p = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < K; j++) {\n                int x = cardNums[p++];\n                lists[ptr[x]++] = i;\n            }\n        }\n\n        int[] done = new int[N];\n        ArrayList<Integer> winners = new ArrayList<>();\n\n        for (int t = 0; t < U && winners.isEmpty(); t++) {\n            int x = nextInt();\n            for (int idx = segStart[x], end = segStart[x + 1]; idx < end; idx++) {\n                int c = lists[idx];\n                if (++done[c] == K) winners.add(c);\n            }\n        }\n\n        Collections.sort(winners);\n        StringBuilder sb = new StringBuilder();\n        boolean first = true;\n        for (int w : winners) {\n            if (!first) sb.append(' ');\n            sb.append(w + 1);\n            first = false;\n        }\n        System.out.println(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15234179998515174,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

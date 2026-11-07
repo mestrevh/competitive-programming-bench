@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:22:16.144269+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 598,
+            "output_tokens": 16238,
+            "total_tokens": 16836
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.038971,
+            "total_cost": 0.038973
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K, C;\n    cin >> N >> K >> C;\n\n    vector<int> A(N + 1);\n    for (int i = 1; i <= N; ++i) {\n        cin >> A[i];\n    }\n\n    const int NEG = -1000000000;\n    int mod = C + 1;\n\n    vector<vector<int>> dp(mod, vector<int>(K + 1, NEG));\n    dp[0][0] = 0;\n\n    for (int i = 1; i <= N; ++i) {\n        int idx = i % mod;\n        int prevIdx = (i - 1) % mod;\n        int maxJ = min(K, i / C);\n\n        for (int j = 0; j <= maxJ; ++j) {\n            int val = NEG;\n\n            if (dp[prevIdx][j] > NEG / 2) {\n                val = dp[prevIdx][j] + A[i];\n            }\n\n            if (j >= 1 && i >= C) {\n                int oldIdx = (i - C) % mod;\n                if (dp[oldIdx][j - 1] > NEG / 2) {\n                    val = max(val, dp[oldIdx][j - 1]);\n                }\n            }\n\n            dp[idx][j] = val;\n        }\n    }\n\n    cout << dp[N % mod][K] << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K, C;\n    cin >> N >> K >> C;\n\n    vector<int> A(N + 1);\n    for (int i = 1; i <= N; ++i) {\n        cin >> A[i];\n    }\n\n    const int NEG = -1000000000;\n    int mod = C + 1;\n\n    vector<vector<int>> dp(mod, vector<int>(K + 1, NEG));\n    dp[0][0] = 0;\n\n    for (int i = 1; i <= N; ++i) {\n        int idx = i % mod;\n        int prevIdx = (i - 1) % mod;\n        int maxJ = min(K, i / C);\n\n        for (int j = 0; j <= maxJ; ++j) {\n            int val = NEG;\n\n            if (dp[prevIdx][j] > NEG / 2) {\n                val = dp[prevIdx][j] + A[i];\n            }\n\n            if (j >= 1 && i >= C) {\n                int oldIdx = (i - C) % mod;\n                if (dp[oldIdx][j - 1] > NEG / 2) {\n                    val = max(val, dp[oldIdx][j - 1]);\n                }\n            }\n\n            dp[idx][j] = val;\n        }\n    }\n\n    cout << dp[N % mod][K] << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17283799999859184,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

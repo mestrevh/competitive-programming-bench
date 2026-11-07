@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T20:08:06.528868+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1119,
+            "output_tokens": 17741,
+            "total_tokens": 18860
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.00887,
+            "total_cost": 0.008894
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n\n    static long cross(long ax, long ay, long bx, long by) {\n        return ax * by - ay * bx;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String ln;\n        while ((ln = br.readLine()) != null) sb.append(ln).append(' ');\n        StringTokenizer tz = new StringTokenizer(sb.toString());\n\n        long[] X = new long[8], Y = new long[8];\n        for (int i = 1; i <= 7; i++) {\n            X[i] = Long.parseLong(tz.nextToken());\n            Y[i] = Long.parseLong(tz.nextToken());\n        }\n\n        long ax = X[2] - X[1], ay = Y[2] - Y[1]; // P1 -> P2\n        long bx = X[3] - X[1], by = Y[3] - Y[1]; // P1 -> P3\n        long dx = X[3] - X[2], dy = Y[3] - Y[2]; // P2 -> P3\n\n        boolean ok = true;\n\n        // 1) angulo P2P1P3 agudo (0 < angulo < 90 graus)\n        ok &= (ax * bx + ay * by) > 0;\n        ok &= (ax * by - ay * bx) != 0;\n\n        // 2) |P1P2| == |P1P3|\n        ok &= (ax * ax + ay * ay) == (bx * bx + by * by);\n\n        // 3) P2, P3, P4, P5 colineares\n        ok &= cross(dx, dy, X[4] - X[2], Y[4] - Y[2]) == 0;\n        ok &= cross(dx, dy, X[5] - X[2], Y[5] - Y[2]) == 0;\n\n        // 4) pontos medios de P2P3 e P4P5 coincidem\n        ok &= (X[2] + X[3] == X[4] + X[5]) && (Y[2] + Y[3] == Y[4] + Y[5]);\n\n        // 5) |P2P3| > |P4P5|\n        ok &= (dx * dx + dy * dy) > ((X[5] - X[4]) * (X[5] - X[4]) + (Y[5] - Y[4]) * (Y[5] - Y[4]));\n\n        // 6) P4P6 e P5P7 perpendiculares a P2P3\n        ok &= ((X[6] - X[4]) * dx + (Y[6] - Y[4]) * dy) == 0;\n        ok &= ((X[7] - X[5]) * dx + (Y[7] - Y[5]) * dy) == 0;\n\n        // 7) |P4P6| == |P5P7|\n        long p46 = (X[6] - X[4]) * (X[6] - X[4]) + (Y[6] - Y[4]) * (Y[6] - Y[4]);\n        long p57 = (X[7] - X[5]) * (X[7] - X[5]) + (Y[7] - Y[5]) * (Y[7] - Y[5]);\n        ok &= p46 == p57;\n\n        // 8) P1 e P6 em lados opostos da reta que contem P2P3\n        long c1 = cross(dx, dy, X[1] - X[2], Y[1] - Y[2]);\n        long c6 = cross(dx, dy, X[6] - X[2], Y[6] - Y[2]);\n        ok &= ((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0));\n\n        System.out.println(ok ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n\n    static long cross(long ax, long ay, long bx, long by) {\n        return ax * by - ay * bx;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String ln;\n        while ((ln = br.readLine()) != null) sb.append(ln).append(' ');\n        StringTokenizer tz = new StringTokenizer(sb.toString());\n\n        long[] X = new long[8], Y = new long[8];\n        for (int i = 1; i <= 7; i++) {\n            X[i] = Long.parseLong(tz.nextToken());\n            Y[i] = Long.parseLong(tz.nextToken());\n        }\n\n        long ax = X[2] - X[1], ay = Y[2] - Y[1]; // P1 -> P2\n        long bx = X[3] - X[1], by = Y[3] - Y[1]; // P1 -> P3\n        long dx = X[3] - X[2], dy = Y[3] - Y[2]; // P2 -> P3\n\n        boolean ok = true;\n\n        // 1) angulo P2P1P3 agudo (0 < angulo < 90 graus)\n        ok &= (ax * bx + ay * by) > 0;\n        ok &= (ax * by - ay * bx) != 0;\n\n        // 2) |P1P2| == |P1P3|\n        ok &= (ax * ax + ay * ay) == (bx * bx + by * by);\n\n        // 3) P2, P3, P4, P5 colineares\n        ok &= cross(dx, dy, X[4] - X[2], Y[4] - Y[2]) == 0;\n        ok &= cross(dx, dy, X[5] - X[2], Y[5] - Y[2]) == 0;\n\n        // 4) pontos medios de P2P3 e P4P5 coincidem\n        ok &= (X[2] + X[3] == X[4] + X[5]) && (Y[2] + Y[3] == Y[4] + Y[5]);\n\n        // 5) |P2P3| > |P4P5|\n        ok &= (dx * dx + dy * dy) > ((X[5] - X[4]) * (X[5] - X[4]) + (Y[5] - Y[4]) * (Y[5] - Y[4]));\n\n        // 6) P4P6 e P5P7 perpendiculares a P2P3\n        ok &= ((X[6] - X[4]) * dx + (Y[6] - Y[4]) * dy) == 0;\n        ok &= ((X[7] - X[5]) * dx + (Y[7] - Y[5]) * dy) == 0;\n\n        // 7) |P4P6| == |P5P7|\n        long p46 = (X[6] - X[4]) * (X[6] - X[4]) + (Y[6] - Y[4]) * (Y[6] - Y[4]);\n        long p57 = (X[7] - X[5]) * (X[7] - X[5]) + (Y[7] - Y[5]) * (Y[7] - Y[5]);\n        ok &= p46 == p57;\n\n        // 8) P1 e P6 em lados opostos da reta que contem P2P3\n        long c1 = cross(dx, dy, X[1] - X[2], Y[1] - Y[2]);\n        long c6 = cross(dx, dy, X[6] - X[2], Y[6] - Y[2]);\n        ok &= ((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0));\n\n        System.out.println(ok ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10679739998886362,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

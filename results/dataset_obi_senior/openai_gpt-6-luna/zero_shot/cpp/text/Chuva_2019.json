@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:08:21.768140+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 838,
+            "output_tokens": 2517,
+            "total_tokens": 3355
+        },
+        "cost_usd": {
+            "input_cost": 8.4e-05,
+            "output_cost": 0.001259,
+            "total_cost": 0.001342
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<string> grid(N);\n    queue<pair<int, int>> q;\n\n    for (int i = 0; i < N; ++i) {\n        cin >> grid[i];\n        for (int j = 0; j < M; ++j) {\n            if (grid[i][j] == 'o') {\n                q.push({i, j});\n            }\n        }\n    }\n\n    auto wet = [&](int r, int c) {\n        if (r < 0 || r >= N || c < 0 || c >= M || grid[r][c] != '.') {\n            return;\n        }\n        grid[r][c] = 'o';\n        q.push({r, c});\n    };\n\n    while (!q.empty()) {\n        auto [r, c] = q.front();\n        q.pop();\n\n        // Water flows downward.\n        wet(r + 1, c);\n\n        // Water spreads horizontally when supported by a shelf below.\n        if (r + 1 < N && grid[r + 1][c] == '#') {\n            wet(r, c - 1);\n            wet(r, c + 1);\n        }\n    }\n\n    for (const string& row : grid) {\n        cout << row << '\\n';\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<string> grid(N);\n    queue<pair<int, int>> q;\n\n    for (int i = 0; i < N; ++i) {\n        cin >> grid[i];\n        for (int j = 0; j < M; ++j) {\n            if (grid[i][j] == 'o') {\n                q.push({i, j});\n            }\n        }\n    }\n\n    auto wet = [&](int r, int c) {\n        if (r < 0 || r >= N || c < 0 || c >= M || grid[r][c] != '.') {\n            return;\n        }\n        grid[r][c] = 'o';\n        q.push({r, c});\n    };\n\n    while (!q.empty()) {\n        auto [r, c] = q.front();\n        q.pop();\n\n        // Water flows downward.\n        wet(r + 1, c);\n\n        // Water spreads horizontally when supported by a shelf below.\n        if (r + 1 < N && grid[r + 1][c] == '#') {\n            wet(r, c - 1);\n            wet(r, c + 1);\n        }\n    }\n\n    for (const string& row : grid) {\n        cout << row << '\\n';\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19456649999483489,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

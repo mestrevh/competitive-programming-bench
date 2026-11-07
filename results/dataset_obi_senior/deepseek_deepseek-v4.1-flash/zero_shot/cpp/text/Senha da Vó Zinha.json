@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:52:20.565098+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1175,
+            "output_tokens": 9098,
+            "total_tokens": 10273
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.021835,
+            "total_cost": 0.021839
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M, K;\n    cin >> N >> M >> K;\n\n    string pattern;\n    cin >> pattern;\n\n    vector<vector<char>> opts(M);\n\n    for (int i = 0; i < M; ++i) {\n        string s;\n        cin >> s;\n\n        sort(s.begin(), s.end());\n        s.erase(unique(s.begin(), s.end()), s.end());\n\n        opts[i] = vector<char>(s.begin(), s.end());\n    }\n\n    long long P;\n    cin >> P;\n\n    vector<int> pos;\n    for (int i = 0; i < N; ++i) {\n        if (pattern[i] == '#') pos.push_back(i);\n    }\n\n    const long long INF = 1000000000LL + 1;\n    vector<long long> suf(M + 1, 1);\n\n    for (int i = M - 1; i >= 0; --i) {\n        long long len = (long long)opts[i].size();\n        if (suf[i + 1] >= INF / len) suf[i] = INF;\n        else suf[i] = min(INF, suf[i + 1] * len);\n    }\n\n    string ans = pattern;\n\n    for (int i = 0; i < M; ++i) {\n        long long block = suf[i + 1];\n        long long idx = 0;\n\n        if (block < P) {\n            idx = (P - 1) / block;\n            P = (P - 1) % block + 1;\n        }\n\n        ans[pos[i]] = opts[i][idx];\n    }\n\n    cout << ans << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M, K;\n    cin >> N >> M >> K;\n\n    string pattern;\n    cin >> pattern;\n\n    vector<vector<char>> opts(M);\n\n    for (int i = 0; i < M; ++i) {\n        string s;\n        cin >> s;\n\n        sort(s.begin(), s.end());\n        s.erase(unique(s.begin(), s.end()), s.end());\n\n        opts[i] = vector<char>(s.begin(), s.end());\n    }\n\n    long long P;\n    cin >> P;\n\n    vector<int> pos;\n    for (int i = 0; i < N; ++i) {\n        if (pattern[i] == '#') pos.push_back(i);\n    }\n\n    const long long INF = 1000000000LL + 1;\n    vector<long long> suf(M + 1, 1);\n\n    for (int i = M - 1; i >= 0; --i) {\n        long long len = (long long)opts[i].size();\n        if (suf[i + 1] >= INF / len) suf[i] = INF;\n        else suf[i] = min(INF, suf[i + 1] * len);\n    }\n\n    string ans = pattern;\n\n    for (int i = 0; i < M; ++i) {\n        long long block = suf[i + 1];\n        long long idx = 0;\n\n        if (block < P) {\n            idx = (P - 1) / block;\n            P = (P - 1) % block + 1;\n        }\n\n        ans[pos[i]] = opts[i][idx];\n    }\n\n    cout << ans << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17994929999986198,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

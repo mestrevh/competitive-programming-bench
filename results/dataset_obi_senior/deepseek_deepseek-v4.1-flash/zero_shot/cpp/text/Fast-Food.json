@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:26:31.418840+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1292,
+            "output_tokens": 50703,
+            "total_tokens": 51995
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.121687,
+            "total_cost": 0.121691
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\ntypedef long long ll;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<ll> X(N), Y(N);\n    for (int i = 0; i < N; ++i) cin >> X[i];\n    for (int i = 0; i < N; ++i) cin >> Y[i];\n\n    vector<pair<ll, ll>> ptsU(N), ptsV(N);\n    for (int i = 0; i < N; ++i) {\n        ll u = X[i] + Y[i];\n        ll v = X[i] - Y[i];\n        ptsU[i] = {u, v};\n        ptsV[i] = {v, u};\n    }\n\n    sort(ptsU.begin(), ptsU.end());\n    sort(ptsV.begin(), ptsV.end());\n\n    vector<ll> prefMinV(N), prefMaxV(N), suffMinV(N), suffMaxV(N);\n    prefMinV[0] = prefMaxV[0] = ptsU[0].second;\n    for (int i = 1; i < N; ++i) {\n        prefMinV[i] = min(prefMinV[i - 1], ptsU[i].second);\n        prefMaxV[i] = max(prefMaxV[i - 1], ptsU[i].second);\n    }\n    suffMinV[N - 1] = suffMaxV[N - 1] = ptsU[N - 1].second;\n    for (int i = N - 2; i >= 0; --i) {\n        suffMinV[i] = min(suffMinV[i + 1], ptsU[i].second);\n        suffMaxV[i] = max(suffMaxV[i + 1], ptsU[i].second);\n    }\n\n    vector<ll> prefMinU(N), prefMaxU(N), suffMinU(N), suffMaxU(N);\n    prefMinU[0] = prefMaxU[0] = ptsV[0].second;\n    for (int i = 1; i < N; ++i) {\n        prefMinU[i] = min(prefMinU[i - 1], ptsV[i].second);\n        prefMaxU[i] = max(prefMaxU[i - 1], ptsV[i].second);\n    }\n    suffMinU[N - 1] = suffMaxU[N - 1] = ptsV[N - 1].second;\n    for (int i = N - 2; i >= 0; --i) {\n        suffMinU[i] = min(suffMinU[i + 1], ptsV[i].second);\n        suffMaxU[i] = max(suffMaxU[i + 1], ptsV[i].second);\n    }\n\n    auto feasible = [&](ll D) -> bool {\n        ll minU = ptsU[0].first, maxU = ptsU[N - 1].first;\n        ll minV = prefMinV[N - 1], maxV = prefMaxV[N - 1];\n        if (maxU - minU <= D && maxV - minV <= D) return true;\n\n        for (int i = 0; i < N - 1; ++i) {\n            ll uRangePref = ptsU[i].first - ptsU[0].first;\n            if (uRangePref > D) break;\n            ll vRangePref = prefMaxV[i] - prefMinV[i];\n            if (vRangePref > D) continue;\n\n            ll uRangeSuff = ptsU[N - 1].first - ptsU[i + 1].first;\n            if (uRangeSuff > D) continue;\n            ll vRangeSuff = suffMaxV[i + 1] - suffMinV[i + 1];\n            if (vRangeSuff > D) continue;\n\n            return true;\n        }\n\n        for (int i = 0; i < N - 1; ++i) {\n            ll vRangePref = ptsV[i].first - ptsV[0].first;\n            if (vRangePref > D) break;\n            ll uRangePref = prefMaxU[i] - prefMinU[i];\n            if (uRangePref > D) continue;\n\n            ll vRangeSuff = ptsV[N - 1].first - ptsV[i + 1].first;\n            if (vRangeSuff > D) continue;\n            ll uRangeSuff = suffMaxU[i + 1] - suffMinU[i + 1];\n            if (uRangeSuff > D) continue;\n\n            return true;\n        }\n\n        return false;\n    };\n\n    ll low = 0;\n    ll high = max(ptsU[N - 1].first - ptsU[0].first,\n                  prefMaxV[N - 1] - prefMinV[N - 1]);\n\n    while (low < high) {\n        ll mid = (low + high) / 2;\n        if (feasible(mid))\n            high = mid;\n        else\n            low = mid + 1;\n    }\n\n    cout << low << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\ntypedef long long ll;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<ll> X(N), Y(N);\n    for (int i = 0; i < N; ++i) cin >> X[i];\n    for (int i = 0; i < N; ++i) cin >> Y[i];\n\n    vector<pair<ll, ll>> ptsU(N), ptsV(N);\n    for (int i = 0; i < N; ++i) {\n        ll u = X[i] + Y[i];\n        ll v = X[i] - Y[i];\n        ptsU[i] = {u, v};\n        ptsV[i] = {v, u};\n    }\n\n    sort(ptsU.begin(), ptsU.end());\n    sort(ptsV.begin(), ptsV.end());\n\n    vector<ll> prefMinV(N), prefMaxV(N), suffMinV(N), suffMaxV(N);\n    prefMinV[0] = prefMaxV[0] = ptsU[0].second;\n    for (int i = 1; i < N; ++i) {\n        prefMinV[i] = min(prefMinV[i - 1], ptsU[i].second);\n        prefMaxV[i] = max(prefMaxV[i - 1], ptsU[i].second);\n    }\n    suffMinV[N - 1] = suffMaxV[N - 1] = ptsU[N - 1].second;\n    for (int i = N - 2; i >= 0; --i) {\n        suffMinV[i] = min(suffMinV[i + 1], ptsU[i].second);\n        suffMaxV[i] = max(suffMaxV[i + 1], ptsU[i].second);\n    }\n\n    vector<ll> prefMinU(N), prefMaxU(N), suffMinU(N), suffMaxU(N);\n    prefMinU[0] = prefMaxU[0] = ptsV[0].second;\n    for (int i = 1; i < N; ++i) {\n        prefMinU[i] = min(prefMinU[i - 1], ptsV[i].second);\n        prefMaxU[i] = max(prefMaxU[i - 1], ptsV[i].second);\n    }\n    suffMinU[N - 1] = suffMaxU[N - 1] = ptsV[N - 1].second;\n    for (int i = N - 2; i >= 0; --i) {\n        suffMinU[i] = min(suffMinU[i + 1], ptsV[i].second);\n        suffMaxU[i] = max(suffMaxU[i + 1], ptsV[i].second);\n    }\n\n    auto feasible = [&](ll D) -> bool {\n        ll minU = ptsU[0].first, maxU = ptsU[N - 1].first;\n        ll minV = prefMinV[N - 1], maxV = prefMaxV[N - 1];\n        if (maxU - minU <= D && maxV - minV <= D) return true;\n\n        for (int i = 0; i < N - 1; ++i) {\n            ll uRangePref = ptsU[i].first - ptsU[0].first;\n            if (uRangePref > D) break;\n            ll vRangePref = prefMaxV[i] - prefMinV[i];\n            if (vRangePref > D) continue;\n\n            ll uRangeSuff = ptsU[N - 1].first - ptsU[i + 1].first;\n            if (uRangeSuff > D) continue;\n            ll vRangeSuff = suffMaxV[i + 1] - suffMinV[i + 1];\n            if (vRangeSuff > D) continue;\n\n            return true;\n        }\n\n        for (int i = 0; i < N - 1; ++i) {\n            ll vRangePref = ptsV[i].first - ptsV[0].first;\n            if (vRangePref > D) break;\n            ll uRangePref = prefMaxU[i] - prefMinU[i];\n            if (uRangePref > D) continue;\n\n            ll vRangeSuff = ptsV[N - 1].first - ptsV[i + 1].first;\n            if (vRangeSuff > D) continue;\n            ll uRangeSuff = suffMaxU[i + 1] - suffMinU[i + 1];\n            if (uRangeSuff > D) continue;\n\n            return true;\n        }\n\n        return false;\n    };\n\n    ll low = 0;\n    ll high = max(ptsU[N - 1].first - ptsU[0].first,\n                  prefMaxV[N - 1] - prefMinV[N - 1]);\n\n    while (low < high) {\n        ll mid = (low + high) / 2;\n        if (feasible(mid))\n            high = mid;\n        else\n            low = mid + 1;\n    }\n\n    cout << low << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.19117980000009993,
+            "counts": {
+                "AC": 21,
+                "WA": 41,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

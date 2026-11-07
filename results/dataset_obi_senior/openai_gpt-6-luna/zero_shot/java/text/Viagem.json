@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:21:38.944589+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1128,
+            "output_tokens": 1057,
+            "total_tokens": 2185
+        },
+        "cost_usd": {
+            "input_cost": 0.000113,
+            "output_cost": 0.000528,
+            "total_cost": 0.000641
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    static class Edge {\n        int to, time, cost;\n\n        Edge(int to, int time, int cost) {\n            this.to = to;\n            this.time = time;\n            this.cost = cost;\n        }\n    }\n\n    static class State {\n        int island, spent;\n        long time;\n\n        State(int island, int spent, long time) {\n            this.island = island;\n            this.spent = spent;\n            this.time = time;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int budget = fs.nextInt();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        ArrayList<Edge>[] graph = new ArrayList[n + 1];\n        for (int i = 1; i <= n; i++) {\n            graph[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < m; i++) {\n            int a = fs.nextInt();\n            int b = fs.nextInt();\n            int time = fs.nextInt();\n            int cost = fs.nextInt();\n\n            graph[a].add(new Edge(b, time, cost));\n            graph[b].add(new Edge(a, time, cost));\n        }\n\n        int start = fs.nextInt();\n        int destination = fs.nextInt();\n\n        long[][] dist = new long[n + 1][budget + 1];\n        for (int i = 1; i <= n; i++) {\n            Arrays.fill(dist[i], Long.MAX_VALUE);\n        }\n\n        PriorityQueue<State> pq = new PriorityQueue<>(Comparator.comparingLong(s -> s.time));\n        dist[start][0] = 0;\n        pq.add(new State(start, 0, 0));\n\n        while (!pq.isEmpty()) {\n            State current = pq.poll();\n            if (current.time != dist[current.island][current.spent]) {\n                continue;\n            }\n            if (current.island == destination) {\n                System.out.println(current.time);\n                return;\n            }\n\n            for (Edge edge : graph[current.island]) {\n                int nextSpent = current.spent + edge.cost;\n                if (nextSpent > budget) {\n                    continue;\n                }\n\n                long nextTime = current.time + edge.time;\n                if (nextTime < dist[edge.to][nextSpent]) {\n                    dist[edge.to][nextSpent] = nextTime;\n                    pq.add(new State(edge.to, nextSpent, nextTime));\n                }\n            }\n        }\n\n        System.out.println(-1);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    static class Edge {\n        int to, time, cost;\n\n        Edge(int to, int time, int cost) {\n            this.to = to;\n            this.time = time;\n            this.cost = cost;\n        }\n    }\n\n    static class State {\n        int island, spent;\n        long time;\n\n        State(int island, int spent, long time) {\n            this.island = island;\n            this.spent = spent;\n            this.time = time;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int budget = fs.nextInt();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        ArrayList<Edge>[] graph = new ArrayList[n + 1];\n        for (int i = 1; i <= n; i++) {\n            graph[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < m; i++) {\n            int a = fs.nextInt();\n            int b = fs.nextInt();\n            int time = fs.nextInt();\n            int cost = fs.nextInt();\n\n            graph[a].add(new Edge(b, time, cost));\n            graph[b].add(new Edge(a, time, cost));\n        }\n\n        int start = fs.nextInt();\n        int destination = fs.nextInt();\n\n        long[][] dist = new long[n + 1][budget + 1];\n        for (int i = 1; i <= n; i++) {\n            Arrays.fill(dist[i], Long.MAX_VALUE);\n        }\n\n        PriorityQueue<State> pq = new PriorityQueue<>(Comparator.comparingLong(s -> s.time));\n        dist[start][0] = 0;\n        pq.add(new State(start, 0, 0));\n\n        while (!pq.isEmpty()) {\n            State current = pq.poll();\n            if (current.time != dist[current.island][current.spent]) {\n                continue;\n            }\n            if (current.island == destination) {\n                System.out.println(current.time);\n                return;\n            }\n\n            for (Edge edge : graph[current.island]) {\n                int nextSpent = current.spent + edge.cost;\n                if (nextSpent > budget) {\n                    continue;\n                }\n\n                long nextTime = current.time + edge.time;\n                if (nextTime < dist[edge.to][nextSpent]) {\n                    dist[edge.to][nextSpent] = nextTime;\n                    pq.add(new State(edge.to, nextSpent, nextTime));\n                }\n            }\n        }\n\n        System.out.println(-1);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09264210000401363,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

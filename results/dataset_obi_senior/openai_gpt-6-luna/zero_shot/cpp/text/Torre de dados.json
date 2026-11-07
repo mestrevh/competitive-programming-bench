@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:36:20.371468+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 896,
+            "output_tokens": 1018,
+            "total_tokens": 1914
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.000509,
+            "total_cost": 0.000599
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    array<int, 7> dp;\n    dp.fill(-1);\n\n    for (int i = 0; i < N; ++i) {\n        int a, b, c, d, e, f;\n        cin >> a >> b >> c >> d >> e >> f;\n\n        array<int, 7> opposite{};\n        opposite[a] = f;\n        opposite[f] = a;\n        opposite[b] = d;\n        opposite[d] = b;\n        opposite[c] = e;\n        opposite[e] = c;\n\n        array<int, 7> next;\n        next.fill(-1);\n\n        for (int bottom = 1; bottom <= 6; ++bottom) {\n            int top = opposite[bottom];\n            int sideMax = 0;\n            for (int value = 1; value <= 6; ++value) {\n                if (value != bottom && value != top) {\n                    sideMax = max(sideMax, value);\n                }\n            }\n\n            if (i == 0) {\n                next[top] = max(next[top], sideMax);\n            } else if (dp[bottom] != -1) {\n                next[top] = max(next[top], dp[bottom] + sideMax);\n            }\n        }\n\n        dp = next;\n    }\n\n    cout << *max_element(dp.begin() + 1, dp.end()) << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    array<int, 7> dp;\n    dp.fill(-1);\n\n    for (int i = 0; i < N; ++i) {\n        int a, b, c, d, e, f;\n        cin >> a >> b >> c >> d >> e >> f;\n\n        array<int, 7> opposite{};\n        opposite[a] = f;\n        opposite[f] = a;\n        opposite[b] = d;\n        opposite[d] = b;\n        opposite[c] = e;\n        opposite[e] = c;\n\n        array<int, 7> next;\n        next.fill(-1);\n\n        for (int bottom = 1; bottom <= 6; ++bottom) {\n            int top = opposite[bottom];\n            int sideMax = 0;\n            for (int value = 1; value <= 6; ++value) {\n                if (value != bottom && value != top) {\n                    sideMax = max(sideMax, value);\n                }\n            }\n\n            if (i == 0) {\n                next[top] = max(next[top], sideMax);\n            } else if (dp[bottom] != -1) {\n                next[top] = max(next[top], dp[bottom] + sideMax);\n            }\n        }\n\n        dp = next;\n    }\n\n    cout << *max_element(dp.begin() + 1, dp.end()) << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18987380000180565,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

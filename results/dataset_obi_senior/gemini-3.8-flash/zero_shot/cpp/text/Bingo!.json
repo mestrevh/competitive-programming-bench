@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:14:43.982797+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 367,
+            "total_tokens": 2212
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.001376,
+            "total_cost": 0.002071
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int N, K, U;\n    if (!(cin >> N >> K >> U)) return 0;\n\n    vector<vector<int>> num_to_cards(U + 1);\n    for (int i = 1; i <= N; ++i) {\n        for (int j = 0; j < K; ++j) {\n            int num;\n            cin >> num;\n            num_to_cards[num].push_back(i);\n        }\n    }\n\n    vector<int> remaining(N + 1, K);\n    vector<int> winners;\n\n    for (int i = 0; i < U; ++i) {\n        int drawn;\n        cin >> drawn;\n        if (winners.empty()) {\n            for (int card_id : num_to_cards[drawn]) {\n                remaining[card_id]--;\n                if (remaining[card_id] == 0) {\n                    winners.push_back(card_id);\n                }\n            }\n        }\n    }\n\n    sort(winners.begin(), winners.end());\n\n    for (size_t i = 0; i < winners.size(); ++i) {\n        if (i > 0) cout << \" \";\n        cout << winners[i];\n    }\n    cout << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int N, K, U;\n    if (!(cin >> N >> K >> U)) return 0;\n\n    vector<vector<int>> num_to_cards(U + 1);\n    for (int i = 1; i <= N; ++i) {\n        for (int j = 0; j < K; ++j) {\n            int num;\n            cin >> num;\n            num_to_cards[num].push_back(i);\n        }\n    }\n\n    vector<int> remaining(N + 1, K);\n    vector<int> winners;\n\n    for (int i = 0; i < U; ++i) {\n        int drawn;\n        cin >> drawn;\n        if (winners.empty()) {\n            for (int card_id : num_to_cards[drawn]) {\n                remaining[card_id]--;\n                if (remaining[card_id] == 0) {\n                    winners.push_back(card_id);\n                }\n            }\n        }\n    }\n\n    sort(winners.begin(), winners.end());\n\n    for (size_t i = 0; i < winners.size(); ++i) {\n        if (i > 0) cout << \" \";\n        cout << winners[i];\n    }\n    cout << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16104549998999573,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

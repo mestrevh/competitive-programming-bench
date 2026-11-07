@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T08:54:57.356883+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 779,
+            "output_tokens": 68292,
+            "total_tokens": 69071
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.034146,
+            "total_cost": 0.034163
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    xs = list(map(int, data[1:2 * n + 1:2]))\n    ys = list(map(int, data[2:2 * n + 1:2]))\n\n    # Events encoded as: (dsq << 22) | (src << 11) | dst\n    # Tents: 0..n-1, Palace: n. dsq = squared Euclidean distance (max 8e8 < 2^30).\n    # For each tent pair {a,b} (a<b) we keep one event and handle both directions.\n    # Palace->tent events are kept separately (anchor of every chain, value 1).\n    edges = None\n    try:\n        import numpy as np\n        cx = np.zeros(n + 1, dtype=np.int64)\n        cy = np.zeros(n + 1, dtype=np.int64)\n        cx[:n] = xs\n        cy[:n] = ys\n        iu, ju = np.triu_indices(n, 1)\n        dx = cx[iu] - cx[ju]\n        dy = cy[iu] - cy[ju]\n        dsq = dx * dx + dy * dy\n        del dx, dy\n        codes = (dsq << 22) + (iu << 11) + ju\n        del dsq, iu, ju\n        pp = cx[:n] * cx[:n] + cy[:n] * cy[:n]\n        pcodes = (pp << 22) + (n << 11) + np.arange(n, dtype=np.int64)\n        del pp, cx, cy\n        allc = np.concatenate((pcodes, codes))\n        del pcodes, codes\n        allc.sort()\n        edges = allc[::-1].tolist()   # descending by distance\n        del allc\n    except Exception:\n        edges = None\n\n    if edges is None:\n        edges = []\n        ext = edges.extend\n        ap = edges.append\n        nsh = n << 11\n        for a in range(n):\n            xa = xs[a]\n            ya = ys[a]\n            ap(((xa * xa + ya * ya) << 22) + nsh + a)\n            b0 = a + 1\n            if b0 < n:\n                base = a << 11\n                ext([((((xa - xb) * (xa - xb)) + ((ya - yb) * (ya - yb))) << 22) + base + b\n                     for b, (xb, yb) in enumerate(zip(xs[b0:], ys[b0:]), b0)])\n        edges.sort(reverse=True)\n\n    # DP over edge-states processed by strictly decreasing distance (ties grouped).\n    # best[v] = max candies of a valid (palace-anchored) chain ending at v\n    # whose last edge has strictly greater distance than the current group.\n    # An event can only extend a chain if best[src] > 0 (chain must start at palace).\n    best = [0] * (n + 1)\n    ans = 0\n    pu = []\n    pv = []\n    pu_append = pu.append\n    pv_append = pv.append\n    prev_d = -1\n    NP = n\n    for e in edges:\n        d = e >> 22\n        if d != prev_d:\n            if pu:\n                for w, val in zip(pu, pv):\n                    if val > best[w]:\n                        best[w] = val\n                del pu[:]\n                del pv[:]\n            prev_d = d\n        a = (e >> 11) & 2047\n        if a == NP:\n            if ans < 1:\n                ans = 1\n            pu_append(e & 2047)\n            pv_append(1)\n        else:\n            b = e & 2047\n            t = best[a]\n            if t:\n                val = t + 1\n                if val > ans:\n                    ans = val\n                pu_append(b)\n                pv_append(val)\n            t = best[b]\n            if t:\n                val = t + 1\n                if val > ans:\n                    ans = val\n                pu_append(a)\n                pv_append(val)\n    print(ans)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    xs = list(map(int, data[1:2 * n + 1:2]))\n    ys = list(map(int, data[2:2 * n + 1:2]))\n\n    # Events encoded as: (dsq << 22) | (src << 11) | dst\n    # Tents: 0..n-1, Palace: n. dsq = squared Euclidean distance (max 8e8 < 2^30).\n    # For each tent pair {a,b} (a<b) we keep one event and handle both directions.\n    # Palace->tent events are kept separately (anchor of every chain, value 1).\n    edges = None\n    try:\n        import numpy as np\n        cx = np.zeros(n + 1, dtype=np.int64)\n        cy = np.zeros(n + 1, dtype=np.int64)\n        cx[:n] = xs\n        cy[:n] = ys\n        iu, ju = np.triu_indices(n, 1)\n        dx = cx[iu] - cx[ju]\n        dy = cy[iu] - cy[ju]\n        dsq = dx * dx + dy * dy\n        del dx, dy\n        codes = (dsq << 22) + (iu << 11) + ju\n        del dsq, iu, ju\n        pp = cx[:n] * cx[:n] + cy[:n] * cy[:n]\n        pcodes = (pp << 22) + (n << 11) + np.arange(n, dtype=np.int64)\n        del pp, cx, cy\n        allc = np.concatenate((pcodes, codes))\n        del pcodes, codes\n        allc.sort()\n        edges = allc[::-1].tolist()   # descending by distance\n        del allc\n    except Exception:\n        edges = None\n\n    if edges is None:\n        edges = []\n        ext = edges.extend\n        ap = edges.append\n        nsh = n << 11\n        for a in range(n):\n            xa = xs[a]\n            ya = ys[a]\n            ap(((xa * xa + ya * ya) << 22) + nsh + a)\n            b0 = a + 1\n            if b0 < n:\n                base = a << 11\n                ext([((((xa - xb) * (xa - xb)) + ((ya - yb) * (ya - yb))) << 22) + base + b\n                     for b, (xb, yb) in enumerate(zip(xs[b0:], ys[b0:]), b0)])\n        edges.sort(reverse=True)\n\n    # DP over edge-states processed by strictly decreasing distance (ties grouped).\n    # best[v] = max candies of a valid (palace-anchored) chain ending at v\n    # whose last edge has strictly greater distance than the current group.\n    # An event can only extend a chain if best[src] > 0 (chain must start at palace).\n    best = [0] * (n + 1)\n    ans = 0\n    pu = []\n    pv = []\n    pu_append = pu.append\n    pv_append = pv.append\n    prev_d = -1\n    NP = n\n    for e in edges:\n        d = e >> 22\n        if d != prev_d:\n            if pu:\n                for w, val in zip(pu, pv):\n                    if val > best[w]:\n                        best[w] = val\n                del pu[:]\n                del pv[:]\n            prev_d = d\n        a = (e >> 11) & 2047\n        if a == NP:\n            if ans < 1:\n                ans = 1\n            pu_append(e & 2047)\n            pv_append(1)\n        else:\n            b = e & 2047\n            t = best[a]\n            if t:\n                val = t + 1\n                if val > ans:\n                    ans = val\n                pu_append(b)\n                pv_append(val)\n            t = best[b]\n            if t:\n                val = t + 1\n                if val > ans:\n                    ans = val\n                pu_append(a)\n                pv_append(val)\n    print(ans)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.1930272999998124,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

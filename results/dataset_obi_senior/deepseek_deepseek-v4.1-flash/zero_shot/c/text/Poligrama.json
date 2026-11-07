@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:37:29.320607+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 657,
+            "output_tokens": 3356,
+            "total_tokens": 4013
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.008054,
+            "total_cost": 0.008056
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint cmp(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main(void) {\n    int N;\n    scanf(\"%d\", &N);\n\n    char P[100005];\n    scanf(\"%s\", P);\n\n    if (N < 2) {\n        printf(\"*\\n\");\n        return 0;\n    }\n\n    int divs[256];\n    int dc = 0;\n\n    for (int i = 1; i * i <= N; i++) {\n        if (N % i == 0) {\n            if (i < N) divs[dc++] = i;\n            int j = N / i;\n            if (j != i && j < N) divs[dc++] = j;\n        }\n    }\n\n    qsort(divs, dc, sizeof(int), cmp);\n\n    int cnt[26], tmp[26];\n\n    for (int d = 0; d < dc; d++) {\n        int L = divs[d];\n        int k = N / L;\n\n        memset(cnt, 0, sizeof(cnt));\n        for (int i = 0; i < L; i++) {\n            cnt[P[i] - 'a']++;\n        }\n\n        int ok = 1;\n        for (int b = 1; b < k; b++) {\n            memset(tmp, 0, sizeof(tmp));\n            int start = b * L;\n            int end = start + L;\n\n            for (int i = start; i < end; i++) {\n                tmp[P[i] - 'a']++;\n            }\n\n            for (int c = 0; c < 26; c++) {\n                if (cnt[c] != tmp[c]) {\n                    ok = 0;\n                    break;\n                }\n            }\n\n            if (!ok) break;\n        }\n\n        if (ok) {\n            printf(\"%.*s\\n\", L, P);\n            return 0;\n        }\n    }\n\n    printf(\"*\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint cmp(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main(void) {\n    int N;\n    scanf(\"%d\", &N);\n\n    char P[100005];\n    scanf(\"%s\", P);\n\n    if (N < 2) {\n        printf(\"*\\n\");\n        return 0;\n    }\n\n    int divs[256];\n    int dc = 0;\n\n    for (int i = 1; i * i <= N; i++) {\n        if (N % i == 0) {\n            if (i < N) divs[dc++] = i;\n            int j = N / i;\n            if (j != i && j < N) divs[dc++] = j;\n        }\n    }\n\n    qsort(divs, dc, sizeof(int), cmp);\n\n    int cnt[26], tmp[26];\n\n    for (int d = 0; d < dc; d++) {\n        int L = divs[d];\n        int k = N / L;\n\n        memset(cnt, 0, sizeof(cnt));\n        for (int i = 0; i < L; i++) {\n            cnt[P[i] - 'a']++;\n        }\n\n        int ok = 1;\n        for (int b = 1; b < k; b++) {\n            memset(tmp, 0, sizeof(tmp));\n            int start = b * L;\n            int end = start + L;\n\n            for (int i = start; i < end; i++) {\n                tmp[P[i] - 'a']++;\n            }\n\n            for (int c = 0; c < 26; c++) {\n                if (cnt[c] != tmp[c]) {\n                    ok = 0;\n                    break;\n                }\n            }\n\n            if (!ok) break;\n        }\n\n        if (ok) {\n            printf(\"%.*s\\n\", L, P);\n            return 0;\n        }\n    }\n\n    printf(\"*\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12264779998804443,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:44:59.095866+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 839,
+            "output_tokens": 943,
+            "total_tokens": 1782
+        },
+        "cost_usd": {
+            "input_cost": 8.4e-05,
+            "output_cost": 0.000472,
+            "total_cost": 0.000555
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter, deque\n\ndata = sys.stdin.buffer.read().split()\nit = iter(data)\n\nL = int(next(it))\nC = int(next(it))\n\nequations = []\ngrid = []\n\nfor _ in range(L):\n    row = [next(it).decode() for _ in range(C)]\n    total = int(next(it))\n    grid.append(row)\n    equations.append((Counter(row), total))\n\nfor j in range(C):\n    col = Counter(grid[i][j] for i in range(L))\n    total = int(next(it))\n    equations.append((col, total))\n\nvariables = set()\nadj = {}\ncoeffs = []\nremaining = []\ndegree = []\n\nfor idx, (counter, total) in enumerate(equations):\n    coeffs.append(counter)\n    remaining.append(total)\n    degree.append(len(counter))\n    for var, coef in counter.items():\n        variables.add(var)\n        adj.setdefault(var, []).append((idx, coef))\n\nvalues = {}\nqueue = deque(i for i, d in enumerate(degree) if d == 1)\n\nwhile queue:\n    eq = queue.popleft()\n    if degree[eq] != 1:\n        continue\n\n    var = next(v for v in coeffs[eq] if v not in values)\n    coef = coeffs[eq][var]\n    value = remaining[eq] // coef\n    values[var] = value\n\n    for e, a in adj[var]:\n        remaining[e] -= a * value\n        degree[e] -= 1\n        if degree[e] == 1:\n            queue.append(e)\n\nout = [f\"{var} {values[var]}\" for var in sorted(variables)]\nsys.stdout.write(\"\\n\".join(out))\n```",
+        "extracted_code": "import sys\nfrom collections import Counter, deque\n\ndata = sys.stdin.buffer.read().split()\nit = iter(data)\n\nL = int(next(it))\nC = int(next(it))\n\nequations = []\ngrid = []\n\nfor _ in range(L):\n    row = [next(it).decode() for _ in range(C)]\n    total = int(next(it))\n    grid.append(row)\n    equations.append((Counter(row), total))\n\nfor j in range(C):\n    col = Counter(grid[i][j] for i in range(L))\n    total = int(next(it))\n    equations.append((col, total))\n\nvariables = set()\nadj = {}\ncoeffs = []\nremaining = []\ndegree = []\n\nfor idx, (counter, total) in enumerate(equations):\n    coeffs.append(counter)\n    remaining.append(total)\n    degree.append(len(counter))\n    for var, coef in counter.items():\n        variables.add(var)\n        adj.setdefault(var, []).append((idx, coef))\n\nvalues = {}\nqueue = deque(i for i, d in enumerate(degree) if d == 1)\n\nwhile queue:\n    eq = queue.popleft()\n    if degree[eq] != 1:\n        continue\n\n    var = next(v for v in coeffs[eq] if v not in values)\n    coef = coeffs[eq][var]\n    value = remaining[eq] // coef\n    values[var] = value\n\n    for e, a in adj[var]:\n        remaining[e] -= a * value\n        degree[e] -= 1\n        if degree[e] == 1:\n            queue.append(e)\n\nout = [f\"{var} {values[var]}\" for var in sorted(variables)]\nsys.stdout.write(\"\\n\".join(out))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08589889999711886,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

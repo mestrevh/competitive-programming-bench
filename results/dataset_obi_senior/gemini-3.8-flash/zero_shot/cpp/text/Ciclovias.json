@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:23:08.355705+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 935,
+            "output_tokens": 897,
+            "total_tokens": 21445
+        },
+        "cost_usd": {
+            "input_cost": 0.000701,
+            "output_cost": 0.003364,
+            "total_cost": 0.004065
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Node {\n    int v;\n    int k;\n};\n\nint main() {\n    // Otimização de I/O para programação competitiva\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> adj(n + 1);\n    for (int i = 0; i < m; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n\n    for (int i = 1; i <= n; ++i) {\n        sort(adj[i].begin(), adj[i].end());\n    }\n\n    vector<vector<int>> rev(n + 1);\n    vector<vector<int>> val_S(n + 1);\n    vector<vector<int>> deg_S(n + 1);\n\n    vector<Node> q;\n    q.reserve(2 * m + n + 5);\n\n    for (int i = 1; i <= n; ++i) {\n        int d = adj[i].size();\n        rev[i].resize(d);\n        for (int j = 0; j < d; ++j) {\n            int to = adj[i][j];\n            auto it = lower_bound(adj[to].begin(), adj[to].end(), i);\n            rev[i][j] = it - adj[to].begin();\n        }\n        val_S[i].assign(d + 1, 0);\n        deg_S[i].assign(d + 1, 2);\n\n        // Caso base: nenhum vértice seguinte\n        val_S[i][d] = 1;\n        deg_S[i][d] = 0;\n        q.push_back({i, d});\n    }\n\n    int head = 0;\n    while (head < (int)q.size()) {\n        Node cur = q[head++];\n        int v = cur.v;\n        int k = cur.k;\n\n        if (k == 0) {\n            continue;\n        }\n\n        // 1) A aresta que chega em v vinda de u = adj[v][k - 1]\n        int u = adj[v][k - 1];\n        int r = rev[v][k - 1]; // posição de v em adj[u]\n        int edge_val = 1 + val_S[v][k];\n\n        deg_S[u][r]--;\n        if (edge_val > val_S[u][r]) {\n            val_S[u][r] = edge_val;\n        }\n        if (deg_S[u][r] == 0) {\n            q.push_back({u, r});\n        }\n\n        // 2) O sufixo anterior S(v, k - 1)\n        deg_S[v][k - 1]--;\n        if (val_S[v][k] > val_S[v][k - 1]) {\n            val_S[v][k - 1] = val_S[v][k];\n        }\n        if (deg_S[v][k - 1] == 0) {\n            q.push_back({v, k - 1});\n        }\n    }\n\n    for (int i = 1; i <= n; ++i) {\n        cout << val_S[i][0] << (i == n ? \"\" : \" \");\n    }\n    cout << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Node {\n    int v;\n    int k;\n};\n\nint main() {\n    // Otimização de I/O para programação competitiva\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> adj(n + 1);\n    for (int i = 0; i < m; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n\n    for (int i = 1; i <= n; ++i) {\n        sort(adj[i].begin(), adj[i].end());\n    }\n\n    vector<vector<int>> rev(n + 1);\n    vector<vector<int>> val_S(n + 1);\n    vector<vector<int>> deg_S(n + 1);\n\n    vector<Node> q;\n    q.reserve(2 * m + n + 5);\n\n    for (int i = 1; i <= n; ++i) {\n        int d = adj[i].size();\n        rev[i].resize(d);\n        for (int j = 0; j < d; ++j) {\n            int to = adj[i][j];\n            auto it = lower_bound(adj[to].begin(), adj[to].end(), i);\n            rev[i][j] = it - adj[to].begin();\n        }\n        val_S[i].assign(d + 1, 0);\n        deg_S[i].assign(d + 1, 2);\n\n        // Caso base: nenhum vértice seguinte\n        val_S[i][d] = 1;\n        deg_S[i][d] = 0;\n        q.push_back({i, d});\n    }\n\n    int head = 0;\n    while (head < (int)q.size()) {\n        Node cur = q[head++];\n        int v = cur.v;\n        int k = cur.k;\n\n        if (k == 0) {\n            continue;\n        }\n\n        // 1) A aresta que chega em v vinda de u = adj[v][k - 1]\n        int u = adj[v][k - 1];\n        int r = rev[v][k - 1]; // posição de v em adj[u]\n        int edge_val = 1 + val_S[v][k];\n\n        deg_S[u][r]--;\n        if (edge_val > val_S[u][r]) {\n            val_S[u][r] = edge_val;\n        }\n        if (deg_S[u][r] == 0) {\n            q.push_back({u, r});\n        }\n\n        // 2) O sufixo anterior S(v, k - 1)\n        deg_S[v][k - 1]--;\n        if (val_S[v][k] > val_S[v][k - 1]) {\n            val_S[v][k - 1] = val_S[v][k];\n        }\n        if (deg_S[v][k - 1] == 0) {\n            q.push_back({v, k - 1});\n        }\n    }\n\n    for (int i = 1; i <= n; ++i) {\n        cout << val_S[i][0] << (i == n ? \"\" : \" \");\n    }\n    cout << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3154103999841027,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

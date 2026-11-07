@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:48:49.374981+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1145,
+            "output_tokens": 971,
+            "total_tokens": 6651
+        },
+        "cost_usd": {
+            "input_cost": 0.000859,
+            "output_cost": 0.003641,
+            "total_cost": 0.0045
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res * sign;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    if (N <= 1) {\n        console.log(0);\n        return;\n    }\n\n    const X = new Int32Array(N);\n    for (let i = 0; i < N; i++) {\n        X[i] = readInt();\n    }\n\n    const U = new Int32Array(N);\n    const V = new Int32Array(N);\n\n    let minU = Infinity, maxU = -Infinity;\n    let minV = Infinity, maxV = -Infinity;\n\n    for (let i = 0; i < N; i++) {\n        const y = readInt();\n        const x = X[i];\n        const u = x + y;\n        const v = x - y;\n        U[i] = u;\n        V[i] = v;\n        if (u < minU) minU = u;\n        if (u > maxU) maxU = u;\n        if (v < minV) minV = v;\n        if (v > maxV) maxV = v;\n    }\n\n    function check(D) {\n        // Caso A:\n        // Q1: u <= minU + D && v <= minV + D\n        // Q2: u >= maxU - D && v >= maxV - D\n        const limU1 = minU + D;\n        const limV1 = minV + D;\n        const limU2 = maxU - D;\n        const limV2 = maxV - D;\n\n        let okA = true;\n        for (let i = 0; i < N; i++) {\n            const u = U[i];\n            const v = V[i];\n            const inQ1 = (u <= limU1 && v <= limV1);\n            const inQ2 = (u >= limU2 && v >= limV2);\n            if (!inQ1 && !inQ2) {\n                okA = false;\n                break;\n            }\n        }\n        if (okA) return true;\n\n        // Caso B:\n        // Q1: u <= minU + D && v >= maxV - D\n        // Q2: u >= maxU - D && v <= minV + D\n        let okB = true;\n        for (let i = 0; i < N; i++) {\n            const u = U[i];\n            const v = V[i];\n            const inQ1 = (u <= limU1 && v >= limV2);\n            const inQ2 = (u >= limU2 && v <= limV1);\n            if (!inQ1 && !inQ2) {\n                okB = false;\n                break;\n            }\n        }\n        return okB;\n    }\n\n    let low = 0;\n    let high = Math.max(maxU - minU, maxV - minV);\n    let ans = high;\n\n    while (low <= high) {\n        const mid = (low + high) >> 1;\n        if (check(mid)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    console.log(ans);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let sign = 1;\n        if (buffer[offset] === 45) { // '-'\n            sign = -1;\n            offset++;\n        }\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] >= 48 && buffer[offset] <= 57) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res * sign;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    if (N <= 1) {\n        console.log(0);\n        return;\n    }\n\n    const X = new Int32Array(N);\n    for (let i = 0; i < N; i++) {\n        X[i] = readInt();\n    }\n\n    const U = new Int32Array(N);\n    const V = new Int32Array(N);\n\n    let minU = Infinity, maxU = -Infinity;\n    let minV = Infinity, maxV = -Infinity;\n\n    for (let i = 0; i < N; i++) {\n        const y = readInt();\n        const x = X[i];\n        const u = x + y;\n        const v = x - y;\n        U[i] = u;\n        V[i] = v;\n        if (u < minU) minU = u;\n        if (u > maxU) maxU = u;\n        if (v < minV) minV = v;\n        if (v > maxV) maxV = v;\n    }\n\n    function check(D) {\n        // Caso A:\n        // Q1: u <= minU + D && v <= minV + D\n        // Q2: u >= maxU - D && v >= maxV - D\n        const limU1 = minU + D;\n        const limV1 = minV + D;\n        const limU2 = maxU - D;\n        const limV2 = maxV - D;\n\n        let okA = true;\n        for (let i = 0; i < N; i++) {\n            const u = U[i];\n            const v = V[i];\n            const inQ1 = (u <= limU1 && v <= limV1);\n            const inQ2 = (u >= limU2 && v >= limV2);\n            if (!inQ1 && !inQ2) {\n                okA = false;\n                break;\n            }\n        }\n        if (okA) return true;\n\n        // Caso B:\n        // Q1: u <= minU + D && v >= maxV - D\n        // Q2: u >= maxU - D && v <= minV + D\n        let okB = true;\n        for (let i = 0; i < N; i++) {\n            const u = U[i];\n            const v = V[i];\n            const inQ1 = (u <= limU1 && v >= limV2);\n            const inQ2 = (u >= limU2 && v <= limV1);\n            if (!inQ1 && !inQ2) {\n                okB = false;\n                break;\n            }\n        }\n        return okB;\n    }\n\n    let low = 0;\n    let high = Math.max(maxU - minU, maxV - minV);\n    let ans = high;\n\n    while (low <= high) {\n        const mid = (low + high) >> 1;\n        if (check(mid)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    console.log(ans);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11041670001577586,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

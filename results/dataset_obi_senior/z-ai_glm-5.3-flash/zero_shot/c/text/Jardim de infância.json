@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:52:11.857693+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1119,
+            "output_tokens": 10329,
+            "total_tokens": 11448
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.005164,
+            "total_cost": 0.005188
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\ntypedef long long ll;\n\nint main(void) {\n    ll x[8], y[8];\n    int i;\n\n    for (i = 1; i <= 7; i++) {\n        if (scanf(\"%lld %lld\", &x[i], &y[i]) != 2) return 0;\n    }\n\n    /* vetores auxiliares */\n    ll v21x = x[2] - x[1], v21y = y[2] - y[1];\n    ll v31x = x[3] - x[1], v31y = y[3] - y[1];\n    ll v32x = x[3] - x[2], v32y = y[3] - y[2];\n    ll v54x = x[5] - x[4], v54y = y[5] - y[4];\n    ll v64x = x[6] - x[4], v64y = y[6] - y[4];\n    ll v75x = x[7] - x[5], v75y = y[7] - y[5];\n\n    int ok = 1;\n\n    /* 1) angulo P2P1P3 agudo: produto escalar > 0 */\n    if (v21x * v31x + v21y * v31y <= 0) ok = 0;\n\n    /* 2) |P1P2| == |P1P3| */\n    if (v21x * v21x + v21y * v21y != v31x * v31x + v31y * v31y) ok = 0;\n\n    /* 3) P2, P3, P4, P5 colineares */\n    if (v32x * (y[4] - y[2]) - v32y * (x[4] - x[2]) != 0) ok = 0;\n    if (v32x * (y[5] - y[2]) - v32y * (x[5] - x[2]) != 0) ok = 0;\n\n    /* 4) pontos medios de P2P3 e P4P5 coincidem: P2+P3 == P4+P5 */\n    if (x[2] + x[3] != x[4] + x[5] || y[2] + y[3] != y[4] + y[5]) ok = 0;\n\n    /* 5) |P2P3| > |P4P5| */\n    if (v32x * v32x + v32y * v32y <= v54x * v54x + v54y * v54y) ok = 0;\n\n    /* 6) P4P6 e P5P7 perpendiculares a P2P3 */\n    if (v64x * v32x + v64y * v32y != 0) ok = 0;\n    if (v75x * v32x + v75y * v32y != 0) ok = 0;\n\n    /* 7) |P4P6| == |P5P7| */\n    if (v64x * v64x + v64y * v64y != v75x * v75x + v75y * v75y) ok = 0;\n\n    /* 8) P1 e P6 em lados opostos da reta que contem P2P3\n          (segmento P1P6 intercepta a reta em exatamente um ponto) */\n    {\n        ll c1 = v32x * (y[1] - y[2]) - v32y * (x[1] - x[2]);\n        ll c6 = v32x * (y[6] - y[2]) - v32y * (x[6] - x[2]);\n        if (!((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0))) ok = 0;\n    }\n\n    printf(\"%c\\n\", ok ? 'S' : 'N');\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\ntypedef long long ll;\n\nint main(void) {\n    ll x[8], y[8];\n    int i;\n\n    for (i = 1; i <= 7; i++) {\n        if (scanf(\"%lld %lld\", &x[i], &y[i]) != 2) return 0;\n    }\n\n    /* vetores auxiliares */\n    ll v21x = x[2] - x[1], v21y = y[2] - y[1];\n    ll v31x = x[3] - x[1], v31y = y[3] - y[1];\n    ll v32x = x[3] - x[2], v32y = y[3] - y[2];\n    ll v54x = x[5] - x[4], v54y = y[5] - y[4];\n    ll v64x = x[6] - x[4], v64y = y[6] - y[4];\n    ll v75x = x[7] - x[5], v75y = y[7] - y[5];\n\n    int ok = 1;\n\n    /* 1) angulo P2P1P3 agudo: produto escalar > 0 */\n    if (v21x * v31x + v21y * v31y <= 0) ok = 0;\n\n    /* 2) |P1P2| == |P1P3| */\n    if (v21x * v21x + v21y * v21y != v31x * v31x + v31y * v31y) ok = 0;\n\n    /* 3) P2, P3, P4, P5 colineares */\n    if (v32x * (y[4] - y[2]) - v32y * (x[4] - x[2]) != 0) ok = 0;\n    if (v32x * (y[5] - y[2]) - v32y * (x[5] - x[2]) != 0) ok = 0;\n\n    /* 4) pontos medios de P2P3 e P4P5 coincidem: P2+P3 == P4+P5 */\n    if (x[2] + x[3] != x[4] + x[5] || y[2] + y[3] != y[4] + y[5]) ok = 0;\n\n    /* 5) |P2P3| > |P4P5| */\n    if (v32x * v32x + v32y * v32y <= v54x * v54x + v54y * v54y) ok = 0;\n\n    /* 6) P4P6 e P5P7 perpendiculares a P2P3 */\n    if (v64x * v32x + v64y * v32y != 0) ok = 0;\n    if (v75x * v32x + v75y * v32y != 0) ok = 0;\n\n    /* 7) |P4P6| == |P5P7| */\n    if (v64x * v64x + v64y * v64y != v75x * v75x + v75y * v75y) ok = 0;\n\n    /* 8) P1 e P6 em lados opostos da reta que contem P2P3\n          (segmento P1P6 intercepta a reta em exatamente um ponto) */\n    {\n        ll c1 = v32x * (y[1] - y[2]) - v32y * (x[1] - x[2]);\n        ll c6 = v32x * (y[6] - y[2]) - v32y * (x[6] - x[2]);\n        if (!((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0))) ok = 0;\n    }\n\n    printf(\"%c\\n\", ok ? 'S' : 'N');\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15917699999408796,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

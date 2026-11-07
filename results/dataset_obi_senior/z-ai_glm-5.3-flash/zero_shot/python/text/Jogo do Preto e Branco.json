@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T07:54:02.623137+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 829,
+            "output_tokens": 11964,
+            "total_tokens": 12793
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.005982,
+            "total_cost": 0.006
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    L = int(data[idx]); idx += 1\n    C = int(data[idx]); idx += 1\n    P = int(data[idx]); idx += 1\n    blacks = set()\n    for _ in range(P):\n        x = int(data[idx]); idx += 1\n        y = int(data[idx]); idx += 1\n        blacks.add((x - 1, y - 1))\n\n    # A cell can hold a white piece iff it's not black and has a black 4-neighbor\n    valid = [[False] * C for _ in range(L)]\n    for r in range(L):\n        for c in range(C):\n            if (r, c) in blacks:\n                continue\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < L and 0 <= nc < C and (nr, nc) in blacks:\n                    valid[r][c] = True\n                    break\n\n    # For each row, enumerate masks (bit = white piece) with:\n    #  - whites only on valid cells\n    #  - no two horizontally adjacent whites inside the row\n    row_masks = []\n    for r in range(L):\n        masks = []\n        for m in range(1 << C):\n            if m & (m << 1):\n                continue\n            ok = True\n            cnt = 0\n            mm = m\n            while mm:\n                low = mm & (-mm)\n                c = low.bit_length() - 1\n                if not valid[r][c]:\n                    ok = False\n                    break\n                cnt += 1\n                mm ^= low\n            if ok:\n                masks.append((m, cnt))\n        row_masks.append(masks)\n\n    # DP over rows: state = mask of whites in current row.\n    # Vertical adjacency check between consecutive rows: m & pm == 0.\n    # (Only 4-directional adjacency matters; diagonals are allowed.)\n    dp = {0: 0}\n    for r in range(L):\n        ndp = {}\n        for pm, pc in dp.items():\n            for m, cnt in row_masks[r]:\n                if m & pm:\n                    continue\n                val = pc + cnt\n                if ndp.get(m, -1) < val:\n                    ndp[m] = val\n        dp = ndp\n\n    print(max(dp.values()))\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    L = int(data[idx]); idx += 1\n    C = int(data[idx]); idx += 1\n    P = int(data[idx]); idx += 1\n    blacks = set()\n    for _ in range(P):\n        x = int(data[idx]); idx += 1\n        y = int(data[idx]); idx += 1\n        blacks.add((x - 1, y - 1))\n\n    # A cell can hold a white piece iff it's not black and has a black 4-neighbor\n    valid = [[False] * C for _ in range(L)]\n    for r in range(L):\n        for c in range(C):\n            if (r, c) in blacks:\n                continue\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < L and 0 <= nc < C and (nr, nc) in blacks:\n                    valid[r][c] = True\n                    break\n\n    # For each row, enumerate masks (bit = white piece) with:\n    #  - whites only on valid cells\n    #  - no two horizontally adjacent whites inside the row\n    row_masks = []\n    for r in range(L):\n        masks = []\n        for m in range(1 << C):\n            if m & (m << 1):\n                continue\n            ok = True\n            cnt = 0\n            mm = m\n            while mm:\n                low = mm & (-mm)\n                c = low.bit_length() - 1\n                if not valid[r][c]:\n                    ok = False\n                    break\n                cnt += 1\n                mm ^= low\n            if ok:\n                masks.append((m, cnt))\n        row_masks.append(masks)\n\n    # DP over rows: state = mask of whites in current row.\n    # Vertical adjacency check between consecutive rows: m & pm == 0.\n    # (Only 4-directional adjacency matters; diagonals are allowed.)\n    dp = {0: 0}\n    for r in range(L):\n        ndp = {}\n        for pm, pc in dp.items():\n            for m, cnt in row_masks[r]:\n                if m & pm:\n                    continue\n                val = pc + cnt\n                if ndp.get(m, -1) < val:\n                    ndp[m] = val\n        dp = ndp\n\n    print(max(dp.values()))\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08831189999909839,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:42:10.434829+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 878,
+            "output_tokens": 285,
+            "total_tokens": 1974
+        },
+        "cost_usd": {
+            "input_cost": 0.000659,
+            "output_cost": 0.001069,
+            "total_cost": 0.001727
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    cubes = list(map(int, sys.stdin.read().split()))\n    if not cubes:\n        return\n    \n    total = sum(cubes)\n    if total % 3 != 0:\n        print('N')\n        return\n    \n    target = total // 3\n    n = len(cubes)\n    \n    # Check if there is an index i with cubes[i] == target\n    # and two distinct indices j, k != i such that cubes[j] + cubes[k] == target\n    for i in range(n):\n        if cubes[i] == target:\n            rem = [cubes[idx] for idx in range(n) if idx != i]\n            # rem has 5 elements, check if two sum to target\n            found = False\n            for j in range(len(rem)):\n                for k in range(j + 1, len(rem)):\n                    if rem[j] + rem[k] == target:\n                        found = True\n                        break\n                if found:\n                    break\n            if found:\n                print('S')\n                return\n\n    print('N')\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    cubes = list(map(int, sys.stdin.read().split()))\n    if not cubes:\n        return\n    \n    total = sum(cubes)\n    if total % 3 != 0:\n        print('N')\n        return\n    \n    target = total // 3\n    n = len(cubes)\n    \n    # Check if there is an index i with cubes[i] == target\n    # and two distinct indices j, k != i such that cubes[j] + cubes[k] == target\n    for i in range(n):\n        if cubes[i] == target:\n            rem = [cubes[idx] for idx in range(n) if idx != i]\n            # rem has 5 elements, check if two sum to target\n            found = False\n            for j in range(len(rem)):\n                for k in range(j + 1, len(rem)):\n                    if rem[j] + rem[k] == target:\n                        found = True\n                        break\n                if found:\n                    break\n            if found:\n                print('S')\n                return\n\n    print('N')\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08474049999495037,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:01:28.305671+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 972,
+            "output_tokens": 1968,
+            "total_tokens": 2940
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.004723,
+            "total_cost": 0.004726
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst N = Number(input[0]);\nconst F = Number(input[1]);\n\nconst grid = [];\nfor (let i = 0; i < N; i++) {\n  grid.push(input[2 + i].split(''));\n}\n\nconst startValue = grid[0][0].charCodeAt(0) - 48;\n\nif (startValue <= F) {\n  grid[0][0] = '*';\n\n  const total = N * N;\n  const queue = new Int32Array(total);\n  let head = 0;\n  let tail = 0;\n\n  queue[tail++] = 0;\n\n  while (head < tail) {\n    const idx = queue[head++];\n    const r = Math.floor(idx / N);\n    const c = idx - r * N;\n\n    if (r > 0) {\n      const ch = grid[r - 1][c];\n      if (ch !== '*' && ch.charCodeAt(0) - 48 <= F) {\n        grid[r - 1][c] = '*';\n        queue[tail++] = idx - N;\n      }\n    }\n\n    if (r + 1 < N) {\n      const ch = grid[r + 1][c];\n      if (ch !== '*' && ch.charCodeAt(0) - 48 <= F) {\n        grid[r + 1][c] = '*';\n        queue[tail++] = idx + N;\n      }\n    }\n\n    if (c > 0) {\n      const ch = grid[r][c - 1];\n      if (ch !== '*' && ch.charCodeAt(0) - 48 <= F) {\n        grid[r][c - 1] = '*';\n        queue[tail++] = idx - 1;\n      }\n    }\n\n    if (c + 1 < N) {\n      const ch = grid[r][c + 1];\n      if (ch !== '*' && ch.charCodeAt(0) - 48 <= F) {\n        grid[r][c + 1] = '*';\n        queue[tail++] = idx + 1;\n      }\n    }\n  }\n}\n\nprocess.stdout.write(grid.map(row => row.join('')).join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst N = Number(input[0]);\nconst F = Number(input[1]);\n\nconst grid = [];\nfor (let i = 0; i < N; i++) {\n  grid.push(input[2 + i].split(''));\n}\n\nconst startValue = grid[0][0].charCodeAt(0) - 48;\n\nif (startValue <= F) {\n  grid[0][0] = '*';\n\n  const total = N * N;\n  const queue = new Int32Array(total);\n  let head = 0;\n  let tail = 0;\n\n  queue[tail++] = 0;\n\n  while (head < tail) {\n    const idx = queue[head++];\n    const r = Math.floor(idx / N);\n    const c = idx - r * N;\n\n    if (r > 0) {\n      const ch = grid[r - 1][c];\n      if (ch !== '*' && ch.charCodeAt(0) - 48 <= F) {\n        grid[r - 1][c] = '*';\n        queue[tail++] = idx - N;\n      }\n    }\n\n    if (r + 1 < N) {\n      const ch = grid[r + 1][c];\n      if (ch !== '*' && ch.charCodeAt(0) - 48 <= F) {\n        grid[r + 1][c] = '*';\n        queue[tail++] = idx + N;\n      }\n    }\n\n    if (c > 0) {\n      const ch = grid[r][c - 1];\n      if (ch !== '*' && ch.charCodeAt(0) - 48 <= F) {\n        grid[r][c - 1] = '*';\n        queue[tail++] = idx - 1;\n      }\n    }\n\n    if (c + 1 < N) {\n      const ch = grid[r][c + 1];\n      if (ch !== '*' && ch.charCodeAt(0) - 48 <= F) {\n        grid[r][c + 1] = '*';\n        queue[tail++] = idx + 1;\n      }\n    }\n  }\n}\n\nprocess.stdout.write(grid.map(row => row.join('')).join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11054400002467446,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

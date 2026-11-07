@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:15:40.949095+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 804,
+            "output_tokens": 505,
+            "total_tokens": 1739
+        },
+        "cost_usd": {
+            "input_cost": 0.000603,
+            "output_cost": 0.001894,
+            "total_cost": 0.002497
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <limits.h>\n\n#define MAXN 105\n#define INF 1000000000\n\nint adj[MAXN][MAXN];\nint dist[MAXN];\nint visited[MAXN];\n\nint main() {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= n; j++) {\n            adj[i][j] = (i == j) ? 0 : INF;\n        }\n        dist[i] = INF;\n        visited[i] = 0;\n    }\n\n    for (int i = 0; i < m; i++) {\n        int u, v, c;\n        scanf(\"%d %d %d\", &u, &v, &c);\n        if (c < adj[u][v]) {\n            adj[u][v] = c;\n            adj[v][u] = c;\n        }\n    }\n\n    dist[1] = 0;\n\n    for (int i = 1; i <= n; i++) {\n        int u = -1;\n        int min_d = INF;\n\n        for (int j = 1; j <= n; j++) {\n            if (!visited[j] && dist[j] < min_d) {\n                min_d = dist[j];\n                u = j;\n            }\n        }\n\n        if (u == -1 || min_d == INF) break;\n\n        visited[u] = 1;\n\n        for (int v = 1; v <= n; v++) {\n            if (!visited[v] && adj[u][v] < INF) {\n                if (dist[u] + adj[u][v] < dist[v]) {\n                    dist[v] = dist[u] + adj[u][v];\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dist[n]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAXN 105\n#define INF 1000000000\n\nint adj[MAXN][MAXN];\nint dist[MAXN];\nint visited[MAXN];\n\nint main() {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= n; j++) {\n            adj[i][j] = (i == j) ? 0 : INF;\n        }\n        dist[i] = INF;\n        visited[i] = 0;\n    }\n\n    for (int i = 0; i < m; i++) {\n        int u, v, c;\n        scanf(\"%d %d %d\", &u, &v, &c);\n        if (c < adj[u][v]) {\n            adj[u][v] = c;\n            adj[v][u] = c;\n        }\n    }\n\n    dist[1] = 0;\n\n    for (int i = 1; i <= n; i++) {\n        int u = -1;\n        int min_d = INF;\n\n        for (int j = 1; j <= n; j++) {\n            if (!visited[j] && dist[j] < min_d) {\n                min_d = dist[j];\n                u = j;\n            }\n        }\n\n        if (u == -1 || min_d == INF) break;\n\n        visited[u] = 1;\n\n        for (int v = 1; v <= n; v++) {\n            if (!visited[v] && adj[u][v] < INF) {\n                if (dist[u] + adj[u][v] < dist[v]) {\n                    dist[v] = dist[u] + adj[u][v];\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dist[n]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.180057499994291,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

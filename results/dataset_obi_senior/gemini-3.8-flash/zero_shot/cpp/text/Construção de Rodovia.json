@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:24:28.597345+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 794,
+            "output_tokens": 603,
+            "total_tokens": 3199
+        },
+        "cost_usd": {
+            "input_cost": 0.000596,
+            "output_cost": 0.002261,
+            "total_cost": 0.002857
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> adj(n + 1);\n    for (int i = 0; i < m; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n\n    vector<bool> visited(n + 1, false);\n\n    for (int i = 1; i <= n; ++i) {\n        if (!visited[i]) {\n            vector<int> comp;\n            long long sum_degrees = 0;\n\n            // DFS para coletar todos os vértices da componente conexa\n            vector<int> q;\n            q.push_back(i);\n            visited[i] = true;\n\n            int head = 0;\n            while (head < (int)q.size()) {\n                int u = q[head++];\n                comp.push_back(u);\n                sum_degrees += adj[u].size();\n\n                for (int v : adj[u]) {\n                    if (!visited[v]) {\n                        visited[v] = true;\n                        q.push_back(v);\n                    }\n                }\n            }\n\n            long long sz = comp.size();\n            // Em um clique, a soma dos graus é exatamente sz * (sz - 1)\n            if (sum_degrees < sz * (sz - 1)) {\n                // Existe pelo menos um vértice com grau < sz - 1\n                int u_target = -1;\n                for (int u : comp) {\n                    if ((int)adj[u].size() < sz - 1) {\n                        u_target = u;\n                        break;\n                    }\n                }\n\n                vector<bool> is_neighbor(n + 1, false);\n                for (int v : adj[u_target]) {\n                    is_neighbor[v] = true;\n                }\n                is_neighbor[u_target] = true;\n\n                for (int v : comp) {\n                    if (!is_neighbor[v]) {\n                        cout << u_target << \" \" << v << \"\\n\";\n                        return 0;\n                    }\n                }\n            }\n        }\n    }\n\n    cout << -1 << \"\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> adj(n + 1);\n    for (int i = 0; i < m; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n\n    vector<bool> visited(n + 1, false);\n\n    for (int i = 1; i <= n; ++i) {\n        if (!visited[i]) {\n            vector<int> comp;\n            long long sum_degrees = 0;\n\n            // DFS para coletar todos os vértices da componente conexa\n            vector<int> q;\n            q.push_back(i);\n            visited[i] = true;\n\n            int head = 0;\n            while (head < (int)q.size()) {\n                int u = q[head++];\n                comp.push_back(u);\n                sum_degrees += adj[u].size();\n\n                for (int v : adj[u]) {\n                    if (!visited[v]) {\n                        visited[v] = true;\n                        q.push_back(v);\n                    }\n                }\n            }\n\n            long long sz = comp.size();\n            // Em um clique, a soma dos graus é exatamente sz * (sz - 1)\n            if (sum_degrees < sz * (sz - 1)) {\n                // Existe pelo menos um vértice com grau < sz - 1\n                int u_target = -1;\n                for (int u : comp) {\n                    if ((int)adj[u].size() < sz - 1) {\n                        u_target = u;\n                        break;\n                    }\n                }\n\n                vector<bool> is_neighbor(n + 1, false);\n                for (int v : adj[u_target]) {\n                    is_neighbor[v] = true;\n                }\n                is_neighbor[u_target] = true;\n\n                for (int v : comp) {\n                    if (!is_neighbor[v]) {\n                        cout << u_target << \" \" << v << \"\\n\";\n                        return 0;\n                    }\n                }\n            }\n        }\n    }\n\n    cout << -1 << \"\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.19168730001547374,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

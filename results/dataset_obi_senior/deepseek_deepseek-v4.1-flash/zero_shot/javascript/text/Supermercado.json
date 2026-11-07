@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:31:47.350176+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 775,
+            "output_tokens": 2631,
+            "total_tokens": 3406
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.006314,
+            "total_cost": 0.006317
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0], 10);\n\nfunction toCents(s) {\n  const parts = s.split('.');\n  const intPart = parts[0];\n  let decPart = parts[1] || '';\n  decPart = (decPart + '00').slice(0, 2);\n  return parseInt(intPart, 10) * 100 + parseInt(decPart, 10);\n}\n\nlet idx = 1;\nlet bestCents = null;\nlet bestG = 1;\n\nfor (let i = 0; i < n; i++) {\n  const pCents = toCents(data[idx++]);\n  const g = parseInt(data[idx++], 10);\n\n  if (bestCents === null || pCents * bestG < bestCents * g) {\n    bestCents = pCents;\n    bestG = g;\n  }\n}\n\nconst roundedCents = Math.round(bestCents * 1000 / bestG);\nconst intPart = Math.floor(roundedCents / 100);\nconst decPart = (roundedCents % 100).toString().padStart(2, '0');\n\nconsole.log(`${intPart}.${decPart}`);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0], 10);\n\nfunction toCents(s) {\n  const parts = s.split('.');\n  const intPart = parts[0];\n  let decPart = parts[1] || '';\n  decPart = (decPart + '00').slice(0, 2);\n  return parseInt(intPart, 10) * 100 + parseInt(decPart, 10);\n}\n\nlet idx = 1;\nlet bestCents = null;\nlet bestG = 1;\n\nfor (let i = 0; i < n; i++) {\n  const pCents = toCents(data[idx++]);\n  const g = parseInt(data[idx++], 10);\n\n  if (bestCents === null || pCents * bestG < bestCents * g) {\n    bestCents = pCents;\n    bestG = g;\n  }\n}\n\nconst roundedCents = Math.round(bestCents * 1000 / bestG);\nconst intPart = Math.floor(roundedCents / 100);\nconst decPart = (roundedCents % 100).toString().padStart(2, '0');\n\nconsole.log(`${intPart}.${decPart}`);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.048037399974418804,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

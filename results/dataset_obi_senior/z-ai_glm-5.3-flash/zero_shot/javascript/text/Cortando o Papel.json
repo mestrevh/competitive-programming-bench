@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:05:50.868555+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 544,
+            "output_tokens": 4276,
+            "total_tokens": 4820
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.002138,
+            "total_cost": 0.00215
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = +data[0];\nconst a = data.slice(1, 1 + n).map(Number);\n\n// Um corte na altura h divide o papel em (número de runs de retângulos com Ai >= h) pedaços\n// acima do corte + 1 pedaço abaixo (sempre conectado pela base em y ∈ [0,1), pois Ai >= 1).\n// Maximizamos o número de runs sobre todas as alturas possíveis (thresholds iguais às alturas).\n\nconst idx = Array.from({ length: n }, (_, i) => i).sort((x, y) => a[y] - a[x]);\nconst active = new Uint8Array(n);\nlet comp = 0, best = 0;\n\nfor (let k = 0; k < n; k++) {\n  const i = idx[k];\n  comp++;\n  if (i > 0 && active[i - 1]) comp--;\n  if (i < n - 1 && active[i + 1]) comp--;\n  active[i] = 1;\n  // só registramos o número de componentes quando a batch de altura igual termina\n  if (k === n - 1 || a[idx[k + 1]] !== a[i]) {\n    if (comp > best) best = comp;\n  }\n}\n\nconsole.log(best + 1);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = +data[0];\nconst a = data.slice(1, 1 + n).map(Number);\n\n// Um corte na altura h divide o papel em (número de runs de retângulos com Ai >= h) pedaços\n// acima do corte + 1 pedaço abaixo (sempre conectado pela base em y ∈ [0,1), pois Ai >= 1).\n// Maximizamos o número de runs sobre todas as alturas possíveis (thresholds iguais às alturas).\n\nconst idx = Array.from({ length: n }, (_, i) => i).sort((x, y) => a[y] - a[x]);\nconst active = new Uint8Array(n);\nlet comp = 0, best = 0;\n\nfor (let k = 0; k < n; k++) {\n  const i = idx[k];\n  comp++;\n  if (i > 0 && active[i - 1]) comp--;\n  if (i < n - 1 && active[i + 1]) comp--;\n  active[i] = 1;\n  // só registramos o número de componentes quando a batch de altura igual termina\n  if (k === n - 1 || a[idx[k + 1]] !== a[i]) {\n    if (comp > best) best = comp;\n  }\n}\n\nconsole.log(best + 1);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10769630002323538,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

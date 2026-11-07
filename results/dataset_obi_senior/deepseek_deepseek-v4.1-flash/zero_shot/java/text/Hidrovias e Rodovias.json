@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:09:44.803895+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1513,
+            "output_tokens": 7420,
+            "total_tokens": 8933
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.017808,
+            "total_cost": 0.017813
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class DSU {\n        int[] parent;\n        int[] rank;\n\n        DSU(int n) {\n            parent = new int[n + 1];\n            rank = new int[n + 1];\n            for (int i = 1; i <= n; i++) {\n                parent[i] = i;\n            }\n        }\n\n        int find(int x) {\n            if (parent[x] != x) {\n                parent[x] = find(parent[x]);\n            }\n            return parent[x];\n        }\n\n        boolean union(int a, int b) {\n            int ra = find(a);\n            int rb = find(b);\n            if (ra == rb) return false;\n\n            if (rank[ra] < rank[rb]) {\n                int tmp = ra;\n                ra = rb;\n                rb = tmp;\n            }\n\n            parent[rb] = ra;\n            if (rank[ra] == rank[rb]) {\n                rank[ra]++;\n            }\n            return true;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n\n        DSU dsu = new DSU(N);\n\n        int[] roadU = new int[M];\n        int[] roadV = new int[M];\n        int roadCount = 0;\n\n        boolean hydroCycle = false;\n\n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            int t = Integer.parseInt(st.nextToken());\n\n            if (t == 1) {\n                if (!dsu.union(a, b)) {\n                    hydroCycle = true;\n                }\n            } else {\n                roadU[roadCount] = a;\n                roadV[roadCount] = b;\n                roadCount++;\n            }\n        }\n\n        if (hydroCycle) {\n            System.out.println(\"N\");\n            return;\n        }\n\n        int keptRoads = 0;\n        for (int i = 0; i < roadCount; i++) {\n            if (dsu.union(roadU[i], roadV[i])) {\n                keptRoads++;\n            }\n        }\n\n        int removedRoads = roadCount - keptRoads;\n\n        System.out.println(removedRoads <= K ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class DSU {\n        int[] parent;\n        int[] rank;\n\n        DSU(int n) {\n            parent = new int[n + 1];\n            rank = new int[n + 1];\n            for (int i = 1; i <= n; i++) {\n                parent[i] = i;\n            }\n        }\n\n        int find(int x) {\n            if (parent[x] != x) {\n                parent[x] = find(parent[x]);\n            }\n            return parent[x];\n        }\n\n        boolean union(int a, int b) {\n            int ra = find(a);\n            int rb = find(b);\n            if (ra == rb) return false;\n\n            if (rank[ra] < rank[rb]) {\n                int tmp = ra;\n                ra = rb;\n                rb = tmp;\n            }\n\n            parent[rb] = ra;\n            if (rank[ra] == rank[rb]) {\n                rank[ra]++;\n            }\n            return true;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n\n        DSU dsu = new DSU(N);\n\n        int[] roadU = new int[M];\n        int[] roadV = new int[M];\n        int roadCount = 0;\n\n        boolean hydroCycle = false;\n\n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            int t = Integer.parseInt(st.nextToken());\n\n            if (t == 1) {\n                if (!dsu.union(a, b)) {\n                    hydroCycle = true;\n                }\n            } else {\n                roadU[roadCount] = a;\n                roadV[roadCount] = b;\n                roadCount++;\n            }\n        }\n\n        if (hydroCycle) {\n            System.out.println(\"N\");\n            return;\n        }\n\n        int keptRoads = 0;\n        for (int i = 0; i < roadCount; i++) {\n            if (dsu.union(roadU[i], roadV[i])) {\n                keptRoads++;\n            }\n        }\n\n        int removedRoads = roadCount - keptRoads;\n\n        System.out.println(removedRoads <= K ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13886269999784417,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

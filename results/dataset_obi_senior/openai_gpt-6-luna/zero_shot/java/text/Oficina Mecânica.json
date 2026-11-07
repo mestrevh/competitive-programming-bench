@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:11:03.865656+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 921,
+            "output_tokens": 3524,
+            "total_tokens": 4445
+        },
+        "cost_usd": {
+            "input_cost": 9.2e-05,
+            "output_cost": 0.001762,
+            "total_cost": 0.001854
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    private static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        int[] times = new int[n];\n        for (int i = 0; i < n; i++) times[i] = fs.nextInt();\n        Arrays.sort(times);\n\n        int[] factors = new int[m];\n        int maxFactor = 0;\n        for (int i = 0; i < m; i++) {\n            factors[i] = fs.nextInt();\n            maxFactor = Math.max(maxFactor, factors[i]);\n        }\n\n        if (n <= m) {\n            System.out.println(0);\n            return;\n        }\n\n        long low = 0;\n        long high = (long) maxFactor * (n - 1);\n\n        while (low < high) {\n            long mid = (low + high) >>> 1;\n            long count = 0;\n\n            for (int factor : factors) {\n                count += Math.min((long) n, mid / factor + 1);\n                if (count >= n) break;\n            }\n\n            if (count >= n) high = mid;\n            else low = mid + 1;\n        }\n\n        long threshold = low;\n        long[] coefficients = new long[n];\n        int size = 0;\n\n        for (int factor : factors) {\n            long count = (threshold - 1) / factor + 1;\n            count = Math.min(count, n);\n\n            for (long q = 0; q < count; q++) {\n                coefficients[size++] = q * factor;\n            }\n        }\n\n        while (size < n) coefficients[size++] = threshold;\n\n        Arrays.sort(coefficients);\n\n        long answer = 0;\n        for (int i = 0; i < n; i++) {\n            answer += (long) times[i] * coefficients[n - 1 - i];\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    private static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        int[] times = new int[n];\n        for (int i = 0; i < n; i++) times[i] = fs.nextInt();\n        Arrays.sort(times);\n\n        int[] factors = new int[m];\n        int maxFactor = 0;\n        for (int i = 0; i < m; i++) {\n            factors[i] = fs.nextInt();\n            maxFactor = Math.max(maxFactor, factors[i]);\n        }\n\n        if (n <= m) {\n            System.out.println(0);\n            return;\n        }\n\n        long low = 0;\n        long high = (long) maxFactor * (n - 1);\n\n        while (low < high) {\n            long mid = (low + high) >>> 1;\n            long count = 0;\n\n            for (int factor : factors) {\n                count += Math.min((long) n, mid / factor + 1);\n                if (count >= n) break;\n            }\n\n            if (count >= n) high = mid;\n            else low = mid + 1;\n        }\n\n        long threshold = low;\n        long[] coefficients = new long[n];\n        int size = 0;\n\n        for (int factor : factors) {\n            long count = (threshold - 1) / factor + 1;\n            count = Math.min(count, n);\n\n            for (long q = 0; q < count; q++) {\n                coefficients[size++] = q * factor;\n            }\n        }\n\n        while (size < n) coefficients[size++] = threshold;\n\n        Arrays.sort(coefficients);\n\n        long answer = 0;\n        for (int i = 0; i < n; i++) {\n            answer += (long) times[i] * coefficients[n - 1 - i];\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1636231999946176,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T07:09:55.706414+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1403,
+            "output_tokens": 7496,
+            "total_tokens": 8899
+        },
+        "cost_usd": {
+            "input_cost": 3e-05,
+            "output_cost": 0.003748,
+            "total_cost": 0.003778
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n, q = int(data[0]), int(data[1])\n    grid = [[c - 48 for c in data[2 + i]] for i in range(n)]\n\n    for _ in range(q):\n        # Matriz com borda morta (dimensao (n+2) x (n+2)) para evitar checagens de limites\n        p = [[0] * (n + 2)] + [[0] + row + [0] for row in grid] + [[0] * (n + 2)]\n        new_grid = []\n        for i in range(n):\n            up, cur, dn = p[i], p[i + 1], p[i + 2]\n            new_row = [0] * n\n            for j in range(n):\n                cnt = (up[j] + up[j + 1] + up[j + 2] +\n                       cur[j] + cur[j + 2] +\n                       dn[j] + dn[j + 1] + dn[j + 2])\n                if cur[j + 1]:\n                    new_row[j] = 1 if (cnt == 2 or cnt == 3) else 0\n                else:\n                    new_row[j] = 1 if cnt == 3 else 0\n            new_grid.append(new_row)\n        grid = new_grid\n\n    sys.stdout.write('\\n'.join(''.join(map(str, row)) for row in grid) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n, q = int(data[0]), int(data[1])\n    grid = [[c - 48 for c in data[2 + i]] for i in range(n)]\n\n    for _ in range(q):\n        # Matriz com borda morta (dimensao (n+2) x (n+2)) para evitar checagens de limites\n        p = [[0] * (n + 2)] + [[0] + row + [0] for row in grid] + [[0] * (n + 2)]\n        new_grid = []\n        for i in range(n):\n            up, cur, dn = p[i], p[i + 1], p[i + 2]\n            new_row = [0] * n\n            for j in range(n):\n                cnt = (up[j] + up[j + 1] + up[j + 2] +\n                       cur[j] + cur[j + 2] +\n                       dn[j] + dn[j + 1] + dn[j + 2])\n                if cur[j + 1]:\n                    new_row[j] = 1 if (cnt == 2 or cnt == 3) else 0\n                else:\n                    new_row[j] = 1 if cnt == 3 else 0\n            new_grid.append(new_row)\n        grid = new_grid\n\n    sys.stdout.write('\\n'.join(''.join(map(str, row)) for row in grid) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07289619999937713,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

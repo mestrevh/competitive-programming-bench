@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T23:41:12.391558+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1510,
+            "output_tokens": 4825,
+            "total_tokens": 6335
+        },
+        "cost_usd": {
+            "input_cost": 3.2e-05,
+            "output_cost": 0.002413,
+            "total_cost": 0.002445
+        },
+        "raw_response": "```cpp\n#include <cstdio>\n#include <utility>\n#include <vector>\nusing namespace std;\n\nstatic int par[100005];\n\nint find(int x){\n    int r = x;\n    while(par[r] != r) r = par[r];\n    while(par[x] != r){ int nx = par[x]; par[x] = r; x = nx; }\n    return r;\n}\n\nint main(){\n    int n, m;\n    long long k;\n    if(scanf(\"%d %d %lld\", &n, &m, &k) != 3) return 0;\n\n    vector<pair<int,int>> roads;\n    roads.reserve(m);\n\n    for(int i = 0; i < m; i++){\n        int a, b, t;\n        scanf(\"%d %d %d\", &a, &b, &t);\n        if(t == 1){\n            // hidrovia: obrigatoriamente existia K anos atras\n            int ra = find(a), rb = find(b);\n            if(ra == rb){\n                // ciclo entre hidrovias: impossivel, nao pode remover hidrovias\n                printf(\"N\\n\");\n                return 0;\n            }\n            par[ra] = rb;\n        } else {\n            roads.push_back(make_pair(a, b));\n        }\n    }\n\n    // Gulosamente manter o maximo de rodovias sem formar ciclo\n    // (Uniao das componentes das hidrovias contraidas; matroide grafico -> guloso otimo)\n    long long removed = 0;\n    for(size_t i = 0; i < roads.size(); i++){\n        int ra = find(roads[i].first), rb = find(roads[i].second);\n        if(ra == rb) removed++;\n        else par[ra] = rb;\n    }\n\n    puts(removed <= k ? \"S\" : \"N\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <cstdio>\n#include <utility>\n#include <vector>\nusing namespace std;\n\nstatic int par[100005];\n\nint find(int x){\n    int r = x;\n    while(par[r] != r) r = par[r];\n    while(par[x] != r){ int nx = par[x]; par[x] = r; x = nx; }\n    return r;\n}\n\nint main(){\n    int n, m;\n    long long k;\n    if(scanf(\"%d %d %lld\", &n, &m, &k) != 3) return 0;\n\n    vector<pair<int,int>> roads;\n    roads.reserve(m);\n\n    for(int i = 0; i < m; i++){\n        int a, b, t;\n        scanf(\"%d %d %d\", &a, &b, &t);\n        if(t == 1){\n            // hidrovia: obrigatoriamente existia K anos atras\n            int ra = find(a), rb = find(b);\n            if(ra == rb){\n                // ciclo entre hidrovias: impossivel, nao pode remover hidrovias\n                printf(\"N\\n\");\n                return 0;\n            }\n            par[ra] = rb;\n        } else {\n            roads.push_back(make_pair(a, b));\n        }\n    }\n\n    // Gulosamente manter o maximo de rodovias sem formar ciclo\n    // (Uniao das componentes das hidrovias contraidas; matroide grafico -> guloso otimo)\n    long long removed = 0;\n    for(size_t i = 0; i < roads.size(); i++){\n        int ra = find(roads[i].first), rb = find(roads[i].second);\n        if(ra == rb) removed++;\n        else par[ra] = rb;\n    }\n\n    puts(removed <= k ? \"S\" : \"N\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.20255759999417933,
+            "counts": {
+                "AC": 39,
+                "WA": 23,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

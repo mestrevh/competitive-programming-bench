@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:14:04.830099+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1594,
+            "output_tokens": 30738,
+            "total_tokens": 32332
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.073771,
+            "total_cost": 0.073776
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, K, T = data[0], data[1], data[2]\n    P = data[3:3 + N]\n    G = data[3 + N:3 + 2 * N]\n\n    if K == 0:\n        print(0)\n        return\n\n    if K == N:\n        print(sum(P))\n        return\n\n    if T >= K * (N - 1):\n        print(sum(sorted(P, reverse=True)[:K]))\n        return\n\n    if T == 0:\n        ans = 0\n        for i in range(N):\n            if G[i]:\n                ans += P[i]\n        print(ans)\n        return\n\n    INF = T + 1\n    dp = [[0]]\n    A_prev = 0\n\n    for idx in range(N):\n        p = P[idx]\n        g = G[idx]\n        A_cur = A_prev + g\n\n        max_s = idx + 1\n        if max_s > K:\n            max_s = K\n\n        next_dp = [None] * (max_s + 1)\n        prev_len = len(dp)\n\n        for s in range(max_s + 1):\n            length = 9 * s + 1\n            add = A_cur - s\n            if add < 0:\n                add = -add\n\n            arr = [INF] * length\n\n            if add < INF:\n                src0 = dp[s] if s < prev_len else None\n                src1 = dp[s - 1] if s > 0 and s - 1 < prev_len else None\n\n                if src0 is not None and src1 is not None:\n                    len1 = len(src1)\n                    upto = p + len1\n\n                    for v in range(p):\n                        nc = src0[v] + add\n                        if nc < INF:\n                            arr[v] = nc\n\n                    j = 0\n                    for v in range(p, upto):\n                        c0 = src0[v]\n                        c1 = src1[j]\n                        if c1 < c0:\n                            c0 = c1\n                        nc = c0 + add\n                        if nc < INF:\n                            arr[v] = nc\n                        j += 1\n\n                    for v in range(upto, length):\n                        nc = src0[v] + add\n                        if nc < INF:\n                            arr[v] = nc\n\n                elif src0 is not None:\n                    for v in range(length):\n                        nc = src0[v] + add\n                        if nc < INF:\n                            arr[v] = nc\n\n                elif src1 is not None:\n                    len1 = len(src1)\n                    for v in range(len1):\n                        nc = src1[v] + add\n                        if nc < INF:\n                            arr[v + p] = nc\n\n            next_dp[s] = arr\n\n        dp = next_dp\n        A_prev = A_cur\n\n    arr = dp[K]\n    ans = 0\n    for v in range(len(arr) - 1, -1, -1):\n        if arr[v] <= T:\n            ans = v\n            break\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, K, T = data[0], data[1], data[2]\n    P = data[3:3 + N]\n    G = data[3 + N:3 + 2 * N]\n\n    if K == 0:\n        print(0)\n        return\n\n    if K == N:\n        print(sum(P))\n        return\n\n    if T >= K * (N - 1):\n        print(sum(sorted(P, reverse=True)[:K]))\n        return\n\n    if T == 0:\n        ans = 0\n        for i in range(N):\n            if G[i]:\n                ans += P[i]\n        print(ans)\n        return\n\n    INF = T + 1\n    dp = [[0]]\n    A_prev = 0\n\n    for idx in range(N):\n        p = P[idx]\n        g = G[idx]\n        A_cur = A_prev + g\n\n        max_s = idx + 1\n        if max_s > K:\n            max_s = K\n\n        next_dp = [None] * (max_s + 1)\n        prev_len = len(dp)\n\n        for s in range(max_s + 1):\n            length = 9 * s + 1\n            add = A_cur - s\n            if add < 0:\n                add = -add\n\n            arr = [INF] * length\n\n            if add < INF:\n                src0 = dp[s] if s < prev_len else None\n                src1 = dp[s - 1] if s > 0 and s - 1 < prev_len else None\n\n                if src0 is not None and src1 is not None:\n                    len1 = len(src1)\n                    upto = p + len1\n\n                    for v in range(p):\n                        nc = src0[v] + add\n                        if nc < INF:\n                            arr[v] = nc\n\n                    j = 0\n                    for v in range(p, upto):\n                        c0 = src0[v]\n                        c1 = src1[j]\n                        if c1 < c0:\n                            c0 = c1\n                        nc = c0 + add\n                        if nc < INF:\n                            arr[v] = nc\n                        j += 1\n\n                    for v in range(upto, length):\n                        nc = src0[v] + add\n                        if nc < INF:\n                            arr[v] = nc\n\n                elif src0 is not None:\n                    for v in range(length):\n                        nc = src0[v] + add\n                        if nc < INF:\n                            arr[v] = nc\n\n                elif src1 is not None:\n                    len1 = len(src1)\n                    for v in range(len1):\n                        nc = src1[v] + add\n                        if nc < INF:\n                            arr[v + p] = nc\n\n            next_dp[s] = arr\n\n        dp = next_dp\n        A_prev = A_cur\n\n    arr = dp[K]\n    ans = 0\n    for v in range(len(arr) - 1, -1, -1):\n        if arr[v] <= T:\n            ans = v\n            break\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 2.4912039000046207,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

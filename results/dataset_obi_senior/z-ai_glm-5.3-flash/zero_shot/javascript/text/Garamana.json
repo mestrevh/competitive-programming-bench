@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:55:04.545682+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 588,
+            "output_tokens": 4097,
+            "total_tokens": 4685
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.002048,
+            "total_cost": 0.002061
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').split(/\\r?\\n/);\n\n// Normaliza removendo acentos (precaução: enunciado garante letras sem acento,\n// mas um dos exemplos contém acento — isso trata ambos os casos corretamente)\nconst strip = (s) => s.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').trim();\n\nconst P = strip(input[0] || '');\nconst A = strip(input[1] || '');\n\n// Conta frequência das letras de P\nconst freq = new Map();\nfor (const ch of P) freq.set(ch, (freq.get(ch) || 0) + 1);\n\n// A é anagrama curinga de P sse:\n// - mesmos comprimentos (garantido, mas verificado por segurança)\n// - para cada letra de A (não '*'), ela pode ser casada com uma letra distinta de P\n// (os '*' casam automaticamente com as letras restantes de P)\nlet ok = P.length === A.length;\nfor (const ch of A) {\n  if (!ok) break;\n  if (ch === '*') continue;\n  const c = freq.get(ch) || 0;\n  if (c === 0) {\n    ok = false;\n    break;\n  }\n  freq.set(ch, c - 1);\n}\n\nconsole.log(ok ? 'S' : 'N');\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').split(/\\r?\\n/);\n\n// Normaliza removendo acentos (precaução: enunciado garante letras sem acento,\n// mas um dos exemplos contém acento — isso trata ambos os casos corretamente)\nconst strip = (s) => s.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').trim();\n\nconst P = strip(input[0] || '');\nconst A = strip(input[1] || '');\n\n// Conta frequência das letras de P\nconst freq = new Map();\nfor (const ch of P) freq.set(ch, (freq.get(ch) || 0) + 1);\n\n// A é anagrama curinga de P sse:\n// - mesmos comprimentos (garantido, mas verificado por segurança)\n// - para cada letra de A (não '*'), ela pode ser casada com uma letra distinta de P\n// (os '*' casam automaticamente com as letras restantes de P)\nlet ok = P.length === A.length;\nfor (const ch of A) {\n  if (!ok) break;\n  if (ch === '*') continue;\n  const c = freq.get(ch) || 0;\n  if (c === 0) {\n    ok = false;\n    break;\n  }\n  freq.set(ch, c - 1);\n}\n\nconsole.log(ok ? 'S' : 'N');",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.05112379998899996,
+            "counts": {
+                "AC": 48,
+                "WA": 1,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 49
+        }
+    }
+]

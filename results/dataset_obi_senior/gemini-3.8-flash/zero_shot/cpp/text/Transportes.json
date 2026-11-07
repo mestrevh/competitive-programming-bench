@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:55:47.551393+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1828,
+            "output_tokens": 1054,
+            "total_tokens": 4673
+        },
+        "cost_usd": {
+            "input_cost": 0.001371,
+            "output_cost": 0.003953,
+            "total_cost": 0.005324
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <queue>\n#include <algorithm>\n\nusing namespace std;\n\nconst long long INF = 1e18;\n\nstruct EdgeInput {\n    int u, v, t;\n};\n\nstruct Edge {\n    int to;\n    int weight;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m, k;\n    if (!(cin >> n >> m >> k)) return 0;\n\n    vector<int> p(k + 1);\n    for (int i = 1; i <= k; ++i) {\n        cin >> p[i];\n    }\n\n    vector<EdgeInput> edges(m);\n    vector<vector<pair<int, int>>> station_edges(n + 1);\n\n    for (int i = 0; i < m; ++i) {\n        cin >> edges[i].u >> edges[i].v >> edges[i].t;\n        station_edges[edges[i].u].push_back({edges[i].t, i});\n        station_edges[edges[i].v].push_back({edges[i].t, i});\n    }\n\n    int a, b;\n    cin >> a >> b;\n\n    int total_nodes = n;\n    vector<int> edge_node_u(m);\n    vector<int> edge_node_v(m);\n\n    // Grafo para o Dijkstra\n    // Vértices 1 a n representam as estações base.\n    // Vértices > n representam pares (estação, sistema).\n    vector<vector<Edge>> adj;\n    adj.resize(n + 1);\n\n    for (int u = 1; u <= n; ++u) {\n        auto& elist = station_edges[u];\n        sort(elist.begin(), elist.end());\n\n        for (size_t i = 0; i < elist.size(); ) {\n            size_t j = i;\n            int type = elist[i].first;\n            total_nodes++;\n            adj.emplace_back(); // total_nodes index\n\n            int aux = total_nodes;\n\n            // Da estação base u para aux com custo p[type]\n            adj[u].push_back({aux, p[type]});\n            // De aux para a estação base u com custo 0\n            adj[aux].push_back({u, 0});\n\n            while (j < elist.size() && elist[j].first == type) {\n                int edge_idx = elist[j].second;\n                if (edges[edge_idx].u == u) {\n                    edge_node_u[edge_idx] = aux;\n                } else {\n                    edge_node_v[edge_idx] = aux;\n                }\n                j++;\n            }\n            i = j;\n        }\n    }\n\n    // Adiciona as arestas de custo 0 entre os nós dos sistemas\n    for (int i = 0; i < m; ++i) {\n        int u_node = edge_node_u[i];\n        int v_node = edge_node_v[i];\n        adj[u_node].push_back({v_node, 0});\n        adj[v_node].push_back({u_node, 0});\n    }\n\n    // Dijkstra a partir de A\n    vector<long long> dist(total_nodes + 1, INF);\n    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;\n\n    dist[a] = 0;\n    pq.push({0, a});\n\n    while (!pq.empty()) {\n        auto [d, u] = pq.top();\n        pq.pop();\n\n        if (d > dist[u]) continue;\n        if (u == b) break;\n\n        for (const auto& edge : adj[u]) {\n            if (dist[u] + edge.weight < dist[edge.to]) {\n                dist[edge.to] = dist[u] + edge.weight;\n                pq.push({dist[edge.to], edge.to});\n            }\n        }\n    }\n\n    if (dist[b] == INF) {\n        cout << -1 << \"\\n\";\n    } else {\n        cout << dist[b] << \"\\n\";\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <algorithm>\n\nusing namespace std;\n\nconst long long INF = 1e18;\n\nstruct EdgeInput {\n    int u, v, t;\n};\n\nstruct Edge {\n    int to;\n    int weight;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m, k;\n    if (!(cin >> n >> m >> k)) return 0;\n\n    vector<int> p(k + 1);\n    for (int i = 1; i <= k; ++i) {\n        cin >> p[i];\n    }\n\n    vector<EdgeInput> edges(m);\n    vector<vector<pair<int, int>>> station_edges(n + 1);\n\n    for (int i = 0; i < m; ++i) {\n        cin >> edges[i].u >> edges[i].v >> edges[i].t;\n        station_edges[edges[i].u].push_back({edges[i].t, i});\n        station_edges[edges[i].v].push_back({edges[i].t, i});\n    }\n\n    int a, b;\n    cin >> a >> b;\n\n    int total_nodes = n;\n    vector<int> edge_node_u(m);\n    vector<int> edge_node_v(m);\n\n    // Grafo para o Dijkstra\n    // Vértices 1 a n representam as estações base.\n    // Vértices > n representam pares (estação, sistema).\n    vector<vector<Edge>> adj;\n    adj.resize(n + 1);\n\n    for (int u = 1; u <= n; ++u) {\n        auto& elist = station_edges[u];\n        sort(elist.begin(), elist.end());\n\n        for (size_t i = 0; i < elist.size(); ) {\n            size_t j = i;\n            int type = elist[i].first;\n            total_nodes++;\n            adj.emplace_back(); // total_nodes index\n\n            int aux = total_nodes;\n\n            // Da estação base u para aux com custo p[type]\n            adj[u].push_back({aux, p[type]});\n            // De aux para a estação base u com custo 0\n            adj[aux].push_back({u, 0});\n\n            while (j < elist.size() && elist[j].first == type) {\n                int edge_idx = elist[j].second;\n                if (edges[edge_idx].u == u) {\n                    edge_node_u[edge_idx] = aux;\n                } else {\n                    edge_node_v[edge_idx] = aux;\n                }\n                j++;\n            }\n            i = j;\n        }\n    }\n\n    // Adiciona as arestas de custo 0 entre os nós dos sistemas\n    for (int i = 0; i < m; ++i) {\n        int u_node = edge_node_u[i];\n        int v_node = edge_node_v[i];\n        adj[u_node].push_back({v_node, 0});\n        adj[v_node].push_back({u_node, 0});\n    }\n\n    // Dijkstra a partir de A\n    vector<long long> dist(total_nodes + 1, INF);\n    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;\n\n    dist[a] = 0;\n    pq.push({0, a});\n\n    while (!pq.empty()) {\n        auto [d, u] = pq.top();\n        pq.pop();\n\n        if (d > dist[u]) continue;\n        if (u == b) break;\n\n        for (const auto& edge : adj[u]) {\n            if (dist[u] + edge.weight < dist[edge.to]) {\n                dist[edge.to] = dist[u] + edge.weight;\n                pq.push({dist[edge.to], edge.to});\n            }\n        }\n    }\n\n    if (dist[b] == INF) {\n        cout << -1 << \"\\n\";\n    } else {\n        cout << dist[b] << \"\\n\";\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18692390000796877,
+            "counts": {
+                "AC": 107,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

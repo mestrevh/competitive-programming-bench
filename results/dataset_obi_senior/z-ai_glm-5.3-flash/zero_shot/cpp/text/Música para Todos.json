@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-03T00:21:35.718108+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 836,
+            "output_tokens": 4499,
+            "total_tokens": 5335
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.00225,
+            "total_cost": 0.002267
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m, c;\n    if (!(cin >> n >> m >> c)) return 0;\n\n    // nextSong[s] = musica amada pelo amigo cliente ha mais tempo que detesta s (0 se ninguem detesta s)\n    vector<int> nextSong(m + 1, 0);\n\n    for (int i = 0; i < n; i++) {\n        int a, d;\n        cin >> a >> d;\n        if (nextSong[d] == 0) nextSong[d] = a; // mantem o amigo mais antigo (primeiro na ordem de leitura)\n    }\n\n    // O proximo passo depende apenas da musica atual:\n // se alguem detesta a musica atual, o mais antigo detestador troca pela musica que ama.\n    // Logo, basta seguir a cadeia a partir de C, detectando ciclo (revisita) -> -1.\n    vector<char> visited(m + 1, 0);\n    int cur = c;\n    long long steps = 0;\n\n    while (nextSong[cur] != 0) {\n        if (visited[cur]) {\n            cout << -1 << \"\\n\";\n            return 0;\n        }\n        visited[cur] = 1;\n        cur = nextSong[cur];\n        steps++;\n    }\n\n    cout << steps << \"\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m, c;\n    if (!(cin >> n >> m >> c)) return 0;\n\n    // nextSong[s] = musica amada pelo amigo cliente ha mais tempo que detesta s (0 se ninguem detesta s)\n    vector<int> nextSong(m + 1, 0);\n\n    for (int i = 0; i < n; i++) {\n        int a, d;\n        cin >> a >> d;\n        if (nextSong[d] == 0) nextSong[d] = a; // mantem o amigo mais antigo (primeiro na ordem de leitura)\n    }\n\n    // O proximo passo depende apenas da musica atual:\n // se alguem detesta a musica atual, o mais antigo detestador troca pela musica que ama.\n    // Logo, basta seguir a cadeia a partir de C, detectando ciclo (revisita) -> -1.\n    vector<char> visited(m + 1, 0);\n    int cur = c;\n    long long steps = 0;\n\n    while (nextSong[cur] != 0) {\n        if (visited[cur]) {\n            cout << -1 << \"\\n\";\n            return 0;\n        }\n        visited[cur] = 1;\n        cur = nextSong[cur];\n        steps++;\n    }\n\n    cout << steps << \"\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1809540999965975,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

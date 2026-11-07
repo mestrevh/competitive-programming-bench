@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:14:46.207056+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 951,
+            "output_tokens": 864,
+            "total_tokens": 1815
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.002074,
+            "total_cost": 0.002076
+        },
+        "raw_response": "```C\n#include <stdio.h>\n\nint main(void) {\n    int N, F;\n    scanf(\"%d %d\", &N, &F);\n\n    char grid[500][502];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    int qr[250000], qc[250000];\n    int front = 0, back = 0;\n\n    if (grid[0][0] - '0' <= F) {\n        grid[0][0] = '*';\n        qr[back] = 0;\n        qc[back] = 0;\n        back++;\n    }\n\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    while (front < back) {\n        int r = qr[front];\n        int c = qc[front];\n        front++;\n\n        for (int k = 0; k < 4; k++) {\n            int nr = r + dr[k];\n            int nc = c + dc[k];\n\n            if (nr < 0 || nr >= N || nc < 0 || nc >= N) continue;\n            if (grid[nr][nc] == '*') continue;\n            if (grid[nr][nc] - '0' <= F) {\n                grid[nr][nc] = '*';\n                qr[back] = nr;\n                qc[back] = nc;\n                back++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, F;\n    scanf(\"%d %d\", &N, &F);\n\n    char grid[500][502];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    int qr[250000], qc[250000];\n    int front = 0, back = 0;\n\n    if (grid[0][0] - '0' <= F) {\n        grid[0][0] = '*';\n        qr[back] = 0;\n        qc[back] = 0;\n        back++;\n    }\n\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    while (front < back) {\n        int r = qr[front];\n        int c = qc[front];\n        front++;\n\n        for (int k = 0; k < 4; k++) {\n            int nr = r + dr[k];\n            int nc = c + dc[k];\n\n            if (nr < 0 || nr >= N || nc < 0 || nc >= N) continue;\n            if (grid[nr][nc] == '*') continue;\n            if (grid[nr][nc] - '0' <= F) {\n                grid[nr][nc] = '*';\n                qr[back] = nr;\n                qc[back] = nc;\n                back++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10415460000513121,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

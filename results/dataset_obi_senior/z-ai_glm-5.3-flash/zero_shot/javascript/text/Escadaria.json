@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:39:59.524998+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1152,
+            "output_tokens": 837,
+            "total_tokens": 1989
+        },
+        "cost_usd": {
+            "input_cost": 2.5e-05,
+            "output_cost": 0.000418,
+            "total_cost": 0.000443
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').split(/\\s+/);\n\nlet idx = 0;\nconst N = parseInt(input[idx++], 10);\nconst A = new Array(N);\nfor (let i = 0; i < N; i++) A[i] = parseInt(input[idx++], 10);\n\nconst INF = Number.MAX_SAFE_INTEGER;\nconst B = new Array(N);\n\n// passe da esquerda para a direita\nlet prev = INF;\nfor (let i = 0; i < N; i++) {\n  const cur = A[i] === -1 ? INF : A[i];\n  prev = Math.min(cur, prev === INF ? INF : prev + 1);\n  B[i] = prev;\n}\n\n// passe da direita para a esquerda\nlet nxt = INF;\nfor (let i = N - 1; i >= 0; i--) {\n  nxt = Math.min(B[i], nxt === INF ? INF : nxt + 1);\n  B[i] = nxt;\n}\n\nprocess.stdout.write(B.join(' ') + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').split(/\\s+/);\n\nlet idx = 0;\nconst N = parseInt(input[idx++], 10);\nconst A = new Array(N);\nfor (let i = 0; i < N; i++) A[i] = parseInt(input[idx++], 10);\n\nconst INF = Number.MAX_SAFE_INTEGER;\nconst B = new Array(N);\n\n// passe da esquerda para a direita\nlet prev = INF;\nfor (let i = 0; i < N; i++) {\n  const cur = A[i] === -1 ? INF : A[i];\n  prev = Math.min(cur, prev === INF ? INF : prev + 1);\n  B[i] = prev;\n}\n\n// passe da direita para a esquerda\nlet nxt = INF;\nfor (let i = N - 1; i >= 0; i--) {\n  nxt = Math.min(B[i], nxt === INF ? INF : nxt + 1);\n  B[i] = nxt;\n}\n\nprocess.stdout.write(B.join(' ') + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10881579999113455,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

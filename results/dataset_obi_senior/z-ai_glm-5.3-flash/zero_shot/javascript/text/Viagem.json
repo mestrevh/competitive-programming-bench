@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T04:03:43.392992+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1234,
+            "output_tokens": 15961,
+            "total_tokens": 17195
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.00798,
+            "total_cost": 0.008007
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').split(/\\s+/);\n  let ptr = 0;\n  while (ptr < data.length && data[ptr] === '') ptr++;\n\n  const V = +data[ptr++], N = +data[ptr++], M = +data[ptr++];\n\n  const deg = new Int32Array(N + 2);\n  const ea = new Int32Array(M), eb = new Int32Array(M);\n  const et = new Int32Array(M), ep = new Int32Array(M);\n  for (let i = 0; i < M; i++) {\n    ea[i] = +data[ptr++]; eb[i] = +data[ptr++];\n    et[i] = +data[ptr++]; ep[i] = +data[ptr++];\n    deg[ea[i]]++; deg[eb[i]]++;\n  }\n  const X = +data[ptr++], Y = +data[ptr++];\n\n  // CSR adjacency\n  const start = new Int32Array(N + 2);\n  for (let u = 1; u <= N; u++) start[u + 1] = start[u] + deg[u];\n  const eV = new Int32Array(2 * M);\n  const eT = new Int32Array(2 * M);\n  const eP = new Int32Array(2 * M);\n  const fill = new Int32Array(N + 2);\n  for (let u = 1; u <= N; u++) fill[u] = start[u];\n  for (let i = 0; i < M; i++) {\n    let j = fill[ea[i]]++;\n    eV[j] = eb[i]; eT[j] = et[i]; eP[j] = ep[i];\n    j = fill[eb[i]]++;\n    eV[j] = ea[i]; eT[j] = et[i]; eP[j] = ep[i];\n  }\n\n  // Dijkstra over states (node, cost spent), minimizing time\n  const S = V + 1;\n  const dist = new Float64Array((N + 1) * S);\n  dist.fill(Infinity);\n\n  const CAP = 1 << 20; // pushes <= 1 + (V+1)*2M\n  const hId = new Int32Array(CAP);\n  const hK = new Float64Array(CAP);\n  let hn = 0;\n\n  const s0 = X * S; // state (X, cost 0)\n  dist[s0] = 0;\n  hId[0] = s0; hK[0] = 0; hn = 1;\n\n  let ans = -1;\n\n  while (hn > 0) {\n    // pop min\n    const topId = hId[0], topK = hK[0];\n    hn--;\n    if (hn > 0) {\n      const lastId = hId[hn], lastK = hK[hn];\n      let hole = 0;\n      for (;;) {\n        let child = 2 * hole + 1;\n        if (child >= hn) break;\n        if (child + 1 < hn && hK[child + 1] < hK[child]) child++;\n        if (hK[child] >= lastK) break;\n        hId[hole] = hId[child]; hK[hole] = hK[child];\n        hole = child;\n      }\n      hId[hole] = lastId; hK[hole] = lastK;\n    }\n\n    if (topK > dist[topId]) continue; // stale entry\n\n    const u = (topId / S) | 0;\n    if (u === Y) { ans = topK; break; }\n    const cost = topId - u * S;\n    const j0 = start[u], j1 = start[u + 1];\n    for (let j = j0; j < j1; j++) {\n      const nc = cost + eP[j];\n      if (nc > V) continue;\n      const nid = eV[j] * S + nc;\n      const nd = topK + eT[j];\n      if (nd < dist[nid]) {\n        dist[nid] = nd;\n        // push (nid, nd)\n        let hole = hn++;\n        while (hole > 0) {\n          const parent = (hole - 1) >> 1;\n          if (hK[parent] <= nd) break;\n          hId[hole] = hId[parent]; hK[hole] = hK[parent];\n          hole = parent;\n        }\n        hId[hole] = nid; hK[hole] = nd;\n      }\n    }\n  }\n\n  process.stdout.write(ans + '\\n');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').split(/\\s+/);\n  let ptr = 0;\n  while (ptr < data.length && data[ptr] === '') ptr++;\n\n  const V = +data[ptr++], N = +data[ptr++], M = +data[ptr++];\n\n  const deg = new Int32Array(N + 2);\n  const ea = new Int32Array(M), eb = new Int32Array(M);\n  const et = new Int32Array(M), ep = new Int32Array(M);\n  for (let i = 0; i < M; i++) {\n    ea[i] = +data[ptr++]; eb[i] = +data[ptr++];\n    et[i] = +data[ptr++]; ep[i] = +data[ptr++];\n    deg[ea[i]]++; deg[eb[i]]++;\n  }\n  const X = +data[ptr++], Y = +data[ptr++];\n\n  // CSR adjacency\n  const start = new Int32Array(N + 2);\n  for (let u = 1; u <= N; u++) start[u + 1] = start[u] + deg[u];\n  const eV = new Int32Array(2 * M);\n  const eT = new Int32Array(2 * M);\n  const eP = new Int32Array(2 * M);\n  const fill = new Int32Array(N + 2);\n  for (let u = 1; u <= N; u++) fill[u] = start[u];\n  for (let i = 0; i < M; i++) {\n    let j = fill[ea[i]]++;\n    eV[j] = eb[i]; eT[j] = et[i]; eP[j] = ep[i];\n    j = fill[eb[i]]++;\n    eV[j] = ea[i]; eT[j] = et[i]; eP[j] = ep[i];\n  }\n\n  // Dijkstra over states (node, cost spent), minimizing time\n  const S = V + 1;\n  const dist = new Float64Array((N + 1) * S);\n  dist.fill(Infinity);\n\n  const CAP = 1 << 20; // pushes <= 1 + (V+1)*2M\n  const hId = new Int32Array(CAP);\n  const hK = new Float64Array(CAP);\n  let hn = 0;\n\n  const s0 = X * S; // state (X, cost 0)\n  dist[s0] = 0;\n  hId[0] = s0; hK[0] = 0; hn = 1;\n\n  let ans = -1;\n\n  while (hn > 0) {\n    // pop min\n    const topId = hId[0], topK = hK[0];\n    hn--;\n    if (hn > 0) {\n      const lastId = hId[hn], lastK = hK[hn];\n      let hole = 0;\n      for (;;) {\n        let child = 2 * hole + 1;\n        if (child >= hn) break;\n        if (child + 1 < hn && hK[child + 1] < hK[child]) child++;\n        if (hK[child] >= lastK) break;\n        hId[hole] = hId[child]; hK[hole] = hK[child];\n        hole = child;\n      }\n      hId[hole] = lastId; hK[hole] = lastK;\n    }\n\n    if (topK > dist[topId]) continue; // stale entry\n\n    const u = (topId / S) | 0;\n    if (u === Y) { ans = topK; break; }\n    const cost = topId - u * S;\n    const j0 = start[u], j1 = start[u + 1];\n    for (let j = j0; j < j1; j++) {\n      const nc = cost + eP[j];\n      if (nc > V) continue;\n      const nid = eV[j] * S + nc;\n      const nd = topK + eT[j];\n      if (nd < dist[nid]) {\n        dist[nid] = nd;\n        // push (nid, nd)\n        let hole = hn++;\n        while (hole > 0) {\n          const parent = (hole - 1) >> 1;\n          if (hK[parent] <= nd) break;\n          hId[hole] = hId[parent]; hK[hole] = hK[parent];\n          hole = parent;\n        }\n        hId[hole] = nid; hK[hole] = nd;\n      }\n    }\n  }\n\n  process.stdout.write(ans + '\\n');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08407430001534522,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

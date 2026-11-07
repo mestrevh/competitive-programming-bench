@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:01:28.977078+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 655,
+            "output_tokens": 463,
+            "total_tokens": 1977
+        },
+        "cost_usd": {
+            "input_cost": 0.000491,
+            "output_cost": 0.001736,
+            "total_cost": 0.002227
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.Locale;\nimport java.util.Arrays;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        Locale.setDefault(Locale.US);\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        StringTokenizer st = new StringTokenizer(line);\n        if (!st.hasMoreTokens()) return;\n\n        int n = Integer.parseInt(st.nextToken());\n        double d = Double.parseDouble(st.nextToken());\n\n        double[] p = new double[n + 1];\n        double[] c = new double[n + 1];\n\n        for (int i = 0; i < n; i++) {\n            st = new StringTokenizer(br.readLine());\n            p[i] = Double.parseDouble(st.nextToken());\n            c[i] = Double.parseDouble(st.nextToken());\n        }\n\n        p[n] = d;\n\n        double[] dp = new double[n + 1];\n        Arrays.fill(dp, Double.POSITIVE_INFINITY);\n        dp[0] = 0.0;\n\n        for (int i = 0; i < n; i++) {\n            double currentP = p[i];\n            double currentC = c[i];\n            double currentDp = dp[i];\n\n            for (int j = i + 1; j <= n; j++) {\n                double dist = p[j] - currentP;\n                double time = (dist * dist) / currentC;\n                if (currentDp + time < dp[j]) {\n                    dp[j] = currentDp + time;\n                }\n            }\n        }\n\n        System.out.printf(Locale.US, \"%.3f\\n\", dp[n]);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.Locale;\nimport java.util.Arrays;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        Locale.setDefault(Locale.US);\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        StringTokenizer st = new StringTokenizer(line);\n        if (!st.hasMoreTokens()) return;\n\n        int n = Integer.parseInt(st.nextToken());\n        double d = Double.parseDouble(st.nextToken());\n\n        double[] p = new double[n + 1];\n        double[] c = new double[n + 1];\n\n        for (int i = 0; i < n; i++) {\n            st = new StringTokenizer(br.readLine());\n            p[i] = Double.parseDouble(st.nextToken());\n            c[i] = Double.parseDouble(st.nextToken());\n        }\n\n        p[n] = d;\n\n        double[] dp = new double[n + 1];\n        Arrays.fill(dp, Double.POSITIVE_INFINITY);\n        dp[0] = 0.0;\n\n        for (int i = 0; i < n; i++) {\n            double currentP = p[i];\n            double currentC = c[i];\n            double currentDp = dp[i];\n\n            for (int j = i + 1; j <= n; j++) {\n                double dist = p[j] - currentP;\n                double time = (dist * dist) / currentC;\n                if (currentDp + time < dp[j]) {\n                    dp[j] = currentDp + time;\n                }\n            }\n        }\n\n        System.out.printf(Locale.US, \"%.3f\\n\", dp[n]);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07627009999123402,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 26,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:34:37.948625+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 655,
+            "output_tokens": 526,
+            "total_tokens": 2082
+        },
+        "cost_usd": {
+            "input_cost": 0.000491,
+            "output_cost": 0.001972,
+            "total_cost": 0.002464
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nToken = nextToken();\n    if (nToken === null) return;\n    const N = parseInt(nToken, 10);\n    const D = parseFloat(nextToken());\n\n    const P = new Float64Array(N);\n    const C = new Float64Array(N);\n\n    for (let i = 0; i < N; i++) {\n        P[i] = parseFloat(nextToken());\n        C[i] = parseFloat(nextToken());\n    }\n\n    const dp = new Float64Array(N);\n    dp.fill(Infinity);\n    dp[0] = 0.0;\n\n    let ans = Infinity;\n\n    for (let i = 0; i < N; i++) {\n        const p_i = P[i];\n        const c_i = C[i];\n        const current_time = dp[i];\n\n        // Opção de ir direto até o fim D a partir de i\n        const distToEnd = D - p_i;\n        const timeToEnd = current_time + (distToEnd * distToEnd) / c_i;\n        if (timeToEnd < ans) {\n            ans = timeToEnd;\n        }\n\n        // Opção de ir até outra bateria j\n        for (let j = i + 1; j < N; j++) {\n            const dist = P[j] - p_i;\n            const timeToJ = current_time + (dist * dist) / c_i;\n            if (timeToJ < dp[j]) {\n                dp[j] = timeToJ;\n            }\n        }\n    }\n\n    console.log(ans.toFixed(3));\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nToken = nextToken();\n    if (nToken === null) return;\n    const N = parseInt(nToken, 10);\n    const D = parseFloat(nextToken());\n\n    const P = new Float64Array(N);\n    const C = new Float64Array(N);\n\n    for (let i = 0; i < N; i++) {\n        P[i] = parseFloat(nextToken());\n        C[i] = parseFloat(nextToken());\n    }\n\n    const dp = new Float64Array(N);\n    dp.fill(Infinity);\n    dp[0] = 0.0;\n\n    let ans = Infinity;\n\n    for (let i = 0; i < N; i++) {\n        const p_i = P[i];\n        const c_i = C[i];\n        const current_time = dp[i];\n\n        // Opção de ir direto até o fim D a partir de i\n        const distToEnd = D - p_i;\n        const timeToEnd = current_time + (distToEnd * distToEnd) / c_i;\n        if (timeToEnd < ans) {\n            ans = timeToEnd;\n        }\n\n        // Opção de ir até outra bateria j\n        for (let j = i + 1; j < N; j++) {\n            const dist = P[j] - p_i;\n            const timeToJ = current_time + (dist * dist) / c_i;\n            if (timeToJ < dp[j]) {\n                dp[j] = timeToJ;\n            }\n        }\n    }\n\n    console.log(ans.toFixed(3));\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.057800899987341836,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

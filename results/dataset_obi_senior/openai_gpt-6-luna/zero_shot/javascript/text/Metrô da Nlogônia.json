@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:55:47.318020+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 862,
+            "output_tokens": 1257,
+            "total_tokens": 2119
+        },
+        "cost_usd": {
+            "input_cost": 8.6e-05,
+            "output_cost": 0.000629,
+            "total_cost": 0.000715
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nfunction readTree(n) {\n  const graph = Array.from({ length: n }, () => []);\n  for (let i = 0; i < n - 1; i++) {\n    const a = nextInt() - 1;\n    const b = nextInt() - 1;\n    graph[a].push(b);\n    graph[b].push(a);\n  }\n  return graph;\n}\n\nfunction getCenter(graph) {\n  const n = graph.length;\n\n  function bfs(start, needParent) {\n    const dist = new Int32Array(n);\n    dist.fill(-1);\n    const parent = needParent ? new Int32Array(n) : null;\n    const queue = new Int32Array(n);\n    let head = 0;\n    let tail = 0;\n    queue[tail++] = start;\n    dist[start] = 0;\n    let farthest = start;\n\n    while (head < tail) {\n      const node = queue[head++];\n      if (dist[node] > dist[farthest]) farthest = node;\n\n      for (const next of graph[node]) {\n        if (dist[next] !== -1) continue;\n        dist[next] = dist[node] + 1;\n        if (needParent) parent[next] = node;\n        queue[tail++] = next;\n      }\n    }\n\n    return { farthest, parent };\n  }\n\n  const endpointA = bfs(0, false).farthest;\n  const result = bfs(endpointA, true);\n  const endpointB = result.farthest;\n\n  const path = [];\n  for (let node = endpointB; ; node = result.parent[node]) {\n    path.push(node);\n    if (node === endpointA) break;\n  }\n  path.reverse();\n\n  return path[Math.floor((path.length - 1) / 2)] + 1;\n}\n\nconst n = nextInt();\nconst m = nextInt();\nconst circle = readTree(n);\nconst square = readTree(m);\n\nconsole.log(`${getCenter(circle)} ${getCenter(square)}`);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nfunction readTree(n) {\n  const graph = Array.from({ length: n }, () => []);\n  for (let i = 0; i < n - 1; i++) {\n    const a = nextInt() - 1;\n    const b = nextInt() - 1;\n    graph[a].push(b);\n    graph[b].push(a);\n  }\n  return graph;\n}\n\nfunction getCenter(graph) {\n  const n = graph.length;\n\n  function bfs(start, needParent) {\n    const dist = new Int32Array(n);\n    dist.fill(-1);\n    const parent = needParent ? new Int32Array(n) : null;\n    const queue = new Int32Array(n);\n    let head = 0;\n    let tail = 0;\n    queue[tail++] = start;\n    dist[start] = 0;\n    let farthest = start;\n\n    while (head < tail) {\n      const node = queue[head++];\n      if (dist[node] > dist[farthest]) farthest = node;\n\n      for (const next of graph[node]) {\n        if (dist[next] !== -1) continue;\n        dist[next] = dist[node] + 1;\n        if (needParent) parent[next] = node;\n        queue[tail++] = next;\n      }\n    }\n\n    return { farthest, parent };\n  }\n\n  const endpointA = bfs(0, false).farthest;\n  const result = bfs(endpointA, true);\n  const endpointB = result.farthest;\n\n  const path = [];\n  for (let node = endpointB; ; node = result.parent[node]) {\n    path.push(node);\n    if (node === endpointA) break;\n  }\n  path.reverse();\n\n  return path[Math.floor((path.length - 1) / 2)] + 1;\n}\n\nconst n = nextInt();\nconst m = nextInt();\nconst circle = readTree(n);\nconst square = readTree(m);\n\nconsole.log(`${getCenter(circle)} ${getCenter(square)}`);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14669389999471605,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

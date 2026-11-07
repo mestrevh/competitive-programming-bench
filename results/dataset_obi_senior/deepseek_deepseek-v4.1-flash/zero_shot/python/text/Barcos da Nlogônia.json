@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:11:00.690968+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1337,
+            "output_tokens": 14912,
+            "total_tokens": 16249
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.035789,
+            "total_cost": 0.035793
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n    N = int(next(it))\n    B = int(next(it))\n\n    edges = []\n    for _ in range(B):\n        i = int(next(it)) - 1\n        j = int(next(it)) - 1\n        p = int(next(it))\n        edges.append((p, i, j))\n\n    C = int(next(it))\n    sets = [None] * N\n\n    for q in range(C):\n        x = int(next(it)) - 1\n        y = int(next(it)) - 1\n\n        if sets[x] is None:\n            sets[x] = {q}\n        else:\n            sets[x].add(q)\n\n        if sets[y] is None:\n            sets[y] = {q}\n        else:\n            sets[y].add(q)\n\n    edges.sort(reverse=True)\n\n    parent = list(range(N))\n    size = [1] * N\n    ans = [0] * C\n\n    def find(a):\n        while parent[a] != a:\n            parent[a] = parent[parent[a]]\n            a = parent[a]\n        return a\n\n    for p, u, v in edges:\n        ru = find(u)\n        rv = find(v)\n        if ru == rv:\n            continue\n\n        if size[ru] < size[rv]:\n            ru, rv = rv, ru\n\n        parent[rv] = ru\n        size[ru] += size[rv]\n\n        s_small = sets[rv]\n        s_big = sets[ru]\n\n        if s_small is not None:\n            if s_big is None:\n                sets[ru] = s_small\n            else:\n                for q in s_small:\n                    if q in s_big:\n                        ans[q] = p\n                        s_big.remove(q)\n                    else:\n                        s_big.add(q)\n\n        sets[rv] = None\n\n    sys.stdout.write('\\n'.join(map(str, ans)) + '\\n')\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    it = iter(data)\n    N = int(next(it))\n    B = int(next(it))\n\n    edges = []\n    for _ in range(B):\n        i = int(next(it)) - 1\n        j = int(next(it)) - 1\n        p = int(next(it))\n        edges.append((p, i, j))\n\n    C = int(next(it))\n    sets = [None] * N\n\n    for q in range(C):\n        x = int(next(it)) - 1\n        y = int(next(it)) - 1\n\n        if sets[x] is None:\n            sets[x] = {q}\n        else:\n            sets[x].add(q)\n\n        if sets[y] is None:\n            sets[y] = {q}\n        else:\n            sets[y].add(q)\n\n    edges.sort(reverse=True)\n\n    parent = list(range(N))\n    size = [1] * N\n    ans = [0] * C\n\n    def find(a):\n        while parent[a] != a:\n            parent[a] = parent[parent[a]]\n            a = parent[a]\n        return a\n\n    for p, u, v in edges:\n        ru = find(u)\n        rv = find(v)\n        if ru == rv:\n            continue\n\n        if size[ru] < size[rv]:\n            ru, rv = rv, ru\n\n        parent[rv] = ru\n        size[ru] += size[rv]\n\n        s_small = sets[rv]\n        s_big = sets[ru]\n\n        if s_small is not None:\n            if s_big is None:\n                sets[ru] = s_small\n            else:\n                for q in s_small:\n                    if q in s_big:\n                        ans[q] = p\n                        s_big.remove(q)\n                    else:\n                        s_big.add(q)\n\n        sets[rv] = None\n\n    sys.stdout.write('\\n'.join(map(str, ans)) + '\\n')\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2848807999980636,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T21:47:53.836267+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 713,
+            "output_tokens": 2657,
+            "total_tokens": 3370
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.001329,
+            "total_cost": 0.001344
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    vector<int> v(n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &v[i]);\n\n    // Compress the sequence into runs of equal values\n    vector<pair<int,int>> runs; // (value, length)\n    for (int i = 0; i < n; ) {\n        int j = i;\n        while (j < n && v[j] == v[i]) j++;\n        runs.push_back({v[i], j - i});\n        i = j;\n    }\n    int m = (int)runs.size();\n\n    // List of distinct values\n    vector<int> vals;\n    for (auto &p : runs) vals.push_back(p.first);\n    sort(vals.begin(), vals.end());\n    vals.erase(unique(vals.begin(), vals.end()), vals.end());\n\n    int k = (int)vals.size();\n\n    int ans = 1; // at least one element can always be marked (n >= 1)\n\n    // For every pair of distinct values (a, b), greedily pick runs of a/b\n    // in an alternating fashion. Greedy is optimal: whenever the current run\n    // has a value different from the last taken one, taking it never hurts.\n    for (int x = 0; x < k; x++) {\n        for (int y = x + 1; y < k; y++) {\n            int a = vals[x], b = vals[y];\n            int last = 0; // 0 is not a valid value (values >= 1)\n            int cnt = 0;\n            for (int i = 0; i < m; i++) {\n                int val = runs[i].first;\n                if ((val == a || val == b) && val != last) {\n                    cnt += runs[i].second;\n                    last = val;\n                }\n            }\n            if (cnt > ans) ans = cnt;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    vector<int> v(n);\n    for (int i = 0; i < n; i++) scanf(\"%d\", &v[i]);\n\n    // Compress the sequence into runs of equal values\n    vector<pair<int,int>> runs; // (value, length)\n    for (int i = 0; i < n; ) {\n        int j = i;\n        while (j < n && v[j] == v[i]) j++;\n        runs.push_back({v[i], j - i});\n        i = j;\n    }\n    int m = (int)runs.size();\n\n    // List of distinct values\n    vector<int> vals;\n    for (auto &p : runs) vals.push_back(p.first);\n    sort(vals.begin(), vals.end());\n    vals.erase(unique(vals.begin(), vals.end()), vals.end());\n\n    int k = (int)vals.size();\n\n    int ans = 1; // at least one element can always be marked (n >= 1)\n\n    // For every pair of distinct values (a, b), greedily pick runs of a/b\n    // in an alternating fashion. Greedy is optimal: whenever the current run\n    // has a value different from the last taken one, taking it never hurts.\n    for (int x = 0; x < k; x++) {\n        for (int y = x + 1; y < k; y++) {\n            int a = vals[x], b = vals[y];\n            int last = 0; // 0 is not a valid value (values >= 1)\n            int cnt = 0;\n            for (int i = 0; i < m; i++) {\n                int val = runs[i].first;\n                if ((val == a || val == b) && val != last) {\n                    cnt += runs[i].second;\n                    last = val;\n                }\n            }\n            if (cnt > ans) ans = cnt;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.1498414000016055,
+            "counts": {
+                "AC": 12,
+                "WA": 8,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

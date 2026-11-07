@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T09:35:03.649925+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 850,
+            "output_tokens": 24264,
+            "total_tokens": 25114
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.012132,
+            "total_cost": 0.01215
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    arr = list(map(int, data))\n    n = arr[0]\n    L = len(arr)\n\n    adj = [()] * (n + 1)\n    p = 1\n    for i in range(1, n + 1):\n        if p >= L:\n            continue\n        m = arr[p]\n        p += 1\n        end = p + m\n        adj[i] = arr[p:end if end <= L else L]\n        p = end\n\n    color = bytearray(n + 1)\n    color[1] = 1\n\n    def paint(start):\n        color[start] = 1\n        stack = [start]\n        pop = stack.pop\n        push = stack.append\n        while stack:\n            u = pop()\n            nc = 3 - color[u]\n            for v in adj[u]:\n                if color[v] == 0:\n                    color[v] = nc\n                    push(v)\n\n    paint(1)\n    for i in range(2, n + 1):\n        if color[i] == 0:\n            paint(i)\n\n    team1 = []\n    team2 = []\n    for i in range(1, n + 1):\n        if color[i] == 1:\n            team1.append(str(i))\n        else:\n            team2.append(str(i))\n\n    sys.stdout.write(' '.join(team1) + '\\n' + ' '.join(team2) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    arr = list(map(int, data))\n    n = arr[0]\n    L = len(arr)\n\n    adj = [()] * (n + 1)\n    p = 1\n    for i in range(1, n + 1):\n        if p >= L:\n            continue\n        m = arr[p]\n        p += 1\n        end = p + m\n        adj[i] = arr[p:end if end <= L else L]\n        p = end\n\n    color = bytearray(n + 1)\n    color[1] = 1\n\n    def paint(start):\n        color[start] = 1\n        stack = [start]\n        pop = stack.pop\n        push = stack.append\n        while stack:\n            u = pop()\n            nc = 3 - color[u]\n            for v in adj[u]:\n                if color[v] == 0:\n                    color[v] = nc\n                    push(v)\n\n    paint(1)\n    for i in range(2, n + 1):\n        if color[i] == 0:\n            paint(i)\n\n    team1 = []\n    team2 = []\n    for i in range(1, n + 1):\n        if color[i] == 1:\n            team1.append(str(i))\n        else:\n            team2.append(str(i))\n\n    sys.stdout.write(' '.join(team1) + '\\n' + ' '.join(team2) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18934440000157338,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

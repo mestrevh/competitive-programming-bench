@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:02:30.344361+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 627,
+            "total_tokens": 2754
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.002351,
+            "total_cost": 0.003046
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayDeque;\nimport java.util.Queue;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = br.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int n = Integer.parseInt(st.nextToken());\n        int m = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[n][m];\n        Queue<int[]> queue = new ArrayDeque<>();\n\n        for (int i = 0; i < n; i++) {\n            String row = br.readLine();\n            for (int j = 0; j < m; j++) {\n                grid[i][j] = row.charAt(j);\n                if (grid[i][j] == 'o') {\n                    queue.offer(new int[]{i, j});\n                }\n            }\n        }\n\n        while (!queue.isEmpty()) {\n            int[] curr = queue.poll();\n            int r = curr[0];\n            int c = curr[1];\n\n            // 1. Cai para baixo se a posição abaixo for '.'\n            if (r + 1 < n && grid[r + 1][c] == '.') {\n                grid[r + 1][c] = 'o';\n                queue.offer(new int[]{r + 1, c});\n            }\n\n            // 2. Se houver uma prateleira '#' logo abaixo, espalha para os lados\n            if (r + 1 < n && grid[r + 1][c] == '#') {\n                if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                    grid[r][c - 1] = 'o';\n                    queue.offer(new int[]{r, c - 1});\n                }\n                if (c + 1 < m && grid[r][c + 1] == '.') {\n                    grid[r][c + 1] = 'o';\n                    queue.offer(new int[]{r, c + 1});\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < n; i++) {\n            sb.append(grid[i]).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayDeque;\nimport java.util.Queue;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = br.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int n = Integer.parseInt(st.nextToken());\n        int m = Integer.parseInt(st.nextToken());\n\n        char[][] grid = new char[n][m];\n        Queue<int[]> queue = new ArrayDeque<>();\n\n        for (int i = 0; i < n; i++) {\n            String row = br.readLine();\n            for (int j = 0; j < m; j++) {\n                grid[i][j] = row.charAt(j);\n                if (grid[i][j] == 'o') {\n                    queue.offer(new int[]{i, j});\n                }\n            }\n        }\n\n        while (!queue.isEmpty()) {\n            int[] curr = queue.poll();\n            int r = curr[0];\n            int c = curr[1];\n\n            // 1. Cai para baixo se a posição abaixo for '.'\n            if (r + 1 < n && grid[r + 1][c] == '.') {\n                grid[r + 1][c] = 'o';\n                queue.offer(new int[]{r + 1, c});\n            }\n\n            // 2. Se houver uma prateleira '#' logo abaixo, espalha para os lados\n            if (r + 1 < n && grid[r + 1][c] == '#') {\n                if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                    grid[r][c - 1] = 'o';\n                    queue.offer(new int[]{r, c - 1});\n                }\n                if (c + 1 < m && grid[r][c + 1] == '.') {\n                    grid[r][c + 1] = 'o';\n                    queue.offer(new int[]{r, c + 1});\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < n; i++) {\n            sb.append(grid[i]).append('\\n');\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.11005869999644347,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 35,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:35:20.788892+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 818,
+            "total_tokens": 2976
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.003068,
+            "total_cost": 0.003762
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readNextString() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        const start = offset;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            offset++;\n        }\n        return buffer.toString('utf8', start, offset);\n    }\n\n    const nStr = readNextString();\n    if (!nStr) return;\n    const n = parseInt(nStr, 10);\n    const m = parseInt(readNextString(), 10);\n\n    const grid = [];\n    const queueR = new Int32Array(n * m);\n    const queueC = new Int32Array(n * m);\n    let head = 0;\n    let tail = 0;\n\n    for (let i = 0; i < n; i++) {\n        const lineStr = readNextString();\n        // Armazenamos como Uint8Array de códigos ASCII: '.' = 46, '#' = 35, 'o' = 111\n        const row = new Uint8Array(m);\n        for (let j = 0; j < m; j++) {\n            const charCode = lineStr.charCodeAt(j);\n            row[j] = charCode;\n            if (charCode === 111) { // 'o'\n                queueR[tail] = i;\n                queueC[tail] = j;\n                tail++;\n            }\n        }\n        grid.push(row);\n    }\n\n    const DOT = 46;\n    const HASH = 35;\n    const O_CHAR = 111;\n\n    while (head < tail) {\n        const r = queueR[head];\n        const c = queueC[head];\n        head++;\n\n        // Caso 1: água desce verticalmente\n        if (r + 1 < n) {\n            if (grid[r + 1][c] === DOT) {\n                grid[r + 1][c] = O_CHAR;\n                queueR[tail] = r + 1;\n                queueC[tail] = c;\n                tail++;\n            } else if (grid[r + 1][c] === HASH) {\n                // Caso 2: água escorre para a esquerda e para a direita se há '#' logo abaixo\n                if (c - 1 >= 0 && grid[r][c - 1] === DOT) {\n                    grid[r][c - 1] = O_CHAR;\n                    queueR[tail] = r;\n                    queueC[tail] = c - 1;\n                    tail++;\n                }\n                if (c + 1 < m && grid[r][c + 1] === DOT) {\n                    grid[r][c + 1] = O_CHAR;\n                    queueR[tail] = r;\n                    queueC[tail] = c + 1;\n                    tail++;\n                }\n            }\n        }\n    }\n\n    const outChunks = [];\n    for (let i = 0; i < n; i++) {\n        outChunks.push(Buffer.from(grid[i]).toString('utf8'));\n    }\n    process.stdout.write(outChunks.join('\\n') + '\\n');\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readNextString() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        const start = offset;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            offset++;\n        }\n        return buffer.toString('utf8', start, offset);\n    }\n\n    const nStr = readNextString();\n    if (!nStr) return;\n    const n = parseInt(nStr, 10);\n    const m = parseInt(readNextString(), 10);\n\n    const grid = [];\n    const queueR = new Int32Array(n * m);\n    const queueC = new Int32Array(n * m);\n    let head = 0;\n    let tail = 0;\n\n    for (let i = 0; i < n; i++) {\n        const lineStr = readNextString();\n        // Armazenamos como Uint8Array de códigos ASCII: '.' = 46, '#' = 35, 'o' = 111\n        const row = new Uint8Array(m);\n        for (let j = 0; j < m; j++) {\n            const charCode = lineStr.charCodeAt(j);\n            row[j] = charCode;\n            if (charCode === 111) { // 'o'\n                queueR[tail] = i;\n                queueC[tail] = j;\n                tail++;\n            }\n        }\n        grid.push(row);\n    }\n\n    const DOT = 46;\n    const HASH = 35;\n    const O_CHAR = 111;\n\n    while (head < tail) {\n        const r = queueR[head];\n        const c = queueC[head];\n        head++;\n\n        // Caso 1: água desce verticalmente\n        if (r + 1 < n) {\n            if (grid[r + 1][c] === DOT) {\n                grid[r + 1][c] = O_CHAR;\n                queueR[tail] = r + 1;\n                queueC[tail] = c;\n                tail++;\n            } else if (grid[r + 1][c] === HASH) {\n                // Caso 2: água escorre para a esquerda e para a direita se há '#' logo abaixo\n                if (c - 1 >= 0 && grid[r][c - 1] === DOT) {\n                    grid[r][c - 1] = O_CHAR;\n                    queueR[tail] = r;\n                    queueC[tail] = c - 1;\n                    tail++;\n                }\n                if (c + 1 < m && grid[r][c + 1] === DOT) {\n                    grid[r][c + 1] = O_CHAR;\n                    queueR[tail] = r;\n                    queueC[tail] = c + 1;\n                    tail++;\n                }\n            }\n        }\n    }\n\n    const outChunks = [];\n    for (let i = 0; i < n; i++) {\n        outChunks.push(Buffer.from(grid[i]).toString('utf8'));\n    }\n    process.stdout.write(outChunks.join('\\n') + '\\n');\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07219579999218695,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

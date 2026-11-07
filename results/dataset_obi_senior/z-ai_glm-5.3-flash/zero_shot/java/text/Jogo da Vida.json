@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T20:08:16.214955+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1403,
+            "output_tokens": 488,
+            "total_tokens": 1891
+        },
+        "cost_usd": {
+            "input_cost": 3e-05,
+            "output_cost": 0.000244,
+            "total_cost": 0.000274
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int n = Integer.parseInt(st.nextToken());\n        int q = Integer.parseInt(st.nextToken());\n\n        int[][] cur = new int[n][n];\n        for (int i = 0; i < n; i++) {\n            String line = br.readLine();\n            for (int j = 0; j < n; j++) {\n                cur[i][j] = line.charAt(j) - '0';\n            }\n        }\n\n        int[][] next = new int[n][n];\n        int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};\n        int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};\n\n        for (int step = 0; step < q; step++) {\n            for (int i = 0; i < n; i++) {\n                for (int j = 0; j < n; j++) {\n                    int alive = 0;\n                    for (int d = 0; d < 8; d++) {\n                        int ni = i + dx[d];\n                        int nj = j + dy[d];\n                        if (ni >= 0 && ni < n && nj >= 0 && nj < n && cur[ni][nj] == 1) {\n                            alive++;\n                        }\n                    }\n                    if (cur[i][j] == 1) {\n                        next[i][j] = (alive == 2 || alive == 3) ? 1 : 0;\n                    } else {\n                        next[i][j] = (alive == 3) ? 1 : 0;\n                    }\n                }\n            }\n            int[][] tmp = cur;\n            cur = next;\n            next = tmp;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                sb.append(cur[i][j]);\n            }\n            sb.append('\\n');\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int n = Integer.parseInt(st.nextToken());\n        int q = Integer.parseInt(st.nextToken());\n\n        int[][] cur = new int[n][n];\n        for (int i = 0; i < n; i++) {\n            String line = br.readLine();\n            for (int j = 0; j < n; j++) {\n                cur[i][j] = line.charAt(j) - '0';\n            }\n        }\n\n        int[][] next = new int[n][n];\n        int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};\n        int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};\n\n        for (int step = 0; step < q; step++) {\n            for (int i = 0; i < n; i++) {\n                for (int j = 0; j < n; j++) {\n                    int alive = 0;\n                    for (int d = 0; d < 8; d++) {\n                        int ni = i + dx[d];\n                        int nj = j + dy[d];\n                        if (ni >= 0 && ni < n && nj >= 0 && nj < n && cur[ni][nj] == 1) {\n                            alive++;\n                        }\n                    }\n                    if (cur[i][j] == 1) {\n                        next[i][j] = (alive == 2 || alive == 3) ? 1 : 0;\n                    } else {\n                        next[i][j] = (alive == 3) ? 1 : 0;\n                    }\n                }\n            }\n            int[][] tmp = cur;\n            cur = next;\n            next = tmp;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                sb.append(cur[i][j]);\n            }\n            sb.append('\\n');\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11846169998170808,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

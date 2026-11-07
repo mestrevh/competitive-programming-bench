@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:01:41.956275+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 703,
+            "output_tokens": 1858,
+            "total_tokens": 2561
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.000929,
+            "total_cost": 0.000944
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    double D;\n    if (scanf(\"%d %lf\", &n, &D) != 2) return 0;\n    vector<double> P(n), C(n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &P[i], &C[i]);\n    }\n\n    // dp[i] = tempo mínimo para chegar à posição P[i] acabando de pegar a bateria i\n    // Transição: usar a bateria j do trecho P[j] -> P[i] custa (P[i]-P[j])^2 / C[j]\n    // (velocidade ótima no trecho de comprimento d com carga C: V = C/d, tempo d/V = d^2/C)\n    const double INF = 1e18;\n    vector<double> dp(n, INF);\n    dp[0] = 0.0;\n    for (int i = 1; i < n; i++) {\n        for (int j = 0; j < i; j++) {\n            if (dp[j] >= INF) continue;\n            double d = P[i] - P[j];\n            double cost = dp[j] + d * d / C[j];\n            if (cost < dp[i]) dp[i] = cost;\n        }\n    }\n\n    // Último trecho: de P[j] até D usando a bateria j (troca possível em qualquer bateria)\n    double ans = INF;\n    for (int j = 0; j < n; j++) {\n        if (dp[j] >= INF) continue;\n        double d = D - P[j];\n        double cost = dp[j] + d * d / C[j];\n        if (cost < ans) ans = cost;\n    }\n\n    printf(\"%.3f\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    double D;\n    if (scanf(\"%d %lf\", &n, &D) != 2) return 0;\n    vector<double> P(n), C(n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &P[i], &C[i]);\n    }\n\n    // dp[i] = tempo mínimo para chegar à posição P[i] acabando de pegar a bateria i\n    // Transição: usar a bateria j do trecho P[j] -> P[i] custa (P[i]-P[j])^2 / C[j]\n    // (velocidade ótima no trecho de comprimento d com carga C: V = C/d, tempo d/V = d^2/C)\n    const double INF = 1e18;\n    vector<double> dp(n, INF);\n    dp[0] = 0.0;\n    for (int i = 1; i < n; i++) {\n        for (int j = 0; j < i; j++) {\n            if (dp[j] >= INF) continue;\n            double d = P[i] - P[j];\n            double cost = dp[j] + d * d / C[j];\n            if (cost < dp[i]) dp[i] = cost;\n        }\n    }\n\n    // Último trecho: de P[j] até D usando a bateria j (troca possível em qualquer bateria)\n    double ans = INF;\n    for (int j = 0; j < n; j++) {\n        if (dp[j] >= INF) continue;\n        double d = D - P[j];\n        double cost = dp[j] + d * d / C[j];\n        if (cost < ans) ans = cost;\n    }\n\n    printf(\"%.3f\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22201289999793516,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

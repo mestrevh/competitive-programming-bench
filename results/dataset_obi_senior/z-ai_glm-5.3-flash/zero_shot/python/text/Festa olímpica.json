@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T06:58:42.175267+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 980,
+            "output_tokens": 6380,
+            "total_tokens": 7360
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.00319,
+            "total_cost": 0.003211
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    N = int(data[0])\n    M = int(data[1])\n    ts = [int(x) for x in data[2:2 + M]]\n\n    # Simula apenas o tamanho da lista ao longo dos turnos\n    L = N\n    for t in ts:\n        L -= L // t\n    K = min(L, 10000)  # precisamos apenas dos K primeiros sobreviventes\n\n    # Traçado inverso: dado q (posição na lista nova), a posição p na lista antiga\n    # satisfaz p = q + (q - 1) // (T - 1), com p mod T != 0 (logo é sobrevivente).\n    try:\n        import numpy as np\n        arr = np.arange(1, K + 1, dtype=np.int64)\n        for t in reversed(ts):\n            arr += (arr - 1) // (t - 1)\n        out = '\\n'.join(map(str, arr.tolist()))\n    except ImportError:\n        arr = list(range(1, K + 1))\n        for t in reversed(ts):\n            c = t - 1\n            new = []\n            ext = new.extend\n            q = 1\n            while q <= K:\n                a = (q - 1) // c\n                q_end = a * c + c\n                if q_end > K:\n                    q_end = K\n                # Dentro do bloco a, p = q + a, valores consecutivos\n                ext(range(q + a, q_end + a + 1))\n                q = q_end + 1\n            arr = new\n        out = '\\n'.join(map(str, arr))\n\n    sys.stdout.write(out)\n    sys.stdout.write('\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    N = int(data[0])\n    M = int(data[1])\n    ts = [int(x) for x in data[2:2 + M]]\n\n    # Simula apenas o tamanho da lista ao longo dos turnos\n    L = N\n    for t in ts:\n        L -= L // t\n    K = min(L, 10000)  # precisamos apenas dos K primeiros sobreviventes\n\n    # Traçado inverso: dado q (posição na lista nova), a posição p na lista antiga\n    # satisfaz p = q + (q - 1) // (T - 1), com p mod T != 0 (logo é sobrevivente).\n    try:\n        import numpy as np\n        arr = np.arange(1, K + 1, dtype=np.int64)\n        for t in reversed(ts):\n            arr += (arr - 1) // (t - 1)\n        out = '\\n'.join(map(str, arr.tolist()))\n    except ImportError:\n        arr = list(range(1, K + 1))\n        for t in reversed(ts):\n            c = t - 1\n            new = []\n            ext = new.extend\n            q = 1\n            while q <= K:\n                a = (q - 1) // c\n                q_end = a * c + c\n                if q_end > K:\n                    q_end = K\n                # Dentro do bloco a, p = q + a, valores consecutivos\n                ext(range(q + a, q_end + a + 1))\n                q = q_end + 1\n            arr = new\n        out = '\\n'.join(map(str, arr))\n\n    sys.stdout.write(out)\n    sys.stdout.write('\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.8957250999992539,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

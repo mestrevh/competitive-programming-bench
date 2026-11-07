@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T04:41:55.952288+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 851,
+            "output_tokens": 3664,
+            "total_tokens": 4515
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.001832,
+            "total_cost": 0.00185
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    size = n + 2\n    cf = [0] * size  # contagem de updates FRENTE cobrindo (diferenças)\n    cb = [0] * size  # contagem de updates TRAS cobrindo (diferenças)\n    cs = [0] * size  # soma das constantes dos updates cobrindo (diferenças)\n    out = []\n\n    def upd(arr, i, d):\n        while i <= n + 1:\n            arr[i] += d\n            i += i & (-i)\n\n    def qry(arr, p):\n        s = 0\n        while p > 0:\n            s += arr[p]\n            p -= p & (-p)\n        return s\n\n    for _ in range(m):\n        t = data[idx]; idx += 1\n        if t == b'1':\n            i = int(data[idx]); idx += 1\n            v = int(data[idx]); idx += 1\n            l = i\n            r = min(n, i + v - 1)\n            if l <= r:\n                upd(cf, l, 1); upd(cf, r + 1, -1)\n                c = v + i\n                upd(cs, l, c); upd(cs, r + 1, -c)\n        elif t == b'2':\n            i = int(data[idx]); idx += 1\n            v = int(data[idx]); idx += 1\n            r = i\n            l = max(1, i - v + 1)\n                upd(cb, l, 1); upd(cb, r + 1, -1)\n            c = v - i\n            upd(cs, l, c); upd(cs, r + 1, -c)\n        else:\n            p = int(data[idx]); idx += 1\n            kf = qry(cf, p)\n            kb = qry(cb, p)\n            s = qry(cs, p)\n            out.append(s + p * (kb - kf))\n    sys.stdout.write('\\n'.join(map(str, out)) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    size = n + 2\n    cf = [0] * size  # contagem de updates FRENTE cobrindo (diferenças)\n    cb = [0] * size  # contagem de updates TRAS cobrindo (diferenças)\n    cs = [0] * size  # soma das constantes dos updates cobrindo (diferenças)\n    out = []\n\n    def upd(arr, i, d):\n        while i <= n + 1:\n            arr[i] += d\n            i += i & (-i)\n\n    def qry(arr, p):\n        s = 0\n        while p > 0:\n            s += arr[p]\n            p -= p & (-p)\n        return s\n\n    for _ in range(m):\n        t = data[idx]; idx += 1\n        if t == b'1':\n            i = int(data[idx]); idx += 1\n            v = int(data[idx]); idx += 1\n            l = i\n            r = min(n, i + v - 1)\n            if l <= r:\n                upd(cf, l, 1); upd(cf, r + 1, -1)\n                c = v + i\n                upd(cs, l, c); upd(cs, r + 1, -c)\n        elif t == b'2':\n            i = int(data[idx]); idx += 1\n            v = int(data[idx]); idx += 1\n            r = i\n            l = max(1, i - v + 1)\n                upd(cb, l, 1); upd(cb, r + 1, -1)\n            c = v - i\n            upd(cs, l, c); upd(cs, r + 1, -c)\n        else:\n            p = int(data[idx]); idx += 1\n            kf = qry(cf, p)\n            kb = qry(cb, p)\n            s = qry(cs, p)\n            out.append(s + p * (kb - kf))\n    sys.stdout.write('\\n'.join(map(str, out)) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.14622699999745237,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 42,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

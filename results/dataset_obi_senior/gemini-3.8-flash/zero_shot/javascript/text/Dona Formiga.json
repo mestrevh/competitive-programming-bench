@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:08:10.148413+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 860,
+            "output_tokens": 506,
+            "total_tokens": 1831
+        },
+        "cost_usd": {
+            "input_cost": 0.000645,
+            "output_cost": 0.001898,
+            "total_cost": 0.002543
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Arrays;\n\npublic class Main {\n    static int S, T, P;\n    static int[] A;\n    static List<Integer>[] adj;\n    static int[] memo;\n\n    static int dfs(int u) {\n        if (memo[u] != -1) {\n            return memo[u];\n        }\n\n        int maxPath = 0;\n        for (int v : adj[u]) {\n            if (A[u] > A[v]) {\n                maxPath = Math.max(maxPath, 1 + dfs(v));\n            }\n        }\n\n        return memo[u] = maxPath;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        S = Integer.parseInt(st.nextToken());\n        T = Integer.parseInt(st.nextToken());\n        P = Integer.parseInt(st.nextToken());\n\n        A = new int[S + 1];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 1; i <= S; i++) {\n            A[i] = Integer.parseInt(st.nextToken());\n        }\n\n        adj = new ArrayList[S + 1];\n        for (int i = 1; i <= S; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < T; i++) {\n            st = new StringTokenizer(br.readLine());\n            int u = Integer.parseInt(st.nextToken());\n            int v = Integer.parseInt(st.nextToken());\n            adj[u].add(v);\n            adj[v].add(u);\n        }\n\n        memo = new int[S + 1];\n        Arrays.fill(memo, -1);\n\n        System.out.println(dfs(P));\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.Arrays;\n\npublic class Main {\n    static int S, T, P;\n    static int[] A;\n    static List<Integer>[] adj;\n    static int[] memo;\n\n    static int dfs(int u) {\n        if (memo[u] != -1) {\n            return memo[u];\n        }\n\n        int maxPath = 0;\n        for (int v : adj[u]) {\n            if (A[u] > A[v]) {\n                maxPath = Math.max(maxPath, 1 + dfs(v));\n            }\n        }\n\n        return memo[u] = maxPath;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        S = Integer.parseInt(st.nextToken());\n        T = Integer.parseInt(st.nextToken());\n        P = Integer.parseInt(st.nextToken());\n\n        A = new int[S + 1];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 1; i <= S; i++) {\n            A[i] = Integer.parseInt(st.nextToken());\n        }\n\n        adj = new ArrayList[S + 1];\n        for (int i = 1; i <= S; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < T; i++) {\n            st = new StringTokenizer(br.readLine());\n            int u = Integer.parseInt(st.nextToken());\n            int v = Integer.parseInt(st.nextToken());\n            adj[u].add(v);\n            adj[v].add(u);\n        }\n\n        memo = new int[S + 1];\n        Arrays.fill(memo, -1);\n\n        System.out.println(dfs(P));\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07062509999377653,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 22,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:40:44.622082+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 860,
+            "output_tokens": 560,
+            "total_tokens": 1724
+        },
+        "cost_usd": {
+            "input_cost": 0.000645,
+            "output_cost": 0.0021,
+            "total_cost": 0.002745
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let sign = 1;\n        if (input.charCodeAt(pos) === 45) { // '-'\n            sign = -1;\n            pos++;\n        }\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) >= 48 && input.charCodeAt(pos) <= 57) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res * sign;\n    }\n\n    const S = nextInt();\n    if (S === null) return;\n    const T = nextInt();\n    const P = nextInt();\n\n    const A = new Int32Array(S + 1);\n    for (let i = 1; i <= S; i++) {\n        A[i] = nextInt();\n    }\n\n    const adj = Array.from({ length: S + 1 }, () => []);\n\n    for (let i = 0; i < T; i++) {\n        const u = nextInt();\n        const v = nextInt();\n        if (A[u] > A[v]) {\n            adj[u].push(v);\n        } else if (A[v] > A[u]) {\n            adj[v].push(u);\n        }\n    }\n\n    const memo = new Int32Array(S + 1).fill(-1);\n\n    function dfs(u) {\n        if (memo[u] !== -1) return memo[u];\n        let maxLen = 0;\n        const neighbors = adj[u];\n        for (let i = 0; i < neighbors.length; i++) {\n            const v = neighbors[i];\n            const dist = 1 + dfs(v);\n            if (dist > maxLen) {\n                maxLen = dist;\n            }\n        }\n        return memo[u] = maxLen;\n    }\n\n    const ans = dfs(P);\n    console.log(ans);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let sign = 1;\n        if (input.charCodeAt(pos) === 45) { // '-'\n            sign = -1;\n            pos++;\n        }\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) >= 48 && input.charCodeAt(pos) <= 57) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res * sign;\n    }\n\n    const S = nextInt();\n    if (S === null) return;\n    const T = nextInt();\n    const P = nextInt();\n\n    const A = new Int32Array(S + 1);\n    for (let i = 1; i <= S; i++) {\n        A[i] = nextInt();\n    }\n\n    const adj = Array.from({ length: S + 1 }, () => []);\n\n    for (let i = 0; i < T; i++) {\n        const u = nextInt();\n        const v = nextInt();\n        if (A[u] > A[v]) {\n            adj[u].push(v);\n        } else if (A[v] > A[u]) {\n            adj[v].push(u);\n        }\n    }\n\n    const memo = new Int32Array(S + 1).fill(-1);\n\n    function dfs(u) {\n        if (memo[u] !== -1) return memo[u];\n        let maxLen = 0;\n        const neighbors = adj[u];\n        for (let i = 0; i < neighbors.length; i++) {\n            const v = neighbors[i];\n            const dist = 1 + dfs(v);\n            if (dist > maxLen) {\n                maxLen = dist;\n            }\n        }\n        return memo[u] = maxLen;\n    }\n\n    const ans = dfs(P);\n    console.log(ans);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.054999500018311664,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:43:06.597201+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 862,
+            "output_tokens": 731,
+            "total_tokens": 1593
+        },
+        "cost_usd": {
+            "input_cost": 8.6e-05,
+            "output_cost": 0.000365,
+            "total_cost": 0.000452
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef find_center(adj):\n    def bfs(start):\n        dist = [-1] * len(adj)\n        dist[start] = 0\n        q = deque([start])\n        farthest = start\n        while q:\n            u = q.popleft()\n            if dist[u] > dist[farthest]:\n                farthest = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    q.append(v)\n        return farthest, dist\n\n    endpoint_a, _ = bfs(0)\n    endpoint_b, dist_a = bfs(endpoint_a)\n    _, dist_b = bfs(endpoint_b)\n\n    return min(range(len(adj)), key=lambda v: max(dist_a[v], dist_b[v])) + 1\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\nidx = 2\n\ncircle = [[] for _ in range(n)]\nfor _ in range(n - 1):\n    a, b = data[idx] - 1, data[idx + 1] - 1\n    idx += 2\n    circle[a].append(b)\n    circle[b].append(a)\n\nsquare = [[] for _ in range(m)]\nfor _ in range(m - 1):\n    x, y = data[idx] - 1, data[idx + 1] - 1\n    idx += 2\n    square[x].append(y)\n    square[y].append(x)\n\nprint(find_center(circle), find_center(square))\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef find_center(adj):\n    def bfs(start):\n        dist = [-1] * len(adj)\n        dist[start] = 0\n        q = deque([start])\n        farthest = start\n        while q:\n            u = q.popleft()\n            if dist[u] > dist[farthest]:\n                farthest = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    q.append(v)\n        return farthest, dist\n\n    endpoint_a, _ = bfs(0)\n    endpoint_b, dist_a = bfs(endpoint_a)\n    _, dist_b = bfs(endpoint_b)\n\n    return min(range(len(adj)), key=lambda v: max(dist_a[v], dist_b[v])) + 1\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn, m = data[0], data[1]\nidx = 2\n\ncircle = [[] for _ in range(n)]\nfor _ in range(n - 1):\n    a, b = data[idx] - 1, data[idx + 1] - 1\n    idx += 2\n    circle[a].append(b)\n    circle[b].append(a)\n\nsquare = [[] for _ in range(m)]\nfor _ in range(m - 1):\n    x, y = data[idx] - 1, data[idx + 1] - 1\n    idx += 2\n    square[x].append(y)\n    square[y].append(x)\n\nprint(find_center(circle), find_center(square))",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.4772616000045673,
+            "counts": {
+                "AC": 6,
+                "WA": 32,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

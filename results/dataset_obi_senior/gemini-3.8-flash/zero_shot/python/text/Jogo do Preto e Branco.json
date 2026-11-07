@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:38:32.106308+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 604,
+            "total_tokens": 2889
+        },
+        "cost_usd": {
+            "input_cost": 0.000568,
+            "output_cost": 0.002265,
+            "total_cost": 0.002833
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n    P = int(input_data[2])\n\n    black_pieces = set()\n    idx = 3\n    for _ in range(P):\n        r = int(input_data[idx]) - 1\n        c = int(input_data[idx + 1]) - 1\n        black_pieces.add((r, c))\n        idx += 2\n\n    candidates = set()\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n\n    for r, c in black_pieces:\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < L and 0 <= nc < C:\n                if (nr, nc) not in black_pieces:\n                    candidates.add((nr, nc))\n\n    cand_list = list(candidates)\n    cand_set = candidates\n\n    # Separar os candidatos em dois conjuntos pela paridade de (r + c)\n    left_nodes = [node for node in cand_list if (node[0] + node[1]) % 2 == 0]\n\n    # Construir lista de adjacência do grafo bipartido\n    adj = {u: [] for u in left_nodes}\n    for r, c in left_nodes:\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if (nr, nc) in cand_set:\n                adj[(r, c)].append((nr, nc))\n\n    # Algoritmo de Kuhn para Emparelhamento Máximo Bipartido\n    match = {}\n\n    def dfs(u, visited):\n        for v in adj[u]:\n            if v not in visited:\n                visited.add(v)\n                if v not in match or dfs(match[v], visited):\n                    match[v] = u\n                    return True\n        return False\n\n    max_matching = 0\n    for u in left_nodes:\n        visited = set()\n        if dfs(u, visited):\n            max_matching += 1\n\n    # Por König-Egerváry: Conjunto Independente Máximo = |V| - Matching Máximo\n    max_white_pieces = len(candidates) - max_matching\n    print(max_white_pieces)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n    P = int(input_data[2])\n\n    black_pieces = set()\n    idx = 3\n    for _ in range(P):\n        r = int(input_data[idx]) - 1\n        c = int(input_data[idx + 1]) - 1\n        black_pieces.add((r, c))\n        idx += 2\n\n    candidates = set()\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n\n    for r, c in black_pieces:\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < L and 0 <= nc < C:\n                if (nr, nc) not in black_pieces:\n                    candidates.add((nr, nc))\n\n    cand_list = list(candidates)\n    cand_set = candidates\n\n    # Separar os candidatos em dois conjuntos pela paridade de (r + c)\n    left_nodes = [node for node in cand_list if (node[0] + node[1]) % 2 == 0]\n\n    # Construir lista de adjacência do grafo bipartido\n    adj = {u: [] for u in left_nodes}\n    for r, c in left_nodes:\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if (nr, nc) in cand_set:\n                adj[(r, c)].append((nr, nc))\n\n    # Algoritmo de Kuhn para Emparelhamento Máximo Bipartido\n    match = {}\n\n    def dfs(u, visited):\n        for v in adj[u]:\n            if v not in visited:\n                visited.add(v)\n                if v not in match or dfs(match[v], visited):\n                    match[v] = u\n                    return True\n        return False\n\n    max_matching = 0\n    for u in left_nodes:\n        visited = set()\n        if dfs(u, visited):\n            max_matching += 1\n\n    # Por König-Egerváry: Conjunto Independente Máximo = |V| - Matching Máximo\n    max_white_pieces = len(candidates) - max_matching\n    print(max_white_pieces)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07773189999716124,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

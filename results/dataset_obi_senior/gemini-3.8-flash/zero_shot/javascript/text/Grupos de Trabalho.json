@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:51:11.856527+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 960,
+            "output_tokens": 564,
+            "total_tokens": 2818
+        },
+        "cost_usd": {
+            "input_cost": 0.00072,
+            "output_cost": 0.002115,
+            "total_cost": 0.002835
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    let buf;\n    try {\n        buf = fs.readFileSync(0);\n    } catch (e) {\n        return;\n    }\n\n    let pos = 0;\n    const len = buf.length;\n\n    function nextInt() {\n        while (pos < len && buf[pos] <= 32) {\n            pos++;\n        }\n        if (pos >= len) return null;\n        let res = 0;\n        while (pos < len && buf[pos] > 32) {\n            res = res * 10 + (buf[pos] - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const E = nextInt();\n    if (E === null) return;\n    const M = nextInt();\n    const D = nextInt();\n\n    const sameX = new Int32Array(M);\n    const sameY = new Int32Array(M);\n    for (let i = 0; i < M; i++) {\n        sameX[i] = nextInt();\n        sameY[i] = nextInt();\n    }\n\n    const diffU = new Int32Array(D);\n    const diffV = new Int32Array(D);\n    for (let i = 0; i < D; i++) {\n        diffU[i] = nextInt();\n        diffV[i] = nextInt();\n    }\n\n    const group = new Int32Array(E + 1);\n    const numGroups = Math.floor(E / 3);\n    for (let g = 0; g < numGroups; g++) {\n        const a = nextInt();\n        const b = nextInt();\n        const c = nextInt();\n        group[a] = g;\n        group[b] = g;\n        group[c] = g;\n    }\n\n    let violations = 0;\n    for (let i = 0; i < M; i++) {\n        if (group[sameX[i]] !== group[sameY[i]]) {\n            violations++;\n        }\n    }\n\n    for (let i = 0; i < D; i++) {\n        if (group[diffU[i]] === group[diffV[i]]) {\n            violations++;\n        }\n    }\n\n    console.log(violations);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    let buf;\n    try {\n        buf = fs.readFileSync(0);\n    } catch (e) {\n        return;\n    }\n\n    let pos = 0;\n    const len = buf.length;\n\n    function nextInt() {\n        while (pos < len && buf[pos] <= 32) {\n            pos++;\n        }\n        if (pos >= len) return null;\n        let res = 0;\n        while (pos < len && buf[pos] > 32) {\n            res = res * 10 + (buf[pos] - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const E = nextInt();\n    if (E === null) return;\n    const M = nextInt();\n    const D = nextInt();\n\n    const sameX = new Int32Array(M);\n    const sameY = new Int32Array(M);\n    for (let i = 0; i < M; i++) {\n        sameX[i] = nextInt();\n        sameY[i] = nextInt();\n    }\n\n    const diffU = new Int32Array(D);\n    const diffV = new Int32Array(D);\n    for (let i = 0; i < D; i++) {\n        diffU[i] = nextInt();\n        diffV[i] = nextInt();\n    }\n\n    const group = new Int32Array(E + 1);\n    const numGroups = Math.floor(E / 3);\n    for (let g = 0; g < numGroups; g++) {\n        const a = nextInt();\n        const b = nextInt();\n        const c = nextInt();\n        group[a] = g;\n        group[b] = g;\n        group[c] = g;\n    }\n\n    let violations = 0;\n    for (let i = 0; i < M; i++) {\n        if (group[sameX[i]] !== group[sameY[i]]) {\n            violations++;\n        }\n    }\n\n    for (let i = 0; i < D; i++) {\n        if (group[diffU[i]] === group[diffV[i]]) {\n            violations++;\n        }\n    }\n\n    console.log(violations);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07903409999562427,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

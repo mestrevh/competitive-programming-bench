@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:10:30.672565+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 675,
+            "output_tokens": 5436,
+            "total_tokens": 6111
+        },
+        "cost_usd": {
+            "input_cost": 6.8e-05,
+            "output_cost": 0.002718,
+            "total_cost": 0.002785
+        },
+        "raw_response": "```c\n#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n#define SOURCE_FLAG 0x80000000u\n\nstatic int compare_u64(const void *a, const void *b) {\n    uint64_t x = *(const uint64_t *)a;\n    uint64_t y = *(const uint64_t *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int x[2000], y[2000];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &x[i], &y[i]);\n    }\n\n    size_t edge_count = (size_t)n * n;\n    uint64_t *edges = malloc(edge_count * sizeof(uint64_t));\n    int *best = calloc((size_t)n, sizeof(int));\n\n    if (edges == NULL || best == NULL) {\n        free(edges);\n        free(best);\n        return 0;\n    }\n\n    size_t count = 0;\n\n    for (int j = 0; j < n; j++) {\n        uint32_t w = (uint32_t)(x[j] * x[j] + y[j] * y[j]);\n        uint32_t code = SOURCE_FLAG | (uint32_t)j;\n        edges[count++] = ((uint64_t)(UINT32_MAX - w) << 32) | code;\n    }\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            if (i == j) continue;\n            int dx = x[i] - x[j];\n            int dy = y[i] - y[j];\n            uint32_t w = (uint32_t)(dx * dx + dy * dy);\n            uint32_t code = (uint32_t)i * (uint32_t)n + (uint32_t)j;\n            edges[count++] = ((uint64_t)(UINT32_MAX - w) << 32) | code;\n        }\n    }\n\n    qsort(edges, count, sizeof(uint64_t), compare_u64);\n\n    int answer = 0;\n    size_t left = 0;\n\n    while (left < count) {\n        uint32_t key = (uint32_t)(edges[left] >> 32);\n        size_t right = left + 1;\n        while (right < count && (uint32_t)(edges[right] >> 32) == key) {\n            right++;\n        }\n\n        for (size_t k = left; k < right; k++) {\n            uint32_t code = (uint32_t)edges[k];\n            int value;\n\n            if (code & SOURCE_FLAG) {\n                value = 1;\n            } else {\n                int from = (int)(code / (uint32_t)n);\n                value = best[from] ? best[from] + 1 : 0;\n            }\n\n            if (value > answer) answer = value;\n        }\n\n        for (size_t k = left; k < right; k++) {\n            uint32_t code = (uint32_t)edges[k];\n            int to, value;\n\n            if (code & SOURCE_FLAG) {\n                to = (int)(code & ~SOURCE_FLAG);\n                value = 1;\n            } else {\n                int from = (int)(code / (uint32_t)n);\n                to = (int)(code % (uint32_t)n);\n                value = best[from] ? best[from] + 1 : 0;\n            }\n\n            if (value > best[to]) best[to] = value;\n        }\n\n        left = right;\n    }\n\n    printf(\"%d\\n\", answer);\n\n    free(edges);\n    free(best);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n\n#define SOURCE_FLAG 0x80000000u\n\nstatic int compare_u64(const void *a, const void *b) {\n    uint64_t x = *(const uint64_t *)a;\n    uint64_t y = *(const uint64_t *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int x[2000], y[2000];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &x[i], &y[i]);\n    }\n\n    size_t edge_count = (size_t)n * n;\n    uint64_t *edges = malloc(edge_count * sizeof(uint64_t));\n    int *best = calloc((size_t)n, sizeof(int));\n\n    if (edges == NULL || best == NULL) {\n        free(edges);\n        free(best);\n        return 0;\n    }\n\n    size_t count = 0;\n\n    for (int j = 0; j < n; j++) {\n        uint32_t w = (uint32_t)(x[j] * x[j] + y[j] * y[j]);\n        uint32_t code = SOURCE_FLAG | (uint32_t)j;\n        edges[count++] = ((uint64_t)(UINT32_MAX - w) << 32) | code;\n    }\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            if (i == j) continue;\n            int dx = x[i] - x[j];\n            int dy = y[i] - y[j];\n            uint32_t w = (uint32_t)(dx * dx + dy * dy);\n            uint32_t code = (uint32_t)i * (uint32_t)n + (uint32_t)j;\n            edges[count++] = ((uint64_t)(UINT32_MAX - w) << 32) | code;\n        }\n    }\n\n    qsort(edges, count, sizeof(uint64_t), compare_u64);\n\n    int answer = 0;\n    size_t left = 0;\n\n    while (left < count) {\n        uint32_t key = (uint32_t)(edges[left] >> 32);\n        size_t right = left + 1;\n        while (right < count && (uint32_t)(edges[right] >> 32) == key) {\n            right++;\n        }\n\n        for (size_t k = left; k < right; k++) {\n            uint32_t code = (uint32_t)edges[k];\n            int value;\n\n            if (code & SOURCE_FLAG) {\n                value = 1;\n            } else {\n                int from = (int)(code / (uint32_t)n);\n                value = best[from] ? best[from] + 1 : 0;\n            }\n\n            if (value > answer) answer = value;\n        }\n\n        for (size_t k = left; k < right; k++) {\n            uint32_t code = (uint32_t)edges[k];\n            int to, value;\n\n            if (code & SOURCE_FLAG) {\n                to = (int)(code & ~SOURCE_FLAG);\n                value = 1;\n            } else {\n                int from = (int)(code / (uint32_t)n);\n                to = (int)(code % (uint32_t)n);\n                value = best[from] ? best[from] + 1 : 0;\n            }\n\n            if (value > best[to]) best[to] = value;\n        }\n\n        left = right;\n    }\n\n    printf(\"%d\\n\", answer);\n\n    free(edges);\n    free(best);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.5056676999956835,
+            "counts": {
+                "AC": 3,
+                "WA": 37,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

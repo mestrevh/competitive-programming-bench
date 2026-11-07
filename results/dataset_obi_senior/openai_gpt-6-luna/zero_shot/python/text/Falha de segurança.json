@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:30:09.678101+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 615,
+            "output_tokens": 816,
+            "total_tokens": 1431
+        },
+        "cost_usd": {
+            "input_cost": 6.2e-05,
+            "output_cost": 0.000408,
+            "total_cost": 0.000469
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter, defaultdict\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\npasswords = [s.decode() for s in data[1:1 + n]]\nfrequency = Counter(passwords)\n\noccurrences = defaultdict(int)\n\nfor password in passwords:\n    length = len(password)\n    substrings = set()\n    for start in range(length):\n        for end in range(start + 1, length + 1):\n            substrings.add(password[start:end])\n\n    for substring in substrings:\n        if substring in frequency:\n            occurrences[substring] += 1\n\nanswer = sum(count * (occurrences[password] - 1)\n             for password, count in frequency.items())\n\nprint(answer)\n```",
+        "extracted_code": "import sys\nfrom collections import Counter, defaultdict\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\npasswords = [s.decode() for s in data[1:1 + n]]\nfrequency = Counter(passwords)\n\noccurrences = defaultdict(int)\n\nfor password in passwords:\n    length = len(password)\n    substrings = set()\n    for start in range(length):\n        for end in range(start + 1, length + 1):\n            substrings.add(password[start:end])\n\n    for substring in substrings:\n        if substring in frequency:\n            occurrences[substring] += 1\n\nanswer = sum(count * (occurrences[password] - 1)\n             for password, count in frequency.items())\n\nprint(answer)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2823098000008031,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

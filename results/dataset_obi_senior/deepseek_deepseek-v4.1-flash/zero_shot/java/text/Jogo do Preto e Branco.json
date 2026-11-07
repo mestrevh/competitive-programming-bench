@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:16:51.476973+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 862,
+            "output_tokens": 3424,
+            "total_tokens": 4286
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.008218,
+            "total_cost": 0.00822
+        },
+        "raw_response": "```java\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        int L = sc.nextInt();\n        int C = sc.nextInt();\n        int P = sc.nextInt();\n\n        boolean[][] black = new boolean[L][C];\n\n        for (int i = 0; i < P; i++) {\n            int x = sc.nextInt() - 1;\n            int y = sc.nextInt() - 1;\n            black[x][y] = true;\n        }\n\n        int[] valid = new int[L];\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        for (int r = 0; r < L; r++) {\n            for (int c = 0; c < C; c++) {\n                if (black[r][c]) continue;\n\n                boolean canBeWhite = false;\n                for (int d = 0; d < 4; d++) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n\n                    if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                        canBeWhite = true;\n                        break;\n                    }\n                }\n\n                if (canBeWhite) {\n                    valid[r] |= (1 << c);\n                }\n            }\n        }\n\n        int M = 1 << C;\n        int NEG = -1000000;\n\n        int[] dp = new int[M];\n        Arrays.fill(dp, NEG);\n        dp[0] = 0;\n\n        for (int r = 0; r < L; r++) {\n            int[] next = new int[M];\n            Arrays.fill(next, NEG);\n\n            for (int prev = 0; prev < M; prev++) {\n                if (dp[prev] < 0) continue;\n\n                for (int cur = 0; cur < M; cur++) {\n                    if ((cur & ~valid[r]) != 0) continue;\n                    if ((cur & (cur << 1)) != 0) continue;\n                    if ((cur & prev) != 0) continue;\n\n                    int val = dp[prev] + Integer.bitCount(cur);\n                    if (val > next[cur]) {\n                        next[cur] = val;\n                    }\n                }\n            }\n\n            dp = next;\n        }\n\n        int answer = 0;\n        for (int v : dp) {\n            answer = Math.max(answer, v);\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        int L = sc.nextInt();\n        int C = sc.nextInt();\n        int P = sc.nextInt();\n\n        boolean[][] black = new boolean[L][C];\n\n        for (int i = 0; i < P; i++) {\n            int x = sc.nextInt() - 1;\n            int y = sc.nextInt() - 1;\n            black[x][y] = true;\n        }\n\n        int[] valid = new int[L];\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        for (int r = 0; r < L; r++) {\n            for (int c = 0; c < C; c++) {\n                if (black[r][c]) continue;\n\n                boolean canBeWhite = false;\n                for (int d = 0; d < 4; d++) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n\n                    if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                        canBeWhite = true;\n                        break;\n                    }\n                }\n\n                if (canBeWhite) {\n                    valid[r] |= (1 << c);\n                }\n            }\n        }\n\n        int M = 1 << C;\n        int NEG = -1000000;\n\n        int[] dp = new int[M];\n        Arrays.fill(dp, NEG);\n        dp[0] = 0;\n\n        for (int r = 0; r < L; r++) {\n            int[] next = new int[M];\n            Arrays.fill(next, NEG);\n\n            for (int prev = 0; prev < M; prev++) {\n                if (dp[prev] < 0) continue;\n\n                for (int cur = 0; cur < M; cur++) {\n                    if ((cur & ~valid[r]) != 0) continue;\n                    if ((cur & (cur << 1)) != 0) continue;\n                    if ((cur & prev) != 0) continue;\n\n                    int val = dp[prev] + Integer.bitCount(cur);\n                    if (val > next[cur]) {\n                        next[cur] = val;\n                    }\n                }\n            }\n\n            dp = next;\n        }\n\n        int answer = 0;\n        for (int v : dp) {\n            answer = Math.max(answer, v);\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09248870000010356,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

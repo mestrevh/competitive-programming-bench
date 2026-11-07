@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:54:13.275559+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1077,
+            "output_tokens": 4299,
+            "total_tokens": 5376
+        },
+        "cost_usd": {
+            "input_cost": 0.000108,
+            "output_cost": 0.002149,
+            "total_cost": 0.002257
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet pos = 0;\nconst N = input[pos++];\nconst M = input[pos++];\nconst n = N * M;\n\nconst power = new Float64Array(n);\nconst order = new Array(n);\n\nfor (let i = 0; i < n; i++) {\n  power[i] = input[pos++];\n  order[i] = i;\n}\n\norder.sort((a, b) => power[a] - power[b]);\n\nconst dsuParent = new Int32Array(n);\nconst dsuSize = new Uint32Array(n);\nconst componentNode = new Int32Array(n);\nconst active = new Uint8Array(n);\n\nfor (let i = 0; i < n; i++) {\n  dsuParent[i] = i;\n  dsuSize[i] = 1;\n  componentNode[i] = i;\n}\n\nconst maxNodes = 2 * n;\nconst nodeSum = new Float64Array(maxNodes);\nconst nodeThreshold = new Float64Array(maxNodes);\nconst nodeParent = new Int32Array(maxNodes);\nnodeParent.fill(-1);\n\nfor (let i = 0; i < n; i++) {\n  nodeSum[i] = power[i];\n  nodeThreshold[i] = power[i];\n}\n\nfunction find(x) {\n  let root = x;\n  while (dsuParent[root] !== root) root = dsuParent[root];\n\n  while (dsuParent[x] !== x) {\n    const next = dsuParent[x];\n    dsuParent[x] = root;\n    x = next;\n  }\n  return root;\n}\n\nlet nodeCount = n;\nconst baseNode = new Int32Array(n);\n\nfunction unite(a, b, threshold) {\n  let ra = find(a);\n  let rb = find(b);\n  if (ra === rb) return;\n\n  const nodeA = componentNode[ra];\n  const nodeB = componentNode[rb];\n  const mergedNode = nodeCount++;\n\n  nodeSum[mergedNode] = nodeSum[nodeA] + nodeSum[nodeB];\n  nodeThreshold[mergedNode] = threshold;\n  nodeParent[nodeA] = mergedNode;\n  nodeParent[nodeB] = mergedNode;\n\n  if (dsuSize[ra] < dsuSize[rb]) {\n    const temp = ra;\n    ra = rb;\n    rb = temp;\n  }\n\n  dsuParent[rb] = ra;\n  dsuSize[ra] += dsuSize[rb];\n  componentNode[ra] = mergedNode;\n}\n\nfor (let start = 0; start < n;) {\n  let end = start + 1;\n  const threshold = power[order[start]];\n  while (end < n && power[order[end]] === threshold) end++;\n\n  for (let k = start; k < end; k++) {\n    active[order[k]] = 1;\n  }\n\n  for (let k = start; k < end; k++) {\n    const v = order[k];\n    const col = v % M;\n\n    if (col > 0 && active[v - 1]) unite(v, v - 1, threshold);\n    if (col + 1 < M && active[v + 1]) unite(v, v + 1, threshold);\n    if (v >= M && active[v - M]) unite(v, v - M, threshold);\n    if (v + M < n && active[v + M]) unite(v, v + M, threshold);\n  }\n\n  for (let k = start; k < end; k++) {\n    const v = order[k];\n    baseNode[v] = componentNode[find(v)];\n  }\n\n  start = end;\n}\n\nconst best = new Float64Array(nodeCount);\n\nfor (let i = nodeCount - 1; i >= 0; i--) {\n  const parent = nodeParent[i];\n  if (parent !== -1 && nodeThreshold[parent] <= nodeSum[i]) {\n    best[i] = best[parent];\n  } else {\n    best[i] = nodeSum[i];\n  }\n}\n\nconst output = [];\nfor (let r = 0; r < N; r++) {\n  const row = [];\n  for (let c = 0; c < M; c++) {\n    const v = r * M + c;\n    row.push(String(best[baseNode[v]]));\n  }\n  output.push(row.join(' '));\n}\n\nprocess.stdout.write(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet pos = 0;\nconst N = input[pos++];\nconst M = input[pos++];\nconst n = N * M;\n\nconst power = new Float64Array(n);\nconst order = new Array(n);\n\nfor (let i = 0; i < n; i++) {\n  power[i] = input[pos++];\n  order[i] = i;\n}\n\norder.sort((a, b) => power[a] - power[b]);\n\nconst dsuParent = new Int32Array(n);\nconst dsuSize = new Uint32Array(n);\nconst componentNode = new Int32Array(n);\nconst active = new Uint8Array(n);\n\nfor (let i = 0; i < n; i++) {\n  dsuParent[i] = i;\n  dsuSize[i] = 1;\n  componentNode[i] = i;\n}\n\nconst maxNodes = 2 * n;\nconst nodeSum = new Float64Array(maxNodes);\nconst nodeThreshold = new Float64Array(maxNodes);\nconst nodeParent = new Int32Array(maxNodes);\nnodeParent.fill(-1);\n\nfor (let i = 0; i < n; i++) {\n  nodeSum[i] = power[i];\n  nodeThreshold[i] = power[i];\n}\n\nfunction find(x) {\n  let root = x;\n  while (dsuParent[root] !== root) root = dsuParent[root];\n\n  while (dsuParent[x] !== x) {\n    const next = dsuParent[x];\n    dsuParent[x] = root;\n    x = next;\n  }\n  return root;\n}\n\nlet nodeCount = n;\nconst baseNode = new Int32Array(n);\n\nfunction unite(a, b, threshold) {\n  let ra = find(a);\n  let rb = find(b);\n  if (ra === rb) return;\n\n  const nodeA = componentNode[ra];\n  const nodeB = componentNode[rb];\n  const mergedNode = nodeCount++;\n\n  nodeSum[mergedNode] = nodeSum[nodeA] + nodeSum[nodeB];\n  nodeThreshold[mergedNode] = threshold;\n  nodeParent[nodeA] = mergedNode;\n  nodeParent[nodeB] = mergedNode;\n\n  if (dsuSize[ra] < dsuSize[rb]) {\n    const temp = ra;\n    ra = rb;\n    rb = temp;\n  }\n\n  dsuParent[rb] = ra;\n  dsuSize[ra] += dsuSize[rb];\n  componentNode[ra] = mergedNode;\n}\n\nfor (let start = 0; start < n;) {\n  let end = start + 1;\n  const threshold = power[order[start]];\n  while (end < n && power[order[end]] === threshold) end++;\n\n  for (let k = start; k < end; k++) {\n    active[order[k]] = 1;\n  }\n\n  for (let k = start; k < end; k++) {\n    const v = order[k];\n    const col = v % M;\n\n    if (col > 0 && active[v - 1]) unite(v, v - 1, threshold);\n    if (col + 1 < M && active[v + 1]) unite(v, v + 1, threshold);\n    if (v >= M && active[v - M]) unite(v, v - M, threshold);\n    if (v + M < n && active[v + M]) unite(v, v + M, threshold);\n  }\n\n  for (let k = start; k < end; k++) {\n    const v = order[k];\n    baseNode[v] = componentNode[find(v)];\n  }\n\n  start = end;\n}\n\nconst best = new Float64Array(nodeCount);\n\nfor (let i = nodeCount - 1; i >= 0; i--) {\n  const parent = nodeParent[i];\n  if (parent !== -1 && nodeThreshold[parent] <= nodeSum[i]) {\n    best[i] = best[parent];\n  } else {\n    best[i] = nodeSum[i];\n  }\n}\n\nconst output = [];\nfor (let r = 0; r < N; r++) {\n  const row = [];\n  for (let c = 0; c < M; c++) {\n    const v = r * M + c;\n    row.push(String(best[baseNode[v]]));\n  }\n  output.push(row.join(' '));\n}\n\nprocess.stdout.write(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12862280000990722,
+            "counts": {
+                "AC": 150,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 150
+        }
+    }
+]

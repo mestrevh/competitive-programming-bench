@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:50:20.228571+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 968,
+            "output_tokens": 344,
+            "total_tokens": 1693
+        },
+        "cost_usd": {
+            "input_cost": 0.000726,
+            "output_cost": 0.00129,
+            "total_cost": 0.002016
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n\n    const ones = [0];\n    for (let i = 1; i <= N; i++) {\n        const val = nextInt();\n        if (val === 1) {\n            ones.push(i);\n        }\n    }\n    ones.push(N + 1);\n\n    let total = 0n;\n    for (let i = 1; i < ones.length - 1; i++) {\n        const leftChoices = BigInt(ones[i] - ones[i - 1]);\n        const rightChoices = BigInt(ones[i + 1] - ones[i]);\n        total += leftChoices * rightChoices;\n    }\n\n    console.log(total.toString());\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n\n    const ones = [0];\n    for (let i = 1; i <= N; i++) {\n        const val = nextInt();\n        if (val === 1) {\n            ones.push(i);\n        }\n    }\n    ones.push(N + 1);\n\n    let total = 0n;\n    for (let i = 1; i < ones.length - 1; i++) {\n        const leftChoices = BigInt(ones[i] - ones[i - 1]);\n        const rightChoices = BigInt(ones[i + 1] - ones[i]);\n        total += leftChoices * rightChoices;\n    }\n\n    console.log(total.toString());\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07520639998256229,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

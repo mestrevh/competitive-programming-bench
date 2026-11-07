@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:47:37.878143+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 675,
+            "output_tokens": 4358,
+            "total_tokens": 5033
+        },
+        "cost_usd": {
+            "input_cost": 6.8e-05,
+            "output_cost": 0.002179,
+            "total_cost": 0.002246
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\ncoords = [(data[i], data[i + 1]) for i in range(1, len(data), 2)]\n\nSHIFT = 22\nedges = []\n\nfor i, (x1, y1) in enumerate(coords):\n    for j, (x2, y2) in enumerate(coords):\n        if i != j:\n            d = (x1 - x2) ** 2 + (y1 - y2) ** 2\n            edges.append((d << SHIFT) | (i << 11) | j)\n\n    d = x1 * x1 + y1 * y1\n    edges.append((d << SHIFT) | (n << 11) | i)\n\nedges.sort(reverse=True)\n\nbest_in = [0] * (n + 1)\nanswer = 0\nm = len(edges)\ni = 0\n\nwhile i < m:\n    distance = edges[i] >> SHIFT\n    j = i + 1\n    while j < m and (edges[j] >> SHIFT) == distance:\n        j += 1\n\n    for k in range(i, j):\n        edge = edges[k]\n        source = (edge >> 11) & 2047\n        dest = edge & 2047\n        value = best_in[source] + 1\n        if value > answer:\n            answer = value\n        edges[k] = (dest << SHIFT) | value\n\n    for k in range(i, j):\n        update = edges[k]\n        dest = update >> SHIFT\n        value = update & ((1 << SHIFT) - 1)\n        if value > best_in[dest]:\n            best_in[dest] = value\n\n    i = j\n\nprint(answer)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\ncoords = [(data[i], data[i + 1]) for i in range(1, len(data), 2)]\n\nSHIFT = 22\nedges = []\n\nfor i, (x1, y1) in enumerate(coords):\n    for j, (x2, y2) in enumerate(coords):\n        if i != j:\n            d = (x1 - x2) ** 2 + (y1 - y2) ** 2\n            edges.append((d << SHIFT) | (i << 11) | j)\n\n    d = x1 * x1 + y1 * y1\n    edges.append((d << SHIFT) | (n << 11) | i)\n\nedges.sort(reverse=True)\n\nbest_in = [0] * (n + 1)\nanswer = 0\nm = len(edges)\ni = 0\n\nwhile i < m:\n    distance = edges[i] >> SHIFT\n    j = i + 1\n    while j < m and (edges[j] >> SHIFT) == distance:\n        j += 1\n\n    for k in range(i, j):\n        edge = edges[k]\n        source = (edge >> 11) & 2047\n        dest = edge & 2047\n        value = best_in[source] + 1\n        if value > answer:\n            answer = value\n        edges[k] = (dest << SHIFT) | value\n\n    for k in range(i, j):\n        update = edges[k]\n        dest = update >> SHIFT\n        value = update & ((1 << SHIFT) - 1)\n        if value > best_in[dest]:\n            best_in[dest] = value\n\n    i = j\n\nprint(answer)",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 7.9135714000003645,
+            "counts": {
+                "AC": 6,
+                "WA": 34,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

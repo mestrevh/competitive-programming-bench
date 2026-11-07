@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T08:27:54.866114+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 967,
+            "output_tokens": 457,
+            "total_tokens": 1424
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.000228,
+            "total_cost": 0.000249
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef farthest(adj, s, n):\n    dist = [-1] * (n + 1)\n    dist[s] = 0\n    q = deque([s])\n    last = s\n    while q:\n        u = q.popleft()\n        last = u\n        for v in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + 1\n                q.append(v)\n    return last, dist\n\ndef center(adj, n):\n    a, _ = farthest(adj, 1, n)\n    b, dist = farthest(adj, a, n)\n    d = dist[b]\n    # walk from a towards b, find middle\n    cur = a\n    cnt = d // 2\n    while cnt > 0:\n        for v in adj[cur]:\n            if dist[v] == dist[cur] + 1:\n                cur = v\n                break\n        cnt -= 1\n    return cur\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    adjN = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        a = int(data[idx]); idx += 1\n        b = int(data[idx]); idx += 1\n        adjN[a].append(b); adjN[b].append(a)\n    adjM = [[] for _ in range(m + 1)]\n    for _ in range(m - 1):\n        x = int(data[idx]); idx += 1\n        y = int(data[idx]); idx += 1\n        adjM[x].append(y); adjM[y].append(x)\n    print(center(adjN, n), center(adjM, m))\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef farthest(adj, s, n):\n    dist = [-1] * (n + 1)\n    dist[s] = 0\n    q = deque([s])\n    last = s\n    while q:\n        u = q.popleft()\n        last = u\n        for v in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + 1\n                q.append(v)\n    return last, dist\n\ndef center(adj, n):\n    a, _ = farthest(adj, 1, n)\n    b, dist = farthest(adj, a, n)\n    d = dist[b]\n    # walk from a towards b, find middle\n    cur = a\n    cnt = d // 2\n    while cnt > 0:\n        for v in adj[cur]:\n            if dist[v] == dist[cur] + 1:\n                cur = v\n                break\n        cnt -= 1\n    return cur\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    adjN = [[] for _ in range(n + 1)]\n    for _ in range(n - 1):\n        a = int(data[idx]); idx += 1\n        b = int(data[idx]); idx += 1\n        adjN[a].append(b); adjN[b].append(a)\n    adjM = [[] for _ in range(m + 1)]\n    for _ in range(m - 1):\n        x = int(data[idx]); idx += 1\n        y = int(data[idx]); idx += 1\n        adjM[x].append(y); adjM[y].append(x)\n    print(center(adjN, n), center(adjM, m))\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.24104820000138716,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

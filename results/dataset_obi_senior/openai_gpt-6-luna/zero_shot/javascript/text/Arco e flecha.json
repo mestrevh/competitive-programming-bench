@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:32:46.011965+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 809,
+            "output_tokens": 1532,
+            "total_tokens": 2341
+        },
+        "cost_usd": {
+            "input_cost": 8.1e-05,
+            "output_cost": 0.000766,
+            "total_cost": 0.000847
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nif (input.length === 0) process.exit(0);\n\nconst n = input[0];\nconst keys = new Float64Array(n + 1);\nconst priorities = new Uint32Array(n + 1);\nconst left = new Int32Array(n + 1);\nconst right = new Int32Array(n + 1);\nconst counts = new Int32Array(n + 1);\nconst sizes = new Int32Array(n + 1);\n\nlet used = 0;\nlet root = 0;\n\nfunction update(node) {\n  sizes[node] = sizes[left[node]] + sizes[right[node]] + counts[node];\n}\n\nfunction rotateRight(node) {\n  const child = left[node];\n  left[node] = right[child];\n  right[child] = node;\n  update(node);\n  update(child);\n  return child;\n}\n\nfunction rotateLeft(node) {\n  const child = right[node];\n  right[node] = left[child];\n  left[child] = node;\n  update(node);\n  update(child);\n  return child;\n}\n\nfunction insert(node, key) {\n  if (node === 0) {\n    const id = ++used;\n    keys[id] = key;\n    priorities[id] = (Math.random() * 0x100000000) >>> 0;\n    counts[id] = 1;\n    sizes[id] = 1;\n    return id;\n  }\n\n  if (key === keys[node]) {\n    counts[node]++;\n  } else if (key < keys[node]) {\n    left[node] = insert(left[node], key);\n    if (priorities[left[node]] < priorities[node]) {\n      node = rotateRight(node);\n    }\n  } else {\n    right[node] = insert(right[node], key);\n    if (priorities[right[node]] < priorities[node]) {\n      node = rotateLeft(node);\n    }\n  }\n\n  update(node);\n  return node;\n}\n\nfunction countAtMost(key) {\n  let node = root;\n  let result = 0;\n\n  while (node !== 0) {\n    if (key < keys[node]) {\n      node = left[node];\n    } else {\n      result += sizes[left[node]] + counts[node];\n      node = right[node];\n    }\n  }\n\n  return result;\n}\n\nconst output = [];\nlet previousPenalty = 0;\nlet pos = 1;\n\nfor (let i = 0; i < n; i++) {\n  const x = input[pos++] + previousPenalty;\n  const y = input[pos++] + previousPenalty;\n  const distanceSquared = x * x + y * y;\n\n  const penalty = countAtMost(distanceSquared);\n  output.push(String(penalty));\n\n  root = insert(root, distanceSquared);\n  previousPenalty = penalty;\n}\n\nprocess.stdout.write(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nif (input.length === 0) process.exit(0);\n\nconst n = input[0];\nconst keys = new Float64Array(n + 1);\nconst priorities = new Uint32Array(n + 1);\nconst left = new Int32Array(n + 1);\nconst right = new Int32Array(n + 1);\nconst counts = new Int32Array(n + 1);\nconst sizes = new Int32Array(n + 1);\n\nlet used = 0;\nlet root = 0;\n\nfunction update(node) {\n  sizes[node] = sizes[left[node]] + sizes[right[node]] + counts[node];\n}\n\nfunction rotateRight(node) {\n  const child = left[node];\n  left[node] = right[child];\n  right[child] = node;\n  update(node);\n  update(child);\n  return child;\n}\n\nfunction rotateLeft(node) {\n  const child = right[node];\n  right[node] = left[child];\n  left[child] = node;\n  update(node);\n  update(child);\n  return child;\n}\n\nfunction insert(node, key) {\n  if (node === 0) {\n    const id = ++used;\n    keys[id] = key;\n    priorities[id] = (Math.random() * 0x100000000) >>> 0;\n    counts[id] = 1;\n    sizes[id] = 1;\n    return id;\n  }\n\n  if (key === keys[node]) {\n    counts[node]++;\n  } else if (key < keys[node]) {\n    left[node] = insert(left[node], key);\n    if (priorities[left[node]] < priorities[node]) {\n      node = rotateRight(node);\n    }\n  } else {\n    right[node] = insert(right[node], key);\n    if (priorities[right[node]] < priorities[node]) {\n      node = rotateLeft(node);\n    }\n  }\n\n  update(node);\n  return node;\n}\n\nfunction countAtMost(key) {\n  let node = root;\n  let result = 0;\n\n  while (node !== 0) {\n    if (key < keys[node]) {\n      node = left[node];\n    } else {\n      result += sizes[left[node]] + counts[node];\n      node = right[node];\n    }\n  }\n\n  return result;\n}\n\nconst output = [];\nlet previousPenalty = 0;\nlet pos = 1;\n\nfor (let i = 0; i < n; i++) {\n  const x = input[pos++] + previousPenalty;\n  const y = input[pos++] + previousPenalty;\n  const distanceSquared = x * x + y * y;\n\n  const penalty = countAtMost(distanceSquared);\n  output.push(String(penalty));\n\n  root = insert(root, distanceSquared);\n  previousPenalty = penalty;\n}\n\nprocess.stdout.write(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17111660000227857,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

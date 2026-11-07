@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T10:02:52.228375+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 896,
+            "output_tokens": 1022,
+            "total_tokens": 1918
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.000511,
+            "total_cost": 0.000601
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet index = 0;\nconst n = input[index++];\nconst dice = [];\n\nfor (let i = 0; i < n; i++) {\n  const faces = input.slice(index, index + 6);\n  index += 6;\n\n  const opposite = Array(7);\n  opposite[faces[0]] = faces[5];\n  opposite[faces[5]] = faces[0];\n  opposite[faces[1]] = faces[3];\n  opposite[faces[3]] = faces[1];\n  opposite[faces[2]] = faces[4];\n  opposite[faces[4]] = faces[2];\n\n  dice.push({ faces, opposite });\n}\n\nlet answer = 0;\n\nfor (let start = 1; start <= 6; start++) {\n  let bottom = start;\n  let sum = 0;\n\n  for (const die of dice) {\n    const top = die.opposite[bottom];\n    let sideMax = 0;\n\n    for (const value of die.faces) {\n      if (value !== bottom && value !== top) {\n        sideMax = Math.max(sideMax, value);\n      }\n    }\n\n    sum += sideMax;\n    bottom = top;\n  }\n\n  answer = Math.max(answer, sum);\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet index = 0;\nconst n = input[index++];\nconst dice = [];\n\nfor (let i = 0; i < n; i++) {\n  const faces = input.slice(index, index + 6);\n  index += 6;\n\n  const opposite = Array(7);\n  opposite[faces[0]] = faces[5];\n  opposite[faces[5]] = faces[0];\n  opposite[faces[1]] = faces[3];\n  opposite[faces[3]] = faces[1];\n  opposite[faces[2]] = faces[4];\n  opposite[faces[4]] = faces[2];\n\n  dice.push({ faces, opposite });\n}\n\nlet answer = 0;\n\nfor (let start = 1; start <= 6; start++) {\n  let bottom = start;\n  let sum = 0;\n\n  for (const die of dice) {\n    const top = die.opposite[bottom];\n    let sideMax = 0;\n\n    for (const value of die.faces) {\n      if (value !== bottom && value !== top) {\n        sideMax = Math.max(sideMax, value);\n      }\n    }\n\n    sum += sideMax;\n    bottom = top;\n  }\n\n  answer = Math.max(answer, sum);\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.052503400002024136,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T21:55:48.820935+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 843,
+            "output_tokens": 1994,
+            "total_tokens": 2837
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.000997,
+            "total_cost": 0.001015
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        in.nextToken();\n        int n = (int) in.nval;\n        in.nextToken();\n        int m = (int) in.nval;\n\n        int[] adj = new int[n];\n        for (int i = 0; i < m; i++) {\n            in.nextToken();\n            int x = (int) in.nval - 1;\n            in.nextToken();\n            int y = (int) in.nval - 1;\n            adj[x] |= 1 << y;\n            adj[y] |= 1 << x;\n        }\n\n        int full = 1 << n;\n        boolean[] ok = new boolean[full];\n        ok[0] = true;\n        long count = 1; // conjunto vazio (usado na DP, removido ao final)\n\n        // mask e independente <=> remover o bit mais baixo ainda e independente,\n        // e o vertice correspondente nao tem vizinhos dentro do mask\n        for (int mask = 1; mask < full; mask++) {\n            int v = Integer.numberOfTrailingZeros(mask);\n            int rest = mask & (mask - 1);\n            if (ok[rest] && (adj[v] & mask) == 0) {\n                ok[mask] = true;\n                count++;\n            }\n        }\n\n        System.out.println(count - 1);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        in.nextToken();\n        int n = (int) in.nval;\n        in.nextToken();\n        int m = (int) in.nval;\n\n        int[] adj = new int[n];\n        for (int i = 0; i < m; i++) {\n            in.nextToken();\n            int x = (int) in.nval - 1;\n            in.nextToken();\n            int y = (int) in.nval - 1;\n            adj[x] |= 1 << y;\n            adj[y] |= 1 << x;\n        }\n\n        int full = 1 << n;\n        boolean[] ok = new boolean[full];\n        ok[0] = true;\n        long count = 1; // conjunto vazio (usado na DP, removido ao final)\n\n        // mask e independente <=> remover o bit mais baixo ainda e independente,\n        // e o vertice correspondente nao tem vizinhos dentro do mask\n        for (int mask = 1; mask < full; mask++) {\n            int v = Integer.numberOfTrailingZeros(mask);\n            int rest = mask & (mask - 1);\n            if (ok[rest] && (adj[v] & mask) == 0) {\n                ok[mask] = true;\n                count++;\n            }\n        }\n\n        System.out.println(count - 1);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10968440002761781,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

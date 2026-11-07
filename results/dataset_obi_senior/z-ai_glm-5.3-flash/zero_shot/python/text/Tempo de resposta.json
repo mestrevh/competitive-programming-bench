@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T09:33:26.271393+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 967,
+            "output_tokens": 11594,
+            "total_tokens": 12561
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.005797,
+            "total_cost": 0.005818
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    idx = 1\n    tempo = 0      # instante (carimbo de tempo) do último evento processado\n    delta = 1      # intervalo a aplicar ao próximo evento (sobrescrito por T)\n    pending = {}   # amigo -> instante em que a mensagem ainda nao respondida chegou\n    total = {}     # amigo -> tempo de resposta acumulado\n\n    for _ in range(n):\n        typ = data[idx]\n        x = int(data[idx + 1])\n        idx += 2\n        if typ == 'T':\n            # X segundos entre o evento anterior e o posterior a este registro\n            delta = x\n        else:\n            # ocorre um evento (R ou E)\n            tempo += delta\n            delta = 1  # padrao: 1 segundo entre eventos consecutivos\n            if typ == 'R':\n                pending[x] = tempo\n                total.setdefault(x, 0)\n            else:  # 'E'\n                if pending.get(x) is not None:\n                    total[x] += tempo - pending[x]\n                    pending[x] = None\n\n    out = []\n    for f in sorted(total):\n        if pending.get(f) is not None:\n            out.append(\"%d -1\" % f)\n        else:\n            out.append(\"%d %d\" % (f, total[f]))\n    if out:\n        sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    n = int(data[0])\n    idx = 1\n    tempo = 0      # instante (carimbo de tempo) do último evento processado\n    delta = 1      # intervalo a aplicar ao próximo evento (sobrescrito por T)\n    pending = {}   # amigo -> instante em que a mensagem ainda nao respondida chegou\n    total = {}     # amigo -> tempo de resposta acumulado\n\n    for _ in range(n):\n        typ = data[idx]\n        x = int(data[idx + 1])\n        idx += 2\n        if typ == 'T':\n            # X segundos entre o evento anterior e o posterior a este registro\n            delta = x\n        else:\n            # ocorre um evento (R ou E)\n            tempo += delta\n            delta = 1  # padrao: 1 segundo entre eventos consecutivos\n            if typ == 'R':\n                pending[x] = tempo\n                total.setdefault(x, 0)\n            else:  # 'E'\n                if pending.get(x) is not None:\n                    total[x] += tempo - pending[x]\n                    pending[x] = None\n\n    out = []\n    for f in sorted(total):\n        if pending.get(f) is not None:\n            out.append(\"%d -1\" % f)\n        else:\n            out.append(\"%d %d\" % (f, total[f]))\n    if out:\n        sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0665341999992961,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:02:13.541822+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 670,
+            "output_tokens": 2220,
+            "total_tokens": 2890
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.00111,
+            "total_cost": 0.001124
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    if(!(cin >> n)) return 0;\n\n    vector<long long> h(n);\n    for(auto &x : h) cin >> x;\n\n    // máximo prefixo (inclusivo) e máximo sufixo (inclusivo)\n    vector<long long> pm(n), sm(n);\n    pm[0] = h[0];\n    for(int i = 1; i < n; i++) pm[i] = max(pm[i-1], h[i]);\n    sm[n-1] = h[n-1];\n    for(int i = n-2; i >= 0; i--) sm[i] = max(sm[i+1], h[i]);\n\n    long long cnt = 0;\n    for(int i = 0; i < n; i++){\n        // nível de água na seção i após saturar\n        long long lvl = min(pm[i], sm[i]);\n        if(lvl - h[i] >= 1) cnt++;  // pelo menos 1m de profundidade\n    }\n\n    cout << cnt << \"\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    if(!(cin >> n)) return 0;\n\n    vector<long long> h(n);\n    for(auto &x : h) cin >> x;\n\n    // máximo prefixo (inclusivo) e máximo sufixo (inclusivo)\n    vector<long long> pm(n), sm(n);\n    pm[0] = h[0];\n    for(int i = 1; i < n; i++) pm[i] = max(pm[i-1], h[i]);\n    sm[n-1] = h[n-1];\n    for(int i = n-2; i >= 0; i--) sm[i] = max(sm[i+1], h[i]);\n\n    long long cnt = 0;\n    for(int i = 0; i < n; i++){\n        // nível de água na seção i após saturar\n        long long lvl = min(pm[i], sm[i]);\n        if(lvl - h[i] >= 1) cnt++;  // pelo menos 1m de profundidade\n    }\n\n    cout << cnt << \"\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16711230000510113,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

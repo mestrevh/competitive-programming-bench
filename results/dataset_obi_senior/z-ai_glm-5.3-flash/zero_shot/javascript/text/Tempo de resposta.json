@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:11:01.516789+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 967,
+            "output_tokens": 4616,
+            "total_tokens": 5583
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.002308,
+            "total_cost": 0.002329
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(Boolean);\n\nlet p = 0;\nconst n = parseInt(tokens[p++], 10);\n\nconst totals = new Map();   // amigo -> soma dos tempos de resposta\nconst pending = new Map();  // amigo -> timestamp do R pendente (sem resposta)\n\nlet t = 0;            // relógio (offset irrelevante, só diferenças importam)\nlet nextDelta = null; // delta definido por registro T entre dois eventos\n\nfor (let i = 0; i < n; i++) {\n  const type = tokens[p++];\n  const x = parseInt(tokens[p++], 10);\n\n  if (type === 'T') {\n    // X segundos entre o evento anterior e o posterior (substitui o padrão de 1s)\n    nextDelta = (nextDelta === null ? 0 : nextDelta) + x;\n  } else {\n    // ocorre um evento: avança o relógio\n    t += (nextDelta === null ? 1 : nextDelta);\n    nextDelta = null;\n\n    if (type === 'R') {\n      pending.set(x, t);\n      if (!totals.has(x)) totals.set(x, 0);\n    } else { // 'E': responde à mensagem pendente desse amigo (a única pendente)\n      if (pending.has(x)) {\n        totals.set(x, totals.get(x) + (t - pending.get(x)));\n        pending.delete(x);\n      }\n    }\n  }\n}\n\nconst friends = Array.from(totals.keys()).sort((a, b) => a - b);\nconst out = friends.map(f => `${f} ${pending.has(f) ? -1 : totals.get(f)}`);\nprocess.stdout.write(out.join('\\n') + (out.length ? '\\n' : ''));\n```",
+        "extracted_code": "const fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(Boolean);\n\nlet p = 0;\nconst n = parseInt(tokens[p++], 10);\n\nconst totals = new Map();   // amigo -> soma dos tempos de resposta\nconst pending = new Map();  // amigo -> timestamp do R pendente (sem resposta)\n\nlet t = 0;            // relógio (offset irrelevante, só diferenças importam)\nlet nextDelta = null; // delta definido por registro T entre dois eventos\n\nfor (let i = 0; i < n; i++) {\n  const type = tokens[p++];\n  const x = parseInt(tokens[p++], 10);\n\n  if (type === 'T') {\n    // X segundos entre o evento anterior e o posterior (substitui o padrão de 1s)\n    nextDelta = (nextDelta === null ? 0 : nextDelta) + x;\n  } else {\n    // ocorre um evento: avança o relógio\n    t += (nextDelta === null ? 1 : nextDelta);\n    nextDelta = null;\n\n    if (type === 'R') {\n      pending.set(x, t);\n      if (!totals.has(x)) totals.set(x, 0);\n    } else { // 'E': responde à mensagem pendente desse amigo (a única pendente)\n      if (pending.has(x)) {\n        totals.set(x, totals.get(x) + (t - pending.get(x)));\n        pending.delete(x);\n      }\n    }\n  }\n}\n\nconst friends = Array.from(totals.keys()).sort((a, b) => a - b);\nconst out = friends.map(f => `${f} ${pending.has(f) ? -1 : totals.get(f)}`);\nprocess.stdout.write(out.join('\\n') + (out.length ? '\\n' : ''));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05659630004083738,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

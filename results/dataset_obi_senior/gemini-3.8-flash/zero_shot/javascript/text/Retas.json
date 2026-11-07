@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:05:52.757141+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1129,
+            "output_tokens": 1012,
+            "total_tokens": 4674
+        },
+        "cost_usd": {
+            "input_cost": 0.000847,
+            "output_cost": 0.003795,
+            "total_cost": 0.004642
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readNextString() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        const start = offset;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            offset++;\n        }\n        return buffer.toString('utf8', start, offset);\n    }\n\n    const nStr = readNextString();\n    if (!nStr) return;\n    const n = parseInt(nStr, 10);\n    const x1 = BigInt(readNextString());\n    const x2 = BigInt(readNextString());\n\n    const points = new Array(n);\n    const vList = new Array(n);\n\n    for (let i = 0; i < n; i++) {\n        const a = BigInt(readNextString());\n        const b = BigInt(readNextString());\n        const u = a * x1 + b;\n        const v = a * x2 + b;\n        points[i] = { u, v };\n        vList[i] = v;\n    }\n\n    // Coordenadas de v para compressão\n    vList.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));\n    let uniqueVCount = 0;\n    for (let i = 0; i < n; i++) {\n        if (i === 0 || vList[i] !== vList[i - 1]) {\n            vList[uniqueVCount++] = vList[i];\n        }\n    }\n    vList.length = uniqueVCount;\n\n    function getVIndex(val) {\n        let low = 0, high = uniqueVCount - 1;\n        while (low <= high) {\n            const mid = (low + high) >> 1;\n            if (vList[mid] === val) return mid + 1; // 1-based index\n            if (vList[mid] < val) low = mid + 1;\n            else high = mid - 1;\n        }\n        return low + 1;\n    }\n\n    for (let i = 0; i < n; i++) {\n        points[i].vRank = getVIndex(points[i].v);\n    }\n\n    // Ordenar points por u crescente\n    points.sort((p1, p2) => (p1.u < p2.u ? -1 : p1.u > p2.u ? 1 : 0));\n\n    // Fenwick Tree (Binary Indexed Tree)\n    const bit = new Int32Array(uniqueVCount + 1);\n\n    function add(idx, val) {\n        for (; idx <= uniqueVCount; idx += idx & -idx) {\n            bit[idx] += val;\n        }\n    }\n\n    function query(idx) {\n        let sum = 0;\n        for (; idx > 0; idx -= idx & -idx) {\n            sum += bit[idx];\n        }\n        return sum;\n    }\n\n    let concordantPairs = 0n;\n\n    let i = 0;\n    while (i < n) {\n        let j = i;\n        while (j < n && points[j].u === points[i].u) {\n            j++;\n        }\n\n        // Consultar para cada ponto no grupo de mesmo u\n        for (let k = i; k < j; k++) {\n            // queremos pontos anteriores com v < points[k].v, logo vRank < points[k].vRank\n            concordantPairs += BigInt(query(points[k].vRank - 1));\n        }\n\n        // Inserir os pontos do grupo na Fenwick Tree\n        for (let k = i; k < j; k++) {\n            add(points[k].vRank, 1);\n        }\n\n        i = j;\n    }\n\n    const totalPairs = (BigInt(n) * BigInt(n - 1)) / 2n;\n    const ans = totalPairs - concordantPairs;\n\n    console.log(ans.toString());\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readNextString() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        const start = offset;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            offset++;\n        }\n        return buffer.toString('utf8', start, offset);\n    }\n\n    const nStr = readNextString();\n    if (!nStr) return;\n    const n = parseInt(nStr, 10);\n    const x1 = BigInt(readNextString());\n    const x2 = BigInt(readNextString());\n\n    const points = new Array(n);\n    const vList = new Array(n);\n\n    for (let i = 0; i < n; i++) {\n        const a = BigInt(readNextString());\n        const b = BigInt(readNextString());\n        const u = a * x1 + b;\n        const v = a * x2 + b;\n        points[i] = { u, v };\n        vList[i] = v;\n    }\n\n    // Coordenadas de v para compressão\n    vList.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));\n    let uniqueVCount = 0;\n    for (let i = 0; i < n; i++) {\n        if (i === 0 || vList[i] !== vList[i - 1]) {\n            vList[uniqueVCount++] = vList[i];\n        }\n    }\n    vList.length = uniqueVCount;\n\n    function getVIndex(val) {\n        let low = 0, high = uniqueVCount - 1;\n        while (low <= high) {\n            const mid = (low + high) >> 1;\n            if (vList[mid] === val) return mid + 1; // 1-based index\n            if (vList[mid] < val) low = mid + 1;\n            else high = mid - 1;\n        }\n        return low + 1;\n    }\n\n    for (let i = 0; i < n; i++) {\n        points[i].vRank = getVIndex(points[i].v);\n    }\n\n    // Ordenar points por u crescente\n    points.sort((p1, p2) => (p1.u < p2.u ? -1 : p1.u > p2.u ? 1 : 0));\n\n    // Fenwick Tree (Binary Indexed Tree)\n    const bit = new Int32Array(uniqueVCount + 1);\n\n    function add(idx, val) {\n        for (; idx <= uniqueVCount; idx += idx & -idx) {\n            bit[idx] += val;\n        }\n    }\n\n    function query(idx) {\n        let sum = 0;\n        for (; idx > 0; idx -= idx & -idx) {\n            sum += bit[idx];\n        }\n        return sum;\n    }\n\n    let concordantPairs = 0n;\n\n    let i = 0;\n    while (i < n) {\n        let j = i;\n        while (j < n && points[j].u === points[i].u) {\n            j++;\n        }\n\n        // Consultar para cada ponto no grupo de mesmo u\n        for (let k = i; k < j; k++) {\n            // queremos pontos anteriores com v < points[k].v, logo vRank < points[k].vRank\n            concordantPairs += BigInt(query(points[k].vRank - 1));\n        }\n\n        // Inserir os pontos do grupo na Fenwick Tree\n        for (let k = i; k < j; k++) {\n            add(points[k].vRank, 1);\n        }\n\n        i = j;\n    }\n\n    const totalPairs = (BigInt(n) * BigInt(n - 1)) / 2n;\n    const ans = totalPairs - concordantPairs;\n\n    console.log(ans.toString());\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22250849998090416,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

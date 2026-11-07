@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:56:03.784615+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1117,
+            "output_tokens": 1697,
+            "total_tokens": 2814
+        },
+        "cost_usd": {
+            "input_cost": 0.000112,
+            "output_cost": 0.000848,
+            "total_cost": 0.00096
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    p = data[0]\n    out = []\n    idx = 1\n\n    for _ in range(p):\n        L, A, B = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n\n        n = B - A + 1\n        lo, hi = 0, n\n\n        while lo < hi:\n            mid = (lo + hi + 1) // 2\n            total = mid * (2 * A + mid - 1) // 2\n            if total < L:\n                lo = mid\n            else:\n                hi = mid - 1\n\n        out.append(str(min(n, lo + 1)))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    p = data[0]\n    out = []\n    idx = 1\n\n    for _ in range(p):\n        L, A, B = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n\n        n = B - A + 1\n        lo, hi = 0, n\n\n        while lo < hi:\n            mid = (lo + hi + 1) // 2\n            total = mid * (2 * A + mid - 1) // 2\n            if total < L:\n                lo = mid\n            else:\n                hi = mid - 1\n\n        out.append(str(min(n, lo + 1)))\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.30803739999828395,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

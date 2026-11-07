@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T21:49:10.102670+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 731,
+            "output_tokens": 5173,
+            "total_tokens": 5904
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.002586,
+            "total_cost": 0.002602
+        },
+        "raw_response": "```java\nimport java.util.*;\nimport java.io.*;\n\npublic class Main {\n\n    private static boolean contains(long[] a, long key) {\n        int lo = 0, hi = a.length - 1;\n        while (lo <= hi) {\n            int mid = (lo + hi) >>> 1;\n            if (a[mid] == key) return true;\n            if (a[mid] < key) lo = mid + 1;\n            else hi = mid - 1;\n        }\n        return false;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sb.append(line).append(' ');\n        }\n        StringTokenizer tok = new StringTokenizer(sb.toString());\n\n        int n = Integer.parseInt(tok.nextToken());\n        long[] pre = new long[n];\n        long total = 0;\n        for (int i = 0; i < n; i++) {\n            total += Long.parseLong(tok.nextToken());\n            pre[i] = total;\n        }\n\n        // Um retângulo inscrito num círculo tem diagonais que são diâmetros.\n        // Logo, precisamos de pelo menos DOIS pares de árvores diametralmente\n        // opostas (qualquer dois diâmetros distintos formam um retângulo).\n\n        // Se a circunferência total for ímpar, não existe ponto oposto.\n        if ((total & 1L) != 0) {\n            System.out.println(\"N\");\n            return;\n        }\n\n        long half = total / 2;\n        Arrays.sort(pre); // somas acumuladas (já ordenadas, por segurança)\n\n        int count = 0; // conta extremidades de pares opostos\n        for (int i = 0; i < n; i++) {\n            long t = pre[i] + half;\n            if (t >= total) t -= total;\n            if (contains(pre, t)) count++;\n        }\n\n        // Cada par diametral é contado duas vezes; precisamos de >= 2 pares.\n        System.out.println(count >= 4 ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n\n    private static boolean contains(long[] a, long key) {\n        int lo = 0, hi = a.length - 1;\n        while (lo <= hi) {\n            int mid = (lo + hi) >>> 1;\n            if (a[mid] == key) return true;\n            if (a[mid] < key) lo = mid + 1;\n            else hi = mid - 1;\n        }\n        return false;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sb.append(line).append(' ');\n        }\n        StringTokenizer tok = new StringTokenizer(sb.toString());\n\n        int n = Integer.parseInt(tok.nextToken());\n        long[] pre = new long[n];\n        long total = 0;\n        for (int i = 0; i < n; i++) {\n            total += Long.parseLong(tok.nextToken());\n            pre[i] = total;\n        }\n\n        // Um retângulo inscrito num círculo tem diagonais que são diâmetros.\n        // Logo, precisamos de pelo menos DOIS pares de árvores diametralmente\n        // opostas (qualquer dois diâmetros distintos formam um retângulo).\n\n        // Se a circunferência total for ímpar, não existe ponto oposto.\n        if ((total & 1L) != 0) {\n            System.out.println(\"N\");\n            return;\n        }\n\n        long half = total / 2;\n        Arrays.sort(pre); // somas acumuladas (já ordenadas, por segurança)\n\n        int count = 0; // conta extremidades de pares opostos\n        for (int i = 0; i < n; i++) {\n            long t = pre[i] + half;\n            if (t >= total) t -= total;\n            if (contains(pre, t)) count++;\n        }\n\n        // Cada par diametral é contado duas vezes; precisamos de >= 2 pares.\n        System.out.println(count >= 4 ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.16427800001110882,
+            "counts": {
+                "AC": 32,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

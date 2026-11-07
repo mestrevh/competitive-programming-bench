@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:45:30.393142+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 758,
+            "output_tokens": 14002,
+            "total_tokens": 14760
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.033605,
+            "total_cost": 0.033607
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst adj = Array.from({ length: n + 1 }, () => []);\n\nlet ptr = 1;\nfor (let i = 0; i < n - 1; i++) {\n  const u = data[ptr++];\n  const v = data[ptr++];\n  adj[u].push(v);\n  adj[v].push(u);\n}\n\nfunction farthest(start, keepParent) {\n  const dist = new Int32Array(n + 1);\n  dist.fill(-1);\n  const parent = keepParent ? new Int32Array(n + 1) : null;\n  const queue = new Int32Array(n + 1);\n\n  let head = 0;\n  let tail = 0;\n  let far = start;\n  let maxDist = 0;\n\n  dist[start] = 0;\n  queue[tail++] = start;\n\n  while (head < tail) {\n    const u = queue[head++];\n    const du = dist[u];\n\n    if (du > maxDist) {\n      maxDist = du;\n      far = u;\n    }\n\n    const list = adj[u];\n    for (let i = 0; i < list.length; i++) {\n      const v = list[i];\n      if (dist[v] === -1) {\n        dist[v] = du + 1;\n        if (parent) parent[v] = u;\n        queue[tail++] = v;\n      }\n    }\n  }\n\n  return { far, maxDist, parent };\n}\n\nconst first = farthest(1, false);\nconst A = first.far;\nconst second = farthest(A, true);\nconst B = second.far;\nconst diameter = second.maxDist;\nconst parent = second.parent;\n\nconst path = [];\nlet cur = B;\n\nwhile (cur !== 0) {\n  path.push(cur);\n  cur = parent[cur];\n}\n\npath.reverse();\n\nfunction countAtDistance(root, forbidden, target) {\n  if (target < 0) return 0;\n\n  let count = 0;\n  const stackNode = [root];\n  const stackParent = [forbidden];\n  const stackDepth = [0];\n\n  while (stackNode.length > 0) {\n    const u = stackNode.pop();\n    const p = stackParent.pop();\n    const depth = stackDepth.pop();\n\n    if (depth === target) count++;\n\n    if (depth < target) {\n      const list = adj[u];\n      for (let i = 0; i < list.length; i++) {\n        const v = list[i];\n        if (v !== p) {\n          stackNode.push(v);\n          stackParent.push(u);\n          stackDepth.push(depth + 1);\n        }\n      }\n    }\n  }\n\n  return count;\n}\n\nlet answerCount;\n\nif (diameter % 2 === 0) {\n  const radius = diameter / 2;\n  const center = path[radius];\n\n  let total = 0;\n  let sumSquares = 0;\n\n  const list = adj[center];\n  for (let i = 0; i < list.length; i++) {\n    const branchCount = countAtDistance(list[i], center, radius - 1);\n    total += branchCount;\n    sumSquares += branchCount * branchCount;\n  }\n\n  answerCount = (total * total - sumSquares) / 2;\n} else {\n  const radius = Math.floor(diameter / 2);\n  const c1 = path[radius];\n  const c2 = path[radius + 1];\n\n  const count1 = countAtDistance(c1, c2, radius);\n  const count2 = countAtDistance(c2, c1, radius);\n\n  answerCount = count1 * count2;\n}\n\nconsole.log(diameter + 1);\nconsole.log(answerCount);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst adj = Array.from({ length: n + 1 }, () => []);\n\nlet ptr = 1;\nfor (let i = 0; i < n - 1; i++) {\n  const u = data[ptr++];\n  const v = data[ptr++];\n  adj[u].push(v);\n  adj[v].push(u);\n}\n\nfunction farthest(start, keepParent) {\n  const dist = new Int32Array(n + 1);\n  dist.fill(-1);\n  const parent = keepParent ? new Int32Array(n + 1) : null;\n  const queue = new Int32Array(n + 1);\n\n  let head = 0;\n  let tail = 0;\n  let far = start;\n  let maxDist = 0;\n\n  dist[start] = 0;\n  queue[tail++] = start;\n\n  while (head < tail) {\n    const u = queue[head++];\n    const du = dist[u];\n\n    if (du > maxDist) {\n      maxDist = du;\n      far = u;\n    }\n\n    const list = adj[u];\n    for (let i = 0; i < list.length; i++) {\n      const v = list[i];\n      if (dist[v] === -1) {\n        dist[v] = du + 1;\n        if (parent) parent[v] = u;\n        queue[tail++] = v;\n      }\n    }\n  }\n\n  return { far, maxDist, parent };\n}\n\nconst first = farthest(1, false);\nconst A = first.far;\nconst second = farthest(A, true);\nconst B = second.far;\nconst diameter = second.maxDist;\nconst parent = second.parent;\n\nconst path = [];\nlet cur = B;\n\nwhile (cur !== 0) {\n  path.push(cur);\n  cur = parent[cur];\n}\n\npath.reverse();\n\nfunction countAtDistance(root, forbidden, target) {\n  if (target < 0) return 0;\n\n  let count = 0;\n  const stackNode = [root];\n  const stackParent = [forbidden];\n  const stackDepth = [0];\n\n  while (stackNode.length > 0) {\n    const u = stackNode.pop();\n    const p = stackParent.pop();\n    const depth = stackDepth.pop();\n\n    if (depth === target) count++;\n\n    if (depth < target) {\n      const list = adj[u];\n      for (let i = 0; i < list.length; i++) {\n        const v = list[i];\n        if (v !== p) {\n          stackNode.push(v);\n          stackParent.push(u);\n          stackDepth.push(depth + 1);\n        }\n      }\n    }\n  }\n\n  return count;\n}\n\nlet answerCount;\n\nif (diameter % 2 === 0) {\n  const radius = diameter / 2;\n  const center = path[radius];\n\n  let total = 0;\n  let sumSquares = 0;\n\n  const list = adj[center];\n  for (let i = 0; i < list.length; i++) {\n    const branchCount = countAtDistance(list[i], center, radius - 1);\n    total += branchCount;\n    sumSquares += branchCount * branchCount;\n  }\n\n  answerCount = (total * total - sumSquares) / 2;\n} else {\n  const radius = Math.floor(diameter / 2);\n  const c1 = path[radius];\n  const c2 = path[radius + 1];\n\n  const count1 = countAtDistance(c1, c2, radius);\n  const count2 = countAtDistance(c2, c1, radius);\n\n  answerCount = count1 * count2;\n}\n\nconsole.log(diameter + 1);\nconsole.log(answerCount);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11723009997513145,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

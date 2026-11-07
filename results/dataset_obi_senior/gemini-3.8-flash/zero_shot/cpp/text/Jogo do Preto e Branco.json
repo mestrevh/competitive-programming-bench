@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:45:18.716554+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 839,
+            "total_tokens": 2950
+        },
+        "cost_usd": {
+            "input_cost": 0.000568,
+            "output_cost": 0.003146,
+            "total_cost": 0.003714
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint L, C, P;\nbool is_black[7][7];\nbool is_eligible[7][7];\nint id[7][7];\n\nvector<vector<int>> adj;\nvector<int> match;\nvector<bool> visited;\n\nint dr[] = {-1, 1, 0, 0};\nint dc[] = {0, 0, -1, 1};\n\nbool dfs(int u) {\n    for (int v : adj[u]) {\n        if (visited[v]) continue;\n        visited[v] = true;\n        if (match[v] < 0 || dfs(match[v])) {\n            match[v] = u;\n            return true;\n        }\n    }\n    return false;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    if (!(cin >> L >> C)) return 0;\n    cin >> P;\n\n    for (int i = 0; i < P; ++i) {\n        int r, c;\n        cin >> r >> c;\n        is_black[r][c] = true;\n    }\n\n    int total_eligible = 0;\n    for (int r = 1; r <= L; ++r) {\n        for (int c = 1; c <= C; ++c) {\n            if (is_black[r][c]) continue;\n            bool adj_black = false;\n            for (int d = 0; d < 4; ++d) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && is_black[nr][nc]) {\n                    adj_black = true;\n                    break;\n                }\n            }\n            if (adj_black) {\n                is_eligible[r][c] = true;\n                id[r][c] = total_eligible++;\n            }\n        }\n    }\n\n    adj.resize(total_eligible);\n\n    for (int r = 1; r <= L; ++r) {\n        for (int c = 1; c <= C; ++c) {\n            if (!is_eligible[r][c]) continue;\n            if ((r + c) % 2 == 0) {\n                for (int d = 0; d < 4; ++d) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n                    if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && is_eligible[nr][nc]) {\n                        adj[id[r][c]].push_back(id[nr][nc]);\n                    }\n                }\n            }\n        }\n    }\n\n    match.assign(total_eligible, -1);\n    int max_matching = 0;\n\n    for (int r = 1; r <= L; ++r) {\n        for (int c = 1; c <= C; ++c) {\n            if (is_eligible[r][c] && (r + c) % 2 == 0) {\n                visited.assign(total_eligible, false);\n                if (dfs(id[r][c])) {\n                    max_matching++;\n                }\n            }\n        }\n    }\n\n    int ans = total_eligible - max_matching;\n    cout << ans << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint L, C, P;\nbool is_black[7][7];\nbool is_eligible[7][7];\nint id[7][7];\n\nvector<vector<int>> adj;\nvector<int> match;\nvector<bool> visited;\n\nint dr[] = {-1, 1, 0, 0};\nint dc[] = {0, 0, -1, 1};\n\nbool dfs(int u) {\n    for (int v : adj[u]) {\n        if (visited[v]) continue;\n        visited[v] = true;\n        if (match[v] < 0 || dfs(match[v])) {\n            match[v] = u;\n            return true;\n        }\n    }\n    return false;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    if (!(cin >> L >> C)) return 0;\n    cin >> P;\n\n    for (int i = 0; i < P; ++i) {\n        int r, c;\n        cin >> r >> c;\n        is_black[r][c] = true;\n    }\n\n    int total_eligible = 0;\n    for (int r = 1; r <= L; ++r) {\n        for (int c = 1; c <= C; ++c) {\n            if (is_black[r][c]) continue;\n            bool adj_black = false;\n            for (int d = 0; d < 4; ++d) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && is_black[nr][nc]) {\n                    adj_black = true;\n                    break;\n                }\n            }\n            if (adj_black) {\n                is_eligible[r][c] = true;\n                id[r][c] = total_eligible++;\n            }\n        }\n    }\n\n    adj.resize(total_eligible);\n\n    for (int r = 1; r <= L; ++r) {\n        for (int c = 1; c <= C; ++c) {\n            if (!is_eligible[r][c]) continue;\n            if ((r + c) % 2 == 0) {\n                for (int d = 0; d < 4; ++d) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n                    if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && is_eligible[nr][nc]) {\n                        adj[id[r][c]].push_back(id[nr][nc]);\n                    }\n                }\n            }\n        }\n    }\n\n    match.assign(total_eligible, -1);\n    int max_matching = 0;\n\n    for (int r = 1; r <= L; ++r) {\n        for (int c = 1; c <= C; ++c) {\n            if (is_eligible[r][c] && (r + c) % 2 == 0) {\n                visited.assign(total_eligible, false);\n                if (dfs(id[r][c])) {\n                    max_matching++;\n                }\n            }\n        }\n    }\n\n    int ans = total_eligible - max_matching;\n    cout << ans << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14669039999716915,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

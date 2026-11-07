@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:19:11.710372+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 789,
+            "output_tokens": 1687,
+            "total_tokens": 2476
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000843,
+            "total_cost": 0.000922
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import defaultdict\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\n\nsubstrings = set()\nprefixes = defaultdict(set)\nsuffixes = defaultdict(set)\n\nfor raw in data[1:n + 1]:\n    s = raw.decode()\n\n    invalid = s in substrings\n    if not invalid:\n        for t in range(1, len(s)):\n            if s[:t] in suffixes[t] and s[t:] in prefixes[len(s) - t]:\n                invalid = True\n                break\n\n    if invalid:\n        print(s)\n        break\n\n    for i in range(len(s)):\n        for j in range(i + 1, len(s) + 1):\n            substrings.add(s[i:j])\n\n    for length in range(1, len(s) + 1):\n        prefixes[length].add(s[:length])\n        suffixes[length].add(s[-length:])\nelse:\n    print(\"ok\")\n```",
+        "extracted_code": "import sys\nfrom collections import defaultdict\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\n\nsubstrings = set()\nprefixes = defaultdict(set)\nsuffixes = defaultdict(set)\n\nfor raw in data[1:n + 1]:\n    s = raw.decode()\n\n    invalid = s in substrings\n    if not invalid:\n        for t in range(1, len(s)):\n            if s[:t] in suffixes[t] and s[t:] in prefixes[len(s) - t]:\n                invalid = True\n                break\n\n    if invalid:\n        print(s)\n        break\n\n    for i in range(len(s)):\n        for j in range(i + 1, len(s) + 1):\n            substrings.add(s[i:j])\n\n    for length in range(1, len(s) + 1):\n        prefixes[length].add(s[:length])\n        suffixes[length].add(s[-length:])\nelse:\n    print(\"ok\")",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3737911999996868,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

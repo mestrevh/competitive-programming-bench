@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T06:59:38.684182+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1031,
+            "output_tokens": 938,
+            "total_tokens": 1969
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.000469,
+            "total_cost": 0.000491
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    E = int(data[idx]); idx += 1\n    M = int(data[idx]); idx += 1\n    D = int(data[idx]); idx += 1\n\n    group_of = [0] * (E + 1)\n\n    same_pairs = []\n\n    for _ in range(M):\n        x = int(data[idx]); y = int(data[idx + 1]); idx += 2\n        same_pairs.append((x, y))\n\n    diff_pairs = []\n    for _ in range(D):\n        u = int(data[idx]); v = int(data[idx + 1]); idx += 2\n        diff_pairs.append((u, v))\n\n    ngroups = E // 3\n    for _ in range(ngroups):\n        i = int(data[idx]); j = int(data[idx + 1]); k = int(data[idx + 2]); idx += 3\n        g = idx - 3  # unique id per group\n        group_of[i] = g\n        group_of[j] = g\n        group_of[k] = g\n\n    violations = 0\n    for x, y in same_pairs:\n        if group_of[x] != group_of[y]:\n            violations += 1\n    for u, v in diff_pairs:\n        if group_of[u] == group_of[v]:\n            violations += 1\n\n    print(violations)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    E = int(data[idx]); idx += 1\n    M = int(data[idx]); idx += 1\n    D = int(data[idx]); idx += 1\n\n    group_of = [0] * (E + 1)\n\n    same_pairs = []\n\n    for _ in range(M):\n        x = int(data[idx]); y = int(data[idx + 1]); idx += 2\n        same_pairs.append((x, y))\n\n    diff_pairs = []\n    for _ in range(D):\n        u = int(data[idx]); v = int(data[idx + 1]); idx += 2\n        diff_pairs.append((u, v))\n\n    ngroups = E // 3\n    for _ in range(ngroups):\n        i = int(data[idx]); j = int(data[idx + 1]); k = int(data[idx + 2]); idx += 3\n        g = idx - 3  # unique id per group\n        group_of[i] = g\n        group_of[j] = g\n        group_of[k] = g\n\n    violations = 0\n    for x, y in same_pairs:\n        if group_of[x] != group_of[y]:\n            violations += 1\n    for u, v in diff_pairs:\n        if group_of[u] == group_of[v]:\n            violations += 1\n\n    print(violations)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1943453000021691,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:54:23.132170+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 722,
+            "output_tokens": 969,
+            "total_tokens": 1691
+        },
+        "cost_usd": {
+            "input_cost": 7.2e-05,
+            "output_cost": 0.000485,
+            "total_cost": 0.000557
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\n\nconst L = data[idx++];\nconst C = data[idx++];\nconst P = data[idx++];\n\nconst black = Array.from({ length: L }, () => Array(C).fill(false));\n\nfor (let i = 0; i < P; i++) {\n  const x = data[idx++] - 1;\n  const y = data[idx++] - 1;\n  black[x][y] = true;\n}\n\nconst candidate = Array.from({ length: L }, () => Array(C).fill(false));\nlet count = 0;\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (black[r][c]) continue;\n\n    const adjacentToBlack =\n      (r > 0 && black[r - 1][c]) ||\n      (r + 1 < L && black[r + 1][c]) ||\n      (c > 0 && black[r][c - 1]) ||\n      (c + 1 < C && black[r][c + 1]);\n\n    if (adjacentToBlack) {\n      candidate[r][c] = true;\n      count++;\n    }\n  }\n}\n\nconst matchRight = Array(L * C).fill(-1);\nconst dr = [-1, 1, 0, 0];\nconst dc = [0, 0, -1, 1];\n\nfunction augment(r, c, visited) {\n  for (let d = 0; d < 4; d++) {\n    const nr = r + dr[d];\n    const nc = c + dc[d];\n\n    if (\n      nr < 0 || nr >= L || nc < 0 || nc >= C ||\n      !candidate[nr][nc]\n    ) continue;\n\n    const rightId = nr * C + nc;\n    if (visited[rightId]) continue;\n    visited[rightId] = true;\n\n    if (\n      matchRight[rightId] === -1 ||\n      augment(Math.floor(matchRight[rightId] / C), matchRight[rightId] % C, visited)\n    ) {\n      matchRight[rightId] = r * C + c;\n      return true;\n    }\n  }\n\n  return false;\n}\n\nlet matching = 0;\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (!candidate[r][c] || (r + c) % 2 !== 0) continue;\n    if (augment(r, c, Array(L * C).fill(false))) matching++;\n  }\n}\n\nconsole.log(count - matching);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\n\nconst L = data[idx++];\nconst C = data[idx++];\nconst P = data[idx++];\n\nconst black = Array.from({ length: L }, () => Array(C).fill(false));\n\nfor (let i = 0; i < P; i++) {\n  const x = data[idx++] - 1;\n  const y = data[idx++] - 1;\n  black[x][y] = true;\n}\n\nconst candidate = Array.from({ length: L }, () => Array(C).fill(false));\nlet count = 0;\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (black[r][c]) continue;\n\n    const adjacentToBlack =\n      (r > 0 && black[r - 1][c]) ||\n      (r + 1 < L && black[r + 1][c]) ||\n      (c > 0 && black[r][c - 1]) ||\n      (c + 1 < C && black[r][c + 1]);\n\n    if (adjacentToBlack) {\n      candidate[r][c] = true;\n      count++;\n    }\n  }\n}\n\nconst matchRight = Array(L * C).fill(-1);\nconst dr = [-1, 1, 0, 0];\nconst dc = [0, 0, -1, 1];\n\nfunction augment(r, c, visited) {\n  for (let d = 0; d < 4; d++) {\n    const nr = r + dr[d];\n    const nc = c + dc[d];\n\n    if (\n      nr < 0 || nr >= L || nc < 0 || nc >= C ||\n      !candidate[nr][nc]\n    ) continue;\n\n    const rightId = nr * C + nc;\n    if (visited[rightId]) continue;\n    visited[rightId] = true;\n\n    if (\n      matchRight[rightId] === -1 ||\n      augment(Math.floor(matchRight[rightId] / C), matchRight[rightId] % C, visited)\n    ) {\n      matchRight[rightId] = r * C + c;\n      return true;\n    }\n  }\n\n  return false;\n}\n\nlet matching = 0;\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (!candidate[r][c] || (r + c) % 2 !== 0) continue;\n    if (augment(r, c, Array(L * C).fill(false))) matching++;\n  }\n}\n\nconsole.log(count - matching);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0635889999975916,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

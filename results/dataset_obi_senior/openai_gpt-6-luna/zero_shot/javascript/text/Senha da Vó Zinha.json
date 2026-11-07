@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T10:01:18.558141+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 886,
+            "total_tokens": 1899
+        },
+        "cost_usd": {
+            "input_cost": 0.000101,
+            "output_cost": 0.000443,
+            "total_cost": 0.000544
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst N = Number(input[0]);\nconst M = Number(input[1]);\nconst K = Number(input[2]);\nconst password = input[3];\nconst choices = [];\n\nfor (let i = 0; i < M; i++) {\n  choices.push(input[4 + i].split('').sort());\n}\n\nlet rank = BigInt(input[4 + M]) - 1n;\n\nconst suffix = Array(M + 1).fill(1n);\nfor (let i = M - 1; i >= 0; i--) {\n  suffix[i] = suffix[i + 1] * BigInt(K);\n}\n\nlet maskedIndex = 0;\nconst result = password.split('');\n\nfor (let i = 0; i < N; i++) {\n  if (result[i] === '#') {\n    const blockSize = suffix[maskedIndex + 1];\n    const optionIndex = Number(rank / blockSize);\n    rank %= blockSize;\n    result[i] = choices[maskedIndex][optionIndex];\n    maskedIndex++;\n  }\n}\n\nconsole.log(result.join(''));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst N = Number(input[0]);\nconst M = Number(input[1]);\nconst K = Number(input[2]);\nconst password = input[3];\nconst choices = [];\n\nfor (let i = 0; i < M; i++) {\n  choices.push(input[4 + i].split('').sort());\n}\n\nlet rank = BigInt(input[4 + M]) - 1n;\n\nconst suffix = Array(M + 1).fill(1n);\nfor (let i = M - 1; i >= 0; i--) {\n  suffix[i] = suffix[i + 1] * BigInt(K);\n}\n\nlet maskedIndex = 0;\nconst result = password.split('');\n\nfor (let i = 0; i < N; i++) {\n  if (result[i] === '#') {\n    const blockSize = suffix[maskedIndex + 1];\n    const optionIndex = Number(rank / blockSize);\n    rank %= blockSize;\n    result[i] = choices[maskedIndex][optionIndex];\n    maskedIndex++;\n  }\n}\n\nconsole.log(result.join(''));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05461680000007618,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T06:51:31.337960+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 684,
+            "output_tokens": 12728,
+            "total_tokens": 13412
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.006364,
+            "total_cost": 0.006379
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.read().splitlines()\n    n = int(data[0])\n    passwords = [data[k].strip() for k in range(1, n + 1)]\n\n    # cnt[s] = número de usuários cuja senha é exatamente s\n    cnt = Counter(passwords)\n    keys = cnt.keys()\n    getitem = cnt.__getitem__\n\n    total = 0\n    # Processar cada senha distinta uma única vez\n    for s, m in cnt.items():\n        L = len(s)\n        # Conjunto de todos os substrings contíguos distintos de s (máx 55)\n        subs = {s[i:j] for i in range(L) for j in range(i + 1, L + 1)}\n        # Interseção com as senhas existentes (feita em C, iterando o menor conjunto)\n        # soma = número de usuários B cuja senha é substring de s\n        suma = sum(map(getitem, subs & keys))\n        # Cada um dos m usuários com senha s acessa (suma - 1) contas\n        # (excluindo a própria conta)\n        total += m * (suma - 1)\n\n    print(total)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.read().splitlines()\n    n = int(data[0])\n    passwords = [data[k].strip() for k in range(1, n + 1)]\n\n    # cnt[s] = número de usuários cuja senha é exatamente s\n    cnt = Counter(passwords)\n    keys = cnt.keys()\n    getitem = cnt.__getitem__\n\n    total = 0\n    # Processar cada senha distinta uma única vez\n    for s, m in cnt.items():\n        L = len(s)\n        # Conjunto de todos os substrings contíguos distintos de s (máx 55)\n        subs = {s[i:j] for i in range(L) for j in range(i + 1, L + 1)}\n        # Interseção com as senhas existentes (feita em C, iterando o menor conjunto)\n        # soma = número de usuários B cuja senha é substring de s\n        suma = sum(map(getitem, subs & keys))\n        # Cada um dos m usuários com senha s acessa (suma - 1) contas\n        # (excluindo a própria conta)\n        total += m * (suma - 1)\n\n    print(total)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12053089999972144,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

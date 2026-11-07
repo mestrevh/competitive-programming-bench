@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T10:06:04.718356+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 987,
+            "output_tokens": 7142,
+            "total_tokens": 8129
+        },
+        "cost_usd": {
+            "input_cost": 9.9e-05,
+            "output_cost": 0.003571,
+            "total_cost": 0.00367
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = input[0];\nconst K = input[1];\nconst dolls = input.slice(2, 2 + N).sort((a, b) => a - b);\n\nfunction ceilDiv(a, b) {\n  let q = Math.floor(a / b);\n  if (q * b < a) q++;\n  return q;\n}\n\nlet dpPrev = new Float64Array(N + 1);\ndpPrev.fill(Infinity);\ndpPrev.fill(0, 0, 1);\n\nlet answer = Infinity;\n\nfor (let pairs = 0; pairs < K; pairs++) {\n  const slopes = [];\n  const intercepts = [];\n  const starts = [];\n  let head = 0;\n  let length = 0;\n\n  const dpNext = pairs + 1 < K ? new Float64Array(N + 1) : null;\n  if (dpNext) dpNext.fill(Infinity);\n\n  for (let i = 1; i <= N; i++) {\n    const x = dolls[i - 1];\n\n    // Complete a pair using a previously selected first doll.\n    let candidate = Infinity;\n    if (length > 0) {\n      while (head + 1 < length && starts[head + 1] <= x) head++;\n      candidate = x * x + slopes[head] * x + intercepts[head];\n    }\n\n    if (dpNext) {\n      dpNext[i] = Math.min(dpNext[i - 1], candidate);\n    } else if (i <= N - K) {\n      answer = Math.min(answer, candidate);\n    }\n\n    // Add this doll as the first doll of a pair.\n    const base = dpPrev[i - 1];\n    if (base !== Infinity) {\n      const m = -2 * x;\n      const b = base + x * x;\n\n      while (length > 0) {\n        const last = length - 1;\n\n        if (slopes[last] === m) {\n          if (intercepts[last] <= b) break;\n          length--;\n          if (head >= length) head = Math.max(0, length - 1);\n          continue;\n        }\n\n        const start = ceilDiv(b - intercepts[last], slopes[last] - m);\n        if (start <= starts[last]) {\n          length--;\n          if (head >= length) head = Math.max(0, length - 1);\n        } else {\n          slopes[length] = m;\n          intercepts[length] = b;\n          starts[length] = start;\n          length++;\n          break;\n        }\n      }\n\n      if (length === 0) {\n        slopes[0] = m;\n        intercepts[0] = b;\n        starts[0] = -Infinity;\n        length = 1;\n        head = 0;\n      }\n    }\n  }\n\n  if (dpNext) dpPrev = dpNext;\n}\n\nconsole.log(String(answer));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = input[0];\nconst K = input[1];\nconst dolls = input.slice(2, 2 + N).sort((a, b) => a - b);\n\nfunction ceilDiv(a, b) {\n  let q = Math.floor(a / b);\n  if (q * b < a) q++;\n  return q;\n}\n\nlet dpPrev = new Float64Array(N + 1);\ndpPrev.fill(Infinity);\ndpPrev.fill(0, 0, 1);\n\nlet answer = Infinity;\n\nfor (let pairs = 0; pairs < K; pairs++) {\n  const slopes = [];\n  const intercepts = [];\n  const starts = [];\n  let head = 0;\n  let length = 0;\n\n  const dpNext = pairs + 1 < K ? new Float64Array(N + 1) : null;\n  if (dpNext) dpNext.fill(Infinity);\n\n  for (let i = 1; i <= N; i++) {\n    const x = dolls[i - 1];\n\n    // Complete a pair using a previously selected first doll.\n    let candidate = Infinity;\n    if (length > 0) {\n      while (head + 1 < length && starts[head + 1] <= x) head++;\n      candidate = x * x + slopes[head] * x + intercepts[head];\n    }\n\n    if (dpNext) {\n      dpNext[i] = Math.min(dpNext[i - 1], candidate);\n    } else if (i <= N - K) {\n      answer = Math.min(answer, candidate);\n    }\n\n    // Add this doll as the first doll of a pair.\n    const base = dpPrev[i - 1];\n    if (base !== Infinity) {\n      const m = -2 * x;\n      const b = base + x * x;\n\n      while (length > 0) {\n        const last = length - 1;\n\n        if (slopes[last] === m) {\n          if (intercepts[last] <= b) break;\n          length--;\n          if (head >= length) head = Math.max(0, length - 1);\n          continue;\n        }\n\n        const start = ceilDiv(b - intercepts[last], slopes[last] - m);\n        if (start <= starts[last]) {\n          length--;\n          if (head >= length) head = Math.max(0, length - 1);\n        } else {\n          slopes[length] = m;\n          intercepts[length] = b;\n          starts[length] = start;\n          length++;\n          break;\n        }\n      }\n\n      if (length === 0) {\n        slopes[0] = m;\n        intercepts[0] = b;\n        starts[0] = -Infinity;\n        length = 1;\n        head = 0;\n      }\n    }\n  }\n\n  if (dpNext) dpPrev = dpNext;\n}\n\nconsole.log(String(answer));",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.6808855999988737,
+            "counts": {
+                "AC": 33,
+                "WA": 43,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

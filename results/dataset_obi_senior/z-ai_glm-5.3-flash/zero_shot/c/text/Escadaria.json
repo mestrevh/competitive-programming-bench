@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:17:15.334760+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1136,
+            "output_tokens": 11702,
+            "total_tokens": 12838
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.005851,
+            "total_cost": 0.005875
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic char *ibuf;\nstatic size_t ipos, ilen;\n\nstatic int readInt(void) {\n    while (ipos < ilen && (ibuf[ipos] < '0' || ibuf[ipos] > '9') && ibuf[ipos] != '-') ipos++;\n    int neg = 0;\n    if (ipos < ilen && ibuf[ipos] == '-') { neg = 1; ipos++; }\n    long x = 0;\n    while (ipos < ilen && ibuf[ipos] >= '0' && ibuf[ipos] <= '9') {\n        x = x * 10 + (ibuf[ipos] - '0');\n        ipos++;\n    }\n    return neg ? (int)-x : (int)x;\n}\n\nint main(void) {\n    /* ---- leitura rapida de toda a entrada ---- */\n    size_t cap = 1 << 20;\n    ibuf = (char *)malloc(cap);\n    ilen = 0;\n    for (;;) {\n        if (ilen == cap) {\n            cap <<= 1;\n            ibuf = (char *)realloc(ibuf, cap);\n        }\n        size_t r = fread(ibuf + ilen, 1, cap - ilen, stdin);\n        if (r == 0) break;\n        ilen += r;\n    }\n    ipos = 0;\n\n    int n = readInt();\n    int *A = (int *)malloc((size_t)n * sizeof(int));\n    for (int i = 0; i < n; i++) A[i] = readInt();\n\n    int *ans = (int *)malloc((size_t)n * sizeof(int));\n    const int INF = 0x3f3f3f3f;\n\n    /*\n     * Resposta para o degrau i: min sobre os degraus conhecidos j de (A_j + |i - j|).\n     * Pois |h_i - h_j| <= |i - j| em qualquer reconstrução valida, e a construcao\n     * h_k = min_j (A_j + |k - j|) e 1-Lipschitz, coincide com os valores conhecidos\n     * e portanto e uma reconstrução valida que atinge esse limite para todo k.\n     *\n     * Calculamos em duas passadas:\n     *   esquerda->direita: min_{j <= i} (A_j + (i - j)) = i + min_{j <= i} (A_j - j)\n     *   direita->esquerda: min_{j >= i} (A_j + (j - i)) = min_{j >= i} (A_j + j) - i\n     */\n\n    int best = INF;\n    for (int i = 0; i < n; i++) {\n        if (A[i] != -1) {\n            int v = A[i] - i;\n            if (v < best) best = v;\n        }\n        ans[i] = (best == INF) ? INF : best + i;\n    }\n\n    best = INF;\n    for (int i = n - 1; i >= 0; i--) {\n        if (A[i] != -1) {\n            int v = A[i] + i;\n            if (v < best) best = v;\n        }\n        if (best != INF) {\n            int c = best - i;\n            if (c < ans[i]) ans[i] = c;\n        }\n    }\n\n    /* ---- saída rapida ---- */\n    size_t ocap = (size_t)n * 8 + 16;\n    char *out = (char *)malloc(ocap);\n    size_t olen = 0;\n    for (int i = 0; i < n; i++) {\n        int x = ans[i];\n        char tmp[12];\n        int t = 0;\n        if (x == 0) tmp[t++] = '0';\n        while (x > 0) { tmp[t++] = (char)('0' + x % 10); x /= 10; }\n        while (t > 0) out[olen++] = tmp[--t];\n        out[olen++] = (i == n - 1) ? '\\n' : ' ';\n    }\n    fwrite(out, 1, olen, stdout);\n\n    free(ibuf);\n    free(A);\n    free(ans);\n    free(out);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic char *ibuf;\nstatic size_t ipos, ilen;\n\nstatic int readInt(void) {\n    while (ipos < ilen && (ibuf[ipos] < '0' || ibuf[ipos] > '9') && ibuf[ipos] != '-') ipos++;\n    int neg = 0;\n    if (ipos < ilen && ibuf[ipos] == '-') { neg = 1; ipos++; }\n    long x = 0;\n    while (ipos < ilen && ibuf[ipos] >= '0' && ibuf[ipos] <= '9') {\n        x = x * 10 + (ibuf[ipos] - '0');\n        ipos++;\n    }\n    return neg ? (int)-x : (int)x;\n}\n\nint main(void) {\n    /* ---- leitura rapida de toda a entrada ---- */\n    size_t cap = 1 << 20;\n    ibuf = (char *)malloc(cap);\n    ilen = 0;\n    for (;;) {\n        if (ilen == cap) {\n            cap <<= 1;\n            ibuf = (char *)realloc(ibuf, cap);\n        }\n        size_t r = fread(ibuf + ilen, 1, cap - ilen, stdin);\n        if (r == 0) break;\n        ilen += r;\n    }\n    ipos = 0;\n\n    int n = readInt();\n    int *A = (int *)malloc((size_t)n * sizeof(int));\n    for (int i = 0; i < n; i++) A[i] = readInt();\n\n    int *ans = (int *)malloc((size_t)n * sizeof(int));\n    const int INF = 0x3f3f3f3f;\n\n    /*\n     * Resposta para o degrau i: min sobre os degraus conhecidos j de (A_j + |i - j|).\n     * Pois |h_i - h_j| <= |i - j| em qualquer reconstrução valida, e a construcao\n     * h_k = min_j (A_j + |k - j|) e 1-Lipschitz, coincide com os valores conhecidos\n     * e portanto e uma reconstrução valida que atinge esse limite para todo k.\n     *\n     * Calculamos em duas passadas:\n     *   esquerda->direita: min_{j <= i} (A_j + (i - j)) = i + min_{j <= i} (A_j - j)\n     *   direita->esquerda: min_{j >= i} (A_j + (j - i)) = min_{j >= i} (A_j + j) - i\n     */\n\n    int best = INF;\n    for (int i = 0; i < n; i++) {\n        if (A[i] != -1) {\n            int v = A[i] - i;\n            if (v < best) best = v;\n        }\n        ans[i] = (best == INF) ? INF : best + i;\n    }\n\n    best = INF;\n    for (int i = n - 1; i >= 0; i--) {\n        if (A[i] != -1) {\n            int v = A[i] + i;\n            if (v < best) best = v;\n        }\n        if (best != INF) {\n            int c = best - i;\n            if (c < ans[i]) ans[i] = c;\n        }\n    }\n\n    /* ---- saída rapida ---- */\n    size_t ocap = (size_t)n * 8 + 16;\n    char *out = (char *)malloc(ocap);\n    size_t olen = 0;\n    for (int i = 0; i < n; i++) {\n        int x = ans[i];\n        char tmp[12];\n        int t = 0;\n        if (x == 0) tmp[t++] = '0';\n        while (x > 0) { tmp[t++] = (char)('0' + x % 10); x /= 10; }\n        while (t > 0) out[olen++] = tmp[--t];\n        out[olen++] = (i == n - 1) ? '\\n' : ' ';\n    }\n    fwrite(out, 1, olen, stdout);\n\n    free(ibuf);\n    free(A);\n    free(ans);\n    free(out);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14749589998973534,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

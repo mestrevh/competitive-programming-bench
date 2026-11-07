@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T11:57:25.626544+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1754,
+            "output_tokens": 1263,
+            "total_tokens": 16477
+        },
+        "cost_usd": {
+            "input_cost": 0.001315,
+            "output_cost": 0.004736,
+            "total_cost": 0.006052
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n#define LOGN 20\n\nint head[MAXN], to[MAXN], nxt[MAXN], edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    edge_cnt++;\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt;\n}\n\nint up[LOGN][MAXN];\nint depth[MAXN];\nint tin[MAXN], tout[MAXN], timer = 0;\n\nvoid dfs(int u, int p, int d) {\n    depth[u] = d;\n    up[0][u] = p;\n    for (int i = 1; i < LOGN; i++) {\n        up[i][u] = up[i - 1][up[i - 1][u]];\n    }\n    \n    timer++;\n    tin[u] = timer;\n\n    for (int e = head[u]; e; e = nxt[e]) {\n        int v = to[e];\n        dfs(v, u, d + 1);\n    }\n\n    tout[u] = timer;\n}\n\nint get_kth_ancestor(int u, int k) {\n    for (int i = LOGN - 1; i >= 0; i--) {\n        if ((k >> i) & 1) {\n            u = up[i][u];\n        }\n    }\n    return u;\n}\n\nint lazy[4 * MAXN];\n\nvoid push(int node) {\n    if (lazy[node] != 0) {\n        lazy[2 * node] = lazy[node];\n        lazy[2 * node + 1] = lazy[node];\n        lazy[node] = 0;\n    }\n}\n\nvoid update(int node, int l, int r, int ql, int qr, int val) {\n    if (ql > r || qr < l) return;\n    if (ql <= l && r <= qr) {\n        lazy[node] = val;\n        return;\n    }\n    push(node);\n    int mid = (l + r) / 2;\n    update(2 * node, l, mid, ql, qr, val);\n    update(2 * node + 1, mid + 1, r, ql, qr, val);\n}\n\nint query(int node, int l, int r, int pos) {\n    if (l == r) {\n        return lazy[node];\n    }\n    push(node);\n    int mid = (l + r) / 2;\n    if (pos <= mid) {\n        return query(2 * node, l, mid, pos);\n    } else {\n        return query(2 * node + 1, mid + 1, r, pos);\n    }\n}\n\nstatic inline int read_int() {\n    int c = getchar();\n    while (c <= ' ' && c != EOF) c = getchar();\n    if (c == EOF) return 0;\n    int res = 0;\n    while (c >= '0' && c <= '9') {\n        res = res * 10 + (c - '0');\n        c = getchar();\n    }\n    return res;\n}\n\nstatic inline void print_int(int x) {\n    char buf[12];\n    int len = 0;\n    if (x == 0) {\n        putchar('0');\n        putchar('\\n');\n        return;\n    }\n    while (x > 0) {\n        buf[len++] = (x % 10) + '0';\n        x /= 10;\n    }\n    while (len > 0) {\n        putchar(buf[--len]);\n    }\n    putchar('\\n');\n}\n\nint main() {\n    int N = read_int();\n    for (int i = 2; i <= N; i++) {\n        int p = read_int();\n        add_edge(p, i);\n    }\n\n    dfs(1, 1, 0);\n\n    int Q = read_int();\n    for (int q = 0; q < Q; q++) {\n        int type = read_int();\n        if (type == 1) {\n            int v = read_int();\n            int k = read_int();\n\n            int A = query(1, 1, N, tin[v]);\n            if (A == 0) {\n                print_int(get_kth_ancestor(v, k));\n            } else {\n                if (k == 1) {\n                    print_int(A);\n                } else {\n                    print_int(get_kth_ancestor(A, k - 1));\n                }\n            }\n        } else {\n            int v = read_int();\n            int anc_mark = query(1, 1, N, tin[v]);\n            if (anc_mark == 0) {\n                if (tin[v] + 1 <= tout[v]) {\n                    update(1, 1, N, tin[v] + 1, tout[v], v);\n                }\n            }\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n#define LOGN 20\n\nint head[MAXN], to[MAXN], nxt[MAXN], edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    edge_cnt++;\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt;\n}\n\nint up[LOGN][MAXN];\nint depth[MAXN];\nint tin[MAXN], tout[MAXN], timer = 0;\n\nvoid dfs(int u, int p, int d) {\n    depth[u] = d;\n    up[0][u] = p;\n    for (int i = 1; i < LOGN; i++) {\n        up[i][u] = up[i - 1][up[i - 1][u]];\n    }\n    \n    timer++;\n    tin[u] = timer;\n\n    for (int e = head[u]; e; e = nxt[e]) {\n        int v = to[e];\n        dfs(v, u, d + 1);\n    }\n\n    tout[u] = timer;\n}\n\nint get_kth_ancestor(int u, int k) {\n    for (int i = LOGN - 1; i >= 0; i--) {\n        if ((k >> i) & 1) {\n            u = up[i][u];\n        }\n    }\n    return u;\n}\n\nint lazy[4 * MAXN];\n\nvoid push(int node) {\n    if (lazy[node] != 0) {\n        lazy[2 * node] = lazy[node];\n        lazy[2 * node + 1] = lazy[node];\n        lazy[node] = 0;\n    }\n}\n\nvoid update(int node, int l, int r, int ql, int qr, int val) {\n    if (ql > r || qr < l) return;\n    if (ql <= l && r <= qr) {\n        lazy[node] = val;\n        return;\n    }\n    push(node);\n    int mid = (l + r) / 2;\n    update(2 * node, l, mid, ql, qr, val);\n    update(2 * node + 1, mid + 1, r, ql, qr, val);\n}\n\nint query(int node, int l, int r, int pos) {\n    if (l == r) {\n        return lazy[node];\n    }\n    push(node);\n    int mid = (l + r) / 2;\n    if (pos <= mid) {\n        return query(2 * node, l, mid, pos);\n    } else {\n        return query(2 * node + 1, mid + 1, r, pos);\n    }\n}\n\nstatic inline int read_int() {\n    int c = getchar();\n    while (c <= ' ' && c != EOF) c = getchar();\n    if (c == EOF) return 0;\n    int res = 0;\n    while (c >= '0' && c <= '9') {\n        res = res * 10 + (c - '0');\n        c = getchar();\n    }\n    return res;\n}\n\nstatic inline void print_int(int x) {\n    char buf[12];\n    int len = 0;\n    if (x == 0) {\n        putchar('0');\n        putchar('\\n');\n        return;\n    }\n    while (x > 0) {\n        buf[len++] = (x % 10) + '0';\n        x /= 10;\n    }\n    while (len > 0) {\n        putchar(buf[--len]);\n    }\n    putchar('\\n');\n}\n\nint main() {\n    int N = read_int();\n    for (int i = 2; i <= N; i++) {\n        int p = read_int();\n        add_edge(p, i);\n    }\n\n    dfs(1, 1, 0);\n\n    int Q = read_int();\n    for (int q = 0; q < Q; q++) {\n        int type = read_int();\n        if (type == 1) {\n            int v = read_int();\n            int k = read_int();\n\n            int A = query(1, 1, N, tin[v]);\n            if (A == 0) {\n                print_int(get_kth_ancestor(v, k));\n            } else {\n                if (k == 1) {\n                    print_int(A);\n                } else {\n                    print_int(get_kth_ancestor(A, k - 1));\n                }\n            }\n        } else {\n            int v = read_int();\n            int anc_mark = query(1, 1, N, tin[v]);\n            if (anc_mark == 0) {\n                if (tin[v] + 1 <= tout[v]) {\n                    update(1, 1, N, tin[v] + 1, tout[v], v);\n                }\n            }\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3028356000140775,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

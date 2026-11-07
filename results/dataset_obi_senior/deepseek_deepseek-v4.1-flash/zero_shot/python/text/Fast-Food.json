@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:54:23.186747+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1293,
+            "output_tokens": 17645,
+            "total_tokens": 18938
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.042348,
+            "total_cost": 0.042352
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    u = [0] * n\n    v = [0] * n\n\n    INF = 10**30\n    min_u = INF\n    max_u = -INF\n    min_v = INF\n    max_v = -INF\n\n    base_y = 1 + n\n    for i in range(n):\n        x = data[1 + i]\n        y = data[base_y + i]\n        uu = x + y\n        vv = x - y\n        u[i] = uu\n        v[i] = vv\n\n        if uu < min_u:\n            min_u = uu\n        if uu > max_u:\n            max_u = uu\n        if vv < min_v:\n            min_v = vv\n        if vv > max_v:\n            max_v = vv\n\n    del data\n\n    def can(D, u=u, v=v, n=n, min_u=min_u, max_u=max_u,\n            min_v=min_v, max_v=max_v, INF=INF):\n        if max_u - min_u <= D and max_v - min_v <= D:\n            return True\n\n        for uc in (min_u, max_u):\n            if uc == min_u:\n                ul = min_u\n                uh = min_u + D\n            else:\n                ul = max_u - D\n                uh = max_u\n\n            for vc in (min_v, max_v):\n                if vc == min_v:\n                    vl = min_v\n                    vh = min_v + D\n                else:\n                    vl = max_v - D\n                    vh = max_v\n\n                rmin_u = INF\n                rmax_u = -INF\n                rmin_v = INF\n                rmax_v = -INF\n                ok = True\n\n                for i in range(n):\n                    uu = u[i]\n                    vv = v[i]\n\n                    if ul <= uu <= uh and vl <= vv <= vh:\n                        continue\n\n                    if uu < rmin_u:\n                        rmin_u = uu\n                    if uu > rmax_u:\n                        rmax_u = uu\n                    if vv < rmin_v:\n                        rmin_v = vv\n                    if vv > rmax_v:\n                        rmax_v = vv\n\n                    if rmax_u - rmin_u > D or rmax_v - rmin_v > D:\n                        ok = False\n                        break\n\n                if ok:\n                    return True\n\n        return False\n\n    lo = 0\n    hi = max(max_u - min_u, max_v - min_v)\n\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    sys.stdout.write(str(lo))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    u = [0] * n\n    v = [0] * n\n\n    INF = 10**30\n    min_u = INF\n    max_u = -INF\n    min_v = INF\n    max_v = -INF\n\n    base_y = 1 + n\n    for i in range(n):\n        x = data[1 + i]\n        y = data[base_y + i]\n        uu = x + y\n        vv = x - y\n        u[i] = uu\n        v[i] = vv\n\n        if uu < min_u:\n            min_u = uu\n        if uu > max_u:\n            max_u = uu\n        if vv < min_v:\n            min_v = vv\n        if vv > max_v:\n            max_v = vv\n\n    del data\n\n    def can(D, u=u, v=v, n=n, min_u=min_u, max_u=max_u,\n            min_v=min_v, max_v=max_v, INF=INF):\n        if max_u - min_u <= D and max_v - min_v <= D:\n            return True\n\n        for uc in (min_u, max_u):\n            if uc == min_u:\n                ul = min_u\n                uh = min_u + D\n            else:\n                ul = max_u - D\n                uh = max_u\n\n            for vc in (min_v, max_v):\n                if vc == min_v:\n                    vl = min_v\n                    vh = min_v + D\n                else:\n                    vl = max_v - D\n                    vh = max_v\n\n                rmin_u = INF\n                rmax_u = -INF\n                rmin_v = INF\n                rmax_v = -INF\n                ok = True\n\n                for i in range(n):\n                    uu = u[i]\n                    vv = v[i]\n\n                    if ul <= uu <= uh and vl <= vv <= vh:\n                        continue\n\n                    if uu < rmin_u:\n                        rmin_u = uu\n                    if uu > rmax_u:\n                        rmax_u = uu\n                    if vv < rmin_v:\n                        rmin_v = vv\n                    if vv > rmax_v:\n                        rmax_v = vv\n\n                    if rmax_u - rmin_u > D or rmax_v - rmin_v > D:\n                        ok = False\n                        break\n\n                if ok:\n                    return True\n\n        return False\n\n    lo = 0\n    hi = max(max_u - min_u, max_v - min_v)\n\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if can(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    sys.stdout.write(str(lo))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.9689527999944403,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:53:19.501623+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1258,
+            "output_tokens": 453,
+            "total_tokens": 16801
+        },
+        "cost_usd": {
+            "input_cost": 0.000944,
+            "output_cost": 0.001699,
+            "total_cost": 0.002642
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    const K = readInt();\n\n    const a = new Int32Array(N);\n    for (let i = 0; i < N; i++) {\n        a[i] = readInt();\n    }\n\n    const b = new Int32Array(N);\n    for (let i = 0; i < N; i++) {\n        b[i] = readInt();\n    }\n\n    let G = 0n;\n    const m = new Int32Array(N);\n\n    for (let i = 0; i < N; i++) {\n        const ai = a[i];\n        const bi = b[i];\n        if (ai > bi) {\n            G += BigInt(ai - bi);\n            m[i] = bi;\n        } else {\n            m[i] = ai;\n        }\n    }\n\n    // TypedArray.prototype.sort() ordena numericamente em ordem crescente\n    m.sort();\n\n    const take = Math.min(N, K + 1);\n    for (let i = 0; i < take; i++) {\n        G += BigInt(m[N - 1 - i]);\n    }\n\n    console.log(G.toString());\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    const K = readInt();\n\n    const a = new Int32Array(N);\n    for (let i = 0; i < N; i++) {\n        a[i] = readInt();\n    }\n\n    const b = new Int32Array(N);\n    for (let i = 0; i < N; i++) {\n        b[i] = readInt();\n    }\n\n    let G = 0n;\n    const m = new Int32Array(N);\n\n    for (let i = 0; i < N; i++) {\n        const ai = a[i];\n        const bi = b[i];\n        if (ai > bi) {\n            G += BigInt(ai - bi);\n            m[i] = bi;\n        } else {\n            m[i] = ai;\n        }\n    }\n\n    // TypedArray.prototype.sort() ordena numericamente em ordem crescente\n    m.sort();\n\n    const take = Math.min(N, K + 1);\n    for (let i = 0; i < take; i++) {\n        G += BigInt(m[N - 1 - i]);\n    }\n\n    console.log(G.toString());\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07174539999687113,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

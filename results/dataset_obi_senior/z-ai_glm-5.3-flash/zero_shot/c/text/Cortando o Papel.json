@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:42:32.755840+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 544,
+            "output_tokens": 3541,
+            "total_tokens": 4085
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.00177,
+            "total_cost": 0.001782
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nstatic int a[100005];\nstatic int idx[100005];\nstatic char on[100005];\nstatic int n;\n\nstatic int cmp(const void *x, const void *y) {\n    long long va = a[*(const int*)x];\n    long long vb = a[*(const int*)y];\n    if (vb < va) return -1;\n    if (vb > va) return 1;\n    return 0;\n}\n\nint main(void) {\n    if (scanf(\"%d\", &n) != 1) return 0;\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n\n    for (int i = 0; i < n; i++) idx[i] = i;\n    qsort(idx, n, sizeof(int), cmp);\n\n    /* Um corte na altura h produz: 1 pedaco (a base, sempre conectada)\n       + o numero de blocos maximos consecutivos com Ai > h.\n       Varremos os valores distintos em ordem decrescente, ativando os\n       indices e contando componentes conectadas (blocos).          */\n    long long best = 2; /* sempre possivel: corte abaixo de todas as alturas -> 2 pedacos */\n    memset(on, 0, sizeof(on));\n    int active = 0;\n    int i = 0;\n    while (i < n) {\n        int v = a[idx[i]];\n        while (i < n && a[idx[i]] == v) {\n            int j = idx[i];\n            int c = 1;\n            if (j > 0 && on[j - 1]) c--;\n            if (j + 1 < n && on[j + 1]) c--;\n            active += c;\n            on[j] = 1;\n            i++;\n        }\n        if (active + 1 > best) best = active + 1;\n    }\n    printf(\"%lld\\n\", best);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nstatic int a[100005];\nstatic int idx[100005];\nstatic char on[100005];\nstatic int n;\n\nstatic int cmp(const void *x, const void *y) {\n    long long va = a[*(const int*)x];\n    long long vb = a[*(const int*)y];\n    if (vb < va) return -1;\n    if (vb > va) return 1;\n    return 0;\n}\n\nint main(void) {\n    if (scanf(\"%d\", &n) != 1) return 0;\n    for (int i = 0; i < n; i++) scanf(\"%d\", &a[i]);\n\n    for (int i = 0; i < n; i++) idx[i] = i;\n    qsort(idx, n, sizeof(int), cmp);\n\n    /* Um corte na altura h produz: 1 pedaco (a base, sempre conectada)\n       + o numero de blocos maximos consecutivos com Ai > h.\n       Varremos os valores distintos em ordem decrescente, ativando os\n       indices e contando componentes conectadas (blocos).          */\n    long long best = 2; /* sempre possivel: corte abaixo de todas as alturas -> 2 pedacos */\n    memset(on, 0, sizeof(on));\n    int active = 0;\n    int i = 0;\n    while (i < n) {\n        int v = a[idx[i]];\n        while (i < n && a[idx[i]] == v) {\n            int j = idx[i];\n            int c = 1;\n            if (j > 0 && on[j - 1]) c--;\n            if (j + 1 < n && on[j + 1]) c--;\n            active += c;\n            on[j] = 1;\n            i++;\n        }\n        if (active + 1 > best) best = active + 1;\n    }\n    printf(\"%lld\\n\", best);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12454729998717085,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

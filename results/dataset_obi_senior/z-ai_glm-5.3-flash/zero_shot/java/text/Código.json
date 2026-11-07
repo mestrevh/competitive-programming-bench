@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T18:39:54.975079+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 866,
+            "output_tokens": 17776,
+            "total_tokens": 18642
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.008888,
+            "total_cost": 0.008907
+        },
+        "raw_response": "```java\nimport java.util.HashSet;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n\n        // Todas as strings têm exatamente 10 letras.\n        // S_k é substring de S_a S_b (|Sa Sb| = 20, |Sk| = 10) sse existe p em [0..10]\n        // tal que S_k = (sufixo de S_a de comprimento 10-p) + (prefixo de S_b de comprimento p).\n        // p = 0 (S_k = S_a) e p = 10 (S_k = S_b) equivalem a S_k ser igual a uma string anterior.\n\n        HashSet<String> full = new HashSet<>();          // strings completas já vistas\n        @SuppressWarnings(\"unchecked\")\n        HashSet<String>[] suf = new HashSet[10];         // suf[L]: sufixos de comprimento L já vistos\n        @SuppressWarnings(\"unchecked\")\n        HashSet<String>[] pre = new HashSet[10];         // pre[L]: prefixos de comprimento L já vistos\n        for (int i = 1; i <= 9; i++) {\n            suf[i] = new HashSet<>();\n            pre[i] = new HashSet<>();\n        }\n\n        String ans = \"ok\";\n\n        outer:\n        for (int k = 0; k < n; k++) {\n            String s = sc.next();\n\n            // casos i = 0 e i = 10: S_k igual a alguma string anterior\n            if (full.contains(s)) {\n                ans = s;\n                break outer;\n            }\n\n            // caso 1 <= i <= 9: S_k = X + Y, X sufixo (len 10-i) de uma anterior,\n            //                              Y prefixo (len i) de uma anterior (podem ser da mesma)\n            for (int i = 1; i <= 9; i++) {\n                if (suf[10 - i].contains(s.substring(0, 10 - i))\n                        && pre[i].contains(s.substring(10 - i))) {\n                    ans = s;\n                    break outer;\n                }\n            }\n\n            // insere S_k (apenas depois da checagem: a, b < k)\n            full.add(s);\n            for (int L = 1; L <= 9; L++) {\n                suf[L].add(s.substring(10 - L));\n                pre[L].add(s.substring(0, L));\n            }\n        }\n\n        System.out.println(ans);\n        sc.close();\n    }\n}\n```",
+        "extracted_code": "import java.util.HashSet;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n\n        // Todas as strings têm exatamente 10 letras.\n        // S_k é substring de S_a S_b (|Sa Sb| = 20, |Sk| = 10) sse existe p em [0..10]\n        // tal que S_k = (sufixo de S_a de comprimento 10-p) + (prefixo de S_b de comprimento p).\n        // p = 0 (S_k = S_a) e p = 10 (S_k = S_b) equivalem a S_k ser igual a uma string anterior.\n\n        HashSet<String> full = new HashSet<>();          // strings completas já vistas\n        @SuppressWarnings(\"unchecked\")\n        HashSet<String>[] suf = new HashSet[10];         // suf[L]: sufixos de comprimento L já vistos\n        @SuppressWarnings(\"unchecked\")\n        HashSet<String>[] pre = new HashSet[10];         // pre[L]: prefixos de comprimento L já vistos\n        for (int i = 1; i <= 9; i++) {\n            suf[i] = new HashSet<>();\n            pre[i] = new HashSet<>();\n        }\n\n        String ans = \"ok\";\n\n        outer:\n        for (int k = 0; k < n; k++) {\n            String s = sc.next();\n\n            // casos i = 0 e i = 10: S_k igual a alguma string anterior\n            if (full.contains(s)) {\n                ans = s;\n                break outer;\n            }\n\n            // caso 1 <= i <= 9: S_k = X + Y, X sufixo (len 10-i) de uma anterior,\n            //                              Y prefixo (len i) de uma anterior (podem ser da mesma)\n            for (int i = 1; i <= 9; i++) {\n                if (suf[10 - i].contains(s.substring(0, 10 - i))\n                        && pre[i].contains(s.substring(10 - i))) {\n                    ans = s;\n                    break outer;\n                }\n            }\n\n            // insere S_k (apenas depois da checagem: a, b < k)\n            full.add(s);\n            for (int L = 1; L <= 9; L++) {\n                suf[L].add(s.substring(10 - L));\n                pre[L].add(s.substring(0, L));\n            }\n        }\n\n        System.out.println(ans);\n        sc.close();\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1776269000256434,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

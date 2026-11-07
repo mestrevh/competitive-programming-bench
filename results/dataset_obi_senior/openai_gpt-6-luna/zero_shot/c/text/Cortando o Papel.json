@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:47:17.885667+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 476,
+            "output_tokens": 2314,
+            "total_tokens": 2790
+        },
+        "cost_usd": {
+            "input_cost": 4.8e-05,
+            "output_cost": 0.001157,
+            "total_cost": 0.001205
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int height;\n    int index;\n} Rectangle;\n\nstatic int parent[100000];\nstatic int active[100000];\n\nstatic int find_root(int x) {\n    if (parent[x] != x)\n        parent[x] = find_root(parent[x]);\n    return parent[x];\n}\n\nstatic int unite(int a, int b) {\n    int root_a = find_root(a);\n    int root_b = find_root(b);\n    if (root_a == root_b)\n        return 0;\n    parent[root_a] = root_b;\n    return 1;\n}\n\nstatic int compare_rectangles(const void *a, const void *b) {\n    const Rectangle *ra = (const Rectangle *)a;\n    const Rectangle *rb = (const Rectangle *)b;\n    if (ra->height < rb->height) return -1;\n    if (ra->height > rb->height) return 1;\n    return 0;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1)\n        return 0;\n\n    Rectangle rectangles[100000];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &rectangles[i].height);\n        rectangles[i].index = i;\n        parent[i] = i;\n    }\n\n    qsort(rectangles, n, sizeof(Rectangle), compare_rectangles);\n\n    int components = 0;\n    int max_components = 0;\n\n    for (int i = n - 1; i >= 0; ) {\n        int j = i;\n        while (j >= 0 && rectangles[j].height == rectangles[i].height)\n            j--;\n\n        for (int k = i; k > j; k--) {\n            int index = rectangles[k].index;\n            active[index] = 1;\n            components++;\n            if (index > 0 && active[index - 1])\n                components -= unite(index, index - 1);\n            if (index + 1 < n && active[index + 1])\n                components -= unite(index, index + 1);\n        }\n\n        if (components > max_components)\n            max_components = components;\n        i = j;\n    }\n\n    printf(\"%d\\n\", max_components + 1);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int height;\n    int index;\n} Rectangle;\n\nstatic int parent[100000];\nstatic int active[100000];\n\nstatic int find_root(int x) {\n    if (parent[x] != x)\n        parent[x] = find_root(parent[x]);\n    return parent[x];\n}\n\nstatic int unite(int a, int b) {\n    int root_a = find_root(a);\n    int root_b = find_root(b);\n    if (root_a == root_b)\n        return 0;\n    parent[root_a] = root_b;\n    return 1;\n}\n\nstatic int compare_rectangles(const void *a, const void *b) {\n    const Rectangle *ra = (const Rectangle *)a;\n    const Rectangle *rb = (const Rectangle *)b;\n    if (ra->height < rb->height) return -1;\n    if (ra->height > rb->height) return 1;\n    return 0;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1)\n        return 0;\n\n    Rectangle rectangles[100000];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &rectangles[i].height);\n        rectangles[i].index = i;\n        parent[i] = i;\n    }\n\n    qsort(rectangles, n, sizeof(Rectangle), compare_rectangles);\n\n    int components = 0;\n    int max_components = 0;\n\n    for (int i = n - 1; i >= 0; ) {\n        int j = i;\n        while (j >= 0 && rectangles[j].height == rectangles[i].height)\n            j--;\n\n        for (int k = i; k > j; k--) {\n            int index = rectangles[k].index;\n            active[index] = 1;\n            components++;\n            if (index > 0 && active[index - 1])\n                components -= unite(index, index - 1);\n            if (index + 1 < n && active[index + 1])\n                components -= unite(index, index + 1);\n        }\n\n        if (components > max_components)\n            max_components = components;\n        i = j;\n    }\n\n    printf(\"%d\\n\", max_components + 1);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1829591999994591,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:00:41.239830+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1152,
+            "output_tokens": 23419,
+            "total_tokens": 24571
+        },
+        "cost_usd": {
+            "input_cost": 2.5e-05,
+            "output_cost": 0.011709,
+            "total_cost": 0.011734
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main(input) {\n  const tokens = input.trim().split(/\\s+/);\n  let ptr = 0;\n  const N = parseInt(tokens[ptr++], 10);\n  const X1 = BigInt(tokens[ptr++]);\n  const X2 = BigInt(tokens[ptr++]);\n\n  const K = 2147483648n;    // 2^31 > 2e9, garante ordenacao lexicografica\n  const HALF = 1000000000n;\n\n  // Ideia: duas retas com inclinacoes A_i < A_j cruzam dentro de [X1, X2]\n  // ssex  y_i(X1) >= y_j(X1)  e  y_i(X2) <= y_j(X2).\n  // Isso equivale acontar pares cuja ordem relativa em \"(h asc, A desc)\"\n  // e oposta a ordem em \"(g asc, A asc)\", com h = A*X1+B, g = A*X2+B.\n  // (pares com A igual tem h e g na mesma ordem => nunca contam)\n\n  const keyL = new Array(N);\n  const keyR = new Array(N);\n\n  for (let i = 0; i < N; i++) {\n    const A = BigInt(tokens[ptr++]);\n    const B = BigInt(tokens[ptr++]);\n    const h = A * X1 + B;\n    const g = A * X2 + B;\n    keyL[i] = h * K + (HALF - A);\n    keyR[i] = g * K + (A + HALF);\n  }\n\n  const idx = new Array(N);\n  for (let i = 0; i < N; i++) idx[i] = i;\n\n  const orderL = idx.slice().sort((a, b) =>\n    keyL[a] < keyL[b] ? -1 : keyL[a] > keyL[b] ? 1 : a - b);\n  const orderR = idx.slice().sort((a, b) =>\n    keyR[a] < keyR[b] ? -1 : keyR[a] > keyR[b] ? 1 : a - b);\n\n  const pos = new Int32Array(N);\n  for (let k = 0; k < N; k++) pos[orderL[k]] = k;\n\n  // numero de inversoes entre as duas permutacoes, via BIT\n  const bit = new Int32Array(N + 1);\n  let total = 0;\n  for (let k = 0; k < N; k++) {\n    const r = pos[orderR[k]] + 1;\n    let s = 0;\n    for (let i = r; i > 0; i -= i & -i) s += bit[i];\n    total += k - s;\n    for (let i = r; i <= N; i += i & -i) bit[i]++;\n  }\n\n  process.stdout.write(total.toString() + \"\\n\");\n}\n\nlet input = \"\";\nprocess.stdin.setEncoding(\"utf8\");\nprocess.stdin.on(\"data\", c => input += c);\nprocess.stdin.on(\"end\", () => main(input));\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main(input) {\n  const tokens = input.trim().split(/\\s+/);\n  let ptr = 0;\n  const N = parseInt(tokens[ptr++], 10);\n  const X1 = BigInt(tokens[ptr++]);\n  const X2 = BigInt(tokens[ptr++]);\n\n  const K = 2147483648n;    // 2^31 > 2e9, garante ordenacao lexicografica\n  const HALF = 1000000000n;\n\n  // Ideia: duas retas com inclinacoes A_i < A_j cruzam dentro de [X1, X2]\n  // ssex  y_i(X1) >= y_j(X1)  e  y_i(X2) <= y_j(X2).\n  // Isso equivale acontar pares cuja ordem relativa em \"(h asc, A desc)\"\n  // e oposta a ordem em \"(g asc, A asc)\", com h = A*X1+B, g = A*X2+B.\n  // (pares com A igual tem h e g na mesma ordem => nunca contam)\n\n  const keyL = new Array(N);\n  const keyR = new Array(N);\n\n  for (let i = 0; i < N; i++) {\n    const A = BigInt(tokens[ptr++]);\n    const B = BigInt(tokens[ptr++]);\n    const h = A * X1 + B;\n    const g = A * X2 + B;\n    keyL[i] = h * K + (HALF - A);\n    keyR[i] = g * K + (A + HALF);\n  }\n\n  const idx = new Array(N);\n  for (let i = 0; i < N; i++) idx[i] = i;\n\n  const orderL = idx.slice().sort((a, b) =>\n    keyL[a] < keyL[b] ? -1 : keyL[a] > keyL[b] ? 1 : a - b);\n  const orderR = idx.slice().sort((a, b) =>\n    keyR[a] < keyR[b] ? -1 : keyR[a] > keyR[b] ? 1 : a - b);\n\n  const pos = new Int32Array(N);\n  for (let k = 0; k < N; k++) pos[orderL[k]] = k;\n\n  // numero de inversoes entre as duas permutacoes, via BIT\n  const bit = new Int32Array(N + 1);\n  let total = 0;\n  for (let k = 0; k < N; k++) {\n    const r = pos[orderR[k]] + 1;\n    let s = 0;\n    for (let i = r; i > 0; i -= i & -i) s += bit[i];\n    total += k - s;\n    for (let i = r; i <= N; i += i & -i) bit[i]++;\n  }\n\n  process.stdout.write(total.toString() + \"\\n\");\n}\n\nlet input = \"\";\nprocess.stdin.setEncoding(\"utf8\");\nprocess.stdin.on(\"data\", c => input += c);\nprocess.stdin.on(\"end\", () => main(input));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19757580000441521,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:13:01.218254+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 965,
+            "output_tokens": 15755,
+            "total_tokens": 16720
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.037812,
+            "total_cost": 0.037815
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    L = int(data[0])\n    C = int(data[1])\n    grid = data[2:2 + L]\n\n    sr = sc = -1\n    for i in range(L):\n        for j in range(C):\n            if grid[i][j] == 'o':\n                sr, sc = i, j\n                break\n        if sr != -1:\n            break\n\n    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n\n    prev = (sr, sc)\n    cur = None\n    for dr, dc in dirs:\n        nr, nc = sr + dr, sc + dc\n        if 0 <= nr < L and 0 <= nc < C and grid[nr][nc] == 'H':\n            cur = (nr, nc)\n            break\n\n    while True:\n        r, c = cur\n        candidates = []\n        for dr, dc in dirs:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < L and 0 <= nc < C and grid[nr][nc] == 'H':\n                if (nr, nc) != prev:\n                    candidates.append((nr, nc))\n\n        if not candidates:\n            break\n\n        prev, cur = cur, candidates[0]\n\n    print(cur[0] + 1, cur[1] + 1)\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    L = int(data[0])\n    C = int(data[1])\n    grid = data[2:2 + L]\n\n    sr = sc = -1\n    for i in range(L):\n        for j in range(C):\n            if grid[i][j] == 'o':\n                sr, sc = i, j\n                break\n        if sr != -1:\n            break\n\n    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n\n    prev = (sr, sc)\n    cur = None\n    for dr, dc in dirs:\n        nr, nc = sr + dr, sc + dc\n        if 0 <= nr < L and 0 <= nc < C and grid[nr][nc] == 'H':\n            cur = (nr, nc)\n            break\n\n    while True:\n        r, c = cur\n        candidates = []\n        for dr, dc in dirs:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < L and 0 <= nc < C and grid[nr][nc] == 'H':\n                if (nr, nc) != prev:\n                    candidates.append((nr, nc))\n\n        if not candidates:\n            break\n\n        prev, cur = cur, candidates[0]\n\n    print(cur[0] + 1, cur[1] + 1)\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08898860000044806,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

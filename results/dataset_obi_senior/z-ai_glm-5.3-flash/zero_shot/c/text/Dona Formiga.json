@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:47:48.471493+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 876,
+            "output_tokens": 13104,
+            "total_tokens": 13980
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.006552,
+            "total_cost": 0.006571
+        },
+        "raw_response": "```C\n#include <stdio.h>\n\n#define MAXS 205\n#define MAXE 40005\n\nstatic int head[MAXS];\nstatic int nxt[MAXE];\nstatic int to[MAXE];\nstatic int A[MAXS];\nstatic int dp[MAXS];\nstatic unsigned char vis[MAXS];\nstatic int ecnt = 0;\n\n/* Como a formiga sempre escorrega para um salao de altura ESTRITAMENTE\n   menor, qualquer movimento diminui a altura: o grafo de movimentos e um\n   DAG e nenhum salao pode ser revisitado. O numero maximo de saloes\n   visitados (excluindo o inicial) e o caminho mais longo saindo de P. */\nstatic int dfs(int u) {\n    if (vis[u]) return dp[u];\n    vis[u] = 1;\n    int best = 1; /* conta o proprio u */\n    for (int e = head[u]; e != -1; e = nxt[e]) {\n        int c = dfs(to[e]) + 1;\n        if (c > best) best = c;\n    }\n    return dp[u] = best;\n}\n\nint main(void) {\n    int S, T, P;\n\n    if (scanf(\"%d %d %d\", &S, &T, &P) != 3) return 0;\n\n    for (int i = 1; i <= S; i++) {\n        if (scanf(\"%d\", &A[i]) != 1) return 0;\n    }\n\n    for (int i = 1; i <= S; i++) head[i] = -1;\n\n    for (int t = 0; t < T; t++) {\n        int I, J;\n        if (scanf(\"%d %d\", &I, &J) != 2) return 0;\n        /* O tunel {I,J} permite escorregar apenas do mais alto para o mais baixo.\n           Alturas iguais: tunel inutil para escorregar. */\n        if (A[I] > A[J]) {\n            to[ecnt] = J; nxt[ecnt] = head[I]; head[I] = ecnt++;\n        } else if (A[J] > A[I]) {\n            to[ecnt] = I; nxt[ecnt] = head[J]; head[J] = ecnt++;\n        }\n    }\n\n    /* dp[P] = maximo de saloes no caminho descendente (incluindo P);\n       a resposta exclui P. */\n    printf(\"%d\\n\", dfs(P) - 1);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXS 205\n#define MAXE 40005\n\nstatic int head[MAXS];\nstatic int nxt[MAXE];\nstatic int to[MAXE];\nstatic int A[MAXS];\nstatic int dp[MAXS];\nstatic unsigned char vis[MAXS];\nstatic int ecnt = 0;\n\n/* Como a formiga sempre escorrega para um salao de altura ESTRITAMENTE\n   menor, qualquer movimento diminui a altura: o grafo de movimentos e um\n   DAG e nenhum salao pode ser revisitado. O numero maximo de saloes\n   visitados (excluindo o inicial) e o caminho mais longo saindo de P. */\nstatic int dfs(int u) {\n    if (vis[u]) return dp[u];\n    vis[u] = 1;\n    int best = 1; /* conta o proprio u */\n    for (int e = head[u]; e != -1; e = nxt[e]) {\n        int c = dfs(to[e]) + 1;\n        if (c > best) best = c;\n    }\n    return dp[u] = best;\n}\n\nint main(void) {\n    int S, T, P;\n\n    if (scanf(\"%d %d %d\", &S, &T, &P) != 3) return 0;\n\n    for (int i = 1; i <= S; i++) {\n        if (scanf(\"%d\", &A[i]) != 1) return 0;\n    }\n\n    for (int i = 1; i <= S; i++) head[i] = -1;\n\n    for (int t = 0; t < T; t++) {\n        int I, J;\n        if (scanf(\"%d %d\", &I, &J) != 2) return 0;\n        /* O tunel {I,J} permite escorregar apenas do mais alto para o mais baixo.\n           Alturas iguais: tunel inutil para escorregar. */\n        if (A[I] > A[J]) {\n            to[ecnt] = J; nxt[ecnt] = head[I]; head[I] = ecnt++;\n        } else if (A[J] > A[I]) {\n            to[ecnt] = I; nxt[ecnt] = head[J]; head[J] = ecnt++;\n        }\n    }\n\n    /* dp[P] = maximo de saloes no caminho descendente (incluindo P);\n       a resposta exclui P. */\n    printf(\"%d\\n\", dfs(P) - 1);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1261503999994602,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

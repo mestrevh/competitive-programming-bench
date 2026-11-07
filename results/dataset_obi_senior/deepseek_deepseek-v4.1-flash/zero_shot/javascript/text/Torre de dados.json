@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:39:39.186583+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1011,
+            "output_tokens": 11750,
+            "total_tokens": 12761
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.0282,
+            "total_cost": 0.028203
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst N = data[idx++];\n\nconst dice = [];\nfor (let i = 0; i < N; i++) {\n    const A = data[idx++], B = data[idx++], C = data[idx++];\n    const D = data[idx++], E = data[idx++], F = data[idx++];\n\n    const opp = new Array(7).fill(0);\n    opp[A] = F;\n    opp[F] = A;\n    opp[B] = D;\n    opp[D] = B;\n    opp[C] = E;\n    opp[E] = C;\n\n    const contrib = new Array(7).fill(0);\n    for (let b = 1; b <= 6; b++) {\n        const top = opp[b];\n        let maxSide = 0;\n        for (let v = 1; v <= 6; v++) {\n            if (v !== b && v !== top && v > maxSide) {\n                maxSide = v;\n            }\n        }\n        contrib[b] = maxSide;\n    }\n\n    dice.push({ opp, contrib });\n}\n\nlet dp = new Array(7).fill(-Infinity);\n\nconst first = dice[0];\nfor (let b = 1; b <= 6; b++) {\n    const top = first.opp[b];\n    dp[top] = Math.max(dp[top], first.contrib[b]);\n}\n\nfor (let i = 1; i < N; i++) {\n    const die = dice[i];\n    const ndp = new Array(7).fill(-Infinity);\n\n    for (let v = 1; v <= 6; v++) {\n        if (dp[v] !== -Infinity) {\n            const b = v;\n            const top = die.opp[b];\n            ndp[top] = Math.max(ndp[top], dp[v] + die.contrib[b]);\n        }\n    }\n\n    dp = ndp;\n}\n\nlet ans = 0;\nfor (let v = 1; v <= 6; v++) {\n    if (dp[v] > ans) ans = dp[v];\n}\n\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst N = data[idx++];\n\nconst dice = [];\nfor (let i = 0; i < N; i++) {\n    const A = data[idx++], B = data[idx++], C = data[idx++];\n    const D = data[idx++], E = data[idx++], F = data[idx++];\n\n    const opp = new Array(7).fill(0);\n    opp[A] = F;\n    opp[F] = A;\n    opp[B] = D;\n    opp[D] = B;\n    opp[C] = E;\n    opp[E] = C;\n\n    const contrib = new Array(7).fill(0);\n    for (let b = 1; b <= 6; b++) {\n        const top = opp[b];\n        let maxSide = 0;\n        for (let v = 1; v <= 6; v++) {\n            if (v !== b && v !== top && v > maxSide) {\n                maxSide = v;\n            }\n        }\n        contrib[b] = maxSide;\n    }\n\n    dice.push({ opp, contrib });\n}\n\nlet dp = new Array(7).fill(-Infinity);\n\nconst first = dice[0];\nfor (let b = 1; b <= 6; b++) {\n    const top = first.opp[b];\n    dp[top] = Math.max(dp[top], first.contrib[b]);\n}\n\nfor (let i = 1; i < N; i++) {\n    const die = dice[i];\n    const ndp = new Array(7).fill(-Infinity);\n\n    for (let v = 1; v <= 6; v++) {\n        if (dp[v] !== -Infinity) {\n            const b = v;\n            const top = die.opp[b];\n            ndp[top] = Math.max(ndp[top], dp[v] + die.contrib[b]);\n        }\n    }\n\n    dp = ndp;\n}\n\nlet ans = 0;\nfor (let v = 1; v <= 6; v++) {\n    if (dp[v] > ans) ans = dp[v];\n}\n\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06959109997842461,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

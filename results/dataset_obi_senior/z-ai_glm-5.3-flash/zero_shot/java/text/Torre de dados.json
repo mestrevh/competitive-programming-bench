@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T22:12:39.416313+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1004,
+            "output_tokens": 71171,
+            "total_tokens": 72175
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.035585,
+            "total_cost": 0.035607
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        in.nextToken();\n        int n = (int) in.nval;\n        int[][] die = new int[n][6];\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < 6; j++) {\n                in.nextToken();\n                die[i][j] = (int) in.nval;\n            }\n\n        // Faces opostas: (A,F), (B,D), (C,E). A rotacao horizontal de cada dado e livre,\n        // logo, fixada a face inferior (contato), a contribuicao de um dado para um lado\n        // pode ser o maximo das 4 faces laterais (as 4 faces que nao sao contato).\n        int[] dp = new int[7];\n        Arrays.fill(dp, -1);\n\n        // Primeiro dado (base da torre): qualquer face pode ficar para baixo.\n        int[] opp = buildOpp(die[0]);\n        for (int f = 1; f <= 6; f++) {\n            int t = opp[f];\n            int side = maxSide(die[0], f, t);\n            if (side > dp[t]) dp[t] = side;\n        }\n\n        // Dados seguintes: a face inferior deve ser igual a face superior exposta do dado anterior.\n        for (int i = 1; i < n; i++) {\n            opp = buildOpp(die[i]);\n            int[] nd = new int[7];\n            Arrays.fill(nd, -1);\n            for (int v = 1; v <= 6; v++) {\n                if (dp[v] < 0) continue;\n                int t = opp[v]; // topo do dado atual, se a face inferior vale v\n                int side = maxSide(die[i], v, t);\n                int cand = dp[v] + side;\n                if (cand > nd[t]) nd[t] = cand;\n            }\n            dp = nd;\n        }\n\n        int ans = 0;\n        for (int v = 1; v <= 6; v++) if (dp[v] > ans) ans = dp[v];\n        System.out.println(ans);\n    }\n\n    static int[] buildOpp(int[] d) {\n        int[] o = new int[7];\n        o[d[0]] = d[5]; o[d[5]] = d[0]; // A <-> F\n        o[d[1]] = d[3]; o[d[3]] = d[1]; // B <-> D\n        o[d[2]] = d[4]; o[d[4]] = d[2]; // C <-> E\n        return o;\n    }\n\n    static int maxSide(int[] d, int bottom, int top) {\n        int m = 0;\n        for (int i = 0; i < 6; i++) {\n            int v = d[i];\n            if (v != bottom && v != top && v > m) m = v;\n        }\n        return m;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        in.nextToken();\n        int n = (int) in.nval;\n        int[][] die = new int[n][6];\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < 6; j++) {\n                in.nextToken();\n                die[i][j] = (int) in.nval;\n            }\n\n        // Faces opostas: (A,F), (B,D), (C,E). A rotacao horizontal de cada dado e livre,\n        // logo, fixada a face inferior (contato), a contribuicao de um dado para um lado\n        // pode ser o maximo das 4 faces laterais (as 4 faces que nao sao contato).\n        int[] dp = new int[7];\n        Arrays.fill(dp, -1);\n\n        // Primeiro dado (base da torre): qualquer face pode ficar para baixo.\n        int[] opp = buildOpp(die[0]);\n        for (int f = 1; f <= 6; f++) {\n            int t = opp[f];\n            int side = maxSide(die[0], f, t);\n            if (side > dp[t]) dp[t] = side;\n        }\n\n        // Dados seguintes: a face inferior deve ser igual a face superior exposta do dado anterior.\n        for (int i = 1; i < n; i++) {\n            opp = buildOpp(die[i]);\n            int[] nd = new int[7];\n            Arrays.fill(nd, -1);\n            for (int v = 1; v <= 6; v++) {\n                if (dp[v] < 0) continue;\n                int t = opp[v]; // topo do dado atual, se a face inferior vale v\n                int side = maxSide(die[i], v, t);\n                int cand = dp[v] + side;\n                if (cand > nd[t]) nd[t] = cand;\n            }\n            dp = nd;\n        }\n\n        int ans = 0;\n        for (int v = 1; v <= 6; v++) if (dp[v] > ans) ans = dp[v];\n        System.out.println(ans);\n    }\n\n    static int[] buildOpp(int[] d) {\n        int[] o = new int[7];\n        o[d[0]] = d[5]; o[d[5]] = d[0]; // A <-> F\n        o[d[1]] = d[3]; o[d[3]] = d[1]; // B <-> D\n        o[d[2]] = d[4]; o[d[4]] = d[2]; // C <-> E\n        return o;\n    }\n\n    static int maxSide(int[] d, int bottom, int top) {\n        int m = 0;\n        for (int i = 0; i < 6; i++) {\n            int v = d[i];\n            if (v != bottom && v != top && v > m) m = v;\n        }\n        return m;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15584279998438433,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

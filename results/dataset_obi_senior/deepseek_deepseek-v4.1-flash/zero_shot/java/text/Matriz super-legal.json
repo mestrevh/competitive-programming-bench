@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:21:04.128671+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 726,
+            "output_tokens": 16260,
+            "total_tokens": 16986
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.039024,
+            "total_cost": 0.039026
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n        int L = fs.nextInt();\n        int C = fs.nextInt();\n        int m = C - 1;\n\n        int[] prev = new int[C];\n        for (int j = 0; j < C; j++) prev[j] = fs.nextInt();\n\n        int[] curr = new int[C];\n        int[] heights = new int[m];\n        int[] stack = new int[m + 1];\n\n        int ans = Math.max(L, C);\n\n        for (int i = 1; i < L; i++) {\n            for (int j = 0; j < C; j++) curr[j] = fs.nextInt();\n\n            for (int j = 0; j < m; j++) {\n                if (prev[j] + curr[j + 1] > prev[j + 1] + curr[j]) {\n                    heights[j] = 0;\n                } else {\n                    heights[j]++;\n                }\n            }\n\n            int top = -1;\n            for (int j = 0; j <= m; j++) {\n                int curH = (j == m) ? -1 : heights[j];\n                while (top >= 0 && heights[stack[top]] > curH) {\n                    int h = heights[stack[top--]];\n                    int left = (top >= 0) ? stack[top] : -1;\n                    int right = j;\n                    int width = right - left - 1;\n                    int area = (h + 1) * (width + 1);\n                    if (area > ans) ans = area;\n                }\n                if (j < m) stack[++top] = j;\n            }\n\n            int[] tmp = prev;\n            prev = curr;\n            curr = tmp;\n        }\n\n        System.out.println(ans);\n    }\n\n    static class FastScanner {\n        private BufferedReader br;\n        private StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n        int L = fs.nextInt();\n        int C = fs.nextInt();\n        int m = C - 1;\n\n        int[] prev = new int[C];\n        for (int j = 0; j < C; j++) prev[j] = fs.nextInt();\n\n        int[] curr = new int[C];\n        int[] heights = new int[m];\n        int[] stack = new int[m + 1];\n\n        int ans = Math.max(L, C);\n\n        for (int i = 1; i < L; i++) {\n            for (int j = 0; j < C; j++) curr[j] = fs.nextInt();\n\n            for (int j = 0; j < m; j++) {\n                if (prev[j] + curr[j + 1] > prev[j + 1] + curr[j]) {\n                    heights[j] = 0;\n                } else {\n                    heights[j]++;\n                }\n            }\n\n            int top = -1;\n            for (int j = 0; j <= m; j++) {\n                int curH = (j == m) ? -1 : heights[j];\n                while (top >= 0 && heights[stack[top]] > curH) {\n                    int h = heights[stack[top--]];\n                    int left = (top >= 0) ? stack[top] : -1;\n                    int right = j;\n                    int width = right - left - 1;\n                    int area = (h + 1) * (width + 1);\n                    if (area > ans) ans = area;\n                }\n                if (j < m) stack[++top] = j;\n            }\n\n            int[] tmp = prev;\n            prev = curr;\n            curr = tmp;\n        }\n\n        System.out.println(ans);\n    }\n\n    static class FastScanner {\n        private BufferedReader br;\n        private StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15331549997790717,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

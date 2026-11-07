@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:14:49.608895+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 735,
+            "output_tokens": 2542,
+            "total_tokens": 3277
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.006101,
+            "total_cost": 0.006103
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\n\nlet pos = 0;\nconst len = data.length;\n\nfunction nextInt() {\n  while (pos < len && data.charCodeAt(pos) <= 32) pos++;\n  let x = 0;\n  while (pos < len) {\n    const c = data.charCodeAt(pos);\n    if (c <= 32) break;\n    x = x * 10 + (c - 48);\n    pos++;\n  }\n  return x;\n}\n\nconst n = nextInt();\nconst a = new Array(n);\n\nfor (let i = 0; i < n; i++) {\n  a[i] = nextInt();\n}\n\nlet i = 0;\nlet j = n - 1;\nlet operations = 0;\n\nif (n > 0) {\n  let left = a[i];\n  let right = a[j];\n\n  while (i < j) {\n    if (left === right) {\n      i++;\n      j--;\n      if (i < j) {\n        left = a[i];\n        right = a[j];\n      }\n    } else if (left < right) {\n      i++;\n      left += a[i];\n      operations++;\n    } else {\n      j--;\n      right += a[j];\n      operations++;\n    }\n  }\n}\n\nconsole.log(operations);\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\n\nlet pos = 0;\nconst len = data.length;\n\nfunction nextInt() {\n  while (pos < len && data.charCodeAt(pos) <= 32) pos++;\n  let x = 0;\n  while (pos < len) {\n    const c = data.charCodeAt(pos);\n    if (c <= 32) break;\n    x = x * 10 + (c - 48);\n    pos++;\n  }\n  return x;\n}\n\nconst n = nextInt();\nconst a = new Array(n);\n\nfor (let i = 0; i < n; i++) {\n  a[i] = nextInt();\n}\n\nlet i = 0;\nlet j = n - 1;\nlet operations = 0;\n\nif (n > 0) {\n  let left = a[i];\n  let right = a[j];\n\n  while (i < j) {\n    if (left === right) {\n      i++;\n      j--;\n      if (i < j) {\n        left = a[i];\n        right = a[j];\n      }\n    } else if (left < right) {\n      i++;\n      left += a[i];\n      operations++;\n    } else {\n      j--;\n      right += a[j];\n      operations++;\n    }\n  }\n}\n\nconsole.log(operations);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09165519999805838,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

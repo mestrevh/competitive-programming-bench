@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:17:28.481723+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1337,
+            "output_tokens": 16169,
+            "total_tokens": 17506
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.038806,
+            "total_cost": 0.03881
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0);\nlet pos = 0;\nconst len = data.length;\n\nfunction nextInt() {\n  while (pos < len && data[pos] <= 32) pos++;\n  let num = 0;\n  while (pos < len && data[pos] > 32) {\n    num = num * 10 + (data[pos] - 48);\n    pos++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst B = nextInt();\n\nconst U = new Int32Array(B);\nconst V = new Int32Array(B);\nconst P = new Int32Array(B);\n\nfor (let i = 0; i < B; i++) {\n  U[i] = nextInt();\n  V[i] = nextInt();\n  P[i] = nextInt();\n}\n\nconst C = nextInt();\n\nconst order = new Int32Array(B);\nfor (let i = 0; i < B; i++) order[i] = i;\norder.sort((a, b) => P[b] - P[a]);\n\nconst MAX = 2 * N + 5;\nconst LOG = Math.ceil(Math.log2(MAX)) + 1;\n\nconst parent = new Int32Array(MAX);\nconst weight = new Int32Array(MAX);\nconst depth = new Int32Array(MAX);\n\nconst up = new Array(LOG);\nfor (let j = 0; j < LOG; j++) {\n  up[j] = new Int32Array(MAX);\n}\n\nconst dsu = new Int32Array(N + 1);\nconst sz = new Int32Array(N + 1);\nconst compRoot = new Int32Array(N + 1);\n\nfor (let i = 1; i <= N; i++) {\n  dsu[i] = i;\n  sz[i] = 1;\n  compRoot[i] = i;\n}\n\nfunction find(x) {\n  while (dsu[x] !== x) {\n    dsu[x] = dsu[dsu[x]];\n    x = dsu[x];\n  }\n  return x;\n}\n\nlet nextNode = N + 1;\n\nfor (let oi = 0; oi < B; oi++) {\n  const i = order[oi];\n  const u = U[i];\n  const v = V[i];\n  const p = P[i];\n\n  let ru = find(u);\n  let rv = find(v);\n\n  if (ru === rv) continue;\n\n  const rootU = compRoot[ru];\n  const rootV = compRoot[rv];\n\n  const newNode = nextNode++;\n  weight[newNode] = p;\n  parent[rootU] = newNode;\n  parent[rootV] = newNode;\n\n  if (sz[ru] < sz[rv]) {\n    const tmp = ru;\n    ru = rv;\n    rv = tmp;\n  }\n\n  dsu[rv] = ru;\n  sz[ru] += sz[rv];\n  compRoot[ru] = newNode;\n}\n\nconst root = compRoot[find(1)];\nparent[root] = 0;\n\nfor (let i = root; i >= 1; i--) {\n  const p = parent[i];\n\n  if (p !== 0) {\n    depth[i] = depth[p] + 1;\n    up[0][i] = p;\n  } else {\n    depth[i] = 0;\n    up[0][i] = 0;\n  }\n\n  for (let j = 1; j < LOG; j++) {\n    const mid = up[j - 1][i];\n    up[j][i] = mid !== 0 ? up[j - 1][mid] : 0;\n  }\n}\n\nfunction lca(u, v) {\n  if (depth[u] < depth[v]) {\n    const tmp = u;\n    u = v;\n    v = tmp;\n  }\n\n  let diff = depth[u] - depth[v];\n\n  for (let j = 0; j < LOG; j++) {\n    if (diff & (1 << j)) {\n      u = up[j][u];\n    }\n  }\n\n  if (u === v) return u;\n\n  for (let j = LOG - 1; j >= 0; j--) {\n    const uu = up[j][u];\n    const vv = up[j][v];\n\n    if (uu !== vv) {\n      u = uu;\n      v = vv;\n    }\n  }\n\n  return parent[u];\n}\n\nconst out = new Array(C);\n\nfor (let q = 0; q < C; q++) {\n  const x = nextInt();\n  const y = nextInt();\n  out[q] = weight[lca(x, y)];\n}\n\nprocess.stdout.write(out.join('\\n') + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0);\nlet pos = 0;\nconst len = data.length;\n\nfunction nextInt() {\n  while (pos < len && data[pos] <= 32) pos++;\n  let num = 0;\n  while (pos < len && data[pos] > 32) {\n    num = num * 10 + (data[pos] - 48);\n    pos++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst B = nextInt();\n\nconst U = new Int32Array(B);\nconst V = new Int32Array(B);\nconst P = new Int32Array(B);\n\nfor (let i = 0; i < B; i++) {\n  U[i] = nextInt();\n  V[i] = nextInt();\n  P[i] = nextInt();\n}\n\nconst C = nextInt();\n\nconst order = new Int32Array(B);\nfor (let i = 0; i < B; i++) order[i] = i;\norder.sort((a, b) => P[b] - P[a]);\n\nconst MAX = 2 * N + 5;\nconst LOG = Math.ceil(Math.log2(MAX)) + 1;\n\nconst parent = new Int32Array(MAX);\nconst weight = new Int32Array(MAX);\nconst depth = new Int32Array(MAX);\n\nconst up = new Array(LOG);\nfor (let j = 0; j < LOG; j++) {\n  up[j] = new Int32Array(MAX);\n}\n\nconst dsu = new Int32Array(N + 1);\nconst sz = new Int32Array(N + 1);\nconst compRoot = new Int32Array(N + 1);\n\nfor (let i = 1; i <= N; i++) {\n  dsu[i] = i;\n  sz[i] = 1;\n  compRoot[i] = i;\n}\n\nfunction find(x) {\n  while (dsu[x] !== x) {\n    dsu[x] = dsu[dsu[x]];\n    x = dsu[x];\n  }\n  return x;\n}\n\nlet nextNode = N + 1;\n\nfor (let oi = 0; oi < B; oi++) {\n  const i = order[oi];\n  const u = U[i];\n  const v = V[i];\n  const p = P[i];\n\n  let ru = find(u);\n  let rv = find(v);\n\n  if (ru === rv) continue;\n\n  const rootU = compRoot[ru];\n  const rootV = compRoot[rv];\n\n  const newNode = nextNode++;\n  weight[newNode] = p;\n  parent[rootU] = newNode;\n  parent[rootV] = newNode;\n\n  if (sz[ru] < sz[rv]) {\n    const tmp = ru;\n    ru = rv;\n    rv = tmp;\n  }\n\n  dsu[rv] = ru;\n  sz[ru] += sz[rv];\n  compRoot[ru] = newNode;\n}\n\nconst root = compRoot[find(1)];\nparent[root] = 0;\n\nfor (let i = root; i >= 1; i--) {\n  const p = parent[i];\n\n  if (p !== 0) {\n    depth[i] = depth[p] + 1;\n    up[0][i] = p;\n  } else {\n    depth[i] = 0;\n    up[0][i] = 0;\n  }\n\n  for (let j = 1; j < LOG; j++) {\n    const mid = up[j - 1][i];\n    up[j][i] = mid !== 0 ? up[j - 1][mid] : 0;\n  }\n}\n\nfunction lca(u, v) {\n  if (depth[u] < depth[v]) {\n    const tmp = u;\n    u = v;\n    v = tmp;\n  }\n\n  let diff = depth[u] - depth[v];\n\n  for (let j = 0; j < LOG; j++) {\n    if (diff & (1 << j)) {\n      u = up[j][u];\n    }\n  }\n\n  if (u === v) return u;\n\n  for (let j = LOG - 1; j >= 0; j--) {\n    const uu = up[j][u];\n    const vv = up[j][v];\n\n    if (uu !== vv) {\n      u = uu;\n      v = vv;\n    }\n  }\n\n  return parent[u];\n}\n\nconst out = new Array(C);\n\nfor (let q = 0; q < C; q++) {\n  const x = nextInt();\n  const y = nextInt();\n  out[q] = weight[lca(x, y)];\n}\n\nprocess.stdout.write(out.join('\\n') + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16106179999769665,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

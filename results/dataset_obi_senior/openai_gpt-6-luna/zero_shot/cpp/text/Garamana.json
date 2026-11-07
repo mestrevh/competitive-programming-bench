@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:22:09.016389+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 531,
+            "output_tokens": 1708,
+            "total_tokens": 2239
+        },
+        "cost_usd": {
+            "input_cost": 5.3e-05,
+            "output_cost": 0.000854,
+            "total_cost": 0.000907
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nvector<int> decode(const string& s) {\n    vector<int> result;\n\n    for (size_t i = 0; i < s.size();) {\n        unsigned char c = s[i];\n        int cp;\n        size_t len;\n\n        if (c < 0x80) {\n            cp = c;\n            len = 1;\n        } else if ((c & 0xE0) == 0xC0) {\n            cp = c & 0x1F;\n            len = 2;\n        } else if ((c & 0xF0) == 0xE0) {\n            cp = c & 0x0F;\n            len = 3;\n        } else {\n            cp = c & 0x07;\n            len = 4;\n        }\n\n        for (size_t j = 1; j < len && i + j < s.size(); ++j)\n            cp = (cp << 6) | (static_cast<unsigned char>(s[i + j]) & 0x3F);\n\n        i += len;\n\n        if (cp >= 0x00E0 && cp <= 0x00E5) cp = 'a';\n        else if (cp == 0x00E7) cp = 'c';\n        else if (cp >= 0x00E8 && cp <= 0x00EB) cp = 'e';\n        else if (cp >= 0x00EC && cp <= 0x00EF) cp = 'i';\n        else if (cp == 0x00F1) cp = 'n';\n        else if (cp >= 0x00F2 && cp <= 0x00F6) cp = 'o';\n        else if (cp >= 0x00F9 && cp <= 0x00FC) cp = 'u';\n        else if (cp == 0x00FD || cp == 0x00FF) cp = 'y';\n\n        result.push_back(cp);\n    }\n\n    return result;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    string P, A;\n    cin >> P >> A;\n\n    map<int, int> count;\n    for (int c : decode(P)) ++count[c];\n\n    bool valid = true;\n    for (int c : decode(A)) {\n        if (c == '*') continue;\n        if (--count[c] < 0) valid = false;\n    }\n\n    cout << (valid ? 'S' : 'N') << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nvector<int> decode(const string& s) {\n    vector<int> result;\n\n    for (size_t i = 0; i < s.size();) {\n        unsigned char c = s[i];\n        int cp;\n        size_t len;\n\n        if (c < 0x80) {\n            cp = c;\n            len = 1;\n        } else if ((c & 0xE0) == 0xC0) {\n            cp = c & 0x1F;\n            len = 2;\n        } else if ((c & 0xF0) == 0xE0) {\n            cp = c & 0x0F;\n            len = 3;\n        } else {\n            cp = c & 0x07;\n            len = 4;\n        }\n\n        for (size_t j = 1; j < len && i + j < s.size(); ++j)\n            cp = (cp << 6) | (static_cast<unsigned char>(s[i + j]) & 0x3F);\n\n        i += len;\n\n        if (cp >= 0x00E0 && cp <= 0x00E5) cp = 'a';\n        else if (cp == 0x00E7) cp = 'c';\n        else if (cp >= 0x00E8 && cp <= 0x00EB) cp = 'e';\n        else if (cp >= 0x00EC && cp <= 0x00EF) cp = 'i';\n        else if (cp == 0x00F1) cp = 'n';\n        else if (cp >= 0x00F2 && cp <= 0x00F6) cp = 'o';\n        else if (cp >= 0x00F9 && cp <= 0x00FC) cp = 'u';\n        else if (cp == 0x00FD || cp == 0x00FF) cp = 'y';\n\n        result.push_back(cp);\n    }\n\n    return result;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    string P, A;\n    cin >> P >> A;\n\n    map<int, int> count;\n    for (int c : decode(P)) ++count[c];\n\n    bool valid = true;\n    for (int c : decode(A)) {\n        if (c == '*') continue;\n        if (--count[c] < 0) valid = false;\n    }\n\n    cout << (valid ? 'S' : 'N') << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1890916999982437,
+            "counts": {
+                "AC": 49,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 49
+        }
+    }
+]

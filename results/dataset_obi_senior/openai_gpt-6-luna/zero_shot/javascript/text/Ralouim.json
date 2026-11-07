@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:58:54.148883+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 675,
+            "output_tokens": 4527,
+            "total_tokens": 5202
+        },
+        "cost_usd": {
+            "input_cost": 6.8e-05,
+            "output_cost": 0.002263,
+            "total_cost": 0.002331
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = data[0];\nconst coordsX = new Int32Array(N);\nconst coordsY = new Int32Array(N);\n\nlet pos = 1;\nfor (let i = 0; i < N; i++) {\n  coordsX[i] = data[pos++];\n  coordsY[i] = data[pos++];\n}\n\nconst pairCount = N * N;\nconst eventCount = pairCount;\nconst weights = new Uint32Array(pairCount + N);\nconst dp = new Uint32Array(pairCount + N);\nlet ids = new Uint32Array(eventCount);\nlet temp = new Uint32Array(eventCount);\n\nlet index = 0;\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < N; j++) {\n    if (i === j) continue;\n    const dx = coordsX[i] - coordsX[j];\n    const dy = coordsY[i] - coordsY[j];\n    const id = i * N + j;\n    weights[id] = dx * dx + dy * dy;\n    ids[index++] = id;\n  }\n}\n\nfor (let i = 0; i < N; i++) {\n  const id = pairCount + i;\n  weights[id] = coordsX[i] * coordsX[i] + coordsY[i] * coordsY[i];\n  ids[index++] = id;\n}\n\nfor (let shift = 0; shift < 30; shift += 10) {\n  const counts = new Uint32Array(1024);\n\n  for (let i = 0; i < eventCount; i++) {\n    counts[(weights[ids[i]] >>> shift) & 1023]++;\n  }\n\n  let sum = 0;\n  for (let i = 0; i < 1024; i++) {\n    const count = counts[i];\n    counts[i] = sum;\n    sum += count;\n  }\n\n  for (let i = 0; i < eventCount; i++) {\n    const id = ids[i];\n    const digit = (weights[id] >>> shift) & 1023;\n    temp[counts[digit]++] = id;\n  }\n\n  const swap = ids;\n  ids = temp;\n  temp = swap;\n}\n\nconst bestAt = new Uint32Array(N);\nlet answer = 1;\nlet end = eventCount;\n\nwhile (end > 0) {\n  const weight = weights[ids[end - 1]];\n  let start = end - 1;\n  while (start > 0 && weights[ids[start - 1]] === weight) start--;\n\n  for (let k = start; k < end; k++) {\n    const id = ids[k];\n    if (id >= pairCount) {\n      dp[id] = 1;\n    } else {\n      const from = Math.floor(id / N);\n      dp[id] = bestAt[from] === 0 ? 0 : bestAt[from] + 1;\n    }\n  }\n\n  for (let k = start; k < end; k++) {\n    const id = ids[k];\n    const value = dp[id];\n    const target = id >= pairCount ? id - pairCount : id % N;\n\n    if (value > bestAt[target]) bestAt[target] = value;\n    if (value > answer) answer = value;\n  }\n\n  end = start;\n}\n\nconsole.log(answer.toString());\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = data[0];\nconst coordsX = new Int32Array(N);\nconst coordsY = new Int32Array(N);\n\nlet pos = 1;\nfor (let i = 0; i < N; i++) {\n  coordsX[i] = data[pos++];\n  coordsY[i] = data[pos++];\n}\n\nconst pairCount = N * N;\nconst eventCount = pairCount;\nconst weights = new Uint32Array(pairCount + N);\nconst dp = new Uint32Array(pairCount + N);\nlet ids = new Uint32Array(eventCount);\nlet temp = new Uint32Array(eventCount);\n\nlet index = 0;\nfor (let i = 0; i < N; i++) {\n  for (let j = 0; j < N; j++) {\n    if (i === j) continue;\n    const dx = coordsX[i] - coordsX[j];\n    const dy = coordsY[i] - coordsY[j];\n    const id = i * N + j;\n    weights[id] = dx * dx + dy * dy;\n    ids[index++] = id;\n  }\n}\n\nfor (let i = 0; i < N; i++) {\n  const id = pairCount + i;\n  weights[id] = coordsX[i] * coordsX[i] + coordsY[i] * coordsY[i];\n  ids[index++] = id;\n}\n\nfor (let shift = 0; shift < 30; shift += 10) {\n  const counts = new Uint32Array(1024);\n\n  for (let i = 0; i < eventCount; i++) {\n    counts[(weights[ids[i]] >>> shift) & 1023]++;\n  }\n\n  let sum = 0;\n  for (let i = 0; i < 1024; i++) {\n    const count = counts[i];\n    counts[i] = sum;\n    sum += count;\n  }\n\n  for (let i = 0; i < eventCount; i++) {\n    const id = ids[i];\n    const digit = (weights[id] >>> shift) & 1023;\n    temp[counts[digit]++] = id;\n  }\n\n  const swap = ids;\n  ids = temp;\n  temp = swap;\n}\n\nconst bestAt = new Uint32Array(N);\nlet answer = 1;\nlet end = eventCount;\n\nwhile (end > 0) {\n  const weight = weights[ids[end - 1]];\n  let start = end - 1;\n  while (start > 0 && weights[ids[start - 1]] === weight) start--;\n\n  for (let k = start; k < end; k++) {\n    const id = ids[k];\n    if (id >= pairCount) {\n      dp[id] = 1;\n    } else {\n      const from = Math.floor(id / N);\n      dp[id] = bestAt[from] === 0 ? 0 : bestAt[from] + 1;\n    }\n  }\n\n  for (let k = start; k < end; k++) {\n    const id = ids[k];\n    const value = dp[id];\n    const target = id >= pairCount ? id - pairCount : id % N;\n\n    if (value > bestAt[target]) bestAt[target] = value;\n    if (value > answer) answer = value;\n  }\n\n  end = start;\n}\n\nconsole.log(answer.toString());",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4348997000051895,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

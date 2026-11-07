@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:33:13.470011+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 726,
+            "output_tokens": 17327,
+            "total_tokens": 18053
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.041585,
+            "total_cost": 0.041587
+        },
+        "raw_response": "```C\n#include <stdio.h>\n\nint A[1005][1005];\nint heights[1005];\nint st[1005];\nint leftb[1005];\n\nint main() {\n    int L, C;\n    scanf(\"%d %d\", &L, &C);\n\n    for (int i = 0; i < L; ++i)\n        for (int j = 0; j < C; ++j)\n            scanf(\"%d\", &A[i][j]);\n\n    long long ans = (L > C) ? L : C;\n    int m = C - 1;\n\n    for (int j = 0; j < m; ++j)\n        heights[j] = 0;\n\n    for (int i = 0; i < L - 1; ++i) {\n        for (int j = 0; j < m; ++j) {\n            long long lhs = (long long)A[i][j] + A[i + 1][j + 1];\n            long long rhs = (long long)A[i][j + 1] + A[i + 1][j];\n            if (lhs <= rhs)\n                ++heights[j];\n            else\n                heights[j] = 0;\n        }\n\n        int top = -1;\n        for (int j = 0; j < m; ++j) {\n            while (top >= 0 && heights[st[top]] >= heights[j])\n                --top;\n            leftb[j] = (top == -1) ? -1 : st[top];\n            st[++top] = j;\n        }\n\n        top = -1;\n        for (int j = m - 1; j >= 0; --j) {\n            while (top >= 0 && heights[st[top]] >= heights[j])\n                --top;\n            int right = (top == -1) ? m : st[top];\n            long long h = heights[j];\n            long long lenplus1 = (long long)right - leftb[j];\n            long long val = (h + 1) * lenplus1;\n            if (val > ans)\n                ans = val;\n            st[++top] = j;\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint A[1005][1005];\nint heights[1005];\nint st[1005];\nint leftb[1005];\n\nint main() {\n    int L, C;\n    scanf(\"%d %d\", &L, &C);\n\n    for (int i = 0; i < L; ++i)\n        for (int j = 0; j < C; ++j)\n            scanf(\"%d\", &A[i][j]);\n\n    long long ans = (L > C) ? L : C;\n    int m = C - 1;\n\n    for (int j = 0; j < m; ++j)\n        heights[j] = 0;\n\n    for (int i = 0; i < L - 1; ++i) {\n        for (int j = 0; j < m; ++j) {\n            long long lhs = (long long)A[i][j] + A[i + 1][j + 1];\n            long long rhs = (long long)A[i][j + 1] + A[i + 1][j];\n            if (lhs <= rhs)\n                ++heights[j];\n            else\n                heights[j] = 0;\n        }\n\n        int top = -1;\n        for (int j = 0; j < m; ++j) {\n            while (top >= 0 && heights[st[top]] >= heights[j])\n                --top;\n            leftb[j] = (top == -1) ? -1 : st[top];\n            st[++top] = j;\n        }\n\n        top = -1;\n        for (int j = m - 1; j >= 0; --j) {\n            while (top >= 0 && heights[st[top]] >= heights[j])\n                --top;\n            int right = (top == -1) ? m : st[top];\n            long long h = heights[j];\n            long long lenplus1 = (long long)right - leftb[j];\n            long long val = (h + 1) * lenplus1;\n            if (val > ans)\n                ans = val;\n            st[++top] = j;\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1646826000069268,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

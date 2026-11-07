@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:04:41.340912+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 657,
+            "output_tokens": 1273,
+            "total_tokens": 1930
+        },
+        "cost_usd": {
+            "input_cost": 6.6e-05,
+            "output_cost": 0.000637,
+            "total_cost": 0.000702
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nstatic inline int read_int(void) {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n\n    int value = 0;\n    while (c >= '0' && c <= '9') {\n        value = value * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return value;\n}\n\nint main(void) {\n    int n = read_int();\n    long long *a = malloc((size_t)n * sizeof(long long));\n\n    for (int i = 0; i < n; i++)\n        a[i] = read_int();\n\n    int left = 0, right = n - 1;\n    long long left_sum = a[left], right_sum = a[right];\n    int operations = 0;\n\n    while (left < right) {\n        if (left_sum == right_sum) {\n            left++;\n            right--;\n            if (left < right) {\n                left_sum = a[left];\n                right_sum = a[right];\n            }\n        } else if (left_sum < right_sum) {\n            left++;\n            left_sum += a[left];\n            operations++;\n        } else {\n            right--;\n            right_sum += a[right];\n            operations++;\n        }\n    }\n\n    printf(\"%d\\n\", operations);\n    free(a);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nstatic inline int read_int(void) {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n\n    int value = 0;\n    while (c >= '0' && c <= '9') {\n        value = value * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return value;\n}\n\nint main(void) {\n    int n = read_int();\n    long long *a = malloc((size_t)n * sizeof(long long));\n\n    for (int i = 0; i < n; i++)\n        a[i] = read_int();\n\n    int left = 0, right = n - 1;\n    long long left_sum = a[left], right_sum = a[right];\n    int operations = 0;\n\n    while (left < right) {\n        if (left_sum == right_sum) {\n            left++;\n            right--;\n            if (left < right) {\n                left_sum = a[left];\n                right_sum = a[right];\n            }\n        } else if (left_sum < right_sum) {\n            left++;\n            left_sum += a[left];\n            operations++;\n        } else {\n            right--;\n            right_sum += a[right];\n            operations++;\n        }\n    }\n\n    printf(\"%d\\n\", operations);\n    free(a);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 20
+            },
+            "total_test_cases": 20
+        }
+    }
+]

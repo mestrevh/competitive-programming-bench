@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:14:08.126448+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 896,
+            "output_tokens": 1074,
+            "total_tokens": 1970
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.000537,
+            "total_cost": 0.000627
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int dp[7], next[7];\n    for (int i = 0; i <= 6; ++i) dp[i] = -1;\n\n    for (int i = 0; i < n; ++i) {\n        int face[7];\n        for (int j = 0; j < 6; ++j) {\n            int value;\n            scanf(\"%d\", &value);\n            face[j] = value;\n        }\n\n        int opposite[7] = {0};\n        opposite[face[0]] = face[5];\n        opposite[face[5]] = face[0];\n        opposite[face[1]] = face[3];\n        opposite[face[3]] = face[1];\n        opposite[face[2]] = face[4];\n        opposite[face[4]] = face[2];\n\n        for (int j = 0; j <= 6; ++j) next[j] = -1;\n\n        if (i == 0) {\n            for (int bottom = 1; bottom <= 6; ++bottom) {\n                int top = opposite[bottom];\n                int side = 0;\n                for (int j = 0; j < 6; ++j) {\n                    if (face[j] != bottom && face[j] != top && face[j] > side)\n                        side = face[j];\n                }\n                next[top] = side;\n            }\n        } else {\n            for (int previousTop = 1; previousTop <= 6; ++previousTop) {\n                if (dp[previousTop] < 0) continue;\n                int bottom = previousTop;\n                int top = opposite[bottom];\n                int side = 0;\n                for (int j = 0; j < 6; ++j) {\n                    if (face[j] != bottom && face[j] != top && face[j] > side)\n                        side = face[j];\n                }\n                int total = dp[previousTop] + side;\n                if (total > next[top]) next[top] = total;\n            }\n        }\n\n        for (int j = 0; j <= 6; ++j) dp[j] = next[j];\n    }\n\n    int answer = 0;\n    for (int top = 1; top <= 6; ++top)\n        if (dp[top] > answer) answer = dp[top];\n\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int dp[7], next[7];\n    for (int i = 0; i <= 6; ++i) dp[i] = -1;\n\n    for (int i = 0; i < n; ++i) {\n        int face[7];\n        for (int j = 0; j < 6; ++j) {\n            int value;\n            scanf(\"%d\", &value);\n            face[j] = value;\n        }\n\n        int opposite[7] = {0};\n        opposite[face[0]] = face[5];\n        opposite[face[5]] = face[0];\n        opposite[face[1]] = face[3];\n        opposite[face[3]] = face[1];\n        opposite[face[2]] = face[4];\n        opposite[face[4]] = face[2];\n\n        for (int j = 0; j <= 6; ++j) next[j] = -1;\n\n        if (i == 0) {\n            for (int bottom = 1; bottom <= 6; ++bottom) {\n                int top = opposite[bottom];\n                int side = 0;\n                for (int j = 0; j < 6; ++j) {\n                    if (face[j] != bottom && face[j] != top && face[j] > side)\n                        side = face[j];\n                }\n                next[top] = side;\n            }\n        } else {\n            for (int previousTop = 1; previousTop <= 6; ++previousTop) {\n                if (dp[previousTop] < 0) continue;\n                int bottom = previousTop;\n                int top = opposite[bottom];\n                int side = 0;\n                for (int j = 0; j < 6; ++j) {\n                    if (face[j] != bottom && face[j] != top && face[j] > side)\n                        side = face[j];\n                }\n                int total = dp[previousTop] + side;\n                if (total > next[top]) next[top] = total;\n            }\n        }\n\n        for (int j = 0; j <= 6; ++j) dp[j] = next[j];\n    }\n\n    int answer = 0;\n    for (int top = 1; top <= 6; ++top)\n        if (dp[top] > answer) answer = dp[top];\n\n    printf(\"%d\\n\", answer);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12105240000528283,
+            "counts": {
+                "AC": 50,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 50
+        }
+    }
+]

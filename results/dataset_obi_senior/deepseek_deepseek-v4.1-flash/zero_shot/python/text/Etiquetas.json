@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:52:33.248618+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 618,
+            "output_tokens": 13322,
+            "total_tokens": 13940
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.031973,
+            "total_cost": 0.031975
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, K, C = data[0], data[1], data[2]\n    A = data[3:3 + N]\n\n    M = N - K * C\n    INF = 10**18\n\n    old = [-INF] * (M + 1)\n    old[0] = 0\n\n    size = M + 1\n\n    for j in range(K + 1):\n        new = [0] * size\n        pref = 0\n        best = 0\n        idx = j * C\n\n        for i in range(1, size):\n            pref += A[idx]\n            idx += 1\n\n            val = old[i] - pref\n            if val > best:\n                best = val\n\n            new[i] = pref + best\n\n        old = new\n\n    sys.stdout.write(str(old[M]))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, K, C = data[0], data[1], data[2]\n    A = data[3:3 + N]\n\n    M = N - K * C\n    INF = 10**18\n\n    old = [-INF] * (M + 1)\n    old[0] = 0\n\n    size = M + 1\n\n    for j in range(K + 1):\n        new = [0] * size\n        pref = 0\n        best = 0\n        idx = j * C\n\n        for i in range(1, size):\n            pref += A[idx]\n            idx += 1\n\n            val = old[i] - pref\n            if val > best:\n                best = val\n\n            new[i] = pref + best\n\n        old = new\n\n    sys.stdout.write(str(old[M]))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.9087328000023263,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

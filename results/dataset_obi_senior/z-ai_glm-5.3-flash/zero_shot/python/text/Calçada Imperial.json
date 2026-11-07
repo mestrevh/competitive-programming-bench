@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T03:50:14.977827+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 729,
+            "output_tokens": 3234,
+            "total_tokens": 3963
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.001617,
+            "total_cost": 0.001633
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    seq = list(map(int, data[1:1 + n]))\n\n    pos = {}\n    for i, v in enumerate(seq):\n        pos.setdefault(v, []).append(i)\n\n    # Caso de um único valor: só é possível marcar 1 número (sem iguais consecutivos)\n    best = 1\n    vals = list(pos.keys())\n    k = len(vals)\n\n    # Para cada par de valores distintos, o máximo de uma subsequência alternada\n    # (sem iguais consecutivos com apenas dois valores) equivale ao número de\n    # \"runs\" (blocos maximais de valor igual) na sequência filtrada por esses\n    # dois valores — pois de cada run no máximo um elemento pode ser escolhido,\n    # e escolher o primeiro de cada run é sempre ótimo (guloso).\n    for x in range(k):\n        pa = pos[vals[x]]\n        la = len(pa)\n        for y in range(x + 1, k):\n            pb = pos[vals[y]]\n            lb = len(pb)\n            i = j = 0\n            last = 0\n            runs = 0\n            while i < la or j < lb:\n                if j >= lb or (i < la and pa[i] < pb[j]):\n                    cur = 1\n                    i += 1\n                else:\n                    cur = 2\n                    j += 1\n                if cur != last:\n                    runs += 1\n                    last = cur\n            if runs > best:\n                best = runs\n\n    print(best)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    seq = list(map(int, data[1:1 + n]))\n\n    pos = {}\n    for i, v in enumerate(seq):\n        pos.setdefault(v, []).append(i)\n\n    # Caso de um único valor: só é possível marcar 1 número (sem iguais consecutivos)\n    best = 1\n    vals = list(pos.keys())\n    k = len(vals)\n\n    # Para cada par de valores distintos, o máximo de uma subsequência alternada\n    # (sem iguais consecutivos com apenas dois valores) equivale ao número de\n    # \"runs\" (blocos maximais de valor igual) na sequência filtrada por esses\n    # dois valores — pois de cada run no máximo um elemento pode ser escolhido,\n    # e escolher o primeiro de cada run é sempre ótimo (guloso).\n    for x in range(k):\n        pa = pos[vals[x]]\n        la = len(pa)\n        for y in range(x + 1, k):\n            pb = pos[vals[y]]\n            lb = len(pb)\n            i = j = 0\n            last = 0\n            runs = 0\n            while i < la or j < lb:\n                if j >= lb or (i < la and pa[i] < pb[j]):\n                    cur = 1\n                    i += 1\n                else:\n                    cur = 2\n                    j += 1\n                if cur != last:\n                    runs += 1\n                    last = cur\n            if runs > best:\n                best = runs\n\n    print(best)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08073370000056457,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

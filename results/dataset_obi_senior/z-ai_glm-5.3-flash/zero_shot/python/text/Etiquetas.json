@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T06:49:15.051985+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 575,
+            "output_tokens": 95329,
+            "total_tokens": 95904
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.047664,
+            "total_cost": 0.047677
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    N = int(data[0]); K = int(data[1]); C = int(data[2])\n    A = list(map(int, data[3:3 + N]))\n    total = sum(A)\n\n    M = N - C + 1\n    # W[u] = soma de A[u..u+C-1]\n    W = [0] * M\n    s = 0\n    for t in range(C):\n        s += A[t]\n    W[0] = s\n    for u in range(1, M):\n        s += A[u + C - 1] - A[u - 1]\n        W[u] = s\n    Wmin = min(W)\n    Wmax = max(W)\n\n    def solve(lam):\n        # Minimiza soma(w + lam) sobre qualquer familia de intervalos\n        # disjuntos de comprimento C (qualquer quantidade).\n        # Retorna (valor otimo, menor contagem otima, maior contagem otima).\n        val = [0] * (N + 1)\n        cmin = [0] * (N + 1)\n        cmax = [0] * (N + 1)\n        wl = W\n        for i in range(C, N + 1):\n            j = i - C\n            av = val[i - 1]\n            bv = val[j] + wl[j] + lam\n            if bv < av:\n                val[i] = bv\n                cmin[i] = cmin[j] + 1\n                cmax[i] = cmax[j] + 1\n            elif bv > av:\n                val[i] = av\n                cmin[i] = cmin[i - 1]\n                cmax[i] = cmax[i - 1]\n            else:\n                p = cmin[i - 1]; q = cmin[j] + 1\n                cmin[i] = q if q < p else p\n                p = cmax[i - 1]; q = cmax[j] + 1\n                cmax[i] = q if q > p else p\n        return val[N], cmin[N], cmax[N]\n\n    # Truque de Lagrange (Aliens trick): g(k) (custo minimo com exatamente k\n    # intervalos) e convexa em k. Busca binaria no maior lambda com\n    # kmax(lambda) >= K; nesse lambda, K esta no intervalo de otimos.\n    # Limites validos: d_K = g(K)-g(K-1) esta em\n    # [K*Wmin-(K-1)*Wmax, K*Wmax-(K-1)*Wmin], logo lambda* = -d_K esta entre\n    # lo e hi abaixo.\n    lo = (K - 1) * Wmin - K * Wmax\n    hi = (K - 1) * Wmax - K * Wmin\n    while lo < hi:\n        mid = (lo + hi + 1) // 2\n        _, _, kmax = solve(mid)\n        if kmax >= K:\n            lo = mid\n        else:\n            hi = mid - 1\n\n    h, kmin, kmax = solve(lo)\n    g = h - lo * K  # soma minima coberta com exatamente K etiquetas\n    print(total - g)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    N = int(data[0]); K = int(data[1]); C = int(data[2])\n    A = list(map(int, data[3:3 + N]))\n    total = sum(A)\n\n    M = N - C + 1\n    # W[u] = soma de A[u..u+C-1]\n    W = [0] * M\n    s = 0\n    for t in range(C):\n        s += A[t]\n    W[0] = s\n    for u in range(1, M):\n        s += A[u + C - 1] - A[u - 1]\n        W[u] = s\n    Wmin = min(W)\n    Wmax = max(W)\n\n    def solve(lam):\n        # Minimiza soma(w + lam) sobre qualquer familia de intervalos\n        # disjuntos de comprimento C (qualquer quantidade).\n        # Retorna (valor otimo, menor contagem otima, maior contagem otima).\n        val = [0] * (N + 1)\n        cmin = [0] * (N + 1)\n        cmax = [0] * (N + 1)\n        wl = W\n        for i in range(C, N + 1):\n            j = i - C\n            av = val[i - 1]\n            bv = val[j] + wl[j] + lam\n            if bv < av:\n                val[i] = bv\n                cmin[i] = cmin[j] + 1\n                cmax[i] = cmax[j] + 1\n            elif bv > av:\n                val[i] = av\n                cmin[i] = cmin[i - 1]\n                cmax[i] = cmax[i - 1]\n            else:\n                p = cmin[i - 1]; q = cmin[j] + 1\n                cmin[i] = q if q < p else p\n                p = cmax[i - 1]; q = cmax[j] + 1\n                cmax[i] = q if q > p else p\n        return val[N], cmin[N], cmax[N]\n\n    # Truque de Lagrange (Aliens trick): g(k) (custo minimo com exatamente k\n    # intervalos) e convexa em k. Busca binaria no maior lambda com\n    # kmax(lambda) >= K; nesse lambda, K esta no intervalo de otimos.\n    # Limites validos: d_K = g(K)-g(K-1) esta em\n    # [K*Wmin-(K-1)*Wmax, K*Wmax-(K-1)*Wmin], logo lambda* = -d_K esta entre\n    # lo e hi abaixo.\n    lo = (K - 1) * Wmin - K * Wmax\n    hi = (K - 1) * Wmax - K * Wmin\n    while lo < hi:\n        mid = (lo + hi + 1) // 2\n        _, _, kmax = solve(mid)\n        if kmax >= K:\n            lo = mid\n        else:\n            hi = mid - 1\n\n    h, kmin, kmax = solve(lo)\n    g = h - lo * K  # soma minima coberta com exatamente K etiquetas\n    print(total - g)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.3027228999999352,
+            "counts": {
+                "AC": 17,
+                "WA": 44,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

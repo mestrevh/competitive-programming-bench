@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:37:08.391526+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 967,
+            "output_tokens": 7941,
+            "total_tokens": 8908
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.003971,
+            "total_cost": 0.003991
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction findCenter(n, edges) {\n  const deg = new Int32Array(n + 2);\n  for (let i = 0; i < edges.length; i += 2) {\n    deg[edges[i]]++;\n    deg[edges[i + 1]]++;\n  }\n  const start = new Int32Array(n + 2);\n  for (let v = 1; v <= n; v++) start[v + 1] = start[v] + deg[v];\n  const adj = new Int32Array(edges.length);\n  const pos = start.slice();\n  for (let i = 0; i < edges.length; i += 2) {\n    const a = edges[i], b = edges[i + 1];\n    adj[pos[a]++] = b;\n    adj[pos[b]++] = a;\n  }\n  const dist = new Int32Array(n + 1);\n  const parent = new Int32Array(n + 1);\n  const queue = new Int32Array(n);\n\n  function bfs(src) {\n    dist.fill(-1);\n    let qh = 0, qt = 0, far = src;\n    queue[qt++] = src;\n    dist[src] = 0;\n    while (qh < qt) {\n      const u = queue[qh++];\n      const du = dist[u];\n      for (let p = start[u]; p < start[u + 1]; p++) {\n        const v = adj[p];\n        if (dist[v] === -1) {\n          dist[v] = du + 1;\n          parent[v] = u;\n          if (dist[v] > dist[far]) far = v;\n          queue[qt++] = v;\n        }\n      }\n    }\n    return far;\n  }\n\n  // Diâmetro via dupla BFS\n  const e1 = bfs(1);\n  const e2 = bfs(e1);\n  const L = dist[e2]; // diâmetro em número de arestas\n  // Centro: vértice a floor(L/2) arestas de uma extremidade do caminho do diâmetro\n  let steps = L >> 1;\n  let c = e2;\n  while (steps-- > 0) c = parent[c];\n  return c;\n}\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(s => s.length).map(Number);\n  let idx = 0;\n  const N = data[idx++];\n  const M = data[idx++];\n  const edges1 = data.slice(idx, idx + 2 * (N - 1));\n  idx += 2 * (N - 1);\n  const edges2 = data.slice(idx, idx + 2 * (M - 1));\n\n  const c1 = findCenter(N, edges1);\n  const c2 = findCenter(M, edges2);\n  process.stdout.write(c1 + ' ' + c2 + '\\n');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction findCenter(n, edges) {\n  const deg = new Int32Array(n + 2);\n  for (let i = 0; i < edges.length; i += 2) {\n    deg[edges[i]]++;\n    deg[edges[i + 1]]++;\n  }\n  const start = new Int32Array(n + 2);\n  for (let v = 1; v <= n; v++) start[v + 1] = start[v] + deg[v];\n  const adj = new Int32Array(edges.length);\n  const pos = start.slice();\n  for (let i = 0; i < edges.length; i += 2) {\n    const a = edges[i], b = edges[i + 1];\n    adj[pos[a]++] = b;\n    adj[pos[b]++] = a;\n  }\n  const dist = new Int32Array(n + 1);\n  const parent = new Int32Array(n + 1);\n  const queue = new Int32Array(n);\n\n  function bfs(src) {\n    dist.fill(-1);\n    let qh = 0, qt = 0, far = src;\n    queue[qt++] = src;\n    dist[src] = 0;\n    while (qh < qt) {\n      const u = queue[qh++];\n      const du = dist[u];\n      for (let p = start[u]; p < start[u + 1]; p++) {\n        const v = adj[p];\n        if (dist[v] === -1) {\n          dist[v] = du + 1;\n          parent[v] = u;\n          if (dist[v] > dist[far]) far = v;\n          queue[qt++] = v;\n        }\n      }\n    }\n    return far;\n  }\n\n  // Diâmetro via dupla BFS\n  const e1 = bfs(1);\n  const e2 = bfs(e1);\n  const L = dist[e2]; // diâmetro em número de arestas\n  // Centro: vértice a floor(L/2) arestas de uma extremidade do caminho do diâmetro\n  let steps = L >> 1;\n  let c = e2;\n  while (steps-- > 0) c = parent[c];\n  return c;\n}\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8').split(/\\s+/).filter(s => s.length).map(Number);\n  let idx = 0;\n  const N = data[idx++];\n  const M = data[idx++];\n  const edges1 = data.slice(idx, idx + 2 * (N - 1));\n  idx += 2 * (N - 1);\n  const edges2 = data.slice(idx, idx + 2 * (M - 1));\n\n  const c1 = findCenter(N, edges1);\n  const c2 = findCenter(M, edges2);\n  process.stdout.write(c1 + ' ' + c2 + '\\n');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.14289370004553348,
+            "counts": {
+                "AC": 6,
+                "WA": 32,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

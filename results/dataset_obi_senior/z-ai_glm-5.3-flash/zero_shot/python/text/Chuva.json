@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T04:24:33.549880+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 670,
+            "output_tokens": 1259,
+            "total_tokens": 1929
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.000629,
+            "total_cost": 0.000644
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    h = list(map(int, data[1:1+n]))\n    if n < 3:\n        print(0)\n        return\n    prefix = [0]*(n)\n    prefix[0] = h[0]\n    for i in range(1, n):\n        prefix[i] = max(prefix[i-1], h[i])\n    suffix = [0]*n\n    suffix[-1] = h[-1]\n    for i in range(n-2, -1, -1):\n        suffix[i] = max(suffix[i+1], h[i])\n    count = 0\n    for i in range(1, n-1):\n        if min(prefix[i-1], suffix[i+1]) > h[i]:\n            count += 1\n    print(count)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    h = list(map(int, data[1:1+n]))\n    if n < 3:\n        print(0)\n        return\n    prefix = [0]*(n)\n    prefix[0] = h[0]\n    for i in range(1, n):\n        prefix[i] = max(prefix[i-1], h[i])\n    suffix = [0]*n\n    suffix[-1] = h[-1]\n    for i in range(n-2, -1, -1):\n        suffix[i] = max(suffix[i+1], h[i])\n    count = 0\n    for i in range(1, n-1):\n        if min(prefix[i-1], suffix[i+1]) > h[i]:\n            count += 1\n    print(count)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09276859999954468,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

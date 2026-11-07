@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:03:51.041151+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1424,
+            "output_tokens": 6010,
+            "total_tokens": 7434
+        },
+        "cost_usd": {
+            "input_cost": 0.000142,
+            "output_cost": 0.003005,
+            "total_cost": 0.003147
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    long long T;\n    cin >> N >> K >> T;\n\n    vector<int> P(N), G(N);\n    for (int &x : P) cin >> x;\n    for (int &x : G) cin >> x;\n\n    if (K == N) {\n        cout << accumulate(P.begin(), P.end(), 0) << '\\n';\n        return 0;\n    }\n\n    int D = min(K, N - K);\n    int maxReward = 9 * K;\n    int width = maxReward + 1;\n    int size = (2 * D + 1) * width;\n    const int INF = 1e9;\n\n    auto indexOf = [&](int d, int reward) {\n        return (d + D) * width + reward;\n    };\n\n    vector<int> cur(size, INF), nxt(size, INF);\n    vector<int> touchedCur, touchedNxt;\n\n    cur[indexOf(0, 0)] = 0;\n    touchedCur.push_back(indexOf(0, 0));\n\n    int initialPrefix = 0;\n\n    for (int i = 1; i <= N; ++i) {\n        for (int idx : touchedNxt) nxt[idx] = INF;\n        touchedNxt.clear();\n\n        int prevPrefix = initialPrefix;\n        int newPrefix = prevPrefix + G[i - 1];\n\n        int prevFLo = max(0, K - (N - (i - 1)));\n        int prevFHi = min(K, i - 1);\n        int prevDLo = prevPrefix - prevFHi;\n        int prevDHi = prevPrefix - prevFLo;\n\n        int nextFLo = max(0, K - (N - i));\n        int nextFHi = min(K, i);\n        int nextDLo = newPrefix - nextFHi;\n        int nextDHi = newPrefix - nextFLo;\n\n        for (int d = prevDLo; d <= prevDHi; ++d) {\n            int f = prevPrefix - d;\n            int rMax = 9 * f;\n\n            int d0 = d + G[i - 1];\n            int d1 = d + G[i - 1] - 1;\n\n            bool valid0 = d0 >= nextDLo && d0 <= nextDHi;\n            bool valid1 = d1 >= nextDLo && d1 <= nextDHi;\n\n            for (int r = 0; r <= rMax; ++r) {\n                int cost = cur[indexOf(d, r)];\n                if (cost == INF) continue;\n\n                if (valid0) {\n                    int nc = cost + abs(d0);\n                    if (nc <= T) {\n                        int idx = indexOf(d0, r);\n                        if (nxt[idx] == INF) touchedNxt.push_back(idx);\n                        if (nc < nxt[idx]) nxt[idx] = nc;\n                    }\n                }\n\n                if (valid1) {\n                    int nc = cost + abs(d1);\n                    if (nc <= T) {\n                        int nr = r + P[i - 1];\n                        int idx = indexOf(d1, nr);\n                        if (nxt[idx] == INF) touchedNxt.push_back(idx);\n                        if (nc < nxt[idx]) nxt[idx] = nc;\n                    }\n                }\n            }\n        }\n\n        initialPrefix = newPrefix;\n        swap(cur, nxt);\n        swap(touchedCur, touchedNxt);\n    }\n\n    int answer = 0;\n    for (int r = 0; r <= maxReward; ++r) {\n        if (cur[indexOf(0, r)] <= T) answer = r;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    long long T;\n    cin >> N >> K >> T;\n\n    vector<int> P(N), G(N);\n    for (int &x : P) cin >> x;\n    for (int &x : G) cin >> x;\n\n    if (K == N) {\n        cout << accumulate(P.begin(), P.end(), 0) << '\\n';\n        return 0;\n    }\n\n    int D = min(K, N - K);\n    int maxReward = 9 * K;\n    int width = maxReward + 1;\n    int size = (2 * D + 1) * width;\n    const int INF = 1e9;\n\n    auto indexOf = [&](int d, int reward) {\n        return (d + D) * width + reward;\n    };\n\n    vector<int> cur(size, INF), nxt(size, INF);\n    vector<int> touchedCur, touchedNxt;\n\n    cur[indexOf(0, 0)] = 0;\n    touchedCur.push_back(indexOf(0, 0));\n\n    int initialPrefix = 0;\n\n    for (int i = 1; i <= N; ++i) {\n        for (int idx : touchedNxt) nxt[idx] = INF;\n        touchedNxt.clear();\n\n        int prevPrefix = initialPrefix;\n        int newPrefix = prevPrefix + G[i - 1];\n\n        int prevFLo = max(0, K - (N - (i - 1)));\n        int prevFHi = min(K, i - 1);\n        int prevDLo = prevPrefix - prevFHi;\n        int prevDHi = prevPrefix - prevFLo;\n\n        int nextFLo = max(0, K - (N - i));\n        int nextFHi = min(K, i);\n        int nextDLo = newPrefix - nextFHi;\n        int nextDHi = newPrefix - nextFLo;\n\n        for (int d = prevDLo; d <= prevDHi; ++d) {\n            int f = prevPrefix - d;\n            int rMax = 9 * f;\n\n            int d0 = d + G[i - 1];\n            int d1 = d + G[i - 1] - 1;\n\n            bool valid0 = d0 >= nextDLo && d0 <= nextDHi;\n            bool valid1 = d1 >= nextDLo && d1 <= nextDHi;\n\n            for (int r = 0; r <= rMax; ++r) {\n                int cost = cur[indexOf(d, r)];\n                if (cost == INF) continue;\n\n                if (valid0) {\n                    int nc = cost + abs(d0);\n                    if (nc <= T) {\n                        int idx = indexOf(d0, r);\n                        if (nxt[idx] == INF) touchedNxt.push_back(idx);\n                        if (nc < nxt[idx]) nxt[idx] = nc;\n                    }\n                }\n\n                if (valid1) {\n                    int nc = cost + abs(d1);\n                    if (nc <= T) {\n                        int nr = r + P[i - 1];\n                        int idx = indexOf(d1, nr);\n                        if (nxt[idx] == INF) touchedNxt.push_back(idx);\n                        if (nc < nxt[idx]) nxt[idx] = nc;\n                    }\n                }\n            }\n        }\n\n        initialPrefix = newPrefix;\n        swap(cur, nxt);\n        swap(touchedCur, touchedNxt);\n    }\n\n    int answer = 0;\n    for (int r = 0; r <= maxReward; ++r) {\n        if (cur[indexOf(0, r)] <= T) answer = r;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.23673219999909634,
+            "counts": {
+                "AC": 66,
+                "WA": 1,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

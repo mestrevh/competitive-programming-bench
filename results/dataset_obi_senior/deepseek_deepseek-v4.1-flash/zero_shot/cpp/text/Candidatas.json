@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:07:11.415674+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 15.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 835,
+            "output_tokens": 18451,
+            "total_tokens": 19286
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.044282,
+            "total_cost": 0.044285
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MAXG = 32;\n\nstruct Item {\n    int g, cnt;\n};\n\nstruct Node {\n    long long ans;\n    int g;\n    int szPref, szSuff;\n    Item pref[MAXG], suff[MAXG];\n\n    Node() : ans(0), g(0), szPref(0), szSuff(0) {}\n};\n\nNode make_leaf(int x) {\n    Node n;\n    n.ans = (x > 1 ? 1LL : 0LL);\n    n.g = x;\n    n.pref[0] = {x, 1};\n    n.suff[0] = {x, 1};\n    n.szPref = n.szSuff = 1;\n    return n;\n}\n\nNode combine(const Node& A, const Node& B) {\n    if (A.szPref == 0) return B;\n    if (B.szPref == 0) return A;\n\n    Node C;\n    C.ans = A.ans + B.ans;\n    C.g = std::gcd(A.g, B.g);\n\n    for (int i = 0; i < A.szSuff; ++i) {\n        int ga = A.suff[i].g;\n        int ca = A.suff[i].cnt;\n        for (int j = 0; j < B.szPref; ++j) {\n            if (std::gcd(ga, B.pref[j].g) > 1) {\n                C.ans += 1LL * ca * B.pref[j].cnt;\n            }\n        }\n    }\n\n    int sz = 0;\n    for (int i = 0; i < A.szPref; ++i) {\n        C.pref[sz++] = A.pref[i];\n    }\n    for (int j = 0; j < B.szPref; ++j) {\n        int val = std::gcd(A.g, B.pref[j].g);\n        int cnt = B.pref[j].cnt;\n        if (sz > 0 && C.pref[sz - 1].g == val) {\n            C.pref[sz - 1].cnt += cnt;\n        } else {\n            C.pref[sz++] = {val, cnt};\n        }\n    }\n    C.szPref = sz;\n\n    sz = 0;\n    for (int i = 0; i < B.szSuff; ++i) {\n        C.suff[sz++] = B.suff[i];\n    }\n    for (int i = 0; i < A.szSuff; ++i) {\n        int val = std::gcd(A.suff[i].g, B.g);\n        int cnt = A.suff[i].cnt;\n        if (sz > 0 && C.suff[sz - 1].g == val) {\n            C.suff[sz - 1].cnt += cnt;\n        } else {\n            C.suff[sz++] = {val, cnt};\n        }\n    }\n    C.szSuff = sz;\n\n    return C;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<Node> seg(2 * N);\n\n    for (int i = 0; i < N; ++i) {\n        int x;\n        cin >> x;\n        seg[N + i] = make_leaf(x);\n    }\n\n    for (int i = N - 1; i >= 1; --i) {\n        seg[i] = combine(seg[2 * i], seg[2 * i + 1]);\n    }\n\n    while (M--) {\n        int T;\n        cin >> T;\n\n        if (T == 1) {\n            int I, V;\n            cin >> I >> V;\n            --I;\n\n            int p = N + I;\n            seg[p] = make_leaf(V);\n\n            p >>= 1;\n            while (p >= 1) {\n                seg[p] = combine(seg[2 * p], seg[2 * p + 1]);\n                p >>= 1;\n            }\n        } else {\n            int E, D;\n            cin >> E >> D;\n            --E;\n\n            int l = E + N;\n            int r = D + N;\n\n            Node left, right;\n\n            while (l < r) {\n                if (l & 1) {\n                    left = combine(left, seg[l]);\n                    ++l;\n                }\n                if (r & 1) {\n                    --r;\n                    right = combine(seg[r], right);\n                }\n                l >>= 1;\n                r >>= 1;\n            }\n\n            Node res = combine(left, right);\n            cout << res.ans << '\\n';\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MAXG = 32;\n\nstruct Item {\n    int g, cnt;\n};\n\nstruct Node {\n    long long ans;\n    int g;\n    int szPref, szSuff;\n    Item pref[MAXG], suff[MAXG];\n\n    Node() : ans(0), g(0), szPref(0), szSuff(0) {}\n};\n\nNode make_leaf(int x) {\n    Node n;\n    n.ans = (x > 1 ? 1LL : 0LL);\n    n.g = x;\n    n.pref[0] = {x, 1};\n    n.suff[0] = {x, 1};\n    n.szPref = n.szSuff = 1;\n    return n;\n}\n\nNode combine(const Node& A, const Node& B) {\n    if (A.szPref == 0) return B;\n    if (B.szPref == 0) return A;\n\n    Node C;\n    C.ans = A.ans + B.ans;\n    C.g = std::gcd(A.g, B.g);\n\n    for (int i = 0; i < A.szSuff; ++i) {\n        int ga = A.suff[i].g;\n        int ca = A.suff[i].cnt;\n        for (int j = 0; j < B.szPref; ++j) {\n            if (std::gcd(ga, B.pref[j].g) > 1) {\n                C.ans += 1LL * ca * B.pref[j].cnt;\n            }\n        }\n    }\n\n    int sz = 0;\n    for (int i = 0; i < A.szPref; ++i) {\n        C.pref[sz++] = A.pref[i];\n    }\n    for (int j = 0; j < B.szPref; ++j) {\n        int val = std::gcd(A.g, B.pref[j].g);\n        int cnt = B.pref[j].cnt;\n        if (sz > 0 && C.pref[sz - 1].g == val) {\n            C.pref[sz - 1].cnt += cnt;\n        } else {\n            C.pref[sz++] = {val, cnt};\n        }\n    }\n    C.szPref = sz;\n\n    sz = 0;\n    for (int i = 0; i < B.szSuff; ++i) {\n        C.suff[sz++] = B.suff[i];\n    }\n    for (int i = 0; i < A.szSuff; ++i) {\n        int val = std::gcd(A.suff[i].g, B.g);\n        int cnt = A.suff[i].cnt;\n        if (sz > 0 && C.suff[sz - 1].g == val) {\n            C.suff[sz - 1].cnt += cnt;\n        } else {\n            C.suff[sz++] = {val, cnt};\n        }\n    }\n    C.szSuff = sz;\n\n    return C;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<Node> seg(2 * N);\n\n    for (int i = 0; i < N; ++i) {\n        int x;\n        cin >> x;\n        seg[N + i] = make_leaf(x);\n    }\n\n    for (int i = N - 1; i >= 1; --i) {\n        seg[i] = combine(seg[2 * i], seg[2 * i + 1]);\n    }\n\n    while (M--) {\n        int T;\n        cin >> T;\n\n        if (T == 1) {\n            int I, V;\n            cin >> I >> V;\n            --I;\n\n            int p = N + I;\n            seg[p] = make_leaf(V);\n\n            p >>= 1;\n            while (p >= 1) {\n                seg[p] = combine(seg[2 * p], seg[2 * p + 1]);\n                p >>= 1;\n            }\n        } else {\n            int E, D;\n            cin >> E >> D;\n            --E;\n\n            int l = E + N;\n            int r = D + N;\n\n            Node left, right;\n\n            while (l < r) {\n                if (l & 1) {\n                    left = combine(left, seg[l]);\n                    ++l;\n                }\n                if (r & 1) {\n                    --r;\n                    right = combine(seg[r], right);\n                }\n                l >>= 1;\n                r >>= 1;\n            }\n\n            Node res = combine(left, right);\n            cout << res.ans << '\\n';\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.6323630000006233,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

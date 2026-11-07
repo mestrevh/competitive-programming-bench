@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:27:12.633053+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1145,
+            "output_tokens": 910,
+            "total_tokens": 9138
+        },
+        "cost_usd": {
+            "input_cost": 0.000859,
+            "output_cost": 0.003413,
+            "total_cost": 0.004271
+        },
+        "raw_response": "Para resolver este problema, podemos transformar as coordenadas dos prédios utilizando uma rotação de $45^\\circ$, convertendo a métrica de Manhattan na métrica de Chebyshev ($\\ell_\\infty$):\n$$u_i = X_i + Y_i$$\n$$v_i = X_i - Y_i$$\n\nA distância Manhattan entre dois pontos $(X_i, Y_i)$ e $(X_j, Y_j)$ torna-se a distância Chebyshev entre $(u_i, v_i)$ e $(u_j, v_j)$:\n$$d_{\\text{quad}}(i, j) = \\max(|u_i - u_j|, |v_i - v_j|)$$\n\nDessa forma, minimizar a distância máxima em cada rede equivale a cobrir todos os pontos no plano $(u, v)$ com dois quadrados de lado $D$ alinhados aos eixos. Os pontos extremos do conjunto delimitam a caixa envolvente mínima: $[u_{\\min}, u_{\\max}] \\times [v_{\\min}, v_{\\max}]$.\n\nPara que dois quadrados de lado $D$ cubram todos os pontos, eles devem cobrir os cantos opostos da caixa envolvente, o que nos dá duas orientações possíveis:\n1. **Diagonal principal**: Um quadrado ancorado no canto inferior-esquerdo $(u_{\\min}, v_{\\min})$ e outro no canto superior-direito $(u_{\\max}, v_{\\max})$.\n2. **Anti-diagonal**: Um quadrado ancorado no canto superior-esquerdo $(u_{\\min}, v_{\\max})$ e outro no canto inferior-direito $(u_{\\max}, v_{\\min})$.\n\nPara cada uma das orientações, o menor tamanho de lado $D$ que cobre todos os pontos é determinado pelo ponto mais desfavorável, exigindo apenas uma passagem linear ($O(N)$) sobre os pontos. A resposta final é o mínimo entre os dois valores obtidos.\n\n### Código em Python 3\n\n```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    X = [int(x) for x in data[1 : n + 1]]\n    Y = [int(y) for y in data[n + 1 : 2 * n + 1]]\n\n    if n <= 2:\n        print(0)\n        return\n\n    u = [x + y for x, y in zip(X, Y)]\n    v = [x - y for x, y in zip(X, Y)]\n\n    u_min = min(u)\n    u_max = max(u)\n    v_min = min(v)\n    v_max = max(v)\n\n    # Orientação 1: (u_min, v_min) e (u_max, v_max)\n    d1 = 0\n    for ui, vi in zip(u, v):\n        cost1 = ui - u_min if ui - u_min > vi - v_min else vi - v_min\n        cost2 = u_max - ui if u_max - ui > v_max - vi else v_max - vi\n        min_cost = cost1 if cost1 < cost2 else cost2\n        if min_cost > d1:\n            d1 = min_cost\n\n    # Orientação 2: (u_min, v_max) e (u_max, v_min)\n    d2 = 0\n    for ui, vi in zip(u, v):\n        cost1 = ui - u_min if ui - u_min > v_max - vi else v_max - vi\n        cost2 = u_max - ui if u_max - ui > vi - v_min else vi - v_min\n        min_cost = cost1 if cost1 < cost2 else cost2\n        if min_cost > d2:\n            d2 = min_cost\n\n    print(min(d1, d2))\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    X = [int(x) for x in data[1 : n + 1]]\n    Y = [int(y) for y in data[n + 1 : 2 * n + 1]]\n\n    if n <= 2:\n        print(0)\n        return\n\n    u = [x + y for x, y in zip(X, Y)]\n    v = [x - y for x, y in zip(X, Y)]\n\n    u_min = min(u)\n    u_max = max(u)\n    v_min = min(v)\n    v_max = max(v)\n\n    # Orientação 1: (u_min, v_min) e (u_max, v_max)\n    d1 = 0\n    for ui, vi in zip(u, v):\n        cost1 = ui - u_min if ui - u_min > vi - v_min else vi - v_min\n        cost2 = u_max - ui if u_max - ui > v_max - vi else v_max - vi\n        min_cost = cost1 if cost1 < cost2 else cost2\n        if min_cost > d1:\n            d1 = min_cost\n\n    # Orientação 2: (u_min, v_max) e (u_max, v_min)\n    d2 = 0\n    for ui, vi in zip(u, v):\n        cost1 = ui - u_min if ui - u_min > v_max - vi else v_max - vi\n        cost2 = u_max - ui if u_max - ui > vi - v_min else vi - v_min\n        min_cost = cost1 if cost1 < cost2 else cost2\n        if min_cost > d2:\n            d2 = min_cost\n\n    print(min(d1, d2))\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3080164000057266,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

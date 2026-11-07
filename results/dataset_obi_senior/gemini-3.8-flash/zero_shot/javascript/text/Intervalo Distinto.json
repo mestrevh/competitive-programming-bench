@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:54:10.242992+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 574,
+            "output_tokens": 325,
+            "total_tokens": 1185
+        },
+        "cost_usd": {
+            "input_cost": 0.000431,
+            "output_cost": 0.001219,
+            "total_cost": 0.001649
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n\n    const lastPos = new Int32Array(100005);\n    lastPos.fill(-1);\n\n    let maxLen = 0;\n    let left = 0;\n\n    for (let right = 0; right < N; right++) {\n        const val = readInt();\n        if (lastPos[val] >= left) {\n            left = lastPos[val] + 1;\n        }\n        lastPos[val] = right;\n        const currentLen = right - left + 1;\n        if (currentLen > maxLen) {\n            maxLen = currentLen;\n        }\n    }\n\n    console.log(maxLen);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n\n    const lastPos = new Int32Array(100005);\n    lastPos.fill(-1);\n\n    let maxLen = 0;\n    let left = 0;\n\n    for (let right = 0; right < N; right++) {\n        const val = readInt();\n        if (lastPos[val] >= left) {\n            left = lastPos[val] + 1;\n        }\n        lastPos[val] = right;\n        const currentLen = right - left + 1;\n        if (currentLen > maxLen) {\n            maxLen = currentLen;\n        }\n    }\n\n    console.log(maxLen);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.057484199991449714,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

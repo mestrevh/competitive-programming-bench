@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:49:23.444081+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 934,
+            "total_tokens": 1947
+        },
+        "cost_usd": {
+            "input_cost": 0.000101,
+            "output_cost": 0.000467,
+            "total_cost": 0.000568
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\ndata = sys.stdin.buffer.read().split()\n\nN, M, K = map(int, data[:3])\npassword = data[3].decode()\nwords = [word.decode() for word in data[4:4 + M]]\nP = int(data[4 + M])\n\nresult = list(password)\nword_index = 0\nremaining = M\n\nfor i, ch in enumerate(password):\n    if ch != '#':\n        continue\n\n    counts = Counter(words[word_index])\n    word_index += 1\n    remaining -= 1\n    suffix_count = K ** remaining\n\n    for letter in sorted(counts):\n        count = counts[letter]\n        branch_size = count * suffix_count\n        if P > branch_size:\n            P -= branch_size\n        else:\n            result[i] = letter\n            P = (P - 1) // count + 1\n            break\n\nprint(''.join(result))\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\ndata = sys.stdin.buffer.read().split()\n\nN, M, K = map(int, data[:3])\npassword = data[3].decode()\nwords = [word.decode() for word in data[4:4 + M]]\nP = int(data[4 + M])\n\nresult = list(password)\nword_index = 0\nremaining = M\n\nfor i, ch in enumerate(password):\n    if ch != '#':\n        continue\n\n    counts = Counter(words[word_index])\n    word_index += 1\n    remaining -= 1\n    suffix_count = K ** remaining\n\n    for letter in sorted(counts):\n        count = counts[letter]\n        branch_size = count * suffix_count\n        if P > branch_size:\n            P -= branch_size\n        else:\n            result[i] = letter\n            P = (P - 1) // count + 1\n            break\n\nprint(''.join(result))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0698608000020613,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

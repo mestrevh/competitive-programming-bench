@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:06:51.008805+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 624,
+            "output_tokens": 601,
+            "total_tokens": 1225
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.001442,
+            "total_cost": 0.001444
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = Number(data[0]);\nconst freq = new Uint32Array(100001);\n\nlet left = 0;\nlet maxLen = 0;\n\nfor (let right = 0; right < n; right++) {\n  const value = Number(data[right + 1]);\n  freq[value]++;\n\n  while (freq[value] > 1) {\n    const leftValue = Number(data[left + 1]);\n    freq[leftValue]--;\n    left++;\n  }\n\n  const len = right - left + 1;\n  if (len > maxLen) maxLen = len;\n}\n\nconsole.log(maxLen);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = Number(data[0]);\nconst freq = new Uint32Array(100001);\n\nlet left = 0;\nlet maxLen = 0;\n\nfor (let right = 0; right < n; right++) {\n  const value = Number(data[right + 1]);\n  freq[value]++;\n\n  while (freq[value] > 1) {\n    const leftValue = Number(data[left + 1]);\n    freq[leftValue]--;\n    left++;\n  }\n\n  const len = right - left + 1;\n  if (len > maxLen) maxLen = len;\n}\n\nconsole.log(maxLen);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08967389998724684,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

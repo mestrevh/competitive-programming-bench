@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:06:38.808846+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 923,
+            "output_tokens": 381,
+            "total_tokens": 2029
+        },
+        "cost_usd": {
+            "input_cost": 0.000692,
+            "output_cost": 0.001429,
+            "total_cost": 0.002121
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const R = nextInt();\n    if (R === null) return;\n    const N = nextInt();\n\n    const minPrice = new Map();\n\n    for (let i = 0; i < N; i++) {\n        const t = nextInt();\n        const p = nextInt();\n        if (!minPrice.has(t) || p < minPrice.get(t)) {\n            minPrice.set(t, p);\n        }\n    }\n\n    const prices = Array.from(minPrice.values());\n    prices.sort((a, b) => a - b);\n\n    let count = 0;\n    let currentMoney = R;\n\n    for (let i = 0; i < prices.length; i++) {\n        if (currentMoney >= prices[i]) {\n            currentMoney -= prices[i];\n            count++;\n        } else {\n            break;\n        }\n    }\n\n    console.log(count);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res;\n    }\n\n    const R = nextInt();\n    if (R === null) return;\n    const N = nextInt();\n\n    const minPrice = new Map();\n\n    for (let i = 0; i < N; i++) {\n        const t = nextInt();\n        const p = nextInt();\n        if (!minPrice.has(t) || p < minPrice.get(t)) {\n            minPrice.set(t, p);\n        }\n    }\n\n    const prices = Array.from(minPrice.values());\n    prices.sort((a, b) => a - b);\n\n    let count = 0;\n    let currentMoney = R;\n\n    for (let i = 0; i < prices.length; i++) {\n        if (currentMoney >= prices[i]) {\n            currentMoney -= prices[i];\n            count++;\n        } else {\n            break;\n        }\n    }\n\n    console.log(count);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0466510999831371,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

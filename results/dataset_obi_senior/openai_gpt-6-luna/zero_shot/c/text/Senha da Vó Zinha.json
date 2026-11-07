@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:12:47.736351+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 1349,
+            "total_tokens": 2362
+        },
+        "cost_usd": {
+            "input_cost": 0.000101,
+            "output_cost": 0.000674,
+            "total_cost": 0.000776
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint compare_chars(const void *a, const void *b) {\n    return *(const char *)a - *(const char *)b;\n}\n\nint main(void) {\n    int N, M, K;\n    scanf(\"%d %d %d\", &N, &M, &K);\n\n    char password[505];\n    scanf(\"%s\", password);\n\n    char options[505][30];\n    for (int i = 0; i < M; i++) {\n        scanf(\"%s\", options[i]);\n        qsort(options[i], K, sizeof(char), compare_chars);\n    }\n\n    long long P;\n    scanf(\"%lld\", &P);\n\n    long long suffix[505];\n    suffix[M] = 1;\n    for (int i = M - 1; i >= 0; i--) {\n        suffix[i] = suffix[i + 1] * K;\n        if (suffix[i] > P) suffix[i] = P;\n    }\n\n    long long rank = P - 1;\n    int index = 0;\n\n    for (int i = 0; i < N; i++) {\n        if (password[i] == '#') {\n            long long digit = rank / suffix[index + 1];\n            rank %= suffix[index + 1];\n            password[i] = options[index][digit];\n            index++;\n        }\n    }\n\n    printf(\"%s\\n\", password);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare_chars(const void *a, const void *b) {\n    return *(const char *)a - *(const char *)b;\n}\n\nint main(void) {\n    int N, M, K;\n    scanf(\"%d %d %d\", &N, &M, &K);\n\n    char password[505];\n    scanf(\"%s\", password);\n\n    char options[505][30];\n    for (int i = 0; i < M; i++) {\n        scanf(\"%s\", options[i]);\n        qsort(options[i], K, sizeof(char), compare_chars);\n    }\n\n    long long P;\n    scanf(\"%lld\", &P);\n\n    long long suffix[505];\n    suffix[M] = 1;\n    for (int i = M - 1; i >= 0; i--) {\n        suffix[i] = suffix[i + 1] * K;\n        if (suffix[i] > P) suffix[i] = P;\n    }\n\n    long long rank = P - 1;\n    int index = 0;\n\n    for (int i = 0; i < N; i++) {\n        if (password[i] == '#') {\n            long long digit = rank / suffix[index + 1];\n            rank %= suffix[index + 1];\n            password[i] = options[index][digit];\n            index++;\n        }\n    }\n\n    printf(\"%s\\n\", password);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1569601000082912,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

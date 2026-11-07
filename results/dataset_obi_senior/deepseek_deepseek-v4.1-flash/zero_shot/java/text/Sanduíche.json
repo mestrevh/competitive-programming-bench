@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:38:37.178445+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 861,
+            "output_tokens": 1571,
+            "total_tokens": 2432
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.00377,
+            "total_cost": 0.003773
+        },
+        "raw_response": "```java\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n\n        int[] forbidden = new int[N];\n\n        for (int i = 0; i < M; i++) {\n            int x = sc.nextInt() - 1;\n            int y = sc.nextInt() - 1;\n            forbidden[x] |= 1 << y;\n            forbidden[y] |= 1 << x;\n        }\n\n        int total = 1 << N;\n        boolean[] valid = new boolean[total];\n        valid[0] = true;\n\n        long answer = 0;\n\n        for (int mask = 1; mask < total; mask++) {\n            int bit = mask & -mask;\n            int v = Integer.numberOfTrailingZeros(bit);\n            int prev = mask ^ bit;\n\n            if (valid[prev] && (forbidden[v] & prev) == 0) {\n                valid[mask] = true;\n                answer++;\n            }\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n\n        int[] forbidden = new int[N];\n\n        for (int i = 0; i < M; i++) {\n            int x = sc.nextInt() - 1;\n            int y = sc.nextInt() - 1;\n            forbidden[x] |= 1 << y;\n            forbidden[y] |= 1 << x;\n        }\n\n        int total = 1 << N;\n        boolean[] valid = new boolean[total];\n        valid[0] = true;\n\n        long answer = 0;\n\n        for (int mask = 1; mask < total; mask++) {\n            int bit = mask & -mask;\n            int v = Integer.numberOfTrailingZeros(bit);\n            int prev = mask ^ bit;\n\n            if (valid[prev] && (forbidden[v] & prev) == 0) {\n                valid[mask] = true;\n                answer++;\n            }\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12309420001110993,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

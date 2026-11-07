@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:03:57.974054+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1160,
+            "output_tokens": 10023,
+            "total_tokens": 11183
+        },
+        "cost_usd": {
+            "input_cost": 0.000116,
+            "output_cost": 0.005012,
+            "total_cost": 0.005128
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        long nextLong() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            long value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n\n        int nextInt() throws IOException {\n            return (int) nextLong();\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int k = fs.nextInt();\n\n        long[] a = new long[n];\n        long[] b = new long[n];\n        for (int i = 0; i < n; i++) a[i] = fs.nextLong();\n        for (int i = 0; i < n; i++) b[i] = fs.nextLong();\n\n        long positiveSum = 0;\n        long[] delta = new long[n];\n        long maxA1 = -1, maxA2 = -1;\n        int maxIdx1 = -1, maxIdx2 = -1;\n        long answer = 0;\n\n        for (int i = 0; i < n; i++) {\n            long gain = a[i] - b[i];\n            if (gain >= 0) positiveSum += gain;\n            delta[i] = gain >= 0 ? b[i] : a[i];\n\n            if (a[i] > maxA1) {\n                maxA2 = maxA1;\n                maxIdx2 = maxIdx1;\n                maxA1 = a[i];\n                maxIdx1 = i;\n            } else if (a[i] > maxA2) {\n                maxA2 = a[i];\n                maxIdx2 = i;\n            }\n\n            answer = Math.max(answer, a[i]);\n        }\n\n        Arrays.sort(delta);\n        int freeCount = Math.min(k, n - 1);\n        long topDeltaSum = 0;\n        for (int i = n - freeCount; i < n; i++) {\n            if (i >= 0) topDeltaSum += delta[i];\n        }\n\n        long threshold = freeCount > 0 ? delta[n - freeCount] : Long.MAX_VALUE;\n        long replacement = freeCount > 0 ? delta[n - freeCount - 1] : 0;\n\n        for (int i = 0; i < n; i++) {\n            long gain = a[i] - b[i];\n            long base = a[i] + positiveSum - Math.max(0L, gain);\n            long freeBonus = topDeltaSum;\n\n            if (freeCount > 0 && delta[i] >= threshold) {\n                freeBonus = topDeltaSum - delta[i] + replacement;\n            }\n\n            answer = Math.max(answer, base + freeBonus);\n\n            if (gain < 0 && n > 1) {\n                long loss = -gain;\n                long terminalA = maxIdx1 != i ? maxA1 : maxA2;\n                if (terminalA >= loss) {\n                    answer = Math.max(answer, terminalA - loss);\n                }\n            }\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        long nextLong() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            long value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n\n        int nextInt() throws IOException {\n            return (int) nextLong();\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int k = fs.nextInt();\n\n        long[] a = new long[n];\n        long[] b = new long[n];\n        for (int i = 0; i < n; i++) a[i] = fs.nextLong();\n        for (int i = 0; i < n; i++) b[i] = fs.nextLong();\n\n        long positiveSum = 0;\n        long[] delta = new long[n];\n        long maxA1 = -1, maxA2 = -1;\n        int maxIdx1 = -1, maxIdx2 = -1;\n        long answer = 0;\n\n        for (int i = 0; i < n; i++) {\n            long gain = a[i] - b[i];\n            if (gain >= 0) positiveSum += gain;\n            delta[i] = gain >= 0 ? b[i] : a[i];\n\n            if (a[i] > maxA1) {\n                maxA2 = maxA1;\n                maxIdx2 = maxIdx1;\n                maxA1 = a[i];\n                maxIdx1 = i;\n            } else if (a[i] > maxA2) {\n                maxA2 = a[i];\n                maxIdx2 = i;\n            }\n\n            answer = Math.max(answer, a[i]);\n        }\n\n        Arrays.sort(delta);\n        int freeCount = Math.min(k, n - 1);\n        long topDeltaSum = 0;\n        for (int i = n - freeCount; i < n; i++) {\n            if (i >= 0) topDeltaSum += delta[i];\n        }\n\n        long threshold = freeCount > 0 ? delta[n - freeCount] : Long.MAX_VALUE;\n        long replacement = freeCount > 0 ? delta[n - freeCount - 1] : 0;\n\n        for (int i = 0; i < n; i++) {\n            long gain = a[i] - b[i];\n            long base = a[i] + positiveSum - Math.max(0L, gain);\n            long freeBonus = topDeltaSum;\n\n            if (freeCount > 0 && delta[i] >= threshold) {\n                freeBonus = topDeltaSum - delta[i] + replacement;\n            }\n\n            answer = Math.max(answer, base + freeBonus);\n\n            if (gain < 0 && n > 1) {\n                long loss = -gain;\n                long terminalA = maxIdx1 != i ? maxA1 : maxA2;\n                if (terminalA >= loss) {\n                    answer = Math.max(answer, terminalA - loss);\n                }\n            }\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.12722760000178823,
+            "counts": {
+                "AC": 40,
+                "WA": 46,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

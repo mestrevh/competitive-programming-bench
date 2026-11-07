@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:56:58.663400+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 839,
+            "output_tokens": 1654,
+            "total_tokens": 2493
+        },
+        "cost_usd": {
+            "input_cost": 8.4e-05,
+            "output_cost": 0.000827,
+            "total_cost": 0.000911
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet pos = 0;\n\nconst L = Number(input[pos++]);\nconst C = Number(input[pos++]);\n\nconst equations = [];\nconst present = new Array(676).fill(false);\n\nfunction variableIndex(name) {\n  return (name.charCodeAt(0) - 97) * 26 + name.charCodeAt(1) - 97;\n}\n\nfunction addEquation(variables, sum) {\n  const coeffs = new Map();\n  for (const v of variables) {\n    coeffs.set(v, (coeffs.get(v) || 0) + 1);\n    present[v] = true;\n  }\n  equations.push({ coeffs, rhs: sum, degree: coeffs.size });\n}\n\nfor (let r = 0; r < L; r++) {\n  const variables = [];\n  for (let c = 0; c < C; c++) {\n    variables.push(variableIndex(input[pos++]));\n  }\n  addEquation(variables, BigInt(input[pos++]));\n}\n\nconst columnSums = [];\nfor (let c = 0; c < C; c++) columnSums.push(BigInt(input[pos++]));\n\nfor (let c = 0; c < C; c++) {\n  const variables = [];\n  for (let r = 0; r < L; r++) {\n    variables.push(variableIndex(input[2 + r * (C + 1) + c]));\n  }\n  addEquation(variables, columnSums[c]);\n}\n\nconst incidence = Array.from({ length: 676 }, () => []);\nfor (let i = 0; i < equations.length; i++) {\n  for (const v of equations[i].coeffs.keys()) incidence[v].push(i);\n}\n\nconst queue = [];\nfor (let i = 0; i < equations.length; i++) {\n  if (equations[i].degree === 1) queue.push(i);\n}\n\nconst known = new Array(676).fill(false);\nconst values = new Array(676);\nlet head = 0;\n\nwhile (head < queue.length) {\n  const eqIndex = queue[head++];\n  const eq = equations[eqIndex];\n  if (eq.degree !== 1) continue;\n\n  let variable = -1;\n  let coefficient = 0;\n  for (const [v, count] of eq.coeffs) {\n    variable = v;\n    coefficient = count;\n    break;\n  }\n\n  if (known[variable]) continue;\n\n  const value = eq.rhs / BigInt(coefficient);\n  known[variable] = true;\n  values[variable] = value;\n\n  for (const affectedIndex of incidence[variable]) {\n    const affected = equations[affectedIndex];\n    const count = affected.coeffs.get(variable);\n    if (count === undefined) continue;\n\n    affected.rhs -= BigInt(count) * value;\n    affected.coeffs.delete(variable);\n    affected.degree--;\n\n    if (affected.degree === 1) queue.push(affectedIndex);\n  }\n}\n\nconst output = [];\nfor (let v = 0; v < 676; v++) {\n  if (!present[v]) continue;\n  const name = String.fromCharCode(97 + Math.floor(v / 26)) +\n               String.fromCharCode(97 + (v % 26));\n  output.push(`${name} ${values[v]}`);\n}\n\nconsole.log(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet pos = 0;\n\nconst L = Number(input[pos++]);\nconst C = Number(input[pos++]);\n\nconst equations = [];\nconst present = new Array(676).fill(false);\n\nfunction variableIndex(name) {\n  return (name.charCodeAt(0) - 97) * 26 + name.charCodeAt(1) - 97;\n}\n\nfunction addEquation(variables, sum) {\n  const coeffs = new Map();\n  for (const v of variables) {\n    coeffs.set(v, (coeffs.get(v) || 0) + 1);\n    present[v] = true;\n  }\n  equations.push({ coeffs, rhs: sum, degree: coeffs.size });\n}\n\nfor (let r = 0; r < L; r++) {\n  const variables = [];\n  for (let c = 0; c < C; c++) {\n    variables.push(variableIndex(input[pos++]));\n  }\n  addEquation(variables, BigInt(input[pos++]));\n}\n\nconst columnSums = [];\nfor (let c = 0; c < C; c++) columnSums.push(BigInt(input[pos++]));\n\nfor (let c = 0; c < C; c++) {\n  const variables = [];\n  for (let r = 0; r < L; r++) {\n    variables.push(variableIndex(input[2 + r * (C + 1) + c]));\n  }\n  addEquation(variables, columnSums[c]);\n}\n\nconst incidence = Array.from({ length: 676 }, () => []);\nfor (let i = 0; i < equations.length; i++) {\n  for (const v of equations[i].coeffs.keys()) incidence[v].push(i);\n}\n\nconst queue = [];\nfor (let i = 0; i < equations.length; i++) {\n  if (equations[i].degree === 1) queue.push(i);\n}\n\nconst known = new Array(676).fill(false);\nconst values = new Array(676);\nlet head = 0;\n\nwhile (head < queue.length) {\n  const eqIndex = queue[head++];\n  const eq = equations[eqIndex];\n  if (eq.degree !== 1) continue;\n\n  let variable = -1;\n  let coefficient = 0;\n  for (const [v, count] of eq.coeffs) {\n    variable = v;\n    coefficient = count;\n    break;\n  }\n\n  if (known[variable]) continue;\n\n  const value = eq.rhs / BigInt(coefficient);\n  known[variable] = true;\n  values[variable] = value;\n\n  for (const affectedIndex of incidence[variable]) {\n    const affected = equations[affectedIndex];\n    const count = affected.coeffs.get(variable);\n    if (count === undefined) continue;\n\n    affected.rhs -= BigInt(count) * value;\n    affected.coeffs.delete(variable);\n    affected.degree--;\n\n    if (affected.degree === 1) queue.push(affectedIndex);\n  }\n}\n\nconst output = [];\nfor (let v = 0; v < 676; v++) {\n  if (!present[v]) continue;\n  const name = String.fromCharCode(97 + Math.floor(v / 26)) +\n               String.fromCharCode(97 + (v % 26));\n  output.push(`${name} ${values[v]}`);\n}\n\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.055767500001820736,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

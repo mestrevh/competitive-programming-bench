@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:01:06.141512+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 964,
+            "output_tokens": 10171,
+            "total_tokens": 11135
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.02441,
+            "total_cost": 0.024413
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\nconst M = data[1];\n\nconst den = new Int32Array(M);\nfor (let i = 0; i < M; i++) {\n  den[i] = data[2 + i] - 1;\n}\n\nconst out = [];\n\nfor (let k = 1; k <= 10000; k++) {\n  let r = k;\n\n  for (let i = M - 1; i >= 0; i--) {\n    r += ((r - 1) / den[i]) | 0;\n    if (r > N) break;\n  }\n\n  if (r <= N) {\n    out.push(r);\n  } else {\n    break;\n  }\n}\n\nprocess.stdout.write(out.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\nconst M = data[1];\n\nconst den = new Int32Array(M);\nfor (let i = 0; i < M; i++) {\n  den[i] = data[2 + i] - 1;\n}\n\nconst out = [];\n\nfor (let k = 1; k <= 10000; k++) {\n  let r = k;\n\n  for (let i = M - 1; i >= 0; i--) {\n    r += ((r - 1) / den[i]) | 0;\n    if (r > N) break;\n  }\n\n  if (r <= N) {\n    out.push(r);\n  } else {\n    break;\n  }\n}\n\nprocess.stdout.write(out.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.24576379999052733,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

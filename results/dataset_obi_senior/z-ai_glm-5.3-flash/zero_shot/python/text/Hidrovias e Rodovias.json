@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T07:06:45.042398+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1526,
+            "output_tokens": 3759,
+            "total_tokens": 5285
+        },
+        "cost_usd": {
+            "input_cost": 3.3e-05,
+            "output_cost": 0.00188,
+            "total_cost": 0.001912
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    k = int(data[idx]); idx += 1\n\n    parent = list(range(n + 1))\n    size = [1] * (n + 1)\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n        return True\n\n    edges = []\n    ok = True\n    for i in range(m):\n        a = int(data[idx]); idx += 1\n        b = int(data[idx]); idx += 1\n        t = int(data[idx]); idx += 1\n        edges.append((a, b, t))\n        if t == 1:\n            if not union(a, b):\n                ok = False\n\n    if not ok:\n        print(\"N\")\n        return\n\n    for a, b, t in edges:\n        union(a, b)\n\n    comp = 0\n    for v in range(1, n + 1):\n        if find(v) == v:\n            comp += 1\n\n    # minimum number of highway removals to make graph a forest\n    rem = m - n + comp\n    print(\"S\" if rem <= k else \"N\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    k = int(data[idx]); idx += 1\n\n    parent = list(range(n + 1))\n    size = [1] * (n + 1)\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False\n        if size[ra] < size[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        size[ra] += size[rb]\n        return True\n\n    edges = []\n    ok = True\n    for i in range(m):\n        a = int(data[idx]); idx += 1\n        b = int(data[idx]); idx += 1\n        t = int(data[idx]); idx += 1\n        edges.append((a, b, t))\n        if t == 1:\n            if not union(a, b):\n                ok = False\n\n    if not ok:\n        print(\"N\")\n        return\n\n    for a, b, t in edges:\n        union(a, b)\n\n    comp = 0\n    for v in range(1, n + 1):\n        if find(v) == v:\n            comp += 1\n\n    # minimum number of highway removals to make graph a forest\n    rem = m - n + comp\n    print(\"S\" if rem <= k else \"N\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15539089999947464,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T08:29:35.777733+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 940,
+            "output_tokens": 492,
+            "total_tokens": 1432
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.000246,
+            "total_cost": 0.000266
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    L = int(data[idx]); idx+=1\n    C = int(data[idx]); idx+=1\n    eqs = []  # (Counter, total)\n    for _ in range(L):\n        cnt = Counter()\n        for _ in range(C):\n            cnt[data[idx]] += 1; idx += 1\n        s = int(data[idx]); idx += 1\n        eqs.append([cnt, s])\n    colsums = [int(data[idx+i]) for i in range(C)]; idx += C\n    for j in range(C):\n        cnt = Counter()\n        for i in range(L):\n            cnt[data[2 + i*(C+1) + j]] += 1\n        eqs.append([cnt, colsums[j]])\n\n    val = {}\n    done = [False]*len(eqs)\n    remaining = len(eqs)\n    while remaining > 0:\n        for e in range(len(eqs)):\n            if done[e]: continue\n            cnt, s = eqs[e]\n            unk = [v for v in cnt if v not in val]\n            if len(unk) == 1:\n                v = unk[0]\n                m = cnt[v]\n                known_sum = sum(k*cnt[k] for k in cnt if k in val)\n                val[v] = (s - known_sum)//m\n                done[e] = True\n                remaining -= 1\n    out = []\n    for name in sorted(val):\n        out.append(f\"{name} {val[name]}\")\n    print('\\n'.join(out))\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    L = int(data[idx]); idx+=1\n    C = int(data[idx]); idx+=1\n    eqs = []  # (Counter, total)\n    for _ in range(L):\n        cnt = Counter()\n        for _ in range(C):\n            cnt[data[idx]] += 1; idx += 1\n        s = int(data[idx]); idx += 1\n        eqs.append([cnt, s])\n    colsums = [int(data[idx+i]) for i in range(C)]; idx += C\n    for j in range(C):\n        cnt = Counter()\n        for i in range(L):\n            cnt[data[2 + i*(C+1) + j]] += 1\n        eqs.append([cnt, colsums[j]])\n\n    val = {}\n    done = [False]*len(eqs)\n    remaining = len(eqs)\n    while remaining > 0:\n        for e in range(len(eqs)):\n            if done[e]: continue\n            cnt, s = eqs[e]\n            unk = [v for v in cnt if v not in val]\n            if len(unk) == 1:\n                v = unk[0]\n                m = cnt[v]\n                known_sum = sum(k*cnt[k] for k in cnt if k in val)\n                val[v] = (s - known_sum)//m\n                done[e] = True\n                remaining -= 1\n    out = []\n    for name in sorted(val):\n        out.append(f\"{name} {val[name]}\")\n    print('\\n'.join(out))\n\nmain()",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 2.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 26,
+                "TLE": 4,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

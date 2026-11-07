@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:46:56.416090+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1067,
+            "output_tokens": 333,
+            "total_tokens": 1801
+        },
+        "cost_usd": {
+            "input_cost": 0.0008,
+            "output_cost": 0.001249,
+            "total_cost": 0.002049
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    \n    S = int(next(iterator))\n    T = int(next(iterator))\n    \n    # Usar uma matriz booleana ou lista de sets para consulta O(1) de adjacência\n    # Como S <= 1000, matriz booleana é muito eficiente em termos de memória e velocidade.\n    adj = [set() for _ in range(S + 1)]\n    for _ in range(T):\n        u = int(next(iterator))\n        v = int(next(iterator))\n        adj[u].add(v)\n        adj[v].add(u)\n        \n    P = int(next(iterator))\n    valid_walks = 0\n    \n    for _ in range(P):\n        n = int(next(iterator))\n        path = [int(next(iterator)) for _ in range(n)]\n        \n        possible = True\n        for i in range(n - 1):\n            if path[i + 1] not in adj[path[i]]:\n                possible = False\n                break\n        \n        if possible:\n            valid_walks += 1\n            \n    print(valid_walks)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    \n    S = int(next(iterator))\n    T = int(next(iterator))\n    \n    # Usar uma matriz booleana ou lista de sets para consulta O(1) de adjacência\n    # Como S <= 1000, matriz booleana é muito eficiente em termos de memória e velocidade.\n    adj = [set() for _ in range(S + 1)]\n    for _ in range(T):\n        u = int(next(iterator))\n        v = int(next(iterator))\n        adj[u].add(v)\n        adj[v].add(u)\n        \n    P = int(next(iterator))\n    valid_walks = 0\n    \n    for _ in range(P):\n        n = int(next(iterator))\n        path = [int(next(iterator)) for _ in range(n)]\n        \n        possible = True\n        for i in range(n - 1):\n            if path[i + 1] not in adj[path[i]]:\n                possible = False\n                break\n        \n        if possible:\n            valid_walks += 1\n            \n    print(valid_walks)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.5981659000026411,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

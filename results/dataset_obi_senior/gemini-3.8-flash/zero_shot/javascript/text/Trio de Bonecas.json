@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:11:22.143719+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1056,
+            "output_tokens": 555,
+            "total_tokens": 5330
+        },
+        "cost_usd": {
+            "input_cost": 0.000792,
+            "output_cost": 0.002081,
+            "total_cost": 0.002873
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const K = nextInt();\n\n    const A = new Int32Array(N + 1);\n    for (let i = 1; i <= N; i++) {\n        A[i] = nextInt();\n    }\n\n    // Ordena de forma decrescente (índices 1 a N)\n    // Usamos subarray de 1 a N para ordenar\n    const sub = A.subarray(1, N + 1);\n    sub.sort((a, b) => b - a);\n\n    // prev[i] armazena dp[i][j-1], curr[i] armazena dp[i][j]\n    let prev = new Float64Array(N + 1);\n    let curr = new Float64Array(N + 1);\n\n    // Para j = 0, dp[i][0] = 0 para todo i, prev já está inicializado com 0.\n\n    for (let j = 1; j <= K; j++) {\n        curr.fill(Infinity);\n        const minI = 3 * j;\n        for (let i = minI; i <= N; i++) {\n            let res = curr[i - 1];\n            const diff = A[i - 1] - A[i];\n            const cost = prev[i - 2] + diff * diff;\n            if (cost < res) {\n                res = cost;\n            }\n            curr[i] = res;\n        }\n        // Troca os buffers para a próxima iteração\n        const temp = prev;\n        prev = curr;\n        curr = temp;\n    }\n\n    console.log(prev[N].toString());\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const K = nextInt();\n\n    const A = new Int32Array(N + 1);\n    for (let i = 1; i <= N; i++) {\n        A[i] = nextInt();\n    }\n\n    // Ordena de forma decrescente (índices 1 a N)\n    // Usamos subarray de 1 a N para ordenar\n    const sub = A.subarray(1, N + 1);\n    sub.sort((a, b) => b - a);\n\n    // prev[i] armazena dp[i][j-1], curr[i] armazena dp[i][j]\n    let prev = new Float64Array(N + 1);\n    let curr = new Float64Array(N + 1);\n\n    // Para j = 0, dp[i][0] = 0 para todo i, prev já está inicializado com 0.\n\n    for (let j = 1; j <= K; j++) {\n        curr.fill(Infinity);\n        const minI = 3 * j;\n        for (let i = minI; i <= N; i++) {\n            let res = curr[i - 1];\n            const diff = A[i - 1] - A[i];\n            const cost = prev[i - 2] + diff * diff;\n            if (cost < res) {\n                res = cost;\n            }\n            curr[i] = res;\n        }\n        // Troca os buffers para a próxima iteração\n        const temp = prev;\n        prev = curr;\n        curr = temp;\n    }\n\n    console.log(prev[N].toString());\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1046241000003647,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

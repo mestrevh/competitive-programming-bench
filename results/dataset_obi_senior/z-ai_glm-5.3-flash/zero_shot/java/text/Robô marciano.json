@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T21:55:12.543847+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 898,
+            "output_tokens": 28898,
+            "total_tokens": 29796
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.014449,
+            "total_cost": 0.014468
+        },
+        "raw_response": "Confiança: 92%\n\n```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in));\n        in.nextToken(); long xi = (long) in.nval;\n        in.nextToken(); long yi = (long) in.nval;\n        in.nextToken(); long xf = (long) in.nval;\n        in.nextToken(); long yf = (long) in.nval;\n        in.nextToken(); int n = (int) in.nval;\n        long[] ax1 = new long[n], ay1 = new long[n], ax2 = new long[n], ay2 = new long[n];\n        for (int i = 0; i < n; i++) {\n            in.nextToken(); ax1[i] = (long) in.nval;\n            in.nextToken(); ay1[i] = (long) in.nval;\n            in.nextToken(); ax2[i] = (long) in.nval;\n            in.nextToken(); ay2[i] = (long) in.nval;\n        }\n        int S = n, T = n + 1;\n        int V = n + 2;\n        long[][] w = new long[V][V];\n        for (int i = 0; i < n; i++) {\n            w[S][i] = w[i][S] = distPointRect(xi, yi, ax1[i], ay1[i], ax2[i], ay2[i]);\n            w[T][i] = w[i][T] = distPointRect(xf, yf, ax1[i], ay1[i], ax2[i], ay2[i]);\n        }\n        w[S][T] = w[T][S] = Math.abs(xi - xf) + Math.abs(yi - yf);\n        for (int i = 0; i < n; i++)\n            for (int j = i + 1; j < n; j++) {\n                long d = rectDist(ax1[i], ay1[i], ax2[i], ay2[i], ax1[j], ay1[j], ax2[j], ay2[j]);\n                w[i][j] = w[j][i] = d;\n            }\n        long[] dist = new long[V];\n        Arrays.fill(dist, Long.MAX_VALUE);\n        dist[S] = 0;\n        PriorityQueue<long[]> pq = new PriorityQueue<>((a, b) -> Long.compare(a[0], b[0]));\n        pq.add(new long[]{0, S});\n        boolean[] done = new boolean[V];\n        while (!pq.isEmpty()) {\n            long[] cur = pq.poll();\n            int u = (int) cur[1];\n            if (done[u]) continue;\n            done[u] = true;\n            if (u == T) break;\n            for (int v = 0; v < V; v++) {\n                if (v == u || done[v]) continue;\n                long nd = cur[0] + w[u][v];\n                if (nd < dist[v]) {\n                    dist[v] = nd;\n                    pq.add(new long[]{nd, v});\n                }\n            }\n        }\n        System.out.println(dist[T]);\n    }\n\n    static long distPointRect(long px, long py, long x1, long y1, long x2, long y2) {\n        long dx = 0, dy = 0;\n        if (px < x1) dx = x1 - px; else if (px > x2) dx = px - x2;\n        if (py < y1) dy = y1 - py; else if (py > y2) dy = py - y2;\n        return dx + dy;\n    }\n\n    static long rectDist(long ax1, long ay1, long ax2, long ay2, long bx1, long by1, long bx2, long by2) {\n        long dx = Math.max(0, Math.max(ax1 - bx2, bx1 - ax2));\n        long dy = Math.max(0, Math.max(ay1 - by2, by1 - ay2));\n        return dx + dy;\n    }\n}\n```\n\n**Ideia da solução:** construir um grafo cujos nós são as N áreas cobertas mais o ponto inicial e o ponto final. O peso da aresta entre duas áreas (ou entre um ponto e uma área) é a distância de Manhattan entre elas (0 se se tocam/sobrepõem, pois o robô pode trafegar livremente dentro de áreas cobertas e entrar/sair por qualquer ponto da borda). A menor distância percorrida fora das áreas é o caminho mínimo (Dijkstra) do ponto inicial ao final nesse grafo — cada trecho exterior de qualquer rota tem comprimento limitado inferiormente pelas distâncias de Manhattan entre as regiões consecutivas tocadas, e esse limite é atingível. Complexidade: O(N² log N), adequada para N ≤ 1000.",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in));\n        in.nextToken(); long xi = (long) in.nval;\n        in.nextToken(); long yi = (long) in.nval;\n        in.nextToken(); long xf = (long) in.nval;\n        in.nextToken(); long yf = (long) in.nval;\n        in.nextToken(); int n = (int) in.nval;\n        long[] ax1 = new long[n], ay1 = new long[n], ax2 = new long[n], ay2 = new long[n];\n        for (int i = 0; i < n; i++) {\n            in.nextToken(); ax1[i] = (long) in.nval;\n            in.nextToken(); ay1[i] = (long) in.nval;\n            in.nextToken(); ax2[i] = (long) in.nval;\n            in.nextToken(); ay2[i] = (long) in.nval;\n        }\n        int S = n, T = n + 1;\n        int V = n + 2;\n        long[][] w = new long[V][V];\n        for (int i = 0; i < n; i++) {\n            w[S][i] = w[i][S] = distPointRect(xi, yi, ax1[i], ay1[i], ax2[i], ay2[i]);\n            w[T][i] = w[i][T] = distPointRect(xf, yf, ax1[i], ay1[i], ax2[i], ay2[i]);\n        }\n        w[S][T] = w[T][S] = Math.abs(xi - xf) + Math.abs(yi - yf);\n        for (int i = 0; i < n; i++)\n            for (int j = i + 1; j < n; j++) {\n                long d = rectDist(ax1[i], ay1[i], ax2[i], ay2[i], ax1[j], ay1[j], ax2[j], ay2[j]);\n                w[i][j] = w[j][i] = d;\n            }\n        long[] dist = new long[V];\n        Arrays.fill(dist, Long.MAX_VALUE);\n        dist[S] = 0;\n        PriorityQueue<long[]> pq = new PriorityQueue<>((a, b) -> Long.compare(a[0], b[0]));\n        pq.add(new long[]{0, S});\n        boolean[] done = new boolean[V];\n        while (!pq.isEmpty()) {\n            long[] cur = pq.poll();\n            int u = (int) cur[1];\n            if (done[u]) continue;\n            done[u] = true;\n            if (u == T) break;\n            for (int v = 0; v < V; v++) {\n                if (v == u || done[v]) continue;\n                long nd = cur[0] + w[u][v];\n                if (nd < dist[v]) {\n                    dist[v] = nd;\n                    pq.add(new long[]{nd, v});\n                }\n            }\n        }\n        System.out.println(dist[T]);\n    }\n\n    static long distPointRect(long px, long py, long x1, long y1, long x2, long y2) {\n        long dx = 0, dy = 0;\n        if (px < x1) dx = x1 - px; else if (px > x2) dx = px - x2;\n        if (py < y1) dy = y1 - py; else if (py > y2) dy = py - y2;\n        return dx + dy;\n    }\n\n    static long rectDist(long ax1, long ay1, long ax2, long ay2, long bx1, long by1, long bx2, long by2) {\n        long dx = Math.max(0, Math.max(ax1 - bx2, bx1 - ax2));\n        long dy = Math.max(0, Math.max(ay1 - by2, by1 - ay2));\n        return dx + dy;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12663509999401867,
+            "counts": {
+                "AC": 37,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 37
+        }
+    }
+]

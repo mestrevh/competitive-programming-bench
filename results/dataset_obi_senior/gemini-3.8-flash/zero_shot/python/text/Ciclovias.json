@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:15:50.147705+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 935,
+            "output_tokens": 1256,
+            "total_tokens": 5183
+        },
+        "cost_usd": {
+            "input_cost": 0.000701,
+            "output_cost": 0.00471,
+            "total_cost": 0.005411
+        },
+        "raw_response": "Para resolver este problema de forma eficiente, vamos analisar a estrutura da programação dinâmica (DP).\n\n### Análise do Problema\nQueremos encontrar o tamanho do caminho mais longo que começa em cada vértice $u$, tal que os elementos nas posições ímpares e pares sejam estritamente crescentes.\n\nSeja $DP(u, v)$ o comprimento do maior caminho que começa com o passo $u \\to v$. \nO próximo vértice $w$ deve ser um vizinho de $v$ tal que $w > u$.\nPortanto, a relação de recorrência é:\n$$DP(u, v) = 1 + \\max(\\{1\\} \\cup \\{DP(v, w) : w \\in \\text{Adj}(v), w > u\\})$$\n\nNote que $DP(u, v)$ depende apenas de vizinhos $w$ de $v$ com $w > u$. Se ordenarmos os vizinhos de cada vértice $v$ em ordem decrescente, à medida que $u$ diminui, os vizinhos $w > u$ válidos formam um prefixo dessa lista ordenada (ou seja, mais elementos tornam-se válidos).\n\nMais importante: se iterarmos por um vértice intermediário $v$ e processarmos seus vizinhos de maneira coordenada, podemos notar a seguinte dependência:\nPara um vértice $u$ de $N$ descendo até 1:\n- Se processarmos os pares $(u, v)$ ordenados adequadamente, podemos atualizar os valores.\n\nDe fato, para cada vértice $u$ fixo, podemos considerar todas as arestas $\\{u, v\\}$. Se processarmos os vértices $u$ de $N$ decrescendo até 1:\nPara cada vizinho $v$ de $u$:\n- Queremos calcular $DP(u, v) = 1 + \\max_{w \\in \\text{Adj}(v), w > u} DP(v, w)$.\n- Como estamos processando $u$ em ordem decrescente de $N$ até 1, todo $w > u$ já foi processado!\n- Portanto, para o vértice $v$, todos os valores $DP(v, w)$ para $w > u$ já foram calculados e podem ser acumulados em um valor de máximo corrente para o vértice $v$!\n\nIsso permite uma abordagem extremamente eficiente em $O(N + M)$:\n1. Mantemos para cada vértice $v$ um valor `best[v]`, que armazena $\\max_{w \\in \\text{Adj}(v), w > u} DP(v, w)$ (inicialmente 1).\n2. Para cada $u$ de $N$ descendo até 1:\n   - Primeiro, calculamos $DP(u, v) = 1 + \\text{best}[v]$ para todo $v \\in \\text{Adj}(u)$.\n   - Em seguida (após calcular todos os $DP(u, v)$ para este $u$), para cada $v \\in \\text{Adj}(u)$, atualizamos $\\text{best}[u] = \\max(\\text{best}[u], DP(u, v))$.\n   - A resposta para o vértice $u$ será $1$ se $u$ não tiver vizinhos, ou $\\max_{v \\in \\text{Adj}(u)} DP(u, v)$.\n\n### Código em Python\n\n```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    # Lista de adjacência\n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n\n    # best[v] guarda o tamanho máximo a partir de v para vizinhos w > u corrente\n    best = [1] * (N + 1)\n    ans = [1] * (N + 1)\n\n    # dp_u_v armazenará temporariamente os valores de DP(u, v) para os vizinhos de u\n    dp_u_v = []\n\n    # Processa os vértices u de N descendo até 1\n    for u in range(N, 0, -1):\n        u_adj = adj[u]\n        if not u_adj:\n            continue\n\n        max_u = 1\n        dp_u_v.clear()\n\n        # Passo 1: Calcular DP(u, v) usando os best[v] atuais (onde todos w > u já foram incorporados)\n        for v in u_adj:\n            val = 1 + best[v]\n            dp_u_v.append(val)\n            if val > max_u:\n                max_u = val\n\n        ans[u] = max_u\n\n        # Passo 2: Agora que u foi processado, atualizamos best[u] com os valores calculados DP(u, v)\n        # para que vértices menores que u possam utilizar u como próximo passo\n        best_u = best[u]\n        for val in dp_u_v:\n            if val > best_u:\n                best_u = val\n        best[u] = best_u\n\n    sys.stdout.write(\" \".join(map(str, ans[1:])) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    # Lista de adjacência\n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n\n    # best[v] guarda o tamanho máximo a partir de v para vizinhos w > u corrente\n    best = [1] * (N + 1)\n    ans = [1] * (N + 1)\n\n    # dp_u_v armazenará temporariamente os valores de DP(u, v) para os vizinhos de u\n    dp_u_v = []\n\n    # Processa os vértices u de N descendo até 1\n    for u in range(N, 0, -1):\n        u_adj = adj[u]\n        if not u_adj:\n            continue\n\n        max_u = 1\n        dp_u_v.clear()\n\n        # Passo 1: Calcular DP(u, v) usando os best[v] atuais (onde todos w > u já foram incorporados)\n        for v in u_adj:\n            val = 1 + best[v]\n            dp_u_v.append(val)\n            if val > max_u:\n                max_u = val\n\n        ans[u] = max_u\n\n        # Passo 2: Agora que u foi processado, atualizamos best[u] com os valores calculados DP(u, v)\n        # para que vértices menores que u possam utilizar u como próximo passo\n        best_u = best[u]\n        for val in dp_u_v:\n            if val > best_u:\n                best_u = val\n        best[u] = best_u\n\n    sys.stdout.write(\" \".join(map(str, ans[1:])) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.7285163999986253,
+            "counts": {
+                "AC": 0,
+                "WA": 40,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

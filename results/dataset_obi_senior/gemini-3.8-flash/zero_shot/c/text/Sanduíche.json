@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:32:36.595099+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 794,
+            "output_tokens": 299,
+            "total_tokens": 2128
+        },
+        "cost_usd": {
+            "input_cost": 0.000596,
+            "output_cost": 0.001121,
+            "total_cost": 0.001717
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint n, m;\nint adj[20];\nlong long count = 0;\n\nvoid backtrack(int idx, int banned_mask) {\n    if (idx == n) {\n        count++;\n        return;\n    }\n\n    // Opção 1: Não incluir o ingrediente idx\n    backtrack(idx + 1, banned_mask);\n\n    // Opção 2: Incluir o ingrediente idx (se for compatível)\n    if (!(banned_mask & (1 << idx))) {\n        backtrack(idx + 1, banned_mask | adj[idx]);\n    }\n}\n\nint main() {\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        --u; --v;\n        adj[u] |= (1 << v);\n        adj[v] |= (1 << u);\n    }\n\n    backtrack(0, 0);\n\n    // O conjunto vazio não é considerado um sanduíche válido\n    printf(\"%lld\\n\", count - 1);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint n, m;\nint adj[20];\nlong long count = 0;\n\nvoid backtrack(int idx, int banned_mask) {\n    if (idx == n) {\n        count++;\n        return;\n    }\n\n    // Opção 1: Não incluir o ingrediente idx\n    backtrack(idx + 1, banned_mask);\n\n    // Opção 2: Incluir o ingrediente idx (se for compatível)\n    if (!(banned_mask & (1 << idx))) {\n        backtrack(idx + 1, banned_mask | adj[idx]);\n    }\n}\n\nint main() {\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        --u; --v;\n        adj[u] |= (1 << v);\n        adj[v] |= (1 << u);\n    }\n\n    backtrack(0, 0);\n\n    // O conjunto vazio não é considerado um sanduíche válido\n    printf(\"%lld\\n\", count - 1);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15852950001135468,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

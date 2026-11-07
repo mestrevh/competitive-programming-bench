@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:50:33.964900+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 860,
+            "output_tokens": 713,
+            "total_tokens": 1573
+        },
+        "cost_usd": {
+            "input_cost": 8.6e-05,
+            "output_cost": 0.000356,
+            "total_cost": 0.000442
+        },
+        "raw_response": "```python\nimport sys\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\n\ntime = 0\ngap = 1\nhas_event = False\npending = {}\ntotals = {}\nfriends = set()\n\ni = 1\nfor _ in range(n):\n    kind = data[i].decode()\n    x = int(data[i + 1])\n    i += 2\n\n    if kind == \"T\":\n        gap = x\n        continue\n\n    if has_event:\n        time += gap\n    else:\n        has_event = True\n    gap = 1\n\n    friends.add(x)\n    if kind == \"R\":\n        pending[x] = time\n        totals.setdefault(x, 0)\n    else:\n        totals[x] = totals.get(x, 0) + time - pending.pop(x)\n\nfor friend in sorted(friends):\n    result = -1 if friend in pending else totals.get(friend, 0)\n    print(friend, result)\n```",
+        "extracted_code": "import sys\n\ndata = sys.stdin.buffer.read().split()\nn = int(data[0])\n\ntime = 0\ngap = 1\nhas_event = False\npending = {}\ntotals = {}\nfriends = set()\n\ni = 1\nfor _ in range(n):\n    kind = data[i].decode()\n    x = int(data[i + 1])\n    i += 2\n\n    if kind == \"T\":\n        gap = x\n        continue\n\n    if has_event:\n        time += gap\n    else:\n        has_event = True\n    gap = 1\n\n    friends.add(x)\n    if kind == \"R\":\n        pending[x] = time\n        totals.setdefault(x, 0)\n    else:\n        totals[x] = totals.get(x, 0) + time - pending.pop(x)\n\nfor friend in sorted(friends):\n    result = -1 if friend in pending else totals.get(friend, 0)\n    print(friend, result)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07943250000244007,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

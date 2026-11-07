@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:47:42.978335+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1157,
+            "output_tokens": 1833,
+            "total_tokens": 2990
+        },
+        "cost_usd": {
+            "input_cost": 0.000116,
+            "output_cost": 0.000916,
+            "total_cost": 0.001032
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst T = nextInt();\n\nconst types = new Int32Array(N);\nfor (let i = 0; i < N; i++) types[i] = nextInt();\n\nconst items = new Array(N);\nfor (let i = 0; i < N; i++) {\n  items[i] = { t: types[i], p: nextInt() };\n}\n\nitems.sort((a, b) => a.t - b.t || a.p - b.p);\n\nconst itemType = new Int32Array(N);\nconst itemPrice = new Int32Array(N);\nconst ptr = new Int32Array(T + 1);\nconst end = new Int32Array(T + 1);\n\nfor (let i = 0; i < N; i++) {\n  const item = items[i];\n  itemType[i] = item.t;\n  itemPrice[i] = item.p;\n  if (i === 0 || items[i - 1].t !== item.t) ptr[item.t] = i;\n  end[item.t] = i + 1;\n}\n\nconst heap = [];\n\nfunction less(a, b) {\n  return itemPrice[a] < itemPrice[b] ||\n    (itemPrice[a] === itemPrice[b] && itemType[a] < itemType[b]);\n}\n\nfunction heapPush(value) {\n  let i = heap.length;\n  heap.push(value);\n  while (i > 0) {\n    const parent = (i - 1) >> 1;\n    if (!less(value, heap[parent])) break;\n    heap[i] = heap[parent];\n    i = parent;\n  }\n  heap[i] = value;\n}\n\nfunction heapPop() {\n  const root = heap[0];\n  const last = heap.pop();\n  if (heap.length > 0) {\n    let i = 0;\n    while (true) {\n      const left = i * 2 + 1;\n      if (left >= heap.length) break;\n      const right = left + 1;\n      let child = left;\n      if (right < heap.length && less(heap[right], heap[left])) child = right;\n      if (!less(heap[child], last)) break;\n      heap[i] = heap[child];\n      i = child;\n    }\n    heap[i] = last;\n  }\n  return root;\n}\n\nfor (let t = 1; t <= T; t++) {\n  if (ptr[t] < end[t]) heapPush(ptr[t]);\n}\n\nconst C = nextInt();\nlet total = 0;\n\nfor (let j = 0; j < C; j++) {\n  const u = nextInt();\n\n  if (u === 0) {\n    while (heap.length > 0) {\n      const index = heap[0];\n      if (ptr[itemType[index]] === index) break;\n      heapPop();\n    }\n    if (heap.length === 0) continue;\n\n    const index = heapPop();\n    const t = itemType[index];\n    total += itemPrice[index];\n    ptr[t]++;\n    if (ptr[t] < end[t]) heapPush(ptr[t]);\n  } else if (ptr[u] < end[u]) {\n    const index = ptr[u];\n    total += itemPrice[index];\n    ptr[u]++;\n    if (ptr[u] < end[u]) heapPush(ptr[u]);\n  }\n}\n\nconsole.log(total.toString());\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst T = nextInt();\n\nconst types = new Int32Array(N);\nfor (let i = 0; i < N; i++) types[i] = nextInt();\n\nconst items = new Array(N);\nfor (let i = 0; i < N; i++) {\n  items[i] = { t: types[i], p: nextInt() };\n}\n\nitems.sort((a, b) => a.t - b.t || a.p - b.p);\n\nconst itemType = new Int32Array(N);\nconst itemPrice = new Int32Array(N);\nconst ptr = new Int32Array(T + 1);\nconst end = new Int32Array(T + 1);\n\nfor (let i = 0; i < N; i++) {\n  const item = items[i];\n  itemType[i] = item.t;\n  itemPrice[i] = item.p;\n  if (i === 0 || items[i - 1].t !== item.t) ptr[item.t] = i;\n  end[item.t] = i + 1;\n}\n\nconst heap = [];\n\nfunction less(a, b) {\n  return itemPrice[a] < itemPrice[b] ||\n    (itemPrice[a] === itemPrice[b] && itemType[a] < itemType[b]);\n}\n\nfunction heapPush(value) {\n  let i = heap.length;\n  heap.push(value);\n  while (i > 0) {\n    const parent = (i - 1) >> 1;\n    if (!less(value, heap[parent])) break;\n    heap[i] = heap[parent];\n    i = parent;\n  }\n  heap[i] = value;\n}\n\nfunction heapPop() {\n  const root = heap[0];\n  const last = heap.pop();\n  if (heap.length > 0) {\n    let i = 0;\n    while (true) {\n      const left = i * 2 + 1;\n      if (left >= heap.length) break;\n      const right = left + 1;\n      let child = left;\n      if (right < heap.length && less(heap[right], heap[left])) child = right;\n      if (!less(heap[child], last)) break;\n      heap[i] = heap[child];\n      i = child;\n    }\n    heap[i] = last;\n  }\n  return root;\n}\n\nfor (let t = 1; t <= T; t++) {\n  if (ptr[t] < end[t]) heapPush(ptr[t]);\n}\n\nconst C = nextInt();\nlet total = 0;\n\nfor (let j = 0; j < C; j++) {\n  const u = nextInt();\n\n  if (u === 0) {\n    while (heap.length > 0) {\n      const index = heap[0];\n      if (ptr[itemType[index]] === index) break;\n      heapPop();\n    }\n    if (heap.length === 0) continue;\n\n    const index = heapPop();\n    const t = itemType[index];\n    total += itemPrice[index];\n    ptr[t]++;\n    if (ptr[t] < end[t]) heapPush(ptr[t]);\n  } else if (ptr[u] < end[u]) {\n    const index = ptr[u];\n    total += itemPrice[index];\n    ptr[u]++;\n    if (ptr[u] < end[u]) heapPush(ptr[u]);\n  }\n}\n\nconsole.log(total.toString());",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16885760000150185,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

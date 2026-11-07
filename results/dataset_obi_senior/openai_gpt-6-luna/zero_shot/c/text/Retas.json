@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:11:00.788418+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1065,
+            "output_tokens": 2133,
+            "total_tokens": 3198
+        },
+        "cost_usd": {
+            "input_cost": 0.000107,
+            "output_cost": 0.001066,
+            "total_cost": 0.001173
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long y1, y2, a;\n    int id;\n} Line;\n\nstatic int compare_start(const void *p1, const void *p2) {\n    const Line *x = p1;\n    const Line *y = p2;\n\n    if (x->y1 < y->y1) return -1;\n    if (x->y1 > y->y1) return 1;\n    if (x->a > y->a) return -1;\n    if (x->a < y->a) return 1;\n    return x->id - y->id;\n}\n\nstatic int compare_end(const void *p1, const void *p2) {\n    const Line *x = p1;\n    const Line *y = p2;\n\n    if (x->y2 < y->y2) return -1;\n    if (x->y2 > y->y2) return 1;\n    if (x->a < y->a) return -1;\n    if (x->a > y->a) return 1;\n    return x->id - y->id;\n}\n\nint main(void) {\n    int n;\n    long long x1, x2;\n\n    if (scanf(\"%d %lld %lld\", &n, &x1, &x2) != 3) return 0;\n\n    Line *start = malloc((size_t)n * sizeof(Line));\n    Line *end = malloc((size_t)n * sizeof(Line));\n    int *rank = malloc((size_t)n * sizeof(int));\n    long long *fenwick = calloc((size_t)n + 1, sizeof(long long));\n\n    for (int i = 0; i < n; ++i) {\n        long long a, b;\n        scanf(\"%lld %lld\", &a, &b);\n\n        start[i].a = end[i].a = a;\n        start[i].y1 = a * x1 + b;\n        start[i].y2 = a * x2 + b;\n        start[i].id = end[i].id = i;\n    }\n\n    qsort(start, (size_t)n, sizeof(Line), compare_start);\n    qsort(end, (size_t)n, sizeof(Line), compare_end);\n\n    for (int i = 0; i < n; ++i)\n        rank[end[i].id] = i + 1;\n\n    long long inversions = 0;\n    for (int i = 0; i < n; ++i) {\n        int r = rank[start[i].id];\n        long long at_most = 0;\n\n        for (int p = r; p > 0; p -= p & -p)\n            at_most += fenwick[p];\n\n        inversions += i - at_most;\n\n        for (int p = r; p <= n; p += p & -p)\n            fenwick[p]++;\n    }\n\n    printf(\"%lld\\n\", inversions);\n\n    free(start);\n    free(end);\n    free(rank);\n    free(fenwick);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long y1, y2, a;\n    int id;\n} Line;\n\nstatic int compare_start(const void *p1, const void *p2) {\n    const Line *x = p1;\n    const Line *y = p2;\n\n    if (x->y1 < y->y1) return -1;\n    if (x->y1 > y->y1) return 1;\n    if (x->a > y->a) return -1;\n    if (x->a < y->a) return 1;\n    return x->id - y->id;\n}\n\nstatic int compare_end(const void *p1, const void *p2) {\n    const Line *x = p1;\n    const Line *y = p2;\n\n    if (x->y2 < y->y2) return -1;\n    if (x->y2 > y->y2) return 1;\n    if (x->a < y->a) return -1;\n    if (x->a > y->a) return 1;\n    return x->id - y->id;\n}\n\nint main(void) {\n    int n;\n    long long x1, x2;\n\n    if (scanf(\"%d %lld %lld\", &n, &x1, &x2) != 3) return 0;\n\n    Line *start = malloc((size_t)n * sizeof(Line));\n    Line *end = malloc((size_t)n * sizeof(Line));\n    int *rank = malloc((size_t)n * sizeof(int));\n    long long *fenwick = calloc((size_t)n + 1, sizeof(long long));\n\n    for (int i = 0; i < n; ++i) {\n        long long a, b;\n        scanf(\"%lld %lld\", &a, &b);\n\n        start[i].a = end[i].a = a;\n        start[i].y1 = a * x1 + b;\n        start[i].y2 = a * x2 + b;\n        start[i].id = end[i].id = i;\n    }\n\n    qsort(start, (size_t)n, sizeof(Line), compare_start);\n    qsort(end, (size_t)n, sizeof(Line), compare_end);\n\n    for (int i = 0; i < n; ++i)\n        rank[end[i].id] = i + 1;\n\n    long long inversions = 0;\n    for (int i = 0; i < n; ++i) {\n        int r = rank[start[i].id];\n        long long at_most = 0;\n\n        for (int p = r; p > 0; p -= p & -p)\n            at_most += fenwick[p];\n\n        inversions += i - at_most;\n\n        for (int p = r; p <= n; p += p & -p)\n            fenwick[p]++;\n    }\n\n    printf(\"%lld\\n\", inversions);\n\n    free(start);\n    free(end);\n    free(rank);\n    free(fenwick);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.11906939999607857,
+            "counts": {
+                "AC": 8,
+                "WA": 35,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

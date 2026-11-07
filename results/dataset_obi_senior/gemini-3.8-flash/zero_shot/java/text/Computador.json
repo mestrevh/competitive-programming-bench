@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:09:05.629191+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 916,
+            "total_tokens": 3510
+        },
+        "cost_usd": {
+            "input_cost": 0.000606,
+            "output_cost": 0.003435,
+            "total_cost": 0.004041
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n\n    static class FastIO {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastIO(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = in.read(buffer, 0, buffer.length);\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() throws IOException {\n            byte c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            boolean neg = false;\n            if (c == '-') {\n                neg = true;\n                c = read();\n            }\n            int res = 0;\n            while (c >= '0' && c <= '9') {\n                res = res * 10 + (c - '0');\n                c = read();\n            }\n            return neg ? -res : res;\n        }\n    }\n\n    static class FenwickTree {\n        int n;\n        long[] tree;\n\n        public FenwickTree(int n) {\n            this.n = n;\n            this.tree = new long[n + 2];\n        }\n\n        public void add(int i, long delta) {\n            for (; i <= n; i += i & -i) {\n                tree[i] += delta;\n            }\n        }\n\n        public long query(int i) {\n            long sum = 0;\n            for (; i > 0; i -= i & -i) {\n                sum += tree[i];\n            }\n            return sum;\n        }\n\n        public void rangeAdd(int l, int r, long delta) {\n            if (l > r) return;\n            add(l, delta);\n            add(r + 1, -delta);\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastIO in = new FastIO(System.in);\n        int n = in.nextInt();\n        if (n == -1) return;\n        int m = in.nextInt();\n\n        FenwickTree bitA = new FenwickTree(n);\n        FenwickTree bitB = new FenwickTree(n);\n\n        StringBuilder out = new StringBuilder();\n\n        for (int k = 0; k < m; k++) {\n            int type = in.nextInt();\n            if (type == 1) {\n                long i = in.nextInt();\n                long v = in.nextInt();\n                int l = (int) i;\n                int r = (int) Math.min((long) n, i + v - 1);\n                long a = v + i;\n                long b = -1;\n                bitA.rangeAdd(l, r, a);\n                bitB.rangeAdd(l, r, b);\n            } else if (type == 2) {\n                long i = in.nextInt();\n                long v = in.nextInt();\n                int l = (int) Math.max(1L, i - v + 1);\n                int r = (int) i;\n                long a = v - i;\n                long b = 1;\n                bitA.rangeAdd(l, r, a);\n                bitB.rangeAdd(l, r, b);\n            } else {\n                int i = in.nextInt();\n                long ans = bitA.query(i) + bitB.query(i) * i;\n                out.append(ans).append('\\n');\n            }\n        }\n\n        System.out.print(out);\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n\n    static class FastIO {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastIO(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = in.read(buffer, 0, buffer.length);\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() throws IOException {\n            byte c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            boolean neg = false;\n            if (c == '-') {\n                neg = true;\n                c = read();\n            }\n            int res = 0;\n            while (c >= '0' && c <= '9') {\n                res = res * 10 + (c - '0');\n                c = read();\n            }\n            return neg ? -res : res;\n        }\n    }\n\n    static class FenwickTree {\n        int n;\n        long[] tree;\n\n        public FenwickTree(int n) {\n            this.n = n;\n            this.tree = new long[n + 2];\n        }\n\n        public void add(int i, long delta) {\n            for (; i <= n; i += i & -i) {\n                tree[i] += delta;\n            }\n        }\n\n        public long query(int i) {\n            long sum = 0;\n            for (; i > 0; i -= i & -i) {\n                sum += tree[i];\n            }\n            return sum;\n        }\n\n        public void rangeAdd(int l, int r, long delta) {\n            if (l > r) return;\n            add(l, delta);\n            add(r + 1, -delta);\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastIO in = new FastIO(System.in);\n        int n = in.nextInt();\n        if (n == -1) return;\n        int m = in.nextInt();\n\n        FenwickTree bitA = new FenwickTree(n);\n        FenwickTree bitB = new FenwickTree(n);\n\n        StringBuilder out = new StringBuilder();\n\n        for (int k = 0; k < m; k++) {\n            int type = in.nextInt();\n            if (type == 1) {\n                long i = in.nextInt();\n                long v = in.nextInt();\n                int l = (int) i;\n                int r = (int) Math.min((long) n, i + v - 1);\n                long a = v + i;\n                long b = -1;\n                bitA.rangeAdd(l, r, a);\n                bitB.rangeAdd(l, r, b);\n            } else if (type == 2) {\n                long i = in.nextInt();\n                long v = in.nextInt();\n                int l = (int) Math.max(1L, i - v + 1);\n                int r = (int) i;\n                long a = v - i;\n                long b = 1;\n                bitA.rangeAdd(l, r, a);\n                bitB.rangeAdd(l, r, b);\n            } else {\n                int i = in.nextInt();\n                long ans = bitA.query(i) + bitB.query(i) * i;\n                out.append(ans).append('\\n');\n            }\n        }\n\n        System.out.print(out);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1747183999978006,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

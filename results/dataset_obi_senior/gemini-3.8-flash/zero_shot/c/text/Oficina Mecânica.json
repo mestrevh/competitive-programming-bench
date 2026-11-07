@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:27:50.437215+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 992,
+            "output_tokens": 743,
+            "total_tokens": 3939
+        },
+        "cost_usd": {
+            "input_cost": 0.000744,
+            "output_cost": 0.002786,
+            "total_cost": 0.00353
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long val;\n    int f;\n} Node;\n\nstatic Node heap[100005];\nstatic int heap_size = 0;\n\nstatic inline void swap_nodes(Node *a, Node *b) {\n    Node tmp = *a;\n    *a = *b;\n    *b = tmp;\n}\n\nstatic void push(long long val, int f) {\n    heap_size++;\n    int i = heap_size;\n    heap[i].val = val;\n    heap[i].f = f;\n    while (i > 1 && heap[i].val < heap[i / 2].val) {\n        swap_nodes(&heap[i], &heap[i / 2]);\n        i /= 2;\n    }\n}\n\nstatic Node pop(void) {\n    Node min_node = heap[1];\n    heap[1] = heap[heap_size--];\n    int i = 1;\n    while (2 * i <= heap_size) {\n        int left = 2 * i;\n        int right = 2 * i + 1;\n        int best = left;\n        if (right <= heap_size && heap[right].val < heap[left].val) {\n            best = right;\n        }\n        if (heap[i].val > heap[best].val) {\n            swap_nodes(&heap[i], &heap[best]);\n            i = best;\n        } else {\n            break;\n        }\n    }\n    return min_node;\n}\n\nstatic int compare_desc(const void *a, const void *b) {\n    long long diff = (*(const int *)b) - (*(const int *)a);\n    return (diff > 0) - (diff < 0);\n}\n\nint T[100005];\nint F[100005];\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &T[i]);\n    }\n\n    for (int j = 0; j < M; j++) {\n        scanf(\"%d\", &F[j]);\n    }\n\n    if (M >= N) {\n        printf(\"0\\n\");\n        return 0;\n    }\n\n    qsort(T, N, sizeof(int), compare_desc);\n\n    for (int j = 0; j < M; j++) {\n        push(F[j], F[j]);\n    }\n\n    unsigned long long total_wait = 0;\n\n    for (int i = M; i < N; i++) {\n        Node min_node = pop();\n        total_wait += (unsigned long long)T[i] * min_node.val;\n        push(min_node.val + min_node.f, min_node.f);\n    }\n\n    printf(\"%llu\\n\", total_wait);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long val;\n    int f;\n} Node;\n\nstatic Node heap[100005];\nstatic int heap_size = 0;\n\nstatic inline void swap_nodes(Node *a, Node *b) {\n    Node tmp = *a;\n    *a = *b;\n    *b = tmp;\n}\n\nstatic void push(long long val, int f) {\n    heap_size++;\n    int i = heap_size;\n    heap[i].val = val;\n    heap[i].f = f;\n    while (i > 1 && heap[i].val < heap[i / 2].val) {\n        swap_nodes(&heap[i], &heap[i / 2]);\n        i /= 2;\n    }\n}\n\nstatic Node pop(void) {\n    Node min_node = heap[1];\n    heap[1] = heap[heap_size--];\n    int i = 1;\n    while (2 * i <= heap_size) {\n        int left = 2 * i;\n        int right = 2 * i + 1;\n        int best = left;\n        if (right <= heap_size && heap[right].val < heap[left].val) {\n            best = right;\n        }\n        if (heap[i].val > heap[best].val) {\n            swap_nodes(&heap[i], &heap[best]);\n            i = best;\n        } else {\n            break;\n        }\n    }\n    return min_node;\n}\n\nstatic int compare_desc(const void *a, const void *b) {\n    long long diff = (*(const int *)b) - (*(const int *)a);\n    return (diff > 0) - (diff < 0);\n}\n\nint T[100005];\nint F[100005];\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &T[i]);\n    }\n\n    for (int j = 0; j < M; j++) {\n        scanf(\"%d\", &F[j]);\n    }\n\n    if (M >= N) {\n        printf(\"0\\n\");\n        return 0;\n    }\n\n    qsort(T, N, sizeof(int), compare_desc);\n\n    for (int j = 0; j < M; j++) {\n        push(F[j], F[j]);\n    }\n\n    unsigned long long total_wait = 0;\n\n    for (int i = M; i < N; i++) {\n        Node min_node = pop();\n        total_wait += (unsigned long long)T[i] * min_node.val;\n        push(min_node.val + min_node.f, min_node.f);\n    }\n\n    printf(\"%llu\\n\", total_wait);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09754799999063835,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

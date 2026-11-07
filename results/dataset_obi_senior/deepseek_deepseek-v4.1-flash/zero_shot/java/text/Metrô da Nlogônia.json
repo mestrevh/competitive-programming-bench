@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:21:59.149379+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 953,
+            "output_tokens": 7209,
+            "total_tokens": 8162
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.017302,
+            "total_cost": 0.017304
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        ArrayList<Integer>[] circle = new ArrayList[N + 1];\n        for (int i = 1; i <= N; i++) circle[i] = new ArrayList<>();\n\n        for (int i = 0; i < N - 1; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            circle[a].add(b);\n            circle[b].add(a);\n        }\n\n        ArrayList<Integer>[] square = new ArrayList[M + 1];\n        for (int i = 1; i <= M; i++) square[i] = new ArrayList<>();\n\n        for (int i = 0; i < M - 1; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            square[a].add(b);\n            square[b].add(a);\n        }\n\n        int u = getCenter(N, circle);\n        int v = getCenter(M, square);\n\n        System.out.println(u + \" \" + v);\n    }\n\n    static int getCenter(int n, ArrayList<Integer>[] adj) {\n        int[] dist = new int[n + 1];\n        int[] parent = new int[n + 1];\n        int[] queue = new int[n];\n\n        Arrays.fill(dist, -1);\n        int head = 0, tail = 0;\n        queue[tail++] = 1;\n        dist[1] = 0;\n\n        int far = 1, maxDist = 0;\n        while (head < tail) {\n            int u = queue[head++];\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    parent[v] = u;\n                    queue[tail++] = v;\n                    if (dist[v] > maxDist) {\n                        maxDist = dist[v];\n                        far = v;\n                    }\n                }\n            }\n        }\n\n        int a = far;\n\n        Arrays.fill(dist, -1);\n        head = 0;\n        tail = 0;\n        queue[tail++] = a;\n        dist[a] = 0;\n        parent[a] = 0;\n\n        far = a;\n        maxDist = 0;\n        while (head < tail) {\n            int u = queue[head++];\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    parent[v] = u;\n                    queue[tail++] = v;\n                    if (dist[v] > maxDist) {\n                        maxDist = dist[v];\n                        far = v;\n                    }\n                }\n            }\n        }\n\n        int b = far;\n        int diameter = dist[b];\n        int steps = diameter - diameter / 2;\n\n        int center = b;\n        while (steps-- > 0) {\n            center = parent[center];\n        }\n\n        return center;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        ArrayList<Integer>[] circle = new ArrayList[N + 1];\n        for (int i = 1; i <= N; i++) circle[i] = new ArrayList<>();\n\n        for (int i = 0; i < N - 1; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            circle[a].add(b);\n            circle[b].add(a);\n        }\n\n        ArrayList<Integer>[] square = new ArrayList[M + 1];\n        for (int i = 1; i <= M; i++) square[i] = new ArrayList<>();\n\n        for (int i = 0; i < M - 1; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            square[a].add(b);\n            square[b].add(a);\n        }\n\n        int u = getCenter(N, circle);\n        int v = getCenter(M, square);\n\n        System.out.println(u + \" \" + v);\n    }\n\n    static int getCenter(int n, ArrayList<Integer>[] adj) {\n        int[] dist = new int[n + 1];\n        int[] parent = new int[n + 1];\n        int[] queue = new int[n];\n\n        Arrays.fill(dist, -1);\n        int head = 0, tail = 0;\n        queue[tail++] = 1;\n        dist[1] = 0;\n\n        int far = 1, maxDist = 0;\n        while (head < tail) {\n            int u = queue[head++];\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    parent[v] = u;\n                    queue[tail++] = v;\n                    if (dist[v] > maxDist) {\n                        maxDist = dist[v];\n                        far = v;\n                    }\n                }\n            }\n        }\n\n        int a = far;\n\n        Arrays.fill(dist, -1);\n        head = 0;\n        tail = 0;\n        queue[tail++] = a;\n        dist[a] = 0;\n        parent[a] = 0;\n\n        far = a;\n        maxDist = 0;\n        while (head < tail) {\n            int u = queue[head++];\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    parent[v] = u;\n                    queue[tail++] = v;\n                    if (dist[v] > maxDist) {\n                        maxDist = dist[v];\n                        far = v;\n                    }\n                }\n            }\n        }\n\n        int b = far;\n        int diameter = dist[b];\n        int steps = diameter - diameter / 2;\n\n        int center = b;\n        while (steps-- > 0) {\n            center = parent[center];\n        }\n\n        return center;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.25951760000316426,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

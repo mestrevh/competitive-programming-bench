@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:59:46.622956+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 1020,
+            "total_tokens": 3147
+        },
+        "cost_usd": {
+            "input_cost": 0.000568,
+            "output_cost": 0.003825,
+            "total_cost": 0.004393
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        let sign = 1;\n        if (input.charCodeAt(pos) === 45) { // '-'\n            sign = -1;\n            pos++;\n        }\n        while (pos < input.length && input.charCodeAt(pos) >= 48 && input.charCodeAt(pos) <= 57) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res * sign;\n    }\n\n    const L = nextInt();\n    if (L === null) return;\n    const C = nextInt();\n    const P = nextInt();\n\n    const isBlack = Array.from({ length: L + 1 }, () => new Uint8Array(C + 1));\n    for (let i = 0; i < P; i++) {\n        const r = nextInt();\n        const c = nextInt();\n        isBlack[r][c] = 1;\n    }\n\n    const dr = [-1, 1, 0, 0];\n    const dc = [0, 0, -1, 1];\n\n    const candidateId = Array.from({ length: L + 1 }, () => new Int32Array(C + 1).fill(-1));\n    const candidates = [];\n\n    for (let r = 1; r <= L; r++) {\n        for (let c = 1; c <= C; c++) {\n            if (isBlack[r][c]) continue;\n            let hasBlackNeighbor = false;\n            for (let d = 0; d < 4; d++) {\n                const nr = r + dr[d];\n                const nc = c + dc[d];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && isBlack[nr][nc]) {\n                    hasBlackNeighbor = true;\n                    break;\n                }\n            }\n            if (hasBlackNeighbor) {\n                candidateId[r][c] = candidates.length;\n                candidates.push({ r, c });\n            }\n        }\n    }\n\n    const numCandidates = candidates.length;\n    const adj = Array.from({ length: numCandidates }, () => []);\n\n    for (let i = 0; i < numCandidates; i++) {\n        const { r, c } = candidates[i];\n        if ((r + c) % 2 === 0) {\n            for (let d = 0; d < 4; d++) {\n                const nr = r + dr[d];\n                const nc = c + dc[d];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C) {\n                    const neighborId = candidateId[nr][nc];\n                    if (neighborId !== -1) {\n                        adj[i].push(neighborId);\n                    }\n                }\n            }\n        }\n    }\n\n    const match = new Int32Array(numCandidates).fill(-1);\n    const visited = new Uint8Array(numCandidates);\n\n    function dfs(u) {\n        for (let i = 0; i < adj[u].length; i++) {\n            const v = adj[u][i];\n            if (!visited[v]) {\n                visited[v] = 1;\n                if (match[v] === -1 || dfs(match[v])) {\n                    match[v] = u;\n                    return true;\n                }\n            }\n        }\n        return false;\n    }\n\n    let maxMatching = 0;\n    for (let i = 0; i < numCandidates; i++) {\n        const { r, c } = candidates[i];\n        if ((r + c) % 2 === 0) {\n            visited.fill(0);\n            if (dfs(i)) {\n                maxMatching++;\n            }\n        }\n    }\n\n    const answer = numCandidates - maxMatching;\n    console.log(answer);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextInt() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        let res = 0;\n        let sign = 1;\n        if (input.charCodeAt(pos) === 45) { // '-'\n            sign = -1;\n            pos++;\n        }\n        while (pos < input.length && input.charCodeAt(pos) >= 48 && input.charCodeAt(pos) <= 57) {\n            res = res * 10 + (input.charCodeAt(pos) - 48);\n            pos++;\n        }\n        return res * sign;\n    }\n\n    const L = nextInt();\n    if (L === null) return;\n    const C = nextInt();\n    const P = nextInt();\n\n    const isBlack = Array.from({ length: L + 1 }, () => new Uint8Array(C + 1));\n    for (let i = 0; i < P; i++) {\n        const r = nextInt();\n        const c = nextInt();\n        isBlack[r][c] = 1;\n    }\n\n    const dr = [-1, 1, 0, 0];\n    const dc = [0, 0, -1, 1];\n\n    const candidateId = Array.from({ length: L + 1 }, () => new Int32Array(C + 1).fill(-1));\n    const candidates = [];\n\n    for (let r = 1; r <= L; r++) {\n        for (let c = 1; c <= C; c++) {\n            if (isBlack[r][c]) continue;\n            let hasBlackNeighbor = false;\n            for (let d = 0; d < 4; d++) {\n                const nr = r + dr[d];\n                const nc = c + dc[d];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C && isBlack[nr][nc]) {\n                    hasBlackNeighbor = true;\n                    break;\n                }\n            }\n            if (hasBlackNeighbor) {\n                candidateId[r][c] = candidates.length;\n                candidates.push({ r, c });\n            }\n        }\n    }\n\n    const numCandidates = candidates.length;\n    const adj = Array.from({ length: numCandidates }, () => []);\n\n    for (let i = 0; i < numCandidates; i++) {\n        const { r, c } = candidates[i];\n        if ((r + c) % 2 === 0) {\n            for (let d = 0; d < 4; d++) {\n                const nr = r + dr[d];\n                const nc = c + dc[d];\n                if (nr >= 1 && nr <= L && nc >= 1 && nc <= C) {\n                    const neighborId = candidateId[nr][nc];\n                    if (neighborId !== -1) {\n                        adj[i].push(neighborId);\n                    }\n                }\n            }\n        }\n    }\n\n    const match = new Int32Array(numCandidates).fill(-1);\n    const visited = new Uint8Array(numCandidates);\n\n    function dfs(u) {\n        for (let i = 0; i < adj[u].length; i++) {\n            const v = adj[u][i];\n            if (!visited[v]) {\n                visited[v] = 1;\n                if (match[v] === -1 || dfs(match[v])) {\n                    match[v] = u;\n                    return true;\n                }\n            }\n        }\n        return false;\n    }\n\n    let maxMatching = 0;\n    for (let i = 0; i < numCandidates; i++) {\n        const { r, c } = candidates[i];\n        if ((r + c) % 2 === 0) {\n            visited.fill(0);\n            if (dfs(i)) {\n                maxMatching++;\n            }\n        }\n    }\n\n    const answer = numCandidates - maxMatching;\n    console.log(answer);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.04656799999065697,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

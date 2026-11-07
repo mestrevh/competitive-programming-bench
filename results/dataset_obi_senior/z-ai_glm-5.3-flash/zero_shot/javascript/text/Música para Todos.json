@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:37:41.596923+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 836,
+            "output_tokens": 7632,
+            "total_tokens": 8468
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.003816,
+            "total_cost": 0.003834
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8');\n  let pos = 0;\n  const len = data.length;\n\n  function readInt() {\n    while (pos < len) {\n      const c = data.charCodeAt(pos);\n      if (c >= 48 && c <= 57) break;\n      pos++;\n    }\n    let x = 0;\n    while (pos < len) {\n      const c = data.charCodeAt(pos);\n      if (c < 48 || c > 57) break;\n      x = x * 10 + (c - 48);\n      pos++;\n    }\n    return x;\n  }\n\n  const N = readInt(), M = readInt(), C = readInt();\n\n  // Para cada música D, guardamos a música adorada (A) do amigo de menor índice\n  // (cliente mais antigo) que detesta D. Como a transição depende apenas da\n  // música atual, o próximo estado é determinístico.\n  const nextSong = new Int32Array(M + 1); // 0 = ninguém detesta essa música\n  for (let i = 0; i < N; i++) {\n    const A = readInt();\n    const D = readInt();\n    if (nextSong[D] === 0) nextSong[D] = A;\n  }\n\n  // Simulação: como cada música determina unicamente a próxima,\n  // revisitar uma música implica ciclo infinito (-1).\n  const visited = new Uint8Array(M + 1);\n  let s = C, count = 0, ans;\n  while (true) {\n    if (visited[s]) { ans = -1; break; }\n    visited[s] = 1;\n    const ns = nextSong[s];\n    if (ns === 0) { ans = count; break; } // ninguém detesta a música atual\n    s = ns;\n    count++;\n  }\n\n  process.stdout.write(String(ans) + '\\n');\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  const data = fs.readFileSync(0, 'utf8');\n  let pos = 0;\n  const len = data.length;\n\n  function readInt() {\n    while (pos < len) {\n      const c = data.charCodeAt(pos);\n      if (c >= 48 && c <= 57) break;\n      pos++;\n    }\n    let x = 0;\n    while (pos < len) {\n      const c = data.charCodeAt(pos);\n      if (c < 48 || c > 57) break;\n      x = x * 10 + (c - 48);\n      pos++;\n    }\n    return x;\n  }\n\n  const N = readInt(), M = readInt(), C = readInt();\n\n  // Para cada música D, guardamos a música adorada (A) do amigo de menor índice\n  // (cliente mais antigo) que detesta D. Como a transição depende apenas da\n  // música atual, o próximo estado é determinístico.\n  const nextSong = new Int32Array(M + 1); // 0 = ninguém detesta essa música\n  for (let i = 0; i < N; i++) {\n    const A = readInt();\n    const D = readInt();\n    if (nextSong[D] === 0) nextSong[D] = A;\n  }\n\n  // Simulação: como cada música determina unicamente a próxima,\n  // revisitar uma música implica ciclo infinito (-1).\n  const visited = new Uint8Array(M + 1);\n  let s = C, count = 0, ans;\n  while (true) {\n    if (visited[s]) { ans = -1; break; }\n    visited[s] = 1;\n    const ns = nextSong[s];\n    if (ns === 0) { ans = count; break; } // ninguém detesta a música atual\n    s = ns;\n    count++;\n  }\n\n  process.stdout.write(String(ans) + '\\n');\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.061143399972934276,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

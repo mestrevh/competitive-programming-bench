@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:32:11.253904+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 845,
+            "output_tokens": 1024,
+            "total_tokens": 3781
+        },
+        "cost_usd": {
+            "input_cost": 0.000634,
+            "output_cost": 0.00384,
+            "total_cost": 0.004474
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct {\n    long long x1, y1, x2, y2;\n} Rect;\n\nstatic inline long long dist_rect(const Rect *a, const Rect *b) {\n    long long dx = 0;\n    if (a->x2 < b->x1) {\n        dx = b->x1 - a->x2;\n    } else if (b->x2 < a->x1) {\n        dx = a->x1 - b->x2;\n    }\n\n    long long dy = 0;\n    if (a->y2 < b->y1) {\n        dy = b->y1 - a->y2;\n    } else if (b->y2 < a->y1) {\n        dy = a->y1 - b->y2;\n    }\n\n    return dx + dy;\n}\n\nint main() {\n    long long xi, yi, xf, yf;\n    if (scanf(\"%lld %lld %lld %lld\", &xi, &yi, &xf, &yf) != 4) {\n        return 0;\n    }\n\n    int n;\n    if (scanf(\"%d\", &n) != 1) {\n        return 0;\n    }\n\n    int total_nodes = n + 2;\n    Rect *rects = (Rect *)malloc(total_nodes * sizeof(Rect));\n\n    // Nó 0: Posição inicial\n    rects[0].x1 = xi;\n    rects[0].x2 = xi;\n    rects[0].y1 = yi;\n    rects[0].y2 = yi;\n\n    // Nós 1 a N: Áreas cobertas\n    for (int i = 1; i <= n; i++) {\n        long long x1, y1, x2, y2;\n        scanf(\"%lld %lld %lld %lld\", &x1, &y1, &x2, &y2);\n        if (x1 > x2) { long long tmp = x1; x1 = x2; x2 = tmp; }\n        if (y1 > y2) { long long tmp = y1; y1 = y2; y2 = tmp; }\n        rects[i].x1 = x1;\n        rects[i].y1 = y1;\n        rects[i].x2 = x2;\n        rects[i].y2 = y2;\n    }\n\n    // Nó N + 1: Posição final\n    rects[n + 1].x1 = xf;\n    rects[n + 1].x2 = xf;\n    rects[n + 1].y1 = yf;\n    rects[n + 1].y2 = yf;\n\n    long long *dist = (long long *)malloc(total_nodes * sizeof(long long));\n    int *visited = (int *)calloc(total_nodes, sizeof(int));\n\n    for (int i = 0; i < total_nodes; i++) {\n        dist[i] = LLONG_MAX;\n    }\n    dist[0] = 0;\n\n    for (int i = 0; i < total_nodes; i++) {\n        int u = -1;\n        long long min_d = LLONG_MAX;\n\n        for (int j = 0; j < total_nodes; j++) {\n            if (!visited[j] && dist[j] < min_d) {\n                min_d = dist[j];\n                u = j;\n            }\n        }\n\n        if (u == -1 || u == n + 1) {\n            break;\n        }\n\n        visited[u] = 1;\n\n        for (int v = 0; v < total_nodes; v++) {\n            if (!visited[v]) {\n                long long weight = dist_rect(&rects[u], &rects[v]);\n                if (dist[u] + weight < dist[v]) {\n                    dist[v] = dist[u] + weight;\n                }\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", dist[n + 1]);\n\n    free(rects);\n    free(dist);\n    free(visited);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct {\n    long long x1, y1, x2, y2;\n} Rect;\n\nstatic inline long long dist_rect(const Rect *a, const Rect *b) {\n    long long dx = 0;\n    if (a->x2 < b->x1) {\n        dx = b->x1 - a->x2;\n    } else if (b->x2 < a->x1) {\n        dx = a->x1 - b->x2;\n    }\n\n    long long dy = 0;\n    if (a->y2 < b->y1) {\n        dy = b->y1 - a->y2;\n    } else if (b->y2 < a->y1) {\n        dy = a->y1 - b->y2;\n    }\n\n    return dx + dy;\n}\n\nint main() {\n    long long xi, yi, xf, yf;\n    if (scanf(\"%lld %lld %lld %lld\", &xi, &yi, &xf, &yf) != 4) {\n        return 0;\n    }\n\n    int n;\n    if (scanf(\"%d\", &n) != 1) {\n        return 0;\n    }\n\n    int total_nodes = n + 2;\n    Rect *rects = (Rect *)malloc(total_nodes * sizeof(Rect));\n\n    // Nó 0: Posição inicial\n    rects[0].x1 = xi;\n    rects[0].x2 = xi;\n    rects[0].y1 = yi;\n    rects[0].y2 = yi;\n\n    // Nós 1 a N: Áreas cobertas\n    for (int i = 1; i <= n; i++) {\n        long long x1, y1, x2, y2;\n        scanf(\"%lld %lld %lld %lld\", &x1, &y1, &x2, &y2);\n        if (x1 > x2) { long long tmp = x1; x1 = x2; x2 = tmp; }\n        if (y1 > y2) { long long tmp = y1; y1 = y2; y2 = tmp; }\n        rects[i].x1 = x1;\n        rects[i].y1 = y1;\n        rects[i].x2 = x2;\n        rects[i].y2 = y2;\n    }\n\n    // Nó N + 1: Posição final\n    rects[n + 1].x1 = xf;\n    rects[n + 1].x2 = xf;\n    rects[n + 1].y1 = yf;\n    rects[n + 1].y2 = yf;\n\n    long long *dist = (long long *)malloc(total_nodes * sizeof(long long));\n    int *visited = (int *)calloc(total_nodes, sizeof(int));\n\n    for (int i = 0; i < total_nodes; i++) {\n        dist[i] = LLONG_MAX;\n    }\n    dist[0] = 0;\n\n    for (int i = 0; i < total_nodes; i++) {\n        int u = -1;\n        long long min_d = LLONG_MAX;\n\n        for (int j = 0; j < total_nodes; j++) {\n            if (!visited[j] && dist[j] < min_d) {\n                min_d = dist[j];\n                u = j;\n            }\n        }\n\n        if (u == -1 || u == n + 1) {\n            break;\n        }\n\n        visited[u] = 1;\n\n        for (int v = 0; v < total_nodes; v++) {\n            if (!visited[v]) {\n                long long weight = dist_rect(&rects[u], &rects[v]);\n                if (dist[u] + weight < dist[v]) {\n                    dist[v] = dist[u] + weight;\n                }\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", dist[n + 1]);\n\n    free(rects);\n    free(dist);\n    free(visited);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1255632999818772,
+            "counts": {
+                "AC": 37,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 37
+        }
+    }
+]

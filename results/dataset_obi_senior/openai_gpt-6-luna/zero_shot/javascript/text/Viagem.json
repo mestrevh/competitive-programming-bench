@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T10:07:13.768308+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1128,
+            "output_tokens": 1869,
+            "total_tokens": 2997
+        },
+        "cost_usd": {
+            "input_cost": 0.000113,
+            "output_cost": 0.000935,
+            "total_cost": 0.001047
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst budget = input[idx++];\nconst n = input[idx++];\nconst m = input[idx++];\n\nconst graph = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 0; i < m; i++) {\n  const a = input[idx++];\n  const b = input[idx++];\n  const time = input[idx++];\n  const cost = input[idx++];\n\n  graph[a].push([b, time, cost]);\n  graph[b].push([a, time, cost]);\n}\n\nconst start = input[idx++];\nconst destination = input[idx++];\n\nconst width = budget + 1;\nconst dist = new Float64Array((n + 1) * width);\ndist.fill(Infinity);\n\nconst maxHeapSize = 2 * m * width + 5;\nconst heapIds = new Int32Array(maxHeapSize);\nconst heapTimes = new Float64Array(maxHeapSize);\nlet heapSize = 0;\nlet poppedId = 0;\nlet poppedTime = 0;\n\nfunction push(id, time) {\n  let pos = heapSize++;\n  while (pos > 0) {\n    const parent = (pos - 1) >> 1;\n    if (heapTimes[parent] <= time) break;\n    heapIds[pos] = heapIds[parent];\n    heapTimes[pos] = heapTimes[parent];\n    pos = parent;\n  }\n  heapIds[pos] = id;\n  heapTimes[pos] = time;\n}\n\nfunction pop() {\n  poppedId = heapIds[0];\n  poppedTime = heapTimes[0];\n\n  const lastId = heapIds[--heapSize];\n  const lastTime = heapTimes[heapSize];\n\n  if (heapSize === 0) return;\n\n  let pos = 0;\n  while (true) {\n    const left = pos * 2 + 1;\n    if (left >= heapSize) break;\n\n    const right = left + 1;\n    let child = left;\n    if (right < heapSize && heapTimes[right] < heapTimes[left]) child = right;\n    if (heapTimes[child] >= lastTime) break;\n\n    heapIds[pos] = heapIds[child];\n    heapTimes[pos] = heapTimes[child];\n    pos = child;\n  }\n\n  heapIds[pos] = lastId;\n  heapTimes[pos] = lastTime;\n}\n\nconst startId = start * width;\ndist[startId] = 0;\npush(startId, 0);\n\nlet answer = -1;\n\nwhile (heapSize > 0) {\n  pop();\n\n  if (poppedTime !== dist[poppedId]) continue;\n\n  const node = Math.floor(poppedId / width);\n  const spent = poppedId - node * width;\n\n  if (node === destination) {\n    answer = poppedTime;\n    break;\n  }\n\n  for (const [next, time, cost] of graph[node]) {\n    const nextSpent = spent + cost;\n    if (nextSpent > budget) continue;\n\n    const nextId = next * width + nextSpent;\n    const nextTime = poppedTime + time;\n\n    if (nextTime < dist[nextId]) {\n      dist[nextId] = nextTime;\n      push(nextId, nextTime);\n    }\n  }\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst budget = input[idx++];\nconst n = input[idx++];\nconst m = input[idx++];\n\nconst graph = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 0; i < m; i++) {\n  const a = input[idx++];\n  const b = input[idx++];\n  const time = input[idx++];\n  const cost = input[idx++];\n\n  graph[a].push([b, time, cost]);\n  graph[b].push([a, time, cost]);\n}\n\nconst start = input[idx++];\nconst destination = input[idx++];\n\nconst width = budget + 1;\nconst dist = new Float64Array((n + 1) * width);\ndist.fill(Infinity);\n\nconst maxHeapSize = 2 * m * width + 5;\nconst heapIds = new Int32Array(maxHeapSize);\nconst heapTimes = new Float64Array(maxHeapSize);\nlet heapSize = 0;\nlet poppedId = 0;\nlet poppedTime = 0;\n\nfunction push(id, time) {\n  let pos = heapSize++;\n  while (pos > 0) {\n    const parent = (pos - 1) >> 1;\n    if (heapTimes[parent] <= time) break;\n    heapIds[pos] = heapIds[parent];\n    heapTimes[pos] = heapTimes[parent];\n    pos = parent;\n  }\n  heapIds[pos] = id;\n  heapTimes[pos] = time;\n}\n\nfunction pop() {\n  poppedId = heapIds[0];\n  poppedTime = heapTimes[0];\n\n  const lastId = heapIds[--heapSize];\n  const lastTime = heapTimes[heapSize];\n\n  if (heapSize === 0) return;\n\n  let pos = 0;\n  while (true) {\n    const left = pos * 2 + 1;\n    if (left >= heapSize) break;\n\n    const right = left + 1;\n    let child = left;\n    if (right < heapSize && heapTimes[right] < heapTimes[left]) child = right;\n    if (heapTimes[child] >= lastTime) break;\n\n    heapIds[pos] = heapIds[child];\n    heapTimes[pos] = heapTimes[child];\n    pos = child;\n  }\n\n  heapIds[pos] = lastId;\n  heapTimes[pos] = lastTime;\n}\n\nconst startId = start * width;\ndist[startId] = 0;\npush(startId, 0);\n\nlet answer = -1;\n\nwhile (heapSize > 0) {\n  pop();\n\n  if (poppedTime !== dist[poppedId]) continue;\n\n  const node = Math.floor(poppedId / width);\n  const spent = poppedId - node * width;\n\n  if (node === destination) {\n    answer = poppedTime;\n    break;\n  }\n\n  for (const [next, time, cost] of graph[node]) {\n    const nextSpent = spent + cost;\n    if (nextSpent > budget) continue;\n\n    const nextId = next * width + nextSpent;\n    const nextTime = poppedTime + time;\n\n    if (nextTime < dist[nextId]) {\n      dist[nextId] = nextTime;\n      push(nextId, nextTime);\n    }\n  }\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0669008999975631,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

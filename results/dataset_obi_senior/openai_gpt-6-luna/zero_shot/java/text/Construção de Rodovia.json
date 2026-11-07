@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:51:59.510660+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 756,
+            "output_tokens": 1439,
+            "total_tokens": 2195
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.000719,
+            "total_cost": 0.000795
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                if (ptr >= len) {\n                    len = in.read(buffer);\n                    ptr = 0;\n                    if (len <= 0) return -1;\n                }\n                c = buffer[ptr++];\n            } while (c <= ' ');\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                if (ptr >= len) {\n                    len = in.read(buffer);\n                    ptr = 0;\n                    if (len <= 0) break;\n                }\n                c = buffer[ptr++];\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        int[] head = new int[n];\n        java.util.Arrays.fill(head, -1);\n        int[] to = new int[2 * m];\n        int[] next = new int[2 * m];\n        int[] degree = new int[n];\n\n        int edgeIndex = 0;\n        for (int i = 0; i < m; i++) {\n            int a = fs.nextInt() - 1;\n            int b = fs.nextInt() - 1;\n\n            to[edgeIndex] = b;\n            next[edgeIndex] = head[a];\n            head[a] = edgeIndex++;\n            degree[a]++;\n\n            to[edgeIndex] = a;\n            next[edgeIndex] = head[b];\n            head[b] = edgeIndex++;\n            degree[b]++;\n        }\n\n        int[] component = new int[n];\n        int[] componentSize = new int[n + 1];\n        int[] stack = new int[n];\n        int componentCount = 0;\n\n        for (int start = 0; start < n; start++) {\n            if (component[start] != 0) continue;\n\n            int id = ++componentCount;\n            int top = 0;\n            stack[top++] = start;\n            component[start] = id;\n\n            while (top > 0) {\n                int u = stack[--top];\n                componentSize[id]++;\n                for (int e = head[u]; e != -1; e = next[e]) {\n                    int v = to[e];\n                    if (component[v] == 0) {\n                        component[v] = id;\n                        stack[top++] = v;\n                    }\n                }\n            }\n        }\n\n        int[] marked = new int[n];\n        for (int u = 0; u < n; u++) {\n            int id = component[u];\n            if (degree[u] == componentSize[id] - 1) continue;\n\n            int mark = u + 1;\n            for (int e = head[u]; e != -1; e = next[e]) {\n                marked[to[e]] = mark;\n            }\n\n            for (int v = 0; v < n; v++) {\n                if (component[v] == id && v != u && marked[v] != mark) {\n                    System.out.println((u + 1) + \" \" + (v + 1));\n                    return;\n                }\n            }\n        }\n\n        System.out.println(-1);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                if (ptr >= len) {\n                    len = in.read(buffer);\n                    ptr = 0;\n                    if (len <= 0) return -1;\n                }\n                c = buffer[ptr++];\n            } while (c <= ' ');\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                if (ptr >= len) {\n                    len = in.read(buffer);\n                    ptr = 0;\n                    if (len <= 0) break;\n                }\n                c = buffer[ptr++];\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        int[] head = new int[n];\n        java.util.Arrays.fill(head, -1);\n        int[] to = new int[2 * m];\n        int[] next = new int[2 * m];\n        int[] degree = new int[n];\n\n        int edgeIndex = 0;\n        for (int i = 0; i < m; i++) {\n            int a = fs.nextInt() - 1;\n            int b = fs.nextInt() - 1;\n\n            to[edgeIndex] = b;\n            next[edgeIndex] = head[a];\n            head[a] = edgeIndex++;\n            degree[a]++;\n\n            to[edgeIndex] = a;\n            next[edgeIndex] = head[b];\n            head[b] = edgeIndex++;\n            degree[b]++;\n        }\n\n        int[] component = new int[n];\n        int[] componentSize = new int[n + 1];\n        int[] stack = new int[n];\n        int componentCount = 0;\n\n        for (int start = 0; start < n; start++) {\n            if (component[start] != 0) continue;\n\n            int id = ++componentCount;\n            int top = 0;\n            stack[top++] = start;\n            component[start] = id;\n\n            while (top > 0) {\n                int u = stack[--top];\n                componentSize[id]++;\n                for (int e = head[u]; e != -1; e = next[e]) {\n                    int v = to[e];\n                    if (component[v] == 0) {\n                        component[v] = id;\n                        stack[top++] = v;\n                    }\n                }\n            }\n        }\n\n        int[] marked = new int[n];\n        for (int u = 0; u < n; u++) {\n            int id = component[u];\n            if (degree[u] == componentSize[id] - 1) continue;\n\n            int mark = u + 1;\n            for (int e = head[u]; e != -1; e = next[e]) {\n                marked[to[e]] = mark;\n            }\n\n            for (int v = 0; v < n; v++) {\n                if (component[v] == id && v != u && marked[v] != mark) {\n                    System.out.println((u + 1) + \" \" + (v + 1));\n                    return;\n                }\n            }\n        }\n\n        System.out.println(-1);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.12335150000581052,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

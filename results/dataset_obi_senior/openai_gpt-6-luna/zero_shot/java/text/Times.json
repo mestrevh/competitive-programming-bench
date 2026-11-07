@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:17:27.095350+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 781,
+            "output_tokens": 1667,
+            "total_tokens": 2448
+        },
+        "cost_usd": {
+            "input_cost": 7.8e-05,
+            "output_cost": 0.000834,
+            "total_cost": 0.000912
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n\n        int[] head = new int[n + 1];\n        Arrays.fill(head, -1);\n\n        int maxEdges = 1_200_000;\n        int[] to = new int[maxEdges];\n        int[] next = new int[maxEdges];\n        int edgeCount = 0;\n\n        for (int i = 1; i <= n; i++) {\n            int m = fs.nextInt();\n            for (int j = 0; j < m; j++) {\n                int x = fs.nextInt();\n\n                to[edgeCount] = x;\n                next[edgeCount] = head[i];\n                head[i] = edgeCount++;\n\n                to[edgeCount] = i;\n                next[edgeCount] = head[x];\n                head[x] = edgeCount++;\n            }\n        }\n\n        byte[] color = new byte[n + 1];\n        Arrays.fill(color, (byte) -1);\n        int[] queue = new int[n];\n\n        for (int start = 1; start <= n; start++) {\n            if (color[start] != -1) continue;\n\n            int front = 0, back = 0;\n            color[start] = 0;\n            queue[back++] = start;\n\n            while (front < back) {\n                int u = queue[front++];\n                for (int e = head[u]; e != -1; e = next[e]) {\n                    int v = to[e];\n                    if (color[v] == -1) {\n                        color[v] = (byte) (1 - color[u]);\n                        queue[back++] = v;\n                    }\n                }\n            }\n        }\n\n        StringBuilder team1 = new StringBuilder();\n        StringBuilder team2 = new StringBuilder();\n\n        for (int i = 1; i <= n; i++) {\n            if (color[i] == 0) {\n                if (team1.length() > 0) team1.append(' ');\n                team1.append(i);\n            } else {\n                if (team2.length() > 0) team2.append(' ');\n                team2.append(i);\n            }\n        }\n\n        System.out.println(team1);\n        System.out.println(team2);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n\n        int[] head = new int[n + 1];\n        Arrays.fill(head, -1);\n\n        int maxEdges = 1_200_000;\n        int[] to = new int[maxEdges];\n        int[] next = new int[maxEdges];\n        int edgeCount = 0;\n\n        for (int i = 1; i <= n; i++) {\n            int m = fs.nextInt();\n            for (int j = 0; j < m; j++) {\n                int x = fs.nextInt();\n\n                to[edgeCount] = x;\n                next[edgeCount] = head[i];\n                head[i] = edgeCount++;\n\n                to[edgeCount] = i;\n                next[edgeCount] = head[x];\n                head[x] = edgeCount++;\n            }\n        }\n\n        byte[] color = new byte[n + 1];\n        Arrays.fill(color, (byte) -1);\n        int[] queue = new int[n];\n\n        for (int start = 1; start <= n; start++) {\n            if (color[start] != -1) continue;\n\n            int front = 0, back = 0;\n            color[start] = 0;\n            queue[back++] = start;\n\n            while (front < back) {\n                int u = queue[front++];\n                for (int e = head[u]; e != -1; e = next[e]) {\n                    int v = to[e];\n                    if (color[v] == -1) {\n                        color[v] = (byte) (1 - color[u]);\n                        queue[back++] = v;\n                    }\n                }\n            }\n        }\n\n        StringBuilder team1 = new StringBuilder();\n        StringBuilder team2 = new StringBuilder();\n\n        for (int i = 1; i <= n; i++) {\n            if (color[i] == 0) {\n                if (team1.length() > 0) team1.append(' ');\n                team1.append(i);\n            } else {\n                if (team2.length() > 0) team2.append(' ');\n                team2.append(i);\n            }\n        }\n\n        System.out.println(team1);\n        System.out.println(team2);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12579790000017965,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

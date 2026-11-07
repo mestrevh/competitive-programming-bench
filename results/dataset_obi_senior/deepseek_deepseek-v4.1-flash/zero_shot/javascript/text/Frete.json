@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:02:05.283993+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 903,
+            "output_tokens": 1498,
+            "total_tokens": 2401
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003595,
+            "total_cost": 0.003598
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nclass MinHeap {\n  constructor() {\n    this.heap = [];\n  }\n\n  size() {\n    return this.heap.length;\n  }\n\n  push(item) {\n    this.heap.push(item);\n    this._up(this.heap.length - 1);\n  }\n\n  pop() {\n    const h = this.heap;\n    if (h.length === 1) return h.pop();\n\n    const top = h[0];\n    h[0] = h.pop();\n    this._down(0);\n    return top;\n  }\n\n  _up(i) {\n    const h = this.heap;\n    while (i > 0) {\n      const p = (i - 1) >> 1;\n      if (h[p][0] <= h[i][0]) break;\n      [h[p], h[i]] = [h[i], h[p]];\n      i = p;\n    }\n  }\n\n  _down(i) {\n    const h = this.heap;\n    const n = h.length;\n\n    while (true) {\n      let smallest = i;\n      const l = 2 * i + 1;\n      const r = 2 * i + 2;\n\n      if (l < n && h[l][0] < h[smallest][0]) smallest = l;\n      if (r < n && h[r][0] < h[smallest][0]) smallest = r;\n\n      if (smallest === i) break;\n\n      [h[i], h[smallest]] = [h[smallest], h[i]];\n      i = smallest;\n    }\n  }\n}\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (input.length === 0) process.exit(0);\n\nlet idx = 0;\nconst N = input[idx++];\nconst M = input[idx++];\n\nconst adj = Array.from({ length: N + 1 }, () => []);\n\nfor (let i = 0; i < M; i++) {\n  const a = input[idx++];\n  const b = input[idx++];\n  const c = input[idx++];\n\n  adj[a].push([b, c]);\n  adj[b].push([a, c]);\n}\n\nconst INF = Infinity;\nconst dist = Array(N + 1).fill(INF);\ndist[1] = 0;\n\nconst heap = new MinHeap();\nheap.push([0, 1]);\n\nwhile (heap.size() > 0) {\n  const [d, u] = heap.pop();\n\n  if (d !== dist[u]) continue;\n  if (u === N) break;\n\n  for (const [v, w] of adj[u]) {\n    const nd = d + w;\n    if (nd < dist[v]) {\n      dist[v] = nd;\n      heap.push([nd, v]);\n    }\n  }\n}\n\nconsole.log(dist[N]);\n```",
+        "extracted_code": "const fs = require('fs');\n\nclass MinHeap {\n  constructor() {\n    this.heap = [];\n  }\n\n  size() {\n    return this.heap.length;\n  }\n\n  push(item) {\n    this.heap.push(item);\n    this._up(this.heap.length - 1);\n  }\n\n  pop() {\n    const h = this.heap;\n    if (h.length === 1) return h.pop();\n\n    const top = h[0];\n    h[0] = h.pop();\n    this._down(0);\n    return top;\n  }\n\n  _up(i) {\n    const h = this.heap;\n    while (i > 0) {\n      const p = (i - 1) >> 1;\n      if (h[p][0] <= h[i][0]) break;\n      [h[p], h[i]] = [h[i], h[p]];\n      i = p;\n    }\n  }\n\n  _down(i) {\n    const h = this.heap;\n    const n = h.length;\n\n    while (true) {\n      let smallest = i;\n      const l = 2 * i + 1;\n      const r = 2 * i + 2;\n\n      if (l < n && h[l][0] < h[smallest][0]) smallest = l;\n      if (r < n && h[r][0] < h[smallest][0]) smallest = r;\n\n      if (smallest === i) break;\n\n      [h[i], h[smallest]] = [h[smallest], h[i]];\n      i = smallest;\n    }\n  }\n}\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (input.length === 0) process.exit(0);\n\nlet idx = 0;\nconst N = input[idx++];\nconst M = input[idx++];\n\nconst adj = Array.from({ length: N + 1 }, () => []);\n\nfor (let i = 0; i < M; i++) {\n  const a = input[idx++];\n  const b = input[idx++];\n  const c = input[idx++];\n\n  adj[a].push([b, c]);\n  adj[b].push([a, c]);\n}\n\nconst INF = Infinity;\nconst dist = Array(N + 1).fill(INF);\ndist[1] = 0;\n\nconst heap = new MinHeap();\nheap.push([0, 1]);\n\nwhile (heap.size() > 0) {\n  const [d, u] = heap.pop();\n\n  if (d !== dist[u]) continue;\n  if (u === N) break;\n\n  for (const [v, w] of adj[u]) {\n    const nd = d + w;\n    if (nd < dist[v]) {\n      dist[v] = nd;\n      heap.push([nd, v]);\n    }\n  }\n}\n\nconsole.log(dist[N]);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08774770001764409,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

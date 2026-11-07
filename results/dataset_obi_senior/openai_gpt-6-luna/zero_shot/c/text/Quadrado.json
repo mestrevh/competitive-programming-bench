@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:09:24.603976+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 464,
+            "output_tokens": 2031,
+            "total_tokens": 2495
+        },
+        "cost_usd": {
+            "input_cost": 4.6e-05,
+            "output_cost": 0.001015,
+            "total_cost": 0.001062
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    if (n == 2) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    if (n == 1) {\n        printf(\"1\\n\");\n        return 0;\n    }\n\n    int offsets[40], count = 0;\n    int m = n - 1;\n\n    if (m % 2 == 0) {\n        for (int k = 1; k <= m / 2; ++k) {\n            offsets[count++] = -k;\n            offsets[count++] = k;\n        }\n    } else {\n        offsets[count++] = -1;\n        offsets[count++] = -2;\n        offsets[count++] = 3;\n\n        int pairs = (m - 3) / 2;\n        for (int k = 4; k < 4 + pairs; ++k) {\n            offsets[count++] = -k;\n            offsets[count++] = k;\n        }\n    }\n    offsets[count++] = 0;\n\n    int max_abs = 0;\n    for (int i = 0; i < n; ++i) {\n        int abs_value = abs(offsets[i]);\n        if (abs_value > max_abs) max_abs = abs_value;\n    }\n\n    int center = max_abs + 1;\n    int values[40];\n    int min_value = 1000000, max_value = 0;\n\n    for (int i = 0; i < n; ++i) {\n        values[i] = offsets[i] + center;\n        if (values[i] < min_value) min_value = values[i];\n        if (values[i] > max_value) max_value = values[i];\n    }\n\n    int multiplier = max_value - min_value + 1;\n\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < n; ++j) {\n            if (j) printf(\" \");\n            printf(\"%d\", multiplier * values[i] + values[j]);\n        }\n        printf(\"\\n\");\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    if (n == 2) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    if (n == 1) {\n        printf(\"1\\n\");\n        return 0;\n    }\n\n    int offsets[40], count = 0;\n    int m = n - 1;\n\n    if (m % 2 == 0) {\n        for (int k = 1; k <= m / 2; ++k) {\n            offsets[count++] = -k;\n            offsets[count++] = k;\n        }\n    } else {\n        offsets[count++] = -1;\n        offsets[count++] = -2;\n        offsets[count++] = 3;\n\n        int pairs = (m - 3) / 2;\n        for (int k = 4; k < 4 + pairs; ++k) {\n            offsets[count++] = -k;\n            offsets[count++] = k;\n        }\n    }\n    offsets[count++] = 0;\n\n    int max_abs = 0;\n    for (int i = 0; i < n; ++i) {\n        int abs_value = abs(offsets[i]);\n        if (abs_value > max_abs) max_abs = abs_value;\n    }\n\n    int center = max_abs + 1;\n    int values[40];\n    int min_value = 1000000, max_value = 0;\n\n    for (int i = 0; i < n; ++i) {\n        values[i] = offsets[i] + center;\n        if (values[i] < min_value) min_value = values[i];\n        if (values[i] > max_value) max_value = values[i];\n    }\n\n    int multiplier = max_value - min_value + 1;\n\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < n; ++j) {\n            if (j) printf(\" \");\n            printf(\"%d\", multiplier * values[i] + values[j]);\n        }\n        printf(\"\\n\");\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.11577450000913814,
+            "counts": {
+                "AC": 0,
+                "WA": 15,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

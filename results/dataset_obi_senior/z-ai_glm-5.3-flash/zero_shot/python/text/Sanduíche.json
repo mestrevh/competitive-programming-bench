@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T09:28:12.177490+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 843,
+            "output_tokens": 7568,
+            "total_tokens": 8411
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.003784,
+            "total_cost": 0.003802
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0]); m = int(data[1])\n    adj = [0] * n\n    idx = 2\n    for _ in range(m):\n        x = int(data[idx]) - 1\n        y = int(data[idx + 1]) - 1\n        idx += 2\n        if x != y:\n            adj[x] |= 1 << y\n            adj[y] |= 1 << x\n\n    # Meet in the middle: split vertices into H1 (first half) and H2 (second half)\n    n1 = n // 2\n    n2 = n - n1\n    full1 = (1 << n1) - 1\n    size1 = 1 << n1\n    size2 = 1 << n2\n    full2 = size2 - 1\n\n    # For v in H1: mask (in H2 local coords) of forbidden vertices in H2\n    cross = [adj[v] >> n1 for v in range(n1)]\n    # Edges inside H1\n    adj1 = [adj[v] & full1 for v in range(n1)]\n    # Edges inside H2 (local coords)\n    adj2 = [adj[n1 + u] >> n1 for u in range(n2)]\n\n    # indep2[mask] = 1 if mask is an independent set within H2\n    indep2 = [0] * size2\n    nbr2 = [0] * size2\n    indep2[0] = 1  # empty set is independent\n    for mask in range(1, size2):\n        low = mask & (-mask)\n        i = low.bit_length() - 1\n        nm = nbr2[mask ^ low] | adj2[i]\n        nbr2[mask] = nm\n        if not (mask & nm):\n            indep2[mask] = 1\n\n    # SOS (subset sum) transform: dp[mask] = number of independent T of H2 with T subset of mask\n    dp = indep2[:]\n    for b in range(n2):\n        bit = 1 << b\n        for mask in range(size2):\n            if mask & bit:\n                dp[mask] += dp[mask ^ bit]\n\n    # S1 = empty subset of H1\n    total = dp[full2]\n\n    # Enumerate all subsets S1 of H1 that are independent within H1\n    nbr1 = [0] * size1\n    fmask = [0] * size1  # forbidden vertices in H2 for this S1\n    for mask in range(1, size1):\n        low = mask & (-mask)\n        i = low.bit_length() - 1\n        prev = mask ^ low\n        nm = nbr1[prev] | adj1[i]\n        nbr1[mask] = nm\n        fmask[mask] = fmask[prev] | cross[i]\n        if not (mask & nm):\n            total += dp[full2 ^ fmask[mask]]\n\n    # Subtract the empty sandwich\n    print(total - 1)\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n    n = int(data[0]); m = int(data[1])\n    adj = [0] * n\n    idx = 2\n    for _ in range(m):\n        x = int(data[idx]) - 1\n        y = int(data[idx + 1]) - 1\n        idx += 2\n        if x != y:\n            adj[x] |= 1 << y\n            adj[y] |= 1 << x\n\n    # Meet in the middle: split vertices into H1 (first half) and H2 (second half)\n    n1 = n // 2\n    n2 = n - n1\n    full1 = (1 << n1) - 1\n    size1 = 1 << n1\n    size2 = 1 << n2\n    full2 = size2 - 1\n\n    # For v in H1: mask (in H2 local coords) of forbidden vertices in H2\n    cross = [adj[v] >> n1 for v in range(n1)]\n    # Edges inside H1\n    adj1 = [adj[v] & full1 for v in range(n1)]\n    # Edges inside H2 (local coords)\n    adj2 = [adj[n1 + u] >> n1 for u in range(n2)]\n\n    # indep2[mask] = 1 if mask is an independent set within H2\n    indep2 = [0] * size2\n    nbr2 = [0] * size2\n    indep2[0] = 1  # empty set is independent\n    for mask in range(1, size2):\n        low = mask & (-mask)\n        i = low.bit_length() - 1\n        nm = nbr2[mask ^ low] | adj2[i]\n        nbr2[mask] = nm\n        if not (mask & nm):\n            indep2[mask] = 1\n\n    # SOS (subset sum) transform: dp[mask] = number of independent T of H2 with T subset of mask\n    dp = indep2[:]\n    for b in range(n2):\n        bit = 1 << b\n        for mask in range(size2):\n            if mask & bit:\n                dp[mask] += dp[mask ^ bit]\n\n    # S1 = empty subset of H1\n    total = dp[full2]\n\n    # Enumerate all subsets S1 of H1 that are independent within H1\n    nbr1 = [0] * size1\n    fmask = [0] * size1  # forbidden vertices in H2 for this S1\n    for mask in range(1, size1):\n        low = mask & (-mask)\n        i = low.bit_length() - 1\n        prev = mask ^ low\n        nm = nbr1[prev] | adj1[i]\n        nbr1[mask] = nm\n        fmask[mask] = fmask[prev] | cross[i]\n        if not (mask & nm):\n            total += dp[full2 ^ fmask[mask]]\n\n    # Subtract the empty sandwich\n    print(total - 1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07235309999668971,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T04:24:15.291002+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 719,
+            "output_tokens": 1469,
+            "total_tokens": 2188
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.000735,
+            "total_cost": 0.00075
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    D = float(data[idx]); idx += 1\n    batteries = []\n    for _ in range(n):\n        p = float(data[idx]); idx += 1\n        c = float(data[idx]); idx += 1\n        batteries.append((p, c))\n    batteries.sort(key=lambda x: x[0])\n    INF = float('inf')\n    dp = [INF] * n\n    dp[0] = 0.0\n    for i in range(1, n):\n        pi = batteries[i][0]\n        best = INF\n        for j in range(i):\n            if dp[j] < INF:\n                d = pi - batteries[j][0]\n                t = dp[j] + d * d / batteries[j][1]\n                if t < best:\n                    best = t\n        dp[i] = best\n    ans = INF\n    for j in range(n):\n        if dp[j] < INF:\n            d = D - batteries[j][0]\n            t = dp[j] + d * d / batteries[j][1]\n            if t < ans:\n                ans = t\n    print(f\"{ans:.3f}\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    D = float(data[idx]); idx += 1\n    batteries = []\n    for _ in range(n):\n        p = float(data[idx]); idx += 1\n        c = float(data[idx]); idx += 1\n        batteries.append((p, c))\n    batteries.sort(key=lambda x: x[0])\n    INF = float('inf')\n    dp = [INF] * n\n    dp[0] = 0.0\n    for i in range(1, n):\n        pi = batteries[i][0]\n        best = INF\n        for j in range(i):\n            if dp[j] < INF:\n                d = pi - batteries[j][0]\n                t = dp[j] + d * d / batteries[j][1]\n                if t < best:\n                    best = t\n        dp[i] = best\n    ans = INF\n    for j in range(n):\n        if dp[j] < INF:\n            d = D - batteries[j][0]\n            t = dp[j] + d * d / batteries[j][1]\n            if t < ans:\n                ans = t\n    print(f\"{ans:.3f}\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10833260000072187,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

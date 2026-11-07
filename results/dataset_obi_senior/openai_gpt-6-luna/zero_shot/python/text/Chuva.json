@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:14:49.624391+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 612,
+            "output_tokens": 773,
+            "total_tokens": 1385
+        },
+        "cost_usd": {
+            "input_cost": 6.1e-05,
+            "output_cost": 0.000387,
+            "total_cost": 0.000448
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\nh = data[1:]\n\nleft_max = [0] * n\nright_max = [0] * n\n\nfor i in range(1, n):\n    left_max[i] = max(left_max[i - 1], h[i - 1])\n\nfor i in range(n - 2, -1, -1):\n    right_max[i] = max(right_max[i + 1], h[i + 1])\n\nanswer = sum(\n    1\n    for i in range(n)\n    if left_max[i] > h[i] and right_max[i] > h[i]\n)\n\nprint(answer)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\nh = data[1:]\n\nleft_max = [0] * n\nright_max = [0] * n\n\nfor i in range(1, n):\n    left_max[i] = max(left_max[i - 1], h[i - 1])\n\nfor i in range(n - 2, -1, -1):\n    right_max[i] = max(right_max[i + 1], h[i + 1])\n\nanswer = sum(\n    1\n    for i in range(n)\n    if left_max[i] > h[i] and right_max[i] > h[i]\n)\n\nprint(answer)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12691620000259718,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

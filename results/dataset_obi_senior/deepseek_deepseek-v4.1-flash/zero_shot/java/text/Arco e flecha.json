@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:21:48.766736+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 910,
+            "output_tokens": 4352,
+            "total_tokens": 5262
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.010445,
+            "total_cost": 0.010448
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int seed = 123456789;\n\n    static int rnd() {\n        seed ^= seed << 13;\n        seed ^= seed >>> 17;\n        seed ^= seed << 5;\n        return seed;\n    }\n\n    static class Node {\n        long key;\n        int prio, cnt, size;\n        Node left, right;\n\n        Node(long key) {\n            this.key = key;\n            this.prio = rnd();\n            this.cnt = 1;\n            this.size = 1;\n        }\n    }\n\n    static int size(Node n) {\n        return n == null ? 0 : n.size;\n    }\n\n    static void update(Node n) {\n        n.size = n.cnt + size(n.left) + size(n.right);\n    }\n\n    static Node rotateRight(Node y) {\n        Node x = y.left;\n        y.left = x.right;\n        x.right = y;\n        update(y);\n        update(x);\n        return x;\n    }\n\n    static Node rotateLeft(Node x) {\n        Node y = x.right;\n        x.right = y.left;\n        y.left = x;\n        update(x);\n        update(y);\n        return y;\n    }\n\n    static Node insert(Node t, long key) {\n        if (t == null) return new Node(key);\n\n        if (key == t.key) {\n            t.cnt++;\n            t.size++;\n            return t;\n        } else if (key < t.key) {\n            t.left = insert(t.left, key);\n            if (t.left.prio < t.prio) t = rotateRight(t);\n        } else {\n            t.right = insert(t.right, key);\n            if (t.right.prio < t.prio) t = rotateLeft(t);\n        }\n\n        update(t);\n        return t;\n    }\n\n    static int query(Node t, long key) {\n        int ans = 0;\n        while (t != null) {\n            if (key < t.key) {\n                t = t.left;\n            } else {\n                ans += size(t.left) + t.cnt;\n                t = t.right;\n            }\n        }\n        return ans;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n\n        StringBuilder sb = new StringBuilder();\n        Node root = null;\n        long prevPenalty = 0;\n\n        for (int i = 0; i < N; i++) {\n            st = new StringTokenizer(br.readLine());\n            long x = Long.parseLong(st.nextToken());\n            long y = Long.parseLong(st.nextToken());\n\n            long xr = x + prevPenalty;\n            long yr = y + prevPenalty;\n            long dist2 = xr * xr + yr * yr;\n\n            int penalty = query(root, dist2);\n            sb.append(penalty).append('\\n');\n\n            root = insert(root, dist2);\n            prevPenalty = penalty;\n        }\n\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int seed = 123456789;\n\n    static int rnd() {\n        seed ^= seed << 13;\n        seed ^= seed >>> 17;\n        seed ^= seed << 5;\n        return seed;\n    }\n\n    static class Node {\n        long key;\n        int prio, cnt, size;\n        Node left, right;\n\n        Node(long key) {\n            this.key = key;\n            this.prio = rnd();\n            this.cnt = 1;\n            this.size = 1;\n        }\n    }\n\n    static int size(Node n) {\n        return n == null ? 0 : n.size;\n    }\n\n    static void update(Node n) {\n        n.size = n.cnt + size(n.left) + size(n.right);\n    }\n\n    static Node rotateRight(Node y) {\n        Node x = y.left;\n        y.left = x.right;\n        x.right = y;\n        update(y);\n        update(x);\n        return x;\n    }\n\n    static Node rotateLeft(Node x) {\n        Node y = x.right;\n        x.right = y.left;\n        y.left = x;\n        update(x);\n        update(y);\n        return y;\n    }\n\n    static Node insert(Node t, long key) {\n        if (t == null) return new Node(key);\n\n        if (key == t.key) {\n            t.cnt++;\n            t.size++;\n            return t;\n        } else if (key < t.key) {\n            t.left = insert(t.left, key);\n            if (t.left.prio < t.prio) t = rotateRight(t);\n        } else {\n            t.right = insert(t.right, key);\n            if (t.right.prio < t.prio) t = rotateLeft(t);\n        }\n\n        update(t);\n        return t;\n    }\n\n    static int query(Node t, long key) {\n        int ans = 0;\n        while (t != null) {\n            if (key < t.key) {\n                t = t.left;\n            } else {\n                ans += size(t.left) + t.cnt;\n                t = t.right;\n            }\n        }\n        return ans;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n\n        StringBuilder sb = new StringBuilder();\n        Node root = null;\n        long prevPenalty = 0;\n\n        for (int i = 0; i < N; i++) {\n            st = new StringTokenizer(br.readLine());\n            long x = Long.parseLong(st.nextToken());\n            long y = Long.parseLong(st.nextToken());\n\n            long xr = x + prevPenalty;\n            long yr = y + prevPenalty;\n            long dist2 = xr * xr + yr * yr;\n\n            int penalty = query(root, dist2);\n            sb.append(penalty).append('\\n');\n\n            root = insert(root, dist2);\n            prevPenalty = penalty;\n        }\n\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2626746000023559,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

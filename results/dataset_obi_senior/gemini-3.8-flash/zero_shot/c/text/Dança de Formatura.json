@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:05:32.812685+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1367,
+            "output_tokens": 835,
+            "total_tokens": 2761
+        },
+        "cost_usd": {
+            "input_cost": 0.001025,
+            "output_cost": 0.003131,
+            "total_cost": 0.004156
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic inline int read_int() {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n    if (c == EOF) return 0;\n    int res = 0;\n    while (c >= '0' && c <= '9') {\n        res = res * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return res;\n}\n\nstatic inline char read_op() {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n    return (char)c;\n}\n\nstatic char out_buf[1 << 20];\nstatic int out_pos = 0;\n\nstatic inline void write_char(char c) {\n    if (out_pos == (1 << 20)) {\n        fwrite(out_buf, 1, out_pos, stdout);\n        out_pos = 0;\n    }\n    out_buf[out_pos++] = c;\n}\n\nstatic inline void write_long(long long x) {\n    char s[24];\n    int idx = 0;\n    if (x == 0) {\n        write_char('0');\n        return;\n    }\n    while (x > 0) {\n        s[idx++] = (char)('0' + (x % 10));\n        x /= 10;\n    }\n    while (idx > 0) {\n        write_char(s[--idx]);\n    }\n}\n\nint main() {\n    int n = read_int();\n    int m = read_int();\n    int p = read_int();\n\n    int *row = (int *)malloc((n + 1) * sizeof(int));\n    int *col = (int *)malloc((m + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) {\n        row[i] = i;\n    }\n    for (int j = 1; j <= m; j++) {\n        col[j] = j;\n    }\n\n    for (int k = 0; k < p; k++) {\n        char op = read_op();\n        int a = read_int();\n        int b = read_int();\n\n        if (op == 'L') {\n            int tmp = row[a];\n            row[a] = row[b];\n            row[b] = tmp;\n        } else if (op == 'C') {\n            int tmp = col[a];\n            col[a] = col[b];\n            col[b] = tmp;\n        }\n    }\n\n    long long M = m;\n    for (int i = 1; i <= n; i++) {\n        long long row_base = (long long)(row[i] - 1) * M;\n        for (int j = 1; j <= m; j++) {\n            long long val = row_base + col[j];\n            write_long(val);\n            if (j < m) {\n                write_char(' ');\n            } else {\n                write_char('\\n');\n            }\n        }\n    }\n\n    if (out_pos > 0) {\n        fwrite(out_buf, 1, out_pos, stdout);\n    }\n\n    free(row);\n    free(col);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic inline int read_int() {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n    if (c == EOF) return 0;\n    int res = 0;\n    while (c >= '0' && c <= '9') {\n        res = res * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return res;\n}\n\nstatic inline char read_op() {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n    return (char)c;\n}\n\nstatic char out_buf[1 << 20];\nstatic int out_pos = 0;\n\nstatic inline void write_char(char c) {\n    if (out_pos == (1 << 20)) {\n        fwrite(out_buf, 1, out_pos, stdout);\n        out_pos = 0;\n    }\n    out_buf[out_pos++] = c;\n}\n\nstatic inline void write_long(long long x) {\n    char s[24];\n    int idx = 0;\n    if (x == 0) {\n        write_char('0');\n        return;\n    }\n    while (x > 0) {\n        s[idx++] = (char)('0' + (x % 10));\n        x /= 10;\n    }\n    while (idx > 0) {\n        write_char(s[--idx]);\n    }\n}\n\nint main() {\n    int n = read_int();\n    int m = read_int();\n    int p = read_int();\n\n    int *row = (int *)malloc((n + 1) * sizeof(int));\n    int *col = (int *)malloc((m + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) {\n        row[i] = i;\n    }\n    for (int j = 1; j <= m; j++) {\n        col[j] = j;\n    }\n\n    for (int k = 0; k < p; k++) {\n        char op = read_op();\n        int a = read_int();\n        int b = read_int();\n\n        if (op == 'L') {\n            int tmp = row[a];\n            row[a] = row[b];\n            row[b] = tmp;\n        } else if (op == 'C') {\n            int tmp = col[a];\n            col[a] = col[b];\n            col[b] = tmp;\n        }\n    }\n\n    long long M = m;\n    for (int i = 1; i <= n; i++) {\n        long long row_base = (long long)(row[i] - 1) * M;\n        for (int j = 1; j <= m; j++) {\n            long long val = row_base + col[j];\n            write_long(val);\n            if (j < m) {\n                write_char(' ');\n            } else {\n                write_char('\\n');\n            }\n        }\n    }\n\n    if (out_pos > 0) {\n        fwrite(out_buf, 1, out_pos, stdout);\n    }\n\n    free(row);\n    free(col);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 55
+            },
+            "total_test_cases": 55
+        }
+    }
+]

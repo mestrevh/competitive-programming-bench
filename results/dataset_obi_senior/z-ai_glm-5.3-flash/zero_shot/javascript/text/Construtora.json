@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:01:32.102794+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1218,
+            "output_tokens": 15225,
+            "total_tokens": 16443
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.007613,
+            "total_cost": 0.007639
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = tokens[0];\nconst a = tokens.slice(1, n + 1);\n\n// A altura final ótima é H = max(a). Cada operação eleva um intervalo de valor\n// v para v+1 (\"operação de nível v\"). Um prédio i só pode participar de uma\n// operação de nível v se a[i] <= v (sua altura nunca fica abaixo da inicial).\n// Logo, para cada nível v (1 <= v < H), as operações de nível v devem cobrir\n// exatamente o conjunto S_v = {i : a[i] <= v}, e cada operação está contida em\n// um único bloco maximal de S_v (prédios separados por alguém com a[i] > v\n// nunca podem estar juntos numa operação, pois esse vizinho nunca terá valor v).\n// Portanto o nº de operações de nível v é >= número de blocos maximais de S_v,\n// e esse limite é atingível executando todas as operações nível a nível\n// crescente (cada bloco maximal de S_v está todo com valor exatamente v).\n//\n// Resposta = soma sobre v de (#blocos maximais de {i : a[i] <= v})\n//          = (max - a[0]) + soma de max(0, a[i-1] - a[i]) para i >= 1.\n//   (o prédio 1 inicia um bloco em todo nível v com a[0] <= v <= max-1;\n//    o prédio i (i>=1) inicia um bloco no nível v para a[i] <= v < a[i-1])\n\nconst mx = Math.max(...a);\nlet ans = mx - a[0];\nfor (let i = 1; i < n; i++) {\n  if (a[i - 1] > a[i]) ans += a[i - 1] - a[i];\n}\n\nconsole.log(ans);\n```",
+        "extracted_code": "const fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = tokens[0];\nconst a = tokens.slice(1, n + 1);\n\n// A altura final ótima é H = max(a). Cada operação eleva um intervalo de valor\n// v para v+1 (\"operação de nível v\"). Um prédio i só pode participar de uma\n// operação de nível v se a[i] <= v (sua altura nunca fica abaixo da inicial).\n// Logo, para cada nível v (1 <= v < H), as operações de nível v devem cobrir\n// exatamente o conjunto S_v = {i : a[i] <= v}, e cada operação está contida em\n// um único bloco maximal de S_v (prédios separados por alguém com a[i] > v\n// nunca podem estar juntos numa operação, pois esse vizinho nunca terá valor v).\n// Portanto o nº de operações de nível v é >= número de blocos maximais de S_v,\n// e esse limite é atingível executando todas as operações nível a nível\n// crescente (cada bloco maximal de S_v está todo com valor exatamente v).\n//\n// Resposta = soma sobre v de (#blocos maximais de {i : a[i] <= v})\n//          = (max - a[0]) + soma de max(0, a[i-1] - a[i]) para i >= 1.\n//   (o prédio 1 inicia um bloco em todo nível v com a[0] <= v <= max-1;\n//    o prédio i (i>=1) inicia um bloco no nível v para a[i] <= v < a[i-1])\n\nconst mx = Math.max(...a);\nlet ans = mx - a[0];\nfor (let i = 1; i < n; i++) {\n  if (a[i - 1] > a[i]) ans += a[i - 1] - a[i];\n}\n\nconsole.log(ans);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07430510001722723,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

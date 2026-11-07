@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:12:05.246601+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 639,
+            "output_tokens": 366,
+            "total_tokens": 1005
+        },
+        "cost_usd": {
+            "input_cost": 6.4e-05,
+            "output_cost": 0.000183,
+            "total_cost": 0.000247
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<vector<int>> adj(N);\n    for (int i = 0; i < N - 1; ++i) {\n        int A, B;\n        cin >> A >> B;\n        --A;\n        --B;\n        adj[A].push_back(B);\n        adj[B].push_back(A);\n    }\n\n    vector<int> parent(N, -1), order;\n    order.reserve(N);\n    parent[0] = 0;\n    order.push_back(0);\n\n    for (int i = 0; i < static_cast<int>(order.size()); ++i) {\n        int u = order[i];\n        for (int v : adj[u]) {\n            if (parent[v] == -1) {\n                parent[v] = u;\n                order.push_back(v);\n            }\n        }\n    }\n\n    vector<int> subtree(N, 1);\n    int answer = N;\n\n    for (int i = N - 1; i > 0; --i) {\n        int u = order[i];\n        answer = min(answer, abs(N - 2 * subtree[u]));\n        subtree[parent[u]] += subtree[u];\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<vector<int>> adj(N);\n    for (int i = 0; i < N - 1; ++i) {\n        int A, B;\n        cin >> A >> B;\n        --A;\n        --B;\n        adj[A].push_back(B);\n        adj[B].push_back(A);\n    }\n\n    vector<int> parent(N, -1), order;\n    order.reserve(N);\n    parent[0] = 0;\n    order.push_back(0);\n\n    for (int i = 0; i < static_cast<int>(order.size()); ++i) {\n        int u = order[i];\n        for (int v : adj[u]) {\n            if (parent[v] == -1) {\n                parent[v] = u;\n                order.push_back(v);\n            }\n        }\n    }\n\n    vector<int> subtree(N, 1);\n    int answer = N;\n\n    for (int i = N - 1; i > 0; --i) {\n        int u = order[i];\n        answer = min(answer, abs(N - 2 * subtree[u]));\n        subtree[parent[u]] += subtree[u];\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17308619999676012,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

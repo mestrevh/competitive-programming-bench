@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:27:43.910122+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1255,
+            "output_tokens": 463,
+            "total_tokens": 3658
+        },
+        "cost_usd": {
+            "input_cost": 0.000941,
+            "output_cost": 0.001736,
+            "total_cost": 0.002678
+        },
+        "raw_response": "```python\nimport heapq\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n    N = int(next(iterator))\n    T = int(next(iterator))\n\n    types = [int(next(iterator)) for _ in range(N)]\n    prices = [int(next(iterator)) for _ in range(N)]\n\n    C = int(next(iterator))\n    clients = [int(next(iterator)) for _ in range(C)]\n\n    by_type = [[] for _ in range(T + 1)]\n    global_heap = []\n\n    for i in range(N):\n        t = types[i]\n        p = prices[i]\n        by_type[t].append((p, i))\n        global_heap.append((p, t, i))\n\n    for t in range(1, T + 1):\n        if by_type[t]:\n            heapq.heapify(by_type[t])\n    heapq.heapify(global_heap)\n\n    sold = [False] * N\n    total_revenue = 0\n\n    for u in clients:\n        if u > 0:\n            h = by_type[u]\n            while h and sold[h[0][1]]:\n                heapq.heappop(h)\n            if h:\n                p, obj_id = heapq.heappop(h)\n                sold[obj_id] = True\n                total_revenue += p\n        else:\n            while global_heap and sold[global_heap[0][2]]:\n                heapq.heappop(global_heap)\n            if global_heap:\n                p, t, obj_id = heapq.heappop(global_heap)\n                sold[obj_id] = True\n                total_revenue += p\n\n    print(total_revenue)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import heapq\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n    N = int(next(iterator))\n    T = int(next(iterator))\n\n    types = [int(next(iterator)) for _ in range(N)]\n    prices = [int(next(iterator)) for _ in range(N)]\n\n    C = int(next(iterator))\n    clients = [int(next(iterator)) for _ in range(C)]\n\n    by_type = [[] for _ in range(T + 1)]\n    global_heap = []\n\n    for i in range(N):\n        t = types[i]\n        p = prices[i]\n        by_type[t].append((p, i))\n        global_heap.append((p, t, i))\n\n    for t in range(1, T + 1):\n        if by_type[t]:\n            heapq.heapify(by_type[t])\n    heapq.heapify(global_heap)\n\n    sold = [False] * N\n    total_revenue = 0\n\n    for u in clients:\n        if u > 0:\n            h = by_type[u]\n            while h and sold[h[0][1]]:\n                heapq.heappop(h)\n            if h:\n                p, obj_id = heapq.heappop(h)\n                sold[obj_id] = True\n                total_revenue += p\n        else:\n            while global_heap and sold[global_heap[0][2]]:\n                heapq.heappop(global_heap)\n            if global_heap:\n                p, t, obj_id = heapq.heappop(global_heap)\n                sold[obj_id] = True\n                total_revenue += p\n\n    print(total_revenue)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.43424159999995027,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

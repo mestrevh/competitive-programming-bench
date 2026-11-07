@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:41:13.118155+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1217,
+            "output_tokens": 49655,
+            "total_tokens": 50872
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.024827,
+            "total_cost": 0.024854
+        },
+        "raw_response": "Analisando o problema: cada fase eleva em 1 um intervalo de prédios que **neste momento** têm todas a mesma altura. Como as alturas só crescem, a altura final H deve ser ≥ M = max(a), e pode-se provar que H = M é ótimo (para nível v ≥ M, o conjunto de prédios que precisa do \"salto\" v→v+1 é todo o array, 1 bloco, então cada unidade extra de H custa exatamente 1 fase a mais).\n\n**Observação-chave:** cada fase corresponde a exatamente um nível v (prédios vão de v para v+1). Todo prédio com a_i ≤ v precisa fazer exatamente uma vez a transição v→v+1. Logo, as fases de nível v formam uma partição do conjunto S_v = {i : a_i ≤ v} em intervalos contíguos — o mínimo de fases nesse nível é o número de blocos contíguos maximais de S_v. Além disso, **qualquer** escolha de partições por nível é realizável: ordenando as fases topologicamente (fases que compartilham um prédio são ordenadas por nível — um DAG sem ciclos), quando uma fase (v, [L,R]) executa, cada prédio nela fez exatamente os saltos de níveis < v, logo está exatamente na altura v, validando a fase.\n\nPortanto a resposta é:\n\n**Σ_{v=1}^{M-1} blocos({i : a_i ≤ v})**\n\nVerificando os exemplos:\n- `[3,1,1,2]`: v=1: {2,3}→1 bloco; v=2: {2,3,4}→1 bloco; total **2** ✓\n- `[5,4,4,4,5,4,4,7]`: v=4: {2,3,4,6,7}→2; v=5: {1..7}→1; v=6: →1; total **4** ✓\n- `[100,100,100]`: **0** ✓\n\nComplexidade O(N·M) ≤ 10⁴ operações.\n\n```C\n#include <stdio.h>\n\nint a[100005];\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int M = 0, mn = 1 << 30;\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n        if (a[i] > M) M = a[i];\n        if (a[i] < mn) mn = a[i];\n    }\n    long long ans = 0;\n    for (int v = mn; v < M; v++) {\n        int blocks = 0, prev = 0;\n        for (int i = 0; i < n; i++) {\n            if (a[i] <= v) {\n                if (!prev) blocks++;\n                prev = 1;\n            } else {\n                prev = 0;\n            }\n        }\n        ans += blocks;\n    }\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint a[100005];\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int M = 0, mn = 1 << 30;\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n        if (a[i] > M) M = a[i];\n        if (a[i] < mn) mn = a[i];\n    }\n    long long ans = 0;\n    for (int v = mn; v < M; v++) {\n        int blocks = 0, prev = 0;\n        for (int i = 0; i < n; i++) {\n            if (a[i] <= v) {\n                if (!prev) blocks++;\n                prev = 1;\n            } else {\n                prev = 0;\n            }\n        }\n        ans += blocks;\n    }\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12737819997710176,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:50:09.894043+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 838,
+            "output_tokens": 3184,
+            "total_tokens": 4022
+        },
+        "cost_usd": {
+            "input_cost": 8.4e-05,
+            "output_cost": 0.001592,
+            "total_cost": 0.001676
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] first = br.readLine().trim().split(\"\\\\s+\");\n        int n = Integer.parseInt(first[0]);\n        int m = Integer.parseInt(first[1]);\n\n        char[][] grid = new char[n][];\n        for (int i = 0; i < n; i++) {\n            grid[i] = br.readLine().trim().toCharArray();\n        }\n\n        int[] queue = new int[m];\n\n        for (int i = 0; i < n; i++) {\n            int head = 0;\n            int tail = 0;\n\n            if (i == 0) {\n                for (int j = 0; j < m; j++) {\n                    if (grid[i][j] == 'o') {\n                        queue[tail++] = j;\n                    }\n                }\n            } else {\n                for (int j = 0; j < m; j++) {\n                    if (grid[i][j] == '.' && grid[i - 1][j] == 'o') {\n                        grid[i][j] = 'o';\n                        queue[tail++] = j;\n                    }\n                }\n            }\n\n            while (head < tail) {\n                int j = queue[head++];\n\n                if (i + 1 < n && grid[i + 1][j] == '#') {\n                    if (j > 0 && grid[i][j - 1] == '.') {\n                        grid[i][j - 1] = 'o';\n                        queue[tail++] = j - 1;\n                    }\n                    if (j + 1 < m && grid[i][j + 1] == '.') {\n                        grid[i][j + 1] = 'o';\n                        queue[tail++] = j + 1;\n                    }\n                }\n            }\n        }\n\n        StringBuilder out = new StringBuilder();\n        for (char[] row : grid) {\n            out.append(row).append('\\n');\n        }\n        System.out.print(out);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] first = br.readLine().trim().split(\"\\\\s+\");\n        int n = Integer.parseInt(first[0]);\n        int m = Integer.parseInt(first[1]);\n\n        char[][] grid = new char[n][];\n        for (int i = 0; i < n; i++) {\n            grid[i] = br.readLine().trim().toCharArray();\n        }\n\n        int[] queue = new int[m];\n\n        for (int i = 0; i < n; i++) {\n            int head = 0;\n            int tail = 0;\n\n            if (i == 0) {\n                for (int j = 0; j < m; j++) {\n                    if (grid[i][j] == 'o') {\n                        queue[tail++] = j;\n                    }\n                }\n            } else {\n                for (int j = 0; j < m; j++) {\n                    if (grid[i][j] == '.' && grid[i - 1][j] == 'o') {\n                        grid[i][j] = 'o';\n                        queue[tail++] = j;\n                    }\n                }\n            }\n\n            while (head < tail) {\n                int j = queue[head++];\n\n                if (i + 1 < n && grid[i + 1][j] == '#') {\n                    if (j > 0 && grid[i][j - 1] == '.') {\n                        grid[i][j - 1] = 'o';\n                        queue[tail++] = j - 1;\n                    }\n                    if (j + 1 < m && grid[i][j + 1] == '.') {\n                        grid[i][j + 1] = 'o';\n                        queue[tail++] = j + 1;\n                    }\n                }\n            }\n        }\n\n        StringBuilder out = new StringBuilder();\n        for (char[] row : grid) {\n            out.append(row).append('\\n');\n        }\n        System.out.print(out);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11328469999716617,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

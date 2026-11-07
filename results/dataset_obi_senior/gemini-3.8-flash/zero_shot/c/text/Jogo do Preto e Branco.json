@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:25:11.363702+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 1079,
+            "total_tokens": 3230
+        },
+        "cost_usd": {
+            "input_cost": 0.000568,
+            "output_cost": 0.004046,
+            "total_cost": 0.004614
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\nint L, C, P;\nint board[8][8]; // 1: preta, 0: vazia\nbool is_candidate[8][8];\n\nint id[8][8];\nint num_candidates;\n\nint head[40], to[200], nxt[200], edge_cnt;\nint match[40];\nbool vis[40];\n\nvoid add_edge(int u, int v) {\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt++;\n}\n\nbool dfs(int u) {\n    for (int e = head[u]; e != -1; e = nxt[e]) {\n        int v = to[e];\n        if (!vis[v]) {\n            vis[v] = true;\n            if (match[v] < 0 || dfs(match[v])) {\n                match[v] = u;\n                return true;\n            }\n        }\n    }\n    return false;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n    if (scanf(\"%d\", &P) != 1) return 0;\n\n    for (int i = 0; i < P; i++) {\n        int r, c;\n        scanf(\"%d %d\", &r, &c);\n        board[r][c] = 1; // peça preta\n    }\n\n    int dr[] = {-1, 1, 0, 0};\n    int dc[] = {0, 0, -1, 1};\n\n    // Identificar casas candidatas (vazias com pelo menos uma vizinha preta)\n    num_candidates = 0;\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (board[r][c] == 0) {\n                bool has_black_neighbor = false;\n                for (int d = 0; d < 4; d++) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n                    if (nr >= 1 && nr <= L && nc >= 1 && nc <= C) {\n                        if (board[nr][nc] == 1) {\n                            has_black_neighbor = true;\n                            break;\n                        }\n                    }\n                }\n                if (has_black_neighbor) {\n                    is_candidate[r][c] = true;\n                    id[r][c] = num_candidates++;\n                }\n            }\n        }\n    }\n\n    memset(head, -1, sizeof(head));\n    edge_cnt = 0;\n\n    // Construir o grafo bipartido entre casas candidatas\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (is_candidate[r][c] && (r + c) % 2 == 0) {\n                int u = id[r][c];\n                for (int d = 0; d < 4; d++) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n                    if (nr >= 1 && nr <= L && nc >= 1 && nc <= C) {\n                        if (is_candidate[nr][nc]) {\n                            int v = id[nr][nc];\n                            add_edge(u, v);\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    // Emparelhamento máximo bipartido (algoritmo de Kuhn)\n    memset(match, -1, sizeof(match));\n    int max_matching = 0;\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (is_candidate[r][c] && (r + c) % 2 == 0) {\n                int u = id[r][c];\n                memset(vis, false, sizeof(vis));\n                if (dfs(u)) {\n                    max_matching++;\n                }\n            }\n        }\n    }\n\n    // Conjunto independente máximo em grafo bipartido = |V| - Matching Máximo\n    int ans = num_candidates - max_matching;\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\nint L, C, P;\nint board[8][8]; // 1: preta, 0: vazia\nbool is_candidate[8][8];\n\nint id[8][8];\nint num_candidates;\n\nint head[40], to[200], nxt[200], edge_cnt;\nint match[40];\nbool vis[40];\n\nvoid add_edge(int u, int v) {\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt++;\n}\n\nbool dfs(int u) {\n    for (int e = head[u]; e != -1; e = nxt[e]) {\n        int v = to[e];\n        if (!vis[v]) {\n            vis[v] = true;\n            if (match[v] < 0 || dfs(match[v])) {\n                match[v] = u;\n                return true;\n            }\n        }\n    }\n    return false;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n    if (scanf(\"%d\", &P) != 1) return 0;\n\n    for (int i = 0; i < P; i++) {\n        int r, c;\n        scanf(\"%d %d\", &r, &c);\n        board[r][c] = 1; // peça preta\n    }\n\n    int dr[] = {-1, 1, 0, 0};\n    int dc[] = {0, 0, -1, 1};\n\n    // Identificar casas candidatas (vazias com pelo menos uma vizinha preta)\n    num_candidates = 0;\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (board[r][c] == 0) {\n                bool has_black_neighbor = false;\n                for (int d = 0; d < 4; d++) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n                    if (nr >= 1 && nr <= L && nc >= 1 && nc <= C) {\n                        if (board[nr][nc] == 1) {\n                            has_black_neighbor = true;\n                            break;\n                        }\n                    }\n                }\n                if (has_black_neighbor) {\n                    is_candidate[r][c] = true;\n                    id[r][c] = num_candidates++;\n                }\n            }\n        }\n    }\n\n    memset(head, -1, sizeof(head));\n    edge_cnt = 0;\n\n    // Construir o grafo bipartido entre casas candidatas\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (is_candidate[r][c] && (r + c) % 2 == 0) {\n                int u = id[r][c];\n                for (int d = 0; d < 4; d++) {\n                    int nr = r + dr[d];\n                    int nc = c + dc[d];\n                    if (nr >= 1 && nr <= L && nc >= 1 && nc <= C) {\n                        if (is_candidate[nr][nc]) {\n                            int v = id[nr][nc];\n                            add_edge(u, v);\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    // Emparelhamento máximo bipartido (algoritmo de Kuhn)\n    memset(match, -1, sizeof(match));\n    int max_matching = 0;\n    for (int r = 1; r <= L; r++) {\n        for (int c = 1; c <= C; c++) {\n            if (is_candidate[r][c] && (r + c) % 2 == 0) {\n                int u = id[r][c];\n                memset(vis, false, sizeof(vis));\n                if (dfs(u)) {\n                    max_matching++;\n                }\n            }\n        }\n    }\n\n    // Conjunto independente máximo em grafo bipartido = |V| - Matching Máximo\n    int ans = num_candidates - max_matching;\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14733779997914098,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

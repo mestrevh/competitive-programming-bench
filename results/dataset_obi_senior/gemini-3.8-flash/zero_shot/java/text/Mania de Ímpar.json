@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:30:45.961725+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1103,
+            "output_tokens": 764,
+            "total_tokens": 2408
+        },
+        "cost_usd": {
+            "input_cost": 0.000827,
+            "output_cost": 0.002865,
+            "total_cost": 0.003692
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer tokenizer = null;\n\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        tokenizer = new StringTokenizer(line);\n        int N = Integer.parseInt(tokenizer.nextToken());\n        int M = Integer.parseInt(tokenizer.nextToken());\n\n        int[][] G = new int[N][M];\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                while (tokenizer == null || !tokenizer.hasMoreTokens()) {\n                    line = reader.readLine();\n                    tokenizer = new StringTokenizer(line);\n                }\n                G[i][j] = Integer.parseInt(tokenizer.nextToken());\n            }\n        }\n\n        // Configuração 0:\n        // Se (i + j) é par => valor deve ser ímpar (1)\n        // Se (i + j) é ímpar => valor deve ser par (0)\n        //\n        // Configuração 1:\n        // Se (i + j) é par => valor deve ser par (0)\n        // Se (i + j) é ímpar => valor deve ser ímpar (1)\n\n        int cost0 = 0;\n        int cost1 = 0;\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                int expectedParity0 = ((i + j) % 2 == 0) ? 1 : 0;\n                int currentParity = G[i][j] % 2;\n\n                if (currentParity != expectedParity0) {\n                    cost0++;\n                } else {\n                    cost1++;\n                }\n            }\n        }\n\n        int chosenConfig = (cost0 <= cost1) ? 0 : 1;\n        int minCost = Math.min(cost0, cost1);\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(minCost).append(\"\\n\");\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                int expectedParity;\n                if (chosenConfig == 0) {\n                    expectedParity = ((i + j) % 2 == 0) ? 1 : 0;\n                } else {\n                    expectedParity = ((i + j) % 2 == 0) ? 0 : 1;\n                }\n\n                int val = G[i][j];\n                if (val % 2 != expectedParity) {\n                    val++;\n                }\n                sb.append(val);\n                if (j < M - 1) {\n                    sb.append(\" \");\n                }\n            }\n            sb.append(\"\\n\");\n        }\n\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer tokenizer = null;\n\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        tokenizer = new StringTokenizer(line);\n        int N = Integer.parseInt(tokenizer.nextToken());\n        int M = Integer.parseInt(tokenizer.nextToken());\n\n        int[][] G = new int[N][M];\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                while (tokenizer == null || !tokenizer.hasMoreTokens()) {\n                    line = reader.readLine();\n                    tokenizer = new StringTokenizer(line);\n                }\n                G[i][j] = Integer.parseInt(tokenizer.nextToken());\n            }\n        }\n\n        // Configuração 0:\n        // Se (i + j) é par => valor deve ser ímpar (1)\n        // Se (i + j) é ímpar => valor deve ser par (0)\n        //\n        // Configuração 1:\n        // Se (i + j) é par => valor deve ser par (0)\n        // Se (i + j) é ímpar => valor deve ser ímpar (1)\n\n        int cost0 = 0;\n        int cost1 = 0;\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                int expectedParity0 = ((i + j) % 2 == 0) ? 1 : 0;\n                int currentParity = G[i][j] % 2;\n\n                if (currentParity != expectedParity0) {\n                    cost0++;\n                } else {\n                    cost1++;\n                }\n            }\n        }\n\n        int chosenConfig = (cost0 <= cost1) ? 0 : 1;\n        int minCost = Math.min(cost0, cost1);\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(minCost).append(\"\\n\");\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                int expectedParity;\n                if (chosenConfig == 0) {\n                    expectedParity = ((i + j) % 2 == 0) ? 1 : 0;\n                } else {\n                    expectedParity = ((i + j) % 2 == 0) ? 0 : 1;\n                }\n\n                int val = G[i][j];\n                if (val % 2 != expectedParity) {\n                    val++;\n                }\n                sb.append(val);\n                if (j < M - 1) {\n                    sb.append(\" \");\n                }\n            }\n            sb.append(\"\\n\");\n        }\n\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10634509997908026,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

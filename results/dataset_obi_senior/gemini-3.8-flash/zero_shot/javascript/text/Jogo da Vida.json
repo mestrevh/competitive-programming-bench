@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:55:31.100791+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1937,
+            "output_tokens": 662,
+            "total_tokens": 2919
+        },
+        "cost_usd": {
+            "input_cost": 0.001453,
+            "output_cost": 0.002483,
+            "total_cost": 0.003935
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length === 0 || input[0] === '') return;\n\n    const N = parseInt(input[0], 10);\n    const Q = parseInt(input[1], 10);\n\n    let grid = new Uint8Array(N * N);\n    for (let i = 0; i < N; i++) {\n        const rowStr = input[2 + i];\n        for (let j = 0; j < N; j++) {\n            grid[i * N + j] = rowStr.charCodeAt(j) - 48;\n        }\n    }\n\n    let nextGrid = new Uint8Array(N * N);\n\n    const dr = [-1, -1, -1, 0, 0, 1, 1, 1];\n    const dc = [-1, 0, 1, -1, 1, -1, 0, 1];\n\n    for (let step = 0; step < Q; step++) {\n        for (let r = 0; r < N; r++) {\n            const rOffset = r * N;\n            for (let c = 0; c < N; c++) {\n                let liveNeighbors = 0;\n                for (let d = 0; d < 8; d++) {\n                    const nr = r + dr[d];\n                    const nc = c + dc[d];\n                    if (nr >= 0 && nr < N && nc >= 0 && nc < N) {\n                        liveNeighbors += grid[nr * N + nc];\n                    }\n                }\n\n                const current = grid[rOffset + c];\n                if (current === 1) {\n                    if (liveNeighbors === 2 || liveNeighbors === 3) {\n                        nextGrid[rOffset + c] = 1;\n                    } else {\n                        nextGrid[rOffset + c] = 0;\n                    }\n                } else {\n                    if (liveNeighbors === 3) {\n                        nextGrid[rOffset + c] = 1;\n                    } else {\n                        nextGrid[rOffset + c] = 0;\n                    }\n                }\n            }\n        }\n\n        const temp = grid;\n        grid = nextGrid;\n        nextGrid = temp;\n    }\n\n    const output = [];\n    for (let i = 0; i < N; i++) {\n        let rowStr = '';\n        const offset = i * N;\n        for (let j = 0; j < N; j++) {\n            rowStr += grid[offset + j];\n        }\n        output.push(rowStr);\n    }\n\n    console.log(output.join('\\n'));\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length === 0 || input[0] === '') return;\n\n    const N = parseInt(input[0], 10);\n    const Q = parseInt(input[1], 10);\n\n    let grid = new Uint8Array(N * N);\n    for (let i = 0; i < N; i++) {\n        const rowStr = input[2 + i];\n        for (let j = 0; j < N; j++) {\n            grid[i * N + j] = rowStr.charCodeAt(j) - 48;\n        }\n    }\n\n    let nextGrid = new Uint8Array(N * N);\n\n    const dr = [-1, -1, -1, 0, 0, 1, 1, 1];\n    const dc = [-1, 0, 1, -1, 1, -1, 0, 1];\n\n    for (let step = 0; step < Q; step++) {\n        for (let r = 0; r < N; r++) {\n            const rOffset = r * N;\n            for (let c = 0; c < N; c++) {\n                let liveNeighbors = 0;\n                for (let d = 0; d < 8; d++) {\n                    const nr = r + dr[d];\n                    const nc = c + dc[d];\n                    if (nr >= 0 && nr < N && nc >= 0 && nc < N) {\n                        liveNeighbors += grid[nr * N + nc];\n                    }\n                }\n\n                const current = grid[rOffset + c];\n                if (current === 1) {\n                    if (liveNeighbors === 2 || liveNeighbors === 3) {\n                        nextGrid[rOffset + c] = 1;\n                    } else {\n                        nextGrid[rOffset + c] = 0;\n                    }\n                } else {\n                    if (liveNeighbors === 3) {\n                        nextGrid[rOffset + c] = 1;\n                    } else {\n                        nextGrid[rOffset + c] = 0;\n                    }\n                }\n            }\n        }\n\n        const temp = grid;\n        grid = nextGrid;\n        nextGrid = temp;\n    }\n\n    const output = [];\n    for (let i = 0; i < N; i++) {\n        let rowStr = '';\n        const offset = i * N;\n        for (let j = 0; j < N; j++) {\n            rowStr += grid[offset + j];\n        }\n        output.push(rowStr);\n    }\n\n    console.log(output.join('\\n'));\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05681110001751222,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

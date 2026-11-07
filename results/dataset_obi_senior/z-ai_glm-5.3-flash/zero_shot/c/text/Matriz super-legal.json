@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:37:12.566567+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 698,
+            "output_tokens": 87844,
+            "total_tokens": 88542
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.043922,
+            "total_cost": 0.043937
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 1000\n\n/* Super-legal <=> condição de Monge (todos os quadrados 2x2 adjacentes:\n   A[i][j] + A[i+1][j+1] <= A[i][j+1] + A[i+1][j]).\n   Marcamos cada célula de B (L-1 x C-1) onde essa condição falha e achamos\n   o maior retângulo só de células \"boas\"; a submatriz correspondente em A\n   tem (h+1)*(w+1) elementos. Se nenhuma célula for válida, a resposta é 0. */\n\nstatic int rprev[MAXN], rcur[MAXN];\nstatic int hgt[MAXN];\nstatic int lo[MAXN], hi[MAXN];\nstatic int stk[MAXN];\n\nstatic char ibuf[1 << 20];\nstatic int ilen = 0, ipos = 0;\n\nstatic int gc(void) {\n    if (ipos == ilen) {\n        ilen = (int)fread(ibuf, 1, sizeof(ibuf), stdin);\n        ipos = 0;\n        if (ilen <= 0) return -1;\n    }\n    return (unsigned char)ibuf[ipos++];\n}\n\nstatic int readInt(void) {\n    int c, sgn = 1, x = 0;\n    for (;;) {\n        c = gc();\n        if (c == -1 || c == '-' || (c >= '0' && c <= '9')) break;\n    }\n    if (c == '-') { sgn = -1; c = gc(); }\n    while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = gc(); }\n    return x * sgn;\n}\n\nint main(void) {\n    int L = readInt(), C = readInt();\n    int n = C - 1;                 /* colunas da matriz de violações */\n    int *prev = rprev, *cur = rcur;\n    int best = 0;\n    int i, j, top;\n\n    for (j = 0; j < C; j++) prev[j] = readInt();\n\n    for (i = 1; i < L; i++) {\n        for (j = 0; j < C; j++) cur[j] = readInt();\n\n        /* atualiza alturas: nº de linhas de B consecutivas \"boas\" terminando aqui */\n        for (j = 0; j < n; j++) {\n            int b = prev[j] + cur[j + 1] - prev[j + 1] - cur[j];\n            hgt[j] = (b <= 0) ? hgt[j] + 1 : 0;\n        }\n\n        /* anterior estritamente menor */\n        top = 0;\n        for (j = 0; j < n; j++) {\n            while (top > 0 && hgt[stk[top - 1]] >= hgt[j]) top--;\n            lo[j] = (top > 0) ? stk[top - 1] : -1;\n            stk[top++] = j;\n        }\n\n        /* próximo estritamente menor */\n        top = 0;\n        for (j = n - 1; j >= 0; j--) {\n            while (top > 0 && hgt[stk[top - 1]] >= hgt[j]) top--;\n            hi[j] = (top > 0) ? stk[top - 1] : n;\n            stk[top++] = j;\n        }\n\n        /* candidatos: retângulo de altura hgt[j] e largura máxima */\n        for (j = 0; j < n; j++) {\n            if (hgt[j] > 0) {\n                int w = hi[j] - lo[j] - 1;\n                int v = (hgt[j] + 1) * (w + 1);\n                if (v > best) best = v;\n            }\n        }\n\n        { int *t = prev; prev = cur; cur = t; }\n    }\n\n    printf(\"%d\\n\", best);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 1000\n\n/* Super-legal <=> condição de Monge (todos os quadrados 2x2 adjacentes:\n   A[i][j] + A[i+1][j+1] <= A[i][j+1] + A[i+1][j]).\n   Marcamos cada célula de B (L-1 x C-1) onde essa condição falha e achamos\n   o maior retângulo só de células \"boas\"; a submatriz correspondente em A\n   tem (h+1)*(w+1) elementos. Se nenhuma célula for válida, a resposta é 0. */\n\nstatic int rprev[MAXN], rcur[MAXN];\nstatic int hgt[MAXN];\nstatic int lo[MAXN], hi[MAXN];\nstatic int stk[MAXN];\n\nstatic char ibuf[1 << 20];\nstatic int ilen = 0, ipos = 0;\n\nstatic int gc(void) {\n    if (ipos == ilen) {\n        ilen = (int)fread(ibuf, 1, sizeof(ibuf), stdin);\n        ipos = 0;\n        if (ilen <= 0) return -1;\n    }\n    return (unsigned char)ibuf[ipos++];\n}\n\nstatic int readInt(void) {\n    int c, sgn = 1, x = 0;\n    for (;;) {\n        c = gc();\n        if (c == -1 || c == '-' || (c >= '0' && c <= '9')) break;\n    }\n    if (c == '-') { sgn = -1; c = gc(); }\n    while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = gc(); }\n    return x * sgn;\n}\n\nint main(void) {\n    int L = readInt(), C = readInt();\n    int n = C - 1;                 /* colunas da matriz de violações */\n    int *prev = rprev, *cur = rcur;\n    int best = 0;\n    int i, j, top;\n\n    for (j = 0; j < C; j++) prev[j] = readInt();\n\n    for (i = 1; i < L; i++) {\n        for (j = 0; j < C; j++) cur[j] = readInt();\n\n        /* atualiza alturas: nº de linhas de B consecutivas \"boas\" terminando aqui */\n        for (j = 0; j < n; j++) {\n            int b = prev[j] + cur[j + 1] - prev[j + 1] - cur[j];\n            hgt[j] = (b <= 0) ? hgt[j] + 1 : 0;\n        }\n\n        /* anterior estritamente menor */\n        top = 0;\n        for (j = 0; j < n; j++) {\n            while (top > 0 && hgt[stk[top - 1]] >= hgt[j]) top--;\n            lo[j] = (top > 0) ? stk[top - 1] : -1;\n            stk[top++] = j;\n        }\n\n        /* próximo estritamente menor */\n        top = 0;\n        for (j = n - 1; j >= 0; j--) {\n            while (top > 0 && hgt[stk[top - 1]] >= hgt[j]) top--;\n            hi[j] = (top > 0) ? stk[top - 1] : n;\n            stk[top++] = j;\n        }\n\n        /* candidatos: retângulo de altura hgt[j] e largura máxima */\n        for (j = 0; j < n; j++) {\n            if (hgt[j] > 0) {\n                int w = hi[j] - lo[j] - 1;\n                int v = (hgt[j] + 1) * (w + 1);\n                if (v > best) best = v;\n            }\n        }\n\n        { int *t = prev; prev = cur; cur = t; }\n    }\n\n    printf(\"%d\\n\", best);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.22164609999163076,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:04:36.646647+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1403,
+            "output_tokens": 11642,
+            "total_tokens": 13045
+        },
+        "cost_usd": {
+            "input_cost": 3e-05,
+            "output_cost": 0.005821,
+            "total_cost": 0.005851
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction readInput() {\n  try {\n    return fs.readFileSync(0, 'utf8');\n  } catch (e) {\n    try {\n      return fs.readFileSync('/dev/stdin', 'utf8');\n    } catch (e2) {\n      return '';\n    }\n  }\n}\n\nconst lines = readInput().split(/\\r?\\n/).filter(l => l.trim().length > 0);\n\nlet ptr = 0;\nconst header = lines[ptr++].trim().split(/\\s+/);\nconst N = parseInt(header[0], 10);\nconst Q = parseInt(header[1], 10);\n\nconst SZ = N + 2; // grid com borda de células mortas (padding)\nlet cur = new Uint8Array(SZ * SZ);\nfor (let i = 0; i < N; i++) {\n  const row = lines[ptr++].trim();\n  const base = (i + 1) * SZ;\n  for (let j = 0; j < N; j++) {\n    cur[base + j + 1] = row.charCodeAt(j) === 49 ? 1 : 0;\n  }\n}\n\nlet nxt = new Uint8Array(SZ * SZ);\n\nfor (let s = 0; s < Q; s++) {\n  for (let i = 1; i <= N; i++) {\n    const base = i * SZ;\n    const up = base - SZ;\n    const down = base + SZ;\n    for (let j = 1; j <= N; j++) {\n      const jL = j - 1, jR = j + 1;\n      const cnt =\n        cur[up + jL] + cur[up + j] + cur[up + jR] +\n        cur[base + jL] + cur[base + jR] +\n        cur[down + jL] + cur[down + j] + cur[down + jR];\n      // viva sobrevive com 2 ou 3 vizinhos; morta nasce com exatamente 3\n      nxt[base + j] = (cnt === 3 || (cnt === 2 && cur[base + j] === 1)) ? 1 : 0;\n    }\n  }\n  const t = cur; cur = nxt; nxt = t;\n}\n\nconst out = [];\nfor (let i = 0; i < N; i++) {\n  const base = (i + 1) * SZ;\n  let row = '';\n  for (let j = 0; j < N; j++) row += cur[base + j + 1];\n  out.push(row);\n}\nprocess.stdout.write(out.join('\\n') + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction readInput() {\n  try {\n    return fs.readFileSync(0, 'utf8');\n  } catch (e) {\n    try {\n      return fs.readFileSync('/dev/stdin', 'utf8');\n    } catch (e2) {\n      return '';\n    }\n  }\n}\n\nconst lines = readInput().split(/\\r?\\n/).filter(l => l.trim().length > 0);\n\nlet ptr = 0;\nconst header = lines[ptr++].trim().split(/\\s+/);\nconst N = parseInt(header[0], 10);\nconst Q = parseInt(header[1], 10);\n\nconst SZ = N + 2; // grid com borda de células mortas (padding)\nlet cur = new Uint8Array(SZ * SZ);\nfor (let i = 0; i < N; i++) {\n  const row = lines[ptr++].trim();\n  const base = (i + 1) * SZ;\n  for (let j = 0; j < N; j++) {\n    cur[base + j + 1] = row.charCodeAt(j) === 49 ? 1 : 0;\n  }\n}\n\nlet nxt = new Uint8Array(SZ * SZ);\n\nfor (let s = 0; s < Q; s++) {\n  for (let i = 1; i <= N; i++) {\n    const base = i * SZ;\n    const up = base - SZ;\n    const down = base + SZ;\n    for (let j = 1; j <= N; j++) {\n      const jL = j - 1, jR = j + 1;\n      const cnt =\n        cur[up + jL] + cur[up + j] + cur[up + jR] +\n        cur[base + jL] + cur[base + jR] +\n        cur[down + jL] + cur[down + j] + cur[down + jR];\n      // viva sobrevive com 2 ou 3 vizinhos; morta nasce com exatamente 3\n      nxt[base + j] = (cnt === 3 || (cnt === 2 && cur[base + j] === 1)) ? 1 : 0;\n    }\n  }\n  const t = cur; cur = nxt; nxt = t;\n}\n\nconst out = [];\nfor (let i = 0; i < N; i++) {\n  const base = (i + 1) * SZ;\n  let row = '';\n  for (let j = 0; j < N; j++) row += cur[base + j + 1];\n  out.push(row);\n}\nprocess.stdout.write(out.join('\\n') + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07130319997668266,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

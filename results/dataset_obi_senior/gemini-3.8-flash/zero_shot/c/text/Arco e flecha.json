@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T11:52:41.231877+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 844,
+            "output_tokens": 880,
+            "total_tokens": 2939
+        },
+        "cost_usd": {
+            "input_cost": 0.000633,
+            "output_cost": 0.0033,
+            "total_cost": 0.003933
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n\n#define MAXN 100005\n\ntypedef struct {\n    long long key;\n    uint32_t priority;\n    int size;\n    int left, right;\n} Node;\n\nNode tree[MAXN];\nint node_count = 0;\n\nstatic inline uint32_t xorshift32(void) {\n    static uint32_t x = 2463534242U;\n    x ^= x << 13;\n    x ^= x >> 17;\n    x ^= x << 5;\n    return x;\n}\n\nstatic inline void update(int t) {\n    if (t) {\n        tree[t].size = 1 + (tree[t].left ? tree[tree[t].left].size : 0) + \n                           (tree[t].right ? tree[tree[t].right].size : 0);\n    }\n}\n\nvoid split(int t, long long key, int *l, int *r) {\n    if (!t) {\n        *l = *r = 0;\n        return;\n    }\n    if (tree[t].key <= key) {\n        split(tree[t].right, key, &tree[t].right, r);\n        *l = t;\n    } else {\n        split(tree[t].left, key, l, &tree[t].left);\n        *r = t;\n    }\n    update(t);\n}\n\nint merge(int l, int r) {\n    if (!l || !r) return l ? l : r;\n    if (tree[l].priority > tree[r].priority) {\n        tree[l].right = merge(tree[l].right, r);\n        update(l);\n        return l;\n    } else {\n        tree[r].left = merge(l, tree[r].left);\n        update(r);\n        return r;\n    }\n}\n\nint count_le(int t, long long key) {\n    int ans = 0;\n    while (t) {\n        if (tree[t].key <= key) {\n            ans += 1 + (tree[t].left ? tree[tree[t].left].size : 0);\n            t = tree[t].right;\n        } else {\n            t = tree[t].left;\n        }\n    }\n    return ans;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int root = 0;\n    long long last_p = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n\n        long long xr = x + last_p;\n        long long yr = y + last_p;\n\n        long long dist_sq = xr * xr + yr * yr;\n\n        int p = count_le(root, dist_sq);\n        printf(\"%d\\n\", p);\n        last_p = p;\n\n        node_count++;\n        tree[node_count].key = dist_sq;\n        tree[node_count].priority = xorshift32();\n        tree[node_count].size = 1;\n        tree[node_count].left = 0;\n        tree[node_count].right = 0;\n\n        int l, r;\n        split(root, dist_sq, &l, &r);\n        root = merge(merge(l, node_count), r);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n\n#define MAXN 100005\n\ntypedef struct {\n    long long key;\n    uint32_t priority;\n    int size;\n    int left, right;\n} Node;\n\nNode tree[MAXN];\nint node_count = 0;\n\nstatic inline uint32_t xorshift32(void) {\n    static uint32_t x = 2463534242U;\n    x ^= x << 13;\n    x ^= x >> 17;\n    x ^= x << 5;\n    return x;\n}\n\nstatic inline void update(int t) {\n    if (t) {\n        tree[t].size = 1 + (tree[t].left ? tree[tree[t].left].size : 0) + \n                           (tree[t].right ? tree[tree[t].right].size : 0);\n    }\n}\n\nvoid split(int t, long long key, int *l, int *r) {\n    if (!t) {\n        *l = *r = 0;\n        return;\n    }\n    if (tree[t].key <= key) {\n        split(tree[t].right, key, &tree[t].right, r);\n        *l = t;\n    } else {\n        split(tree[t].left, key, l, &tree[t].left);\n        *r = t;\n    }\n    update(t);\n}\n\nint merge(int l, int r) {\n    if (!l || !r) return l ? l : r;\n    if (tree[l].priority > tree[r].priority) {\n        tree[l].right = merge(tree[l].right, r);\n        update(l);\n        return l;\n    } else {\n        tree[r].left = merge(l, tree[r].left);\n        update(r);\n        return r;\n    }\n}\n\nint count_le(int t, long long key) {\n    int ans = 0;\n    while (t) {\n        if (tree[t].key <= key) {\n            ans += 1 + (tree[t].left ? tree[tree[t].left].size : 0);\n            t = tree[t].right;\n        } else {\n            t = tree[t].left;\n        }\n    }\n    return ans;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int root = 0;\n    long long last_p = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n\n        long long xr = x + last_p;\n        long long yr = y + last_p;\n\n        long long dist_sq = xr * xr + yr * yr;\n\n        int p = count_le(root, dist_sq);\n        printf(\"%d\\n\", p);\n        last_p = p;\n\n        node_count++;\n        tree[node_count].key = dist_sq;\n        tree[node_count].priority = xorshift32();\n        tree[node_count].size = 1;\n        tree[node_count].left = 0;\n        tree[node_count].right = 0;\n\n        int l, r;\n        split(root, dist_sq, &l, &r);\n        root = merge(merge(l, node_count), r);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.48663030000170693,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

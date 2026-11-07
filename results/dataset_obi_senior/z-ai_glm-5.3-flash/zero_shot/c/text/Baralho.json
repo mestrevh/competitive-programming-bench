@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T16:27:54.322304+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 902,
+            "output_tokens": 4351,
+            "total_tokens": 5253
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.002175,
+            "total_cost": 0.002195
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[256];\n    if (scanf(\"%255s\", s) != 1) s[0] = '\\0';\n    int len = (int)strlen(s);\n\n    /* naipes: 0=Copas, 1=Espadas, 2=Ouros, 3=Paus (ordem exigida na saída) */\n    int seen[4][14];\n    int dup[4] = {0, 0, 0, 0};\n    memset(seen, 0, sizeof(seen));\n\n    for (int i = 0; i + 2 < len; i += 3) {\n        int v = (s[i] - '0') * 10 + (s[i + 1] - '0'); /* valor 01..13 */\n        int n;\n        switch (s[i + 2]) {\n            case 'C': n = 0; break;\n            case 'E': n = 1; break;\n            case 'U': n = 2; break;\n            default:  n = 3; break; /* 'P' */\n        }\n        if (seen[n][v]) dup[n] = 1;\n        seen[n][v] = 1;\n    }\n\n    for (int n = 0; n < 4; n++) {\n        if (dup[n]) {\n            printf(\"erro\\n\");\n        } else {\n            int cnt = 0;\n            for (int v = 1; v <= 13; v++)\n                if (seen[n][v]) cnt++;\n            printf(\"%d\\n\", 13 - cnt);\n        }\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char s[256];\n    if (scanf(\"%255s\", s) != 1) s[0] = '\\0';\n    int len = (int)strlen(s);\n\n    /* naipes: 0=Copas, 1=Espadas, 2=Ouros, 3=Paus (ordem exigida na saída) */\n    int seen[4][14];\n    int dup[4] = {0, 0, 0, 0};\n    memset(seen, 0, sizeof(seen));\n\n    for (int i = 0; i + 2 < len; i += 3) {\n        int v = (s[i] - '0') * 10 + (s[i + 1] - '0'); /* valor 01..13 */\n        int n;\n        switch (s[i + 2]) {\n            case 'C': n = 0; break;\n            case 'E': n = 1; break;\n            case 'U': n = 2; break;\n            default:  n = 3; break; /* 'P' */\n        }\n        if (seen[n][v]) dup[n] = 1;\n        seen[n][v] = 1;\n    }\n\n    for (int n = 0; n < 4; n++) {\n        if (dup[n]) {\n            printf(\"erro\\n\");\n        } else {\n            int cnt = 0;\n            for (int v = 1; v <= 13; v++)\n                if (seen[n][v]) cnt++;\n            printf(\"%d\\n\", 13 - cnt);\n        }\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12208879998070188,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

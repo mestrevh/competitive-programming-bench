@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T09:31:31.382775+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 773,
+            "output_tokens": 700,
+            "total_tokens": 1473
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.00035,
+            "total_cost": 0.000367
+        },
+        "raw_response": "```python\nimport sys\nfrom fractions import Fraction\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    idx = 1\n    best = None\n    for _ in range(n):\n        p = data[idx]; g = int(data[idx + 1]); idx += 2\n        cents = int(round(float(p) * 100))\n        cost = Fraction(cents * 1000, g)\n        if best is None or cost < best:\n            best = cost\n    # best is price in cents for 1 kg (as a Fraction); round half up to integer cents\n    num, den = best.numerator, best.denominator\n    rounded = (2 * num + den) // (2 * den)\n    print(f\"{rounded // 100}.{rounded % 100:02d}\")\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom fractions import Fraction\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0])\n    idx = 1\n    best = None\n    for _ in range(n):\n        p = data[idx]; g = int(data[idx + 1]); idx += 2\n        cents = int(round(float(p) * 100))\n        cost = Fraction(cents * 1000, g)\n        if best is None or cost < best:\n            best = cost\n    # best is price in cents for 1 kg (as a Fraction); round half up to integer cents\n    num, den = best.numerator, best.denominator\n    rounded = (2 * num + den) // (2 * den)\n    print(f\"{rounded // 100}.{rounded % 100:02d}\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09490530000039143,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

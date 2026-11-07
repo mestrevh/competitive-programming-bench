@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:37:15.924854+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1380,
+            "output_tokens": 4901,
+            "total_tokens": 6281
+        },
+        "cost_usd": {
+            "input_cost": 3e-05,
+            "output_cost": 0.00245,
+            "total_cost": 0.00248
+        },
+        "raw_response": "```cpp\n#include <cstdio>\n#include <cstdlib>\n\nstatic char *ibuf;\nstatic size_t ipos = 0, ilen = 0;\n\nstatic inline int gc() { return ipos < ilen ? (unsigned char)ibuf[ipos++] : -1; }\n\nstatic inline long readNum() {\n    int c = gc();\n    while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = gc();\n    long v = 0;\n    while (c >= '0' && c <= '9') { v = v * 10 + (c - '0'); c = gc(); }\n    return v;\n}\n\nstatic inline char readLetter() {\n    int c = gc();\n    while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = gc();\n    return (char)c;\n}\n\nint main() {\n    size_t cap = 1 << 20;\n    ibuf = (char*)malloc(cap);\n    while (true) {\n        if (ilen == cap) { cap <<= 1; ibuf = (char*)realloc(ibuf, cap); }\n        size_t r = fread(ibuf + ilen, 1, cap - ilen, stdin);\n        if (r == 0) break;\n        ilen += r;\n    }\n\n    long N = readNum();\n    long M = readNum();\n    long P = readNum();\n\n    int *Qr = (int*)malloc(sizeof(int) * (N + 1));\n    int *Qc = (int*)malloc(sizeof(int) * (M + 1));\n    for (long i = 1; i <= N; i++) Qr[i] = (int)i;\n    for (long j = 1; j <= M; j++) Qc[j] = (int)j;\n\n    for (long p = 0; p < P; p++) {\n        char letter = readLetter();\n        long a = readNum();\n        long b = readNum();\n        if (letter == 'L') {\n            int t = Qr[a]; Qr[a] = Qr[b]; Qr[b] = t;\n        } else {\n            int t = Qc[a]; Qc[a] = Qc[b]; Qc[b] = t;\n        }\n    }\n\n    size_t omax = (size_t)N * (size_t)M * 8 + 16;\n    char *obuf = (char*)malloc(omax);\n    size_t opos = 0;\n\n    for (long i = 1; i <= N; i++) {\n        long rb = (long)(Qr[i] - 1) * M;\n        for (long j = 1; j <= M; j++) {\n            long v = rb + Qc[j];\n            char tmp[12];\n            int len = 0;\n            if (v == 0) tmp[len++] = '0';\n            while (v > 0) { tmp[len++] = (char)('0' + v % 10); v /= 10; }\n            if (j > 1) obuf[opos++] = ' ';\n            while (len > 0) obuf[opos++] = tmp[--len];\n        }\n        obuf[opos++] = '\\n';\n    }\n\n    fwrite(obuf, 1, opos, stdout);\n    return 0;\n}\n```",
+        "extracted_code": "#include <cstdio>\n#include <cstdlib>\n\nstatic char *ibuf;\nstatic size_t ipos = 0, ilen = 0;\n\nstatic inline int gc() { return ipos < ilen ? (unsigned char)ibuf[ipos++] : -1; }\n\nstatic inline long readNum() {\n    int c = gc();\n    while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = gc();\n    long v = 0;\n    while (c >= '0' && c <= '9') { v = v * 10 + (c - '0'); c = gc(); }\n    return v;\n}\n\nstatic inline char readLetter() {\n    int c = gc();\n    while (c == ' ' || c == '\\n' || c == '\\r' || c == '\\t') c = gc();\n    return (char)c;\n}\n\nint main() {\n    size_t cap = 1 << 20;\n    ibuf = (char*)malloc(cap);\n    while (true) {\n        if (ilen == cap) { cap <<= 1; ibuf = (char*)realloc(ibuf, cap); }\n        size_t r = fread(ibuf + ilen, 1, cap - ilen, stdin);\n        if (r == 0) break;\n        ilen += r;\n    }\n\n    long N = readNum();\n    long M = readNum();\n    long P = readNum();\n\n    int *Qr = (int*)malloc(sizeof(int) * (N + 1));\n    int *Qc = (int*)malloc(sizeof(int) * (M + 1));\n    for (long i = 1; i <= N; i++) Qr[i] = (int)i;\n    for (long j = 1; j <= M; j++) Qc[j] = (int)j;\n\n    for (long p = 0; p < P; p++) {\n        char letter = readLetter();\n        long a = readNum();\n        long b = readNum();\n        if (letter == 'L') {\n            int t = Qr[a]; Qr[a] = Qr[b]; Qr[b] = t;\n        } else {\n            int t = Qc[a]; Qc[a] = Qc[b]; Qc[b] = t;\n        }\n    }\n\n    size_t omax = (size_t)N * (size_t)M * 8 + 16;\n    char *obuf = (char*)malloc(omax);\n    size_t opos = 0;\n\n    for (long i = 1; i <= N; i++) {\n        long rb = (long)(Qr[i] - 1) * M;\n        for (long j = 1; j <= M; j++) {\n            long v = rb + Qc[j];\n            char tmp[12];\n            int len = 0;\n            if (v == 0) tmp[len++] = '0';\n            while (v > 0) { tmp[len++] = (char)('0' + v % 10); v /= 10; }\n            if (j > 1) obuf[opos++] = ' ';\n            while (len > 0) obuf[opos++] = tmp[--len];\n        }\n        obuf[opos++] = '\\n';\n    }\n\n    fwrite(obuf, 1, opos, stdout);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22141740000370191,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:46:14.145372+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 794,
+            "output_tokens": 784,
+            "total_tokens": 3992
+        },
+        "cost_usd": {
+            "input_cost": 0.000596,
+            "output_cost": 0.00294,
+            "total_cost": 0.003536
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n\n    adj = [0] * N\n    idx = 2\n    for _ in range(M):\n        u = int(input_data[idx]) - 1\n        v = int(input_data[idx + 1]) - 1\n        adj[u] |= 1 << v\n        adj[v] |= 1 << u\n        idx += 2\n\n    N1 = N // 2\n    N2 = N - N1\n\n    # adj2 para os vértices da segunda metade (0 a N2-1)\n    adj2 = [0] * N2\n    for i in range(N2):\n        adj2[i] = (adj[i + N1] >> N1) & ((1 << N2) - 1)\n\n    # Identificar quais subconjuntos da segunda metade são independentes\n    is_indep2 = [0] * (1 << N2)\n    is_indep2[0] = 1\n    for m in range(1, 1 << N2):\n        v = (m & -m).bit_length() - 1\n        rest = m ^ (1 << v)\n        if is_indep2[rest] and not (rest & adj2[v]):\n            is_indep2[m] = 1\n\n    # SOS DP (Soma sobre subconjuntos) para a segunda metade\n    # dp[mask] = número de subconjuntos independentes contidos em mask\n    dp = list(is_indep2)\n    for i in range(N2):\n        bit = 1 << i\n        for m in range(1 << N2):\n            if m & bit:\n                dp[m] += dp[m ^ bit]\n\n    # Processar a primeira metade\n    adj1 = [adj[i] & ((1 << N1) - 1) for i in range(N1)]\n    is_indep1 = [0] * (1 << N1)\n    is_indep1[0] = 1\n\n    total_sandwiches = 0\n\n    for m in range(1 << N1):\n        if m > 0:\n            v = (m & -m).bit_length() - 1\n            rest = m ^ (1 << v)\n            if is_indep1[rest] and not (rest & adj1[v]):\n                is_indep1[m] = 1\n            else:\n                is_indep1[m] = 0\n\n        if is_indep1[m]:\n            # Encontrar quais vértices da parte 2 são proibidos por m\n            forbidden2 = 0\n            for i in range(N1):\n                if (m >> i) & 1:\n                    forbidden2 |= adj[i] >> N1\n\n            allowed2 = ((1 << N2) - 1) ^ forbidden2\n            total_sandwiches += dp[allowed2]\n\n    # O sanduíche deve conter ao menos um ingrediente (descontar o conjunto vazio)\n    total_sandwiches -= 1\n\n    print(total_sandwiches)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n\n    adj = [0] * N\n    idx = 2\n    for _ in range(M):\n        u = int(input_data[idx]) - 1\n        v = int(input_data[idx + 1]) - 1\n        adj[u] |= 1 << v\n        adj[v] |= 1 << u\n        idx += 2\n\n    N1 = N // 2\n    N2 = N - N1\n\n    # adj2 para os vértices da segunda metade (0 a N2-1)\n    adj2 = [0] * N2\n    for i in range(N2):\n        adj2[i] = (adj[i + N1] >> N1) & ((1 << N2) - 1)\n\n    # Identificar quais subconjuntos da segunda metade são independentes\n    is_indep2 = [0] * (1 << N2)\n    is_indep2[0] = 1\n    for m in range(1, 1 << N2):\n        v = (m & -m).bit_length() - 1\n        rest = m ^ (1 << v)\n        if is_indep2[rest] and not (rest & adj2[v]):\n            is_indep2[m] = 1\n\n    # SOS DP (Soma sobre subconjuntos) para a segunda metade\n    # dp[mask] = número de subconjuntos independentes contidos em mask\n    dp = list(is_indep2)\n    for i in range(N2):\n        bit = 1 << i\n        for m in range(1 << N2):\n            if m & bit:\n                dp[m] += dp[m ^ bit]\n\n    # Processar a primeira metade\n    adj1 = [adj[i] & ((1 << N1) - 1) for i in range(N1)]\n    is_indep1 = [0] * (1 << N1)\n    is_indep1[0] = 1\n\n    total_sandwiches = 0\n\n    for m in range(1 << N1):\n        if m > 0:\n            v = (m & -m).bit_length() - 1\n            rest = m ^ (1 << v)\n            if is_indep1[rest] and not (rest & adj1[v]):\n                is_indep1[m] = 1\n            else:\n                is_indep1[m] = 0\n\n        if is_indep1[m]:\n            # Encontrar quais vértices da parte 2 são proibidos por m\n            forbidden2 = 0\n            for i in range(N1):\n                if (m >> i) & 1:\n                    forbidden2 |= adj[i] >> N1\n\n            allowed2 = ((1 << N2) - 1) ^ forbidden2\n            total_sandwiches += dp[allowed2]\n\n    # O sanduíche deve conter ao menos um ingrediente (descontar o conjunto vazio)\n    total_sandwiches -= 1\n\n    print(total_sandwiches)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08634409999649506,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

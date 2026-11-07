@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:55:22.381544+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1099,
+            "output_tokens": 1015,
+            "total_tokens": 10613
+        },
+        "cost_usd": {
+            "input_cost": 0.000824,
+            "output_cost": 0.003806,
+            "total_cost": 0.004631
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length < 14) return;\n\n    const p = [];\n    for (let i = 0; i < 7; i++) {\n        p.push({\n            x: BigInt(input[2 * i]),\n            y: BigInt(input[2 * i + 1])\n        });\n    }\n\n    const dot = (v1, v2) => v1.x * v2.x + v1.y * v2.y;\n    const cross = (v1, v2) => v1.x * v2.y - v1.y * v2.x;\n    const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y });\n    const distSq = (a, b) => {\n        const dx = a.x - b.x;\n        const dy = a.y - b.y;\n        return dx * dx + dy * dy;\n    };\n\n    const p1 = p[0], p2 = p[1], p3 = p[2], p4 = p[3], p5 = p[4], p6 = p[5], p7 = p[6];\n\n    // Condição 1: O ângulo ∠P2P1P3 é agudo (vértice em P1)\n    const v1 = sub(p2, p1);\n    const v2 = sub(p3, p1);\n    if (dot(v1, v2) <= 0n) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 2: Os segmentos P1P2 e P1P3 têm o mesmo comprimento\n    if (distSq(p1, p2) !== distSq(p1, p3)) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 3: Os pontos P2, P3, P4 e P5 são colineares\n    const lineVec = sub(p3, p2);\n    if (cross(lineVec, sub(p4, p2)) !== 0n || cross(lineVec, sub(p5, p2)) !== 0n) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 4: Os pontos médios dos segmentos P2P3 e P4P5 são coincidentes\n    if (p2.x + p3.x !== p4.x + p5.x || p2.y + p3.y !== p4.y + p5.y) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 5: O segmento P2P3 tem comprimento maior que o segmento P4P5\n    if (distSq(p2, p3) <= distSq(p4, p5)) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 6: Os segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3\n    const v46 = sub(p6, p4);\n    const v57 = sub(p7, p5);\n    if (dot(v46, lineVec) !== 0n || dot(v57, lineVec) !== 0n) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 7: Os segmentos P4P6 e P5P7 têm o mesmo comprimento\n    if (distSq(p4, p6) !== distSq(p5, p7)) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 8: Os pontos P1 e P6 devem estar separados pela reta que contém o segmento P2P3\n    const cp1 = cross(lineVec, sub(p1, p2));\n    const cp6 = cross(lineVec, sub(p6, p2));\n    if (!((cp1 > 0n && cp6 < 0n) || (cp1 < 0n && cp6 > 0n))) {\n        console.log('N');\n        return;\n    }\n\n    console.log('S');\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length < 14) return;\n\n    const p = [];\n    for (let i = 0; i < 7; i++) {\n        p.push({\n            x: BigInt(input[2 * i]),\n            y: BigInt(input[2 * i + 1])\n        });\n    }\n\n    const dot = (v1, v2) => v1.x * v2.x + v1.y * v2.y;\n    const cross = (v1, v2) => v1.x * v2.y - v1.y * v2.x;\n    const sub = (a, b) => ({ x: a.x - b.x, y: a.y - b.y });\n    const distSq = (a, b) => {\n        const dx = a.x - b.x;\n        const dy = a.y - b.y;\n        return dx * dx + dy * dy;\n    };\n\n    const p1 = p[0], p2 = p[1], p3 = p[2], p4 = p[3], p5 = p[4], p6 = p[5], p7 = p[6];\n\n    // Condição 1: O ângulo ∠P2P1P3 é agudo (vértice em P1)\n    const v1 = sub(p2, p1);\n    const v2 = sub(p3, p1);\n    if (dot(v1, v2) <= 0n) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 2: Os segmentos P1P2 e P1P3 têm o mesmo comprimento\n    if (distSq(p1, p2) !== distSq(p1, p3)) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 3: Os pontos P2, P3, P4 e P5 são colineares\n    const lineVec = sub(p3, p2);\n    if (cross(lineVec, sub(p4, p2)) !== 0n || cross(lineVec, sub(p5, p2)) !== 0n) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 4: Os pontos médios dos segmentos P2P3 e P4P5 são coincidentes\n    if (p2.x + p3.x !== p4.x + p5.x || p2.y + p3.y !== p4.y + p5.y) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 5: O segmento P2P3 tem comprimento maior que o segmento P4P5\n    if (distSq(p2, p3) <= distSq(p4, p5)) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 6: Os segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3\n    const v46 = sub(p6, p4);\n    const v57 = sub(p7, p5);\n    if (dot(v46, lineVec) !== 0n || dot(v57, lineVec) !== 0n) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 7: Os segmentos P4P6 e P5P7 têm o mesmo comprimento\n    if (distSq(p4, p6) !== distSq(p5, p7)) {\n        console.log('N');\n        return;\n    }\n\n    // Condição 8: Os pontos P1 e P6 devem estar separados pela reta que contém o segmento P2P3\n    const cp1 = cross(lineVec, sub(p1, p2));\n    const cp6 = cross(lineVec, sub(p6, p2));\n    if (!((cp1 > 0n && cp6 < 0n) || (cp1 < 0n && cp6 > 0n))) {\n        console.log('N');\n        return;\n    }\n\n    console.log('S');\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.047194299986585975,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

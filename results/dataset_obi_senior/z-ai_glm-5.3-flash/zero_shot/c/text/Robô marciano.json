@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:58:30.787054+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 898,
+            "output_tokens": 10625,
+            "total_tokens": 11523
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.005313,
+            "total_cost": 0.005332
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\ntypedef long long ll;\n#define INF 1000000000000000000LL\n\nll xs[1005][2], ys[1005][2];\nll dist[1005];\nint used[1005];\n\n/* custo minimo (Manhattan) de deslocamento descoberto entre duas regiões\n   (pontos são retângulos degenerados) */\nstatic inline ll w(int a, int b){\n    ll gx = 0, gy = 0;\n    if (xs[a][1] < xs[b][0]) gx = xs[b][0] - xs[a][1];\n    else if (xs[b][1] < xs[a][0]) gx = xs[a][0] - xs[b][1];\n    if (ys[a][1] < ys[b][0]) gy = ys[b][0] - ys[a][1];\n    else if (ys[b][1] < ys[a][0]) gy = ys[a][0] - ys[b][1];\n    return gx + gy;\n}\n\nint main(void){\n    ll xi, yi, xf, yf, a, b, c, d, t;\n    if (scanf(\"%lld %lld %lld %lld\", &xi, &yi, &xf, &yf) != 4) return 0;\n\n    /* no 0: ponto inicial; no 1: ponto final; nos 2..N+1: retângulos */\n    xs[0][0] = xs[0][1] = xi; ys[0][0] = ys[0][1] = yi;\n    xs[1][0] = xs[1][1] = xf; ys[1][0] = ys[1][1] = yf;\n\n    int N;\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++){\n        scanf(\"%lld %lld %lld %lld\", &a, &b, &c, &d);\n        if (a > c){ t = a; a = c; c = t; }\n        if (b > d){ t = b; b = d; d = t; }\n        xs[2+i][0] = a; xs[2+i][1] = c;\n        ys[2+i][0] = b; ys[2+i][1] = d;\n    }\n\n    int n = N + 2;\n    for (int i = 0; i < n; i++){ dist[i] = INF; used[i] = 0; }\n    dist[0] = 0;\n\n    /* Dijkstra O(n^2) */\n    for (int it = 0; it < n; it++){\n        int u = -1;\n        for (int i = 0; i < n; i++)\n            if (!used[i] && (u < 0 || dist[i] < dist[u])) u = i;\n        if (u < 0 || dist[u] >= INF) break;\n        used[u] = 1;\n        for (int v = 0; v < n; v++){\n            if (used[v]) continue;\n            ll nd = dist[u] + w(u, v);\n            if (nd < dist[v]) dist[v] = nd;\n        }\n    }\n\n    printf(\"%lld\\n\", dist[1]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\ntypedef long long ll;\n#define INF 1000000000000000000LL\n\nll xs[1005][2], ys[1005][2];\nll dist[1005];\nint used[1005];\n\n/* custo minimo (Manhattan) de deslocamento descoberto entre duas regiões\n   (pontos são retângulos degenerados) */\nstatic inline ll w(int a, int b){\n    ll gx = 0, gy = 0;\n    if (xs[a][1] < xs[b][0]) gx = xs[b][0] - xs[a][1];\n    else if (xs[b][1] < xs[a][0]) gx = xs[a][0] - xs[b][1];\n    if (ys[a][1] < ys[b][0]) gy = ys[b][0] - ys[a][1];\n    else if (ys[b][1] < ys[a][0]) gy = ys[a][0] - ys[b][1];\n    return gx + gy;\n}\n\nint main(void){\n    ll xi, yi, xf, yf, a, b, c, d, t;\n    if (scanf(\"%lld %lld %lld %lld\", &xi, &yi, &xf, &yf) != 4) return 0;\n\n    /* no 0: ponto inicial; no 1: ponto final; nos 2..N+1: retângulos */\n    xs[0][0] = xs[0][1] = xi; ys[0][0] = ys[0][1] = yi;\n    xs[1][0] = xs[1][1] = xf; ys[1][0] = ys[1][1] = yf;\n\n    int N;\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++){\n        scanf(\"%lld %lld %lld %lld\", &a, &b, &c, &d);\n        if (a > c){ t = a; a = c; c = t; }\n        if (b > d){ t = b; b = d; d = t; }\n        xs[2+i][0] = a; xs[2+i][1] = c;\n        ys[2+i][0] = b; ys[2+i][1] = d;\n    }\n\n    int n = N + 2;\n    for (int i = 0; i < n; i++){ dist[i] = INF; used[i] = 0; }\n    dist[0] = 0;\n\n    /* Dijkstra O(n^2) */\n    for (int it = 0; it < n; it++){\n        int u = -1;\n        for (int i = 0; i < n; i++)\n            if (!used[i] && (u < 0 || dist[i] < dist[u])) u = i;\n        if (u < 0 || dist[u] >= INF) break;\n        used[u] = 1;\n        for (int v = 0; v < n; v++){\n            if (used[v]) continue;\n            ll nd = dist[u] + w(u, v);\n            if (nd < dist[v]) dist[v] = nd;\n        }\n    }\n\n    printf(\"%lld\\n\", dist[1]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13104479998582974,
+            "counts": {
+                "AC": 37,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 37
+        }
+    }
+]

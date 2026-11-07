@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:40:16.937195+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 476,
+            "output_tokens": 1481,
+            "total_tokens": 1957
+        },
+        "cost_usd": {
+            "input_cost": 4.8e-05,
+            "output_cost": 0.00074,
+            "total_cost": 0.000788
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst heights = input.slice(1);\nconst indices = Array.from({ length: n }, (_, i) => i);\n\nindices.sort((a, b) => heights[b] - heights[a]);\n\nconst active = new Uint8Array(n);\nlet components = 0;\nlet best = 0;\n\nfor (let i = 0; i < n;) {\n  let j = i;\n  while (j < n && heights[indices[j]] === heights[indices[i]]) j++;\n\n  for (let k = i; k < j; k++) {\n    const pos = indices[k];\n    const left = pos > 0 && active[pos - 1];\n    const right = pos + 1 < n && active[pos + 1];\n\n    if (!left && !right) components++;\n    else if (left && right) components--;\n\n    active[pos] = 1;\n  }\n\n  best = Math.max(best, components);\n  i = j;\n}\n\nconsole.log(best + 1);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst heights = input.slice(1);\nconst indices = Array.from({ length: n }, (_, i) => i);\n\nindices.sort((a, b) => heights[b] - heights[a]);\n\nconst active = new Uint8Array(n);\nlet components = 0;\nlet best = 0;\n\nfor (let i = 0; i < n;) {\n  let j = i;\n  while (j < n && heights[indices[j]] === heights[indices[i]]) j++;\n\n  for (let k = i; k < j; k++) {\n    const pos = indices[k];\n    const left = pos > 0 && active[pos - 1];\n    const right = pos + 1 < n && active[pos + 1];\n\n    if (!left && !right) components++;\n    else if (left && right) components--;\n\n    active[pos] = 1;\n  }\n\n  best = Math.max(best, components);\n  i = j;\n}\n\nconsole.log(best + 1);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12190139999438543,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

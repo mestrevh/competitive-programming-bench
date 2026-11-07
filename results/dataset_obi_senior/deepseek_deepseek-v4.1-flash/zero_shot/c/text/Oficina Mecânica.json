@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:35:41.664208+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1058,
+            "output_tokens": 13869,
+            "total_tokens": 14927
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.033286,
+            "total_cost": 0.033289
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long T[100005];\nstatic long long heap_w[100005];\nstatic int heap_f[100005];\n\nint cmp_desc(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return 1;\n    if (x > y) return -1;\n    return 0;\n}\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%lld\", &T[i]);\n    }\n\n    qsort(T, N, sizeof(long long), cmp_desc);\n\n    for (int i = 0; i < M; ++i) {\n        int f;\n        scanf(\"%d\", &f);\n        heap_w[i] = 0;\n        heap_f[i] = f;\n    }\n\n    long long ans = 0;\n\n    for (int i = 0; i < N; ++i) {\n        long long w = heap_w[0];\n        int f = heap_f[0];\n\n        ans += w * T[i];\n\n        heap_w[0] = w + f;\n\n        int idx = 0;\n        while (1) {\n            int c = idx * 2 + 1;\n            if (c >= M) break;\n\n            if (c + 1 < M && heap_w[c + 1] < heap_w[c]) {\n                ++c;\n            }\n\n            if (heap_w[idx] <= heap_w[c]) break;\n\n            long long tw = heap_w[idx];\n            heap_w[idx] = heap_w[c];\n            heap_w[c] = tw;\n\n            int tf = heap_f[idx];\n            heap_f[idx] = heap_f[c];\n            heap_f[c] = tf;\n\n            idx = c;\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long T[100005];\nstatic long long heap_w[100005];\nstatic int heap_f[100005];\n\nint cmp_desc(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return 1;\n    if (x > y) return -1;\n    return 0;\n}\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%lld\", &T[i]);\n    }\n\n    qsort(T, N, sizeof(long long), cmp_desc);\n\n    for (int i = 0; i < M; ++i) {\n        int f;\n        scanf(\"%d\", &f);\n        heap_w[i] = 0;\n        heap_f[i] = f;\n    }\n\n    long long ans = 0;\n\n    for (int i = 0; i < N; ++i) {\n        long long w = heap_w[0];\n        int f = heap_f[0];\n\n        ans += w * T[i];\n\n        heap_w[0] = w + f;\n\n        int idx = 0;\n        while (1) {\n            int c = idx * 2 + 1;\n            if (c >= M) break;\n\n            if (c + 1 < M && heap_w[c + 1] < heap_w[c]) {\n                ++c;\n            }\n\n            if (heap_w[idx] <= heap_w[c]) break;\n\n            long long tw = heap_w[idx];\n            heap_w[idx] = heap_w[c];\n            heap_w[c] = tw;\n\n            int tf = heap_f[idx];\n            heap_f[idx] = heap_f[c];\n            heap_f[c] = tf;\n\n            idx = c;\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17286049999529496,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

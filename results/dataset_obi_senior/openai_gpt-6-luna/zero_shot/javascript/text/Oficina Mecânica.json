@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:56:30.560902+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 921,
+            "output_tokens": 2065,
+            "total_tokens": 2986
+        },
+        "cost_usd": {
+            "input_cost": 9.2e-05,
+            "output_cost": 0.001032,
+            "total_cost": 0.001125
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet p = 0;\n\nconst N = input[p++];\nconst M = input[p++];\n\nconst cars = input.slice(p, p + N);\np += N;\nconst mechanics = input.slice(p, p + M);\n\ncars.sort((a, b) => b - a);\n\nconst values = new Array(M).fill(0);\nconst steps = mechanics;\n\nlet answer = 0n;\n\nfor (let k = 0; k < N; k++) {\n  const coefficient = values[0];\n  answer += BigInt(cars[k]) * BigInt(coefficient);\n\n  const step = steps[0];\n  const updated = coefficient + step;\n  let i = 0;\n\n  while (true) {\n    const left = 2 * i + 1;\n    if (left >= M) break;\n\n    const right = left + 1;\n    let child = left;\n    if (right < M && values[right] < values[left]) child = right;\n    if (values[child] >= updated) break;\n\n    values[i] = values[child];\n    steps[i] = steps[child];\n    i = child;\n  }\n\n  values[i] = updated;\n  steps[i] = step;\n}\n\nconsole.log(answer.toString());\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet p = 0;\n\nconst N = input[p++];\nconst M = input[p++];\n\nconst cars = input.slice(p, p + N);\np += N;\nconst mechanics = input.slice(p, p + M);\n\ncars.sort((a, b) => b - a);\n\nconst values = new Array(M).fill(0);\nconst steps = mechanics;\n\nlet answer = 0n;\n\nfor (let k = 0; k < N; k++) {\n  const coefficient = values[0];\n  answer += BigInt(cars[k]) * BigInt(coefficient);\n\n  const step = steps[0];\n  const updated = coefficient + step;\n  let i = 0;\n\n  while (true) {\n    const left = 2 * i + 1;\n    if (left >= M) break;\n\n    const right = left + 1;\n    let child = left;\n    if (right < M && values[right] < values[left]) child = right;\n    if (values[child] >= updated) break;\n\n    values[i] = values[child];\n    steps[i] = steps[child];\n    i = child;\n  }\n\n  values[i] = updated;\n  steps[i] = step;\n}\n\nconsole.log(answer.toString());",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10473170000477694,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

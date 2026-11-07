@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:30:14.010701+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 948,
+            "output_tokens": 22369,
+            "total_tokens": 23317
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.053686,
+            "total_cost": 0.053688
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    it = iter(data)\n    Xi = int(next(it))\n    Yi = int(next(it))\n    Xf = int(next(it))\n    Yf = int(next(it))\n    N = int(next(it))\n\n    x1s = [0] * N\n    y1s = [0] * N\n    x2s = [0] * N\n    y2s = [0] * N\n\n    for i in range(N):\n        x1s[i] = int(next(it))\n        y1s[i] = int(next(it))\n        x2s[i] = int(next(it))\n        y2s[i] = int(next(it))\n\n    S = N\n    T = N + 1\n    V = N + 2\n    INF = 10**18\n\n    dist = [INF] * V\n    used = [False] * V\n    dist[S] = 0\n\n    ds = [0] * N\n    dt = [0] * N\n\n    for i in range(N):\n        dx = 0\n        if Xi < x1s[i]:\n            dx = x1s[i] - Xi\n        elif Xi > x2s[i]:\n            dx = Xi - x2s[i]\n\n        dy = 0\n        if Yi < y1s[i]:\n            dy = y1s[i] - Yi\n        elif Yi > y2s[i]:\n            dy = Yi - y2s[i]\n\n        ds[i] = dx + dy\n\n        dx = 0\n        if Xf < x1s[i]:\n            dx = x1s[i] - Xf\n        elif Xf > x2s[i]:\n            dx = Xf - x2s[i]\n\n        dy = 0\n        if Yf < y1s[i]:\n            dy = y1s[i] - Yf\n        elif Yf > y2s[i]:\n            dy = Yf - y2s[i]\n\n        dt[i] = dx + dy\n\n    dST = abs(Xi - Xf) + abs(Yi - Yf)\n\n    for _ in range(V):\n        u = -1\n        best = INF\n        for i in range(V):\n            if not used[i] and dist[i] < best:\n                best = dist[i]\n                u = i\n\n        if u == -1 or u == T:\n            break\n\n        used[u] = True\n        du = dist[u]\n\n        if u == S:\n            for v in range(N):\n                if not used[v]:\n                    nd = du + ds[v]\n                    if nd < dist[v]:\n                        dist[v] = nd\n            if not used[T]:\n                nd = du + dST\n                if nd < dist[T]:\n                    dist[T] = nd\n\n        elif u == T:\n            pass\n\n        else:\n            ux1 = x1s[u]\n            uy1 = y1s[u]\n            ux2 = x2s[u]\n            uy2 = y2s[u]\n\n            if not used[T]:\n                nd = du + dt[u]\n                if nd < dist[T]:\n                    dist[T] = nd\n\n            for v in range(N):\n                if not used[v] and v != u:\n                    vx1 = x1s[v]\n                    vy1 = y1s[v]\n                    vx2 = x2s[v]\n                    vy2 = y2s[v]\n\n                    dx = 0\n                    if ux2 < vx1:\n                        dx = vx1 - ux2\n                    elif vx2 < ux1:\n                        dx = ux1 - vx2\n\n                    dy = 0\n                    if uy2 < vy1:\n                        dy = vy1 - uy2\n                    elif vy2 < uy1:\n                        dy = uy1 - vy2\n\n                    w = dx + dy\n                    nd = du + w\n                    if nd < dist[v]:\n                        dist[v] = nd\n\n    print(dist[T])\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    it = iter(data)\n    Xi = int(next(it))\n    Yi = int(next(it))\n    Xf = int(next(it))\n    Yf = int(next(it))\n    N = int(next(it))\n\n    x1s = [0] * N\n    y1s = [0] * N\n    x2s = [0] * N\n    y2s = [0] * N\n\n    for i in range(N):\n        x1s[i] = int(next(it))\n        y1s[i] = int(next(it))\n        x2s[i] = int(next(it))\n        y2s[i] = int(next(it))\n\n    S = N\n    T = N + 1\n    V = N + 2\n    INF = 10**18\n\n    dist = [INF] * V\n    used = [False] * V\n    dist[S] = 0\n\n    ds = [0] * N\n    dt = [0] * N\n\n    for i in range(N):\n        dx = 0\n        if Xi < x1s[i]:\n            dx = x1s[i] - Xi\n        elif Xi > x2s[i]:\n            dx = Xi - x2s[i]\n\n        dy = 0\n        if Yi < y1s[i]:\n            dy = y1s[i] - Yi\n        elif Yi > y2s[i]:\n            dy = Yi - y2s[i]\n\n        ds[i] = dx + dy\n\n        dx = 0\n        if Xf < x1s[i]:\n            dx = x1s[i] - Xf\n        elif Xf > x2s[i]:\n            dx = Xf - x2s[i]\n\n        dy = 0\n        if Yf < y1s[i]:\n            dy = y1s[i] - Yf\n        elif Yf > y2s[i]:\n            dy = Yf - y2s[i]\n\n        dt[i] = dx + dy\n\n    dST = abs(Xi - Xf) + abs(Yi - Yf)\n\n    for _ in range(V):\n        u = -1\n        best = INF\n        for i in range(V):\n            if not used[i] and dist[i] < best:\n                best = dist[i]\n                u = i\n\n        if u == -1 or u == T:\n            break\n\n        used[u] = True\n        du = dist[u]\n\n        if u == S:\n            for v in range(N):\n                if not used[v]:\n                    nd = du + ds[v]\n                    if nd < dist[v]:\n                        dist[v] = nd\n            if not used[T]:\n                nd = du + dST\n                if nd < dist[T]:\n                    dist[T] = nd\n\n        elif u == T:\n            pass\n\n        else:\n            ux1 = x1s[u]\n            uy1 = y1s[u]\n            ux2 = x2s[u]\n            uy2 = y2s[u]\n\n            if not used[T]:\n                nd = du + dt[u]\n                if nd < dist[T]:\n                    dist[T] = nd\n\n            for v in range(N):\n                if not used[v] and v != u:\n                    vx1 = x1s[v]\n                    vy1 = y1s[v]\n                    vx2 = x2s[v]\n                    vy2 = y2s[v]\n\n                    dx = 0\n                    if ux2 < vx1:\n                        dx = vx1 - ux2\n                    elif vx2 < ux1:\n                        dx = ux1 - vx2\n\n                    dy = 0\n                    if uy2 < vy1:\n                        dy = vy1 - uy2\n                    elif vy2 < uy1:\n                        dy = uy1 - vy2\n\n                    w = dx + dy\n                    nd = du + w\n                    if nd < dist[v]:\n                        dist[v] = nd\n\n    print(dist[T])\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2661080999969272,
+            "counts": {
+                "AC": 37,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 37
+        }
+    }
+]

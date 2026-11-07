@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:34:02.211590+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1145,
+            "output_tokens": 1247,
+            "total_tokens": 5082
+        },
+        "cost_usd": {
+            "input_cost": 0.000859,
+            "output_cost": 0.004676,
+            "total_cost": 0.005535
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nconst long long INF = 4e18;\n\nstruct Point {\n    long long u, v;\n};\n\nint n;\nvector<Point> pts;\nlong long min_u, max_u, min_v, max_v;\n\nbool check(long long D) {\n    if (max_u - min_u <= D && max_v - min_v <= D) {\n        return true;\n    }\n\n    // Os 4 cantos para o primeiro quadrado:\n    // 0: [min_u, min_u + D] x [min_v, min_v + D]\n    // 1: [min_u, min_u + D] x [max_v - D, max_v]\n    // 2: [max_u - D, max_u] x [min_v, min_v + D]\n    // 3: [max_u - D, max_u] x [max_v - D, max_v]\n\n    long long c_u_min[4] = {min_u, min_u, max_u - D, max_u - D};\n    long long c_u_max[4] = {min_u + D, min_u + D, max_u, max_u};\n    long long c_v_min[4] = {min_v, max_v - D, min_v, max_v - D};\n    long long c_v_max[4] = {min_v + D, max_v, min_v + D, max_v};\n\n    long long rem_min_u[4], rem_max_u[4], rem_min_v[4], rem_max_v[4];\n    for (int k = 0; k < 4; ++k) {\n        rem_min_u[k] = INF;\n        rem_max_u[k] = -INF;\n        rem_min_v[k] = INF;\n        rem_max_v[k] = -INF;\n    }\n\n    for (int i = 0; i < n; ++i) {\n        long long u = pts[i].u;\n        long long v = pts[i].v;\n\n        for (int k = 0; k < 4; ++k) {\n            // Se o ponto não está coberto pelo quadrado k\n            if (u < c_u_min[k] || u > c_u_max[k] || v < c_v_min[k] || v > c_v_max[k]) {\n                if (u < rem_min_u[k]) rem_min_u[k] = u;\n                if (u > rem_max_u[k]) rem_max_u[k] = u;\n                if (v < rem_min_v[k]) rem_min_v[k] = v;\n                if (v > rem_max_v[k]) rem_max_v[k] = v;\n            }\n        }\n    }\n\n    for (int k = 0; k < 4; ++k) {\n        if (rem_min_u[k] == INF) {\n            // Todos os pontos foram cobertos pelo primeiro quadrado\n            return true;\n        }\n        if (rem_max_u[k] - rem_min_u[k] <= D && rem_max_v[k] - rem_min_v[k] <= D) {\n            return true;\n        }\n    }\n\n    return false;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    if (!(cin >> n)) return 0;\n\n    vector<long long> X(n), Y(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> X[i];\n    }\n    for (int i = 0; i < n; ++i) {\n        cin >> Y[i];\n    }\n\n    pts.resize(n);\n    min_u = INF; max_u = -INF;\n    min_v = INF; max_v = -INF;\n\n    for (int i = 0; i < n; ++i) {\n        pts[i].u = X[i] + Y[i];\n        pts[i].v = X[i] - Y[i];\n        min_u = min(min_u, pts[i].u);\n        max_u = max(max_u, pts[i].u);\n        min_v = min(min_v, pts[i].v);\n        max_v = max(max_v, pts[i].v);\n    }\n\n    long long low = 0, high = 2000000000LL;\n    long long ans = high;\n\n    while (low <= high) {\n        long long mid = low + (high - low) / 2;\n        if (check(mid)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nconst long long INF = 4e18;\n\nstruct Point {\n    long long u, v;\n};\n\nint n;\nvector<Point> pts;\nlong long min_u, max_u, min_v, max_v;\n\nbool check(long long D) {\n    if (max_u - min_u <= D && max_v - min_v <= D) {\n        return true;\n    }\n\n    // Os 4 cantos para o primeiro quadrado:\n    // 0: [min_u, min_u + D] x [min_v, min_v + D]\n    // 1: [min_u, min_u + D] x [max_v - D, max_v]\n    // 2: [max_u - D, max_u] x [min_v, min_v + D]\n    // 3: [max_u - D, max_u] x [max_v - D, max_v]\n\n    long long c_u_min[4] = {min_u, min_u, max_u - D, max_u - D};\n    long long c_u_max[4] = {min_u + D, min_u + D, max_u, max_u};\n    long long c_v_min[4] = {min_v, max_v - D, min_v, max_v - D};\n    long long c_v_max[4] = {min_v + D, max_v, min_v + D, max_v};\n\n    long long rem_min_u[4], rem_max_u[4], rem_min_v[4], rem_max_v[4];\n    for (int k = 0; k < 4; ++k) {\n        rem_min_u[k] = INF;\n        rem_max_u[k] = -INF;\n        rem_min_v[k] = INF;\n        rem_max_v[k] = -INF;\n    }\n\n    for (int i = 0; i < n; ++i) {\n        long long u = pts[i].u;\n        long long v = pts[i].v;\n\n        for (int k = 0; k < 4; ++k) {\n            // Se o ponto não está coberto pelo quadrado k\n            if (u < c_u_min[k] || u > c_u_max[k] || v < c_v_min[k] || v > c_v_max[k]) {\n                if (u < rem_min_u[k]) rem_min_u[k] = u;\n                if (u > rem_max_u[k]) rem_max_u[k] = u;\n                if (v < rem_min_v[k]) rem_min_v[k] = v;\n                if (v > rem_max_v[k]) rem_max_v[k] = v;\n            }\n        }\n    }\n\n    for (int k = 0; k < 4; ++k) {\n        if (rem_min_u[k] == INF) {\n            // Todos os pontos foram cobertos pelo primeiro quadrado\n            return true;\n        }\n        if (rem_max_u[k] - rem_min_u[k] <= D && rem_max_v[k] - rem_min_v[k] <= D) {\n            return true;\n        }\n    }\n\n    return false;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    if (!(cin >> n)) return 0;\n\n    vector<long long> X(n), Y(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> X[i];\n    }\n    for (int i = 0; i < n; ++i) {\n        cin >> Y[i];\n    }\n\n    pts.resize(n);\n    min_u = INF; max_u = -INF;\n    min_v = INF; max_v = -INF;\n\n    for (int i = 0; i < n; ++i) {\n        pts[i].u = X[i] + Y[i];\n        pts[i].v = X[i] - Y[i];\n        min_u = min(min_u, pts[i].u);\n        max_u = max(max_u, pts[i].u);\n        min_v = min(min_v, pts[i].v);\n        max_v = max(max_v, pts[i].v);\n    }\n\n    long long low = 0, high = 2000000000LL;\n    long long ans = high;\n\n    while (low <= high) {\n        long long mid = low + (high - low) / 2;\n        if (check(mid)) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    cout << ans << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16665759999887086,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

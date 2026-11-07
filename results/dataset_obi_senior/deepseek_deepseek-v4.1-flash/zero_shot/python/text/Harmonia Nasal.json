@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:01:22.507758+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1278,
+            "output_tokens": 19015,
+            "total_tokens": 20293
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.045636,
+            "total_cost": 0.04564
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n    b = data[2 + n:2 + 2 * n]\n\n    p_sum = 0\n    g = [0] * n\n\n    for i in range(n):\n        ai, bi = a[i], b[i]\n        if ai > bi:\n            p_sum += ai - bi\n        g[i] = ai if ai < bi else bi\n\n    k = min(k, n - 1)\n\n    if k == n - 1:\n        print(p_sum + sum(g))\n        return\n\n    idx = sorted(range(n), key=lambda i: (-g[i], i))\n    top_sum = sum(g[idx[i]] for i in range(k))\n    next_val = g[idx[k]]\n\n    pos = [-1] * n\n    for p, i in enumerate(idx):\n        pos[i] = p\n\n    ans = 0\n    for i in range(n):\n        if pos[i] < k:\n            best_others = top_sum - g[i] + next_val\n        else:\n            best_others = top_sum\n\n        cur = p_sum + g[i] + best_others\n        if cur > ans:\n            ans = cur\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n    b = data[2 + n:2 + 2 * n]\n\n    p_sum = 0\n    g = [0] * n\n\n    for i in range(n):\n        ai, bi = a[i], b[i]\n        if ai > bi:\n            p_sum += ai - bi\n        g[i] = ai if ai < bi else bi\n\n    k = min(k, n - 1)\n\n    if k == n - 1:\n        print(p_sum + sum(g))\n        return\n\n    idx = sorted(range(n), key=lambda i: (-g[i], i))\n    top_sum = sum(g[idx[i]] for i in range(k))\n    next_val = g[idx[k]]\n\n    pos = [-1] * n\n    for p, i in enumerate(idx):\n        pos[i] = p\n\n    ans = 0\n    for i in range(n):\n        if pos[i] < k:\n            best_others = top_sum - g[i] + next_val\n        else:\n            best_others = top_sum\n\n        cur = p_sum + g[i] + best_others\n        if cur > ans:\n            ans = cur\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3200855999966734,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

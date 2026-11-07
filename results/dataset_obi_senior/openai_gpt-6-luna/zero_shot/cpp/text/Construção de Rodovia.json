@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:10:24.217083+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 756,
+            "output_tokens": 967,
+            "total_tokens": 1723
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.000483,
+            "total_cost": 0.000559
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<vector<int>> adj(N + 1);\n    for (int i = 0; i < M; ++i) {\n        int x, y;\n        cin >> x >> y;\n        adj[x].push_back(y);\n        adj[y].push_back(x);\n    }\n\n    vector<char> visited(N + 1, false);\n    for (int start = 1; start <= N; ++start) {\n        if (visited[start]) continue;\n\n        vector<int> component;\n        stack<int> st;\n        st.push(start);\n        visited[start] = true;\n\n        long long degreeSum = 0;\n        while (!st.empty()) {\n            int v = st.top();\n            st.pop();\n            component.push_back(v);\n            degreeSum += adj[v].size();\n\n            for (int u : adj[v]) {\n                if (!visited[u]) {\n                    visited[u] = true;\n                    st.push(u);\n                }\n            }\n        }\n\n        long long k = component.size();\n        if (degreeSum < k * (k - 1)) {\n            int v = -1;\n            for (int u : component) {\n                if ((long long)adj[u].size() < k - 1) {\n                    v = u;\n                    break;\n                }\n            }\n\n            vector<char> isNeighbor(N + 1, false);\n            for (int u : adj[v]) isNeighbor[u] = true;\n\n            for (int u : component) {\n                if (u != v && !isNeighbor[u]) {\n                    cout << v << ' ' << u << '\\n';\n                    return 0;\n                }\n            }\n        }\n    }\n\n    cout << -1 << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<vector<int>> adj(N + 1);\n    for (int i = 0; i < M; ++i) {\n        int x, y;\n        cin >> x >> y;\n        adj[x].push_back(y);\n        adj[y].push_back(x);\n    }\n\n    vector<char> visited(N + 1, false);\n    for (int start = 1; start <= N; ++start) {\n        if (visited[start]) continue;\n\n        vector<int> component;\n        stack<int> st;\n        st.push(start);\n        visited[start] = true;\n\n        long long degreeSum = 0;\n        while (!st.empty()) {\n            int v = st.top();\n            st.pop();\n            component.push_back(v);\n            degreeSum += adj[v].size();\n\n            for (int u : adj[v]) {\n                if (!visited[u]) {\n                    visited[u] = true;\n                    st.push(u);\n                }\n            }\n        }\n\n        long long k = component.size();\n        if (degreeSum < k * (k - 1)) {\n            int v = -1;\n            for (int u : component) {\n                if ((long long)adj[u].size() < k - 1) {\n                    v = u;\n                    break;\n                }\n            }\n\n            vector<char> isNeighbor(N + 1, false);\n            for (int u : adj[v]) isNeighbor[u] = true;\n\n            for (int u : component) {\n                if (u != v && !isNeighbor[u]) {\n                    cout << v << ' ' << u << '\\n';\n                    return 0;\n                }\n            }\n        }\n    }\n\n    cout << -1 << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.19903029999841237,
+            "counts": {
+                "AC": 6,
+                "WA": 7,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

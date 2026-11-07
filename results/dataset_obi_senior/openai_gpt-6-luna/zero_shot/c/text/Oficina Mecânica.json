@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:07:11.887555+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 921,
+            "output_tokens": 2991,
+            "total_tokens": 3912
+        },
+        "cost_usd": {
+            "input_cost": 9.2e-05,
+            "output_cost": 0.001496,
+            "total_cost": 0.001588
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long value;\n    int mechanic;\n    int k;\n} Node;\n\nstatic Node heap[100005];\nstatic int heap_size;\n\nstatic int less_node(Node a, Node b) {\n    if (a.value != b.value) return a.value < b.value;\n    return a.mechanic < b.mechanic;\n}\n\nstatic void push(Node x) {\n    int i = ++heap_size;\n    while (i > 1 && less_node(x, heap[i / 2])) {\n        heap[i] = heap[i / 2];\n        i /= 2;\n    }\n    heap[i] = x;\n}\n\nstatic Node pop_min(void) {\n    Node result = heap[1];\n    Node last = heap[heap_size--];\n    int i = 1;\n\n    while (i * 2 <= heap_size) {\n        int child = i * 2;\n        if (child + 1 <= heap_size && less_node(heap[child + 1], heap[child]))\n            child++;\n        if (!less_node(heap[child], last)) break;\n        heap[i] = heap[child];\n        i = child;\n    }\n\n    if (heap_size > 0) heap[i] = last;\n    return result;\n}\n\nstatic int cmp_int(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    int *T = malloc((size_t)N * sizeof(int));\n    long long *coeff = malloc((size_t)N * sizeof(long long));\n    int *F = malloc((size_t)M * sizeof(int));\n\n    for (int i = 0; i < N; i++) scanf(\"%d\", &T[i]);\n    for (int j = 0; j < M; j++) scanf(\"%d\", &F[j]);\n\n    qsort(T, N, sizeof(int), cmp_int);\n\n    for (int j = 0; j < M; j++) {\n        Node x = {0, j, 0};\n        push(x);\n    }\n\n    for (int i = 0; i < N; i++) {\n        Node x = pop_min();\n        coeff[i] = x.value;\n\n        x.k++;\n        x.value = (long long)x.k * F[x.mechanic];\n        push(x);\n    }\n\n    long long answer = 0;\n    for (int i = 0; i < N; i++)\n        answer += (long long)T[N - 1 - i] * coeff[i];\n\n    printf(\"%lld\\n\", answer);\n\n    free(T);\n    free(coeff);\n    free(F);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long value;\n    int mechanic;\n    int k;\n} Node;\n\nstatic Node heap[100005];\nstatic int heap_size;\n\nstatic int less_node(Node a, Node b) {\n    if (a.value != b.value) return a.value < b.value;\n    return a.mechanic < b.mechanic;\n}\n\nstatic void push(Node x) {\n    int i = ++heap_size;\n    while (i > 1 && less_node(x, heap[i / 2])) {\n        heap[i] = heap[i / 2];\n        i /= 2;\n    }\n    heap[i] = x;\n}\n\nstatic Node pop_min(void) {\n    Node result = heap[1];\n    Node last = heap[heap_size--];\n    int i = 1;\n\n    while (i * 2 <= heap_size) {\n        int child = i * 2;\n        if (child + 1 <= heap_size && less_node(heap[child + 1], heap[child]))\n            child++;\n        if (!less_node(heap[child], last)) break;\n        heap[i] = heap[child];\n        i = child;\n    }\n\n    if (heap_size > 0) heap[i] = last;\n    return result;\n}\n\nstatic int cmp_int(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    int *T = malloc((size_t)N * sizeof(int));\n    long long *coeff = malloc((size_t)N * sizeof(long long));\n    int *F = malloc((size_t)M * sizeof(int));\n\n    for (int i = 0; i < N; i++) scanf(\"%d\", &T[i]);\n    for (int j = 0; j < M; j++) scanf(\"%d\", &F[j]);\n\n    qsort(T, N, sizeof(int), cmp_int);\n\n    for (int j = 0; j < M; j++) {\n        Node x = {0, j, 0};\n        push(x);\n    }\n\n    for (int i = 0; i < N; i++) {\n        Node x = pop_min();\n        coeff[i] = x.value;\n\n        x.k++;\n        x.value = (long long)x.k * F[x.mechanic];\n        push(x);\n    }\n\n    long long answer = 0;\n    for (int i = 0; i < N; i++)\n        answer += (long long)T[N - 1 - i] * coeff[i];\n\n    printf(\"%lld\\n\", answer);\n\n    free(T);\n    free(coeff);\n    free(F);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1105750000133412,
+            "counts": {
+                "AC": 91,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 91
+        }
+    }
+]

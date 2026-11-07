@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:44:08.476008+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 838,
+            "output_tokens": 1482,
+            "total_tokens": 2320
+        },
+        "cost_usd": {
+            "input_cost": 8.4e-05,
+            "output_cost": 0.000741,
+            "total_cost": 0.000825
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAX 505\n\nint main(void) {\n    int n, m;\n    char grid[MAX][MAX];\n    int queue[MAX * MAX];\n    int head = 0, tail = 0;\n\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int r = 0; r < n; r++)\n        scanf(\"%s\", grid[r]);\n\n    for (int r = 0; r < n; r++) {\n        for (int c = 0; c < m; c++) {\n            if (grid[r][c] == 'o')\n                queue[tail++] = r * m + c;\n        }\n    }\n\n    while (head < tail) {\n        int pos = queue[head++];\n        int r = pos / m;\n        int c = pos % m;\n\n        if (r + 1 < n && grid[r + 1][c] == '.') {\n            grid[r + 1][c] = 'o';\n            queue[tail++] = (r + 1) * m + c;\n        }\n\n        if (r + 1 < n && grid[r + 1][c] == '#') {\n            for (int dc = -1; dc <= 1; dc += 2) {\n                int nc = c + dc;\n                if (nc >= 0 && nc < m && grid[r][nc] == '.') {\n                    grid[r][nc] = 'o';\n                    queue[tail++] = r * m + nc;\n                }\n            }\n        }\n    }\n\n    for (int r = 0; r < n; r++)\n        printf(\"%s\\n\", grid[r]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAX 505\n\nint main(void) {\n    int n, m;\n    char grid[MAX][MAX];\n    int queue[MAX * MAX];\n    int head = 0, tail = 0;\n\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int r = 0; r < n; r++)\n        scanf(\"%s\", grid[r]);\n\n    for (int r = 0; r < n; r++) {\n        for (int c = 0; c < m; c++) {\n            if (grid[r][c] == 'o')\n                queue[tail++] = r * m + c;\n        }\n    }\n\n    while (head < tail) {\n        int pos = queue[head++];\n        int r = pos / m;\n        int c = pos % m;\n\n        if (r + 1 < n && grid[r + 1][c] == '.') {\n            grid[r + 1][c] = 'o';\n            queue[tail++] = (r + 1) * m + c;\n        }\n\n        if (r + 1 < n && grid[r + 1][c] == '#') {\n            for (int dc = -1; dc <= 1; dc += 2) {\n                int nc = c + dc;\n                if (nc >= 0 && nc < m && grid[r][nc] == '.') {\n                    grid[r][nc] = 'o';\n                    queue[tail++] = r * m + nc;\n                }\n            }\n        }\n    }\n\n    for (int r = 0; r < n; r++)\n        printf(\"%s\\n\", grid[r]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16157250000105705,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

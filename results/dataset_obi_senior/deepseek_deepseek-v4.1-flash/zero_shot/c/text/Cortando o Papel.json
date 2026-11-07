@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:58:31.782427+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 544,
+            "output_tokens": 19637,
+            "total_tokens": 20181
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.047129,
+            "total_cost": 0.04713
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long x;\n    int delta;\n} Event;\n\nint cmp(const void *a, const void *b) {\n    const Event *ea = (const Event*)a;\n    const Event *eb = (const Event*)b;\n    if (ea->x < eb->x) return -1;\n    if (ea->x > eb->x) return 1;\n    if (ea->delta < eb->delta) return -1;\n    if (ea->delta > eb->delta) return 1;\n    return 0;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    long long *A = (long long*)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &A[i]);\n    }\n\n    Event *ev = (Event*)malloc(2 * N * sizeof(Event));\n    int m = 0;\n    long long prev = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long cur = A[i];\n        if (cur > prev) {\n            ev[m].x = prev;\n            ev[m].delta = 1;\n            m++;\n            ev[m].x = cur;\n            ev[m].delta = -1;\n            m++;\n        }\n        prev = cur;\n    }\n\n    qsort(ev, m, sizeof(Event), cmp);\n\n    int cur = 0, best = 0;\n    for (int i = 0; i < m; i++) {\n        cur += ev[i].delta;\n        if (cur > best) best = cur;\n    }\n\n    printf(\"%d\\n\", best + 1);\n\n    free(A);\n    free(ev);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long x;\n    int delta;\n} Event;\n\nint cmp(const void *a, const void *b) {\n    const Event *ea = (const Event*)a;\n    const Event *eb = (const Event*)b;\n    if (ea->x < eb->x) return -1;\n    if (ea->x > eb->x) return 1;\n    if (ea->delta < eb->delta) return -1;\n    if (ea->delta > eb->delta) return 1;\n    return 0;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    long long *A = (long long*)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &A[i]);\n    }\n\n    Event *ev = (Event*)malloc(2 * N * sizeof(Event));\n    int m = 0;\n    long long prev = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long cur = A[i];\n        if (cur > prev) {\n            ev[m].x = prev;\n            ev[m].delta = 1;\n            m++;\n            ev[m].x = cur;\n            ev[m].delta = -1;\n            m++;\n        }\n        prev = cur;\n    }\n\n    qsort(ev, m, sizeof(Event), cmp);\n\n    int cur = 0, best = 0;\n    for (int i = 0; i < m; i++) {\n        cur += ev[i].delta;\n        if (cur > best) best = cur;\n    }\n\n    printf(\"%d\\n\", best + 1);\n\n    free(A);\n    free(ev);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20057210000231862,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

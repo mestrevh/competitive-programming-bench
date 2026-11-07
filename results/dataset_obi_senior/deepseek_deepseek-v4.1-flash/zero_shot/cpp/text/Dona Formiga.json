@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:14:00.110737+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 888,
+            "output_tokens": 1104,
+            "total_tokens": 1992
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.00265,
+            "total_cost": 0.002652
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint S, T, P;\nvector<int> h;\nvector<vector<int>> adj;\nvector<int> dp;\n\nint dfs(int v) {\n    if (dp[v] != -1) return dp[v];\n    int best = 0;\n    for (int u : adj[v]) {\n        best = max(best, 1 + dfs(u));\n    }\n    return dp[v] = best;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    cin >> S >> T >> P;\n    h.assign(S + 1, 0);\n    for (int i = 1; i <= S; i++) cin >> h[i];\n\n    adj.assign(S + 1, {});\n    for (int k = 0; k < T; k++) {\n        int i, j;\n        cin >> i >> j;\n        if (h[i] > h[j]) adj[i].push_back(j);\n        else if (h[j] > h[i]) adj[j].push_back(i);\n    }\n\n    dp.assign(S + 1, -1);\n    cout << dfs(P) << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint S, T, P;\nvector<int> h;\nvector<vector<int>> adj;\nvector<int> dp;\n\nint dfs(int v) {\n    if (dp[v] != -1) return dp[v];\n    int best = 0;\n    for (int u : adj[v]) {\n        best = max(best, 1 + dfs(u));\n    }\n    return dp[v] = best;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    cin >> S >> T >> P;\n    h.assign(S + 1, 0);\n    for (int i = 1; i <= S; i++) cin >> h[i];\n\n    adj.assign(S + 1, {});\n    for (int k = 0; k < T; k++) {\n        int i, j;\n        cin >> i >> j;\n        if (h[i] > h[j]) adj[i].push_back(j);\n        else if (h[j] > h[i]) adj[j].push_back(i);\n    }\n\n    dp.assign(S + 1, -1);\n    cout << dfs(P) << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15705890000026557,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

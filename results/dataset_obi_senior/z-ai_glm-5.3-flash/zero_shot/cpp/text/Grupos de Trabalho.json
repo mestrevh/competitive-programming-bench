@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T23:35:31.156111+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1015,
+            "output_tokens": 1919,
+            "total_tokens": 2934
+        },
+        "cost_usd": {
+            "input_cost": 2.2e-05,
+            "output_cost": 0.000959,
+            "total_cost": 0.000981
+        },
+        "raw_response": "```cpp\n#include <cstdio>\n#include <vector>\n#include <utility>\nusing namespace std;\n\nstatic char ibuf[1 << 16];\nstatic int ipos = 0, ilen = 0;\n\ninline int readChar() {\n    if (ipos == ilen) {\n        ilen = (int)fread(ibuf, 1, sizeof(ibuf), stdin);\n        ipos = 0;\n        if (ilen <= 0) return -1;\n    }\n    return ibuf[ipos++];\n}\n\ninline int readInt() {\n    int c = readChar();\n    while (c != -1 && (c < '0' || c > '9') && c != '-') c = readChar();\n    if (c == -1) return -1;\n    int sign = 1;\n    if (c == '-') {\n        sign = -1;\n        c = readChar();\n    }\n    int x = 0;\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = readChar();\n    }\n    return x * sign;\n}\n\nint main() {\n    int E = readInt(), M = readInt(), D = readInt();\n\n    vector<pair<int,int>> same(M), diff(D);\n    for (int i = 0; i < M; ++i) {\n        int x = readInt(), y = readInt();\n        same[i] = make_pair(x, y);\n    }\n    for (int i = 0; i < D; ++i) {\n        int x = readInt(), y = readInt();\n        diff[i] = make_pair(x, y);\n    }\n\n    vector<int> grp(E + 1, 0);\n    int numGroups = E / 3;\n    for (int g = 0; g < numGroups; ++g) {\n        int a = readInt(), b = readInt(), c = readInt();\n        grp[a] = g;\n        grp[b] = g;\n        grp[c] = g;\n    }\n\n    long long violations = 0;\n    for (int i = 0; i < M; ++i) {\n        if (grp[same[i].first] != grp[same[i].second]) ++violations;\n    }\n    for (int i = 0; i < D; ++i) {\n        if (grp[diff[i].first] == grp[diff[i].second]) ++violations;\n    }\n\n    printf(\"%lld\\n\", violations);\n    return 0;\n}\n```",
+        "extracted_code": "#include <cstdio>\n#include <vector>\n#include <utility>\nusing namespace std;\n\nstatic char ibuf[1 << 16];\nstatic int ipos = 0, ilen = 0;\n\ninline int readChar() {\n    if (ipos == ilen) {\n        ilen = (int)fread(ibuf, 1, sizeof(ibuf), stdin);\n        ipos = 0;\n        if (ilen <= 0) return -1;\n    }\n    return ibuf[ipos++];\n}\n\ninline int readInt() {\n    int c = readChar();\n    while (c != -1 && (c < '0' || c > '9') && c != '-') c = readChar();\n    if (c == -1) return -1;\n    int sign = 1;\n    if (c == '-') {\n        sign = -1;\n        c = readChar();\n    }\n    int x = 0;\n    while (c >= '0' && c <= '9') {\n        x = x * 10 + (c - '0');\n        c = readChar();\n    }\n    return x * sign;\n}\n\nint main() {\n    int E = readInt(), M = readInt(), D = readInt();\n\n    vector<pair<int,int>> same(M), diff(D);\n    for (int i = 0; i < M; ++i) {\n        int x = readInt(), y = readInt();\n        same[i] = make_pair(x, y);\n    }\n    for (int i = 0; i < D; ++i) {\n        int x = readInt(), y = readInt();\n        diff[i] = make_pair(x, y);\n    }\n\n    vector<int> grp(E + 1, 0);\n    int numGroups = E / 3;\n    for (int g = 0; g < numGroups; ++g) {\n        int a = readInt(), b = readInt(), c = readInt();\n        grp[a] = g;\n        grp[b] = g;\n        grp[c] = g;\n    }\n\n    long long violations = 0;\n    for (int i = 0; i < M; ++i) {\n        if (grp[same[i].first] != grp[same[i].second]) ++violations;\n    }\n    for (int i = 0; i < D; ++i) {\n        if (grp[diff[i].first] == grp[diff[i].second]) ++violations;\n    }\n\n    printf(\"%lld\\n\", violations);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1887505999984569,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

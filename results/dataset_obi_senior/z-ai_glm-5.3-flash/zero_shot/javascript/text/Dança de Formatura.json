@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:08:07.976953+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1380,
+            "output_tokens": 9660,
+            "total_tokens": 11040
+        },
+        "cost_usd": {
+            "input_cost": 3e-05,
+            "output_cost": 0.00483,
+            "total_cost": 0.00486
+        },
+        "raw_response": "Analisando o problema: as trocas de linhas não afetam a estrutura de colunas e vice-versa (trocar colunas age uniformemente em todas as linhas). Logo, basta manter uma permutação de linhas R e uma permutação de colunas C, e o aluno final na célula (i, j) é o que começou em (R[i], C[j]), ou seja, `(R[i]-1)*M + C[j]`. Isso é O(N + M + P + N·M), sem armazenar a matriz N×M completa. Para a saída (até ~8 MB), uso um Buffer pré-alocado com conversão manual de dígitos e leitura de entrada byte a byte.\n\n```javascript\nconst fs = require('fs');\n\nfunction main() {\n  let data;\n  try {\n    data = fs.readFileSync(0);\n  } catch (e) {\n    data = fs.readFileSync('/dev/stdin');\n  }\n  const len = data.length;\n  let pos = 0;\n\n  function nextInt() {\n    while (pos < len && data[pos] <= 32) pos++;\n    let n = 0;\n    while (pos < len) {\n      const c = data[pos];\n      if (c < 48 || c > 57) break;\n      n = n * 10 + (c - 48);\n      pos++;\n    }\n    return n;\n  }\n\n  const N = nextInt();\n  const M = nextInt();\n  const P = nextInt();\n\n  // R[i] = linha original cujos alunos estão agora na linha i\n  // C[j] = coluna original cujas células estão agora na coluna j\n  const R = new Int32Array(N + 1);\n  const C = new Int32Array(M + 1);\n  for (let i = 1; i <= N; i++) R[i] = i;\n  for (let j = 1; j <= M; j++) C[j] = j;\n\n  for (let p = 0; p < P; p++) {\n    while (pos < len && data[pos] <= 32) pos++;\n    const op = data[pos++]; // 76 = 'L', 67 = 'C'\n    const a = nextInt();\n    const b = nextInt();\n    if (op === 76) {\n      const t = R[a]; R[a] = R[b]; R[b] = t;\n    } else {\n      const t = C[a]; C[a] = C[b]; C[b] = t;\n    }\n  }\n\n  // Buffer de saída: no máx 7 dígitos + 1 separador por número\n  const out = Buffer.allocUnsafe(8 * N * M + 16);\n  let o = 0;\n\n  for (let i = 1; i <= N; i++) {\n    const base = (R[i] - 1) * M;\n    for (let j = 1; j <= M; j++) {\n      let v = base + C[j];\n      const start = o;\n      do {\n        out[o++] = 48 + (v % 10);\n        v = (v / 10) | 0;\n      } while (v > 0);\n      for (let x = start, y = o - 1; x < y; x++, y--) {\n        const t = out[x]; out[x] = out[y]; out[y] = t;\n      }\n      out[o++] = 32; // espaço\n    }\n    o--; // substitui o último espaço por quebra de linha\n    out[o++] = 10;\n  }\n\n  let written = 0;\n  while (written < o) {\n    written += fs.writeSync(1, out, written, o - written);\n  }\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n  let data;\n  try {\n    data = fs.readFileSync(0);\n  } catch (e) {\n    data = fs.readFileSync('/dev/stdin');\n  }\n  const len = data.length;\n  let pos = 0;\n\n  function nextInt() {\n    while (pos < len && data[pos] <= 32) pos++;\n    let n = 0;\n    while (pos < len) {\n      const c = data[pos];\n      if (c < 48 || c > 57) break;\n      n = n * 10 + (c - 48);\n      pos++;\n    }\n    return n;\n  }\n\n  const N = nextInt();\n  const M = nextInt();\n  const P = nextInt();\n\n  // R[i] = linha original cujos alunos estão agora na linha i\n  // C[j] = coluna original cujas células estão agora na coluna j\n  const R = new Int32Array(N + 1);\n  const C = new Int32Array(M + 1);\n  for (let i = 1; i <= N; i++) R[i] = i;\n  for (let j = 1; j <= M; j++) C[j] = j;\n\n  for (let p = 0; p < P; p++) {\n    while (pos < len && data[pos] <= 32) pos++;\n    const op = data[pos++]; // 76 = 'L', 67 = 'C'\n    const a = nextInt();\n    const b = nextInt();\n    if (op === 76) {\n      const t = R[a]; R[a] = R[b]; R[b] = t;\n    } else {\n      const t = C[a]; C[a] = C[b]; C[b] = t;\n    }\n  }\n\n  // Buffer de saída: no máx 7 dígitos + 1 separador por número\n  const out = Buffer.allocUnsafe(8 * N * M + 16);\n  let o = 0;\n\n  for (let i = 1; i <= N; i++) {\n    const base = (R[i] - 1) * M;\n    for (let j = 1; j <= M; j++) {\n      let v = base + C[j];\n      const start = o;\n      do {\n        out[o++] = 48 + (v % 10);\n        v = (v / 10) | 0;\n      } while (v > 0);\n      for (let x = start, y = o - 1; x < y; x++, y--) {\n        const t = out[x]; out[x] = out[y]; out[y] = t;\n      }\n      out[o++] = 32; // espaço\n    }\n    o--; // substitui o último espaço por quebra de linha\n    out[o++] = 10;\n  }\n\n  let written = 0;\n  while (written < o) {\n    written += fs.writeSync(1, out, written, o - written);\n  }\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2418411999824457,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

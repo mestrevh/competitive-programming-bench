@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:18:59.996656+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 655,
+            "output_tokens": 447,
+            "total_tokens": 2239
+        },
+        "cost_usd": {
+            "input_cost": 0.000491,
+            "output_cost": 0.001676,
+            "total_cost": 0.002168
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <iomanip>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Battery {\n    double p;\n    double c;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    double d;\n    if (!(cin >> n >> d)) return 0;\n\n    vector<Battery> b(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> b[i].p >> b[i].c;\n    }\n\n    // dp[i] armazenará o tempo mínimo para chegar à posição b[i].p\n    // O destino final é a posição D, que podemos tratar como o índice n\n    vector<double> dp(n + 1, 1e18);\n    dp[0] = 0.0;\n\n    for (int i = 0; i < n; ++i) {\n        // Tentar ir da bateria i até qualquer bateria j futura\n        for (int j = i + 1; j < n; ++j) {\n            double dist = b[j].p - b[i].p;\n            double time = (dist * dist) / b[i].c;\n            if (dp[i] + time < dp[j]) {\n                dp[j] = dp[i] + time;\n            }\n        }\n        // Tentar ir da bateria i direto até o final D\n        double dist = d - b[i].p;\n        double time = (dist * dist) / b[i].c;\n        if (dp[i] + time < dp[n]) {\n            dp[n] = dp[i] + time;\n        }\n    }\n\n    cout << fixed << setprecision(3) << dp[n] << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <iomanip>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Battery {\n    double p;\n    double c;\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    double d;\n    if (!(cin >> n >> d)) return 0;\n\n    vector<Battery> b(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> b[i].p >> b[i].c;\n    }\n\n    // dp[i] armazenará o tempo mínimo para chegar à posição b[i].p\n    // O destino final é a posição D, que podemos tratar como o índice n\n    vector<double> dp(n + 1, 1e18);\n    dp[0] = 0.0;\n\n    for (int i = 0; i < n; ++i) {\n        // Tentar ir da bateria i até qualquer bateria j futura\n        for (int j = i + 1; j < n; ++j) {\n            double dist = b[j].p - b[i].p;\n            double time = (dist * dist) / b[i].c;\n            if (dp[i] + time < dp[j]) {\n                dp[j] = dp[i] + time;\n            }\n        }\n        // Tentar ir da bateria i direto até o final D\n        double dist = d - b[i].p;\n        double time = (dist * dist) / b[i].c;\n        if (dp[i] + time < dp[n]) {\n            dp[n] = dp[i] + time;\n        }\n    }\n\n    cout << fixed << setprecision(3) << dp[n] << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21613270000671037,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

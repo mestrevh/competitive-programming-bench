@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:54:00.206628+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 817,
+            "output_tokens": 93705,
+            "total_tokens": 94522
+        },
+        "cost_usd": {
+            "input_cost": 1.7e-05,
+            "output_cost": 0.046852,
+            "total_cost": 0.04687
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n, K;\n    if(!(cin >> n >> K)) return 0;\n    int m = n - 1;\n    vector<int> ea(m), eb(m);\n    vector<int> start(n + 1, 0);\n    for(int i = 0; i < m; ++i){\n        int a, b; cin >> a >> b; --a; --b;\n        ea[i] = a; eb[i] = b;\n        start[a + 1]++; start[b + 1]++;\n    }\n    for(int i = 0; i < n; ++i) start[i + 1] += start[i];\n    vector<int> adj(2 * (size_t)m);\n    {\n        vector<int> it(start.begin(), start.end() - 1);\n        for(int i = 0; i < m; ++i){\n            adj[it[ea[i]]++] = eb[i];\n            adj[it[eb[i]]++] = ea[i];\n        }\n    }\n    // BFS para obter ordem (pais antes de filhos) e pais\n    vector<int> order(n), par(n, -1);\n    {\n        int qt = 0;\n        order[qt++] = 0;\n        for(int qh = 0; qh < qt; ++qh){\n            int u = order[qh];\n            for(int j = start[u]; j < start[u + 1]; ++j){\n                int w = adj[j];\n                if(w != par[u]){\n                    par[w] = u;\n                    order[qt++] = w;\n                }\n            }\n        }\n    }\n    vector<int> f(n), b(n);\n    const int INF = 1000000000;\n\n    // Verifica se K radares de raio R bastam (guloso bottom-up, O(n))\n    auto check = [&](int R)->bool{\n        for(int i = 0; i < n; ++i){ f[i] = -1; b[i] = INF; }\n        long long cnt = 0;\n        for(int i = n - 1; i >= 1; --i){\n            int v = order[i];\n            int fv = f[v], bv = b[v];\n            if(bv > R){\n                // v nao esta coberto; v em si passa a ser pendente a distancia 0\n                if(fv < 0) fv = 0;\n            } else if(fv >= 0 && bv + fv <= R){\n                // radar mais proximo cobre todos os pendentes (o mais distante esta a fv)\n                fv = -1;\n            }\n            if(fv == R){\n                // pendente mais profundo a exatamente R: obrigado a colocar radar em v\n                cnt++; fv = -1; bv = 0;\n            }\n            int p = par[v];\n            if(fv >= 0 && fv + 1 > f[p]) f[p] = fv + 1;\n            if(bv + 1 < b[p]) b[p] = bv + 1;\n        }\n        {\n            int fv = f[0], bv = b[0];\n            if(bv > R){\n                if(fv < 0) fv = 0;\n            } else if(fv >= 0 && bv + fv <= R){\n                fv = -1;\n            }\n            if(fv >= 0) cnt++; // radar na raiz cobre os pendentes restantes (dist <= fv <= R)\n        }\n        return cnt <= K;\n    };\n\n    int lo = 0, hi = n;\n    while(lo < hi){\n        int mid = lo + (hi - lo) / 2;\n        if(check(mid)) hi = mid; else lo = mid + 1;\n    }\n    cout << lo << \"\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int n, K;\n    if(!(cin >> n >> K)) return 0;\n    int m = n - 1;\n    vector<int> ea(m), eb(m);\n    vector<int> start(n + 1, 0);\n    for(int i = 0; i < m; ++i){\n        int a, b; cin >> a >> b; --a; --b;\n        ea[i] = a; eb[i] = b;\n        start[a + 1]++; start[b + 1]++;\n    }\n    for(int i = 0; i < n; ++i) start[i + 1] += start[i];\n    vector<int> adj(2 * (size_t)m);\n    {\n        vector<int> it(start.begin(), start.end() - 1);\n        for(int i = 0; i < m; ++i){\n            adj[it[ea[i]]++] = eb[i];\n            adj[it[eb[i]]++] = ea[i];\n        }\n    }\n    // BFS para obter ordem (pais antes de filhos) e pais\n    vector<int> order(n), par(n, -1);\n    {\n        int qt = 0;\n        order[qt++] = 0;\n        for(int qh = 0; qh < qt; ++qh){\n            int u = order[qh];\n            for(int j = start[u]; j < start[u + 1]; ++j){\n                int w = adj[j];\n                if(w != par[u]){\n                    par[w] = u;\n                    order[qt++] = w;\n                }\n            }\n        }\n    }\n    vector<int> f(n), b(n);\n    const int INF = 1000000000;\n\n    // Verifica se K radares de raio R bastam (guloso bottom-up, O(n))\n    auto check = [&](int R)->bool{\n        for(int i = 0; i < n; ++i){ f[i] = -1; b[i] = INF; }\n        long long cnt = 0;\n        for(int i = n - 1; i >= 1; --i){\n            int v = order[i];\n            int fv = f[v], bv = b[v];\n            if(bv > R){\n                // v nao esta coberto; v em si passa a ser pendente a distancia 0\n                if(fv < 0) fv = 0;\n            } else if(fv >= 0 && bv + fv <= R){\n                // radar mais proximo cobre todos os pendentes (o mais distante esta a fv)\n                fv = -1;\n            }\n            if(fv == R){\n                // pendente mais profundo a exatamente R: obrigado a colocar radar em v\n                cnt++; fv = -1; bv = 0;\n            }\n            int p = par[v];\n            if(fv >= 0 && fv + 1 > f[p]) f[p] = fv + 1;\n            if(bv + 1 < b[p]) b[p] = bv + 1;\n        }\n        {\n            int fv = f[0], bv = b[0];\n            if(bv > R){\n                if(fv < 0) fv = 0;\n            } else if(fv >= 0 && bv + fv <= R){\n                fv = -1;\n            }\n            if(fv >= 0) cnt++; // radar na raiz cobre os pendentes restantes (dist <= fv <= R)\n        }\n        return cnt <= K;\n    };\n\n    int lo = 0, hi = n;\n    while(lo < hi){\n        int mid = lo + (hi - lo) / 2;\n        if(check(mid)) hi = mid; else lo = mid + 1;\n    }\n    cout << lo << \"\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2502550999997766,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

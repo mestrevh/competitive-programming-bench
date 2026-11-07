@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:00:38.864561+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 883,
+            "output_tokens": 469,
+            "total_tokens": 1862
+        },
+        "cost_usd": {
+            "input_cost": 0.000662,
+            "output_cost": 0.001759,
+            "total_cost": 0.002421
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length < 2) return;\n\n    const L = parseInt(input[0], 10);\n    const C = parseInt(input[1], 10);\n\n    const grid = [];\n    let startR = -1, startC = -1;\n\n    for (let i = 0; i < L; i++) {\n        const row = input[2 + i].split('');\n        grid.push(row);\n        for (let j = 0; j < C; j++) {\n            if (row[j] === 'o') {\n                startR = i;\n                startC = j;\n            }\n        }\n    }\n\n    const visited = Array.from({ length: L }, () => Array(C).fill(false));\n    visited[startR][startC] = true;\n\n    const dr = [-1, 1, 0, 0];\n    const dc = [0, 0, -1, 1];\n\n    let currR = startR;\n    let currC = startC;\n\n    while (true) {\n        let moved = false;\n        for (let d = 0; d < 4; d++) {\n            const nr = currR + dr[d];\n            const nc = currC + dc[d];\n\n            if (nr >= 0 && nr < L && nc >= 0 && nc < C) {\n                if (!visited[nr][nc] && grid[nr][nc] === 'H') {\n                    visited[nr][nc] = true;\n                    currR = nr;\n                    currC = nc;\n                    moved = true;\n                    break;\n                }\n            }\n        }\n        if (!moved) {\n            break;\n        }\n    }\n\n    console.log(`${currR + 1} ${currC + 1}`);\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (input.length < 2) return;\n\n    const L = parseInt(input[0], 10);\n    const C = parseInt(input[1], 10);\n\n    const grid = [];\n    let startR = -1, startC = -1;\n\n    for (let i = 0; i < L; i++) {\n        const row = input[2 + i].split('');\n        grid.push(row);\n        for (let j = 0; j < C; j++) {\n            if (row[j] === 'o') {\n                startR = i;\n                startC = j;\n            }\n        }\n    }\n\n    const visited = Array.from({ length: L }, () => Array(C).fill(false));\n    visited[startR][startC] = true;\n\n    const dr = [-1, 1, 0, 0];\n    const dc = [0, 0, -1, 1];\n\n    let currR = startR;\n    let currC = startC;\n\n    while (true) {\n        let moved = false;\n        for (let d = 0; d < 4; d++) {\n            const nr = currR + dr[d];\n            const nc = currC + dc[d];\n\n            if (nr >= 0 && nr < L && nc >= 0 && nc < C) {\n                if (!visited[nr][nc] && grid[nr][nc] === 'H') {\n                    visited[nr][nc] = true;\n                    currR = nr;\n                    currC = nc;\n                    moved = true;\n                    break;\n                }\n            }\n        }\n        if (!moved) {\n            break;\n        }\n    }\n\n    console.log(`${currR + 1} ${currC + 1}`);\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07203199999639764,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

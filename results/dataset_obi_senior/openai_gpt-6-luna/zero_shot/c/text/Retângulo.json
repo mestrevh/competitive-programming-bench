@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:11:10.801850+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 654,
+            "output_tokens": 842,
+            "total_tokens": 1496
+        },
+        "cost_usd": {
+            "input_cost": 6.5e-05,
+            "output_cost": 0.000421,
+            "total_cost": 0.000486
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *arcos = malloc((size_t)n * sizeof(long long));\n    long long *pos = malloc((size_t)n * sizeof(long long));\n\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &arcos[i]);\n        total += arcos[i];\n    }\n\n    pos[0] = 0;\n    for (int i = 1; i < n; i++)\n        pos[i] = pos[i - 1] + arcos[i - 1];\n\n    if (total % 2 != 0) {\n        puts(\"N\");\n        free(arcos);\n        free(pos);\n        return 0;\n    }\n\n    long long metade = total / 2;\n    int pares = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long alvo = pos[i] + metade;\n        if (alvo >= total) alvo -= total;\n\n        int esquerda = 0, direita = n - 1;\n        while (esquerda <= direita) {\n            int meio = esquerda + (direita - esquerda) / 2;\n            if (pos[meio] == alvo) {\n                if (i < meio) pares++;\n                break;\n            }\n            if (pos[meio] < alvo)\n                esquerda = meio + 1;\n            else\n                direita = meio - 1;\n        }\n    }\n\n    puts(pares >= 2 ? \"S\" : \"N\");\n\n    free(arcos);\n    free(pos);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *arcos = malloc((size_t)n * sizeof(long long));\n    long long *pos = malloc((size_t)n * sizeof(long long));\n\n    long long total = 0;\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &arcos[i]);\n        total += arcos[i];\n    }\n\n    pos[0] = 0;\n    for (int i = 1; i < n; i++)\n        pos[i] = pos[i - 1] + arcos[i - 1];\n\n    if (total % 2 != 0) {\n        puts(\"N\");\n        free(arcos);\n        free(pos);\n        return 0;\n    }\n\n    long long metade = total / 2;\n    int pares = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long alvo = pos[i] + metade;\n        if (alvo >= total) alvo -= total;\n\n        int esquerda = 0, direita = n - 1;\n        while (esquerda <= direita) {\n            int meio = esquerda + (direita - esquerda) / 2;\n            if (pos[meio] == alvo) {\n                if (i < meio) pares++;\n                break;\n            }\n            if (pos[meio] < alvo)\n                esquerda = meio + 1;\n            else\n                direita = meio - 1;\n        }\n    }\n\n    puts(pares >= 2 ? \"S\" : \"N\");\n\n    free(arcos);\n    free(pos);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13758329999109264,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

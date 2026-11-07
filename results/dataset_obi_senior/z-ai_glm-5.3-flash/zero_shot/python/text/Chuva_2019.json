@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T04:24:38.453154+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 931,
+            "output_tokens": 288,
+            "total_tokens": 1219
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.000144,
+            "total_cost": 0.000164
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0]); m = int(data[1])\n    grid = [list(data[2+i]) for i in range(n)]\n    q = deque()\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == 'o':\n                q.append((i, j))\n    while q:\n        i, j = q.popleft()\n        # vertical down\n        if i+1 < n and grid[i+1][j] == '.':\n            grid[i+1][j] = 'o'\n            q.append((i+1, j))\n        if j+1 < m and grid[i][j+1] == '.' and i+1 < n and grid[i+1][j+1] == '#':\n            grid[i][j+1] = 'o'\n            q.append((i, j+1))\n        if j-1 >= 0 and grid[i][j-1] == '.' and i+1 < n and grid[i+1][j-1] == '#':\n            grid[i][j-1] = 'o'\n            q.append((i, j-1))\n    print('\\n'.join(''.join(r) for r in grid))\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.read().split()\n    n = int(data[0]); m = int(data[1])\n    grid = [list(data[2+i]) for i in range(n)]\n    q = deque()\n    for i in range(n):\n        for j in range(m):\n            if grid[i][j] == 'o':\n                q.append((i, j))\n    while q:\n        i, j = q.popleft()\n        # vertical down\n        if i+1 < n and grid[i+1][j] == '.':\n            grid[i+1][j] = 'o'\n            q.append((i+1, j))\n        if j+1 < m and grid[i][j+1] == '.' and i+1 < n and grid[i+1][j+1] == '#':\n            grid[i][j+1] = 'o'\n            q.append((i, j+1))\n        if j-1 >= 0 and grid[i][j-1] == '.' and i+1 < n and grid[i+1][j-1] == '#':\n            grid[i][j-1] = 'o'\n            q.append((i, j-1))\n    print('\\n'.join(''.join(r) for r in grid))\n\nmain()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.09714110000095388,
+            "counts": {
+                "AC": 0,
+                "WA": 35,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

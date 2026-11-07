@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:34:39.793333+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 750,
+            "output_tokens": 418,
+            "total_tokens": 1168
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.000209,
+            "total_cost": 0.000284
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<int> adj(N, 0);\n    for (int i = 0; i < M; ++i) {\n        int X, Y;\n        cin >> X >> Y;\n        --X;\n        --Y;\n        adj[X] |= 1 << Y;\n        adj[Y] |= 1 << X;\n    }\n\n    int total = 1 << N;\n    vector<unsigned char> independent(total, 0);\n    independent[0] = 1;\n\n    int answer = 0;\n    for (int mask = 1; mask < total; ++mask) {\n        int vertex = __builtin_ctz(static_cast<unsigned>(mask));\n        int rest = mask & (mask - 1);\n        independent[mask] = independent[rest] && !(adj[vertex] & rest);\n        answer += independent[mask];\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<int> adj(N, 0);\n    for (int i = 0; i < M; ++i) {\n        int X, Y;\n        cin >> X >> Y;\n        --X;\n        --Y;\n        adj[X] |= 1 << Y;\n        adj[Y] |= 1 << X;\n    }\n\n    int total = 1 << N;\n    vector<unsigned char> independent(total, 0);\n    independent[0] = 1;\n\n    int answer = 0;\n    for (int mask = 1; mask < total; ++mask) {\n        int vertex = __builtin_ctz(static_cast<unsigned>(mask));\n        int rest = mask & (mask - 1);\n        independent[mask] = independent[rest] && !(adj[vertex] & rest);\n        answer += independent[mask];\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17046529999788618,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

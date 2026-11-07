@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:36:14.029175+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 859,
+            "output_tokens": 3422,
+            "total_tokens": 4281
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.008213,
+            "total_cost": 0.008215
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet p = 0;\n\nconst N = parseInt(data[p++], 10);\nconst M = parseInt(data[p++], 10);\n\nclass Fenwick {\n  constructor(n) {\n    this.n = n;\n    this.bit = new Float64Array(n + 2);\n  }\n\n  add(i, v) {\n    const n = this.n;\n    const bit = this.bit;\n    for (; i <= n; i += i & -i) {\n      bit[i] += v;\n    }\n  }\n\n  sum(i) {\n    const bit = this.bit;\n    let s = 0;\n    for (; i > 0; i -= i & -i) {\n      s += bit[i];\n    }\n    return s;\n  }\n\n  rangeAdd(l, r, v) {\n    this.add(l, v);\n    if (r + 1 <= this.n) {\n      this.add(r + 1, -v);\n    }\n  }\n}\n\nconst bitA = new Fenwick(N);\nconst bitB = new Fenwick(N);\nconst out = [];\n\nfor (let q = 0; q < M; q++) {\n  const type = parseInt(data[p++], 10);\n\n  if (type === 3) {\n    const i = parseInt(data[p++], 10);\n    const ans = bitA.sum(i) * i + bitB.sum(i);\n    out.push(String(ans));\n  } else {\n    const i = parseInt(data[p++], 10);\n    const V = parseInt(data[p++], 10);\n\n    if (type === 1) {\n      const l = i;\n      const r = Math.min(N, i + V - 1);\n      bitA.rangeAdd(l, r, -1);\n      bitB.rangeAdd(l, r, V + i);\n    } else {\n      const l = Math.max(1, i - V + 1);\n      const r = i;\n      bitA.rangeAdd(l, r, 1);\n      bitB.rangeAdd(l, r, V - i);\n    }\n  }\n}\n\nprocess.stdout.write(out.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet p = 0;\n\nconst N = parseInt(data[p++], 10);\nconst M = parseInt(data[p++], 10);\n\nclass Fenwick {\n  constructor(n) {\n    this.n = n;\n    this.bit = new Float64Array(n + 2);\n  }\n\n  add(i, v) {\n    const n = this.n;\n    const bit = this.bit;\n    for (; i <= n; i += i & -i) {\n      bit[i] += v;\n    }\n  }\n\n  sum(i) {\n    const bit = this.bit;\n    let s = 0;\n    for (; i > 0; i -= i & -i) {\n      s += bit[i];\n    }\n    return s;\n  }\n\n  rangeAdd(l, r, v) {\n    this.add(l, v);\n    if (r + 1 <= this.n) {\n      this.add(r + 1, -v);\n    }\n  }\n}\n\nconst bitA = new Fenwick(N);\nconst bitB = new Fenwick(N);\nconst out = [];\n\nfor (let q = 0; q < M; q++) {\n  const type = parseInt(data[p++], 10);\n\n  if (type === 3) {\n    const i = parseInt(data[p++], 10);\n    const ans = bitA.sum(i) * i + bitB.sum(i);\n    out.push(String(ans));\n  } else {\n    const i = parseInt(data[p++], 10);\n    const V = parseInt(data[p++], 10);\n\n    if (type === 1) {\n      const l = i;\n      const r = Math.min(N, i + V - 1);\n      bitA.rangeAdd(l, r, -1);\n      bitB.rangeAdd(l, r, V + i);\n    } else {\n      const l = Math.max(1, i - V + 1);\n      const r = i;\n      bitA.rangeAdd(l, r, 1);\n      bitB.rangeAdd(l, r, V - i);\n    }\n  }\n}\n\nprocess.stdout.write(out.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19668449999880977,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:39:05.776141+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 626,
+            "output_tokens": 547,
+            "total_tokens": 2542
+        },
+        "cost_usd": {
+            "input_cost": 0.00047,
+            "output_cost": 0.002051,
+            "total_cost": 0.002521
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int count = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (ptr >= count) {\n                count = in.read(buffer);\n                if (count <= 0) return -1;\n                ptr = 0;\n            }\n            return buffer[ptr++];\n        }\n\n        public int nextInt() throws IOException {\n            byte b = read();\n            while (b <= ' ' && b != -1) {\n                b = read();\n            }\n            if (b == -1) return -1;\n            int res = 0;\n            while (b >= '0' && b <= '9') {\n                res = res * 10 + (b - '0');\n                b = read();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        long k = scanner.nextInt();\n\n        long[] s = new long[n + 1];\n        s[0] = 0;\n        for (int i = 1; i <= n; i++) {\n            s[i] = s[i - 1] + scanner.nextInt();\n        }\n\n        long ans = 0;\n        int p1 = 0;\n        int p2 = 0;\n\n        for (int r = 1; r <= n; r++) {\n            long target = s[r] - k;\n            while (p1 < r && s[p1] < target) {\n                p1++;\n            }\n            while (p2 < r && s[p2] <= target) {\n                p2++;\n            }\n            if (p1 < r && s[p1] == target) {\n                ans += (p2 - p1);\n            }\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int count = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (ptr >= count) {\n                count = in.read(buffer);\n                if (count <= 0) return -1;\n                ptr = 0;\n            }\n            return buffer[ptr++];\n        }\n\n        public int nextInt() throws IOException {\n            byte b = read();\n            while (b <= ' ' && b != -1) {\n                b = read();\n            }\n            if (b == -1) return -1;\n            int res = 0;\n            while (b >= '0' && b <= '9') {\n                res = res * 10 + (b - '0');\n                b = read();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        long k = scanner.nextInt();\n\n        long[] s = new long[n + 1];\n        s[0] = 0;\n        for (int i = 1; i <= n; i++) {\n            s[i] = s[i - 1] + scanner.nextInt();\n        }\n\n        long ans = 0;\n        int p1 = 0;\n        int p2 = 0;\n\n        for (int r = 1; r <= n; r++) {\n            long target = s[r] - k;\n            while (p1 < r && s[p1] < target) {\n                p1++;\n            }\n            while (p2 < r && s[p2] <= target) {\n                p2++;\n            }\n            if (p1 < r && s[p1] == target) {\n                ans += (p2 - p1);\n            }\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10065279999980703,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

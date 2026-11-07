@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:34:17.845952+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 948,
+            "output_tokens": 5019,
+            "total_tokens": 5967
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.00251,
+            "total_cost": 0.00253
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nstatic char grid[505][505];\nstatic int qx[250005], qy[250005];\n\nint main(void) {\n    int n, f;\n    if (scanf(\"%d %d\", &n, &f) != 2) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    /* Se a fissura (0,0) não pode ser invadida, nada acontece */\n    if (grid[0][0] - '0' > f) {\n        for (int i = 0; i < n; i++) puts(grid[i]);\n        return 0;\n    }\n\n    /* BFS a partir de (0,0) */\n    int head = 0, tail = 0;\n    grid[0][0] = '*';\n    qx[tail] = 0; qy[tail] = 0; tail++;\n\n    while (head < tail) {\n        int x = qx[head], y = qy[head];\n        head++;\n\n        if (x > 0 && grid[x-1][y] != '*' && grid[x-1][y] - '0' <= f) {\n            grid[x-1][y] = '*'; qx[tail] = x-1; qy[tail] = y; tail++;\n        }\n        if (x < n-1 && grid[x+1][y] != '*' && grid[x+1][y] - '0' <= f) {\n            grid[x+1][y] = '*'; qx[tail] = x+1; qy[tail] = y; tail++;\n        }\n        if (y > 0 && grid[x][y-1] != '*' && grid[x][y-1] - '0' <= f) {\n            grid[x][y-1] = '*'; qx[tail] = x; qy[tail] = y-1; tail++;\n        }\n        if (y < n-1 && grid[x][y+1] != '*' && grid[x][y+1] - '0' <= f) {\n            grid[x][y+1] = '*'; qx[tail] = x; qy[tail] = y+1; tail++;\n        }\n    }\n\n    for (int i = 0; i < n; i++) puts(grid[i]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nstatic char grid[505][505];\nstatic int qx[250005], qy[250005];\n\nint main(void) {\n    int n, f;\n    if (scanf(\"%d %d\", &n, &f) != 2) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    /* Se a fissura (0,0) não pode ser invadida, nada acontece */\n    if (grid[0][0] - '0' > f) {\n        for (int i = 0; i < n; i++) puts(grid[i]);\n        return 0;\n    }\n\n    /* BFS a partir de (0,0) */\n    int head = 0, tail = 0;\n    grid[0][0] = '*';\n    qx[tail] = 0; qy[tail] = 0; tail++;\n\n    while (head < tail) {\n        int x = qx[head], y = qy[head];\n        head++;\n\n        if (x > 0 && grid[x-1][y] != '*' && grid[x-1][y] - '0' <= f) {\n            grid[x-1][y] = '*'; qx[tail] = x-1; qy[tail] = y; tail++;\n        }\n        if (x < n-1 && grid[x+1][y] != '*' && grid[x+1][y] - '0' <= f) {\n            grid[x+1][y] = '*'; qx[tail] = x+1; qy[tail] = y; tail++;\n        }\n        if (y > 0 && grid[x][y-1] != '*' && grid[x][y-1] - '0' <= f) {\n            grid[x][y-1] = '*'; qx[tail] = x; qy[tail] = y-1; tail++;\n        }\n        if (y < n-1 && grid[x][y+1] != '*' && grid[x][y+1] - '0' <= f) {\n            grid[x][y+1] = '*'; qx[tail] = x; qy[tail] = y+1; tail++;\n        }\n    }\n\n    for (int i = 0; i < n; i++) puts(grid[i]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.27120809999178164,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

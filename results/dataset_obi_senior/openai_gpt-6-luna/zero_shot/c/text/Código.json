@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:47:41.187633+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 789,
+            "output_tokens": 1985,
+            "total_tokens": 2774
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000992,
+            "total_cost": 0.001071
+        },
+        "raw_response": "```c\n#include <stdint.h>\n#include <stdio.h>\n#include <string.h>\n\n#define TABLE_SIZE 32768\n\ntypedef struct {\n    uint64_t keys[TABLE_SIZE];\n    unsigned char used[TABLE_SIZE];\n} Set;\n\nstatic Set prefixes[11];\nstatic Set suffixes[11];\n\nstatic uint64_t encode(const char *s, int start, int length) {\n    uint64_t value = 0;\n    for (int i = 0; i < length; i++) {\n        value = value * 26 + (uint64_t)(s[start + i] - 'a');\n    }\n    return value;\n}\n\nstatic uint64_t hash_value(uint64_t x) {\n    x += 0x9e3779b97f4a7c15ULL;\n    x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9ULL;\n    x = (x ^ (x >> 27)) * 0x94d049bb133111ebULL;\n    return x ^ (x >> 31);\n}\n\nstatic int contains(const Set *set, uint64_t key) {\n    uint32_t index = (uint32_t)hash_value(key) & (TABLE_SIZE - 1);\n    while (set->used[index]) {\n        if (set->keys[index] == key) return 1;\n        index = (index + 1) & (TABLE_SIZE - 1);\n    }\n    return 0;\n}\n\nstatic void insert(Set *set, uint64_t key) {\n    uint32_t index = (uint32_t)hash_value(key) & (TABLE_SIZE - 1);\n    while (set->used[index]) {\n        if (set->keys[index] == key) return;\n        index = (index + 1) & (TABLE_SIZE - 1);\n    }\n    set->used[index] = 1;\n    set->keys[index] = key;\n}\n\nint main(void) {\n    int n;\n    char s[11];\n\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%10s\", s);\n\n        if (contains(&prefixes[10], encode(s, 0, 10))) {\n            printf(\"%s\\n\", s);\n            return 0;\n        }\n\n        for (int split = 1; split <= 9; split++) {\n            if (contains(&suffixes[10 - split], encode(s, 0, 10 - split)) &&\n                contains(&prefixes[split], encode(s, 10 - split, split))) {\n                printf(\"%s\\n\", s);\n                return 0;\n            }\n        }\n\n        for (int length = 1; length <= 10; length++) {\n            insert(&prefixes[length], encode(s, 0, length));\n            insert(&suffixes[length], encode(s, 10 - length, length));\n        }\n    }\n\n    printf(\"ok\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdint.h>\n#include <stdio.h>\n#include <string.h>\n\n#define TABLE_SIZE 32768\n\ntypedef struct {\n    uint64_t keys[TABLE_SIZE];\n    unsigned char used[TABLE_SIZE];\n} Set;\n\nstatic Set prefixes[11];\nstatic Set suffixes[11];\n\nstatic uint64_t encode(const char *s, int start, int length) {\n    uint64_t value = 0;\n    for (int i = 0; i < length; i++) {\n        value = value * 26 + (uint64_t)(s[start + i] - 'a');\n    }\n    return value;\n}\n\nstatic uint64_t hash_value(uint64_t x) {\n    x += 0x9e3779b97f4a7c15ULL;\n    x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9ULL;\n    x = (x ^ (x >> 27)) * 0x94d049bb133111ebULL;\n    return x ^ (x >> 31);\n}\n\nstatic int contains(const Set *set, uint64_t key) {\n    uint32_t index = (uint32_t)hash_value(key) & (TABLE_SIZE - 1);\n    while (set->used[index]) {\n        if (set->keys[index] == key) return 1;\n        index = (index + 1) & (TABLE_SIZE - 1);\n    }\n    return 0;\n}\n\nstatic void insert(Set *set, uint64_t key) {\n    uint32_t index = (uint32_t)hash_value(key) & (TABLE_SIZE - 1);\n    while (set->used[index]) {\n        if (set->keys[index] == key) return;\n        index = (index + 1) & (TABLE_SIZE - 1);\n    }\n    set->used[index] = 1;\n    set->keys[index] = key;\n}\n\nint main(void) {\n    int n;\n    char s[11];\n\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%10s\", s);\n\n        if (contains(&prefixes[10], encode(s, 0, 10))) {\n            printf(\"%s\\n\", s);\n            return 0;\n        }\n\n        for (int split = 1; split <= 9; split++) {\n            if (contains(&suffixes[10 - split], encode(s, 0, 10 - split)) &&\n                contains(&prefixes[split], encode(s, 10 - split, split))) {\n                printf(\"%s\\n\", s);\n                return 0;\n            }\n        }\n\n        for (int length = 1; length <= 10; length++) {\n            insert(&prefixes[length], encode(s, 0, length));\n            insert(&suffixes[length], encode(s, 10 - length, length));\n        }\n    }\n\n    printf(\"ok\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17080019999411888,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

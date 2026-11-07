@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:16:37.563373+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 678,
+            "output_tokens": 672,
+            "total_tokens": 1350
+        },
+        "cost_usd": {
+            "input_cost": 6.8e-05,
+            "output_cost": 0.000336,
+            "total_cost": 0.000404
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n\n        BigDecimal bestPrice = null;\n        int bestGrams = 1;\n\n        for (int i = 0; i < n; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            BigDecimal price = new BigDecimal(st.nextToken());\n            int grams = Integer.parseInt(st.nextToken());\n\n            if (bestPrice == null\n                    || price.multiply(BigDecimal.valueOf(bestGrams))\n                            .compareTo(bestPrice.multiply(BigDecimal.valueOf(grams))) < 0) {\n                bestPrice = price;\n                bestGrams = grams;\n            }\n        }\n\n        BigDecimal cost = bestPrice.multiply(BigDecimal.valueOf(1000))\n                .divide(BigDecimal.valueOf(bestGrams), 2, RoundingMode.HALF_UP);\n\n        System.out.println(cost.toPlainString());\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n\n        BigDecimal bestPrice = null;\n        int bestGrams = 1;\n\n        for (int i = 0; i < n; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            BigDecimal price = new BigDecimal(st.nextToken());\n            int grams = Integer.parseInt(st.nextToken());\n\n            if (bestPrice == null\n                    || price.multiply(BigDecimal.valueOf(bestGrams))\n                            .compareTo(bestPrice.multiply(BigDecimal.valueOf(grams))) < 0) {\n                bestPrice = price;\n                bestGrams = grams;\n            }\n        }\n\n        BigDecimal cost = bestPrice.multiply(BigDecimal.valueOf(1000))\n                .divide(BigDecimal.valueOf(bestGrams), 2, RoundingMode.HALF_UP);\n\n        System.out.println(cost.toPlainString());\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0791425999996136,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

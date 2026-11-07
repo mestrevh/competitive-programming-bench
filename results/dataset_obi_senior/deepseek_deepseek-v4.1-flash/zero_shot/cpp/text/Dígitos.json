@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:17:27.464522+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 669,
+            "output_tokens": 8808,
+            "total_tokens": 9477
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.021139,
+            "total_cost": 0.021141
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nbool check(const string& s, int L) {\n    int n = (int)s.size();\n    string cur = s.substr(0, L);\n    int pos = L;\n\n    while (pos < n) {\n        int i = (int)cur.size() - 1;\n        while (i >= 0 && cur[i] == '9') {\n            cur[i] = '0';\n            --i;\n        }\n        if (i < 0) {\n            cur.insert(cur.begin(), '1');\n        } else {\n            ++cur[i];\n        }\n\n        int len = (int)cur.size();\n        if (pos + len > n) return false;\n        if (s.compare(pos, len, cur) != 0) return false;\n        pos += len;\n    }\n\n    return true;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    string s;\n    s.reserve(N);\n\n    for (int i = 0; i < N; ++i) {\n        int d;\n        cin >> d;\n        s.push_back(char('0' + d));\n    }\n\n    for (int L = 1; L <= N; ++L) {\n        if (s[0] == '0') continue;\n        if (check(s, L)) {\n            cout << s.substr(0, L) << '\\n';\n            return 0;\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nbool check(const string& s, int L) {\n    int n = (int)s.size();\n    string cur = s.substr(0, L);\n    int pos = L;\n\n    while (pos < n) {\n        int i = (int)cur.size() - 1;\n        while (i >= 0 && cur[i] == '9') {\n            cur[i] = '0';\n            --i;\n        }\n        if (i < 0) {\n            cur.insert(cur.begin(), '1');\n        } else {\n            ++cur[i];\n        }\n\n        int len = (int)cur.size();\n        if (pos + len > n) return false;\n        if (s.compare(pos, len, cur) != 0) return false;\n        pos += len;\n    }\n\n    return true;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    string s;\n    s.reserve(N);\n\n    for (int i = 0; i < N; ++i) {\n        int d;\n        cin >> d;\n        s.push_back(char('0' + d));\n    }\n\n    for (int L = 1; L <= N; ++L) {\n        if (s[0] == '0') continue;\n        if (check(s, L)) {\n            cout << s.substr(0, L) << '\\n';\n            return 0;\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10838650000005146,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

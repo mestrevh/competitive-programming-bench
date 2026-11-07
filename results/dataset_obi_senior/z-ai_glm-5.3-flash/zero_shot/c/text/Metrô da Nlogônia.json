@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:37:57.503979+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 967,
+            "output_tokens": 5647,
+            "total_tokens": 6614
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.002824,
+            "total_cost": 0.002844
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nstatic char *ibuf;\nstatic size_t ipos = 0, ilen = 0;\n\nstatic int readInt(void) {\n    while (ipos < ilen && (ibuf[ipos] < '0' || ibuf[ipos] > '9')) ipos++;\n    int x = 0;\n    while (ipos < ilen && ibuf[ipos] >= '0' && ibuf[ipos] <= '9')\n        x = x * 10 + (ibuf[ipos++] - '0');\n    return x;\n}\n\nstatic int *head_, *nxt_, *to_, *dist_, *par_, *que_;\nstatic int ecnt;\n\nstatic void addEdge(int a, int b) {\n    ecnt++; to_[ecnt] = b; nxt_[ecnt] = head_[a]; head_[a] = ecnt;\n    ecnt++; to_[ecnt] = a; nxt_[ecnt] = head_[b]; head_[b] = ecnt;\n}\n\nstatic int bfs(int s, int n) {\n    for (int i = 1; i <= n; i++) { dist_[i] = -1; par_[i] = 0; }\n    int qh = 0, qt = 0, far = s;\n    que_[qt++] = s; dist_[s] = 0;\n    while (qh < qt) {\n        int u = que_[qh++];\n        if (dist_[u] > dist_[far]) far = u;\n        for (int e = head_[u]; e; e = nxt_[e]) {\n            int v = to_[e];\n            if (dist_[v] < 0) {\n                dist_[v] = dist_[u] + 1;\n                par_[v] = u;\n                que_[qt++] = v;\n            }\n        }\n    }\n    return far;\n}\n\n/* centro de uma arvore: no que minimiza a excentricidade (raio = ceil(D/2)) */\nstatic int centerOf(int n, int start) {\n    int u = bfs(start, n);\n    int v = bfs(u, n);          /* v extremo do diametro */\n    int L = dist_[v];           /* diametro em arestas */\n    int steps = L - L / 2;      /* ceil(L/2) passos de volta de v */\n    int c = v;\n    while (steps--) c = par_[c];\n    return c;\n}\n\nint main(void) {\n    size_t cap = 1 << 20, r;\n    ibuf = (char *)malloc(cap);\n    ilen = 0;\n    while ((r = fread(ibuf + ilen, 1, cap - ilen, stdin)) > 0) {\n        ilen += r;\n        if (ilen == cap) {\n            cap <<= 1;\n            ibuf = (char *)realloc(ibuf, cap);\n        }\n    }\n\n    int N = readInt();\n    int M = readInt();\n    int mx = N > M ? N : M;\n\n    head_ = (int *)calloc((size_t)mx + 2, sizeof(int));\n    dist_ = (int *)malloc(((size_t)mx + 2) * sizeof(int));\n    par_  = (int *)malloc(((size_t)mx + 2) * sizeof(int));\n    que_  = (int *)malloc(((size_t)mx + 2) * sizeof(int));\n    nxt_  = (int *)malloc(((size_t)mx + 2) * 2 * sizeof(int));\n    to_   = (int *)malloc(((size_t)mx + 2) * 2 * sizeof(int));\n\n    /* sistema Circulo */\n    ecnt = 0;\n    for (int i = 0; i < N - 1; i++) {\n        int a = readInt(), b = readInt();\n        addEdge(a, b);\n    }\n    int c1 = centerOf(N, 1);\n\n    /* sistema Quadrado */\n    memset(head_, 0, ((size_t)mx + 2) * sizeof(int));\n    ecnt = 0;\n    for (int i = 0; i < M - 1; i++) {\n        int a = readInt(), b = readInt();\n        addEdge(a, b);\n    }\n    int c2 = centerOf(M, 1);\n\n    printf(\"%d %d\\n\", c1, c2);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nstatic char *ibuf;\nstatic size_t ipos = 0, ilen = 0;\n\nstatic int readInt(void) {\n    while (ipos < ilen && (ibuf[ipos] < '0' || ibuf[ipos] > '9')) ipos++;\n    int x = 0;\n    while (ipos < ilen && ibuf[ipos] >= '0' && ibuf[ipos] <= '9')\n        x = x * 10 + (ibuf[ipos++] - '0');\n    return x;\n}\n\nstatic int *head_, *nxt_, *to_, *dist_, *par_, *que_;\nstatic int ecnt;\n\nstatic void addEdge(int a, int b) {\n    ecnt++; to_[ecnt] = b; nxt_[ecnt] = head_[a]; head_[a] = ecnt;\n    ecnt++; to_[ecnt] = a; nxt_[ecnt] = head_[b]; head_[b] = ecnt;\n}\n\nstatic int bfs(int s, int n) {\n    for (int i = 1; i <= n; i++) { dist_[i] = -1; par_[i] = 0; }\n    int qh = 0, qt = 0, far = s;\n    que_[qt++] = s; dist_[s] = 0;\n    while (qh < qt) {\n        int u = que_[qh++];\n        if (dist_[u] > dist_[far]) far = u;\n        for (int e = head_[u]; e; e = nxt_[e]) {\n            int v = to_[e];\n            if (dist_[v] < 0) {\n                dist_[v] = dist_[u] + 1;\n                par_[v] = u;\n                que_[qt++] = v;\n            }\n        }\n    }\n    return far;\n}\n\n/* centro de uma arvore: no que minimiza a excentricidade (raio = ceil(D/2)) */\nstatic int centerOf(int n, int start) {\n    int u = bfs(start, n);\n    int v = bfs(u, n);          /* v extremo do diametro */\n    int L = dist_[v];           /* diametro em arestas */\n    int steps = L - L / 2;      /* ceil(L/2) passos de volta de v */\n    int c = v;\n    while (steps--) c = par_[c];\n    return c;\n}\n\nint main(void) {\n    size_t cap = 1 << 20, r;\n    ibuf = (char *)malloc(cap);\n    ilen = 0;\n    while ((r = fread(ibuf + ilen, 1, cap - ilen, stdin)) > 0) {\n        ilen += r;\n        if (ilen == cap) {\n            cap <<= 1;\n            ibuf = (char *)realloc(ibuf, cap);\n        }\n    }\n\n    int N = readInt();\n    int M = readInt();\n    int mx = N > M ? N : M;\n\n    head_ = (int *)calloc((size_t)mx + 2, sizeof(int));\n    dist_ = (int *)malloc(((size_t)mx + 2) * sizeof(int));\n    par_  = (int *)malloc(((size_t)mx + 2) * sizeof(int));\n    que_  = (int *)malloc(((size_t)mx + 2) * sizeof(int));\n    nxt_  = (int *)malloc(((size_t)mx + 2) * 2 * sizeof(int));\n    to_   = (int *)malloc(((size_t)mx + 2) * 2 * sizeof(int));\n\n    /* sistema Circulo */\n    ecnt = 0;\n    for (int i = 0; i < N - 1; i++) {\n        int a = readInt(), b = readInt();\n        addEdge(a, b);\n    }\n    int c1 = centerOf(N, 1);\n\n    /* sistema Quadrado */\n    memset(head_, 0, ((size_t)mx + 2) * sizeof(int));\n    ecnt = 0;\n    for (int i = 0; i < M - 1; i++) {\n        int a = readInt(), b = readInt();\n        addEdge(a, b);\n    }\n    int c2 = centerOf(M, 1);\n\n    printf(\"%d %d\\n\", c1, c2);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12454589997651055,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T04:12:13.269709+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1204,
+            "output_tokens": 423,
+            "total_tokens": 4628
+        },
+        "cost_usd": {
+            "input_cost": 0.000903,
+            "output_cost": 0.001586,
+            "total_cost": 0.002489
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextBigInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0n;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10n + BigInt(buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const pBig = nextBigInt();\n    if (pBig === null) return;\n    const P = Number(pBig);\n\n    const out = [];\n\n    for (let i = 0; i < P; i++) {\n        const L = nextBigInt();\n        const A = nextBigInt();\n        const B = nextBigInt();\n\n        let low = 0n;\n        let high = B - A;\n        const maxM = 5000000n;\n        if (high > maxM) {\n            high = maxM;\n        }\n\n        let ans = 0n;\n        while (low <= high) {\n            const mid = (low + high) >> 1n;\n            const sum = mid * A + (mid * (mid - 1n)) / 2n;\n            if (sum < L) {\n                ans = mid;\n                low = mid + 1n;\n            } else {\n                high = mid - 1n;\n            }\n        }\n\n        out.push((ans + 1n).toString());\n    }\n\n    console.log(out.join('\\n'));\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextBigInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0n;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10n + BigInt(buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const pBig = nextBigInt();\n    if (pBig === null) return;\n    const P = Number(pBig);\n\n    const out = [];\n\n    for (let i = 0; i < P; i++) {\n        const L = nextBigInt();\n        const A = nextBigInt();\n        const B = nextBigInt();\n\n        let low = 0n;\n        let high = B - A;\n        const maxM = 5000000n;\n        if (high > maxM) {\n            high = maxM;\n        }\n\n        let ans = 0n;\n        while (low <= high) {\n            const mid = (low + high) >> 1n;\n            const sum = mid * A + (mid * (mid - 1n)) / 2n;\n            if (sum < L) {\n                ans = mid;\n                low = mid + 1n;\n            } else {\n                high = mid - 1n;\n            }\n        }\n\n        out.push((ans + 1n).toString());\n    }\n\n    console.log(out.join('\\n'));\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11516120002488606,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

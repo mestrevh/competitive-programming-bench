@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:39:59.261154+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 321,
+            "total_tokens": 1078
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.00016,
+            "total_cost": 0.000177
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint n;\nvector<vector<int>> adj;\nvector<int> sz;\nlong long best = LLONG_MAX;\n\nvoid dfs(int u, int p) {\n    sz[u] = 1;\n    for (int v : adj[u]) {\n        if (v == p) continue;\n        dfs(v, u);\n        sz[u] += sz[v];\n    }\n    if (p != -1) {\n        long long diff = (long long)n - 2LL * sz[u];\n        if (diff < 0) diff = -diff;\n        best = min(best, diff);\n    }\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cin >> n;\n    adj.assign(n + 1, {});\n    sz.assign(n + 1, 0);\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        cin >> a >> b;\n        adj[a].push_back(b);\n        adj[b].push_back(a);\n    }\n    if (n == 2) {\n        cout << 0 << \"\\n\";\n        return 0;\n    }\n    dfs(1, -1);\n    cout << best << \"\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint n;\nvector<vector<int>> adj;\nvector<int> sz;\nlong long best = LLONG_MAX;\n\nvoid dfs(int u, int p) {\n    sz[u] = 1;\n    for (int v : adj[u]) {\n        if (v == p) continue;\n        dfs(v, u);\n        sz[u] += sz[v];\n    }\n    if (p != -1) {\n        long long diff = (long long)n - 2LL * sz[u];\n        if (diff < 0) diff = -diff;\n        best = min(best, diff);\n    }\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    cin >> n;\n    adj.assign(n + 1, {});\n    sz.assign(n + 1, 0);\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        cin >> a >> b;\n        adj[a].push_back(b);\n        adj[b].push_back(a);\n    }\n    if (n == 2) {\n        cout << 0 << \"\\n\";\n        return 0;\n    }\n    dfs(1, -1);\n    cout << best << \"\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1825687000018661,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

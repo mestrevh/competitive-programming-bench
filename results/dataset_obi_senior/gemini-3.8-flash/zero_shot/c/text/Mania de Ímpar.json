@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:25:58.970157+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1103,
+            "output_tokens": 505,
+            "total_tokens": 3035
+        },
+        "cost_usd": {
+            "input_cost": 0.000827,
+            "output_cost": 0.001894,
+            "total_cost": 0.002721
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAX 105\n\nint N, M;\nint G[MAX][MAX];\nint sol[MAX][MAX];\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            scanf(\"%d\", &G[i][j]);\n        }\n    }\n\n    // Padrão 0: paridade da célula (i, j) deve ser (i + j) % 2\n    // Padrão 1: paridade da célula (i, j) deve ser 1 - (i + j) % 2\n    int cost[2] = {0, 0};\n\n    for (int p = 0; p < 2; p++) {\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                int expected_parity = (p == 0) ? ((i + j) % 2) : (1 - (i + j) % 2);\n                if ((G[i][j] % 2) != expected_parity) {\n                    cost[p]++;\n                }\n            }\n        }\n    }\n\n    int best_p = (cost[0] <= cost[1]) ? 0 : 1;\n\n    printf(\"%d\\n\", cost[best_p]);\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int expected_parity = (best_p == 0) ? ((i + j) % 2) : (1 - (i + j) % 2);\n            int val = G[i][j];\n            if ((val % 2) != expected_parity) {\n                val++;\n            }\n            printf(\"%d%c\", val, (j == M - 1) ? '\\n' : ' ');\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAX 105\n\nint N, M;\nint G[MAX][MAX];\nint sol[MAX][MAX];\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            scanf(\"%d\", &G[i][j]);\n        }\n    }\n\n    // Padrão 0: paridade da célula (i, j) deve ser (i + j) % 2\n    // Padrão 1: paridade da célula (i, j) deve ser 1 - (i + j) % 2\n    int cost[2] = {0, 0};\n\n    for (int p = 0; p < 2; p++) {\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                int expected_parity = (p == 0) ? ((i + j) % 2) : (1 - (i + j) % 2);\n                if ((G[i][j] % 2) != expected_parity) {\n                    cost[p]++;\n                }\n            }\n        }\n    }\n\n    int best_p = (cost[0] <= cost[1]) ? 0 : 1;\n\n    printf(\"%d\\n\", cost[best_p]);\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            int expected_parity = (best_p == 0) ? ((i + j) % 2) : (1 - (i + j) % 2);\n            int val = G[i][j];\n            if ((val % 2) != expected_parity) {\n                val++;\n            }\n            printf(\"%d%c\", val, (j == M - 1) ? '\\n' : ' ');\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1436896999948658,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

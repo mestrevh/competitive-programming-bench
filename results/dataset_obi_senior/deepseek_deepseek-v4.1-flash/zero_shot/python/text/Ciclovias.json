@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:32:51.503537+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1018,
+            "output_tokens": 32402,
+            "total_tokens": 33420
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.077765,
+            "total_cost": 0.077768
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    m = data[1]\n\n    adj = [[] for _ in range(n)]\n    to = []\n\n    pos = 2\n    for _ in range(m):\n        a = data[pos] - 1\n        b = data[pos + 1] - 1\n        pos += 2\n\n        idx = len(to)\n        to.append(b)\n        adj[a].append(idx)\n\n        to.append(a)\n        adj[b].append(idx + 1)\n\n    del data\n\n    edge_count = 2 * m\n    val = [0] * edge_count\n    best_greater = [0] * n\n\n    for v in range(n - 1, -1, -1):\n        lst = adj[v]\n        if not lst:\n            continue\n\n        for idx in lst:\n            w = to[idx]\n            if w < v:\n                x = best_greater[w] + 1\n                if x < 2:\n                    x = 2\n                val[idx] = x\n\n        lst.sort(key=to.__getitem__)\n\n        suffix_max = 0\n        for i in range(len(lst) - 1, -1, -1):\n            idx = lst[i]\n            u = to[idx]\n\n            x = suffix_max + 1\n            if x < 2:\n                x = 2\n            val[idx ^ 1] = x\n\n            cur = val[idx]\n            if cur > suffix_max:\n                suffix_max = cur\n\n        for idx in lst:\n            w = to[idx]\n            x = val[idx ^ 1]\n            if x > best_greater[w]:\n                best_greater[w] = x\n\n    ans = []\n    for i in range(n):\n        best = 1\n        for idx in adj[i]:\n            if val[idx] > best:\n                best = val[idx]\n        ans.append(str(best))\n\n    sys.stdout.write(\" \".join(ans) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve() -> None:\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    m = data[1]\n\n    adj = [[] for _ in range(n)]\n    to = []\n\n    pos = 2\n    for _ in range(m):\n        a = data[pos] - 1\n        b = data[pos + 1] - 1\n        pos += 2\n\n        idx = len(to)\n        to.append(b)\n        adj[a].append(idx)\n\n        to.append(a)\n        adj[b].append(idx + 1)\n\n    del data\n\n    edge_count = 2 * m\n    val = [0] * edge_count\n    best_greater = [0] * n\n\n    for v in range(n - 1, -1, -1):\n        lst = adj[v]\n        if not lst:\n            continue\n\n        for idx in lst:\n            w = to[idx]\n            if w < v:\n                x = best_greater[w] + 1\n                if x < 2:\n                    x = 2\n                val[idx] = x\n\n        lst.sort(key=to.__getitem__)\n\n        suffix_max = 0\n        for i in range(len(lst) - 1, -1, -1):\n            idx = lst[i]\n            u = to[idx]\n\n            x = suffix_max + 1\n            if x < 2:\n                x = 2\n            val[idx ^ 1] = x\n\n            cur = val[idx]\n            if cur > suffix_max:\n                suffix_max = cur\n\n        for idx in lst:\n            w = to[idx]\n            x = val[idx ^ 1]\n            if x > best_greater[w]:\n                best_greater[w] = x\n\n    ans = []\n    for i in range(n):\n        best = 1\n        for idx in adj[i]:\n            if val[idx] > best:\n                best = val[idx]\n        ans.append(str(best))\n\n    sys.stdout.write(\" \".join(ans) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.0026135000007343,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

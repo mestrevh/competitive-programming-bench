@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:49:14.295326+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 584,
+            "output_tokens": 411,
+            "total_tokens": 1731
+        },
+        "cost_usd": {
+            "input_cost": 0.000438,
+            "output_cost": 0.001541,
+            "total_cost": 0.001979
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    string s;\n    cin >> s;\n\n    vector<int> divisors;\n    for (int i = 1; i * i <= n; ++i) {\n        if (n % i == 0) {\n            divisors.push_back(i);\n            if (i * i != n && i != 1) {\n                divisors.push_back(n / i);\n            }\n        }\n    }\n    sort(divisors.begin(), divisors.end());\n\n    for (int L : divisors) {\n        vector<int> count_root(26, 0);\n        for (int i = 0; i < L; ++i) {\n            count_root[s[i] - 'a']++;\n        }\n\n        bool ok = true;\n        for (int i = L; i < n; i += L) {\n            vector<int> count_block(26, 0);\n            for (int j = 0; j < L; ++j) {\n                count_block[s[i + j] - 'a']++;\n            }\n            if (count_block != count_root) {\n                ok = false;\n                break;\n            }\n        }\n\n        if (ok) {\n            cout << s.substr(0, L) << \"\\n\";\n            return 0;\n        }\n    }\n\n    cout << \"*\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    string s;\n    cin >> s;\n\n    vector<int> divisors;\n    for (int i = 1; i * i <= n; ++i) {\n        if (n % i == 0) {\n            divisors.push_back(i);\n            if (i * i != n && i != 1) {\n                divisors.push_back(n / i);\n            }\n        }\n    }\n    sort(divisors.begin(), divisors.end());\n\n    for (int L : divisors) {\n        vector<int> count_root(26, 0);\n        for (int i = 0; i < L; ++i) {\n            count_root[s[i] - 'a']++;\n        }\n\n        bool ok = true;\n        for (int i = L; i < n; i += L) {\n            vector<int> count_block(26, 0);\n            for (int j = 0; j < L; ++j) {\n                count_block[s[i + j] - 'a']++;\n            }\n            if (count_block != count_root) {\n                ok = false;\n                break;\n            }\n        }\n\n        if (ok) {\n            cout << s.substr(0, L) << \"\\n\";\n            return 0;\n        }\n    }\n\n    cout << \"*\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1700591999979224,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

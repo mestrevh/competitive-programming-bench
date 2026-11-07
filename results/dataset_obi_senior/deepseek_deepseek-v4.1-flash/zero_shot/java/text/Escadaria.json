@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:57:58.149222+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1147,
+            "output_tokens": 4583,
+            "total_tokens": 5730
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.010999,
+            "total_cost": 0.011003
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n\n        int[] A = new int[N];\n        int idx = 0;\n        while (idx < N) {\n            if (!st.hasMoreTokens()) {\n                st = new StringTokenizer(br.readLine());\n            }\n            while (st.hasMoreTokens() && idx < N) {\n                A[idx++] = Integer.parseInt(st.nextToken());\n            }\n        }\n\n        int INF = 1_000_000_000;\n        int[] left = new int[N];\n        int best = INF;\n\n        for (int i = 0; i < N; i++) {\n            if (A[i] != -1) {\n                best = Math.min(best, A[i] - i);\n            }\n            left[i] = best == INF ? INF : best + i;\n        }\n\n        int[] ans = new int[N];\n        best = INF;\n\n        for (int i = N - 1; i >= 0; i--) {\n            if (A[i] != -1) {\n                best = Math.min(best, A[i] + i);\n            }\n            int right = best == INF ? INF : best - i;\n            ans[i] = Math.min(left[i], right);\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < N; i++) {\n            if (i > 0) sb.append(' ');\n            sb.append(ans[i]);\n        }\n        sb.append('\\n');\n        System.out.print(sb.toString());\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n\n        int[] A = new int[N];\n        int idx = 0;\n        while (idx < N) {\n            if (!st.hasMoreTokens()) {\n                st = new StringTokenizer(br.readLine());\n            }\n            while (st.hasMoreTokens() && idx < N) {\n                A[idx++] = Integer.parseInt(st.nextToken());\n            }\n        }\n\n        int INF = 1_000_000_000;\n        int[] left = new int[N];\n        int best = INF;\n\n        for (int i = 0; i < N; i++) {\n            if (A[i] != -1) {\n                best = Math.min(best, A[i] - i);\n            }\n            left[i] = best == INF ? INF : best + i;\n        }\n\n        int[] ans = new int[N];\n        best = INF;\n\n        for (int i = N - 1; i >= 0; i--) {\n            if (A[i] != -1) {\n                best = Math.min(best, A[i] + i);\n            }\n            int right = best == INF ? INF : best - i;\n            ans[i] = Math.min(left[i], right);\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < N; i++) {\n            if (i > 0) sb.append(' ');\n            sb.append(ans[i]);\n        }\n        sb.append('\\n');\n        System.out.print(sb.toString());\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1498655999894254,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

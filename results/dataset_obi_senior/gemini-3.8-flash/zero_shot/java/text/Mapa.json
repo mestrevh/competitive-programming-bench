@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:31:07.420869+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 883,
+            "output_tokens": 568,
+            "total_tokens": 2905
+        },
+        "cost_usd": {
+            "input_cost": 0.000662,
+            "output_cost": 0.00213,
+            "total_cost": 0.002792
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer tokenizer = new StringTokenizer(line);\n        int L = Integer.parseInt(tokenizer.nextToken());\n        int C = Integer.parseInt(tokenizer.nextToken());\n\n        char[][] map = new char[L][C];\n        int startR = -1;\n        int startC = -1;\n\n        for (int i = 0; i < L; i++) {\n            String row = reader.readLine();\n            for (int j = 0; j < C; j++) {\n                map[i][j] = row.charAt(j);\n                if (map[i][j] == 'o') {\n                    startR = i;\n                    startC = j;\n                }\n            }\n        }\n\n        boolean[][] visited = new boolean[L][C];\n        visited[startR][startC] = true;\n\n        int currR = startR;\n        int currC = startC;\n\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        while (true) {\n            boolean moved = false;\n            for (int d = 0; d < 4; d++) {\n                int nr = currR + dr[d];\n                int nc = currC + dc[d];\n\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C) {\n                    if (!visited[nr][nc] && map[nr][nc] == 'H') {\n                        visited[nr][nc] = true;\n                        currR = nr;\n                        currC = nc;\n                        moved = true;\n                        break;\n                    }\n                }\n            }\n            if (!moved) {\n                break;\n            }\n        }\n\n        // As coordenadas na saída são 1-indexadas\n        System.out.println((currR + 1) + \" \" + (currC + 1));\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer tokenizer = new StringTokenizer(line);\n        int L = Integer.parseInt(tokenizer.nextToken());\n        int C = Integer.parseInt(tokenizer.nextToken());\n\n        char[][] map = new char[L][C];\n        int startR = -1;\n        int startC = -1;\n\n        for (int i = 0; i < L; i++) {\n            String row = reader.readLine();\n            for (int j = 0; j < C; j++) {\n                map[i][j] = row.charAt(j);\n                if (map[i][j] == 'o') {\n                    startR = i;\n                    startC = j;\n                }\n            }\n        }\n\n        boolean[][] visited = new boolean[L][C];\n        visited[startR][startC] = true;\n\n        int currR = startR;\n        int currC = startC;\n\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        while (true) {\n            boolean moved = false;\n            for (int d = 0; d < 4; d++) {\n                int nr = currR + dr[d];\n                int nc = currC + dc[d];\n\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C) {\n                    if (!visited[nr][nc] && map[nr][nc] == 'H') {\n                        visited[nr][nc] = true;\n                        currR = nr;\n                        currC = nc;\n                        moved = true;\n                        break;\n                    }\n                }\n            }\n            if (!moved) {\n                break;\n            }\n        }\n\n        // As coordenadas na saída são 1-indexadas\n        System.out.println((currR + 1) + \" \" + (currC + 1));\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10686369999893941,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

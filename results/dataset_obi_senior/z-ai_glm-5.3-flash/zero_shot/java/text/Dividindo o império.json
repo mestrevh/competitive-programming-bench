@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T18:41:13.628588+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 741,
+            "output_tokens": 1719,
+            "total_tokens": 2460
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.00086,
+            "total_cost": 0.000875
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n        int N = nextInt(in);\n\n        int[] head = new int[N + 1];\n        int[] nxt = new int[2 * (N - 1)];\n        int[] to = new int[2 * (N - 1)];\n        int idx = 0;\n\n        // head[u] = -1 means no edges yet\n        for (int i = 0; i < N + 1; i++) head[i] = -1;\n\n        for (int i = 0; i < N - 1; i++) {\n            int a = nextInt(in);\n            int b = nextInt(in);\n            to[idx] = b; nxt[idx] = head[a]; head[a] = idx; idx++;\n            to[idx] = a; nxt[idx] = head[b]; head[b] = idx; idx++;\n        }\n\n        // Iterative DFS to get traversal order and parents (avoids stack overflow)\n        int[] parent = new int[N + 1];\n        int[] order = new int[N];\n        boolean[] visited = new boolean[N + 1];\n        int[] stack = new int[N];\n        int top = 0, cnt = 0;\n\n        stack[top++] = 1;\n        visited[1] = true;\n        parent[1] = 0;\n\n        while (top > 0) {\n            int u = stack[--top];\n            order[cnt++] = u;\n            for (int e = head[u]; e != -1; e = nxt[e]) {\n                int v = to[e];\n                if (!visited[v]) {\n                    visited[v] = true;\n                    parent[v] = u;\n                    stack[top++] = v;\n                }\n            }\n        }\n\n        // Compute subtree sizes in reverse DFS order\n        int[] size = new int[N + 1];\n        for (int i = 1; i <= N; i++) size[i] = 1;\n\n        int best = Integer.MAX_VALUE;\n        for (int i = N - 1; i >= 1; i--) {\n            int u = order[i];\n            size[parent[u]] += size[u];\n            // Removing edge (parent[u], u) splits tree into size[u] and N - size[u]\n            int diff = Math.abs(N - 2 * size[u]);\n            if (diff < best) best = diff;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(best).append('\\n');\n        System.out.print(sb);\n    }\n\n    private static int nextInt(DataInputStream in) throws IOException {\n        int ret = 0;\n        int b;\n        boolean neg = false;\n        do {\n            b = in.read();\n        } while (b != '-' && (b < '0' || b > '9'));\n        if (b == '-') {\n            neg = true;\n            b = in.read();\n        }\n        while (b >= '0' && b <= '9') {\n            ret = ret * 10 + (b - '0');\n            b = in.read();\n        }\n        return neg ? -ret : ret;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n\n    public static void main(String[] args) throws IOException {\n        DataInputStream in = new DataInputStream(new BufferedInputStream(System.in, 1 << 16));\n        int N = nextInt(in);\n\n        int[] head = new int[N + 1];\n        int[] nxt = new int[2 * (N - 1)];\n        int[] to = new int[2 * (N - 1)];\n        int idx = 0;\n\n        // head[u] = -1 means no edges yet\n        for (int i = 0; i < N + 1; i++) head[i] = -1;\n\n        for (int i = 0; i < N - 1; i++) {\n            int a = nextInt(in);\n            int b = nextInt(in);\n            to[idx] = b; nxt[idx] = head[a]; head[a] = idx; idx++;\n            to[idx] = a; nxt[idx] = head[b]; head[b] = idx; idx++;\n        }\n\n        // Iterative DFS to get traversal order and parents (avoids stack overflow)\n        int[] parent = new int[N + 1];\n        int[] order = new int[N];\n        boolean[] visited = new boolean[N + 1];\n        int[] stack = new int[N];\n        int top = 0, cnt = 0;\n\n        stack[top++] = 1;\n        visited[1] = true;\n        parent[1] = 0;\n\n        while (top > 0) {\n            int u = stack[--top];\n            order[cnt++] = u;\n            for (int e = head[u]; e != -1; e = nxt[e]) {\n                int v = to[e];\n                if (!visited[v]) {\n                    visited[v] = true;\n                    parent[v] = u;\n                    stack[top++] = v;\n                }\n            }\n        }\n\n        // Compute subtree sizes in reverse DFS order\n        int[] size = new int[N + 1];\n        for (int i = 1; i <= N; i++) size[i] = 1;\n\n        int best = Integer.MAX_VALUE;\n        for (int i = N - 1; i >= 1; i--) {\n            int u = order[i];\n            size[parent[u]] += size[u];\n            // Removing edge (parent[u], u) splits tree into size[u] and N - size[u]\n            int diff = Math.abs(N - 2 * size[u]);\n            if (diff < best) best = diff;\n        }\n\n        StringBuilder sb = new StringBuilder();\n        sb.append(best).append('\\n');\n        System.out.print(sb);\n    }\n\n    private static int nextInt(DataInputStream in) throws IOException {\n        int ret = 0;\n        int b;\n        boolean neg = false;\n        do {\n            b = in.read();\n        } while (b != '-' && (b < '0' || b > '9'));\n        if (b == '-') {\n            neg = true;\n            b = in.read();\n        }\n        while (b >= '0' && b <= '9') {\n            ret = ret * 10 + (b - '0');\n            b = in.read();\n        }\n        return neg ? -ret : ret;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11693370004650205,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T11:55:06.570953+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1529,
+            "output_tokens": 701,
+            "total_tokens": 8856
+        },
+        "cost_usd": {
+            "input_cost": 0.001147,
+            "output_cost": 0.002629,
+            "total_cost": 0.003776
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define INF 0x3f3f3f3f\n\nstatic int P[305];\nstatic int G[305];\nstatic int A[305];\nstatic int dp[2][305][2705];\n\nstatic inline int min_val(int a, int b) {\n    return a < b ? a : b;\n}\n\nstatic inline int max_val(int a, int b) {\n    return a > b ? a : b;\n}\n\nint main(void) {\n    int N, K;\n    long long T;\n    if (scanf(\"%d %d %lld\", &N, &K, &T) != 3) {\n        return 0;\n    }\n\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &P[i]);\n    }\n\n    A[0] = 0;\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &G[i]);\n        A[i] = A[i - 1] + G[i];\n    }\n\n    memset(dp, 0x3f, sizeof(dp));\n    dp[0][0][0] = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int cur = (i - 1) & 1;\n        int nxt = i & 1;\n\n        memset(dp[nxt], 0x3f, sizeof(dp[nxt]));\n\n        int p = P[i];\n        int j_min = max_val(0, i - (N - K));\n        int j_max = min_val(i, K);\n\n        for (int j = j_min; j <= j_max; j++) {\n            int add = abs(A[i] - j);\n            int v_max = j * 9;\n\n            for (int v = 0; v <= v_max; v++) {\n                int best = dp[cur][j][v];\n                if (j > 0 && v >= p) {\n                    if (dp[cur][j - 1][v - p] < best) {\n                        best = dp[cur][j - 1][v - p];\n                    }\n                }\n                if (best < INF) {\n                    dp[nxt][j][v] = best + add;\n                }\n            }\n        }\n    }\n\n    int final_step = N & 1;\n    int max_brigadeiros = 0;\n\n    for (int v = K * 9; v >= 0; v--) {\n        if (dp[final_step][K][v] <= T) {\n            max_brigadeiros = v;\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", max_brigadeiros);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define INF 0x3f3f3f3f\n\nstatic int P[305];\nstatic int G[305];\nstatic int A[305];\nstatic int dp[2][305][2705];\n\nstatic inline int min_val(int a, int b) {\n    return a < b ? a : b;\n}\n\nstatic inline int max_val(int a, int b) {\n    return a > b ? a : b;\n}\n\nint main(void) {\n    int N, K;\n    long long T;\n    if (scanf(\"%d %d %lld\", &N, &K, &T) != 3) {\n        return 0;\n    }\n\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &P[i]);\n    }\n\n    A[0] = 0;\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &G[i]);\n        A[i] = A[i - 1] + G[i];\n    }\n\n    memset(dp, 0x3f, sizeof(dp));\n    dp[0][0][0] = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int cur = (i - 1) & 1;\n        int nxt = i & 1;\n\n        memset(dp[nxt], 0x3f, sizeof(dp[nxt]));\n\n        int p = P[i];\n        int j_min = max_val(0, i - (N - K));\n        int j_max = min_val(i, K);\n\n        for (int j = j_min; j <= j_max; j++) {\n            int add = abs(A[i] - j);\n            int v_max = j * 9;\n\n            for (int v = 0; v <= v_max; v++) {\n                int best = dp[cur][j][v];\n                if (j > 0 && v >= p) {\n                    if (dp[cur][j - 1][v - p] < best) {\n                        best = dp[cur][j - 1][v - p];\n                    }\n                }\n                if (best < INF) {\n                    dp[nxt][j][v] = best + add;\n                }\n            }\n        }\n    }\n\n    int final_step = N & 1;\n    int max_brigadeiros = 0;\n\n    for (int v = K * 9; v >= 0; v--) {\n        if (dp[final_step][K][v] <= T) {\n            max_brigadeiros = v;\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", max_brigadeiros);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14770030000363477,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

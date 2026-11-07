@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:49:53.353293+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1033,
+            "output_tokens": 279,
+            "total_tokens": 1312
+        },
+        "cost_usd": {
+            "input_cost": 0.000103,
+            "output_cost": 0.00014,
+            "total_cost": 0.000243
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\ni = 0\n\nS, T = data[i], data[i + 1]\ni += 2\n\nedges = set()\nfor _ in range(T):\n    x, y = data[i], data[i + 1]\n    i += 2\n    edges.add((x, y))\n    edges.add((y, x))\n\nP = data[i]\ni += 1\n\npossible_count = 0\n\nfor _ in range(P):\n    N = data[i]\n    i += 1\n    previous = data[i]\n    i += 1\n    possible = True\n\n    for _ in range(N - 1):\n        current = data[i]\n        i += 1\n        if (previous, current) not in edges:\n            possible = False\n        previous = current\n\n    if possible:\n        possible_count += 1\n\nprint(possible_count)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\ni = 0\n\nS, T = data[i], data[i + 1]\ni += 2\n\nedges = set()\nfor _ in range(T):\n    x, y = data[i], data[i + 1]\n    i += 2\n    edges.add((x, y))\n    edges.add((y, x))\n\nP = data[i]\ni += 1\n\npossible_count = 0\n\nfor _ in range(P):\n    N = data[i]\n    i += 1\n    previous = data[i]\n    i += 1\n    possible = True\n\n    for _ in range(N - 1):\n        current = data[i]\n        i += 1\n        if (previous, current) not in edges:\n            possible = False\n        previous = current\n\n    if possible:\n        possible_count += 1\n\nprint(possible_count)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.8186312000034377,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

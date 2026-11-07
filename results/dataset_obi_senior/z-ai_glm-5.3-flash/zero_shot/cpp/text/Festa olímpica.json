@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T23:33:35.761875+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 964,
+            "output_tokens": 19780,
+            "total_tokens": 20744
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.00989,
+            "total_cost": 0.009911
+        },
+        "raw_response": "```cpp\n#include <cstdio>\n#include <vector>\nusing namespace std;\n\n/*\n  Estrategia:\n  - Um turno com parametro T transforma a posicao q (q nao multiplo de T) numa lista\n    na nova posicao v = q - floor(q/T) (bijecao entre nao-multiplos e posicoes remanescentes).\n  - Logo, dado v, a posicao anterior unica e q = v + floor((v-1)/(T-1)) (a v-esima posicao\n    que nao e multiplo de T).\n  - Calculamos o numero total de sobreviventes s aplicando s <- s - floor(s/T) a cada turno.\n  - A resposta e a lista final: para cada j = 1..min(10000, s), a posicao inicial do\n    j-esimo sobrevivente e obtida aplicando a inversao dos turnos na ordem reversa.\n    O mapeamento e estritamente crescente em j, logo a saida ja sai ordenada.\n*/\n\nint main(){\n    long long N, M;\n    if(scanf(\"%lld %lld\", &N, &M) != 2) return 0;\n\n    vector<unsigned> T((size_t)M);\n    long long s = N;                         // tamanho da lista corrente\n    for(long long i = 0; i < M; ++i){\n        unsigned t;\n        scanf(\"%u\", &t);\n        T[(size_t)i] = t;\n        s -= s / (long long)t;               // remove floor(s/T) elementos\n    }\n\n    unsigned K = (s < 10000) ? (unsigned)s : 10000u;\n\n    vector<unsigned> v((size_t)K + 1);\n    for(unsigned j = 1; j <= K; ++j) v[j] = j;   // posicoes finais 1..K\n\n    for(long long i = M - 1; i >= 0; --i){\n        unsigned Ti = T[(size_t)i];\n        if(v[(size_t)K] < Ti) continue;          // nenhum valor muda neste turno\n        unsigned step = Ti - 1;\n        if(step == 1){                            // T = 2: q = 2*v - 1\n            for(unsigned t = 1; t <= K; ++t)\n                v[t] += v[t] - 1;\n        } else {\n            for(unsigned t = 1; t <= K; ++t){\n                unsigned x = v[t];\n                v[t] = x + (x - 1) / step;\n            }\n        }\n    }\n\n    for(unsigned t = 1; t <= K; ++t)\n        printf(\"%u\\n\", v[t]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\n/*\n  Estrategia:\n  - Um turno com parametro T transforma a posicao q (q nao multiplo de T) numa lista\n    na nova posicao v = q - floor(q/T) (bijecao entre nao-multiplos e posicoes remanescentes).\n  - Logo, dado v, a posicao anterior unica e q = v + floor((v-1)/(T-1)) (a v-esima posicao\n    que nao e multiplo de T).\n  - Calculamos o numero total de sobreviventes s aplicando s <- s - floor(s/T) a cada turno.\n  - A resposta e a lista final: para cada j = 1..min(10000, s), a posicao inicial do\n    j-esimo sobrevivente e obtida aplicando a inversao dos turnos na ordem reversa.\n    O mapeamento e estritamente crescente em j, logo a saida ja sai ordenada.\n*/\n\nint main(){\n    long long N, M;\n    if(scanf(\"%lld %lld\", &N, &M) != 2) return 0;\n\n    vector<unsigned> T((size_t)M);\n    long long s = N;                         // tamanho da lista corrente\n    for(long long i = 0; i < M; ++i){\n        unsigned t;\n        scanf(\"%u\", &t);\n        T[(size_t)i] = t;\n        s -= s / (long long)t;               // remove floor(s/T) elementos\n    }\n\n    unsigned K = (s < 10000) ? (unsigned)s : 10000u;\n\n    vector<unsigned> v((size_t)K + 1);\n    for(unsigned j = 1; j <= K; ++j) v[j] = j;   // posicoes finais 1..K\n\n    for(long long i = M - 1; i >= 0; --i){\n        unsigned Ti = T[(size_t)i];\n        if(v[(size_t)K] < Ti) continue;          // nenhum valor muda neste turno\n        unsigned step = Ti - 1;\n        if(step == 1){                            // T = 2: q = 2*v - 1\n            for(unsigned t = 1; t <= K; ++t)\n                v[t] += v[t] - 1;\n        } else {\n            for(unsigned t = 1; t <= K; ++t){\n                unsigned x = v[t];\n                v[t] = x + (x - 1) / step;\n            }\n        }\n    }\n\n    for(unsigned t = 1; t <= K; ++t)\n        printf(\"%u\\n\", v[t]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13579050000407733,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

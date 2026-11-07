@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T06:58:52.061526+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 948,
+            "output_tokens": 270,
+            "total_tokens": 1218
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.000135,
+            "total_cost": 0.000155
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n, f = int(data[0]), int(data[1])\n    grid = [data[2 + i].decode() for i in range(n)]\n    visited = [[False] * n for _ in range(n)]\n    dq = deque()\n    if int(grid[0][0]) <= f:\n        visited[0][0] = True\n        dq.append((0, 0))\n    while dq:\n        i, j = dq.popleft()\n        for di, dj in ((1,0),(-1,0),(0,1),(0,-1)):\n            ni, nj = i + di, j + dj\n            if 0 <= ni < n and 0 <= nj < n and not visited[ni][nj] and int(grid[ni][nj]) <= f:\n                visited[ni][nj] = True\n                dq.append((ni, nj))\n    out = []\n    for i in range(n):\n        row = ['*' if visited[i][j] else grid[i][j] for j in range(n)]\n        out.append(''.join(row))\n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n, f = int(data[0]), int(data[1])\n    grid = [data[2 + i].decode() for i in range(n)]\n    visited = [[False] * n for _ in range(n)]\n    dq = deque()\n    if int(grid[0][0]) <= f:\n        visited[0][0] = True\n        dq.append((0, 0))\n    while dq:\n        i, j = dq.popleft()\n        for di, dj in ((1,0),(-1,0),(0,1),(0,-1)):\n            ni, nj = i + di, j + dj\n            if 0 <= ni < n and 0 <= nj < n and not visited[ni][nj] and int(grid[ni][nj]) <= f:\n                visited[ni][nj] = True\n                dq.append((ni, nj))\n    out = []\n    for i in range(n):\n        row = ['*' if visited[i][j] else grid[i][j] for j in range(n)]\n        out.append(''.join(row))\n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17976049999924726,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

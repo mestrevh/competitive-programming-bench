@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T23:41:31.747765+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 902,
+            "output_tokens": 1929,
+            "total_tokens": 2831
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.000964,
+            "total_cost": 0.000984
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nlet data = '';\ntry {\n  data = fs.readFileSync(0, 'utf8');\n} catch (e) {\n  data = '';\n}\n\nconst input = (data.trim().split(/\\s+/)[0]) || '';\n\nconst order = ['C', 'E', 'U', 'P'];\nconst counts = {};\nconst dup = {};\nfor (const s of order) {\n  counts[s] = new Set();\n  dup[s] = false;\n}\n\nfor (let i = 0; i + 2 < input.length; i += 3) {\n  const n = input.substring(i, i + 2);\n  const s = input[i + 2];\n  if (counts[s] === undefined) continue;\n  if (counts[s].has(n)) {\n    dup[s] = true;\n  } else {\n    counts[s].add(n);\n  }\n}\n\nconst out = order.map(s => {\n  if (dup[s]) return 'erro';\n  return String(13 - counts[s].size);\n});\n\nconsole.log(out.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\n\nlet data = '';\ntry {\n  data = fs.readFileSync(0, 'utf8');\n} catch (e) {\n  data = '';\n}\n\nconst input = (data.trim().split(/\\s+/)[0]) || '';\n\nconst order = ['C', 'E', 'U', 'P'];\nconst counts = {};\nconst dup = {};\nfor (const s of order) {\n  counts[s] = new Set();\n  dup[s] = false;\n}\n\nfor (let i = 0; i + 2 < input.length; i += 3) {\n  const n = input.substring(i, i + 2);\n  const s = input[i + 2];\n  if (counts[s] === undefined) continue;\n  if (counts[s].has(n)) {\n    dup[s] = true;\n  } else {\n    counts[s].add(n);\n  }\n}\n\nconst out = order.map(s => {\n  if (dup[s]) return 'erro';\n  return String(13 - counts[s].size);\n});\n\nconsole.log(out.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06779829994775355,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

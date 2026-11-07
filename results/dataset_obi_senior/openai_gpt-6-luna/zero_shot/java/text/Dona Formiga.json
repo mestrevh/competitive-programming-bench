@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:54:11.535184+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 792,
+            "output_tokens": 712,
+            "total_tokens": 1504
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000356,
+            "total_cost": 0.000435
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int[] altura;\n    static ArrayList<Integer>[] adj;\n    static int[] memo;\n\n    static int dfs(int v) {\n        if (memo[v] != -1) return memo[v];\n\n        int melhor = 0;\n        for (int u : adj[v]) {\n            if (altura[u] < altura[v]) {\n                melhor = Math.max(melhor, 1 + dfs(u));\n            }\n        }\n        return memo[v] = melhor;\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner(System.in);\n\n        int s = fs.nextInt();\n        int t = fs.nextInt();\n        int p = fs.nextInt() - 1;\n\n        altura = new int[s];\n        for (int i = 0; i < s; i++) altura[i] = fs.nextInt();\n\n        adj = new ArrayList[s];\n        for (int i = 0; i < s; i++) adj[i] = new ArrayList<>();\n\n        for (int i = 0; i < t; i++) {\n            int a = fs.nextInt() - 1;\n            int b = fs.nextInt() - 1;\n            adj[a].add(b);\n            adj[b].add(a);\n        }\n\n        memo = new int[s];\n        Arrays.fill(memo, -1);\n\n        System.out.println(dfs(p));\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = read();\n            }\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value * sign;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int[] altura;\n    static ArrayList<Integer>[] adj;\n    static int[] memo;\n\n    static int dfs(int v) {\n        if (memo[v] != -1) return memo[v];\n\n        int melhor = 0;\n        for (int u : adj[v]) {\n            if (altura[u] < altura[v]) {\n                melhor = Math.max(melhor, 1 + dfs(u));\n            }\n        }\n        return memo[v] = melhor;\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner(System.in);\n\n        int s = fs.nextInt();\n        int t = fs.nextInt();\n        int p = fs.nextInt() - 1;\n\n        altura = new int[s];\n        for (int i = 0; i < s; i++) altura[i] = fs.nextInt();\n\n        adj = new ArrayList[s];\n        for (int i = 0; i < s; i++) adj[i] = new ArrayList<>();\n\n        for (int i = 0; i < t; i++) {\n            int a = fs.nextInt() - 1;\n            int b = fs.nextInt() - 1;\n            adj[a].add(b);\n            adj[b].add(a);\n        }\n\n        memo = new int[s];\n        Arrays.fill(memo, -1);\n\n        System.out.println(dfs(p));\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = read();\n            }\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value * sign;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09004100000311155,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

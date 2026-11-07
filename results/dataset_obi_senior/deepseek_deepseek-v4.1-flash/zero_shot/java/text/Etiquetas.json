@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:59:36.651540+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 597,
+            "output_tokens": 16967,
+            "total_tokens": 17564
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.040721,
+            "total_cost": 0.040723
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int N = fs.nextInt();\n        int K = fs.nextInt();\n        int C = fs.nextInt();\n\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = fs.nextInt();\n        }\n\n        int[] pref = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            pref[i] = pref[i - 1] + A[i - 1];\n        }\n\n        int total = pref[N];\n        final int INF = 1_000_000_000;\n\n        int ring = C + 1;\n        int[][] dp = new int[ring][K + 1];\n        for (int[] row : dp) {\n            Arrays.fill(row, INF);\n        }\n        dp[0][0] = 0;\n\n        for (int i = 1; i <= N; i++) {\n            int cur = i % ring;\n            int prev = (i - 1) % ring;\n            int maxJ = Math.min(K, i / C);\n\n            dp[cur][0] = 0;\n\n            if (i >= C) {\n                int cover = pref[i] - pref[i - C];\n                int old = (i - C) % ring;\n\n                for (int j = 1; j <= maxJ; j++) {\n                    int best = dp[prev][j];\n                    int val = dp[old][j - 1] + cover;\n                    if (val < best) {\n                        best = val;\n                    }\n                    dp[cur][j] = best;\n                }\n            }\n\n            if (maxJ < K) {\n                dp[cur][maxJ + 1] = INF;\n            }\n        }\n\n        int minCovered = dp[N % ring][K];\n        System.out.println(total - minCovered);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int N = fs.nextInt();\n        int K = fs.nextInt();\n        int C = fs.nextInt();\n\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = fs.nextInt();\n        }\n\n        int[] pref = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            pref[i] = pref[i - 1] + A[i - 1];\n        }\n\n        int total = pref[N];\n        final int INF = 1_000_000_000;\n\n        int ring = C + 1;\n        int[][] dp = new int[ring][K + 1];\n        for (int[] row : dp) {\n            Arrays.fill(row, INF);\n        }\n        dp[0][0] = 0;\n\n        for (int i = 1; i <= N; i++) {\n            int cur = i % ring;\n            int prev = (i - 1) % ring;\n            int maxJ = Math.min(K, i / C);\n\n            dp[cur][0] = 0;\n\n            if (i >= C) {\n                int cover = pref[i] - pref[i - C];\n                int old = (i - C) % ring;\n\n                for (int j = 1; j <= maxJ; j++) {\n                    int best = dp[prev][j];\n                    int val = dp[old][j - 1] + cover;\n                    if (val < best) {\n                        best = val;\n                    }\n                    dp[cur][j] = best;\n                }\n            }\n\n            if (maxJ < K) {\n                dp[cur][maxJ + 1] = INF;\n            }\n        }\n\n        int minCovered = dp[N % ring][K];\n        System.out.println(total - minCovered);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16696269999374636,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

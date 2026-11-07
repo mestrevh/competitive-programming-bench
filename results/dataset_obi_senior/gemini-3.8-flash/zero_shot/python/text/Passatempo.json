@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:41:46.367654+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 891,
+            "output_tokens": 514,
+            "total_tokens": 2071
+        },
+        "cost_usd": {
+            "input_cost": 0.000668,
+            "output_cost": 0.001928,
+            "total_cost": 0.002596
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    L = int(input_data[0])\n    C = int(input_data[1])\n    \n    idx = 2\n    grid = []\n    row_sums = []\n    for _ in range(L):\n        row = input_data[idx:idx+C]\n        grid.append(row)\n        idx += C\n        row_sums.append(int(input_data[idx]))\n        idx += 1\n        \n    col_sums = []\n    for _ in range(C):\n        col_sums.append(int(input_data[idx]))\n        idx += 1\n\n    # Represent rows and cols as equations\n    # Each equation: list of variable names, and the target sum\n    equations = []\n    for r in range(L):\n        equations.append((grid[r], row_sums[r]))\n    for c in range(C):\n        col_vars = [grid[r][c] for r in range(L)]\n        equations.append((col_vars, col_sums[c]))\n\n    all_vars = set()\n    for row in grid:\n        for v in row:\n            all_vars.add(v)\n            \n    val = {}\n    \n    while len(val) < len(all_vars):\n        found = False\n        for eq_vars, total in equations:\n            unknowns = {}\n            known_sum = 0\n            for v in eq_vars:\n                if v in val:\n                    known_sum += val[v]\n                else:\n                    unknowns[v] = unknowns.get(v, 0) + 1\n            \n            if len(unknowns) == 1:\n                v, count = next(iter(unknowns.items()))\n                val[v] = (total - known_sum) // count\n                found = True\n                break\n        if not found:\n            break\n\n    for v in sorted(all_vars):\n        print(f\"{v} {val[v]}\")\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    L = int(input_data[0])\n    C = int(input_data[1])\n    \n    idx = 2\n    grid = []\n    row_sums = []\n    for _ in range(L):\n        row = input_data[idx:idx+C]\n        grid.append(row)\n        idx += C\n        row_sums.append(int(input_data[idx]))\n        idx += 1\n        \n    col_sums = []\n    for _ in range(C):\n        col_sums.append(int(input_data[idx]))\n        idx += 1\n\n    # Represent rows and cols as equations\n    # Each equation: list of variable names, and the target sum\n    equations = []\n    for r in range(L):\n        equations.append((grid[r], row_sums[r]))\n    for c in range(C):\n        col_vars = [grid[r][c] for r in range(L)]\n        equations.append((col_vars, col_sums[c]))\n\n    all_vars = set()\n    for row in grid:\n        for v in row:\n            all_vars.add(v)\n            \n    val = {}\n    \n    while len(val) < len(all_vars):\n        found = False\n        for eq_vars, total in equations:\n            unknowns = {}\n            known_sum = 0\n            for v in eq_vars:\n                if v in val:\n                    known_sum += val[v]\n                else:\n                    unknowns[v] = unknowns.get(v, 0) + 1\n            \n            if len(unknowns) == 1:\n                v, count = next(iter(unknowns.items()))\n                val[v] = (total - known_sum) // count\n                found = True\n                break\n        if not found:\n            break\n\n    for v in sorted(all_vars):\n        print(f\"{v} {val[v]}\")\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.27014889999554725,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

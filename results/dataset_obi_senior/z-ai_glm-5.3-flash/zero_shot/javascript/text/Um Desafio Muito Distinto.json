@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T04:02:13.007289+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1242,
+            "output_tokens": 36750,
+            "total_tokens": 37992
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.018375,
+            "total_cost": 0.018402
+        },
+        "raw_response": "Analisando o problema: para completar k rodadas, João precisa que a soma das primeiras k−1 rodadas seja < L (a k-ésima rodada pode estourar L, pois ainda conta). Como os valores são distintos e positivos, a soma mínima de k−1 valores distintos em [A,B] é a dos k−1 menores: f(m) = m·A + m(m−1)/2. Logo, a resposta é 1 + min(m*, B−A), onde m* é o maior m com m·A + m(m−1)/2 < L (busca binária, com limites que garantem aritmética exata em double: m ≤ ⌊(L−1)/A⌋ e m < √(2L)).\n\nVerifiquei contra todos os exemplos fornecidos (ex.: L=7,A=3,B=7 → 2; L=8 → 3; L=40,A=1,B=10 → 9; etc.) e todos batem.\n\n```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet idx = 0;\nconst P = +data[idx++];\nconst out = new Array(P);\n\nfor (let i = 0; i < P; i++) {\n  const L = +data[idx++];\n  const A = +data[idx++];\n  const B = +data[idx++];\n\n  // Maior inteiro m com m*A <= L-1 (corrige arredondamento da divisao em ponto flutuante)\n  let hiA = Math.floor((L - 1) / A);\n  while ((hiA + 1) * A <= L - 1) hiA++;\n  while (hiA > 0 && hiA * A > L - 1) hiA--;\n\n  // Como A >= 1: m(m+1)/2 <= m*A + m(m-1)/2 < L  =>  m < sqrt(2L)\n  const hiS = Math.floor(Math.sqrt(2 * L)) + 2;\n  const hi = hiA < hiS ? hiA : hiS;\n\n  // Busca binaria: maior m com g(m) = m*A + m(m-1)/2 < L\n  // (todos os valores avaliados ficam abaixo de 2^53, aritmetica exata)\n  let lo = 0;\n  while (lo < hi) {\n    const mid = (lo + hi + 1) >> 1;\n    if (mid * A + (mid * (mid - 1)) / 2 < L) lo = mid;\n    else hi = mid - 1;\n  }\n\n  // Resposta: 1 + min(m*, B-A)\n  const cap = B - A;\n  out[i] = 1 + (lo < cap ? lo : cap);\n}\n\nprocess.stdout.write(out.join('\\n') + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet idx = 0;\nconst P = +data[idx++];\nconst out = new Array(P);\n\nfor (let i = 0; i < P; i++) {\n  const L = +data[idx++];\n  const A = +data[idx++];\n  const B = +data[idx++];\n\n  // Maior inteiro m com m*A <= L-1 (corrige arredondamento da divisao em ponto flutuante)\n  let hiA = Math.floor((L - 1) / A);\n  while ((hiA + 1) * A <= L - 1) hiA++;\n  while (hiA > 0 && hiA * A > L - 1) hiA--;\n\n  // Como A >= 1: m(m+1)/2 <= m*A + m(m-1)/2 < L  =>  m < sqrt(2L)\n  const hiS = Math.floor(Math.sqrt(2 * L)) + 2;\n  const hi = hiA < hiS ? hiA : hiS;\n\n  // Busca binaria: maior m com g(m) = m*A + m(m-1)/2 < L\n  // (todos os valores avaliados ficam abaixo de 2^53, aritmetica exata)\n  let lo = 0;\n  while (lo < hi) {\n    const mid = (lo + hi + 1) >> 1;\n    if (mid * A + (mid * (mid - 1)) / 2 < L) lo = mid;\n    else hi = mid - 1;\n  }\n\n  // Resposta: 1 + min(m*, B-A)\n  const cap = B - A;\n  out[i] = 1 + (lo < cap ? lo : cap);\n}\n\nprocess.stdout.write(out.join('\\n') + '\\n');",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07261610002024099,
+            "counts": {
+                "AC": 5,
+                "WA": 0,
+                "RE": 36,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

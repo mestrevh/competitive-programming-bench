@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:38:09.748839+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 910,
+            "output_tokens": 6634,
+            "total_tokens": 7544
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.015922,
+            "total_cost": 0.015924
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    strings = data[1:1 + n]\n\n    seen = set()\n    pref = set()\n    suff = set()\n\n    for s in strings:\n        invalid = False\n\n        if s in seen:\n            invalid = True\n        else:\n            for x in range(1, 10):\n                if s[:x] in suff and s[x:] in pref:\n                    invalid = True\n                    break\n\n        if invalid:\n            sys.stdout.write(s + \"\\n\")\n            return\n\n        seen.add(s)\n\n        for l in range(1, 10):\n            pref.add(s[:l])\n            suff.add(s[10 - l:])\n\n    sys.stdout.write(\"ok\\n\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    strings = data[1:1 + n]\n\n    seen = set()\n    pref = set()\n    suff = set()\n\n    for s in strings:\n        invalid = False\n\n        if s in seen:\n            invalid = True\n        else:\n            for x in range(1, 10):\n                if s[:x] in suff and s[x:] in pref:\n                    invalid = True\n                    break\n\n        if invalid:\n            sys.stdout.write(s + \"\\n\")\n            return\n\n        seen.add(s)\n\n        for l in range(1, 10):\n            pref.add(s[:l])\n            suff.add(s[10 - l:])\n\n    sys.stdout.write(\"ok\\n\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0755152000056114,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:01:10.900491+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 792,
+            "output_tokens": 916,
+            "total_tokens": 1708
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000458,
+            "total_cost": 0.000537
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        long[][] graph = new long[n][n];\n        for (long[] row : graph) {\n            Arrays.fill(row, Long.MAX_VALUE);\n        }\n\n        for (int i = 0; i < m; i++) {\n            int a = fs.nextInt() - 1;\n            int b = fs.nextInt() - 1;\n            long cost = fs.nextInt();\n            graph[a][b] = Math.min(graph[a][b], cost);\n            graph[b][a] = Math.min(graph[b][a], cost);\n        }\n\n        long[] dist = new long[n];\n        boolean[] visited = new boolean[n];\n        Arrays.fill(dist, Long.MAX_VALUE);\n        dist[0] = 0;\n\n        for (int i = 0; i < n; i++) {\n            int u = -1;\n            for (int v = 0; v < n; v++) {\n                if (!visited[v] && (u == -1 || dist[v] < dist[u])) {\n                    u = v;\n                }\n            }\n\n            if (u == -1 || dist[u] == Long.MAX_VALUE) {\n                break;\n            }\n\n            visited[u] = true;\n            for (int v = 0; v < n; v++) {\n                if (graph[u][v] != Long.MAX_VALUE\n                        && dist[u] + graph[u][v] < dist[v]) {\n                    dist[v] = dist[u] + graph[u][v];\n                }\n            }\n        }\n\n        System.out.println(dist[n - 1]);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n\n        long[][] graph = new long[n][n];\n        for (long[] row : graph) {\n            Arrays.fill(row, Long.MAX_VALUE);\n        }\n\n        for (int i = 0; i < m; i++) {\n            int a = fs.nextInt() - 1;\n            int b = fs.nextInt() - 1;\n            long cost = fs.nextInt();\n            graph[a][b] = Math.min(graph[a][b], cost);\n            graph[b][a] = Math.min(graph[b][a], cost);\n        }\n\n        long[] dist = new long[n];\n        boolean[] visited = new boolean[n];\n        Arrays.fill(dist, Long.MAX_VALUE);\n        dist[0] = 0;\n\n        for (int i = 0; i < n; i++) {\n            int u = -1;\n            for (int v = 0; v < n; v++) {\n                if (!visited[v] && (u == -1 || dist[v] < dist[u])) {\n                    u = v;\n                }\n            }\n\n            if (u == -1 || dist[u] == Long.MAX_VALUE) {\n                break;\n            }\n\n            visited[u] = true;\n            for (int v = 0; v < n; v++) {\n                if (graph[u][v] != Long.MAX_VALUE\n                        && dist[u] + graph[u][v] < dist[v]) {\n                    dist[v] = dist[u] + graph[u][v];\n                }\n            }\n        }\n\n        System.out.println(dist[n - 1]);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09345020000182558,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:22:05.838333+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 920,
+            "output_tokens": 1317,
+            "total_tokens": 2237
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003161,
+            "total_cost": 0.003164
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine().trim();\n\n        int[][] count = new int[4][14];\n        boolean[] duplicated = new boolean[4];\n\n        for (int i = 0; i + 3 <= s.length(); i += 3) {\n            int rank = Integer.parseInt(s.substring(i, i + 2));\n            char suit = s.charAt(i + 2);\n\n            int idx;\n            switch (suit) {\n                case 'C': idx = 0; break;\n                case 'E': idx = 1; break;\n                case 'U': idx = 2; break;\n                case 'P': idx = 3; break;\n                default: idx = -1;\n            }\n\n            if (idx != -1) {\n                count[idx][rank]++;\n                if (count[idx][rank] > 1) {\n                    duplicated[idx] = true;\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n\n        for (int idx = 0; idx < 4; idx++) {\n            if (duplicated[idx]) {\n                sb.append(\"erro\\n\");\n            } else {\n                int missing = 0;\n                for (int rank = 1; rank <= 13; rank++) {\n                    if (count[idx][rank] == 0) {\n                        missing++;\n                    }\n                }\n                sb.append(missing).append('\\n');\n            }\n        }\n\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine().trim();\n\n        int[][] count = new int[4][14];\n        boolean[] duplicated = new boolean[4];\n\n        for (int i = 0; i + 3 <= s.length(); i += 3) {\n            int rank = Integer.parseInt(s.substring(i, i + 2));\n            char suit = s.charAt(i + 2);\n\n            int idx;\n            switch (suit) {\n                case 'C': idx = 0; break;\n                case 'E': idx = 1; break;\n                case 'U': idx = 2; break;\n                case 'P': idx = 3; break;\n                default: idx = -1;\n            }\n\n            if (idx != -1) {\n                count[idx][rank]++;\n                if (count[idx][rank] > 1) {\n                    duplicated[idx] = true;\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n\n        for (int idx = 0; idx < 4; idx++) {\n            if (duplicated[idx]) {\n                sb.append(\"erro\\n\");\n            } else {\n                int missing = 0;\n                for (int rank = 1; rank <= 13; rank++) {\n                    if (count[idx][rank] == 0) {\n                        missing++;\n                    }\n                }\n                sb.append(missing).append('\\n');\n            }\n        }\n\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07718989998102188,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

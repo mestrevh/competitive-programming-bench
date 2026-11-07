@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:55:58.580524+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1168,
+            "output_tokens": 3935,
+            "total_tokens": 5103
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.009444,
+            "total_cost": 0.009448
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst A = data.slice(1, 1 + n);\n\nconst ans = new Array(n);\nconst left = new Array(n);\n\nlet best = Infinity;\nfor (let i = 0; i < n; i++) {\n    if (A[i] !== -1) {\n        const v = A[i] - (i + 1);\n        if (v < best) best = v;\n    }\n    left[i] = (i + 1) + best;\n}\n\nbest = Infinity;\nfor (let i = n - 1; i >= 0; i--) {\n    if (A[i] !== -1) {\n        const v = A[i] + (i + 1);\n        if (v < best) best = v;\n    }\n    const right = -(i + 1) + best;\n    ans[i] = Math.min(left[i], right);\n}\n\nconsole.log(ans.join(' '));\n```",
+        "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst A = data.slice(1, 1 + n);\n\nconst ans = new Array(n);\nconst left = new Array(n);\n\nlet best = Infinity;\nfor (let i = 0; i < n; i++) {\n    if (A[i] !== -1) {\n        const v = A[i] - (i + 1);\n        if (v < best) best = v;\n    }\n    left[i] = (i + 1) + best;\n}\n\nbest = Infinity;\nfor (let i = n - 1; i >= 0; i--) {\n    if (A[i] !== -1) {\n        const v = A[i] + (i + 1);\n        if (v < best) best = v;\n    }\n    const right = -(i + 1) + best;\n    ans[i] = Math.min(left[i], right);\n}\n\nconsole.log(ans.join(' '));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15311640000436455,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

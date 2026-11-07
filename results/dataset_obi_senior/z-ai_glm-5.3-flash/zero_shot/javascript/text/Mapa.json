@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T02:33:25.859203+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 913,
+            "output_tokens": 17520,
+            "total_tokens": 18433
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.00876,
+            "total_cost": 0.00878
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\n(function main() {\n  const data = fs.readFileSync(0, 'utf8').split(/\\r?\\n/);\n  let p = 0;\n  while (p < data.length && data[p].trim() === '') p++;\n  const header = data[p++].trim().split(/\\s+/).map(Number);\n  const L = header[0], C = header[1];\n\n  const grid = [];\n  for (let i = 0; i < L; i++) {\n    grid.push(data[p++] || '');\n  }\n\n  // localizar 'o'\n  let sr = -1, sc = -1;\n  for (let r = 0; r < L; r++) {\n    for (let c = 0; c < C; c++) {\n      if (grid[r][c] === 'o') { sr = r; sc = c; }\n    }\n  }\n\n  const DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1]];\n  const key = (r, c) => r * 200 + c;\n  const visited = new Set();\n\n  function pathNeighbors(r, c) {\n    const res = [];\n    for (const [dr, dc] of DIRS) {\n      const nr = r + dr, nc = c + dc;\n      if (nr < 0 || nr >= L || nc < 0 || nc >= C) continue;\n      const ch = grid[nr][nc];\n      if (ch === 'H' || ch === 'o') res.push([nr, nc]);\n    }\n    return res;\n  }\n\n  visited.add(key(sr, sc));\n  let cr, cc;\n  const startCands = pathNeighbors(sr, sc).filter(([r, c]) => !visited.has(key(r, c)));\n\n  if (startCands.length === 0) {\n    cr = sr; cc = sc;\n  } else {\n    [cr, cc] = startCands[0];\n    for (;;) {\n      visited.add(key(cr, cc));\n      const cands = pathNeighbors(cr, cc).filter(([r, c]) => !visited.has(key(r, c)));\n      if (cands.length !== 1) break; // sem próximo passo -> posição atual de Hermione\n      [cr, cc] = cands[0];\n    }\n  }\n\n  process.stdout.write((cr + 1) + ' ' + (cc + 1) + '\\n');\n})();\n```",
+        "extracted_code": "const fs = require('fs');\n\n(function main() {\n  const data = fs.readFileSync(0, 'utf8').split(/\\r?\\n/);\n  let p = 0;\n  while (p < data.length && data[p].trim() === '') p++;\n  const header = data[p++].trim().split(/\\s+/).map(Number);\n  const L = header[0], C = header[1];\n\n  const grid = [];\n  for (let i = 0; i < L; i++) {\n    grid.push(data[p++] || '');\n  }\n\n  // localizar 'o'\n  let sr = -1, sc = -1;\n  for (let r = 0; r < L; r++) {\n    for (let c = 0; c < C; c++) {\n      if (grid[r][c] === 'o') { sr = r; sc = c; }\n    }\n  }\n\n  const DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1]];\n  const key = (r, c) => r * 200 + c;\n  const visited = new Set();\n\n  function pathNeighbors(r, c) {\n    const res = [];\n    for (const [dr, dc] of DIRS) {\n      const nr = r + dr, nc = c + dc;\n      if (nr < 0 || nr >= L || nc < 0 || nc >= C) continue;\n      const ch = grid[nr][nc];\n      if (ch === 'H' || ch === 'o') res.push([nr, nc]);\n    }\n    return res;\n  }\n\n  visited.add(key(sr, sc));\n  let cr, cc;\n  const startCands = pathNeighbors(sr, sc).filter(([r, c]) => !visited.has(key(r, c)));\n\n  if (startCands.length === 0) {\n    cr = sr; cc = sc;\n  } else {\n    [cr, cc] = startCands[0];\n    for (;;) {\n      visited.add(key(cr, cc));\n      const cands = pathNeighbors(cr, cc).filter(([r, c]) => !visited.has(key(r, c)));\n      if (cands.length !== 1) break; // sem próximo passo -> posição atual de Hermione\n      [cr, cc] = cands[0];\n    }\n  }\n\n  process.stdout.write((cr + 1) + ' ' + (cc + 1) + '\\n');\n})();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05881070002214983,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

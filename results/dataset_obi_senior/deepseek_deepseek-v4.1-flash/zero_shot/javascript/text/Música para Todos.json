@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:18:56.753430+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 874,
+            "output_tokens": 4373,
+            "total_tokens": 5247
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.010495,
+            "total_cost": 0.010498
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (data.length === 0) process.exit(0);\n\nlet idx = 0;\nconst N = data[idx++];\nconst M = data[idx++];\nconst C = data[idx++];\n\nconst next = new Int32Array(M + 1);\nconst hasHater = new Uint8Array(M + 1);\n\nfor (let i = 1; i <= N; i++) {\n  const A = data[idx++];\n  const D = data[idx++];\n\n  if (hasHater[D] === 0) {\n    hasHater[D] = 1;\n    next[D] = A;\n  }\n}\n\nconst seen = new Uint8Array(M + 1);\nlet cur = C;\nlet swaps = 0;\n\nwhile (true) {\n  if (next[cur] === 0) {\n    process.stdout.write(String(swaps) + '\\n');\n    break;\n  }\n\n  if (seen[cur] === 1) {\n    process.stdout.write('-1\\n');\n    break;\n  }\n\n  seen[cur] = 1;\n  cur = next[cur];\n  swaps++;\n}\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (data.length === 0) process.exit(0);\n\nlet idx = 0;\nconst N = data[idx++];\nconst M = data[idx++];\nconst C = data[idx++];\n\nconst next = new Int32Array(M + 1);\nconst hasHater = new Uint8Array(M + 1);\n\nfor (let i = 1; i <= N; i++) {\n  const A = data[idx++];\n  const D = data[idx++];\n\n  if (hasHater[D] === 0) {\n    hasHater[D] = 1;\n    next[D] = A;\n  }\n}\n\nconst seen = new Uint8Array(M + 1);\nlet cur = C;\nlet swaps = 0;\n\nwhile (true) {\n  if (next[cur] === 0) {\n    process.stdout.write(String(swaps) + '\\n');\n    break;\n  }\n\n  if (seen[cur] === 1) {\n    process.stdout.write('-1\\n');\n    break;\n  }\n\n  seen[cur] = 1;\n  cur = next[cur];\n  swaps++;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09703919998719357,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

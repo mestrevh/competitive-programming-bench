@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:46:52.453917+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 756,
+            "output_tokens": 1722,
+            "total_tokens": 2478
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.000861,
+            "total_cost": 0.000937
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int read_int(void) {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n\n    int value = 0;\n    while (c > ' ') {\n        value = value * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return value;\n}\n\nint main(void) {\n    int n = read_int();\n    int m = read_int();\n\n    int *head = malloc((size_t)(n + 1) * sizeof(int));\n    int *degree = calloc((size_t)(n + 1), sizeof(int));\n    int *to = malloc((size_t)(2 * m + 1) * sizeof(int));\n    int *next = malloc((size_t)(2 * m + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int edge_count = 0;\n    for (int i = 0; i < m; i++) {\n        int x = read_int();\n        int y = read_int();\n\n        to[edge_count] = y;\n        next[edge_count] = head[x];\n        head[x] = edge_count++;\n        degree[x]++;\n\n        to[edge_count] = x;\n        next[edge_count] = head[y];\n        head[y] = edge_count++;\n        degree[y]++;\n    }\n\n    char *visited = calloc((size_t)(n + 1), sizeof(char));\n    int *stack = malloc((size_t)n * sizeof(int));\n    int *vertices = malloc((size_t)n * sizeof(int));\n    int *marked = calloc((size_t)(n + 1), sizeof(int));\n    int token = 0;\n\n    for (int start = 1; start <= n; start++) {\n        if (visited[start]) continue;\n\n        int top = 0;\n        int count = 0;\n        long long degree_sum = 0;\n\n        stack[top++] = start;\n        visited[start] = 1;\n\n        while (top > 0) {\n            int u = stack[--top];\n            vertices[count++] = u;\n            degree_sum += degree[u];\n\n            for (int e = head[u]; e != -1; e = next[e]) {\n                int v = to[e];\n                if (!visited[v]) {\n                    visited[v] = 1;\n                    stack[top++] = v;\n                }\n            }\n        }\n\n        if (degree_sum < (long long)count * (count - 1)) {\n            int candidate = -1;\n            for (int i = 0; i < count; i++) {\n                if (degree[vertices[i]] < count - 1) {\n                    candidate = vertices[i];\n                    break;\n                }\n            }\n\n            token++;\n            marked[candidate] = token;\n            for (int e = head[candidate]; e != -1; e = next[e]) {\n                marked[to[e]] = token;\n            }\n\n            for (int i = 0; i < count; i++) {\n                int v = vertices[i];\n                if (marked[v] != token) {\n                    printf(\"%d %d\\n\", candidate, v);\n                    return 0;\n                }\n            }\n        }\n    }\n\n    puts(\"-1\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int read_int(void) {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n\n    int value = 0;\n    while (c > ' ') {\n        value = value * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return value;\n}\n\nint main(void) {\n    int n = read_int();\n    int m = read_int();\n\n    int *head = malloc((size_t)(n + 1) * sizeof(int));\n    int *degree = calloc((size_t)(n + 1), sizeof(int));\n    int *to = malloc((size_t)(2 * m + 1) * sizeof(int));\n    int *next = malloc((size_t)(2 * m + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int edge_count = 0;\n    for (int i = 0; i < m; i++) {\n        int x = read_int();\n        int y = read_int();\n\n        to[edge_count] = y;\n        next[edge_count] = head[x];\n        head[x] = edge_count++;\n        degree[x]++;\n\n        to[edge_count] = x;\n        next[edge_count] = head[y];\n        head[y] = edge_count++;\n        degree[y]++;\n    }\n\n    char *visited = calloc((size_t)(n + 1), sizeof(char));\n    int *stack = malloc((size_t)n * sizeof(int));\n    int *vertices = malloc((size_t)n * sizeof(int));\n    int *marked = calloc((size_t)(n + 1), sizeof(int));\n    int token = 0;\n\n    for (int start = 1; start <= n; start++) {\n        if (visited[start]) continue;\n\n        int top = 0;\n        int count = 0;\n        long long degree_sum = 0;\n\n        stack[top++] = start;\n        visited[start] = 1;\n\n        while (top > 0) {\n            int u = stack[--top];\n            vertices[count++] = u;\n            degree_sum += degree[u];\n\n            for (int e = head[u]; e != -1; e = next[e]) {\n                int v = to[e];\n                if (!visited[v]) {\n                    visited[v] = 1;\n                    stack[top++] = v;\n                }\n            }\n        }\n\n        if (degree_sum < (long long)count * (count - 1)) {\n            int candidate = -1;\n            for (int i = 0; i < count; i++) {\n                if (degree[vertices[i]] < count - 1) {\n                    candidate = vertices[i];\n                    break;\n                }\n            }\n\n            token++;\n            marked[candidate] = token;\n            for (int e = head[candidate]; e != -1; e = next[e]) {\n                marked[to[e]] = token;\n            }\n\n            for (int i = 0; i < count; i++) {\n                int v = vertices[i];\n                if (marked[v] != token) {\n                    printf(\"%d %d\\n\", candidate, v);\n                    return 0;\n                }\n            }\n        }\n    }\n\n    puts(\"-1\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 13
+            },
+            "total_test_cases": 13
+        }
+    }
+]

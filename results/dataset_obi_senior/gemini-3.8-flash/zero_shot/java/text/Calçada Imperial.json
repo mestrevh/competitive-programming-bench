@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:05:38.000604+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 647,
+            "output_tokens": 675,
+            "total_tokens": 2359
+        },
+        "cost_usd": {
+            "input_cost": 0.000485,
+            "output_cost": 0.002531,
+            "total_cost": 0.003017
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = br.readLine();\n        }\n        if (line == null) return;\n        \n        int n = Integer.parseInt(line.trim());\n        int[] v = new int[n];\n        \n        ArrayList<Integer>[] pos = new ArrayList[n + 1];\n        for (int i = 0; i <= n; i++) {\n            pos[i] = new ArrayList<>();\n        }\n        \n        ArrayList<Integer> distinct = new ArrayList<>();\n        for (int i = 0; i < n; i++) {\n            line = br.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = br.readLine();\n            }\n            v[i] = Integer.parseInt(line.trim());\n            if (pos[v[i]].isEmpty()) {\n                distinct.add(v[i]);\n            }\n            pos[v[i]].add(i);\n        }\n\n        int maxLen = 1;\n\n        for (int i = 0; i < distinct.size(); i++) {\n            int a = distinct.get(i);\n            ArrayList<Integer> posA = pos[a];\n            for (int j = i + 1; j < distinct.size(); j++) {\n                int b = distinct.get(j);\n                ArrayList<Integer> posB = pos[b];\n\n                int pA = 0, pB = 0;\n                int lastVal = -1;\n                int currentLen = 0;\n\n                while (pA < posA.size() || pB < posB.size()) {\n                    int nextVal;\n                    if (pA < posA.size() && pB < posB.size()) {\n                        if (posA.get(pA) < posB.get(pB)) {\n                            nextVal = a;\n                            pA++;\n                        } else {\n                            nextVal = b;\n                            pB++;\n                        }\n                    } else if (pA < posA.size()) {\n                        nextVal = a;\n                        pA++;\n                    } else {\n                        nextVal = b;\n                        pB++;\n                    }\n\n                    if (nextVal != lastVal) {\n                        currentLen++;\n                        lastVal = nextVal;\n                    }\n                }\n\n                if (currentLen > maxLen) {\n                    maxLen = currentLen;\n                }\n            }\n        }\n\n        System.out.println(maxLen);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = br.readLine();\n        }\n        if (line == null) return;\n        \n        int n = Integer.parseInt(line.trim());\n        int[] v = new int[n];\n        \n        ArrayList<Integer>[] pos = new ArrayList[n + 1];\n        for (int i = 0; i <= n; i++) {\n            pos[i] = new ArrayList<>();\n        }\n        \n        ArrayList<Integer> distinct = new ArrayList<>();\n        for (int i = 0; i < n; i++) {\n            line = br.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = br.readLine();\n            }\n            v[i] = Integer.parseInt(line.trim());\n            if (pos[v[i]].isEmpty()) {\n                distinct.add(v[i]);\n            }\n            pos[v[i]].add(i);\n        }\n\n        int maxLen = 1;\n\n        for (int i = 0; i < distinct.size(); i++) {\n            int a = distinct.get(i);\n            ArrayList<Integer> posA = pos[a];\n            for (int j = i + 1; j < distinct.size(); j++) {\n                int b = distinct.get(j);\n                ArrayList<Integer> posB = pos[b];\n\n                int pA = 0, pB = 0;\n                int lastVal = -1;\n                int currentLen = 0;\n\n                while (pA < posA.size() || pB < posB.size()) {\n                    int nextVal;\n                    if (pA < posA.size() && pB < posB.size()) {\n                        if (posA.get(pA) < posB.get(pB)) {\n                            nextVal = a;\n                            pA++;\n                        } else {\n                            nextVal = b;\n                            pB++;\n                        }\n                    } else if (pA < posA.size()) {\n                        nextVal = a;\n                        pA++;\n                    } else {\n                        nextVal = b;\n                        pB++;\n                    }\n\n                    if (nextVal != lastVal) {\n                        currentLen++;\n                        lastVal = nextVal;\n                    }\n                }\n\n                if (currentLen > maxLen) {\n                    maxLen = currentLen;\n                }\n            }\n        }\n\n        System.out.println(maxLen);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1117134999949485,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T04:58:25.384726+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 528,
+            "output_tokens": 19722,
+            "total_tokens": 20250
+        },
+        "cost_usd": {
+            "input_cost": 1.1e-05,
+            "output_cost": 0.009861,
+            "total_cost": 0.009872
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import defaultdict\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n\n    # Um corte na altura h divide a folha em:\n    #   - 1 pedaco inferior (sempre conexo, pois todas as bases assentam na mesma linha)\n    #   - um pedaco para cada sequencia maximal de retangulos consecutivos com A_i > h\n    # Logo, pedacos = 1 + f(h), onde f(h) = numero de indices i com A_{i-1} <= h < A_i\n    # (A_0 = 0), ou seja, i onde a altura \"sobe\" ultrapassando o corte.\n    # Cada subida i define o intervalo de alturas [A_{i-1}, A_i). A resposta e\n    # 1 + maximo numero de intervalos que se sobrepoem em algum ponto (varredura).\n\n    start = defaultdict(int)  # coord -> nº de intervalos que comecam em coord\n    end = defaultdict(int)    # coord -> nº de intervalos que terminam (exclusivo) em coord\n    prev = 0\n    for tok in data[1:1 + n]:\n        x = int(tok)\n        if x > prev:\n            start[prev] += 1\n            end[x] += 1\n        prev = x\n\n    count = 0\n    best = 0\n    # Em coordinates iguais, processamos primeiro as terminacoes (-) e depois as\n    # comecas (+): intervalos sao semi-abertos [a, b).\n    for c in sorted(set(start) | set(end)):\n        count += start[c] - end[c]\n        if count > best:\n            best = count\n\n    print(best + 1)\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom collections import defaultdict\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n\n    # Um corte na altura h divide a folha em:\n    #   - 1 pedaco inferior (sempre conexo, pois todas as bases assentam na mesma linha)\n    #   - um pedaco para cada sequencia maximal de retangulos consecutivos com A_i > h\n    # Logo, pedacos = 1 + f(h), onde f(h) = numero de indices i com A_{i-1} <= h < A_i\n    # (A_0 = 0), ou seja, i onde a altura \"sobe\" ultrapassando o corte.\n    # Cada subida i define o intervalo de alturas [A_{i-1}, A_i). A resposta e\n    # 1 + maximo numero de intervalos que se sobrepoem em algum ponto (varredura).\n\n    start = defaultdict(int)  # coord -> nº de intervalos que comecam em coord\n    end = defaultdict(int)    # coord -> nº de intervalos que terminam (exclusivo) em coord\n    prev = 0\n    for tok in data[1:1 + n]:\n        x = int(tok)\n        if x > prev:\n            start[prev] += 1\n            end[x] += 1\n        prev = x\n\n    count = 0\n    best = 0\n    # Em coordinates iguais, processamos primeiro as terminacoes (-) e depois as\n    # comecas (+): intervalos sao semi-abertos [a, b).\n    for c in sorted(set(start) | set(end)):\n        count += start[c] - end[c]\n        if count > best:\n            best = count\n\n    print(best + 1)\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10041249999994761,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

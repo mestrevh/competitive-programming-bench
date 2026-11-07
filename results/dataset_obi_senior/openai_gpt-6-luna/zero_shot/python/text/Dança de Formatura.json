@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:19:44.524427+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1262,
+            "output_tokens": 1352,
+            "total_tokens": 2614
+        },
+        "cost_usd": {
+            "input_cost": 0.000126,
+            "output_cost": 0.000676,
+            "total_cost": 0.000802
+        },
+        "raw_response": "```python\nimport sys\nfrom array import array\n\ndata = sys.stdin.buffer.read()\npos = 0\nlength = len(data)\n\ndef read_int():\n    global pos\n    while pos < length and data[pos] <= 32:\n        pos += 1\n    value = 0\n    while pos < length and data[pos] > 32:\n        value = value * 10 + data[pos] - 48\n        pos += 1\n    return value\n\nn = read_int()\nm = read_int()\np = read_int()\n\nrows = array('i', range(n))\ncols = array('i', range(m))\n\nfor _ in range(p):\n    while data[pos] <= 32:\n        pos += 1\n    op = data[pos]\n    pos += 1\n    a = read_int() - 1\n    b = read_int() - 1\n\n    if op == 76:  # L\n        rows[a], rows[b] = rows[b], rows[a]\n    else:  # C\n        cols[a], cols[b] = cols[b], cols[a]\n\nout = sys.stdout\nlines = []\n\nfor i in range(n):\n    base = rows[i] * m\n    lines.append(' '.join(str(base + cols[j] + 1) for j in range(m)) + '\\n')\n    if len(lines) >= 8192:\n        out.write(''.join(lines))\n        lines.clear()\n\nif lines:\n    out.write(''.join(lines))\n```",
+        "extracted_code": "import sys\nfrom array import array\n\ndata = sys.stdin.buffer.read()\npos = 0\nlength = len(data)\n\ndef read_int():\n    global pos\n    while pos < length and data[pos] <= 32:\n        pos += 1\n    value = 0\n    while pos < length and data[pos] > 32:\n        value = value * 10 + data[pos] - 48\n        pos += 1\n    return value\n\nn = read_int()\nm = read_int()\np = read_int()\n\nrows = array('i', range(n))\ncols = array('i', range(m))\n\nfor _ in range(p):\n    while data[pos] <= 32:\n        pos += 1\n    op = data[pos]\n    pos += 1\n    a = read_int() - 1\n    b = read_int() - 1\n\n    if op == 76:  # L\n        rows[a], rows[b] = rows[b], rows[a]\n    else:  # C\n        cols[a], cols[b] = cols[b], cols[a]\n\nout = sys.stdout\nlines = []\n\nfor i in range(n):\n    base = rows[i] * m\n    lines.append(' '.join(str(base + cols[j] + 1) for j in range(m)) + '\\n')\n    if len(lines) >= 8192:\n        out.write(''.join(lines))\n        lines.clear()\n\nif lines:\n    out.write(''.join(lines))",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.792883800000709,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

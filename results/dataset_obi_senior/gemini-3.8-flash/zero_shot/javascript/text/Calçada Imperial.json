@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:00:32.041574+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 647,
+            "output_tokens": 799,
+            "total_tokens": 2565
+        },
+        "cost_usd": {
+            "input_cost": 0.000485,
+            "output_cost": 0.002996,
+            "total_cost": 0.003482
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n        \n        int n = Integer.parseInt(line.trim());\n        int[] v = new int[n];\n        \n        ArrayList<Integer>[] positions = new ArrayList[n + 1];\n        for (int i = 0; i <= n; i++) {\n            positions[i] = new ArrayList<>();\n        }\n        \n        ArrayList<Integer> distinctValues = new ArrayList<>();\n        \n        for (int i = 0; i < n; i++) {\n            line = reader.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = reader.readLine();\n            }\n            v[i] = Integer.parseInt(line.trim());\n            if (positions[v[i]].isEmpty()) {\n                distinctValues.add(v[i]);\n            }\n            positions[v[i]].add(i);\n        }\n        \n        if (distinctValues.size() <= 1) {\n            System.out.println(n > 0 ? 1 : 0);\n            return;\n        }\n        \n        int maxLen = 1;\n        int numDistinct = distinctValues.size();\n        \n        for (int i = 0; i < numDistinct; i++) {\n            int valA = distinctValues.get(i);\n            ArrayList<Integer> posA = positions[valA];\n            \n            for (int j = i + 1; j < numDistinct; j++) {\n                int valB = distinctValues.get(j);\n                ArrayList<Integer> posB = positions[valB];\n                \n                int pA = 0;\n                int pB = 0;\n                int lenA = posA.size();\n                int lenB = posB.size();\n                \n                int lastVal = -1;\n                int count = 0;\n                \n                while (pA < lenA && pB < lenB) {\n                    if (posA.get(pA) < posB.get(pB)) {\n                        if (lastVal != valA) {\n                            count++;\n                            lastVal = valA;\n                        }\n                        pA++;\n                    } else {\n                        if (lastVal != valB) {\n                            count++;\n                            lastVal = valB;\n                        }\n                        pB++;\n                    }\n                }\n                \n                while (pA < lenA) {\n                    if (lastVal != valA) {\n                        count++;\n                        lastVal = valA;\n                    }\n                    pA++;\n                }\n                \n                while (pB < lenB) {\n                    if (lastVal != valB) {\n                        count++;\n                        lastVal = valB;\n                    }\n                    pB++;\n                }\n                \n                if (count > maxLen) {\n                    maxLen = count;\n                }\n            }\n        }\n        \n        System.out.println(maxLen);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n        \n        int n = Integer.parseInt(line.trim());\n        int[] v = new int[n];\n        \n        ArrayList<Integer>[] positions = new ArrayList[n + 1];\n        for (int i = 0; i <= n; i++) {\n            positions[i] = new ArrayList<>();\n        }\n        \n        ArrayList<Integer> distinctValues = new ArrayList<>();\n        \n        for (int i = 0; i < n; i++) {\n            line = reader.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = reader.readLine();\n            }\n            v[i] = Integer.parseInt(line.trim());\n            if (positions[v[i]].isEmpty()) {\n                distinctValues.add(v[i]);\n            }\n            positions[v[i]].add(i);\n        }\n        \n        if (distinctValues.size() <= 1) {\n            System.out.println(n > 0 ? 1 : 0);\n            return;\n        }\n        \n        int maxLen = 1;\n        int numDistinct = distinctValues.size();\n        \n        for (int i = 0; i < numDistinct; i++) {\n            int valA = distinctValues.get(i);\n            ArrayList<Integer> posA = positions[valA];\n            \n            for (int j = i + 1; j < numDistinct; j++) {\n                int valB = distinctValues.get(j);\n                ArrayList<Integer> posB = positions[valB];\n                \n                int pA = 0;\n                int pB = 0;\n                int lenA = posA.size();\n                int lenB = posB.size();\n                \n                int lastVal = -1;\n                int count = 0;\n                \n                while (pA < lenA && pB < lenB) {\n                    if (posA.get(pA) < posB.get(pB)) {\n                        if (lastVal != valA) {\n                            count++;\n                            lastVal = valA;\n                        }\n                        pA++;\n                    } else {\n                        if (lastVal != valB) {\n                            count++;\n                            lastVal = valB;\n                        }\n                        pB++;\n                    }\n                }\n                \n                while (pA < lenA) {\n                    if (lastVal != valA) {\n                        count++;\n                        lastVal = valA;\n                    }\n                    pA++;\n                }\n                \n                while (pB < lenB) {\n                    if (lastVal != valB) {\n                        count++;\n                        lastVal = valB;\n                    }\n                    pB++;\n                }\n                \n                if (count > maxLen) {\n                    maxLen = count;\n                }\n            }\n        }\n        \n        System.out.println(maxLen);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07571159998769872,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 20,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:33:24.156721+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 647,
+            "output_tokens": 632,
+            "total_tokens": 1943
+        },
+        "cost_usd": {
+            "input_cost": 0.000485,
+            "output_cost": 0.00237,
+            "total_cost": 0.002855
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (!input || input.length === 0 || input[0] === '') return;\n\n    const N = parseInt(input[0], 10);\n    const V = [];\n    for (let i = 1; i <= N; i++) {\n        V.push(parseInt(input[i], 10));\n    }\n\n    if (N <= 2) {\n        console.log(N);\n        return;\n    }\n\n    const pos = new Map();\n    for (let i = 0; i < N; i++) {\n        const val = V[i];\n        if (!pos.has(val)) {\n            pos.set(val, []);\n        }\n        pos.get(val).push(i);\n    }\n\n    const distinctVals = Array.from(pos.keys());\n    if (distinctVals.length <= 1) {\n        console.log(1);\n        return;\n    }\n\n    let maxLen = 1;\n\n    for (let i = 0; i < distinctVals.length; i++) {\n        const a = distinctVals[i];\n        const posA = pos.get(a);\n\n        for (let j = i + 1; j < distinctVals.length; j++) {\n            const b = distinctVals[j];\n            const posB = pos.get(b);\n\n            let pA = 0;\n            let pB = 0;\n            let currentLen = 0;\n            let lastVal = 0;\n\n            while (pA < posA.length && pB < posB.length) {\n                if (posA[pA] < posB[pB]) {\n                    if (lastVal !== a) {\n                        currentLen++;\n                        lastVal = a;\n                    }\n                    pA++;\n                } else {\n                    if (lastVal !== b) {\n                        currentLen++;\n                        lastVal = b;\n                    }\n                    pB++;\n                }\n            }\n\n            while (pA < posA.length) {\n                if (lastVal !== a) {\n                    currentLen++;\n                    lastVal = a;\n                }\n                pA++;\n            }\n\n            while (pB < posB.length) {\n                if (lastVal !== b) {\n                    currentLen++;\n                    lastVal = b;\n                }\n                pB++;\n            }\n\n            if (currentLen > maxLen) {\n                maxLen = currentLen;\n            }\n        }\n    }\n\n    console.log(maxLen);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    if (!input || input.length === 0 || input[0] === '') return;\n\n    const N = parseInt(input[0], 10);\n    const V = [];\n    for (let i = 1; i <= N; i++) {\n        V.push(parseInt(input[i], 10));\n    }\n\n    if (N <= 2) {\n        console.log(N);\n        return;\n    }\n\n    const pos = new Map();\n    for (let i = 0; i < N; i++) {\n        const val = V[i];\n        if (!pos.has(val)) {\n            pos.set(val, []);\n        }\n        pos.get(val).push(i);\n    }\n\n    const distinctVals = Array.from(pos.keys());\n    if (distinctVals.length <= 1) {\n        console.log(1);\n        return;\n    }\n\n    let maxLen = 1;\n\n    for (let i = 0; i < distinctVals.length; i++) {\n        const a = distinctVals[i];\n        const posA = pos.get(a);\n\n        for (let j = i + 1; j < distinctVals.length; j++) {\n            const b = distinctVals[j];\n            const posB = pos.get(b);\n\n            let pA = 0;\n            let pB = 0;\n            let currentLen = 0;\n            let lastVal = 0;\n\n            while (pA < posA.length && pB < posB.length) {\n                if (posA[pA] < posB[pB]) {\n                    if (lastVal !== a) {\n                        currentLen++;\n                        lastVal = a;\n                    }\n                    pA++;\n                } else {\n                    if (lastVal !== b) {\n                        currentLen++;\n                        lastVal = b;\n                    }\n                    pB++;\n                }\n            }\n\n            while (pA < posA.length) {\n                if (lastVal !== a) {\n                    currentLen++;\n                    lastVal = a;\n                }\n                pA++;\n            }\n\n            while (pB < posB.length) {\n                if (lastVal !== b) {\n                    currentLen++;\n                    lastVal = b;\n                }\n                pB++;\n            }\n\n            if (currentLen > maxLen) {\n                maxLen = currentLen;\n            }\n        }\n    }\n\n    console.log(maxLen);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.047997200017562136,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

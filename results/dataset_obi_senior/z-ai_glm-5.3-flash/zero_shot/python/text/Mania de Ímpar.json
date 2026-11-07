@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T07:57:01.070488+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1202,
+            "output_tokens": 809,
+            "total_tokens": 2011
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.000405,
+            "total_cost": 0.00043
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    g = []\n    for i in range(n):\n        row = [int(data[idx + j]) for j in range(m)]\n        idx += m\n        g.append(row)\n\n    # cost for assignment: cell (i,j) must have parity (i+j)%2 (0=even,1=odd)\n    best_cost = None\n    best_base = None\n    for flip in (0, 1):\n        cost = 0\n        for i in range(n):\n            for j in range(m):\n                want = (i + j + flip) % 2\n                if g[i][j] % 2 != want:\n                    cost += 1\n        if best_cost is None or cost < best_cost:\n            best_cost = cost\n            best_base = flip\n\n    out = [str(best_cost)]\n    for i in range(n):\n        row = []\n        for j in range(m):\n            want = (i + j + best_base) % 2\n            v = g[i][j]\n            if v % 2 != want:\n                v += 1\n            row.append(str(v))\n        out.append(' '.join(row))\n    print('\\n'.join(out))\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    idx = 0\n    n = int(data[idx]); idx += 1\n    m = int(data[idx]); idx += 1\n    g = []\n    for i in range(n):\n        row = [int(data[idx + j]) for j in range(m)]\n        idx += m\n        g.append(row)\n\n    # cost for assignment: cell (i,j) must have parity (i+j)%2 (0=even,1=odd)\n    best_cost = None\n    best_base = None\n    for flip in (0, 1):\n        cost = 0\n        for i in range(n):\n            for j in range(m):\n                want = (i + j + flip) % 2\n                if g[i][j] % 2 != want:\n                    cost += 1\n        if best_cost is None or cost < best_cost:\n            best_cost = cost\n            best_base = flip\n\n    out = [str(best_cost)]\n    for i in range(n):\n        row = []\n        for j in range(m):\n            want = (i + j + best_base) % 2\n            v = g[i][j]\n            if v % 2 != want:\n                v += 1\n            row.append(str(v))\n        out.append(' '.join(row))\n    print('\\n'.join(out))\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07470269999976153,
+            "counts": {
+                "AC": 31,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 31
+        }
+    }
+]

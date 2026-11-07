@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T22:43:24.417895+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 719,
+            "output_tokens": 26301,
+            "total_tokens": 27020
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.013151,
+            "total_cost": 0.013166
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    vector<vector<int>> adj(n+1);\n    for(int i=0;i<n-1;i++){\n        int x,y; scanf(\"%d %d\",&x,&y);\n        adj[x].push_back(y);\n        adj[y].push_back(x);\n    }\n    vector<int> dist(n+1), par(n+1);\n    auto bfs=[&](int s){\n        fill(dist.begin(),dist.end(),-1);\n        dist[s]=0;\n        queue<int> q; q.push(s);\n        while(!q.empty()){\n            int u=q.front(); q.pop();\n            for(int v:adj[u]) if(dist[v]<0){dist[v]=dist[u]+1; par[v]=u; q.push(v);}\n        }\n    };\n    // diametro: dupla BFS\n    bfs(1);\n    int a=1;\n    for(int i=2;i<=n;i++) if(dist[i]>dist[a]) a=i;\n    bfs(a);\n    int b=a;\n    for(int i=1;i<=n;i++) if(dist[i]>dist[b]) b=i;\n    int D=dist[b];\n\n    // centro: vertice a distancia floor(D/2) de a ao longo do caminho a..b\n    int c=b;\n    for(int i=0;i<D-D/2;i++) c=par[c];\n\n    // BFS a partir do centro: profundidade e identificacao da \"branch\"\n    vector<int> dep(n+1,-1), br(n+1,0);\n    {\n        queue<int> q; q.push(c); dep[c]=0;\n        while(!q.empty()){\n            int u=q.front(); q.pop();\n            for(int v:adj[u]) if(dep[v]<0){\n                dep[v]=dep[u]+1;\n                br[v]=(u==c? v : br[u]);\n                q.push(v);\n            }\n        }\n    }\n    // todo par de vertices a distancia D tem caminho passando pelo centro,\n    // e os dois extremos estao em branches distintas do centro.\n    vector<int> h(n+1,0);\n    for(int u=1;u<=n;u++) if(dep[u]>0) h[br[u]]=max(h[br[u]],dep[u]);\n    vector<long long> T(D+2,0);\n    for(int u=1;u<=n;u++) if(dep[u]>0) T[dep[u]]++;\n    vector<int> off(n+1,-1);\n    int cur=0;\n    for(int r=1;r<=n;r++) if(h[r]>0){ off[r]=cur; cur+=h[r]+1; }\n    vector<long long> fdata(cur,0);\n    for(int u=1;u<=n;u++) if(dep[u]>0) fdata[off[br[u]]+dep[u]]++;\n\n    // pares ordenados entre branches distintas com delta_u + delta_v = D\n    long long cross=0;\n    for(int x=1;x<=D;x++) cross += (long long)T[x]*T[D-x];\n    // remove pares na mesma branch (esses nao passam pelo centro)\n    long long same=0;\n    for(int r=1;r<=n;r++){\n        if(off[r]<0) continue;\n        int hb=h[r];\n        int xlo=max(1,D-hb), xhi=min(D-1,hb);\n        for(int x=xlo;x<=xhi;x++)\n            same += fdata[off[r]+x]*fdata[off[r]+D-x];\n    }\n    printf(\"%d\\n%lld\\n\", D+1, (cross-same)/2);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    int n;\n    if(scanf(\"%d\",&n)!=1) return 0;\n    vector<vector<int>> adj(n+1);\n    for(int i=0;i<n-1;i++){\n        int x,y; scanf(\"%d %d\",&x,&y);\n        adj[x].push_back(y);\n        adj[y].push_back(x);\n    }\n    vector<int> dist(n+1), par(n+1);\n    auto bfs=[&](int s){\n        fill(dist.begin(),dist.end(),-1);\n        dist[s]=0;\n        queue<int> q; q.push(s);\n        while(!q.empty()){\n            int u=q.front(); q.pop();\n            for(int v:adj[u]) if(dist[v]<0){dist[v]=dist[u]+1; par[v]=u; q.push(v);}\n        }\n    };\n    // diametro: dupla BFS\n    bfs(1);\n    int a=1;\n    for(int i=2;i<=n;i++) if(dist[i]>dist[a]) a=i;\n    bfs(a);\n    int b=a;\n    for(int i=1;i<=n;i++) if(dist[i]>dist[b]) b=i;\n    int D=dist[b];\n\n    // centro: vertice a distancia floor(D/2) de a ao longo do caminho a..b\n    int c=b;\n    for(int i=0;i<D-D/2;i++) c=par[c];\n\n    // BFS a partir do centro: profundidade e identificacao da \"branch\"\n    vector<int> dep(n+1,-1), br(n+1,0);\n    {\n        queue<int> q; q.push(c); dep[c]=0;\n        while(!q.empty()){\n            int u=q.front(); q.pop();\n            for(int v:adj[u]) if(dep[v]<0){\n                dep[v]=dep[u]+1;\n                br[v]=(u==c? v : br[u]);\n                q.push(v);\n            }\n        }\n    }\n    // todo par de vertices a distancia D tem caminho passando pelo centro,\n    // e os dois extremos estao em branches distintas do centro.\n    vector<int> h(n+1,0);\n    for(int u=1;u<=n;u++) if(dep[u]>0) h[br[u]]=max(h[br[u]],dep[u]);\n    vector<long long> T(D+2,0);\n    for(int u=1;u<=n;u++) if(dep[u]>0) T[dep[u]]++;\n    vector<int> off(n+1,-1);\n    int cur=0;\n    for(int r=1;r<=n;r++) if(h[r]>0){ off[r]=cur; cur+=h[r]+1; }\n    vector<long long> fdata(cur,0);\n    for(int u=1;u<=n;u++) if(dep[u]>0) fdata[off[br[u]]+dep[u]]++;\n\n    // pares ordenados entre branches distintas com delta_u + delta_v = D\n    long long cross=0;\n    for(int x=1;x<=D;x++) cross += (long long)T[x]*T[D-x];\n    // remove pares na mesma branch (esses nao passam pelo centro)\n    long long same=0;\n    for(int r=1;r<=n;r++){\n        if(off[r]<0) continue;\n        int hb=h[r];\n        int xlo=max(1,D-hb), xhi=min(D-1,hb);\n        for(int x=xlo;x<=xhi;x++)\n            same += fdata[off[r]+x]*fdata[off[r]+D-x];\n    }\n    printf(\"%d\\n%lld\\n\", D+1, (cross-same)/2);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21294489999854704,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

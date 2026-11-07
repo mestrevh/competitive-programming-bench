@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T13:32:02.548194+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 964,
+            "output_tokens": 16549,
+            "total_tokens": 17513
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.039718,
+            "total_cost": 0.03972
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int L, C;\n    scanf(\"%d %d\", &L, &C);\n    char grid[105][105];\n    int sr = -1, sc = -1;\n\n    for (int i = 0; i < L; i++) {\n        scanf(\"%s\", grid[i]);\n        for (int j = 0; j < C; j++) {\n            if (grid[i][j] == 'o') {\n                sr = i;\n                sc = j;\n            }\n        }\n    }\n\n    int pr = sr, pc = sc;\n    int cr = sr, cc = sc;\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    while (1) {\n        int found = 0;\n        for (int d = 0; d < 4; d++) {\n            int nr = cr + dr[d];\n            int nc = cc + dc[d];\n            if (nr >= 0 && nr < L && nc >= 0 && nc < C) {\n                if (grid[nr][nc] != '.') {\n                    if (nr != pr || nc != pc) {\n                        pr = cr;\n                        pc = cc;\n                        cr = nr;\n                        cc = nc;\n                        found = 1;\n                        break;\n                    }\n                }\n            }\n        }\n        if (!found) break;\n    }\n\n    printf(\"%d %d\\n\", cr + 1, cc + 1);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int L, C;\n    scanf(\"%d %d\", &L, &C);\n    char grid[105][105];\n    int sr = -1, sc = -1;\n\n    for (int i = 0; i < L; i++) {\n        scanf(\"%s\", grid[i]);\n        for (int j = 0; j < C; j++) {\n            if (grid[i][j] == 'o') {\n                sr = i;\n                sc = j;\n            }\n        }\n    }\n\n    int pr = sr, pc = sc;\n    int cr = sr, cc = sc;\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    while (1) {\n        int found = 0;\n        for (int d = 0; d < 4; d++) {\n            int nr = cr + dr[d];\n            int nc = cc + dc[d];\n            if (nr >= 0 && nr < L && nc >= 0 && nc < C) {\n                if (grid[nr][nc] != '.') {\n                    if (nr != pr || nc != pc) {\n                        pr = cr;\n                        pc = cc;\n                        cr = nr;\n                        cc = nc;\n                        found = 1;\n                        break;\n                    }\n                }\n            }\n        }\n        if (!found) break;\n    }\n\n    printf(\"%d %d\\n\", cr + 1, cc + 1);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1658066000090912,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

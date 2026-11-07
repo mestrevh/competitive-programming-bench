@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:42:22.474308+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 713,
+            "output_tokens": 11134,
+            "total_tokens": 11847
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.005567,
+            "total_cost": 0.005582
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        in.nextToken();\n        int n = (int) in.nval;\n        int[] v = new int[n];\n        for (int i = 0; i < n; i++) {\n            in.nextToken();\n            v[i] = (int) in.nval;\n        }\n\n        // Comprime a sequencia em blocos (runs) de valores consecutivos iguais.\n        // Em qualquer marcacao valida, cada run contribui com no maximo um numero marcado.\n        int[] runVal = new int[n];\n        int R = 0;\n        for (int i = 0; i < n; i++) {\n            if (i == 0 || v[i] != v[i - 1]) runVal[R++] = v[i];\n        }\n\n        // Para cada valor, guarda os indices dos runs (em ordem crescente)\n        @SuppressWarnings(\"unchecked\")\n        ArrayList<Integer>[] runsByVal = new ArrayList[n + 1];\n        for (int i = 0; i <= n; i++) runsByVal[i] = new ArrayList<>();\n        boolean[] seen = new boolean[n + 1];\n        ArrayList<Integer> distinct = new ArrayList<>();\n        for (int t = 0; t < R; t++) {\n            int c = runVal[t];\n            runsByVal[c].add(t);\n            if (!seen[c]) { seen[c] = true; distinct.add(c); }\n        }\n\n        // Resposta pelo menos 1 (um unico numero marcado e sempre valido).\n        int ans = 1;\n\n        // Para cada par de valores distintos (a, b): o melhor conjunto marcado\n        // alterna a e b. Isso equivale a escolher uma sub-sequencia da lista de\n        // runs filtrada (so runs de valor a ou b) sem dois iguais adjacentes,\n        // o que a gulosa resolve de forma otima em strings binarias.\n        int K = distinct.size();\n        for (int i = 0; i < K; i++) {\n            int a = distinct.get(i);\n            ArrayList<Integer> la = runsByVal[a];\n            for (int j = i + 1; j < K; j++) {\n                int b = distinct.get(j);\n                ArrayList<Integer> lb = runsByVal[b];\n\n                // Merge dos indices dos runs; gulosa: pega run se valor difere do ultimo pego\n                int pa = 0, pb = 0, sa = la.size(), sb = lb.size();\n                int last = 0, cnt = 0;\n                while (pa < sa || pb < sb) {\n                    int val;\n                    if (pb >= sb || (pa < sa && la.get(pa) < lb.get(pb))) { val = a; pa++; }\n                    else { val = b; pb++; }\n                    if (val != last) { cnt++; last = val; }\n                }\n                if (cnt > ans) ans = cnt;\n            }\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        in.nextToken();\n        int n = (int) in.nval;\n        int[] v = new int[n];\n        for (int i = 0; i < n; i++) {\n            in.nextToken();\n            v[i] = (int) in.nval;\n        }\n\n        // Comprime a sequencia em blocos (runs) de valores consecutivos iguais.\n        // Em qualquer marcacao valida, cada run contribui com no maximo um numero marcado.\n        int[] runVal = new int[n];\n        int R = 0;\n        for (int i = 0; i < n; i++) {\n            if (i == 0 || v[i] != v[i - 1]) runVal[R++] = v[i];\n        }\n\n        // Para cada valor, guarda os indices dos runs (em ordem crescente)\n        @SuppressWarnings(\"unchecked\")\n        ArrayList<Integer>[] runsByVal = new ArrayList[n + 1];\n        for (int i = 0; i <= n; i++) runsByVal[i] = new ArrayList<>();\n        boolean[] seen = new boolean[n + 1];\n        ArrayList<Integer> distinct = new ArrayList<>();\n        for (int t = 0; t < R; t++) {\n            int c = runVal[t];\n            runsByVal[c].add(t);\n            if (!seen[c]) { seen[c] = true; distinct.add(c); }\n        }\n\n        // Resposta pelo menos 1 (um unico numero marcado e sempre valido).\n        int ans = 1;\n\n        // Para cada par de valores distintos (a, b): o melhor conjunto marcado\n        // alterna a e b. Isso equivale a escolher uma sub-sequencia da lista de\n        // runs filtrada (so runs de valor a ou b) sem dois iguais adjacentes,\n        // o que a gulosa resolve de forma otima em strings binarias.\n        int K = distinct.size();\n        for (int i = 0; i < K; i++) {\n            int a = distinct.get(i);\n            ArrayList<Integer> la = runsByVal[a];\n            for (int j = i + 1; j < K; j++) {\n                int b = distinct.get(j);\n                ArrayList<Integer> lb = runsByVal[b];\n\n                // Merge dos indices dos runs; gulosa: pega run se valor difere do ultimo pego\n                int pa = 0, pb = 0, sa = la.size(), sb = lb.size();\n                int last = 0, cnt = 0;\n                while (pa < sa || pb < sb) {\n                    int val;\n                    if (pb >= sb || (pa < sa && la.get(pa) < lb.get(pb))) { val = a; pa++; }\n                    else { val = b; pb++; }\n                    if (val != last) { cnt++; last = val; }\n                }\n                if (cnt > ans) ans = cnt;\n            }\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1241059000021778,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

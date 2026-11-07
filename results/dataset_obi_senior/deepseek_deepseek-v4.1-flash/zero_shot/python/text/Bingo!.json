@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T12:11:09.304029+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 959,
+            "output_tokens": 648,
+            "total_tokens": 1607
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.001555,
+            "total_cost": 0.001558
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    N = next(it)\n    K = next(it)\n    U = next(it)\n\n    cards = []\n    for _ in range(N):\n        card = [next(it) for _ in range(K)]\n        cards.append(card)\n\n    pos = [0] * (U + 1)\n    for p in range(1, U + 1):\n        num = next(it)\n        pos[num] = p\n\n    best = U + 1\n    winners = []\n\n    for idx, card in enumerate(cards, start=1):\n        finish = max(pos[num] for num in card)\n        if finish < best:\n            best = finish\n            winners = [idx]\n        elif finish == best:\n            winners.append(idx)\n\n    sys.stdout.write(\" \".join(map(str, winners)))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    N = next(it)\n    K = next(it)\n    U = next(it)\n\n    cards = []\n    for _ in range(N):\n        card = [next(it) for _ in range(K)]\n        cards.append(card)\n\n    pos = [0] * (U + 1)\n    for p in range(1, U + 1):\n        num = next(it)\n        pos[num] = p\n\n    best = U + 1\n    winners = []\n\n    for idx, card in enumerate(cards, start=1):\n        finish = max(pos[num] for num in card)\n        if finish < best:\n            best = finish\n            winners = [idx]\n        elif finish == best:\n            winners.append(idx)\n\n    sys.stdout.write(\" \".join(map(str, winners)))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2200964000003296,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

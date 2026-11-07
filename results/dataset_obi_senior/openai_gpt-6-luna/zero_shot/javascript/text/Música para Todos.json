@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:55:54.963705+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 747,
+            "output_tokens": 434,
+            "total_tokens": 1181
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.000217,
+            "total_cost": 0.000292
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet pos = 0;\nconst N = input[pos++];\nconst M = input[pos++];\nconst C = input[pos++];\n\nconst earliestDetester = new Int32Array(M + 1);\nconst favorite = new Int32Array(N + 1);\n\nfor (let i = 1; i <= N; i++) {\n  const A = input[pos++];\n  const D = input[pos++];\n  favorite[i] = A;\n  if (earliestDetester[D] === 0) earliestDetester[D] = i;\n}\n\nconst visited = new Uint8Array(M + 1);\nlet song = C;\nlet swaps = 0;\n\nwhile (earliestDetester[song] !== 0) {\n  if (visited[song]) {\n    console.log(-1);\n    process.exit(0);\n  }\n\n  visited[song] = 1;\n  song = favorite[earliestDetester[song]];\n  swaps++;\n}\n\nconsole.log(swaps);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet pos = 0;\nconst N = input[pos++];\nconst M = input[pos++];\nconst C = input[pos++];\n\nconst earliestDetester = new Int32Array(M + 1);\nconst favorite = new Int32Array(N + 1);\n\nfor (let i = 1; i <= N; i++) {\n  const A = input[pos++];\n  const D = input[pos++];\n  favorite[i] = A;\n  if (earliestDetester[D] === 0) earliestDetester[D] = i;\n}\n\nconst visited = new Uint8Array(M + 1);\nlet song = C;\nlet swaps = 0;\n\nwhile (earliestDetester[song] !== 0) {\n  if (visited[song]) {\n    console.log(-1);\n    process.exit(0);\n  }\n\n  visited[song] = 1;\n  song = favorite[earliestDetester[song]];\n  swaps++;\n}\n\nconsole.log(swaps);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07652219998999499,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

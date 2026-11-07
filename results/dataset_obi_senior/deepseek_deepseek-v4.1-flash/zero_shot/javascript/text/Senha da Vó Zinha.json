@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T09:30:31.661291+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1196,
+            "output_tokens": 9902,
+            "total_tokens": 11098
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.023765,
+            "total_cost": 0.023768
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nif (data.length < 5) process.exit(0);\n\nconst M = parseInt(data[1], 10);\nconst K = parseInt(data[2], 10);\nconst pattern = data[3];\n\nconst words = [];\nfor (let i = 0; i < M; i++) {\n    words.push(data[4 + i].split('').sort());\n}\n\nlet P = parseInt(data[4 + M], 10);\n\nconst CAP = 1000000000;\nconst blocks = new Array(M);\nlet cur = 1;\n\nfor (let i = M - 1; i >= 0; i--) {\n    blocks[i] = cur;\n    cur *= K;\n    if (cur > CAP) cur = CAP;\n}\n\nlet answer = '';\nlet idx = 0;\n\nfor (let i = 0; i < pattern.length; i++) {\n    const ch = pattern[i];\n\n    if (ch === '#') {\n        const block = blocks[idx];\n        const q = Math.floor((P - 1) / block);\n\n        answer += words[idx][q];\n        P = ((P - 1) % block) + 1;\n        idx++;\n    } else {\n        answer += ch;\n    }\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nif (data.length < 5) process.exit(0);\n\nconst M = parseInt(data[1], 10);\nconst K = parseInt(data[2], 10);\nconst pattern = data[3];\n\nconst words = [];\nfor (let i = 0; i < M; i++) {\n    words.push(data[4 + i].split('').sort());\n}\n\nlet P = parseInt(data[4 + M], 10);\n\nconst CAP = 1000000000;\nconst blocks = new Array(M);\nlet cur = 1;\n\nfor (let i = M - 1; i >= 0; i--) {\n    blocks[i] = cur;\n    cur *= K;\n    if (cur > CAP) cur = CAP;\n}\n\nlet answer = '';\nlet idx = 0;\n\nfor (let i = 0; i < pattern.length; i++) {\n    const ch = pattern[i];\n\n    if (ch === '#') {\n        const block = blocks[idx];\n        const q = Math.floor((P - 1) / block);\n\n        answer += words[idx][q];\n        P = ((P - 1) % block) + 1;\n        idx++;\n    } else {\n        answer += ch;\n    }\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.044613500009290874,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

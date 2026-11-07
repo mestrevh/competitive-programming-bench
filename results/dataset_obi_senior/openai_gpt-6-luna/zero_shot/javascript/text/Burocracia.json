@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:36:15.669657+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1682,
+            "output_tokens": 11726,
+            "total_tokens": 13408
+        },
+        "cost_usd": {
+            "input_cost": 0.000168,
+            "output_cost": 0.005863,
+            "total_cost": 0.006031
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet inputIndex = 0;\n\nfunction nextInt() {\n  while (inputIndex < input.length && input.charCodeAt(inputIndex) <= 32) inputIndex++;\n  let value = 0;\n  while (inputIndex < input.length) {\n    const c = input.charCodeAt(inputIndex);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    inputIndex++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst parent = new Int32Array(N + 1);\nparent[1] = 1;\n\nconst head = new Int32Array(N + 1);\nconst next = new Int32Array(N + 1);\n\nfor (let i = 2; i <= N; i++) {\n  parent[i] = nextInt();\n  next[i] = head[parent[i]];\n  head[parent[i]] = i;\n}\n\nconst size = new Int32Array(N + 1);\nsize.fill(1);\nfor (let i = N; i >= 2; i--) size[parent[i]] += size[i];\n\nconst tin = new Int32Array(N + 1);\nconst stack = new Int32Array(N);\nlet top = 0;\nlet timer = 0;\nstack[top++] = 1;\n\nwhile (top > 0) {\n  const v = stack[--top];\n  tin[v] = timer++;\n  for (let child = head[v]; child !== 0; child = next[child]) {\n    stack[top++] = child;\n  }\n}\n\nconst LOG = Math.ceil(Math.log2(N + 1));\nconst originalUp = new Array(LOG);\noriginalUp[0] = parent;\n\nfor (let level = 1; level < LOG; level++) {\n  const prev = originalUp[level - 1];\n  const curr = new Int32Array(N + 1);\n  for (let v = 1; v <= N; v++) curr[v] = prev[prev[v]];\n  originalUp[level] = curr;\n}\n\nconst segments = new Array(LOG);\nfor (let level = 0; level < LOG; level++) {\n  const tree = new Int32Array(4 * N + 5);\n  tree.fill(-1);\n  segments[level] = tree;\n}\n\nfunction rangeAssign(tree, node, left, right, ql, qr, value) {\n  if (ql <= left && right <= qr) {\n    tree[node] = value;\n    return;\n  }\n\n  if (tree[node] !== -1) {\n    const valueAtNode = tree[node];\n    tree[node * 2] = valueAtNode;\n    tree[node * 2 + 1] = valueAtNode;\n    tree[node] = -1;\n  }\n\n  const mid = (left + right) >> 1;\n  if (ql <= mid) rangeAssign(tree, node * 2, left, mid, ql, qr, value);\n  if (qr > mid) rangeAssign(tree, node * 2 + 1, mid + 1, right, ql, qr, value);\n}\n\nfunction getJump(level, v) {\n  const tree = segments[level];\n  const pos = tin[v];\n  let node = 1;\n  let left = 0;\n  let right = N - 1;\n\n  while (true) {\n    if (tree[node] !== -1) return tree[node];\n    if (left === right) return originalUp[level][v];\n\n    const mid = (left + right) >> 1;\n    if (pos <= mid) {\n      node *= 2;\n      right = mid;\n    } else {\n      node = node * 2 + 1;\n      left = mid + 1;\n    }\n  }\n}\n\nconst Q = nextInt();\nconst answers = [];\n\nfor (let i = 0; i < Q; i++) {\n  const type = nextInt();\n  const v = nextInt();\n\n  if (type === 1) {\n    let k = nextInt();\n    let current = v;\n    let level = 0;\n\n    while (k > 0) {\n      if (k & 1) current = getJump(level, current);\n      k >>= 1;\n      level++;\n    }\n\n    answers.push(String(current));\n  } else {\n    const left = tin[v] + 1;\n    const right = tin[v] + size[v] - 1;\n\n    if (left <= right) {\n      for (let level = 0; level < LOG; level++) {\n        const value = level === 0 ? v : getJump(level - 1, v);\n        rangeAssign(segments[level], 1, 0, N - 1, left, right, value);\n      }\n    }\n  }\n}\n\nconsole.log(answers.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet inputIndex = 0;\n\nfunction nextInt() {\n  while (inputIndex < input.length && input.charCodeAt(inputIndex) <= 32) inputIndex++;\n  let value = 0;\n  while (inputIndex < input.length) {\n    const c = input.charCodeAt(inputIndex);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    inputIndex++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst parent = new Int32Array(N + 1);\nparent[1] = 1;\n\nconst head = new Int32Array(N + 1);\nconst next = new Int32Array(N + 1);\n\nfor (let i = 2; i <= N; i++) {\n  parent[i] = nextInt();\n  next[i] = head[parent[i]];\n  head[parent[i]] = i;\n}\n\nconst size = new Int32Array(N + 1);\nsize.fill(1);\nfor (let i = N; i >= 2; i--) size[parent[i]] += size[i];\n\nconst tin = new Int32Array(N + 1);\nconst stack = new Int32Array(N);\nlet top = 0;\nlet timer = 0;\nstack[top++] = 1;\n\nwhile (top > 0) {\n  const v = stack[--top];\n  tin[v] = timer++;\n  for (let child = head[v]; child !== 0; child = next[child]) {\n    stack[top++] = child;\n  }\n}\n\nconst LOG = Math.ceil(Math.log2(N + 1));\nconst originalUp = new Array(LOG);\noriginalUp[0] = parent;\n\nfor (let level = 1; level < LOG; level++) {\n  const prev = originalUp[level - 1];\n  const curr = new Int32Array(N + 1);\n  for (let v = 1; v <= N; v++) curr[v] = prev[prev[v]];\n  originalUp[level] = curr;\n}\n\nconst segments = new Array(LOG);\nfor (let level = 0; level < LOG; level++) {\n  const tree = new Int32Array(4 * N + 5);\n  tree.fill(-1);\n  segments[level] = tree;\n}\n\nfunction rangeAssign(tree, node, left, right, ql, qr, value) {\n  if (ql <= left && right <= qr) {\n    tree[node] = value;\n    return;\n  }\n\n  if (tree[node] !== -1) {\n    const valueAtNode = tree[node];\n    tree[node * 2] = valueAtNode;\n    tree[node * 2 + 1] = valueAtNode;\n    tree[node] = -1;\n  }\n\n  const mid = (left + right) >> 1;\n  if (ql <= mid) rangeAssign(tree, node * 2, left, mid, ql, qr, value);\n  if (qr > mid) rangeAssign(tree, node * 2 + 1, mid + 1, right, ql, qr, value);\n}\n\nfunction getJump(level, v) {\n  const tree = segments[level];\n  const pos = tin[v];\n  let node = 1;\n  let left = 0;\n  let right = N - 1;\n\n  while (true) {\n    if (tree[node] !== -1) return tree[node];\n    if (left === right) return originalUp[level][v];\n\n    const mid = (left + right) >> 1;\n    if (pos <= mid) {\n      node *= 2;\n      right = mid;\n    } else {\n      node = node * 2 + 1;\n      left = mid + 1;\n    }\n  }\n}\n\nconst Q = nextInt();\nconst answers = [];\n\nfor (let i = 0; i < Q; i++) {\n  const type = nextInt();\n  const v = nextInt();\n\n  if (type === 1) {\n    let k = nextInt();\n    let current = v;\n    let level = 0;\n\n    while (k > 0) {\n      if (k & 1) current = getJump(level, current);\n      k >>= 1;\n      level++;\n    }\n\n    answers.push(String(current));\n  } else {\n    const left = tin[v] + 1;\n    const right = tin[v] + size[v] - 1;\n\n    if (left <= right) {\n      for (let level = 0; level < LOG; level++) {\n        const value = level === 0 ? v : getJump(level - 1, v);\n        rangeAssign(segments[level], 1, 0, N - 1, left, right, value);\n      }\n    }\n  }\n}\n\nconsole.log(answers.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.19179040000017267,
+            "counts": {
+                "AC": 16,
+                "WA": 37,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

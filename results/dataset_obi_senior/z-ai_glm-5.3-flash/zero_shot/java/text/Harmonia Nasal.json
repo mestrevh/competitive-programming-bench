@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T20:00:05.398540+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1296,
+            "output_tokens": 45365,
+            "total_tokens": 46661
+        },
+        "cost_usd": {
+            "input_cost": 2.8e-05,
+            "output_cost": 0.022683,
+            "total_cost": 0.02271
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sb.append(line).append(' ');\n        }\n        StringTokenizer st = new StringTokenizer(sb.toString());\n        int n = Integer.parseInt(st.nextToken());\n        int k = Integer.parseInt(st.nextToken());\n        long[] a = new long[n];\n        long[] b = new long[n];\n        for (int i = 0; i < n; i++) a[i] = Long.parseLong(st.nextToken());\n        for (int i = 0; i < n; i++) b[i] = Long.parseLong(st.nextToken());\n\n        // Análise (banco = nasalidade anterior - resistência anterior):\n        // Anexar j exige banco + a_j >= 0, e o banco cresce em (a_j - d_j), onde\n        // d_j = 0 se zerada, senão b_j.\n        // -> Sílabas do meio com a_j - d_j < 0 nunca valem a pena (removê-las só\n        //    aumenta o banco e a pontuação), então todas as transições tornam-se\n        //    automaticamente válidas (banco >= 0 >= -a_j) e a ordem é irrelevante.\n        // Papéis possíveis:\n        //   - última sílaba L: contribui a_L (seu b nunca é pago) = base_L + g_L\n        //   - sílaba do meio zerada: contribui a_i = base_i + g_i\n        //   - sílaba do meio paga: contribui a_i - b_i <= base_i\n        // onde base_i = max(a_i - b_i, 0) e g_i = min(a_i, b_i).\n        // Total de papéis \"privilegiados\" (L + zerados) <= K+1, então a resposta é:\n        //   soma de base_i + soma dos (K+1) maiores g_i.\n        long ans = 0;\n        long[] m = new long[n];\n        for (int i = 0; i < n; i++) {\n            long d = a[i] - b[i];\n            if (d > 0) ans += d;\n            m[i] = Math.min(a[i], b[i]);\n        }\n        int take = Math.min(k + 1, n);\n        Arrays.sort(m);\n        for (int i = n - 1; i >= n - take; i--) ans += m[i];\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder sb = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            sb.append(line).append(' ');\n        }\n        StringTokenizer st = new StringTokenizer(sb.toString());\n        int n = Integer.parseInt(st.nextToken());\n        int k = Integer.parseInt(st.nextToken());\n        long[] a = new long[n];\n        long[] b = new long[n];\n        for (int i = 0; i < n; i++) a[i] = Long.parseLong(st.nextToken());\n        for (int i = 0; i < n; i++) b[i] = Long.parseLong(st.nextToken());\n\n        // Análise (banco = nasalidade anterior - resistência anterior):\n        // Anexar j exige banco + a_j >= 0, e o banco cresce em (a_j - d_j), onde\n        // d_j = 0 se zerada, senão b_j.\n        // -> Sílabas do meio com a_j - d_j < 0 nunca valem a pena (removê-las só\n        //    aumenta o banco e a pontuação), então todas as transições tornam-se\n        //    automaticamente válidas (banco >= 0 >= -a_j) e a ordem é irrelevante.\n        // Papéis possíveis:\n        //   - última sílaba L: contribui a_L (seu b nunca é pago) = base_L + g_L\n        //   - sílaba do meio zerada: contribui a_i = base_i + g_i\n        //   - sílaba do meio paga: contribui a_i - b_i <= base_i\n        // onde base_i = max(a_i - b_i, 0) e g_i = min(a_i, b_i).\n        // Total de papéis \"privilegiados\" (L + zerados) <= K+1, então a resposta é:\n        //   soma de base_i + soma dos (K+1) maiores g_i.\n        long ans = 0;\n        long[] m = new long[n];\n        for (int i = 0; i < n; i++) {\n            long d = a[i] - b[i];\n            if (d > 0) ans += d;\n            m[i] = Math.min(a[i], b[i]);\n        }\n        int take = Math.min(k + 1, n);\n        Arrays.sort(m);\n        for (int i = n - 1; i >= n - take; i--) ans += m[i];\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1983403000049293,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:46:37.206501+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 741,
+            "output_tokens": 909,
+            "total_tokens": 1650
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.000454,
+            "total_cost": 0.00047
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int m = n - 1;\n    int *head = calloc(n + 2, sizeof(int));\n    int *nxt = malloc((2 * m + 2) * sizeof(int));\n    int *to = malloc((2 * m + 2) * sizeof(int));\n    for (int i = 0; i <= n; i++) head[i] = -1;\n    for (int i = 0; i < m; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        to[2 * i] = b;     nxt[2 * i] = head[a];     head[a] = 2 * i;\n        to[2 * i + 1] = a; nxt[2 * i + 1] = head[b]; head[b] = 2 * i + 1;\n    }\n\n    int *parent = calloc(n + 1, sizeof(int));\n    int *order = malloc((n + 1) * sizeof(int));\n    char *visited = calloc(n + 1, sizeof(char));\n    int cnt = 0;\n    int *stack = malloc((n + 1) * sizeof(int));\n    int top = 0;\n    stack[top++] = 1;\n    visited[1] = 1;\n    parent[1] = 0;\n    while (top > 0) {\n        int u = stack[--top];\n        order[cnt++] = u;\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (!visited[v]) {\n                visited[v] = 1;\n                parent[v] = u;\n                stack[top++] = v;\n            }\n        }\n    }\n\n    long long *sz = calloc(n + 1, sizeof(long long));\n    for (int i = 0; i < n; i++) sz[i + 1] = 1;\n    for (int i = cnt - 1; i >= 0; i--) {\n        int u = order[i];\n        if (parent[u] != 0) sz[parent[u]] += sz[u];\n    }\n\n    long long best = -1;\n    for (int v = 2; v <= n; v++) {\n        if (parent[v] != 0 || v == 1) {\n            long long s = sz[v];\n            long long diff = s * 2 > n ? s * 2 - n : n - s * 2;\n            if (best < 0 || diff < best) best = diff;\n        }\n    }\n    /* iterate over edges: each non-root vertex v has one edge to parent */\n    best = -1;\n    for (int v = 1; v <= n; v++) {\n        for (int e = head[v]; e != -1; e = nxt[e]) {\n            int u = to[e];\n            /* consider edge (v,u): component containing u when removed */\n            /* size of component containing child = sz[child] */\n        }\n    }\n    /* simpler: for each vertex except root, edge to parent */\n    best = -1;\n    for (int v = 2; v <= n; v++) {\n        if (parent[v] != 0 || sz[v] < n) {\n            long long s = sz[v];\n            if (s >= 1 && s <= n - 1) {\n                long long diff = n - 2 * s;\n                if (diff < 0) diff = -diff;\n                if (best < 0 || diff < best) best = diff;\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", best);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    int m = n - 1;\n    int *head = calloc(n + 2, sizeof(int));\n    int *nxt = malloc((2 * m + 2) * sizeof(int));\n    int *to = malloc((2 * m + 2) * sizeof(int));\n    for (int i = 0; i <= n; i++) head[i] = -1;\n    for (int i = 0; i < m; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        to[2 * i] = b;     nxt[2 * i] = head[a];     head[a] = 2 * i;\n        to[2 * i + 1] = a; nxt[2 * i + 1] = head[b]; head[b] = 2 * i + 1;\n    }\n\n    int *parent = calloc(n + 1, sizeof(int));\n    int *order = malloc((n + 1) * sizeof(int));\n    char *visited = calloc(n + 1, sizeof(char));\n    int cnt = 0;\n    int *stack = malloc((n + 1) * sizeof(int));\n    int top = 0;\n    stack[top++] = 1;\n    visited[1] = 1;\n    parent[1] = 0;\n    while (top > 0) {\n        int u = stack[--top];\n        order[cnt++] = u;\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (!visited[v]) {\n                visited[v] = 1;\n                parent[v] = u;\n                stack[top++] = v;\n            }\n        }\n    }\n\n    long long *sz = calloc(n + 1, sizeof(long long));\n    for (int i = 0; i < n; i++) sz[i + 1] = 1;\n    for (int i = cnt - 1; i >= 0; i--) {\n        int u = order[i];\n        if (parent[u] != 0) sz[parent[u]] += sz[u];\n    }\n\n    long long best = -1;\n    for (int v = 2; v <= n; v++) {\n        if (parent[v] != 0 || v == 1) {\n            long long s = sz[v];\n            long long diff = s * 2 > n ? s * 2 - n : n - s * 2;\n            if (best < 0 || diff < best) best = diff;\n        }\n    }\n    /* iterate over edges: each non-root vertex v has one edge to parent */\n    best = -1;\n    for (int v = 1; v <= n; v++) {\n        for (int e = head[v]; e != -1; e = nxt[e]) {\n            int u = to[e];\n            /* consider edge (v,u): component containing u when removed */\n            /* size of component containing child = sz[child] */\n        }\n    }\n    /* simpler: for each vertex except root, edge to parent */\n    best = -1;\n    for (int v = 2; v <= n; v++) {\n        if (parent[v] != 0 || sz[v] < n) {\n            long long s = sz[v];\n            if (s >= 1 && s <= n - 1) {\n                long long diff = n - 2 * s;\n                if (diff < 0) diff = -diff;\n                if (best < 0 || diff < best) best = diff;\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", best);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11056590001680888,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

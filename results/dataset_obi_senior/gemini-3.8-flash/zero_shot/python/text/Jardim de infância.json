@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:33:28.585299+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1099,
+            "output_tokens": 1613,
+            "total_tokens": 9325
+        },
+        "cost_usd": {
+            "input_cost": 0.000824,
+            "output_cost": 0.006049,
+            "total_cost": 0.006873
+        },
+        "raw_response": "Para resolver este problema, precisamos verificar exatamente as 8 condições descritas no enunciado utilizando operações básicas de geometria vetorial (produto escalar, produto vetorial e distâncias ao quadrado para evitar problemas de precisão com números de ponto flutuante):\n\n1. **Ângulo $\\angle P_2 P_1 P_3$ agudo:** O produto escalar entre os vetores $(P_2 - P_1)$ e $(P_3 - P_1)$ deve ser estritamente positivo: $(P_2 - P_1) \\cdot (P_3 - P_1) > 0$.\n2. **$|P_1 P_2| = |P_1 P_3|$:** A distância ao quadrado de $P_1$ a $P_2$ deve ser igual à de $P_1$ a $P_3$.\n3. **Colinearidade de $P_2, P_3, P_4, P_5$:** O produto vetorial de $(P_3 - P_2)$ com $(P_4 - P_2)$ e com $(P_5 - P_2)$ deve ser nulo.\n4. **Pontos médios coincidentes:** Como $(P_2 + P_3) / 2 = (P_4 + P_5) / 2$, basta verificar se $P_2 + P_3 = P_4 + P_5$.\n5. **Comprimento de $P_2 P_3 > P_4 P_5$:** A distância ao quadrado de $P_2$ a $P_3$ deve ser estritamente maior que a de $P_4$ a $P_5$.\n6. **Perpendicularidade de $P_4 P_6$ e $P_5 P_7$ a $P_2 P_3$:** O produto escalar de $(P_6 - P_4)$ com $(P_3 - P_2)$ e de $(P_7 - P_5)$ com $(P_3 - P_2)$ devem ser ambos iguais a zero.\n7. **$|P_4 P_6| = |P_5 P_7|$:** A distância ao quadrado de $P_4$ a $P_6$ deve ser igual à de $P_5$ a $P_7$.\n8. **Separação de $P_1$ e $P_6$ pela reta $P_2 P_3$:** Os pontos $P_1$ e $P_6$ devem estar em semiplanos opostos em relação à reta que passa por $P_2$ e $P_3$. Isso ocorre se e somente se os produtos vetoriais $(P_3 - P_2) \\times (P_1 - P_2)$ e $(P_3 - P_2) \\times (P_6 - P_2)$ tiverem sinais opostos não-nulos.\n\nAbaixo está a implementação completa e eficiente em Python:\n\n```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    # Lendo os 7 pontos P1, P2, ..., P7 (índices 1 a 7)\n    pts = [None]\n    idx = 0\n    for _ in range(7):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        pts.append((x, y))\n        idx += 2\n\n    def dist2(a, b):\n        return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2\n\n    def dot(a, b):\n        return a[0] * b[0] + a[1] * b[1]\n\n    def cross(a, b):\n        return a[0] * b[1] - a[1] * b[0]\n\n    def sub(a, b):\n        return (a[0] - b[0], a[1] - b[1])\n\n    p1, p2, p3, p4, p5, p6, p7 = pts[1:]\n\n    # Condição 1: O ângulo ∠P2P1P3 é agudo\n    v1_2 = sub(p2, p1)\n    v1_3 = sub(p3, p1)\n    if dot(v1_2, v1_3) <= 0:\n        print(\"N\")\n        return\n\n    # Condição 2: Os segmentos P1P2 e P1P3 têm o mesmo comprimento\n    if dist2(p1, p2) != dist2(p1, p3):\n        print(\"N\")\n        return\n\n    # Condição 3: Os pontos P2, P3, P4 e P5 são colineares\n    v2_3 = sub(p3, p2)\n    v2_4 = sub(p4, p2)\n    v2_5 = sub(p5, p2)\n    if cross(v2_3, v2_4) != 0 or cross(v2_3, v2_5) != 0:\n        print(\"N\")\n        return\n\n    # Condição 4: Os pontos médios dos segmentos P2P3 e P4P5 são coincidentes\n    if p2[0] + p3[0] != p4[0] + p5[0] or p2[1] + p3[1] != p4[1] + p5[1]:\n        print(\"N\")\n        return\n\n    # Condição 5: O segmento P2P3 tem comprimento maior que o segmento P4P5\n    if dist2(p2, p3) <= dist2(p4, p5):\n        print(\"N\")\n        return\n\n    # Condição 6: Os segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3\n    v4_6 = sub(p6, p4)\n    v5_7 = sub(p7, p5)\n    if dot(v4_6, v2_3) != 0 or dot(v5_7, v2_3) != 0:\n        print(\"N\")\n        return\n\n    # Condição 7: Os segmentos P4P6 e P5P7 têm o mesmo comprimento\n    if dist2(p4, p6) != dist2(p5, p7):\n        print(\"N\")\n        return\n\n    # Condição 8: P1 e P6 devem estar separados pela reta que contém P2P3\n    v2_1 = sub(p1, p2)\n    v2_6 = sub(p6, p2)\n    cp1 = cross(v2_3, v2_1)\n    cp6 = cross(v2_3, v2_6)\n    if cp1 * cp6 >= 0:\n        print(\"N\")\n        return\n\n    print(\"S\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    # Lendo os 7 pontos P1, P2, ..., P7 (índices 1 a 7)\n    pts = [None]\n    idx = 0\n    for _ in range(7):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        pts.append((x, y))\n        idx += 2\n\n    def dist2(a, b):\n        return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2\n\n    def dot(a, b):\n        return a[0] * b[0] + a[1] * b[1]\n\n    def cross(a, b):\n        return a[0] * b[1] - a[1] * b[0]\n\n    def sub(a, b):\n        return (a[0] - b[0], a[1] - b[1])\n\n    p1, p2, p3, p4, p5, p6, p7 = pts[1:]\n\n    # Condição 1: O ângulo ∠P2P1P3 é agudo\n    v1_2 = sub(p2, p1)\n    v1_3 = sub(p3, p1)\n    if dot(v1_2, v1_3) <= 0:\n        print(\"N\")\n        return\n\n    # Condição 2: Os segmentos P1P2 e P1P3 têm o mesmo comprimento\n    if dist2(p1, p2) != dist2(p1, p3):\n        print(\"N\")\n        return\n\n    # Condição 3: Os pontos P2, P3, P4 e P5 são colineares\n    v2_3 = sub(p3, p2)\n    v2_4 = sub(p4, p2)\n    v2_5 = sub(p5, p2)\n    if cross(v2_3, v2_4) != 0 or cross(v2_3, v2_5) != 0:\n        print(\"N\")\n        return\n\n    # Condição 4: Os pontos médios dos segmentos P2P3 e P4P5 são coincidentes\n    if p2[0] + p3[0] != p4[0] + p5[0] or p2[1] + p3[1] != p4[1] + p5[1]:\n        print(\"N\")\n        return\n\n    # Condição 5: O segmento P2P3 tem comprimento maior que o segmento P4P5\n    if dist2(p2, p3) <= dist2(p4, p5):\n        print(\"N\")\n        return\n\n    # Condição 6: Os segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3\n    v4_6 = sub(p6, p4)\n    v5_7 = sub(p7, p5)\n    if dot(v4_6, v2_3) != 0 or dot(v5_7, v2_3) != 0:\n        print(\"N\")\n        return\n\n    # Condição 7: Os segmentos P4P6 e P5P7 têm o mesmo comprimento\n    if dist2(p4, p6) != dist2(p5, p7):\n        print(\"N\")\n        return\n\n    # Condição 8: P1 e P6 devem estar separados pela reta que contém P2P3\n    v2_1 = sub(p1, p2)\n    v2_6 = sub(p6, p2)\n    cp1 = cross(v2_3, v2_1)\n    cp6 = cross(v2_3, v2_6)\n    if cp1 * cp6 >= 0:\n        print(\"N\")\n        return\n\n    print(\"S\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06953659999999218,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

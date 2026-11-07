@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:34:59.563057+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1013,
+            "output_tokens": 1815,
+            "total_tokens": 2828
+        },
+        "cost_usd": {
+            "input_cost": 0.000101,
+            "output_cost": 0.000907,
+            "total_cost": 0.001009
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M, K;\n    cin >> N >> M >> K;\n\n    string password;\n    cin >> password;\n\n    vector<array<int, 26>> freq(M);\n    for (int i = 0; i < M; ++i) {\n        string s;\n        cin >> s;\n        freq[i].fill(0);\n        for (char c : s) ++freq[i][c - 'a'];\n    }\n\n    long long P;\n    cin >> P;\n    const long long cap = P;\n\n    auto mulCap = [&](long long a, long long b) {\n        if (a == 0 || b == 0) return 0LL;\n        if (a > cap / b) return cap;\n        return min(cap, a * b);\n    };\n\n    vector<long long> powers(M + 1, 1);\n    for (int i = 1; i <= M; ++i)\n        powers[i] = mulCap(powers[i - 1], K);\n\n    long long prefixMultiplicity = 1;\n    int hashIndex = 0;\n\n    for (int i = 0; i < N; ++i) {\n        if (password[i] != '#') continue;\n\n        int remaining = M - hashIndex - 1;\n        for (int c = 0; c < 26; ++c) {\n            if (freq[hashIndex][c] == 0) continue;\n\n            long long count = mulCap(prefixMultiplicity, freq[hashIndex][c]);\n            count = mulCap(count, powers[remaining]);\n\n            if (P > count) {\n                P -= count;\n            } else {\n                password[i] = char('a' + c);\n                prefixMultiplicity = mulCap(prefixMultiplicity, freq[hashIndex][c]);\n                break;\n            }\n        }\n\n        ++hashIndex;\n    }\n\n    cout << password << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M, K;\n    cin >> N >> M >> K;\n\n    string password;\n    cin >> password;\n\n    vector<array<int, 26>> freq(M);\n    for (int i = 0; i < M; ++i) {\n        string s;\n        cin >> s;\n        freq[i].fill(0);\n        for (char c : s) ++freq[i][c - 'a'];\n    }\n\n    long long P;\n    cin >> P;\n    const long long cap = P;\n\n    auto mulCap = [&](long long a, long long b) {\n        if (a == 0 || b == 0) return 0LL;\n        if (a > cap / b) return cap;\n        return min(cap, a * b);\n    };\n\n    vector<long long> powers(M + 1, 1);\n    for (int i = 1; i <= M; ++i)\n        powers[i] = mulCap(powers[i - 1], K);\n\n    long long prefixMultiplicity = 1;\n    int hashIndex = 0;\n\n    for (int i = 0; i < N; ++i) {\n        if (password[i] != '#') continue;\n\n        int remaining = M - hashIndex - 1;\n        for (int c = 0; c < 26; ++c) {\n            if (freq[hashIndex][c] == 0) continue;\n\n            long long count = mulCap(prefixMultiplicity, freq[hashIndex][c]);\n            count = mulCap(count, powers[remaining]);\n\n            if (P > count) {\n                P -= count;\n            } else {\n                password[i] = char('a' + c);\n                prefixMultiplicity = mulCap(prefixMultiplicity, freq[hashIndex][c]);\n                break;\n            }\n        }\n\n        ++hashIndex;\n    }\n\n    cout << password << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18415400000230875,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

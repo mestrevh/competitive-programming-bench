@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T20:56:16.815777+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 727,
+            "output_tokens": 10937,
+            "total_tokens": 11664
+        },
+        "cost_usd": {
+            "input_cost": 1.6e-05,
+            "output_cost": 0.005469,
+            "total_cost": 0.005484
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    private static final int BUFSIZE = 1 << 16;\n    private static final byte[] buffer = new byte[BUFSIZE];\n    private static int bufPos = 0, bufLen = 0;\n    private static final InputStream in = System.in;\n\n    private static int readByte() throws IOException {\n        if (bufPos == bufLen) {\n            bufLen = in.read(buffer, 0, BUFSIZE);\n            bufPos = 0;\n            if (bufLen == -1) return -1;\n        }\n        return buffer[bufPos++];\n    }\n\n    private static long nextLong() throws IOException {\n        int b = readByte();\n        while (b != -1 && (b < '0' || b > '9')) b = readByte();\n        long ret = 0;\n        while (b >= '0' && b <= '9') {\n            ret = ret * 10 + (b - '0');\n            b = readByte();\n        }\n        return ret;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int n = (int) nextLong();\n        int[] a = new int[n];\n        for (int i = 0; i < n; i++) a[i] = (int) nextLong();\n\n        int l = 0, r = n - 1;\n        long ls = a[0], rs = a[n - 1];\n        long count = 0;\n\n        while (l < r) {\n            if (ls == rs) {\n                l++;\n                r--;\n                ls = a[l];\n                rs = a[r];\n            } else if (ls < rs) {\n                l++;\n                ls += a[l];\n                count++;\n            } else {\n                r--;\n                rs += a[r];\n                count++;\n            }\n        }\n\n        System.out.print(count);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    private static final int BUFSIZE = 1 << 16;\n    private static final byte[] buffer = new byte[BUFSIZE];\n    private static int bufPos = 0, bufLen = 0;\n    private static final InputStream in = System.in;\n\n    private static int readByte() throws IOException {\n        if (bufPos == bufLen) {\n            bufLen = in.read(buffer, 0, BUFSIZE);\n            bufPos = 0;\n            if (bufLen == -1) return -1;\n        }\n        return buffer[bufPos++];\n    }\n\n    private static long nextLong() throws IOException {\n        int b = readByte();\n        while (b != -1 && (b < '0' || b > '9')) b = readByte();\n        long ret = 0;\n        while (b >= '0' && b <= '9') {\n            ret = ret * 10 + (b - '0');\n            b = readByte();\n        }\n        return ret;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int n = (int) nextLong();\n        int[] a = new int[n];\n        for (int i = 0; i < n; i++) a[i] = (int) nextLong();\n\n        int l = 0, r = n - 1;\n        long ls = a[0], rs = a[n - 1];\n        long count = 0;\n\n        while (l < r) {\n            if (ls == rs) {\n                l++;\n                r--;\n                ls = a[l];\n                rs = a[r];\n            } else if (ls < rs) {\n                l++;\n                ls += a[l];\n                count++;\n            } else {\n                r--;\n                rs += a[r];\n                count++;\n            }\n        }\n\n        System.out.print(count);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09692600002745166,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T21:00:47.513783+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1234,
+            "output_tokens": 3155,
+            "total_tokens": 4389
+        },
+        "cost_usd": {
+            "input_cost": 2.6e-05,
+            "output_cost": 0.001577,
+            "total_cost": 0.001604
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct { int to, t, p, next; } Edge;\ntypedef struct { int d, id; } HN;\n\nstatic Edge *E;\nstatic int *head;\nstatic int C, N;\nstatic int *dist;\nstatic char *vis;\nstatic HN *heap;\nstatic int hn;\n\nstatic void hpush(int d, int id) {\n    int i = hn++;\n    heap[i].d = d; heap[i].id = id;\n    while (i > 0) {\n        int p = (i - 1) >> 1;\n        if (heap[p].d <= heap[i].d) break;\n        HN tmp = heap[p]; heap[p] = heap[i]; heap[i] = tmp;\n        i = p;\n    }\n}\n\nstatic HN hpop(void) {\n    HN top = heap[0];\n    heap[0] = heap[--hn];\n    int i = 0;\n    for (;;) {\n        int l = 2 * i + 1, r = l + 1, s = i;\n        if (l < hn && heap[l].d < heap[s].d) s = l;\n        if (r < hn && heap[r].d < heap[s].d) s = r;\n        if (s == i) break;\n        HN tmp = heap[s]; heap[s] = heap[i]; heap[i] = tmp;\n        i = s;\n    }\n    return top;\n}\n\nint main(void) {\n    int V, M;\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n    C = V + 1;\n\n    E = malloc(sizeof(Edge) * 2 * (size_t)M);\n    head = malloc(sizeof(int) * (size_t)(N + 1));\n    for (int i = 0; i <= N; i++) head[i] = -1;\n\n    for (int i = 0; i < M; i++) {\n        int a, b, t, p;\n        scanf(\"%d %d %d %d\", &a, &b, &t, &p);\n        E[2 * i]     = (Edge){ b, t, p, head[a] }; head[a] = 2 * i;\n        E[2 * i + 1] = (Edge){ a, t, p, head[b] }; head[b] = 2 * i + 1;\n    }\n\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n\n    long total = (long)(N + 1) * C;\n    dist = malloc(sizeof(int) * (size_t)total);\n    vis  = malloc((size_t)total);\n    for (long i = 0; i < total; i++) { dist[i] = INT_MAX; vis[i] = 0; }\n\n    /* max pushes <= 1 + sum over directed edges of (V+1) ~ 804k; allocate safely */\n    heap = malloc(sizeof(HN) * 2200000);\n    hn = 0;\n\n    long sid = (long)X * C;\n    dist[sid] = 0;\n    hpush(0, (int)sid);\n\n    int ans = -1;\n    while (hn > 0) {\n        HN cur = hpop();\n        if (vis[cur.id]) continue;\n        vis[cur.id] = 1;\n        int u = cur.id / C, c = cur.id - u * C;\n        if (u == Y) { ans = cur.d; break; }\n        for (int e = head[u]; e != -1; e = E[e].next) {\n            int nc = c + E[e].p;\n            if (nc <= V) {\n                int nd = cur.d + E[e].t;\n                long nid = (long)E[e].to * C + nc;\n                if (nd < dist[nid]) {\n                    dist[nid] = nd;\n                    hpush(nd, (int)nid);\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct { int to, t, p, next; } Edge;\ntypedef struct { int d, id; } HN;\n\nstatic Edge *E;\nstatic int *head;\nstatic int C, N;\nstatic int *dist;\nstatic char *vis;\nstatic HN *heap;\nstatic int hn;\n\nstatic void hpush(int d, int id) {\n    int i = hn++;\n    heap[i].d = d; heap[i].id = id;\n    while (i > 0) {\n        int p = (i - 1) >> 1;\n        if (heap[p].d <= heap[i].d) break;\n        HN tmp = heap[p]; heap[p] = heap[i]; heap[i] = tmp;\n        i = p;\n    }\n}\n\nstatic HN hpop(void) {\n    HN top = heap[0];\n    heap[0] = heap[--hn];\n    int i = 0;\n    for (;;) {\n        int l = 2 * i + 1, r = l + 1, s = i;\n        if (l < hn && heap[l].d < heap[s].d) s = l;\n        if (r < hn && heap[r].d < heap[s].d) s = r;\n        if (s == i) break;\n        HN tmp = heap[s]; heap[s] = heap[i]; heap[i] = tmp;\n        i = s;\n    }\n    return top;\n}\n\nint main(void) {\n    int V, M;\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n    C = V + 1;\n\n    E = malloc(sizeof(Edge) * 2 * (size_t)M);\n    head = malloc(sizeof(int) * (size_t)(N + 1));\n    for (int i = 0; i <= N; i++) head[i] = -1;\n\n    for (int i = 0; i < M; i++) {\n        int a, b, t, p;\n        scanf(\"%d %d %d %d\", &a, &b, &t, &p);\n        E[2 * i]     = (Edge){ b, t, p, head[a] }; head[a] = 2 * i;\n        E[2 * i + 1] = (Edge){ a, t, p, head[b] }; head[b] = 2 * i + 1;\n    }\n\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n\n    long total = (long)(N + 1) * C;\n    dist = malloc(sizeof(int) * (size_t)total);\n    vis  = malloc((size_t)total);\n    for (long i = 0; i < total; i++) { dist[i] = INT_MAX; vis[i] = 0; }\n\n    /* max pushes <= 1 + sum over directed edges of (V+1) ~ 804k; allocate safely */\n    heap = malloc(sizeof(HN) * 2200000);\n    hn = 0;\n\n    long sid = (long)X * C;\n    dist[sid] = 0;\n    hpush(0, (int)sid);\n\n    int ans = -1;\n    while (hn > 0) {\n        HN cur = hpop();\n        if (vis[cur.id]) continue;\n        vis[cur.id] = 1;\n        int u = cur.id / C, c = cur.id - u * C;\n        if (u == Y) { ans = cur.d; break; }\n        for (int e = head[u]; e != -1; e = E[e].next) {\n            int nc = c + E[e].p;\n            if (nc <= V) {\n                int nd = cur.d + E[e].t;\n                long nid = (long)E[e].to * C + nc;\n                if (nd < dist[nid]) {\n                    dist[nid] = nd;\n                    hpush(nd, (int)nid);\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1483746999874711,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

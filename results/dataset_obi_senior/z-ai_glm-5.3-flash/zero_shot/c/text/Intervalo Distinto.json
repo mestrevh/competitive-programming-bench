@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T18:51:18.893744+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 611,
+            "output_tokens": 2419,
+            "total_tokens": 3030
+        },
+        "cost_usd": {
+            "input_cost": 1.3e-05,
+            "output_cost": 0.00121,
+            "total_cost": 0.001223
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nstatic int last[100001]; /* last[v] = último índice (1-based) em que v apareceu; 0 = nunca */\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int l = 1;      /* início atual da janela */\n    int best = 0;\n\n    for (int i = 1; i <= n; i++) {\n        int v;\n        scanf(\"%d\", &v);\n\n        /* se v já apareceu dentro da janela atual, avança o início */\n        if (last[v] >= l) {\n            l = last[v] + 1;\n        }\n        last[v] = i;\n\n        int len = i - l + 1;\n        if (len > best) best = len;\n    }\n\n    printf(\"%d\\n\", best);\n    return 0;\n}\n```\n\n**Explicação da solução (window sliding / two pointers, O(N)):**\n\n- Mantemos uma janela `[l, i]` que sempre contém apenas valores distintos.\n- `last[v]` guarda a última posição (1-based) em que o valor `v` foi visto (0 se nunca foi visto, já que arrays globais começam zerados).\n- Ao processar o elemento na posição `i`:\n  - Se `last[v] >= l`, o valor `v` está duplicado dentro da janela atual; então movemos `l` para `last[v] + 1`, removendo a duplicata.\n  - Atualizamos `last[v] = i`.\n  - O comprimento da janela válida é `i - l + 1`; guardamos o máximo.\n- Como cada posição é visitada uma única vez e cada valor só pode \"empurrar\" `l` para frente, a complexidade total é **O(N)** tempo e **O(max Ii)** memória — resolve todas as subtarefas (N ≤ 10⁵, Ii ≤ 10⁵).\n\n**Verificação nos exemplos:**\n- Exemplo 1: `3 2 1 3 2 1 3 2` → janela máxima tem tamanho **3** ✔\n- Exemplo 2: `3 2 3 8 5 5` → janela `2 3 8 5` tem tamanho **4** ✔",
+        "extracted_code": "#include <stdio.h>\n\nstatic int last[100001]; /* last[v] = último índice (1-based) em que v apareceu; 0 = nunca */\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int l = 1;      /* início atual da janela */\n    int best = 0;\n\n    for (int i = 1; i <= n; i++) {\n        int v;\n        scanf(\"%d\", &v);\n\n        /* se v já apareceu dentro da janela atual, avança o início */\n        if (last[v] >= l) {\n            l = last[v] + 1;\n        }\n        last[v] = i;\n\n        int len = i - l + 1;\n        if (len > best) best = len;\n    }\n\n    printf(\"%d\\n\", best);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17653349999454804,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:49:12.826325+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1828,
+            "output_tokens": 788,
+            "total_tokens": 3835
+        },
+        "cost_usd": {
+            "input_cost": 0.001371,
+            "output_cost": 0.002955,
+            "total_cost": 0.004326
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    P = [0] * (K + 1)\n    for i in range(1, K + 1):\n        P[i] = int(next(it))\n\n    # Guardar as arestas\n    edges = []\n    # Mapear pares únicos (u, t) para IDs de nós\n    # O nó base de cada estação u é u (1 <= u <= N)\n    # Nós especiais (u, t) serão indexados a partir de N + 1\n    node_map = {}\n    next_node_id = N + 1\n\n    for _ in range(M):\n        u = int(next(it))\n        v = int(next(it))\n        t = int(next(it))\n        edges.append((u, v, t))\n        \n        if (u, t) not in node_map:\n            node_map[(u, t)] = next_node_id\n            next_node_id += 1\n        if (v, t) not in node_map:\n            node_map[(v, t)] = next_node_id\n            next_node_id += 1\n\n    A = int(next(it))\n    B = int(next(it))\n\n    if A == B:\n        print(0)\n        return\n\n    num_nodes = next_node_id\n    adj = [[] for _ in range(num_nodes)]\n\n    # Conectar estação base com seus nós (u, t)\n    for (u, t), ut_id in node_map.items():\n        # De u para (u, t) custa P[t]\n        adj[u].append((ut_id, P[t]))\n        # De (u, t) para u custa 0 (desembarque)\n        adj[ut_id].append((u, 0))\n\n    # Conectar (u, t) e (v, t) para cada aresta\n    for u, v, t in edges:\n        ut_id = node_map[(u, t)]\n        vt_id = node_map[(v, t)]\n        adj[ut_id].append((vt_id, 0))\n        adj[vt_id].append((ut_id, 0))\n\n    # Dijkstra a partir do nó A\n    dist = [float('inf')] * num_nodes\n    dist[A] = 0\n    pq = [(0, A)]\n\n    while pq:\n        d, u = heapq.heappop(pq)\n        if d > dist[u]:\n            continue\n\n        if u == B:\n            print(d)\n            return\n\n        for v, weight in adj[u]:\n            new_d = d + weight\n            if new_d < dist[v]:\n                dist[v] = new_d\n                heapq.heappush(pq, (new_d, v))\n\n    ans = dist[B]\n    if ans == float('inf'):\n        print(-1)\n    else:\n        print(ans)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    P = [0] * (K + 1)\n    for i in range(1, K + 1):\n        P[i] = int(next(it))\n\n    # Guardar as arestas\n    edges = []\n    # Mapear pares únicos (u, t) para IDs de nós\n    # O nó base de cada estação u é u (1 <= u <= N)\n    # Nós especiais (u, t) serão indexados a partir de N + 1\n    node_map = {}\n    next_node_id = N + 1\n\n    for _ in range(M):\n        u = int(next(it))\n        v = int(next(it))\n        t = int(next(it))\n        edges.append((u, v, t))\n        \n        if (u, t) not in node_map:\n            node_map[(u, t)] = next_node_id\n            next_node_id += 1\n        if (v, t) not in node_map:\n            node_map[(v, t)] = next_node_id\n            next_node_id += 1\n\n    A = int(next(it))\n    B = int(next(it))\n\n    if A == B:\n        print(0)\n        return\n\n    num_nodes = next_node_id\n    adj = [[] for _ in range(num_nodes)]\n\n    # Conectar estação base com seus nós (u, t)\n    for (u, t), ut_id in node_map.items():\n        # De u para (u, t) custa P[t]\n        adj[u].append((ut_id, P[t]))\n        # De (u, t) para u custa 0 (desembarque)\n        adj[ut_id].append((u, 0))\n\n    # Conectar (u, t) e (v, t) para cada aresta\n    for u, v, t in edges:\n        ut_id = node_map[(u, t)]\n        vt_id = node_map[(v, t)]\n        adj[ut_id].append((vt_id, 0))\n        adj[vt_id].append((ut_id, 0))\n\n    # Dijkstra a partir do nó A\n    dist = [float('inf')] * num_nodes\n    dist[A] = 0\n    pq = [(0, A)]\n\n    while pq:\n        d, u = heapq.heappop(pq)\n        if d > dist[u]:\n            continue\n\n        if u == B:\n            print(d)\n            return\n\n        for v, weight in adj[u]:\n            new_d = d + weight\n            if new_d < dist[v]:\n                dist[v] = new_d\n                heapq.heappush(pq, (new_d, v))\n\n    ans = dist[B]\n    if ans == float('inf'):\n        print(-1)\n    else:\n        print(ans)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.7354494999963208,
+            "counts": {
+                "AC": 107,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

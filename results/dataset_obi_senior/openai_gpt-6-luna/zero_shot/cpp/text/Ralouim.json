@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T02:32:55.213673+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 675,
+            "output_tokens": 3007,
+            "total_tokens": 3682
+        },
+        "cost_usd": {
+            "input_cost": 6.8e-05,
+            "output_cost": 0.001504,
+            "total_cost": 0.001571
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    int dist2;\n    uint16_t from, to;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<int> x(N), y(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> x[i] >> y[i];\n    }\n\n    vector<Edge> edges;\n    edges.reserve(static_cast<size_t>(N) * (N - 1) + N);\n\n    for (int i = 0; i < N; ++i) {\n        edges.push_back({x[i] * x[i] + y[i] * y[i],\n                         static_cast<uint16_t>(N),\n                         static_cast<uint16_t>(i)});\n    }\n\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            if (i == j) continue;\n            int dx = x[i] - x[j];\n            int dy = y[i] - y[j];\n            edges.push_back({dx * dx + dy * dy,\n                             static_cast<uint16_t>(i),\n                             static_cast<uint16_t>(j)});\n        }\n    }\n\n    sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b) {\n        return a.dist2 > b.dist2;\n    });\n\n    vector<int> best(N + 1, 0);\n    vector<int> pending(N + 1, 0);\n    vector<int> touched;\n    best[N] = 0;\n\n    for (size_t i = 0; i < edges.size();) {\n        size_t j = i;\n        while (j < edges.size() && edges[j].dist2 == edges[i].dist2) {\n            const Edge& e = edges[j];\n            int candidate = best[e.from] + 1;\n            if (candidate > pending[e.to]) {\n                if (pending[e.to] == 0) touched.push_back(e.to);\n                pending[e.to] = candidate;\n            }\n            ++j;\n        }\n\n        for (int v : touched) {\n            best[v] = max(best[v], pending[v]);\n            pending[v] = 0;\n        }\n        touched.clear();\n        i = j;\n    }\n\n    cout << *max_element(best.begin(), best.begin() + N) << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    int dist2;\n    uint16_t from, to;\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<int> x(N), y(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> x[i] >> y[i];\n    }\n\n    vector<Edge> edges;\n    edges.reserve(static_cast<size_t>(N) * (N - 1) + N);\n\n    for (int i = 0; i < N; ++i) {\n        edges.push_back({x[i] * x[i] + y[i] * y[i],\n                         static_cast<uint16_t>(N),\n                         static_cast<uint16_t>(i)});\n    }\n\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            if (i == j) continue;\n            int dx = x[i] - x[j];\n            int dy = y[i] - y[j];\n            edges.push_back({dx * dx + dy * dy,\n                             static_cast<uint16_t>(i),\n                             static_cast<uint16_t>(j)});\n        }\n    }\n\n    sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b) {\n        return a.dist2 > b.dist2;\n    });\n\n    vector<int> best(N + 1, 0);\n    vector<int> pending(N + 1, 0);\n    vector<int> touched;\n    best[N] = 0;\n\n    for (size_t i = 0; i < edges.size();) {\n        size_t j = i;\n        while (j < edges.size() && edges[j].dist2 == edges[i].dist2) {\n            const Edge& e = edges[j];\n            int candidate = best[e.from] + 1;\n            if (candidate > pending[e.to]) {\n                if (pending[e.to] == 0) touched.push_back(e.to);\n                pending[e.to] = candidate;\n            }\n            ++j;\n        }\n\n        for (int v : touched) {\n            best[v] = max(best[v], pending[v]);\n            pending[v] = 0;\n        }\n        touched.clear();\n        i = j;\n    }\n\n    cout << *max_element(best.begin(), best.begin() + N) << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.2545767999981763,
+            "counts": {
+                "AC": 6,
+                "WA": 34,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

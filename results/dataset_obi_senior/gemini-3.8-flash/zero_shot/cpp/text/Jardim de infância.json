@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T10:40:47.229635+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1099,
+            "output_tokens": 1088,
+            "total_tokens": 16657
+        },
+        "cost_usd": {
+            "input_cost": 0.000824,
+            "output_cost": 0.00408,
+            "total_cost": 0.004904
+        },
+        "raw_response": "```cpp\n#include <iostream>\n\nusing namespace std;\n\nstruct Point {\n    long long x, y;\n};\n\n// Vector subtraction: B - A\nPoint vec(Point A, Point B) {\n    return {B.x - A.x, B.y - A.y};\n}\n\n// Dot product of two vectors\nlong long dot(Point A, Point B) {\n    return A.x * B.x + A.y * B.y;\n}\n\n// 2D Cross product of two vectors (A x B)\nlong long cross(Point A, Point B) {\n    return A.x * B.y - A.y * B.x;\n}\n\n// Squared distance between two points\nlong long distSq(Point A, Point B) {\n    long long dx = A.x - B.x;\n    long long dy = A.y - B.y;\n    return dx * dx + dy * dy;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    Point P[8];\n    for (int i = 1; i <= 7; ++i) {\n        if (!(cin >> P[i].x >> P[i].y)) return 0;\n    }\n\n    // Condition 1: Angle P2-P1-P3 is acute (vertex at P1)\n    // u = P2 - P1, v = P3 - P1. Dot product must be strictly positive.\n    Point u = vec(P[1], P[2]);\n    Point v = vec(P[1], P[3]);\n    if (dot(u, v) <= 0) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 2: Segments P1P2 and P1P3 have the same length\n    if (distSq(P[1], P[2]) != distSq(P[1], P[3])) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 3: Points P2, P3, P4, and P5 are collinear\n    Point base = vec(P[2], P[3]);\n    if (cross(base, vec(P[2], P[4])) != 0 || cross(base, vec(P[2], P[5])) != 0) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 4: Midpoints of P2P3 and P4P5 coincide\n    // (P2 + P3) == (P4 + P5)\n    if (P[2].x + P[3].x != P[4].x + P[5].x || P[2].y + P[3].y != P[4].y + P[5].y) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 5: Segment P2P3 is strictly longer than P4P5\n    if (distSq(P[2], P[3]) <= distSq(P[4], P[5])) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 6: P4P6 and P5P7 are perpendicular to P2P3\n    Point v46 = vec(P[4], P[6]);\n    Point v57 = vec(P[5], P[7]);\n    if (dot(v46, base) != 0 || dot(v57, base) != 0) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 7: Segments P4P6 and P5P7 have the same length\n    if (distSq(P[4], P[6]) != distSq(P[5], P[7])) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 8: P1 and P6 are separated by the line containing P2P3\n    // Formally, the cross products of (P3 - P2) with (P1 - P2) and (P6 - P2) have opposite signs\n    long long cp1 = cross(base, vec(P[2], P[1]));\n    long long cp6 = cross(base, vec(P[2], P[6]));\n    if (!((cp1 > 0 && cp6 < 0) || (cp1 < 0 && cp6 > 0))) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    cout << \"S\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n\nusing namespace std;\n\nstruct Point {\n    long long x, y;\n};\n\n// Vector subtraction: B - A\nPoint vec(Point A, Point B) {\n    return {B.x - A.x, B.y - A.y};\n}\n\n// Dot product of two vectors\nlong long dot(Point A, Point B) {\n    return A.x * B.x + A.y * B.y;\n}\n\n// 2D Cross product of two vectors (A x B)\nlong long cross(Point A, Point B) {\n    return A.x * B.y - A.y * B.x;\n}\n\n// Squared distance between two points\nlong long distSq(Point A, Point B) {\n    long long dx = A.x - B.x;\n    long long dy = A.y - B.y;\n    return dx * dx + dy * dy;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    Point P[8];\n    for (int i = 1; i <= 7; ++i) {\n        if (!(cin >> P[i].x >> P[i].y)) return 0;\n    }\n\n    // Condition 1: Angle P2-P1-P3 is acute (vertex at P1)\n    // u = P2 - P1, v = P3 - P1. Dot product must be strictly positive.\n    Point u = vec(P[1], P[2]);\n    Point v = vec(P[1], P[3]);\n    if (dot(u, v) <= 0) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 2: Segments P1P2 and P1P3 have the same length\n    if (distSq(P[1], P[2]) != distSq(P[1], P[3])) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 3: Points P2, P3, P4, and P5 are collinear\n    Point base = vec(P[2], P[3]);\n    if (cross(base, vec(P[2], P[4])) != 0 || cross(base, vec(P[2], P[5])) != 0) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 4: Midpoints of P2P3 and P4P5 coincide\n    // (P2 + P3) == (P4 + P5)\n    if (P[2].x + P[3].x != P[4].x + P[5].x || P[2].y + P[3].y != P[4].y + P[5].y) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 5: Segment P2P3 is strictly longer than P4P5\n    if (distSq(P[2], P[3]) <= distSq(P[4], P[5])) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 6: P4P6 and P5P7 are perpendicular to P2P3\n    Point v46 = vec(P[4], P[6]);\n    Point v57 = vec(P[5], P[7]);\n    if (dot(v46, base) != 0 || dot(v57, base) != 0) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 7: Segments P4P6 and P5P7 have the same length\n    if (distSq(P[4], P[6]) != distSq(P[5], P[7])) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    // Condition 8: P1 and P6 are separated by the line containing P2P3\n    // Formally, the cross products of (P3 - P2) with (P1 - P2) and (P6 - P2) have opposite signs\n    long long cp1 = cross(base, vec(P[2], P[1]));\n    long long cp6 = cross(base, vec(P[2], P[6]));\n    if (!((cp1 > 0 && cp6 < 0) || (cp1 < 0 && cp6 > 0))) {\n        cout << \"N\\n\";\n        return 0;\n    }\n\n    cout << \"S\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18188020001980476,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

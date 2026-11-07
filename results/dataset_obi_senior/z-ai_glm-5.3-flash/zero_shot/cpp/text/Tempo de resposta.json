@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T00:37:50.425330+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 967,
+            "output_tokens": 10242,
+            "total_tokens": 11209
+        },
+        "cost_usd": {
+            "input_cost": 2.1e-05,
+            "output_cost": 0.005121,
+            "total_cost": 0.005142
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    const int MAXF = 105;\n    vector<long long> totalTime(MAXF, 0); // soma dos tempos de resposta\n    vector<long long> recv(MAXF, 0);      // mensagens recebidas do amigo\n    vector<long long> sent(MAXF, 0);      // respostas enviadas ao amigo\n    vector<long long> pending(MAXF, -1);  // instante da mensagem sem resposta\n    vector<char> seen(MAXF, 0);           // amigo aparece na entrada\n\n    long long curTime = 0; // instante do último evento processado\n    long long gap = 1;     // intervalo até o próximo evento (padrão 1s)\n\n    for (int i = 0; i < n; ++i) {\n        char type;\n        long long x;\n        cin >> type >> x;\n\n        if (type == 'T') {\n            gap = x;\n        } else {\n            curTime += gap;\n            gap = 1;\n            int f = (int)x;\n            seen[f] = 1;\n\n            if (type == 'R') {\n                recv[f]++;\n                pending[f] = curTime;\n            } else if (type == 'E') {\n                if (pending[f] >= 0) {\n                    sent[f]++;\n                    totalTime[f] += curTime - pending[f];\n                    pending[f] = -1;\n                }\n            }\n        }\n    }\n\n    for (int f = 1; f <= 100; ++f) {\n        if (!seen[f]) continue;\n        if (recv[f] == sent[f]) {\n            cout << f << ' ' << totalTime[f] << '\\n';\n        } else {\n            cout << f << ' ' << -1 << '\\n';\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (!(cin >> n)) return 0;\n\n    const int MAXF = 105;\n    vector<long long> totalTime(MAXF, 0); // soma dos tempos de resposta\n    vector<long long> recv(MAXF, 0);      // mensagens recebidas do amigo\n    vector<long long> sent(MAXF, 0);      // respostas enviadas ao amigo\n    vector<long long> pending(MAXF, -1);  // instante da mensagem sem resposta\n    vector<char> seen(MAXF, 0);           // amigo aparece na entrada\n\n    long long curTime = 0; // instante do último evento processado\n    long long gap = 1;     // intervalo até o próximo evento (padrão 1s)\n\n    for (int i = 0; i < n; ++i) {\n        char type;\n        long long x;\n        cin >> type >> x;\n\n        if (type == 'T') {\n            gap = x;\n        } else {\n            curTime += gap;\n            gap = 1;\n            int f = (int)x;\n            seen[f] = 1;\n\n            if (type == 'R') {\n                recv[f]++;\n                pending[f] = curTime;\n            } else if (type == 'E') {\n                if (pending[f] >= 0) {\n                    sent[f]++;\n                    totalTime[f] += curTime - pending[f];\n                    pending[f] = -1;\n                }\n            }\n        }\n    }\n\n    for (int f = 1; f <= 100; ++f) {\n        if (!seen[f]) continue;\n        if (recv[f] == sent[f]) {\n            cout << f << ' ' << totalTime[f] << '\\n';\n        } else {\n            cout << f << ' ' << -1 << '\\n';\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15491680000559427,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

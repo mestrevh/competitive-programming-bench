@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T23:25:15.487563+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 575,
+            "output_tokens": 38014,
+            "total_tokens": 38589
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.019007,
+            "total_cost": 0.019019
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\n/*\n  Todas as K etiquetas (blocos disjuntos de C quadrados) devem ser coladas.\n  Maximizar a soma descoberta <=> maximizar (soma dos quadrados nao cobertos).\n  DP por camadas (numero de etiquetas usadas):\n    dp[j][i] = maior soma descoberta nos primeiros i quadrados usando exatamente j etiquetas\n    dp[j][i] = max(dp[j][i-1] + A[i],            // quadrado i descoberto\n                   dp[j-1][i-C])                 // etiqueta cobre [i-C+1 .. i]\n  Estado (j,i) so pode levar ao estado final (K,N) se:\n    i >= j*C  (espaco para as j etiquetas)  e  i <= N - (K-j)*C  (espaco para as restantes)\n  Logo cada camada tem exatamente N - K*C + 1 posicoes uteis.\n  Complexidade: O(K * (N - K*C + 1)) <= ~N^2/4 = 2.5e7 no pior caso.\n  Memoria: duas linhas de tamanho N+1.\n*/\nint main() {\n    int N, K, C;\n    if (scanf(\"%d %d %d\", &N, &K, &C) != 3) return 0;\n\n    vector<long long> A(N + 1, 0), pre(N + 1, 0);\n    for (int i = 1; i <= N; i++) {\n        int x;\n        scanf(\"%d\", &x);\n        A[i] = x;\n        pre[i] = pre[i - 1] + x;\n    }\n\n    if ((long long)K * C > N) K = (int)((long long)N / C); // defesa (restricoes garantem K*C <= N)\n\n    const long long NEG_INF = LLONG_MIN / 4;\n    vector<long long> prv(N + 1, 0), cur(N + 1, NEG_INF);\n\n    for (int i = 0; i <= N; i++) prv[i] = pre[i]; // camada j = 0: nada coberto\n\n    for (int j = 1; j <= K; j++) {\n        int lo = j * C;\n        int hi = N - (K - j) * C;\n        for (int i = lo; i <= hi; i++) {\n            long long best = prv[i - C];              // quadrado i coberto por etiqueta terminando em i\n            if (i > lo) {                              // quadrado i descoberto\n                long long alt = cur[i - 1] + A[i];\n                if (alt > best) best = alt;\n            }\n            cur[i] = best;\n        }\n        swap(prv, cur);\n    }\n\n    printf(\"%lld\\n\", prv[N]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\n/*\n  Todas as K etiquetas (blocos disjuntos de C quadrados) devem ser coladas.\n  Maximizar a soma descoberta <=> maximizar (soma dos quadrados nao cobertos).\n  DP por camadas (numero de etiquetas usadas):\n    dp[j][i] = maior soma descoberta nos primeiros i quadrados usando exatamente j etiquetas\n    dp[j][i] = max(dp[j][i-1] + A[i],            // quadrado i descoberto\n                   dp[j-1][i-C])                 // etiqueta cobre [i-C+1 .. i]\n  Estado (j,i) so pode levar ao estado final (K,N) se:\n    i >= j*C  (espaco para as j etiquetas)  e  i <= N - (K-j)*C  (espaco para as restantes)\n  Logo cada camada tem exatamente N - K*C + 1 posicoes uteis.\n  Complexidade: O(K * (N - K*C + 1)) <= ~N^2/4 = 2.5e7 no pior caso.\n  Memoria: duas linhas de tamanho N+1.\n*/\nint main() {\n    int N, K, C;\n    if (scanf(\"%d %d %d\", &N, &K, &C) != 3) return 0;\n\n    vector<long long> A(N + 1, 0), pre(N + 1, 0);\n    for (int i = 1; i <= N; i++) {\n        int x;\n        scanf(\"%d\", &x);\n        A[i] = x;\n        pre[i] = pre[i - 1] + x;\n    }\n\n    if ((long long)K * C > N) K = (int)((long long)N / C); // defesa (restricoes garantem K*C <= N)\n\n    const long long NEG_INF = LLONG_MIN / 4;\n    vector<long long> prv(N + 1, 0), cur(N + 1, NEG_INF);\n\n    for (int i = 0; i <= N; i++) prv[i] = pre[i]; // camada j = 0: nada coberto\n\n    for (int j = 1; j <= K; j++) {\n        int lo = j * C;\n        int hi = N - (K - j) * C;\n        for (int i = lo; i <= hi; i++) {\n            long long best = prv[i - C];              // quadrado i coberto por etiqueta terminando em i\n            if (i > lo) {                              // quadrado i descoberto\n                long long alt = cur[i - 1] + A[i];\n                if (alt > best) best = alt;\n            }\n            cur[i] = best;\n        }\n        swap(prv, cur);\n    }\n\n    printf(\"%lld\\n\", prv[N]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2521197000023676,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

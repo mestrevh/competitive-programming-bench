@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:03:38.026478+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 518,
+            "output_tokens": 691,
+            "total_tokens": 3279
+        },
+        "cost_usd": {
+            "input_cost": 0.000389,
+            "output_cost": 0.002591,
+            "total_cost": 0.00298
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int h;\n    int idx;\n} Element;\n\nint cmp(const void *a, const void *b) {\n    Element *ea = (Element *)a;\n    Element *eb = (Element *)b;\n    if (eb->h != ea->h) {\n        return (eb->h > ea->h) - (eb->h < ea->h);\n    }\n    return ea->idx - eb->idx;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int *raw_a = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &raw_a[i]);\n    }\n\n    // Comprimir elementos adjacentes iguais\n    int *a = (int *)malloc((n + 2) * sizeof(int));\n    int m = 0;\n    a[0] = 0;\n    for (int i = 0; i < n; i++) {\n        if (m == 0 || raw_a[i] != a[m]) {\n            m++;\n            a[m] = raw_a[i];\n        }\n    }\n    a[m + 1] = 0;\n    free(raw_a);\n\n    Element *elems = (Element *)malloc(m * sizeof(Element));\n    for (int i = 1; i <= m; i++) {\n        elems[i - 1].h = a[i];\n        elems[i - 1].idx = i;\n    }\n\n    qsort(elems, m, sizeof(Element), cmp);\n\n    char *active = (char *)calloc(m + 2, sizeof(char));\n    int current_comp = 0;\n    int max_comp = 0;\n\n    int i = 0;\n    while (i < m) {\n        int j = i;\n        while (j < m && elems[j].h == elems[i].h) {\n            int idx = elems[j].idx;\n            active[idx] = 1;\n\n            if (active[idx - 1] && active[idx + 1]) {\n                current_comp--;\n            } else if (!active[idx - 1] && !active[idx + 1]) {\n                current_comp++;\n            }\n            j++;\n        }\n\n        if (current_comp > max_comp) {\n            max_comp = current_comp;\n        }\n\n        i = j;\n    }\n\n    // O número total de pedaços é 1 (parte de baixo) + número de componentes acima do corte\n    printf(\"%d\\n\", max_comp + 1);\n\n    free(a);\n    free(elems);\n    free(active);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int h;\n    int idx;\n} Element;\n\nint cmp(const void *a, const void *b) {\n    Element *ea = (Element *)a;\n    Element *eb = (Element *)b;\n    if (eb->h != ea->h) {\n        return (eb->h > ea->h) - (eb->h < ea->h);\n    }\n    return ea->idx - eb->idx;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int *raw_a = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &raw_a[i]);\n    }\n\n    // Comprimir elementos adjacentes iguais\n    int *a = (int *)malloc((n + 2) * sizeof(int));\n    int m = 0;\n    a[0] = 0;\n    for (int i = 0; i < n; i++) {\n        if (m == 0 || raw_a[i] != a[m]) {\n            m++;\n            a[m] = raw_a[i];\n        }\n    }\n    a[m + 1] = 0;\n    free(raw_a);\n\n    Element *elems = (Element *)malloc(m * sizeof(Element));\n    for (int i = 1; i <= m; i++) {\n        elems[i - 1].h = a[i];\n        elems[i - 1].idx = i;\n    }\n\n    qsort(elems, m, sizeof(Element), cmp);\n\n    char *active = (char *)calloc(m + 2, sizeof(char));\n    int current_comp = 0;\n    int max_comp = 0;\n\n    int i = 0;\n    while (i < m) {\n        int j = i;\n        while (j < m && elems[j].h == elems[i].h) {\n            int idx = elems[j].idx;\n            active[idx] = 1;\n\n            if (active[idx - 1] && active[idx + 1]) {\n                current_comp--;\n            } else if (!active[idx - 1] && !active[idx + 1]) {\n                current_comp++;\n            }\n            j++;\n        }\n\n        if (current_comp > max_comp) {\n            max_comp = current_comp;\n        }\n\n        i = j;\n    }\n\n    // O número total de pedaços é 1 (parte de baixo) + número de componentes acima do corte\n    printf(\"%d\\n\", max_comp + 1);\n\n    free(a);\n    free(elems);\n    free(active);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2060209000192117,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

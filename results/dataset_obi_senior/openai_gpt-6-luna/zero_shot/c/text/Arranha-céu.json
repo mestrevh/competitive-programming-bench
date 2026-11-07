@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:35:53.036001+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 725,
+            "output_tokens": 345,
+            "total_tokens": 1070
+        },
+        "cost_usd": {
+            "input_cost": 7.3e-05,
+            "output_cost": 0.000172,
+            "total_cost": 0.000245
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 100000\n\nlong long bit[MAXN + 1];\nint values[MAXN + 1];\n\nvoid add(int index, long long delta, int n) {\n    while (index <= n) {\n        bit[index] += delta;\n        index += index & -index;\n    }\n}\n\nlong long prefix_sum(int index) {\n    long long sum = 0;\n    while (index > 0) {\n        sum += bit[index];\n        index -= index & -index;\n    }\n    return sum;\n}\n\nint main(void) {\n    int n, q;\n    if (scanf(\"%d %d\", &n, &q) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%d\", &values[i]);\n        add(i, values[i], n);\n    }\n\n    for (int i = 0; i < q; i++) {\n        int type, k;\n        scanf(\"%d %d\", &type, &k);\n\n        if (type == 0) {\n            int p;\n            scanf(\"%d\", &p);\n            add(k, p - values[k], n);\n            values[k] = p;\n        } else {\n            printf(\"%lld\\n\", prefix_sum(k));\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 100000\n\nlong long bit[MAXN + 1];\nint values[MAXN + 1];\n\nvoid add(int index, long long delta, int n) {\n    while (index <= n) {\n        bit[index] += delta;\n        index += index & -index;\n    }\n}\n\nlong long prefix_sum(int index) {\n    long long sum = 0;\n    while (index > 0) {\n        sum += bit[index];\n        index -= index & -index;\n    }\n    return sum;\n}\n\nint main(void) {\n    int n, q;\n    if (scanf(\"%d %d\", &n, &q) != 2) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%d\", &values[i]);\n        add(i, values[i], n);\n    }\n\n    for (int i = 0; i < q; i++) {\n        int type, k;\n        scanf(\"%d %d\", &type, &k);\n\n        if (type == 0) {\n            int p;\n            scanf(\"%d\", &p);\n            add(k, p - values[k], n);\n            values[k] = p;\n        } else {\n            printf(\"%lld\\n\", prefix_sum(k));\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11841950000962242,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

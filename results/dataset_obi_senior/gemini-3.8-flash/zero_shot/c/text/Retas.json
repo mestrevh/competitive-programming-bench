@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:31:34.775461+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1129,
+            "output_tokens": 1134,
+            "total_tokens": 5255
+        },
+        "cost_usd": {
+            "input_cost": 0.000847,
+            "output_cost": 0.004253,
+            "total_cost": 0.005099
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef __int128_t int128;\n\ntypedef struct {\n    int128 y1;\n    int128 y2;\n} Line;\n\nint compare_lines(const void *a, const void *b) {\n    const Line *la = (const Line *)a;\n    const Line *lb = (const Line *)b;\n    if (la->y1 < lb->y1) return -1;\n    if (la->y1 > lb->y1) return 1;\n    if (la->y2 > lb->y2) return -1;\n    if (la->y2 < lb->y2) return 1;\n    return 0;\n}\n\nint compare_int128(const void *a, const void *b) {\n    int128 va = *(const int128 *)a;\n    int128 vb = *(const int128 *)b;\n    if (va < vb) return -1;\n    if (va > vb) return 1;\n    return 0;\n}\n\nint bit_size;\nint *bit;\n\nvoid bit_add(int idx, int val) {\n    for (; idx <= bit_size; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nint bit_query(int idx) {\n    int sum = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        sum += bit[idx];\n    }\n}\n\nint lower_bound(int128 *arr, int n, int128 val) {\n    int l = 0, r = n - 1;\n    int ans = n;\n    while (l <= r) {\n        int mid = l + (r - l) / 2;\n        if (arr[mid] >= val) {\n            ans = mid;\n            r = mid - 1;\n        } else {\n            l = mid + 1;\n        }\n    }\n    return ans;\n}\n\nint main() {\n    int n;\n    long long x1_in, x2_in;\n    if (scanf(\"%d %lld %lld\", &n, &x1_in, &x2_in) != 3) return 0;\n\n    int128 x1 = x1_in;\n    int128 x2 = x2_in;\n\n    Line *lines = (Line *)malloc(n * sizeof(Line));\n    int128 *y2_vals = (int128 *)malloc(n * sizeof(int128));\n\n    for (int i = 0; i < n; i++) {\n        long long a, b;\n        scanf(\"%lld %lld\", &a, &b);\n        int128 a128 = a;\n        int128 b128 = b;\n        lines[i].y1 = a128 * x1 + b128;\n        lines[i].y2 = a128 * x2 + b128;\n        y2_vals[i] = lines[i].y2;\n    }\n\n    qsort(y2_vals, n, sizeof(int128), compare_int128);\n\n    int unique_y2 = 0;\n    for (int i = 0; i < n; i++) {\n        if (i == 0 || y2_vals[i] != y2_vals[i - 1]) {\n            y2_vals[unique_y2++] = y2_vals[i];\n        }\n    }\n\n    qsort(lines, n, sizeof(Line), compare_lines);\n\n    bit_size = unique_y2;\n    bit = (int *)calloc(bit_size + 1, sizeof(int));\n\n    long long non_intersecting = 0;\n\n    for (int i = 0; i < n; i++) {\n        int rk = lower_bound(y2_vals, unique_y2, lines[i].y2);\n        // rk is 0-indexed, corresponding to 1-based index rk + 1.\n        // Elements strictly smaller than lines[i].y2 have rank <= rk - 1 (1-based: <= rk)\n        non_intersecting += bit_query(rk);\n        bit_add(rk + 1, 1);\n    }\n\n    long long total_pairs = (long long)n * (n - 1) / 2;\n    long long ans = total_pairs - non_intersecting;\n\n    printf(\"%lld\\n\", ans);\n\n    free(lines);\n    free(y2_vals);\n    free(bit);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef __int128_t int128;\n\ntypedef struct {\n    int128 y1;\n    int128 y2;\n} Line;\n\nint compare_lines(const void *a, const void *b) {\n    const Line *la = (const Line *)a;\n    const Line *lb = (const Line *)b;\n    if (la->y1 < lb->y1) return -1;\n    if (la->y1 > lb->y1) return 1;\n    if (la->y2 > lb->y2) return -1;\n    if (la->y2 < lb->y2) return 1;\n    return 0;\n}\n\nint compare_int128(const void *a, const void *b) {\n    int128 va = *(const int128 *)a;\n    int128 vb = *(const int128 *)b;\n    if (va < vb) return -1;\n    if (va > vb) return 1;\n    return 0;\n}\n\nint bit_size;\nint *bit;\n\nvoid bit_add(int idx, int val) {\n    for (; idx <= bit_size; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nint bit_query(int idx) {\n    int sum = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        sum += bit[idx];\n    }\n}\n\nint lower_bound(int128 *arr, int n, int128 val) {\n    int l = 0, r = n - 1;\n    int ans = n;\n    while (l <= r) {\n        int mid = l + (r - l) / 2;\n        if (arr[mid] >= val) {\n            ans = mid;\n            r = mid - 1;\n        } else {\n            l = mid + 1;\n        }\n    }\n    return ans;\n}\n\nint main() {\n    int n;\n    long long x1_in, x2_in;\n    if (scanf(\"%d %lld %lld\", &n, &x1_in, &x2_in) != 3) return 0;\n\n    int128 x1 = x1_in;\n    int128 x2 = x2_in;\n\n    Line *lines = (Line *)malloc(n * sizeof(Line));\n    int128 *y2_vals = (int128 *)malloc(n * sizeof(int128));\n\n    for (int i = 0; i < n; i++) {\n        long long a, b;\n        scanf(\"%lld %lld\", &a, &b);\n        int128 a128 = a;\n        int128 b128 = b;\n        lines[i].y1 = a128 * x1 + b128;\n        lines[i].y2 = a128 * x2 + b128;\n        y2_vals[i] = lines[i].y2;\n    }\n\n    qsort(y2_vals, n, sizeof(int128), compare_int128);\n\n    int unique_y2 = 0;\n    for (int i = 0; i < n; i++) {\n        if (i == 0 || y2_vals[i] != y2_vals[i - 1]) {\n            y2_vals[unique_y2++] = y2_vals[i];\n        }\n    }\n\n    qsort(lines, n, sizeof(Line), compare_lines);\n\n    bit_size = unique_y2;\n    bit = (int *)calloc(bit_size + 1, sizeof(int));\n\n    long long non_intersecting = 0;\n\n    for (int i = 0; i < n; i++) {\n        int rk = lower_bound(y2_vals, unique_y2, lines[i].y2);\n        // rk is 0-indexed, corresponding to 1-based index rk + 1.\n        // Elements strictly smaller than lines[i].y2 have rank <= rk - 1 (1-based: <= rk)\n        non_intersecting += bit_query(rk);\n        bit_add(rk + 1, 1);\n    }\n\n    long long total_pairs = (long long)n * (n - 1) / 2;\n    long long ans = total_pairs - non_intersecting;\n\n    printf(\"%lld\\n\", ans);\n\n    free(lines);\n    free(y2_vals);\n    free(bit);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.18770810001296923,
+            "counts": {
+                "AC": 8,
+                "WA": 35,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

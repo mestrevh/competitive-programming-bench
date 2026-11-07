@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:08:48.293345+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 650,
+            "output_tokens": 13255,
+            "total_tokens": 13905
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.006627,
+            "total_cost": 0.006641
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8');\nconst len = input.length;\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < len) {\n    const c = input.charCodeAt(pos);\n    if (c >= 48 && c <= 57) break;\n    pos++;\n  }\n  let x = 0;\n  while (pos < len) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    x = x * 10 + (c - 48);\n    pos++;\n  }\n  return x;\n}\n\nconst n = nextInt();\nconst k = nextInt();\n\n// Prefix sums: P[j] = X_1 + ... + X_j (não-decrescente, pois X_i >= 0)\nconst P = new Int32Array(n + 1);\nlet acc = 0;\nfor (let i = 1; i <= n; i++) {\n  acc += nextInt();\n  P[i] = acc;\n}\n\n// Conta pares (i, j) com i < j e P[j] - P[i] = K.\n// Como P é não-decrescente, para cada j os índices i com P[i] = P[j] - K\n// formam um bloco contíguo [lo, hi) dentro de [0, j-1]. Como\n// t = P[j] - K é não-decrescente, lo e hi só avançam: O(N) total.\nlet lo = 0, hi = 0, ans = 0;\nfor (let j = 1; j <= n; j++) {\n  const t = P[j] - k;\n  // hi: primeiro índice com P[hi] > t (limitado a j, pois i <= j-1)\n  while (hi < j && P[hi] <= t) hi++;\n  // lo: primeiro índice com P[lo] >= t\n  while (lo < hi && P[lo] < t) lo++;\n  ans += hi - lo;\n}\n\nprocess.stdout.write(String(ans) + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8');\nconst len = input.length;\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < len) {\n    const c = input.charCodeAt(pos);\n    if (c >= 48 && c <= 57) break;\n    pos++;\n  }\n  let x = 0;\n  while (pos < len) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    x = x * 10 + (c - 48);\n    pos++;\n  }\n  return x;\n}\n\nconst n = nextInt();\nconst k = nextInt();\n\n// Prefix sums: P[j] = X_1 + ... + X_j (não-decrescente, pois X_i >= 0)\nconst P = new Int32Array(n + 1);\nlet acc = 0;\nfor (let i = 1; i <= n; i++) {\n  acc += nextInt();\n  P[i] = acc;\n}\n\n// Conta pares (i, j) com i < j e P[j] - P[i] = K.\n// Como P é não-decrescente, para cada j os índices i com P[i] = P[j] - K\n// formam um bloco contíguo [lo, hi) dentro de [0, j-1]. Como\n// t = P[j] - K é não-decrescente, lo e hi só avançam: O(N) total.\nlet lo = 0, hi = 0, ans = 0;\nfor (let j = 1; j <= n; j++) {\n  const t = P[j] - k;\n  // hi: primeiro índice com P[hi] > t (limitado a j, pois i <= j-1)\n  while (hi < j && P[hi] <= t) hi++;\n  // lo: primeiro índice com P[lo] >= t\n  while (lo < hi && P[lo] < t) lo++;\n  ans += hi - lo;\n}\n\nprocess.stdout.write(String(ans) + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07655769999837503,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

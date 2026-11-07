@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T20:50:28.451334+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 829,
+            "output_tokens": 18061,
+            "total_tokens": 18890
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.009031,
+            "total_cost": 0.009048
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in));\n        in.nextToken(); int L = (int) in.nval;\n        in.nextToken(); int C = (int) in.nval;\n\n        // blacks[r] = bitmask das colunas com peça preta na linha r\n        int[] blacks = new int[L + 2];\n        in.nextToken(); int P = (int) in.nval;\n        for (int i = 0; i < P; i++) {\n            in.nextToken(); int x = (int) in.nval;\n            in.nextToken(); int y = (int) in.nval;\n            blacks[x] |= 1 << (y - 1);\n        }\n\n        final int full = (1 << C) - 1;\n        final int size = 1 << C;\n\n        // supported[r]: células (não pretas) da linha r que têm pelo menos um vizinho preto\n        // (esquerda/direita na própria linha, ou preto na linha de cima / de baixo)\n        int[] supported = new int[L + 1];\n        for (int r = 1; r <= L; r++) {\n            int horiz = ((blacks[r] << 1) & full) | (blacks[r] >> 1);\n            int vert = (r > 1 ? blacks[r - 1] : 0) | (r < L ? blacks[r + 1] : 0);\n            supported[r] = (horiz | vert) & full & ~blacks[r];\n        }\n\n        // DP por linhas: dp[w] = máx. brancas até a linha atual, com máscara w de brancas na linha atual (-1 = inviável)\n        int[] dp = new int[size];\n        java.util.Arrays.fill(dp, -1);\n        for (int r = 1; r <= L; r++) {\n            int[] prev = dp;\n            int[] cur = new int[size];\n            java.util.Arrays.fill(cur, -1);\n            for (int w = 0; w < size; w++) {\n                // não pode sobrepor peças pretas\n                if ((w & blacks[r]) != 0) continue;\n                // toda branca precisa de vizinho preto (fixado pela entrada)\n                if ((w & ~supported[r]) != 0) continue;\n                // duas brancas vizinhas na horizontal (bits adjacentes)\n                if ((w & (w << 1)) != 0) continue;\n\n                int add = Integer.bitCount(w);\n                if (r == 1) {\n                    cur[w] = add;\n                } else {\n                    int best = -1;\n                    for (int pw = 0; pw < size; pw++) {\n                        int v = prev[pw];\n                        // vizinhança vertical proibida entre linhas consecutivas\n                        if (v >= 0 && (pw & w) == 0 && v > best) best = v;\n                    }\n                    if (best >= 0) cur[w] = best + add;\n                }\n            }\n            dp = cur;\n        }\n\n        int ans = 0;\n        for (int w = 0; w < size; w++) if (dp[w] > ans) ans = dp[w];\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedInputStream(System.in));\n        in.nextToken(); int L = (int) in.nval;\n        in.nextToken(); int C = (int) in.nval;\n\n        // blacks[r] = bitmask das colunas com peça preta na linha r\n        int[] blacks = new int[L + 2];\n        in.nextToken(); int P = (int) in.nval;\n        for (int i = 0; i < P; i++) {\n            in.nextToken(); int x = (int) in.nval;\n            in.nextToken(); int y = (int) in.nval;\n            blacks[x] |= 1 << (y - 1);\n        }\n\n        final int full = (1 << C) - 1;\n        final int size = 1 << C;\n\n        // supported[r]: células (não pretas) da linha r que têm pelo menos um vizinho preto\n        // (esquerda/direita na própria linha, ou preto na linha de cima / de baixo)\n        int[] supported = new int[L + 1];\n        for (int r = 1; r <= L; r++) {\n            int horiz = ((blacks[r] << 1) & full) | (blacks[r] >> 1);\n            int vert = (r > 1 ? blacks[r - 1] : 0) | (r < L ? blacks[r + 1] : 0);\n            supported[r] = (horiz | vert) & full & ~blacks[r];\n        }\n\n        // DP por linhas: dp[w] = máx. brancas até a linha atual, com máscara w de brancas na linha atual (-1 = inviável)\n        int[] dp = new int[size];\n        java.util.Arrays.fill(dp, -1);\n        for (int r = 1; r <= L; r++) {\n            int[] prev = dp;\n            int[] cur = new int[size];\n            java.util.Arrays.fill(cur, -1);\n            for (int w = 0; w < size; w++) {\n                // não pode sobrepor peças pretas\n                if ((w & blacks[r]) != 0) continue;\n                // toda branca precisa de vizinho preto (fixado pela entrada)\n                if ((w & ~supported[r]) != 0) continue;\n                // duas brancas vizinhas na horizontal (bits adjacentes)\n                if ((w & (w << 1)) != 0) continue;\n\n                int add = Integer.bitCount(w);\n                if (r == 1) {\n                    cur[w] = add;\n                } else {\n                    int best = -1;\n                    for (int pw = 0; pw < size; pw++) {\n                        int v = prev[pw];\n                        // vizinhança vertical proibida entre linhas consecutivas\n                        if (v >= 0 && (pw & w) == 0 && v > best) best = v;\n                    }\n                    if (best >= 0) cur[w] = best + add;\n                }\n            }\n            dp = cur;\n        }\n\n        int ans = 0;\n        for (int w = 0; w < size; w++) if (dp[w] > ans) ans = dp[w];\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11367679998511449,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

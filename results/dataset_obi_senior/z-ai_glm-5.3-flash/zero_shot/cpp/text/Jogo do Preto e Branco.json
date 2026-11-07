@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-03T00:06:01.785768+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 829,
+            "output_tokens": 13655,
+            "total_tokens": 14484
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.006828,
+            "total_cost": 0.006845
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int L, C;\n    cin >> L >> C;\n    int P;\n    cin >> P;\n    vector<string> grid(L, string(C, '.'));\n    for (int i = 0; i < P; i++){\n        int x, y;\n        cin >> x >> y;\n        --x; --y;\n        grid[x][y] = '#'; // peça preta\n    }\n\n    // Uma peça branca só pode ocupar casas não-pretas vizinhas (ortogonalmente)\n    // de alguma peça preta. Constrói máscara de candidatos por linha.\n    vector<int> cand(L, 0);\n    for (int r = 0; r < L; r++){\n        for (int c = 0; c < C; c++){\n            if (grid[r][c] == '#') continue;\n            bool ok = false;\n            if (r > 0 && grid[r-1][c] == '#') ok = true;\n            if (r + 1 < L && grid[r+1][c] == '#') ok = true;\n            if (c > 0 && grid[r][c-1] == '#') ok = true;\n            if (c + 1 < C && grid[r][c+1] == '#') ok = true;\n            if (ok) cand[r] |= (1 << c);\n        }\n    }\n\n    // Máscaras válidas por linha: sem duas peças brancas lado a lado\n    vector<int> valid;\n    for (int m = 0; m < (1 << C); m++){\n        if ((m & (m << 1)) == 0) valid.push_back(m);\n    }\n\n    const long long NEG = LLONG_MIN / 4;\n    vector<long long> dp(1 << C, NEG), ndp(1 << C, NEG);\n\n    // Primeira linha\n    for (int m : valid){\n        if ((m & ~cand[0]) == 0) dp[m] = __builtin_popcount(m);\n    }\n\n    // Demais linhas: proibido peças brancas verticalmente adjacentes\n    for (int r = 1; r < L; r++){\n        fill(ndp.begin(), ndp.end(), NEG);\n        for (int m : valid){\n            if (m & ~cand[r]) continue;      // só células candidatas\n            int cost = __builtin_popcount(m);\n            for (int pm : valid){\n                if (dp[pm] == NEG) continue;\n                if (pm & m) continue;        // conflito vertical\n                long long val = dp[pm] + cost;\n                if (val > ndp[m]) ndp[m] = val;\n            }\n        }\n        swap(dp, ndp);\n    }\n\n    long long ans = 0;\n    for (int m = 0; m < (1 << C); m++){\n        ans = max(ans, dp[m]);\n    }\n\n    cout << ans << \"\\n\";\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int L, C;\n    cin >> L >> C;\n    int P;\n    cin >> P;\n    vector<string> grid(L, string(C, '.'));\n    for (int i = 0; i < P; i++){\n        int x, y;\n        cin >> x >> y;\n        --x; --y;\n        grid[x][y] = '#'; // peça preta\n    }\n\n    // Uma peça branca só pode ocupar casas não-pretas vizinhas (ortogonalmente)\n    // de alguma peça preta. Constrói máscara de candidatos por linha.\n    vector<int> cand(L, 0);\n    for (int r = 0; r < L; r++){\n        for (int c = 0; c < C; c++){\n            if (grid[r][c] == '#') continue;\n            bool ok = false;\n            if (r > 0 && grid[r-1][c] == '#') ok = true;\n            if (r + 1 < L && grid[r+1][c] == '#') ok = true;\n            if (c > 0 && grid[r][c-1] == '#') ok = true;\n            if (c + 1 < C && grid[r][c+1] == '#') ok = true;\n            if (ok) cand[r] |= (1 << c);\n        }\n    }\n\n    // Máscaras válidas por linha: sem duas peças brancas lado a lado\n    vector<int> valid;\n    for (int m = 0; m < (1 << C); m++){\n        if ((m & (m << 1)) == 0) valid.push_back(m);\n    }\n\n    const long long NEG = LLONG_MIN / 4;\n    vector<long long> dp(1 << C, NEG), ndp(1 << C, NEG);\n\n    // Primeira linha\n    for (int m : valid){\n        if ((m & ~cand[0]) == 0) dp[m] = __builtin_popcount(m);\n    }\n\n    // Demais linhas: proibido peças brancas verticalmente adjacentes\n    for (int r = 1; r < L; r++){\n        fill(ndp.begin(), ndp.end(), NEG);\n        for (int m : valid){\n            if (m & ~cand[r]) continue;      // só células candidatas\n            int cost = __builtin_popcount(m);\n            for (int pm : valid){\n                if (dp[pm] == NEG) continue;\n                if (pm & m) continue;        // conflito vertical\n                long long val = dp[pm] + cost;\n                if (val > ndp[m]) ndp[m] = val;\n            }\n        }\n        swap(dp, ndp);\n    }\n\n    long long ans = 0;\n    for (int m = 0; m < (1 << C); m++){\n        ans = max(ans, dp[m]);\n    }\n\n    cout << ans << \"\\n\";\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2353984000001219,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

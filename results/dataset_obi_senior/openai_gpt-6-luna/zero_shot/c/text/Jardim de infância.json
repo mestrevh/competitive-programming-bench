@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T09:00:10.037947+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1006,
+            "output_tokens": 1465,
+            "total_tokens": 2471
+        },
+        "cost_usd": {
+            "input_cost": 0.000101,
+            "output_cost": 0.000732,
+            "total_cost": 0.000833
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\ntypedef long long ll;\n\ntypedef struct {\n    ll x, y;\n} Point;\n\nll cross(Point a, Point b) {\n    return a.x * b.y - a.y * b.x;\n}\n\nint main(void) {\n    Point p[7];\n\n    for (int i = 0; i < 7; i++) {\n        if (scanf(\"%lld %lld\", &p[i].x, &p[i].y) != 2) return 0;\n    }\n\n    Point v12 = {p[1].x - p[0].x, p[1].y - p[0].y};\n    Point v13 = {p[2].x - p[0].x, p[2].y - p[0].y};\n    Point base = {p[2].x - p[1].x, p[2].y - p[1].y};\n\n    ll dot = v12.x * v13.x + v12.y * v13.y;\n    ll len12 = v12.x * v12.x + v12.y * v12.y;\n    ll len13 = v13.x * v13.x + v13.y * v13.y;\n\n    int valid = dot > 0 && len12 == len13;\n\n    for (int i = 3; i <= 4; i++) {\n        Point v = {p[i].x - p[1].x, p[i].y - p[1].y};\n        if (cross(base, v) != 0) valid = 0;\n    }\n\n    if (p[1].x + p[2].x != p[3].x + p[4].x ||\n        p[1].y + p[2].y != p[3].y + p[4].y) {\n        valid = 0;\n    }\n\n    ll baseLen = base.x * base.x + base.y * base.y;\n    Point v45 = {p[4].x - p[3].x, p[4].y - p[3].y};\n    ll len45 = v45.x * v45.x + v45.y * v45.y;\n    if (baseLen <= len45) valid = 0;\n\n    Point v46 = {p[5].x - p[3].x, p[5].y - p[3].y};\n    Point v57 = {p[6].x - p[4].x, p[6].y - p[4].y};\n    if (base.x * v46.x + base.y * v46.y != 0 ||\n        base.x * v57.x + base.y * v57.y != 0) {\n        valid = 0;\n    }\n\n    ll len46 = v46.x * v46.x + v46.y * v46.y;\n    ll len57 = v57.x * v57.x + v57.y * v57.y;\n    if (len46 != len57) valid = 0;\n\n    Point v1 = {p[0].x - p[1].x, p[0].y - p[1].y};\n    Point v6 = {p[5].x - p[1].x, p[5].y - p[1].y};\n    ll side1 = cross(base, v1);\n    ll side6 = cross(base, v6);\n    if (!((side1 < 0 && side6 > 0) || (side1 > 0 && side6 < 0))) {\n        valid = 0;\n    }\n\n    printf(\"%c\\n\", valid ? 'S' : 'N');\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\ntypedef long long ll;\n\ntypedef struct {\n    ll x, y;\n} Point;\n\nll cross(Point a, Point b) {\n    return a.x * b.y - a.y * b.x;\n}\n\nint main(void) {\n    Point p[7];\n\n    for (int i = 0; i < 7; i++) {\n        if (scanf(\"%lld %lld\", &p[i].x, &p[i].y) != 2) return 0;\n    }\n\n    Point v12 = {p[1].x - p[0].x, p[1].y - p[0].y};\n    Point v13 = {p[2].x - p[0].x, p[2].y - p[0].y};\n    Point base = {p[2].x - p[1].x, p[2].y - p[1].y};\n\n    ll dot = v12.x * v13.x + v12.y * v13.y;\n    ll len12 = v12.x * v12.x + v12.y * v12.y;\n    ll len13 = v13.x * v13.x + v13.y * v13.y;\n\n    int valid = dot > 0 && len12 == len13;\n\n    for (int i = 3; i <= 4; i++) {\n        Point v = {p[i].x - p[1].x, p[i].y - p[1].y};\n        if (cross(base, v) != 0) valid = 0;\n    }\n\n    if (p[1].x + p[2].x != p[3].x + p[4].x ||\n        p[1].y + p[2].y != p[3].y + p[4].y) {\n        valid = 0;\n    }\n\n    ll baseLen = base.x * base.x + base.y * base.y;\n    Point v45 = {p[4].x - p[3].x, p[4].y - p[3].y};\n    ll len45 = v45.x * v45.x + v45.y * v45.y;\n    if (baseLen <= len45) valid = 0;\n\n    Point v46 = {p[5].x - p[3].x, p[5].y - p[3].y};\n    Point v57 = {p[6].x - p[4].x, p[6].y - p[4].y};\n    if (base.x * v46.x + base.y * v46.y != 0 ||\n        base.x * v57.x + base.y * v57.y != 0) {\n        valid = 0;\n    }\n\n    ll len46 = v46.x * v46.x + v46.y * v46.y;\n    ll len57 = v57.x * v57.x + v57.y * v57.y;\n    if (len46 != len57) valid = 0;\n\n    Point v1 = {p[0].x - p[1].x, p[0].y - p[1].y};\n    Point v6 = {p[5].x - p[1].x, p[5].y - p[1].y};\n    ll side1 = cross(base, v1);\n    ll side6 = cross(base, v6);\n    if (!((side1 < 0 && side6 > 0) || (side1 > 0 && side6 < 0))) {\n        valid = 0;\n    }\n\n    printf(\"%c\\n\", valid ? 'S' : 'N');\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10904630000004545,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

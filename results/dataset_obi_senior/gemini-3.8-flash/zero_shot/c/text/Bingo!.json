@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T11:53:51.010812+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 528,
+            "total_tokens": 2424
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.00198,
+            "total_cost": 0.002674
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_EDGES 1000005\n#define MAX_U 10005\n#define MAX_N 1005\n\nint head[MAX_U];\nint to[MAX_EDGES];\nint nxt[MAX_EDGES];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int card) {\n    to[edge_cnt] = card;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt++;\n}\n\nint hits[MAX_N];\nint winner[MAX_N];\n\nint main() {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) {\n        return 0;\n    }\n\n    for (int i = 1; i <= U; ++i) {\n        head[i] = -1;\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        for (int j = 0; j < K; ++j) {\n            int num;\n            scanf(\"%d\", &num);\n            add_edge(num, i);\n        }\n    }\n\n    int found_winner = 0;\n\n    for (int step = 0; step < U; ++step) {\n        int drawn;\n        scanf(\"%d\", &drawn);\n\n        if (found_winner) {\n            continue;\n        }\n\n        for (int e = head[drawn]; e != -1; e = nxt[e]) {\n            int card = to[e];\n            hits[card]++;\n            if (hits[card] == K) {\n                winner[card] = 1;\n                found_winner = 1;\n            }\n        }\n    }\n\n    int first = 1;\n    for (int i = 1; i <= N; ++i) {\n        if (winner[i]) {\n            if (!first) {\n                putchar(' ');\n            }\n            printf(\"%d\", i);\n            first = 0;\n        }\n    }\n    putchar('\\n');\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_EDGES 1000005\n#define MAX_U 10005\n#define MAX_N 1005\n\nint head[MAX_U];\nint to[MAX_EDGES];\nint nxt[MAX_EDGES];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int card) {\n    to[edge_cnt] = card;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt++;\n}\n\nint hits[MAX_N];\nint winner[MAX_N];\n\nint main() {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) {\n        return 0;\n    }\n\n    for (int i = 1; i <= U; ++i) {\n        head[i] = -1;\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        for (int j = 0; j < K; ++j) {\n            int num;\n            scanf(\"%d\", &num);\n            add_edge(num, i);\n        }\n    }\n\n    int found_winner = 0;\n\n    for (int step = 0; step < U; ++step) {\n        int drawn;\n        scanf(\"%d\", &drawn);\n\n        if (found_winner) {\n            continue;\n        }\n\n        for (int e = head[drawn]; e != -1; e = nxt[e]) {\n            int card = to[e];\n            hits[card]++;\n            if (hits[card] == K) {\n                winner[card] = 1;\n                found_winner = 1;\n            }\n        }\n    }\n\n    int first = 1;\n    for (int i = 1; i <= N; ++i) {\n        if (winner[i]) {\n            if (!first) {\n                putchar(' ');\n            }\n            printf(\"%d\", i);\n            first = 0;\n        }\n    }\n    putchar('\\n');\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2467309999919962,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

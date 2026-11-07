@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:04:44.723750+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 929,
+            "total_tokens": 3133
+        },
+        "cost_usd": {
+            "input_cost": 0.000606,
+            "output_cost": 0.003484,
+            "total_cost": 0.00409
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[32768];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = in.read(buffer, 0, buffer.length);\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() throws IOException {\n            int c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c < '0' || c > '9') {\n                    // skip non-digit if any\n                } else {\n                    res = res * 10 + (c - '0');\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n\n    static class FenwickTree {\n        int n;\n        long[] tree;\n\n        public FenwickTree(int n) {\n            this.n = n;\n            this.tree = new long[n + 2];\n        }\n\n        public void add(int i, long delta) {\n            while (i <= n) {\n                tree[i] += delta;\n                i += i & (-i);\n            }\n        }\n\n        public long query(int i) {\n            long sum = 0;\n            while (i > 0) {\n                sum += tree[i];\n                i -= i & (-i);\n            }\n            return sum;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int m = scanner.nextInt();\n\n        FenwickTree bitA = new FenwickTree(n + 1);\n        FenwickTree bitB = new FenwickTree(n + 1);\n\n        StringBuilder sb = new StringBuilder();\n\n        for (int op = 0; op < m; op++) {\n            int type = scanner.nextInt();\n            if (type == 1) {\n                int i = scanner.nextInt();\n                int v = scanner.nextInt();\n                int l = i;\n                int r = Math.min(n, i + v - 1);\n                long a = -1;\n                long b = (long) v + i;\n\n                bitA.add(l, a);\n                bitA.add(r + 1, -a);\n                bitB.add(l, b);\n                bitB.add(r + 1, -b);\n            } else if (type == 2) {\n                int i = scanner.nextInt();\n                int v = scanner.nextInt();\n                int l = Math.max(1, i - v + 1);\n                int r = i;\n                long a = 1;\n                long b = (long) v - i;\n\n                bitA.add(l, a);\n                bitA.add(r + 1, -a);\n                bitB.add(l, b);\n                bitB.add(r + 1, -b);\n            } else if (type == 3) {\n                int i = scanner.nextInt();\n                long valA = bitA.query(i);\n                long valB = bitB.query(i);\n                long ans = valA * i + valB;\n                sb.append(ans).append('\\n');\n            }\n        }\n\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[32768];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = in.read(buffer, 0, buffer.length);\n                if (tail <= 0) return -1;\n            }\n            return buffer[head++];\n        }\n\n        public int nextInt() throws IOException {\n            int c = read();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = read();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c < '0' || c > '9') {\n                    // skip non-digit if any\n                } else {\n                    res = res * 10 + (c - '0');\n                }\n                c = read();\n            }\n            return res;\n        }\n    }\n\n    static class FenwickTree {\n        int n;\n        long[] tree;\n\n        public FenwickTree(int n) {\n            this.n = n;\n            this.tree = new long[n + 2];\n        }\n\n        public void add(int i, long delta) {\n            while (i <= n) {\n                tree[i] += delta;\n                i += i & (-i);\n            }\n        }\n\n        public long query(int i) {\n            long sum = 0;\n            while (i > 0) {\n                sum += tree[i];\n                i -= i & (-i);\n            }\n            return sum;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int m = scanner.nextInt();\n\n        FenwickTree bitA = new FenwickTree(n + 1);\n        FenwickTree bitB = new FenwickTree(n + 1);\n\n        StringBuilder sb = new StringBuilder();\n\n        for (int op = 0; op < m; op++) {\n            int type = scanner.nextInt();\n            if (type == 1) {\n                int i = scanner.nextInt();\n                int v = scanner.nextInt();\n                int l = i;\n                int r = Math.min(n, i + v - 1);\n                long a = -1;\n                long b = (long) v + i;\n\n                bitA.add(l, a);\n                bitA.add(r + 1, -a);\n                bitB.add(l, b);\n                bitB.add(r + 1, -b);\n            } else if (type == 2) {\n                int i = scanner.nextInt();\n                int v = scanner.nextInt();\n                int l = Math.max(1, i - v + 1);\n                int r = i;\n                long a = 1;\n                long b = (long) v - i;\n\n                bitA.add(l, a);\n                bitA.add(r + 1, -a);\n                bitB.add(l, b);\n                bitB.add(r + 1, -b);\n            } else if (type == 3) {\n                int i = scanner.nextInt();\n                long valA = bitA.query(i);\n                long valB = bitB.query(i);\n                long ans = valA * i + valB;\n                sb.append(ans).append('\\n');\n            }\n        }\n\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.07319989998359233,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 42,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:38:07.942207+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 884,
+            "total_tokens": 3039
+        },
+        "cost_usd": {
+            "input_cost": 0.000606,
+            "output_cost": 0.003315,
+            "total_cost": 0.003921
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    const M = readInt();\n\n    // Como N <= 200,000 e os valores acumulados podem atingir até ~4e10,\n    // Float64Array suporta inteiros de até 2^53 - 1 com precisão exata.\n    const treeA = new Float64Array(N + 2);\n    const treeB = new Float64Array(N + 2);\n\n    function addA(idx, val) {\n        for (; idx <= N + 1; idx += idx & -idx) {\n            treeA[idx] += val;\n        }\n    }\n\n    function addB(idx, val) {\n        for (; idx <= N + 1; idx += idx & -idx) {\n            treeB[idx] += val;\n        }\n    }\n\n    function queryA(idx) {\n        let sum = 0;\n        for (; idx > 0; idx -= idx & -idx) {\n            sum += treeA[idx];\n        }\n        return sum;\n    }\n\n    function queryB(idx) {\n        let sum = 0;\n        for (; idx > 0; idx -= idx & -idx) {\n            sum += treeB[idx];\n        }\n        return sum;\n    }\n\n    let out = '';\n    const CHUNK_SIZE = 65536;\n\n    for (let k = 0; k < M; k++) {\n        const type = readInt();\n        if (type === 1) {\n            const I = readInt();\n            const V = readInt();\n            const L = I;\n            const R = I + V - 1 < N ? I + V - 1 : N;\n\n            const aVal = V + I;\n            const bVal = -1;\n\n            addA(L, aVal);\n            addA(R + 1, -aVal);\n\n            addB(L, bVal);\n            addB(R + 1, -bVal);\n        } else if (type === 2) {\n            const I = readInt();\n            const V = readInt();\n            const L = I - V + 1 > 1 ? I - V + 1 : 1;\n            const R = I;\n\n            const aVal = V - I;\n            const bVal = 1;\n\n            addA(L, aVal);\n            addA(R + 1, -aVal);\n\n            addB(L, bVal);\n            addB(R + 1, -bVal);\n        } else if (type === 3) {\n            const I = readInt();\n            const a = queryA(I);\n            const b = queryB(I);\n            const ans = a + b * I;\n            out += ans + '\\n';\n            if (out.length >= CHUNK_SIZE) {\n                process.stdout.write(out);\n                out = '';\n            }\n        }\n    }\n\n    if (out.length > 0) {\n        process.stdout.write(out);\n    }\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n    const M = readInt();\n\n    // Como N <= 200,000 e os valores acumulados podem atingir até ~4e10,\n    // Float64Array suporta inteiros de até 2^53 - 1 com precisão exata.\n    const treeA = new Float64Array(N + 2);\n    const treeB = new Float64Array(N + 2);\n\n    function addA(idx, val) {\n        for (; idx <= N + 1; idx += idx & -idx) {\n            treeA[idx] += val;\n        }\n    }\n\n    function addB(idx, val) {\n        for (; idx <= N + 1; idx += idx & -idx) {\n            treeB[idx] += val;\n        }\n    }\n\n    function queryA(idx) {\n        let sum = 0;\n        for (; idx > 0; idx -= idx & -idx) {\n            sum += treeA[idx];\n        }\n        return sum;\n    }\n\n    function queryB(idx) {\n        let sum = 0;\n        for (; idx > 0; idx -= idx & -idx) {\n            sum += treeB[idx];\n        }\n        return sum;\n    }\n\n    let out = '';\n    const CHUNK_SIZE = 65536;\n\n    for (let k = 0; k < M; k++) {\n        const type = readInt();\n        if (type === 1) {\n            const I = readInt();\n            const V = readInt();\n            const L = I;\n            const R = I + V - 1 < N ? I + V - 1 : N;\n\n            const aVal = V + I;\n            const bVal = -1;\n\n            addA(L, aVal);\n            addA(R + 1, -aVal);\n\n            addB(L, bVal);\n            addB(R + 1, -bVal);\n        } else if (type === 2) {\n            const I = readInt();\n            const V = readInt();\n            const L = I - V + 1 > 1 ? I - V + 1 : 1;\n            const R = I;\n\n            const aVal = V - I;\n            const bVal = 1;\n\n            addA(L, aVal);\n            addA(R + 1, -aVal);\n\n            addB(L, bVal);\n            addB(R + 1, -bVal);\n        } else if (type === 3) {\n            const I = readInt();\n            const a = queryA(I);\n            const b = queryB(I);\n            const ans = a + b * I;\n            out += ans + '\\n';\n            if (out.length >= CHUNK_SIZE) {\n                process.stdout.write(out);\n                out = '';\n            }\n        }\n    }\n\n    if (out.length > 0) {\n        process.stdout.write(out);\n    }\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12889609998092055,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

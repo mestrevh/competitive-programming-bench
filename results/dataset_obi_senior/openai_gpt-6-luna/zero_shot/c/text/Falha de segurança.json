@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T08:55:20.264296+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 615,
+            "output_tokens": 1478,
+            "total_tokens": 2093
+        },
+        "cost_usd": {
+            "input_cost": 6.2e-05,
+            "output_cost": 0.000739,
+            "total_cost": 0.0008
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n#include <stdint.h>\n\n#define MAX_N 20000\n#define TABLE_SIZE 65536\n\ntypedef struct {\n    char key[11];\n    int count;\n} Entry;\n\nstatic Entry table[TABLE_SIZE];\nstatic char passwords[MAX_N][11];\n\nstatic uint64_t hash_string(const char *s) {\n    uint64_t h = 1469598103934665603ULL;\n    while (*s) {\n        h ^= (unsigned char)*s++;\n        h *= 1099511628211ULL;\n    }\n    return h;\n}\n\nstatic int find_slot(const char *s) {\n    unsigned int i = (unsigned int)(hash_string(s) & (TABLE_SIZE - 1));\n    while (table[i].count != 0 && strcmp(table[i].key, s) != 0)\n        i = (i + 1) & (TABLE_SIZE - 1);\n    return (int)i;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1)\n        return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%10s\", passwords[i]);\n        int slot = find_slot(passwords[i]);\n        if (table[slot].count == 0)\n            strcpy(table[slot].key, passwords[i]);\n        table[slot].count++;\n    }\n\n    long long answer = 0;\n\n    for (int i = 0; i < n; i++) {\n        char seen[55][11];\n        int seen_count = 0;\n        int len = (int)strlen(passwords[i]);\n\n        for (int start = 0; start < len; start++) {\n            for (int end = start + 1; end <= len; end++) {\n                char sub[11];\n                int sub_len = end - start;\n                memcpy(sub, passwords[i] + start, (size_t)sub_len);\n                sub[sub_len] = '\\0';\n\n                int duplicate = 0;\n                for (int j = 0; j < seen_count; j++) {\n                    if (strcmp(seen[j], sub) == 0) {\n                        duplicate = 1;\n                        break;\n                    }\n                }\n                if (duplicate)\n                    continue;\n\n                strcpy(seen[seen_count++], sub);\n                int slot = find_slot(sub);\n                if (table[slot].count != 0)\n                    answer += table[slot].count;\n            }\n        }\n\n        answer--;\n    }\n\n    printf(\"%lld\\n\", answer);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n#include <stdint.h>\n\n#define MAX_N 20000\n#define TABLE_SIZE 65536\n\ntypedef struct {\n    char key[11];\n    int count;\n} Entry;\n\nstatic Entry table[TABLE_SIZE];\nstatic char passwords[MAX_N][11];\n\nstatic uint64_t hash_string(const char *s) {\n    uint64_t h = 1469598103934665603ULL;\n    while (*s) {\n        h ^= (unsigned char)*s++;\n        h *= 1099511628211ULL;\n    }\n    return h;\n}\n\nstatic int find_slot(const char *s) {\n    unsigned int i = (unsigned int)(hash_string(s) & (TABLE_SIZE - 1));\n    while (table[i].count != 0 && strcmp(table[i].key, s) != 0)\n        i = (i + 1) & (TABLE_SIZE - 1);\n    return (int)i;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1)\n        return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%10s\", passwords[i]);\n        int slot = find_slot(passwords[i]);\n        if (table[slot].count == 0)\n            strcpy(table[slot].key, passwords[i]);\n        table[slot].count++;\n    }\n\n    long long answer = 0;\n\n    for (int i = 0; i < n; i++) {\n        char seen[55][11];\n        int seen_count = 0;\n        int len = (int)strlen(passwords[i]);\n\n        for (int start = 0; start < len; start++) {\n            for (int end = start + 1; end <= len; end++) {\n                char sub[11];\n                int sub_len = end - start;\n                memcpy(sub, passwords[i] + start, (size_t)sub_len);\n                sub[sub_len] = '\\0';\n\n                int duplicate = 0;\n                for (int j = 0; j < seen_count; j++) {\n                    if (strcmp(seen[j], sub) == 0) {\n                        duplicate = 1;\n                        break;\n                    }\n                }\n                if (duplicate)\n                    continue;\n\n                strcpy(seen[seen_count++], sub);\n                int slot = find_slot(sub);\n                if (table[slot].count != 0)\n                    answer += table[slot].count;\n            }\n        }\n\n        answer--;\n    }\n\n    printf(\"%lld\\n\", answer);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15230390000215266,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

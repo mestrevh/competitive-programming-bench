@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:05:02.634988+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1006,
+            "output_tokens": 1553,
+            "total_tokens": 2559
+        },
+        "cost_usd": {
+            "input_cost": 0.000101,
+            "output_cost": 0.000776,
+            "total_cost": 0.000877
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = in.read();\n            }\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value * sign;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        long[] x = new long[7];\n        long[] y = new long[7];\n\n        for (int i = 0; i < 7; i++) {\n            x[i] = fs.nextInt();\n            y[i] = fs.nextInt();\n        }\n\n        long ax = x[1] - x[0], ay = y[1] - y[0];\n        long bx = x[2] - x[0], by = y[2] - y[0];\n        long ux = x[2] - x[1], uy = y[2] - y[1];\n\n        boolean valid = ax * bx + ay * by > 0\n                && ax * ax + ay * ay == bx * bx + by * by\n                && ux * (y[3] - y[1]) - uy * (x[3] - x[1]) == 0\n                && ux * (y[4] - y[1]) - uy * (x[4] - x[1]) == 0\n                && x[1] + x[2] == x[3] + x[4]\n                && y[1] + y[2] == y[3] + y[4];\n\n        long dx = x[1] - x[2], dy = y[1] - y[2];\n        long ex = x[3] - x[4], ey = y[3] - y[4];\n        valid &= dx * dx + dy * dy > ex * ex + ey * ey;\n\n        long p46x = x[5] - x[3], p46y = y[5] - y[3];\n        long p57x = x[6] - x[4], p57y = y[6] - y[4];\n        valid &= ux * p46x + uy * p46y == 0\n                && ux * p57x + uy * p57y == 0\n                && p46x * p46x + p46y * p46y\n                   == p57x * p57x + p57y * p57y;\n\n        long side1 = ux * (y[0] - y[1]) - uy * (x[0] - x[1]);\n        long side6 = ux * (y[5] - y[1]) - uy * (x[5] - x[1]);\n        valid &= (side1 < 0 && side6 > 0) || (side1 > 0 && side6 < 0);\n\n        System.out.println(valid ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = in.read();\n            }\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value * sign;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        long[] x = new long[7];\n        long[] y = new long[7];\n\n        for (int i = 0; i < 7; i++) {\n            x[i] = fs.nextInt();\n            y[i] = fs.nextInt();\n        }\n\n        long ax = x[1] - x[0], ay = y[1] - y[0];\n        long bx = x[2] - x[0], by = y[2] - y[0];\n        long ux = x[2] - x[1], uy = y[2] - y[1];\n\n        boolean valid = ax * bx + ay * by > 0\n                && ax * ax + ay * ay == bx * bx + by * by\n                && ux * (y[3] - y[1]) - uy * (x[3] - x[1]) == 0\n                && ux * (y[4] - y[1]) - uy * (x[4] - x[1]) == 0\n                && x[1] + x[2] == x[3] + x[4]\n                && y[1] + y[2] == y[3] + y[4];\n\n        long dx = x[1] - x[2], dy = y[1] - y[2];\n        long ex = x[3] - x[4], ey = y[3] - y[4];\n        valid &= dx * dx + dy * dy > ex * ex + ey * ey;\n\n        long p46x = x[5] - x[3], p46y = y[5] - y[3];\n        long p57x = x[6] - x[4], p57y = y[6] - y[4];\n        valid &= ux * p46x + uy * p46y == 0\n                && ux * p57x + uy * p57y == 0\n                && p46x * p46x + p46y * p46y\n                   == p57x * p57x + p57y * p57y;\n\n        long side1 = ux * (y[0] - y[1]) - uy * (x[0] - x[1]);\n        long side6 = ux * (y[5] - y[1]) - uy * (x[5] - x[1]);\n        valid &= (side1 < 0 && side6 > 0) || (side1 > 0 && side6 < 0);\n\n        System.out.println(valid ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07745129999966593,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

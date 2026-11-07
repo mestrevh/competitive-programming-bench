@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:57:45.766746+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 715,
+            "total_tokens": 2198
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.002681,
+            "total_cost": 0.003376
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public int nextInt() {\n            int b = readByte();\n            while (b <= ' ' && b != -1) {\n                b = readByte();\n            }\n            if (b == -1) return -1;\n            int n = 0;\n            while (b >= '0' && b <= '9') {\n                n = n * 10 + (b - '0');\n                b = readByte();\n            }\n            return n;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int k = scanner.nextInt();\n        int u = scanner.nextInt();\n\n        List<Integer>[] numToCards = new ArrayList[u + 1];\n        for (int i = 1; i <= u; i++) {\n            numToCards[i] = new ArrayList<>();\n        }\n\n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j < k; j++) {\n                int val = scanner.nextInt();\n                numToCards[val].add(i);\n            }\n        }\n\n        int[] remaining = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            remaining[i] = k;\n        }\n\n        List<Integer> winners = new ArrayList<>();\n        for (int step = 0; step < u; step++) {\n            int drawn = scanner.nextInt();\n            if (!winners.isEmpty()) {\n                continue;\n            }\n            for (int card : numToCards[drawn]) {\n                remaining[card]--;\n                if (remaining[card] == 0) {\n                    winners.add(card);\n                }\n            }\n        }\n\n        winners.sort(null);\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < winners.size(); i++) {\n            if (i > 0) sb.append(' ');\n            sb.append(winners.get(i));\n        }\n        System.out.println(sb.toString());\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public int nextInt() {\n            int b = readByte();\n            while (b <= ' ' && b != -1) {\n                b = readByte();\n            }\n            if (b == -1) return -1;\n            int n = 0;\n            while (b >= '0' && b <= '9') {\n                n = n * 10 + (b - '0');\n                b = readByte();\n            }\n            return n;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int k = scanner.nextInt();\n        int u = scanner.nextInt();\n\n        List<Integer>[] numToCards = new ArrayList[u + 1];\n        for (int i = 1; i <= u; i++) {\n            numToCards[i] = new ArrayList<>();\n        }\n\n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j < k; j++) {\n                int val = scanner.nextInt();\n                numToCards[val].add(i);\n            }\n        }\n\n        int[] remaining = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            remaining[i] = k;\n        }\n\n        List<Integer> winners = new ArrayList<>();\n        for (int step = 0; step < u; step++) {\n            int drawn = scanner.nextInt();\n            if (!winners.isEmpty()) {\n                continue;\n            }\n            for (int card : numToCards[drawn]) {\n                remaining[card]--;\n                if (remaining[card] == 0) {\n                    winners.add(card);\n                }\n            }\n        }\n\n        winners.sort(null);\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < winners.size(); i++) {\n            if (i > 0) sb.append(' ');\n            sb.append(winners.get(i));\n        }\n        System.out.println(sb.toString());\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.0756489000050351,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 35,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:29:43.981437+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 534,
+            "total_tokens": 1946
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.002002,
+            "total_cost": 0.002697
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const K = nextInt();\n    const U = nextInt();\n\n    // head and next for adjacency list to save memory and be fast\n    // Each number in 1..U can have a list of cards that contain it\n    const head = new Int32Array(U + 1).fill(-1);\n    const toCard = new Int32Array(N * K);\n    const nextEdge = new Int32Array(N * K);\n    let edgeCount = 0;\n\n    for (let c = 1; c <= N; c++) {\n        for (let j = 0; j < K; j++) {\n            const num = nextInt();\n            toCard[edgeCount] = c;\n            nextEdge[edgeCount] = head[num];\n            head[num] = edgeCount++;\n        }\n    }\n\n    const remaining = new Int32Array(N + 1).fill(K);\n    const winners = [];\n\n    for (let i = 0; i < U; i++) {\n        const drawn = nextInt();\n        let e = head[drawn];\n        while (e !== -1) {\n            const card = toCard[e];\n            remaining[card]--;\n            if (remaining[card] === 0) {\n                winners.push(card);\n            }\n            e = nextEdge[e];\n        }\n\n        if (winners.length > 0) {\n            break;\n        }\n    }\n\n    winners.sort((a, b) => a - b);\n    console.log(winners.join(' '));\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const K = nextInt();\n    const U = nextInt();\n\n    // head and next for adjacency list to save memory and be fast\n    // Each number in 1..U can have a list of cards that contain it\n    const head = new Int32Array(U + 1).fill(-1);\n    const toCard = new Int32Array(N * K);\n    const nextEdge = new Int32Array(N * K);\n    let edgeCount = 0;\n\n    for (let c = 1; c <= N; c++) {\n        for (let j = 0; j < K; j++) {\n            const num = nextInt();\n            toCard[edgeCount] = c;\n            nextEdge[edgeCount] = head[num];\n            head[num] = edgeCount++;\n        }\n    }\n\n    const remaining = new Int32Array(N + 1).fill(K);\n    const winners = [];\n\n    for (let i = 0; i < U; i++) {\n        const drawn = nextInt();\n        let e = head[drawn];\n        while (e !== -1) {\n            const card = toCard[e];\n            remaining[card]--;\n            if (remaining[card] === 0) {\n                winners.push(card);\n            }\n            e = nextEdge[e];\n        }\n\n        if (winners.length > 0) {\n            break;\n        }\n    }\n\n    winners.sort((a, b) => a - b);\n    console.log(winners.join(' '));\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1446142999920994,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

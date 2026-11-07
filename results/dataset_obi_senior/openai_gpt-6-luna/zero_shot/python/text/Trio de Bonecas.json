@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:55:25.853068+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 987,
+            "output_tokens": 10211,
+            "total_tokens": 11198
+        },
+        "cost_usd": {
+            "input_cost": 9.9e-05,
+            "output_cost": 0.005105,
+            "total_cost": 0.005204
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nN, K = data[0], data[1]\na = sorted(data[2:])\n\nM = N - K\nprev = [0] * (M + 1)\n\nfor k in range(1, K + 1):\n    cur = [0] * (M + 1)\n    start = 2 * k\n    for i in range(start, M + 1):\n        cost = (a[i - 1] - a[i - 2]) ** 2\n        take = prev[i - 2] + cost\n        skip = cur[i - 1]\n        cur[i] = take if take < skip else skip\n    prev = cur\n\nprint(prev[M])\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nN, K = data[0], data[1]\na = sorted(data[2:])\n\nM = N - K\nprev = [0] * (M + 1)\n\nfor k in range(1, K + 1):\n    cur = [0] * (M + 1)\n    start = 2 * k\n    for i in range(start, M + 1):\n        cost = (a[i - 1] - a[i - 2]) ** 2\n        take = prev[i - 2] + cost\n        skip = cur[i - 1]\n        cur[i] = take if take < skip else skip\n    prev = cur\n\nprint(prev[M])",
+        "judge_result": {
+            "judge_predict": "TLE",
+            "execution_time": 2.0,
+            "counts": {
+                "AC": 32,
+                "WA": 36,
+                "RE": 0,
+                "TLE": 8,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T19:28:44.424895+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 575,
+            "output_tokens": 2788,
+            "total_tokens": 3363
+        },
+        "cost_usd": {
+            "input_cost": 1.2e-05,
+            "output_cost": 0.001394,
+            "total_cost": 0.001406
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        in.nextToken(); int n = (int) in.nval;\n        in.nextToken(); int k = (int) in.nval;\n        in.nextToken(); int c = (int) in.nval;\n\n        long[] pref = new long[n + 1];\n        for (int i = 1; i <= n; i++) {\n            in.nextToken();\n            pref[i] = pref[i - 1] + (long) in.nval;\n        }\n\n        final int INF = Integer.MAX_VALUE / 2;\n\n        // dp[j][i] = soma mínima coberta nos i primeiros quadrados usando j etiquetas\n        int[] prev = new int[n + 1]; // j = 0: nada coberto\n        int[] cur = new int[n + 1];\n\n        for (int j = 1; j <= k; j++) {\n            cur[0] = INF;\n            for (int i = 1; i <= n; i++) {\n                int best;\n                // deixa o quadrado i descoberto\n                if (cur[i - 1] < INF) best = cur[i - 1];\n                else best = INF;\n                // coloca uma etiqueta cobrindo [i-c+1, i]\n                if (i >= c) {\n                    int base = prev[i - c];\n                    if (base < INF) {\n                        int cand = base + (int) (pref[i] - pref[i - c]);\n                        if (cand < best) best = cand;\n                    }\n                }\n                cur[i] = best;\n            }\n            int[] t = prev; prev = cur; cur = t;\n        }\n\n        System.out.println(pref[n] - prev[n]);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));\n        in.nextToken(); int n = (int) in.nval;\n        in.nextToken(); int k = (int) in.nval;\n        in.nextToken(); int c = (int) in.nval;\n\n        long[] pref = new long[n + 1];\n        for (int i = 1; i <= n; i++) {\n            in.nextToken();\n            pref[i] = pref[i - 1] + (long) in.nval;\n        }\n\n        final int INF = Integer.MAX_VALUE / 2;\n\n        // dp[j][i] = soma mínima coberta nos i primeiros quadrados usando j etiquetas\n        int[] prev = new int[n + 1]; // j = 0: nada coberto\n        int[] cur = new int[n + 1];\n\n        for (int j = 1; j <= k; j++) {\n            cur[0] = INF;\n            for (int i = 1; i <= n; i++) {\n                int best;\n                // deixa o quadrado i descoberto\n                if (cur[i - 1] < INF) best = cur[i - 1];\n                else best = INF;\n                // coloca uma etiqueta cobrindo [i-c+1, i]\n                if (i >= c) {\n                    int base = prev[i - c];\n                    if (base < INF) {\n                        int cand = base + (int) (pref[i] - pref[i - c]);\n                        if (cand < best) best = cand;\n                    }\n                }\n                cur[i] = best;\n            }\n            int[] t = prev; prev = cur; cur = t;\n        }\n\n        System.out.println(pref[n] - prev[n]);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2084033999708481,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

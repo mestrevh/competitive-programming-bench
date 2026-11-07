@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:08:07.807476+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 722,
+            "output_tokens": 1078,
+            "total_tokens": 1800
+        },
+        "cost_usd": {
+            "input_cost": 7.2e-05,
+            "output_cost": 0.000539,
+            "total_cost": 0.000611
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    static int rows, cols;\n    static boolean[][] eligible;\n    static int[][] match;\n    static boolean[][] visited;\n\n    static boolean augment(int r, int c) {\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        for (int k = 0; k < 4; k++) {\n            int nr = r + dr[k];\n            int nc = c + dc[k];\n\n            if (nr < 0 || nr >= rows || nc < 0 || nc >= cols\n                    || !eligible[nr][nc] || visited[nr][nc]) {\n                continue;\n            }\n\n            visited[nr][nc] = true;\n            if (match[nr][nc] == -1 || augment(match[nr][nc] / cols, match[nr][nc] % cols)) {\n                match[nr][nc] = r * cols + c;\n                return true;\n            }\n        }\n        return false;\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner(System.in);\n        rows = fs.nextInt();\n        cols = fs.nextInt();\n\n        boolean[][] black = new boolean[rows][cols];\n        int p = fs.nextInt();\n\n        for (int i = 0; i < p; i++) {\n            int r = fs.nextInt() - 1;\n            int c = fs.nextInt() - 1;\n            black[r][c] = true;\n        }\n\n        eligible = new boolean[rows][cols];\n        int count = 0;\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        for (int r = 0; r < rows; r++) {\n            for (int c = 0; c < cols; c++) {\n                if (black[r][c]) continue;\n\n                for (int k = 0; k < 4; k++) {\n                    int nr = r + dr[k];\n                    int nc = c + dc[k];\n                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && black[nr][nc]) {\n                        eligible[r][c] = true;\n                        count++;\n                        break;\n                    }\n                }\n            }\n        }\n\n        match = new int[rows][cols];\n        for (int r = 0; r < rows; r++) {\n            for (int c = 0; c < cols; c++) {\n                match[r][c] = -1;\n            }\n        }\n\n        int matching = 0;\n        for (int r = 0; r < rows; r++) {\n            for (int c = 0; c < cols; c++) {\n                if (eligible[r][c] && (r + c) % 2 == 0) {\n                    visited = new boolean[rows][cols];\n                    if (augment(r, c)) matching++;\n                }\n            }\n        }\n\n        System.out.println(count - matching);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int ch;\n            do {\n                ch = read();\n            } while (ch <= ' ');\n\n            int value = 0;\n            while (ch > ' ') {\n                value = value * 10 + ch - '0';\n                ch = read();\n            }\n            return value;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    static int rows, cols;\n    static boolean[][] eligible;\n    static int[][] match;\n    static boolean[][] visited;\n\n    static boolean augment(int r, int c) {\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        for (int k = 0; k < 4; k++) {\n            int nr = r + dr[k];\n            int nc = c + dc[k];\n\n            if (nr < 0 || nr >= rows || nc < 0 || nc >= cols\n                    || !eligible[nr][nc] || visited[nr][nc]) {\n                continue;\n            }\n\n            visited[nr][nc] = true;\n            if (match[nr][nc] == -1 || augment(match[nr][nc] / cols, match[nr][nc] % cols)) {\n                match[nr][nc] = r * cols + c;\n                return true;\n            }\n        }\n        return false;\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner(System.in);\n        rows = fs.nextInt();\n        cols = fs.nextInt();\n\n        boolean[][] black = new boolean[rows][cols];\n        int p = fs.nextInt();\n\n        for (int i = 0; i < p; i++) {\n            int r = fs.nextInt() - 1;\n            int c = fs.nextInt() - 1;\n            black[r][c] = true;\n        }\n\n        eligible = new boolean[rows][cols];\n        int count = 0;\n        int[] dr = {-1, 1, 0, 0};\n        int[] dc = {0, 0, -1, 1};\n\n        for (int r = 0; r < rows; r++) {\n            for (int c = 0; c < cols; c++) {\n                if (black[r][c]) continue;\n\n                for (int k = 0; k < 4; k++) {\n                    int nr = r + dr[k];\n                    int nc = c + dc[k];\n                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && black[nr][nc]) {\n                        eligible[r][c] = true;\n                        count++;\n                        break;\n                    }\n                }\n            }\n        }\n\n        match = new int[rows][cols];\n        for (int r = 0; r < rows; r++) {\n            for (int c = 0; c < cols; c++) {\n                match[r][c] = -1;\n            }\n        }\n\n        int matching = 0;\n        for (int r = 0; r < rows; r++) {\n            for (int c = 0; c < cols; c++) {\n                if (eligible[r][c] && (r + c) % 2 == 0) {\n                    visited = new boolean[rows][cols];\n                    if (augment(r, c)) matching++;\n                }\n            }\n        }\n\n        System.out.println(count - matching);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int ch;\n            do {\n                ch = read();\n            } while (ch <= ' ');\n\n            int value = 0;\n            while (ch > ' ') {\n                value = value * 10 + ch - '0';\n                ch = read();\n            }\n            return value;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07393869999941671,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

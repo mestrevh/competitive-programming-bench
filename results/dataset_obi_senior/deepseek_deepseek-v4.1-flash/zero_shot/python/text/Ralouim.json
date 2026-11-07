@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:25:00.050094+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 765,
+            "output_tokens": 27518,
+            "total_tokens": 28283
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.066043,
+            "total_cost": 0.066045
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    xs = [0] * (n + 1)\n    ys = [0] * (n + 1)\n    idx = 1\n    for i in range(1, n + 1):\n        xs[i] = data[idx]\n        ys[i] = data[idx + 1]\n        idx += 2\n\n    SHIFT = 11\n    MASK = (1 << SHIFT) - 1\n    LSHIFT = 2 * SHIFT\n    total = n * n\n    edges = [0] * total\n    p = 0\n\n    for v in range(1, n + 1):\n        x = xs[v]\n        y = ys[v]\n        length = x * x + y * y\n        edges[p] = (length << LSHIFT) | v\n        p += 1\n\n    for u in range(1, n + 1):\n        xu = xs[u]\n        yu = ys[u]\n        ucode = u << SHIFT\n        for v in range(1, u):\n            dx = xu - xs[v]\n            dy = yu - ys[v]\n            length = dx * dx + dy * dy\n            edges[p] = (length << LSHIFT) | ucode | v\n            p += 1\n        for v in range(u + 1, n + 1):\n            dx = xu - xs[v]\n            dy = yu - ys[v]\n            length = dx * dx + dy * dy\n            edges[p] = (length << LSHIFT) | ucode | v\n            p += 1\n\n    edges.sort(reverse=True)\n\n    NEG = -10**9\n    best = [NEG] * (n + 1)\n    upd = [NEG] * (n + 1)\n    touched = []\n    ans = 0\n\n    e = edges\n    b = best\n    up = upd\n    i = 0\n\n    while i < total:\n        L = e[i] >> LSHIFT\n        j = i\n        while j < total and (e[j] >> LSHIFT) == L:\n            key = e[j]\n            u = (key >> SHIFT) & MASK\n            v = key & MASK\n\n            if u == 0:\n                val = 1\n            else:\n                bu = b[u]\n                if bu < 0:\n                    j += 1\n                    continue\n                val = bu + 1\n\n            if val > up[v]:\n                if up[v] == NEG:\n                    touched.append(v)\n                up[v] = val\n                if val > ans:\n                    ans = val\n            j += 1\n\n        for v in touched:\n            uv = up[v]\n            if uv > b[v]:\n                b[v] = uv\n            up[v] = NEG\n        touched.clear()\n        i = j\n\n    sys.stdout.write(str(ans) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    xs = [0] * (n + 1)\n    ys = [0] * (n + 1)\n    idx = 1\n    for i in range(1, n + 1):\n        xs[i] = data[idx]\n        ys[i] = data[idx + 1]\n        idx += 2\n\n    SHIFT = 11\n    MASK = (1 << SHIFT) - 1\n    LSHIFT = 2 * SHIFT\n    total = n * n\n    edges = [0] * total\n    p = 0\n\n    for v in range(1, n + 1):\n        x = xs[v]\n        y = ys[v]\n        length = x * x + y * y\n        edges[p] = (length << LSHIFT) | v\n        p += 1\n\n    for u in range(1, n + 1):\n        xu = xs[u]\n        yu = ys[u]\n        ucode = u << SHIFT\n        for v in range(1, u):\n            dx = xu - xs[v]\n            dy = yu - ys[v]\n            length = dx * dx + dy * dy\n            edges[p] = (length << LSHIFT) | ucode | v\n            p += 1\n        for v in range(u + 1, n + 1):\n            dx = xu - xs[v]\n            dy = yu - ys[v]\n            length = dx * dx + dy * dy\n            edges[p] = (length << LSHIFT) | ucode | v\n            p += 1\n\n    edges.sort(reverse=True)\n\n    NEG = -10**9\n    best = [NEG] * (n + 1)\n    upd = [NEG] * (n + 1)\n    touched = []\n    ans = 0\n\n    e = edges\n    b = best\n    up = upd\n    i = 0\n\n    while i < total:\n        L = e[i] >> LSHIFT\n        j = i\n        while j < total and (e[j] >> LSHIFT) == L:\n            key = e[j]\n            u = (key >> SHIFT) & MASK\n            v = key & MASK\n\n            if u == 0:\n                val = 1\n            else:\n                bu = b[u]\n                if bu < 0:\n                    j += 1\n                    continue\n                val = bu + 1\n\n            if val > up[v]:\n                if up[v] == NEG:\n                    touched.append(v)\n                up[v] = val\n                if val > ans:\n                    ans = val\n            j += 1\n\n        for v in touched:\n            uv = up[v]\n            if uv > b[v]:\n                b[v] = uv\n            up[v] = NEG\n        touched.clear()\n        i = j\n\n    sys.stdout.write(str(ans) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 3.426627400003781,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

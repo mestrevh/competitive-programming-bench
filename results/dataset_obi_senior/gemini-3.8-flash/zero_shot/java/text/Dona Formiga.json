@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:12:41.061206+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 860,
+            "output_tokens": 620,
+            "total_tokens": 2278
+        },
+        "cost_usd": {
+            "input_cost": 0.000645,
+            "output_cost": 0.002325,
+            "total_cost": 0.00297
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static int S, T, P;\n    static int[] A;\n    static List<Integer>[] adj;\n    static int[] memo;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = null;\n\n        String line = br.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = br.readLine();\n        }\n        if (line == null) return;\n\n        st = new StringTokenizer(line);\n        S = Integer.parseInt(st.nextToken());\n        T = Integer.parseInt(st.nextToken());\n        P = Integer.parseInt(st.nextToken());\n\n        A = new int[S + 1];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 1; i <= S; i++) {\n            A[i] = Integer.parseInt(st.nextToken());\n        }\n\n        adj = new ArrayList[S + 1];\n        for (int i = 1; i <= S; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < T; i++) {\n            line = br.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = br.readLine();\n            }\n            if (line == null) break;\n            st = new StringTokenizer(line);\n            int u = Integer.parseInt(st.nextToken());\n            int v = Integer.parseInt(st.nextToken());\n\n            if (A[u] > A[v]) {\n                adj[u].add(v);\n            } else if (A[v] > A[u]) {\n                adj[v].add(u);\n            }\n        }\n\n        memo = new int[S + 1];\n        Arrays.fill(memo, -1);\n\n        int ans = dfs(P);\n        System.out.println(ans);\n    }\n\n    static int dfs(int u) {\n        if (memo[u] != -1) {\n            return memo[u];\n        }\n\n        int maxLen = 0;\n        for (int v : adj[u]) {\n            maxLen = Math.max(maxLen, 1 + dfs(v));\n        }\n\n        return memo[u] = maxLen;\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.List;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static int S, T, P;\n    static int[] A;\n    static List<Integer>[] adj;\n    static int[] memo;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = null;\n\n        String line = br.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = br.readLine();\n        }\n        if (line == null) return;\n\n        st = new StringTokenizer(line);\n        S = Integer.parseInt(st.nextToken());\n        T = Integer.parseInt(st.nextToken());\n        P = Integer.parseInt(st.nextToken());\n\n        A = new int[S + 1];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 1; i <= S; i++) {\n            A[i] = Integer.parseInt(st.nextToken());\n        }\n\n        adj = new ArrayList[S + 1];\n        for (int i = 1; i <= S; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < T; i++) {\n            line = br.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = br.readLine();\n            }\n            if (line == null) break;\n            st = new StringTokenizer(line);\n            int u = Integer.parseInt(st.nextToken());\n            int v = Integer.parseInt(st.nextToken());\n\n            if (A[u] > A[v]) {\n                adj[u].add(v);\n            } else if (A[v] > A[u]) {\n                adj[v].add(u);\n            }\n        }\n\n        memo = new int[S + 1];\n        Arrays.fill(memo, -1);\n\n        int ans = dfs(P);\n        System.out.println(ans);\n    }\n\n    static int dfs(int u) {\n        if (memo[u] != -1) {\n            return memo[u];\n        }\n\n        int maxLen = 0;\n        for (int v : adj[u]) {\n            maxLen = Math.max(maxLen, 1 + dfs(v));\n        }\n\n        return memo[u] = maxLen;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11317540000891313,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

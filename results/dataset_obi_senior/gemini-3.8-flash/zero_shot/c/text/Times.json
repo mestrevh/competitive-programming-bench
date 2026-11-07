@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:34:51.206859+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 858,
+            "output_tokens": 608,
+            "total_tokens": 2784
+        },
+        "cost_usd": {
+            "input_cost": 0.000643,
+            "output_cost": 0.00228,
+            "total_cost": 0.002923
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n#define MAXM 600005\n\nint head[MAXN], to[MAXM], nxt[MAXM];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    edge_cnt++;\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt;\n}\n\nint team[MAXN];\nint queue[MAXN];\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        int m;\n        if (scanf(\"%d\", &m) != 1) break;\n        for (int j = 0; j < m; j++) {\n            int x;\n            scanf(\"%d\", &x);\n            add_edge(i, x);\n        }\n    }\n\n    int q_start = 0, q_end = 0;\n\n    team[1] = 1;\n    queue[q_end++] = 1;\n\n    while (q_start < q_end) {\n        int u = queue[q_start++];\n        int t = team[u];\n        int next_team = (t == 1) ? 2 : 1;\n\n        for (int e = head[u]; e != 0; e = nxt[e]) {\n            int v = to[e];\n            if (team[v] == 0) {\n                team[v] = next_team;\n                queue[q_end++] = v;\n            }\n        }\n    }\n\n    // Imprimir o primeiro time\n    int first = 1;\n    for (int i = 1; i <= n; i++) {\n        if (team[i] == 1) {\n            if (!first) {\n                putchar(' ');\n            }\n            printf(\"%d\", i);\n            first = 0;\n        }\n    }\n    putchar('\\n');\n\n    // Imprimir o segundo time\n    first = 1;\n    for (int i = 1; i <= n; i++) {\n        if (team[i] == 2) {\n            if (!first) {\n                putchar(' ');\n            }\n            printf(\"%d\", i);\n            first = 0;\n        }\n    }\n    putchar('\\n');\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n#define MAXM 600005\n\nint head[MAXN], to[MAXM], nxt[MAXM];\nint edge_cnt = 0;\n\nvoid add_edge(int u, int v) {\n    edge_cnt++;\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt;\n}\n\nint team[MAXN];\nint queue[MAXN];\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 1; i <= n; i++) {\n        int m;\n        if (scanf(\"%d\", &m) != 1) break;\n        for (int j = 0; j < m; j++) {\n            int x;\n            scanf(\"%d\", &x);\n            add_edge(i, x);\n        }\n    }\n\n    int q_start = 0, q_end = 0;\n\n    team[1] = 1;\n    queue[q_end++] = 1;\n\n    while (q_start < q_end) {\n        int u = queue[q_start++];\n        int t = team[u];\n        int next_team = (t == 1) ? 2 : 1;\n\n        for (int e = head[u]; e != 0; e = nxt[e]) {\n            int v = to[e];\n            if (team[v] == 0) {\n                team[v] = next_team;\n                queue[q_end++] = v;\n            }\n        }\n    }\n\n    // Imprimir o primeiro time\n    int first = 1;\n    for (int i = 1; i <= n; i++) {\n        if (team[i] == 1) {\n            if (!first) {\n                putchar(' ');\n            }\n            printf(\"%d\", i);\n            first = 0;\n        }\n    }\n    putchar('\\n');\n\n    // Imprimir o segundo time\n    first = 1;\n    for (int i = 1; i <= n; i++) {\n        if (team[i] == 2) {\n            if (!first) {\n                putchar(' ');\n            }\n            printf(\"%d\", i);\n            first = 0;\n        }\n    }\n    putchar('\\n');\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17319089997909032,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

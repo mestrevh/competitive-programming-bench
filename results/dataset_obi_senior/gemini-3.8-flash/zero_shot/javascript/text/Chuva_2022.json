@@ -1,0 +1,74 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T03:02:42.618931+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 656,
+            "output_tokens": 484,
+            "total_tokens": 1546
+        },
+        "cost_usd": {
+            "input_cost": 0.000492,
+            "output_cost": 0.001815,
+            "total_cost": 0.002307
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Chuva {\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n        int n = scanner.nextInt();\n        int s = scanner.nextInt();\n\n        int[] count = new int[1000001];\n        count[0] = 1;\n\n        long ans = 0;\n        int currentSum = 0;\n\n        for (int i = 0; i < n; i++) {\n            currentSum += scanner.nextInt();\n            if (currentSum >= s) {\n                ans += count[currentSum - s];\n            }\n            count[currentSum]++;\n        }\n\n        System.out.println(ans);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int count = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (ptr >= count) {\n                count = in.read(buffer, 0, buffer.length);\n                if (count <= 0) {\n                    return -1;\n                }\n                ptr = 0;\n            }\n            return buffer[ptr++];\n        }\n\n        public int nextInt() throws IOException {\n            byte b = read();\n            while (b <= ' ' && b != -1) {\n                b = read();\n            }\n            if (b == -1) return -1;\n            boolean neg = false;\n            if (b == '-') {\n                neg = true;\n                b = read();\n            }\n            int res = 0;\n            while (b >= '0' && b <= '9') {\n                res = res * 10 + (b - '0');\n                b = read();\n            }\n            return neg ? -res : res;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Chuva {\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n        int n = scanner.nextInt();\n        int s = scanner.nextInt();\n\n        int[] count = new int[1000001];\n        count[0] = 1;\n\n        long ans = 0;\n        int currentSum = 0;\n\n        for (int i = 0; i < n; i++) {\n            currentSum += scanner.nextInt();\n            if (currentSum >= s) {\n                ans += count[currentSum - s];\n            }\n            count[currentSum]++;\n        }\n\n        System.out.println(ans);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int count = 0;\n\n        public FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private byte read() throws IOException {\n            if (ptr >= count) {\n                count = in.read(buffer, 0, buffer.length);\n                if (count <= 0) {\n                    return -1;\n                }\n                ptr = 0;\n            }\n            return buffer[ptr++];\n        }\n\n        public int nextInt() throws IOException {\n            byte b = read();\n            while (b <= ' ' && b != -1) {\n                b = read();\n            }\n            if (b == -1) return -1;\n            boolean neg = false;\n            if (b == '-') {\n                neg = true;\n                b = read();\n            }\n            int res = 0;\n            while (b >= '0' && b <= '9') {\n                res = res * 10 + (b - '0');\n                b = read();\n            }\n            return neg ? -res : res;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "RE",
+            "execution_time": 0.4418396999826655,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 30,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-05T03:35:30.056601+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 656,
+            "output_tokens": 321,
+            "total_tokens": 1456
+        },
+        "cost_usd": {
+            "input_cost": 0.000492,
+            "output_cost": 0.001204,
+            "total_cost": 0.001696
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const S = nextInt();\n\n    // A soma máxima possível é 10 * N = 1.000.000\n    const count = new Int32Array(1000005);\n    count[0] = 1;\n\n    let currentSum = 0;\n    let ans = 0;\n\n    for (let i = 0; i < N; i++) {\n        const x = nextInt();\n        currentSum += x;\n        if (currentSum >= S) {\n            ans += count[currentSum - S];\n        }\n        count[currentSum]++;\n    }\n\n    console.log(ans);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n    const S = nextInt();\n\n    // A soma máxima possível é 10 * N = 1.000.000\n    const count = new Int32Array(1000005);\n    count[0] = 1;\n\n    let currentSum = 0;\n    let ans = 0;\n\n    for (let i = 0; i < N; i++) {\n        const x = nextInt();\n        currentSum += x;\n        if (currentSum >= S) {\n            ans += count[currentSum - S];\n        }\n        count[currentSum]++;\n    }\n\n    console.log(ans);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05513019999489188,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

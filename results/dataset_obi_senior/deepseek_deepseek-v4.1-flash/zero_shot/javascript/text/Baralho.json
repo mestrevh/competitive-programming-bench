@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T08:15:40.299621+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 920,
+            "output_tokens": 960,
+            "total_tokens": 1880
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.002304,
+            "total_cost": 0.002307
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst s = fs.readFileSync(0, 'utf8').trim();\n\nconst suits = { C: 0, E: 1, U: 2, P: 3 };\nconst counts = Array.from({ length: 4 }, () => Array(14).fill(0));\n\nfor (let i = 0; i < s.length; i += 3) {\n  const rank = parseInt(s.slice(i, i + 2), 10);\n  const suit = suits[s[i + 2]];\n  counts[suit][rank]++;\n}\n\nconst order = ['C', 'E', 'U', 'P'];\nconst output = [];\n\nfor (const suit of order) {\n  const arr = counts[suits[suit]];\n  let duplicate = false;\n  let missing = 0;\n\n  for (let r = 1; r <= 13; r++) {\n    if (arr[r] > 1) duplicate = true;\n    if (arr[r] === 0) missing++;\n  }\n\n  output.push(duplicate ? 'erro' : missing);\n}\n\nprocess.stdout.write(output.join('\\n'));\n```",
+        "extracted_code": "const fs = require('fs');\nconst s = fs.readFileSync(0, 'utf8').trim();\n\nconst suits = { C: 0, E: 1, U: 2, P: 3 };\nconst counts = Array.from({ length: 4 }, () => Array(14).fill(0));\n\nfor (let i = 0; i < s.length; i += 3) {\n  const rank = parseInt(s.slice(i, i + 2), 10);\n  const suit = suits[s[i + 2]];\n  counts[suit][rank]++;\n}\n\nconst order = ['C', 'E', 'U', 'P'];\nconst output = [];\n\nfor (const suit of order) {\n  const arr = counts[suits[suit]];\n  let duplicate = false;\n  let missing = 0;\n\n  for (let r = 1; r <= 13; r++) {\n    if (arr[r] > 1) duplicate = true;\n    if (arr[r] === 0) missing++;\n  }\n\n  output.push(duplicate ? 'erro' : missing);\n}\n\nprocess.stdout.write(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.04535199998645112,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

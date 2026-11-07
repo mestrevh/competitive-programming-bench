@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T16:19:22.943294+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 860,
+            "output_tokens": 374,
+            "total_tokens": 1692
+        },
+        "cost_usd": {
+            "input_cost": 0.000645,
+            "output_cost": 0.001402,
+            "total_cost": 0.002047
+        },
+        "raw_response": "```python\nimport sys\n\n# Aumenta o limite de recursão por garantia\nsys.setrecursionlimit(2000)\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    S = int(data[0])\n    T = int(data[1])\n    P = int(data[2])\n\n    # Alturas dos salões (1-indexado)\n    A = [0] + [int(x) for x in data[3:3 + S]]\n\n    adj = [[] for _ in range(S + 1)]\n\n    idx = 3 + S\n    for _ in range(T):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n\n        if A[u] > A[v]:\n            adj[u].append(v)\n        elif A[v] > A[u]:\n            adj[v].append(u)\n\n    # Programação dinâmica com memoização para encontrar o caminho mais longo\n    memo = [-1] * (S + 1)\n\n    def dfs(u):\n        if memo[u] != -1:\n            return memo[u]\n        \n        max_dist = 0\n        for v in adj[u]:\n            dist = 1 + dfs(v)\n            if dist > max_dist:\n                max_dist = dist\n                \n        memo[u] = max_dist\n        return max_dist\n\n    print(dfs(P))\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\n# Aumenta o limite de recursão por garantia\nsys.setrecursionlimit(2000)\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    S = int(data[0])\n    T = int(data[1])\n    P = int(data[2])\n\n    # Alturas dos salões (1-indexado)\n    A = [0] + [int(x) for x in data[3:3 + S]]\n\n    adj = [[] for _ in range(S + 1)]\n\n    idx = 3 + S\n    for _ in range(T):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n\n        if A[u] > A[v]:\n            adj[u].append(v)\n        elif A[v] > A[u]:\n            adj[v].append(u)\n\n    # Programação dinâmica com memoização para encontrar o caminho mais longo\n    memo = [-1] * (S + 1)\n\n    def dfs(u):\n        if memo[u] != -1:\n            return memo[u]\n        \n        max_dist = 0\n        for v in adj[u]:\n            dist = 1 + dfs(v)\n            if dist > max_dist:\n                max_dist = dist\n                \n        memo[u] = max_dist\n        return max_dist\n\n    print(dfs(P))\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09643209999921964,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

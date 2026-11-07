@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:40:33.446120+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 858,
+            "output_tokens": 877,
+            "total_tokens": 2598
+        },
+        "cost_usd": {
+            "input_cost": 0.000643,
+            "output_cost": 0.003289,
+            "total_cost": 0.003932
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < len) return true;\n            ptr = 0;\n            try {\n                len = in.read(buffer);\n            } catch (IOException e) {\n                len = -1;\n            }\n            return len > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public int nextInt() {\n            int c = readByte();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = readByte();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = readByte();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n\n        int maxEdges = 600005;\n        int[] head = new int[n + 1];\n        int[] to = new int[maxEdges + 5];\n        int[] next = new int[maxEdges + 5];\n        int edgeCount = 0;\n\n        for (int i = 1; i <= n; i++) {\n            head[i] = -1;\n        }\n\n        for (int i = 1; i <= n; i++) {\n            int m = scanner.nextInt();\n            for (int j = 0; j < m; j++) {\n                int v = scanner.nextInt();\n                edgeCount++;\n                to[edgeCount] = v;\n                next[edgeCount] = head[i];\n                head[i] = edgeCount;\n            }\n        }\n\n        int[] color = new int[n + 1];\n        int[] queue = new int[n + 5];\n        int front = 0, back = 0;\n\n        color[1] = 1;\n        queue[back++] = 1;\n\n        while (front < back) {\n            int u = queue[front++];\n            int c = color[u];\n            int nextColor = (c == 1) ? 2 : 1;\n\n            for (int e = head[u]; e != -1; e = next[e]) {\n                int v = to[e];\n                if (color[v] == 0) {\n                    color[v] = nextColor;\n                    queue[back++] = v;\n                }\n            }\n        }\n\n        StringBuilder team1 = new StringBuilder();\n        StringBuilder team2 = new StringBuilder();\n\n        boolean first1 = true;\n        boolean first2 = true;\n\n        for (int i = 1; i <= n; i++) {\n            if (color[i] == 1) {\n                if (!first1) team1.append(' ');\n                team1.append(i);\n                first1 = false;\n            } else {\n                if (!first2) team2.append(' ');\n                team2.append(i);\n                first2 = false;\n            }\n        }\n\n        System.out.println(team1.toString());\n        System.out.println(team2.toString());\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < len) return true;\n            ptr = 0;\n            try {\n                len = in.read(buffer);\n            } catch (IOException e) {\n                len = -1;\n            }\n            return len > 0;\n        }\n\n        private int readByte() {\n            if (hasNextByte()) return buffer[ptr++];\n            return -1;\n        }\n\n        public int nextInt() {\n            int c = readByte();\n            while (c <= ' ') {\n                if (c == -1) return -1;\n                c = readByte();\n            }\n            int res = 0;\n            while (c > ' ') {\n                if (c >= '0' && c <= '9') {\n                    res = res * 10 + (c - '0');\n                }\n                c = readByte();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n\n        int maxEdges = 600005;\n        int[] head = new int[n + 1];\n        int[] to = new int[maxEdges + 5];\n        int[] next = new int[maxEdges + 5];\n        int edgeCount = 0;\n\n        for (int i = 1; i <= n; i++) {\n            head[i] = -1;\n        }\n\n        for (int i = 1; i <= n; i++) {\n            int m = scanner.nextInt();\n            for (int j = 0; j < m; j++) {\n                int v = scanner.nextInt();\n                edgeCount++;\n                to[edgeCount] = v;\n                next[edgeCount] = head[i];\n                head[i] = edgeCount;\n            }\n        }\n\n        int[] color = new int[n + 1];\n        int[] queue = new int[n + 5];\n        int front = 0, back = 0;\n\n        color[1] = 1;\n        queue[back++] = 1;\n\n        while (front < back) {\n            int u = queue[front++];\n            int c = color[u];\n            int nextColor = (c == 1) ? 2 : 1;\n\n            for (int e = head[u]; e != -1; e = next[e]) {\n                int v = to[e];\n                if (color[v] == 0) {\n                    color[v] = nextColor;\n                    queue[back++] = v;\n                }\n            }\n        }\n\n        StringBuilder team1 = new StringBuilder();\n        StringBuilder team2 = new StringBuilder();\n\n        boolean first1 = true;\n        boolean first2 = true;\n\n        for (int i = 1; i <= n; i++) {\n            if (color[i] == 1) {\n                if (!first1) team1.append(' ');\n                team1.append(i);\n                first1 = false;\n            } else {\n                if (!first2) team2.append(' ');\n                team2.append(i);\n                first2 = false;\n            }\n        }\n\n        System.out.println(team1.toString());\n        System.out.println(team2.toString());\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12697519999346696,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

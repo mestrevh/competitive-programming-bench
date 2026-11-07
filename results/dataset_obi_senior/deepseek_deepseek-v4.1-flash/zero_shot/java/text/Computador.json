@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T00:40:52.959329+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 859,
+            "output_tokens": 2213,
+            "total_tokens": 3072
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.005311,
+            "total_cost": 0.005314
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = read();\n            }\n\n            int val = 0;\n            while (c > ' ') {\n                val = val * 10 + (c - '0');\n                c = read();\n            }\n            return val * sign;\n        }\n    }\n\n    static int n;\n    static long[] bitC;\n    static long[] bitK;\n\n    static void add(long[] bit, int idx, long val) {\n        for (int i = idx; i <= n; i += i & -i) {\n            bit[i] += val;\n        }\n    }\n\n    static long sum(long[] bit, int idx) {\n        long res = 0;\n        for (int i = idx; i > 0; i -= i & -i) {\n            res += bit[i];\n        }\n        return res;\n    }\n\n    static void rangeAddConst(int l, int r, long val) {\n        add(bitC, l, val);\n        if (r + 1 <= n) add(bitC, r + 1, -val);\n    }\n\n    static void rangeAddCoeff(int l, int r, long val) {\n        add(bitK, l, val);\n        if (r + 1 <= n) add(bitK, r + 1, -val);\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        n = fs.nextInt();\n        int m = fs.nextInt();\n\n        bitC = new long[n + 2];\n        bitK = new long[n + 2];\n\n        StringBuilder out = new StringBuilder();\n\n        for (int q = 0; q < m; q++) {\n            int type = fs.nextInt();\n\n            if (type == 1) {\n                int i = fs.nextInt();\n                int v = fs.nextInt();\n\n                int l = i;\n                int r = Math.min(n, i + v - 1);\n\n                long c = (long) v + i;\n                long k = -1;\n\n                rangeAddConst(l, r, c);\n                rangeAddCoeff(l, r, k);\n            } else if (type == 2) {\n                int i = fs.nextInt();\n                int v = fs.nextInt();\n\n                int l = Math.max(1, i - v + 1);\n                int r = i;\n\n                long c = (long) v - i;\n                long k = 1;\n\n                rangeAddConst(l, r, c);\n                rangeAddCoeff(l, r, k);\n            } else {\n                int i = fs.nextInt();\n\n                long ans = sum(bitC, i) + sum(bitK, i) * i;\n                out.append(ans).append('\\n');\n            }\n        }\n\n        System.out.print(out);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int sign = 1;\n            if (c == '-') {\n                sign = -1;\n                c = read();\n            }\n\n            int val = 0;\n            while (c > ' ') {\n                val = val * 10 + (c - '0');\n                c = read();\n            }\n            return val * sign;\n        }\n    }\n\n    static int n;\n    static long[] bitC;\n    static long[] bitK;\n\n    static void add(long[] bit, int idx, long val) {\n        for (int i = idx; i <= n; i += i & -i) {\n            bit[i] += val;\n        }\n    }\n\n    static long sum(long[] bit, int idx) {\n        long res = 0;\n        for (int i = idx; i > 0; i -= i & -i) {\n            res += bit[i];\n        }\n        return res;\n    }\n\n    static void rangeAddConst(int l, int r, long val) {\n        add(bitC, l, val);\n        if (r + 1 <= n) add(bitC, r + 1, -val);\n    }\n\n    static void rangeAddCoeff(int l, int r, long val) {\n        add(bitK, l, val);\n        if (r + 1 <= n) add(bitK, r + 1, -val);\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        n = fs.nextInt();\n        int m = fs.nextInt();\n\n        bitC = new long[n + 2];\n        bitK = new long[n + 2];\n\n        StringBuilder out = new StringBuilder();\n\n        for (int q = 0; q < m; q++) {\n            int type = fs.nextInt();\n\n            if (type == 1) {\n                int i = fs.nextInt();\n                int v = fs.nextInt();\n\n                int l = i;\n                int r = Math.min(n, i + v - 1);\n\n                long c = (long) v + i;\n                long k = -1;\n\n                rangeAddConst(l, r, c);\n                rangeAddCoeff(l, r, k);\n            } else if (type == 2) {\n                int i = fs.nextInt();\n                int v = fs.nextInt();\n\n                int l = Math.max(1, i - v + 1);\n                int r = i;\n\n                long c = (long) v - i;\n                long k = 1;\n\n                rangeAddConst(l, r, c);\n                rangeAddCoeff(l, r, k);\n            } else {\n                int i = fs.nextInt();\n\n                long ans = sum(bitC, i) + sum(bitK, i) * i;\n                out.append(ans).append('\\n');\n            }\n        }\n\n        System.out.print(out);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13770350001868792,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

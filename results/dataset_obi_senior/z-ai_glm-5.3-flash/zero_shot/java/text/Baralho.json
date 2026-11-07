@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T17:15:01.514961+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 902,
+            "output_tokens": 1659,
+            "total_tokens": 2561
+        },
+        "cost_usd": {
+            "input_cost": 1.9e-05,
+            "output_cost": 0.00083,
+            "total_cost": 0.000849
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) s = \"\";\n        s = s.trim();\n\n        int[] masks = new int[4];      // contagem via bitmask para C, E, U, P\n        boolean[] dup = new boolean[4];\n        String suits = \"CEUP\";\n\n        for (int i = 0; i + 2 < s.length(); i += 3) {\n            int val = (s.charAt(i) - '0') * 10 + (s.charAt(i + 1) - '0');\n            int idx = suits.indexOf(s.charAt(i + 2));\n            if (idx >= 0 && val >= 1 && val <= 13) {\n                int bit = 1 << (val - 1);\n                if ((masks[idx] & bit) != 0) dup[idx] = true;\n                masks[idx] |= bit;\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < 4; i++) {\n            if (dup[i]) sb.append(\"erro\");\n            else sb.append(13 - Integer.bitCount(masks[i]));\n            sb.append('\\n');\n        }\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String s = br.readLine();\n        if (s == null) s = \"\";\n        s = s.trim();\n\n        int[] masks = new int[4];      // contagem via bitmask para C, E, U, P\n        boolean[] dup = new boolean[4];\n        String suits = \"CEUP\";\n\n        for (int i = 0; i + 2 < s.length(); i += 3) {\n            int val = (s.charAt(i) - '0') * 10 + (s.charAt(i + 1) - '0');\n            int idx = suits.indexOf(s.charAt(i + 2));\n            if (idx >= 0 && val >= 1 && val <= 13) {\n                int bit = 1 << (val - 1);\n                if ((masks[idx] & bit) != 0) dup[idx] = true;\n                masks[idx] |= bit;\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < 4; i++) {\n            if (dup[i]) sb.append(\"erro\");\n            else sb.append(13 - Integer.bitCount(masks[i]));\n            sb.append('\\n');\n        }\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08932140003889799,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

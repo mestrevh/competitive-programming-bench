@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:10:35.395990+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 518,
+            "output_tokens": 834,
+            "total_tokens": 3526
+        },
+        "cost_usd": {
+            "input_cost": 0.000389,
+            "output_cost": 0.003128,
+            "total_cost": 0.003516
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.HashMap;\nimport java.util.List;\nimport java.util.Map;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(\"\");\n\n        String next() {\n            while (!st.hasMoreTokens()) {\n                try {\n                    String line = br.readLine();\n                    if (line == null) return null;\n                    st = new StringTokenizer(line);\n                } catch (IOException e) {\n                    e.printStackTrace();\n                }\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner sc = new FastScanner();\n        String token = sc.next();\n        if (token == null) return;\n        int n = Integer.parseInt(token);\n\n        int[] raw = new int[n];\n        for (int i = 0; i < n; i++) {\n            raw[i] = sc.nextInt();\n        }\n\n        // Remove duplicatas consecutivas\n        List<Integer> list = new ArrayList<>(n + 2);\n        list.add(0); // Sentinela à esquerda\n        for (int i = 0; i < n; i++) {\n            if (i == 0 || raw[i] != raw[i - 1]) {\n                list.add(raw[i]);\n            }\n        }\n        list.add(0); // Sentinela à direita\n\n        int m = list.size();\n        int[] a = new int[m];\n        for (int i = 0; i < m; i++) {\n            a[i] = list.get(i);\n        }\n\n        // Agrupa os índices por altura (excluindo as sentinelas)\n        Map<Integer, List<Integer>> heightIndices = new HashMap<>();\n        for (int i = 1; i < m - 1; i++) {\n            heightIndices.computeIfAbsent(a[i], k -> new ArrayList<>()).add(i);\n        }\n\n        List<Integer> uniqueHeights = new ArrayList<>(heightIndices.keySet());\n        Collections.sort(uniqueHeights);\n\n        // Para H logo acima de 0 (0 < H < menor altura), temos 1 componente\n        int currentComponents = 1;\n        int maxComponents = 1;\n\n        for (int h : uniqueHeights) {\n            List<Integer> indices = heightIndices.get(h);\n            for (int idx : indices) {\n                if (a[idx] > a[idx - 1] && a[idx] > a[idx + 1]) {\n                    // Pico local: a componente desaparece quando o corte passa dessa altura\n                    currentComponents--;\n                } else if (a[idx] < a[idx - 1] && a[idx] < a[idx + 1]) {\n                    // Vale local: a componente se divide em duas quando o corte passa dessa altura\n                    currentComponents++;\n                }\n            }\n            if (currentComponents > maxComponents) {\n                maxComponents = currentComponents;\n            }\n        }\n\n        // O número total de pedaços é o número de componentes superiores + 1 (base inferior)\n        System.out.println(maxComponents + 1);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\nimport java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.HashMap;\nimport java.util.List;\nimport java.util.Map;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(\"\");\n\n        String next() {\n            while (!st.hasMoreTokens()) {\n                try {\n                    String line = br.readLine();\n                    if (line == null) return null;\n                    st = new StringTokenizer(line);\n                } catch (IOException e) {\n                    e.printStackTrace();\n                }\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner sc = new FastScanner();\n        String token = sc.next();\n        if (token == null) return;\n        int n = Integer.parseInt(token);\n\n        int[] raw = new int[n];\n        for (int i = 0; i < n; i++) {\n            raw[i] = sc.nextInt();\n        }\n\n        // Remove duplicatas consecutivas\n        List<Integer> list = new ArrayList<>(n + 2);\n        list.add(0); // Sentinela à esquerda\n        for (int i = 0; i < n; i++) {\n            if (i == 0 || raw[i] != raw[i - 1]) {\n                list.add(raw[i]);\n            }\n        }\n        list.add(0); // Sentinela à direita\n\n        int m = list.size();\n        int[] a = new int[m];\n        for (int i = 0; i < m; i++) {\n            a[i] = list.get(i);\n        }\n\n        // Agrupa os índices por altura (excluindo as sentinelas)\n        Map<Integer, List<Integer>> heightIndices = new HashMap<>();\n        for (int i = 1; i < m - 1; i++) {\n            heightIndices.computeIfAbsent(a[i], k -> new ArrayList<>()).add(i);\n        }\n\n        List<Integer> uniqueHeights = new ArrayList<>(heightIndices.keySet());\n        Collections.sort(uniqueHeights);\n\n        // Para H logo acima de 0 (0 < H < menor altura), temos 1 componente\n        int currentComponents = 1;\n        int maxComponents = 1;\n\n        for (int h : uniqueHeights) {\n            List<Integer> indices = heightIndices.get(h);\n            for (int idx : indices) {\n                if (a[idx] > a[idx - 1] && a[idx] > a[idx + 1]) {\n                    // Pico local: a componente desaparece quando o corte passa dessa altura\n                    currentComponents--;\n                } else if (a[idx] < a[idx - 1] && a[idx] < a[idx + 1]) {\n                    // Vale local: a componente se divide em duas quando o corte passa dessa altura\n                    currentComponents++;\n                }\n            }\n            if (currentComponents > maxComponents) {\n                maxComponents = currentComponents;\n            }\n        }\n\n        // O número total de pedaços é o número de componentes superiores + 1 (base inferior)\n        System.out.println(maxComponents + 1);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2382787999813445,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

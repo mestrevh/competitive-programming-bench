@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T01:21:17.324435+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 719,
+            "output_tokens": 28708,
+            "total_tokens": 29427
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.014354,
+            "total_cost": 0.014369
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst buf = fs.readFileSync(0, 'utf8');\nconst tokens = buf.trim().split(/\\s+/);\nconst N = +tokens[0];\n\nconst head = new Int32Array(N + 1).fill(-1);\nconst M = N - 1;\nconst nxt = new Int32Array(2 * M);\nconst to = new Int32Array(2 * M);\nlet ec = 0;\n{\n  let ptr = 1;\n  for (let i = 0; i < M; i++) {\n    const x = +tokens[ptr++], y = +tokens[ptr++];\n    to[ec] = y; nxt[ec] = head[x]; head[x] = ec++;\n    to[ec] = x; nxt[ec] = head[y]; head[y] = ec++;\n  }\n}\n\nconst dist = new Int32Array(N + 1);\nconst parent = new Int32Array(N + 1);\nconst q = new Int32Array(N + 1);\n\nfunction bfs(src, ban) {\n  dist.fill(-1);\n  let qh = 0, qt = 0;\n  dist[src] = 0; parent[src] = 0; q[qt++] = src;\n  let far = src;\n  while (qh < qt) {\n    const u = q[qh++];\n    if (dist[u] > dist[far]) far = u;\n    for (let e = head[u]; e !== -1; e = nxt[e]) {\n      const v = to[e];\n      if (v === ban || dist[v] !== -1) continue;\n      dist[v] = dist[u] + 1; parent[v] = u; q[qt++] = v;\n    }\n  }\n  return far;\n}\n\n// Encontrar diâmetro D da árvore\nconst a = bfs(1, -1);\nconst b = bfs(a, -1);\nconst D = dist[b];\n\nlet ans;\nif ((D & 1) === 0) {\n  // Centro é um vértice c: todo par de diâmetro tem ambos os endpoints\n  // a distância D/2 de c, em direções diferentes de c.\n  const half = D >> 1;\n  let c = b;\n  for (let i = 0; i < half; i++) c = parent[c];\n  let deg = 0;\n  for (let e = head[c]; e !== -1; e = nxt[e]) deg++;\n  const cntDir = new Int32Array(deg);\n  const dir = new Int32Array(N + 1);\n  dist.fill(-1);\n  let qt = 0, qh = 0;\n  dist[c] = 0; q[qt++] = c;\n  let di = 0;\n  for (let e = head[c]; e !== -1; e = nxt[e]) {\n    const v = to[e];\n    dist[v] = 1; dir[v] = di; q[qt++] = v; di++;\n  }\n  while (qh < qt) {\n    const u = q[qh++];\n    for (let e = head[u]; e !== -1; e = nxt[e]) {\n      const v = to[e];\n      if (dist[v] !== -1) continue;\n      dist[v] = dist[u] + 1; dir[v] = dir[u]; q[qt++] = v;\n    }\n  }\n  let T = 0, sq = 0;\n  for (let v = 1; v <= N; v++) {\n    if (dist[v] === half) { T++; cntDir[dir[v]]++; }\n  }\n  for (let i = 0; i < deg; i++) sq += cntDir[i] * cntDir[i];\n  ans = (D + 1) + '\\n' + ((T * T - sq) / 2);\n} else {\n  // Centro é uma aresta (c1, c2): todo par de diâmetro tem um endpoint\n  // de cada lado dessa aresta, com dist(u,c1) + dist(v,c2) = D-1.\n  const half = (D - 1) >> 1;\n  let c2 = b;\n  for (let i = 0; i < half; i++) c2 = parent[c2];\n  const c1 = parent[c2];\n  bfs(c1, c2);\n  const cntA = new Int32Array(D + 1);\n  for (let v = 1; v <= N; v++) if (dist[v] !== -1) cntA[dist[v]]++;\n  bfs(c2, c1);\n  const cntB = new Int32Array(D + 1);\n  for (let v = 1; v <= N; v++) if (dist[v] !== -1) cntB[dist[v]]++;\n  let count = 0;\n  for (let t = 0; t <= D - 1; t++) count += cntA[t] * cntB[D - 1 - t];\n  ans = (D + 1) + '\\n' + count;\n}\n\nprocess.stdout.write(ans + '\\n');\n```",
+        "extracted_code": "const fs = require('fs');\nconst buf = fs.readFileSync(0, 'utf8');\nconst tokens = buf.trim().split(/\\s+/);\nconst N = +tokens[0];\n\nconst head = new Int32Array(N + 1).fill(-1);\nconst M = N - 1;\nconst nxt = new Int32Array(2 * M);\nconst to = new Int32Array(2 * M);\nlet ec = 0;\n{\n  let ptr = 1;\n  for (let i = 0; i < M; i++) {\n    const x = +tokens[ptr++], y = +tokens[ptr++];\n    to[ec] = y; nxt[ec] = head[x]; head[x] = ec++;\n    to[ec] = x; nxt[ec] = head[y]; head[y] = ec++;\n  }\n}\n\nconst dist = new Int32Array(N + 1);\nconst parent = new Int32Array(N + 1);\nconst q = new Int32Array(N + 1);\n\nfunction bfs(src, ban) {\n  dist.fill(-1);\n  let qh = 0, qt = 0;\n  dist[src] = 0; parent[src] = 0; q[qt++] = src;\n  let far = src;\n  while (qh < qt) {\n    const u = q[qh++];\n    if (dist[u] > dist[far]) far = u;\n    for (let e = head[u]; e !== -1; e = nxt[e]) {\n      const v = to[e];\n      if (v === ban || dist[v] !== -1) continue;\n      dist[v] = dist[u] + 1; parent[v] = u; q[qt++] = v;\n    }\n  }\n  return far;\n}\n\n// Encontrar diâmetro D da árvore\nconst a = bfs(1, -1);\nconst b = bfs(a, -1);\nconst D = dist[b];\n\nlet ans;\nif ((D & 1) === 0) {\n  // Centro é um vértice c: todo par de diâmetro tem ambos os endpoints\n  // a distância D/2 de c, em direções diferentes de c.\n  const half = D >> 1;\n  let c = b;\n  for (let i = 0; i < half; i++) c = parent[c];\n  let deg = 0;\n  for (let e = head[c]; e !== -1; e = nxt[e]) deg++;\n  const cntDir = new Int32Array(deg);\n  const dir = new Int32Array(N + 1);\n  dist.fill(-1);\n  let qt = 0, qh = 0;\n  dist[c] = 0; q[qt++] = c;\n  let di = 0;\n  for (let e = head[c]; e !== -1; e = nxt[e]) {\n    const v = to[e];\n    dist[v] = 1; dir[v] = di; q[qt++] = v; di++;\n  }\n  while (qh < qt) {\n    const u = q[qh++];\n    for (let e = head[u]; e !== -1; e = nxt[e]) {\n      const v = to[e];\n      if (dist[v] !== -1) continue;\n      dist[v] = dist[u] + 1; dir[v] = dir[u]; q[qt++] = v;\n    }\n  }\n  let T = 0, sq = 0;\n  for (let v = 1; v <= N; v++) {\n    if (dist[v] === half) { T++; cntDir[dir[v]]++; }\n  }\n  for (let i = 0; i < deg; i++) sq += cntDir[i] * cntDir[i];\n  ans = (D + 1) + '\\n' + ((T * T - sq) / 2);\n} else {\n  // Centro é uma aresta (c1, c2): todo par de diâmetro tem um endpoint\n  // de cada lado dessa aresta, com dist(u,c1) + dist(v,c2) = D-1.\n  const half = (D - 1) >> 1;\n  let c2 = b;\n  for (let i = 0; i < half; i++) c2 = parent[c2];\n  const c1 = parent[c2];\n  bfs(c1, c2);\n  const cntA = new Int32Array(D + 1);\n  for (let v = 1; v <= N; v++) if (dist[v] !== -1) cntA[dist[v]]++;\n  bfs(c2, c1);\n  const cntB = new Int32Array(D + 1);\n  for (let v = 1; v <= N; v++) if (dist[v] !== -1) cntB[dist[v]]++;\n  let count = 0;\n  for (let t = 0; t <= D - 1; t++) count += cntA[t] * cntB[D - 1 - t];\n  ans = (D + 1) + '\\n' + count;\n}\n\nprocess.stdout.write(ans + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09194910002406687,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

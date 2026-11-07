@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:32:45.840058+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 765,
+            "output_tokens": 15308,
+            "total_tokens": 16073
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.036739,
+            "total_cost": 0.036741
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Ralouim {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n\n        int[] x = new int[N + 1];\n        int[] y = new int[N + 1];\n\n        for (int i = 1; i <= N; i++) {\n            st = new StringTokenizer(br.readLine());\n            x[i] = Integer.parseInt(st.nextToken());\n            y[i] = Integer.parseInt(st.nextToken());\n        }\n\n        int M = N * N;\n        long[] edges = new long[M];\n\n        final int SHIFT1 = 11;\n        final int SHIFT2 = 22;\n        final int MASK = (1 << SHIFT1) - 1;\n\n        int idx = 0;\n        for (int u = 0; u <= N; u++) {\n            for (int v = 1; v <= N; v++) {\n                if (u == v) continue;\n\n                long dx = x[u] - x[v];\n                long dy = y[u] - y[v];\n                long d = dx * dx + dy * dy;\n\n                long code = (d << SHIFT2) | ((long) u << SHIFT1) | v;\n                edges[idx++] = code;\n            }\n        }\n\n        Arrays.sort(edges);\n\n        int[] maxIncoming = new int[N + 1];\n        int[] valEdge = new int[M];\n        int ans = 0;\n\n        int i = M - 1;\n        while (i >= 0) {\n            int len = (int) (edges[i] >>> SHIFT2);\n            int j = i;\n            while (j >= 0 && (int) (edges[j] >>> SHIFT2) == len) {\n                j--;\n            }\n\n            for (int k = i; k > j; k--) {\n                long code = edges[k];\n                int u = (int) ((code >>> SHIFT1) & MASK);\n                int v = (int) (code & MASK);\n\n                int val;\n                if (u == 0) {\n                    val = 1;\n                } else {\n                    int prev = maxIncoming[u];\n                    val = (prev == 0) ? 0 : prev + 1;\n                }\n\n                valEdge[k] = val;\n                if (val > ans) ans = val;\n            }\n\n            for (int k = i; k > j; k--) {\n                int val = valEdge[k];\n                if (val > 0) {\n                    int v = (int) (edges[k] & MASK);\n                    if (val > maxIncoming[v]) {\n                        maxIncoming[v] = val;\n                    }\n                }\n            }\n\n            i = j;\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Ralouim {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n\n        int[] x = new int[N + 1];\n        int[] y = new int[N + 1];\n\n        for (int i = 1; i <= N; i++) {\n            st = new StringTokenizer(br.readLine());\n            x[i] = Integer.parseInt(st.nextToken());\n            y[i] = Integer.parseInt(st.nextToken());\n        }\n\n        int M = N * N;\n        long[] edges = new long[M];\n\n        final int SHIFT1 = 11;\n        final int SHIFT2 = 22;\n        final int MASK = (1 << SHIFT1) - 1;\n\n        int idx = 0;\n        for (int u = 0; u <= N; u++) {\n            for (int v = 1; v <= N; v++) {\n                if (u == v) continue;\n\n                long dx = x[u] - x[v];\n                long dy = y[u] - y[v];\n                long d = dx * dx + dy * dy;\n\n                long code = (d << SHIFT2) | ((long) u << SHIFT1) | v;\n                edges[idx++] = code;\n            }\n        }\n\n        Arrays.sort(edges);\n\n        int[] maxIncoming = new int[N + 1];\n        int[] valEdge = new int[M];\n        int ans = 0;\n\n        int i = M - 1;\n        while (i >= 0) {\n            int len = (int) (edges[i] >>> SHIFT2);\n            int j = i;\n            while (j >= 0 && (int) (edges[j] >>> SHIFT2) == len) {\n                j--;\n            }\n\n            for (int k = i; k > j; k--) {\n                long code = edges[k];\n                int u = (int) ((code >>> SHIFT1) & MASK);\n                int v = (int) (code & MASK);\n\n                int val;\n                if (u == 0) {\n                    val = 1;\n                } else {\n                    int prev = maxIncoming[u];\n                    val = (prev == 0) ? 0 : prev + 1;\n                }\n\n                valEdge[k] = val;\n                if (val > ans) ans = val;\n            }\n\n            for (int k = i; k > j; k--) {\n                int val = valEdge[k];\n                if (val > 0) {\n                    int v = (int) (edges[k] & MASK);\n                    if (val > maxIncoming[v]) {\n                        maxIncoming[v] = val;\n                    }\n                }\n            }\n\n            i = j;\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4405434000073001,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

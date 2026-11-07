@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T10:48:01.289269+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1242,
+            "output_tokens": 44432,
+            "total_tokens": 45674
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.022216,
+            "total_cost": 0.022243
+        },
+        "raw_response": "```python\nimport sys\nfrom math import isqrt\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    p = int(data[0])\n    out = []\n    cache = {}\n    idx = 1\n    for _ in range(p):\n        L = int(data[idx]); A = int(data[idx + 1]); B = int(data[idx + 2])\n        idx += 3\n        key = (L, A, B)\n        r = cache.get(key)\n        if r is None:\n            n = B - A + 1\n            S = (A + B) * n // 2  # soma de todos os valores em [A, B]\n            if S < L:\n                # A soma total nunca alcança L: João usa todos os n valores\n                # (todas as somas parícias ficam < L) e completa n rodadas.\n                r = n\n            else:\n                # A partida termina quando a soma atinge >= L.\n                # Resposta = maior k <= n tal que existem k valores distintos\n                # com soma >= L e os k-1 primeiros somando < L.\n                # Condições equivalentes:\n                #   (k-1)*A + (k-1)(k-2)/2 <= L-1        (soma mínima dos k-1 menores)\n                #   k*B - k(k-1)/2 >= L                   (soma máxima dos k maiores)\n                # A segunda é sempre satisfeita para o k ótimo; basta maximizar k\n                # pela primeira: máximo j >= 0 com j*A + j*(j-1)/2 <= L-1, k = j+1.\n                c = 2 * A - 1\n                j = (isqrt(c * c + 8 * (L - 1)) - c) // 2\n                if j < 0:\n                    j = 0\n                lim = L - 1\n                # ajustes de segurança (na prática não executam)\n                while (j + 1) * A + (j + 1) * j // 2 <= lim:\n                    j += 1\n                while j > 0 and j * A + j * (j - 1) // 2 > lim:\n                    j -= 1\n                r = j + 1\n                if r > n:\n                    r = n\n            cache[key] = r\n        out.append(r)\n    sys.stdout.write(\"\\n\".join(map(str, out)) + \"\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\nfrom math import isqrt\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    p = int(data[0])\n    out = []\n    cache = {}\n    idx = 1\n    for _ in range(p):\n        L = int(data[idx]); A = int(data[idx + 1]); B = int(data[idx + 2])\n        idx += 3\n        key = (L, A, B)\n        r = cache.get(key)\n        if r is None:\n            n = B - A + 1\n            S = (A + B) * n // 2  # soma de todos os valores em [A, B]\n            if S < L:\n                # A soma total nunca alcança L: João usa todos os n valores\n                # (todas as somas parícias ficam < L) e completa n rodadas.\n                r = n\n            else:\n                # A partida termina quando a soma atinge >= L.\n                # Resposta = maior k <= n tal que existem k valores distintos\n                # com soma >= L e os k-1 primeiros somando < L.\n                # Condições equivalentes:\n                #   (k-1)*A + (k-1)(k-2)/2 <= L-1        (soma mínima dos k-1 menores)\n                #   k*B - k(k-1)/2 >= L                   (soma máxima dos k maiores)\n                # A segunda é sempre satisfeita para o k ótimo; basta maximizar k\n                # pela primeira: máximo j >= 0 com j*A + j*(j-1)/2 <= L-1, k = j+1.\n                c = 2 * A - 1\n                j = (isqrt(c * c + 8 * (L - 1)) - c) // 2\n                if j < 0:\n                    j = 0\n                lim = L - 1\n                # ajustes de segurança (na prática não executam)\n                while (j + 1) * A + (j + 1) * j // 2 <= lim:\n                    j += 1\n                while j > 0 and j * A + j * (j - 1) // 2 > lim:\n                    j -= 1\n                r = j + 1\n                if r > n:\n                    r = n\n            cache[key] = r\n        out.append(r)\n    sys.stdout.write(\"\\n\".join(map(str, out)) + \"\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12297689999832073,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T18:40:37.177955+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1380,
+            "output_tokens": 8563,
+            "total_tokens": 9943
+        },
+        "cost_usd": {
+            "input_cost": 3e-05,
+            "output_cost": 0.004281,
+            "total_cost": 0.004311
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    private static final int IBUF_SIZE = 1 << 16;\n    private static final byte[] ibuf = new byte[IBUF_SIZE];\n    private static int ipos = 0, ilen = 0;\n    private static final InputStream is = System.in;\n\n    private static int readByte() throws IOException {\n        if (ipos == ilen) {\n            ilen = is.read(ibuf, 0, IBUF_SIZE);\n            ipos = 0;\n            if (ilen <= 0) return -1;\n        }\n        return ibuf[ipos++];\n    }\n\n    private static int nextInt() throws IOException {\n        int c = readByte();\n        while (c != -1 && (c < '0' || c > '9')) c = readByte();\n        int x = 0;\n        while (c >= '0' && c <= '9') {\n            x = x * 10 + (c - '0');\n            c = readByte();\n        }\n        return x;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int n = nextInt();\n        int m = nextInt();\n        int p = nextInt();\n\n        // rowFrom[i] = linha original cujo conteúdo está agora na linha i\n        // colFrom[j] = coluna original cujo conteúdo está agora na coluna j\n        int[] rowFrom = new int[n + 1];\n        for (int i = 1; i <= n; i++) rowFrom[i] = i;\n        int[] colFrom = new int[m + 1];\n        for (int j = 1; j <= m; j++) colFrom[j] = j;\n\n        for (int k = 0; k < p; k++) {\n            int c = readByte();\n            while (c != 'L' && c != 'C') {\n                if (c == -1) break;\n                c = readByte();\n            }\n            int a = nextInt();\n            int b = nextInt();\n            if (c == 'L') {\n                int t = rowFrom[a]; rowFrom[a] = rowFrom[b]; rowFrom[b] = t;\n            } else if (c == 'C') {\n                int t = colFrom[a]; colFrom[a] = colFrom[b]; colFrom[b] = t;\n            }\n        }\n\n        OutputStream os = new BufferedOutputStream(System.out, 1 << 16);\n        byte[] buf = new byte[1 << 16];\n        int bufLen = buf.length;\n        int bufIdx = 0;\n\n        for (int i = 1; i <= n; i++) {\n            int base = (rowFrom[i] - 1) * m;\n            for (int j = 1; j <= m; j++) {\n                int val = base + colFrom[j];\n                if (bufIdx + 9 > bufLen) {\n                    os.write(buf, 0, bufIdx);\n                    bufIdx = 0;\n                }\n                int start = bufIdx;\n                do {\n                    buf[bufIdx++] = (byte) ('0' + val % 10);\n                    val /= 10;\n                } while (val > 0);\n                for (int l = start, r = bufIdx - 1; l < r; l++, r--) {\n                    byte t = buf[l]; buf[l] = buf[r]; buf[r] = t;\n                }\n                buf[bufIdx++] = (j < m) ? (byte) ' ' : (byte) '\\n';\n            }\n        }\n        os.write(buf, 0, bufIdx);\n        os.flush();\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    private static final int IBUF_SIZE = 1 << 16;\n    private static final byte[] ibuf = new byte[IBUF_SIZE];\n    private static int ipos = 0, ilen = 0;\n    private static final InputStream is = System.in;\n\n    private static int readByte() throws IOException {\n        if (ipos == ilen) {\n            ilen = is.read(ibuf, 0, IBUF_SIZE);\n            ipos = 0;\n            if (ilen <= 0) return -1;\n        }\n        return ibuf[ipos++];\n    }\n\n    private static int nextInt() throws IOException {\n        int c = readByte();\n        while (c != -1 && (c < '0' || c > '9')) c = readByte();\n        int x = 0;\n        while (c >= '0' && c <= '9') {\n            x = x * 10 + (c - '0');\n            c = readByte();\n        }\n        return x;\n    }\n\n    public static void main(String[] args) throws IOException {\n        int n = nextInt();\n        int m = nextInt();\n        int p = nextInt();\n\n        // rowFrom[i] = linha original cujo conteúdo está agora na linha i\n        // colFrom[j] = coluna original cujo conteúdo está agora na coluna j\n        int[] rowFrom = new int[n + 1];\n        for (int i = 1; i <= n; i++) rowFrom[i] = i;\n        int[] colFrom = new int[m + 1];\n        for (int j = 1; j <= m; j++) colFrom[j] = j;\n\n        for (int k = 0; k < p; k++) {\n            int c = readByte();\n            while (c != 'L' && c != 'C') {\n                if (c == -1) break;\n                c = readByte();\n            }\n            int a = nextInt();\n            int b = nextInt();\n            if (c == 'L') {\n                int t = rowFrom[a]; rowFrom[a] = rowFrom[b]; rowFrom[b] = t;\n            } else if (c == 'C') {\n                int t = colFrom[a]; colFrom[a] = colFrom[b]; colFrom[b] = t;\n            }\n        }\n\n        OutputStream os = new BufferedOutputStream(System.out, 1 << 16);\n        byte[] buf = new byte[1 << 16];\n        int bufLen = buf.length;\n        int bufIdx = 0;\n\n        for (int i = 1; i <= n; i++) {\n            int base = (rowFrom[i] - 1) * m;\n            for (int j = 1; j <= m; j++) {\n                int val = base + colFrom[j];\n                if (bufIdx + 9 > bufLen) {\n                    os.write(buf, 0, bufIdx);\n                    bufIdx = 0;\n                }\n                int start = bufIdx;\n                do {\n                    buf[bufIdx++] = (byte) ('0' + val % 10);\n                    val /= 10;\n                } while (val > 0);\n                for (int l = start, r = bufIdx - 1; l < r; l++, r--) {\n                    byte t = buf[l]; buf[l] = buf[r]; buf[r] = t;\n                }\n                buf[bufIdx++] = (j < m) ? (byte) ' ' : (byte) '\\n';\n            }\n        }\n        os.write(buf, 0, bufIdx);\n        os.flush();\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3299105999758467,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

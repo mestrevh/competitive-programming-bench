@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T03:00:06.095808+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1157,
+            "output_tokens": 1189,
+            "total_tokens": 2346
+        },
+        "cost_usd": {
+            "input_cost": 0.000116,
+            "output_cost": 0.000594,
+            "total_cost": 0.00071
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    static class Item {\n        int type;\n        int price;\n        int id;\n\n        Item(int type, int price, int id) {\n            this.type = type;\n            this.price = price;\n            this.id = id;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int n = fs.nextInt();\n        int t = fs.nextInt();\n\n        int[] types = new int[n];\n        for (int i = 0; i < n; i++) {\n            types[i] = fs.nextInt();\n        }\n\n        PriorityQueue<Item>[] byType = new PriorityQueue[t + 1];\n        PriorityQueue<Item> all = new PriorityQueue<>((a, b) -> {\n            int cmp = Integer.compare(a.price, b.price);\n            if (cmp != 0) return cmp;\n            cmp = Integer.compare(a.type, b.type);\n            if (cmp != 0) return cmp;\n            return Integer.compare(a.id, b.id);\n        });\n\n        boolean[] active = new boolean[n];\n        for (int i = 0; i < n; i++) {\n            int price = fs.nextInt();\n            Item item = new Item(types[i], price, i);\n            active[i] = true;\n\n            if (byType[types[i]] == null) {\n                byType[types[i]] = new PriorityQueue<>(\n                    (a, b) -> Integer.compare(a.price, b.price)\n                );\n            }\n            byType[types[i]].add(item);\n            all.add(item);\n        }\n\n        int c = fs.nextInt();\n        long total = 0;\n\n        for (int i = 0; i < c; i++) {\n            int desiredType = fs.nextInt();\n\n            if (desiredType == 0) {\n                while (!all.isEmpty() && !active[all.peek().id]) {\n                    all.poll();\n                }\n                if (!all.isEmpty()) {\n                    Item item = all.poll();\n                    active[item.id] = false;\n                    total += item.price;\n                }\n            } else {\n                PriorityQueue<Item> queue = byType[desiredType];\n                if (queue == null) continue;\n\n                while (!queue.isEmpty() && !active[queue.peek().id]) {\n                    queue.poll();\n                }\n                if (!queue.isEmpty()) {\n                    Item item = queue.poll();\n                    active[item.id] = false;\n                    total += item.price;\n                }\n            }\n        }\n\n        System.out.println(total);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = in.read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = in.read();\n            }\n            return value;\n        }\n    }\n\n    static class Item {\n        int type;\n        int price;\n        int id;\n\n        Item(int type, int price, int id) {\n            this.type = type;\n            this.price = price;\n            this.id = id;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int n = fs.nextInt();\n        int t = fs.nextInt();\n\n        int[] types = new int[n];\n        for (int i = 0; i < n; i++) {\n            types[i] = fs.nextInt();\n        }\n\n        PriorityQueue<Item>[] byType = new PriorityQueue[t + 1];\n        PriorityQueue<Item> all = new PriorityQueue<>((a, b) -> {\n            int cmp = Integer.compare(a.price, b.price);\n            if (cmp != 0) return cmp;\n            cmp = Integer.compare(a.type, b.type);\n            if (cmp != 0) return cmp;\n            return Integer.compare(a.id, b.id);\n        });\n\n        boolean[] active = new boolean[n];\n        for (int i = 0; i < n; i++) {\n            int price = fs.nextInt();\n            Item item = new Item(types[i], price, i);\n            active[i] = true;\n\n            if (byType[types[i]] == null) {\n                byType[types[i]] = new PriorityQueue<>(\n                    (a, b) -> Integer.compare(a.price, b.price)\n                );\n            }\n            byType[types[i]].add(item);\n            all.add(item);\n        }\n\n        int c = fs.nextInt();\n        long total = 0;\n\n        for (int i = 0; i < c; i++) {\n            int desiredType = fs.nextInt();\n\n            if (desiredType == 0) {\n                while (!all.isEmpty() && !active[all.peek().id]) {\n                    all.poll();\n                }\n                if (!all.isEmpty()) {\n                    Item item = all.poll();\n                    active[item.id] = false;\n                    total += item.price;\n                }\n            } else {\n                PriorityQueue<Item> queue = byType[desiredType];\n                if (queue == null) continue;\n\n                while (!queue.isEmpty() && !active[queue.peek().id]) {\n                    queue.poll();\n                }\n                if (!queue.isEmpty()) {\n                    Item item = queue.poll();\n                    active[item.id] = false;\n                    total += item.price;\n                }\n            }\n        }\n\n        System.out.println(total);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21416960000351537,
+            "counts": {
+                "AC": 52,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 52
+        }
+    }
+]

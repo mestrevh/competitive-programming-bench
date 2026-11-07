@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-03T00:09:26.929465+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 929,
+            "output_tokens": 8259,
+            "total_tokens": 9188
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.00413,
+            "total_cost": 0.004149
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint L, C;\nvector<string> g;\n\nbool inside(int r, int c) {\n    return r >= 0 && r < L && c >= 0 && c < C;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n    g.assign(L, \"\");\n    char buf[256];\n    for (int i = 0; i < L; i++) {\n        scanf(\"%s\", buf);\n        g[i] = buf;\n    }\n\n    int sr = -1, sc = -1;\n    for (int i = 0; i < L; i++)\n        for (int j = 0; j < C; j++)\n            if (g[i][j] == 'o') { sr = i; sc = j; }\n\n    const int dr[4] = {-1, 1, 0, 0};\n    const int dc[4] = {0, 0, -1, 1};\n\n    // Vai para o unico vizinho 'H' da posicao inicial 'o'\n    int pr = sr, pc = sc; // posicao anterior (onde veio)\n    int cr = -1, cc = -1; // posicao atual\n    for (int d = 0; d < 4; d++) {\n        int r = sr + dr[d], c = sc + dc[d];\n        if (inside(r, c) && g[r][c] == 'H') { cr = r; cc = c; }\n    }\n\n    // Caminha: Move sempre para o vizinho 'H' que nao seja o de onde veio.\n    // Para quando o unico vizinho 'H' da celula atual e exatamente o anterior.\n    while (true) {\n        int nr = -1, nc = -1;\n        for (int d = 0; d < 4; d++) {\n            int r = cr + dr[d], c = cc + dc[d];\n            if (inside(r, c) && g[r][c] == 'H' && !(r == pr && c == pc)) {\n                nr = r; nc = c;\n                break;\n            }\n        }\n        if (nr == -1) break; // chegou: sem vizinho 'H' diferente do anterior\n        pr = cr; pc = cc;\n        cr = nr; cc = nc;\n    }\n\n    printf(\"%d %d\\n\", cr + 1, cc + 1);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint L, C;\nvector<string> g;\n\nbool inside(int r, int c) {\n    return r >= 0 && r < L && c >= 0 && c < C;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n    g.assign(L, \"\");\n    char buf[256];\n    for (int i = 0; i < L; i++) {\n        scanf(\"%s\", buf);\n        g[i] = buf;\n    }\n\n    int sr = -1, sc = -1;\n    for (int i = 0; i < L; i++)\n        for (int j = 0; j < C; j++)\n            if (g[i][j] == 'o') { sr = i; sc = j; }\n\n    const int dr[4] = {-1, 1, 0, 0};\n    const int dc[4] = {0, 0, -1, 1};\n\n    // Vai para o unico vizinho 'H' da posicao inicial 'o'\n    int pr = sr, pc = sc; // posicao anterior (onde veio)\n    int cr = -1, cc = -1; // posicao atual\n    for (int d = 0; d < 4; d++) {\n        int r = sr + dr[d], c = sc + dc[d];\n        if (inside(r, c) && g[r][c] == 'H') { cr = r; cc = c; }\n    }\n\n    // Caminha: Move sempre para o vizinho 'H' que nao seja o de onde veio.\n    // Para quando o unico vizinho 'H' da celula atual e exatamente o anterior.\n    while (true) {\n        int nr = -1, nc = -1;\n        for (int d = 0; d < 4; d++) {\n            int r = cr + dr[d], c = cc + dc[d];\n            if (inside(r, c) && g[r][c] == 'H' && !(r == pr && c == pc)) {\n                nr = r; nc = c;\n                break;\n            }\n        }\n        if (nr == -1) break; // chegou: sem vizinho 'H' diferente do anterior\n        pr = cr; pc = cc;\n        cr = nr; cc = nc;\n    }\n\n    printf(\"%d %d\\n\", cr + 1, cc + 1);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2245217000017874,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

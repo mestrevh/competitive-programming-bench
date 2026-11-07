@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T01:42:36.989234+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1034,
+            "output_tokens": 9850,
+            "total_tokens": 10884
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.02364,
+            "total_cost": 0.023643
+        },
+        "raw_response": "```java\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n\n        int[] last = new int[101];\n        int[] total = new int[101];\n        boolean[] seen = new boolean[101];\n        Arrays.fill(last, -1);\n\n        int tempo = 0;\n        boolean hasEvent = false;\n\n        for (int i = 0; i < N; i++) {\n            char c = sc.next().charAt(0);\n            int x = sc.nextInt();\n\n            if (c == 'T') {\n                if (hasEvent) {\n                    tempo += x - 1;\n                }\n            } else {\n                seen[x] = true;\n                if (c == 'R') {\n                    last[x] = tempo;\n                } else {\n                    if (last[x] != -1) {\n                        total[x] += tempo - last[x];\n                        last[x] = -1;\n                    }\n                }\n                hasEvent = true;\n                tempo += 1;\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 1; i <= 100; i++) {\n            if (seen[i]) {\n                if (last[i] != -1) {\n                    sb.append(i).append(\" -1\\n\");\n                } else {\n                    sb.append(i).append(' ').append(total[i]).append('\\n');\n                }\n            }\n        }\n\n        System.out.print(sb);\n    }\n}\n```",
+        "extracted_code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n\n        int[] last = new int[101];\n        int[] total = new int[101];\n        boolean[] seen = new boolean[101];\n        Arrays.fill(last, -1);\n\n        int tempo = 0;\n        boolean hasEvent = false;\n\n        for (int i = 0; i < N; i++) {\n            char c = sc.next().charAt(0);\n            int x = sc.nextInt();\n\n            if (c == 'T') {\n                if (hasEvent) {\n                    tempo += x - 1;\n                }\n            } else {\n                seen[x] = true;\n                if (c == 'R') {\n                    last[x] = tempo;\n                } else {\n                    if (last[x] != -1) {\n                        total[x] += tempo - last[x];\n                        last[x] = -1;\n                    }\n                }\n                hasEvent = true;\n                tempo += 1;\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        for (int i = 1; i <= 100; i++) {\n            if (seen[i]) {\n                if (last[i] != -1) {\n                    sb.append(i).append(\" -1\\n\");\n                } else {\n                    sb.append(i).append(' ').append(total[i]).append('\\n');\n                }\n            }\n        }\n\n        System.out.print(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10506999999051914,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T13:51:42.762468+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1266,
+            "output_tokens": 4483,
+            "total_tokens": 5749
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.010759,
+            "total_cost": 0.010763
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    V = data[idx]\n    N = data[idx + 1]\n    M = data[idx + 2]\n    idx += 3\n\n    adj = [[] for _ in range(N + 1)]\n\n    for _ in range(M):\n        a = data[idx]\n        b = data[idx + 1]\n        t = data[idx + 2]\n        p = data[idx + 3]\n        idx += 4\n\n        if p <= V:\n            adj[a].append((b, t, p))\n            adj[b].append((a, t, p))\n\n    X = data[idx]\n    Y = data[idx + 1]\n\n    INF = 10**18\n    dist = [[INF] * (N + 1) for _ in range(V + 1)]\n    dist[0][X] = 0\n\n    heap = [(0, X, 0)]\n\n    while heap:\n        d, u, c = heapq.heappop(heap)\n\n        if d != dist[c][u]:\n            continue\n\n        if u == Y:\n            print(d)\n            return\n\n        for v, t, p in adj[u]:\n            nc = c + p\n            if nc <= V:\n                nd = d + t\n                if nd < dist[nc][v]:\n                    dist[nc][v] = nd\n                    heapq.heappush(heap, (nd, v, nc))\n\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    idx = 0\n    V = data[idx]\n    N = data[idx + 1]\n    M = data[idx + 2]\n    idx += 3\n\n    adj = [[] for _ in range(N + 1)]\n\n    for _ in range(M):\n        a = data[idx]\n        b = data[idx + 1]\n        t = data[idx + 2]\n        p = data[idx + 3]\n        idx += 4\n\n        if p <= V:\n            adj[a].append((b, t, p))\n            adj[b].append((a, t, p))\n\n    X = data[idx]\n    Y = data[idx + 1]\n\n    INF = 10**18\n    dist = [[INF] * (N + 1) for _ in range(V + 1)]\n    dist[0][X] = 0\n\n    heap = [(0, X, 0)]\n\n    while heap:\n        d, u, c = heapq.heappop(heap)\n\n        if d != dist[c][u]:\n            continue\n\n        if u == Y:\n            print(d)\n            return\n\n        for v, t, p in adj[u]:\n            nc = c + p\n            if nc <= V:\n                nd = d + t\n                if nd < dist[nc][v]:\n                    dist[nc][v] = nd\n                    heapq.heappush(heap, (nd, v, nc))\n\n    print(-1)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0849235999994562,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

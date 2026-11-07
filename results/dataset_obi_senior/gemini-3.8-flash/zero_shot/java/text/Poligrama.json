@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T02:34:45.782468+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 584,
+            "output_tokens": 563,
+            "total_tokens": 1881
+        },
+        "cost_usd": {
+            "input_cost": 0.000438,
+            "output_cost": 0.002111,
+            "total_cost": 0.002549
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.List;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        if (line == null) return;\n        int n = Integer.parseInt(line.trim());\n        String s = reader.readLine().trim();\n\n        List<Integer> divisors = new ArrayList<>();\n        for (int i = 1; i * i <= n; i++) {\n            if (n % i == 0) {\n                if (i < n) {\n                    divisors.add(i);\n                }\n                int other = n / i;\n                if (other != i && other < n) {\n                    divisors.add(other);\n                }\n            }\n        }\n        Collections.sort(divisors);\n\n        int[] baseCount = new int[26];\n        int[] currentCount = new int[26];\n\n        for (int len : divisors) {\n            for (int i = 0; i < 26; i++) {\n                baseCount[i] = 0;\n            }\n            for (int i = 0; i < len; i++) {\n                baseCount[s.charAt(i) - 'a']++;\n            }\n\n            boolean ok = true;\n            for (int block = 1; block < n / len; block++) {\n                for (int i = 0; i < 26; i++) {\n                    currentCount[i] = 0;\n                }\n                int start = block * len;\n                for (int i = 0; i < len; i++) {\n                    currentCount[s.charAt(start + i) - 'a']++;\n                }\n\n                for (int i = 0; i < 26; i++) {\n                    if (baseCount[i] != currentCount[i]) {\n                        ok = false;\n                        break;\n                    }\n                }\n                if (!ok) break;\n            }\n\n            if (ok) {\n                System.out.println(s.substring(0, len));\n                return;\n            }\n        }\n\n        System.out.println(\"*\");\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.List;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        if (line == null) return;\n        int n = Integer.parseInt(line.trim());\n        String s = reader.readLine().trim();\n\n        List<Integer> divisors = new ArrayList<>();\n        for (int i = 1; i * i <= n; i++) {\n            if (n % i == 0) {\n                if (i < n) {\n                    divisors.add(i);\n                }\n                int other = n / i;\n                if (other != i && other < n) {\n                    divisors.add(other);\n                }\n            }\n        }\n        Collections.sort(divisors);\n\n        int[] baseCount = new int[26];\n        int[] currentCount = new int[26];\n\n        for (int len : divisors) {\n            for (int i = 0; i < 26; i++) {\n                baseCount[i] = 0;\n            }\n            for (int i = 0; i < len; i++) {\n                baseCount[s.charAt(i) - 'a']++;\n            }\n\n            boolean ok = true;\n            for (int block = 1; block < n / len; block++) {\n                for (int i = 0; i < 26; i++) {\n                    currentCount[i] = 0;\n                }\n                int start = block * len;\n                for (int i = 0; i < len; i++) {\n                    currentCount[s.charAt(start + i) - 'a']++;\n                }\n\n                for (int i = 0; i < 26; i++) {\n                    if (baseCount[i] != currentCount[i]) {\n                        ok = false;\n                        break;\n                    }\n                }\n                if (!ok) break;\n            }\n\n            if (ok) {\n                System.out.println(s.substring(0, len));\n                return;\n            }\n        }\n\n        System.out.println(\"*\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09728760001598857,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

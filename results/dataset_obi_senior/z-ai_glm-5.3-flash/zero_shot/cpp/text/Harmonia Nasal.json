@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T23:38:44.926716+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1280,
+            "output_tokens": 31732,
+            "total_tokens": 33012
+        },
+        "cost_usd": {
+            "input_cost": 2.7e-05,
+            "output_cost": 0.015866,
+            "total_cost": 0.015893
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\ntypedef long long ll;\n\n/*\nIdeia:\n- Valor final = soma dos a_i usados menos a soma dos b_i de todas as sílabas usadas\n  exceto a última (e exceto as que foram zeradas).\n- Cada sílaba i (i != última) contribui: 0 (fora), a_i - b_i (usada sem zerar),\n  a_i (usada com zerada). Com no máximo K zeradas.\n- Base (sem zerar): incluir todas com a_i > b_i, valendo (a_i - b_i).\n  Zerar a sílaba i adiciona ganho g_i = b_i (se a_i > b_i) ou a_i (se a_i <= b_i).\n  Resposta para última sílaba L: a_L + base(sem L) + top-K ganhos entre i != L.\n- Esse valor é alcançável: com todas as sílabas não-últimas tendo contribuição\n  positiva (a_i > c_i, c_i = b_i ou 0), a nasalidade acumulada P satisfaz\n  P >= a_{atual} em todo ponto, logo qualquer ordem satisfaz a_i + A >= B.\n*/\n\nint main(){\n    int n; long long k;\n    if(scanf(\"%d %lld\", &n, &k) != 2) return 0;\n    vector<ll> a(n), b(n);\n    for(int i = 0; i < n; i++) scanf(\"%lld\", &a[i]);\n    for(int i = 0; i < n; i++) scanf(\"%lld\", &b[i]);\n\n    ll base = 0;\n    vector<ll> gain(n);\n    for(int i = 0; i < n; i++){\n        if(a[i] > b[i]){ base += a[i] - b[i]; gain[i] = b[i]; }\n        else gain[i] = a[i];\n    }\n\n    vector<int> ord(n);\n    iota(ord.begin(), ord.end(), 0);\n    sort(ord.begin(), ord.end(), [&](int x, int y){\n        if(gain[x] != gain[y]) return gain[x] > gain[y];\n        return x < y;\n    });\n    vector<int> pos(n);\n    vector<ll> pre(n + 1, 0);\n    for(int r = 0; r < n; r++){\n        pos[ord[r]] = r + 1;\n        pre[r + 1] = pre[r] + gain[ord[r]];\n    }\n\n    ll kk = min(k, (ll)n);\n    ll ans = 0;\n    for(int i = 0; i < n; i++){\n        ll v = a[i] + base;\n        if(a[i] > b[i]) v -= a[i] - b[i]; // se i e ultima, nao entra na base com (a-b)\n        int p = pos[i];\n        ll t;\n        if((ll)p > kk) t = pre[kk];\n        else t = pre[min(kk + 1, (ll)n)] - gain[i];\n        v += t;\n        ans = max(ans, v);\n    }\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\ntypedef long long ll;\n\n/*\nIdeia:\n- Valor final = soma dos a_i usados menos a soma dos b_i de todas as sílabas usadas\n  exceto a última (e exceto as que foram zeradas).\n- Cada sílaba i (i != última) contribui: 0 (fora), a_i - b_i (usada sem zerar),\n  a_i (usada com zerada). Com no máximo K zeradas.\n- Base (sem zerar): incluir todas com a_i > b_i, valendo (a_i - b_i).\n  Zerar a sílaba i adiciona ganho g_i = b_i (se a_i > b_i) ou a_i (se a_i <= b_i).\n  Resposta para última sílaba L: a_L + base(sem L) + top-K ganhos entre i != L.\n- Esse valor é alcançável: com todas as sílabas não-últimas tendo contribuição\n  positiva (a_i > c_i, c_i = b_i ou 0), a nasalidade acumulada P satisfaz\n  P >= a_{atual} em todo ponto, logo qualquer ordem satisfaz a_i + A >= B.\n*/\n\nint main(){\n    int n; long long k;\n    if(scanf(\"%d %lld\", &n, &k) != 2) return 0;\n    vector<ll> a(n), b(n);\n    for(int i = 0; i < n; i++) scanf(\"%lld\", &a[i]);\n    for(int i = 0; i < n; i++) scanf(\"%lld\", &b[i]);\n\n    ll base = 0;\n    vector<ll> gain(n);\n    for(int i = 0; i < n; i++){\n        if(a[i] > b[i]){ base += a[i] - b[i]; gain[i] = b[i]; }\n        else gain[i] = a[i];\n    }\n\n    vector<int> ord(n);\n    iota(ord.begin(), ord.end(), 0);\n    sort(ord.begin(), ord.end(), [&](int x, int y){\n        if(gain[x] != gain[y]) return gain[x] > gain[y];\n        return x < y;\n    });\n    vector<int> pos(n);\n    vector<ll> pre(n + 1, 0);\n    for(int r = 0; r < n; r++){\n        pos[ord[r]] = r + 1;\n        pre[r + 1] = pre[r] + gain[ord[r]];\n    }\n\n    ll kk = min(k, (ll)n);\n    ll ans = 0;\n    for(int i = 0; i < n; i++){\n        ll v = a[i] + base;\n        if(a[i] > b[i]) v -= a[i] - b[i]; // se i e ultima, nao entra na base com (a-b)\n        int p = pos[i];\n        ll t;\n        if((ll)p > kk) t = pre[kk];\n        else t = pre[min(kk + 1, (ll)n)] - gain[i];\n        v += t;\n        ans = max(ans, v);\n    }\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21055429999978514,
+            "counts": {
+                "AC": 86,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 86
+        }
+    }
+]

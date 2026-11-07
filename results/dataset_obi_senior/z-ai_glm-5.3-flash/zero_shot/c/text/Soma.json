@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T20:01:58.995498+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 650,
+            "output_tokens": 1478,
+            "total_tokens": 2128
+        },
+        "cost_usd": {
+            "input_cost": 1.4e-05,
+            "output_cost": 0.000739,
+            "total_cost": 0.000753
+        },
+        "raw_response": "```C\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define HSIZE (1 << 21)\n\nstatic long long hkey[HSIZE];\nstatic int hcnt[HSIZE];\n\nstatic inline long long hash_find_add(long long k) {\n    unsigned long long h = (unsigned long long)k * 0x9E3779B97F4A7C15ULL;\n    unsigned int i = (unsigned int)(h >> 40) & (HSIZE - 1);\n    for (;;) {\n        if (hcnt[i] == 0) return 0;\n        if (hkey[i] == k) return hcnt[i];\n        i = (i + 1) & (HSIZE - 1);\n    }\n}\n\nstatic inline void hash_add(long long k) {\n    unsigned long long h = (unsigned long long)k * 0x9E3779B97F4A7C15ULL;\n    unsigned int i = (unsigned int)(h >> 40) & (HSIZE - 1);\n    for (;;) {\n        if (hcnt[i] == 0) {\n            hkey[i] = k;\n            hcnt[i] = 1;\n            return;\n        }\n        if (hkey[i] == k) {\n            hcnt[i]++;\n            return;\n        }\n        i = (i + 1) & (HSIZE - 1);\n    }\n}\n\nstatic int read_int(void) {\n    int c = getchar_unlocked();\n    while (c == ' ' || c == '\\n' || c == '\\r') c = getchar_unlocked();\n    int s = 1;\n    if (c == '-') { s = -1; c = getchar_unlocked(); }\n    int x = 0;\n    while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = getchar_unlocked(); }\n    return s * x;\n}\n\nint main(void) {\n    int N = read_int();\n    long long K = read_int();\n\n    memset(hkey, 0, sizeof(hkey));\n    memset(hcnt, 0, sizeof(hcnt));\n\n    long long ans = 0;\n    long long P = 0;\n\n    hash_add(0); /* prefixo vazio P0 = 0 */\n\n    for (int i = 0; i < N; i++) {\n        P += read_int();\n        ans += hash_find_add(P - K);\n        hash_add(P);\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define HSIZE (1 << 21)\n\nstatic long long hkey[HSIZE];\nstatic int hcnt[HSIZE];\n\nstatic inline long long hash_find_add(long long k) {\n    unsigned long long h = (unsigned long long)k * 0x9E3779B97F4A7C15ULL;\n    unsigned int i = (unsigned int)(h >> 40) & (HSIZE - 1);\n    for (;;) {\n        if (hcnt[i] == 0) return 0;\n        if (hkey[i] == k) return hcnt[i];\n        i = (i + 1) & (HSIZE - 1);\n    }\n}\n\nstatic inline void hash_add(long long k) {\n    unsigned long long h = (unsigned long long)k * 0x9E3779B97F4A7C15ULL;\n    unsigned int i = (unsigned int)(h >> 40) & (HSIZE - 1);\n    for (;;) {\n        if (hcnt[i] == 0) {\n            hkey[i] = k;\n            hcnt[i] = 1;\n            return;\n        }\n        if (hkey[i] == k) {\n            hcnt[i]++;\n            return;\n        }\n        i = (i + 1) & (HSIZE - 1);\n    }\n}\n\nstatic int read_int(void) {\n    int c = getchar_unlocked();\n    while (c == ' ' || c == '\\n' || c == '\\r') c = getchar_unlocked();\n    int s = 1;\n    if (c == '-') { s = -1; c = getchar_unlocked(); }\n    int x = 0;\n    while (c >= '0' && c <= '9') { x = x * 10 + (c - '0'); c = getchar_unlocked(); }\n    return s * x;\n}\n\nint main(void) {\n    int N = read_int();\n    long long K = read_int();\n\n    memset(hkey, 0, sizeof(hkey));\n    memset(hcnt, 0, sizeof(hcnt));\n\n    long long ans = 0;\n    long long P = 0;\n\n    hash_add(0); /* prefixo vazio P0 = 0 */\n\n    for (int i = 0; i < N; i++) {\n        P += read_int();\n        ans += hash_find_add(P - K);\n        hash_add(P);\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 46
+            },
+            "total_test_cases": 46
+        }
+    }
+]

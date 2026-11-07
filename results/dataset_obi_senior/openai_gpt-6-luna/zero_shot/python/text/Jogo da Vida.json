@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:36:56.404671+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1288,
+            "output_tokens": 277,
+            "total_tokens": 1565
+        },
+        "cost_usd": {
+            "input_cost": 0.000129,
+            "output_cost": 0.000139,
+            "total_cost": 0.000267
+        },
+        "raw_response": "```python\nimport sys\n\ndata = sys.stdin.buffer.read().split()\nn, q = map(int, data[:2])\ngrid = [[int(c) for c in row] for row in data[2:2 + n]]\n\nfor _ in range(q):\n    nxt = [[0] * n for _ in range(n)]\n    for i in range(n):\n        for j in range(n):\n            neighbors = 0\n            for di in (-1, 0, 1):\n                for dj in (-1, 0, 1):\n                    if di == 0 and dj == 0:\n                        continue\n                    ni, nj = i + di, j + dj\n                    if 0 <= ni < n and 0 <= nj < n:\n                        neighbors += grid[ni][nj]\n            if neighbors == 3 or (grid[i][j] == 1 and neighbors == 2):\n                nxt[i][j] = 1\n    grid = nxt\n\nsys.stdout.write(\"\\n\".join(\"\".join(map(str, row)) for row in grid))\n```",
+        "extracted_code": "import sys\n\ndata = sys.stdin.buffer.read().split()\nn, q = map(int, data[:2])\ngrid = [[int(c) for c in row] for row in data[2:2 + n]]\n\nfor _ in range(q):\n    nxt = [[0] * n for _ in range(n)]\n    for i in range(n):\n        for j in range(n):\n            neighbors = 0\n            for di in (-1, 0, 1):\n                for dj in (-1, 0, 1):\n                    if di == 0 and dj == 0:\n                        continue\n                    ni, nj = i + di, j + dj\n                    if 0 <= ni < n and 0 <= nj < n:\n                        neighbors += grid[ni][nj]\n            if neighbors == 3 or (grid[i][j] == 1 and neighbors == 2):\n                nxt[i][j] = 1\n    grid = nxt\n\nsys.stdout.write(\"\\n\".join(\"\".join(map(str, row)) for row in grid))",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.5645676999993157,
+            "counts": {
+                "AC": 1,
+                "WA": 18,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

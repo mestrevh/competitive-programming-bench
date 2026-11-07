@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-10-22T04:54:54.071873+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 856,
+            "output_tokens": 17047,
+            "total_tokens": 17903
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.008523,
+            "total_cost": 0.008542
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); m = int(data[1])\n    vals = list(map(int, data[2:2 + 2 * m]))\n    del data\n\n    # degree of each vertex\n    deg = [0] * (n + 1)\n    for v in vals:\n        deg[v] += 1\n\n    # prefix sums -> CSR adjacency structure\n    start = [0] * (n + 2)\n    s = 0\n    for v in range(1, n + 1):\n        start[v] = s\n        s += deg[v]\n    start[n + 1] = s\n\n    adj = [0] * (2 * m)\n    pos = start[:]\n    it = iter(vals)\n    for a, b in zip(it, it):\n        adj[pos[a]] = b; pos[a] += 1\n        adj[pos[b]] = a; pos[b] += 1\n    del vals, pos\n\n    visited = bytearray(n + 1)\n    best = None\n\n    # find connected components; a component works iff it is not a clique\n    for root in range(1, n + 1):\n        if visited[root]:\n            continue\n        visited[root] = 1\n        stack = [root]\n        verts = []\n        vappend = verts.append\n        spush = stack.append\n        esum = 0  # sum of degrees = 2 * number of edges inside component\n        while stack:\n            v = stack.pop()\n            vappend(v)\n            esum += deg[v]\n            for u in adj[start[v]:start[v + 1]]:\n                if not visited[u]:\n                    visited[u] = 1\n                    spush(u)\n        k = len(verts)\n        if esum < k * (k - 1):  # edges = esum/2 < k*(k-1)/2  <=>  not a clique\n            best = verts\n            break\n\n    if best is None:\n        sys.stdout.write(\"-1\\n\")\n        return\n\n    k = len(best)\n    v0 = -1\n    for v in best:\n        if deg[v] < k - 1:  # this vertex has a non-neighbor inside its component\n            v0 = v\n            break\n\n    if v0 < 0:\n        sys.stdout.write(\"-1\\n\")\n        return\n\n    mark = bytearray(n + 1)\n    for u in adj[start[v0]:start[v0 + 1]]:\n        mark[u] = 1\n    mark[v0] = 1\n\n    res = -1\n    for u in best:\n        if not mark[u]:\n            res = u\n            break\n\n    if res < 0:\n        sys.stdout.write(\"-1\\n\")\n        return\n\n    if v0 > res:\n        v0, res = res, v0\n    sys.stdout.write(f\"{v0} {res}\\n\")\n\nmain()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0]); m = int(data[1])\n    vals = list(map(int, data[2:2 + 2 * m]))\n    del data\n\n    # degree of each vertex\n    deg = [0] * (n + 1)\n    for v in vals:\n        deg[v] += 1\n\n    # prefix sums -> CSR adjacency structure\n    start = [0] * (n + 2)\n    s = 0\n    for v in range(1, n + 1):\n        start[v] = s\n        s += deg[v]\n    start[n + 1] = s\n\n    adj = [0] * (2 * m)\n    pos = start[:]\n    it = iter(vals)\n    for a, b in zip(it, it):\n        adj[pos[a]] = b; pos[a] += 1\n        adj[pos[b]] = a; pos[b] += 1\n    del vals, pos\n\n    visited = bytearray(n + 1)\n    best = None\n\n    # find connected components; a component works iff it is not a clique\n    for root in range(1, n + 1):\n        if visited[root]:\n            continue\n        visited[root] = 1\n        stack = [root]\n        verts = []\n        vappend = verts.append\n        spush = stack.append\n        esum = 0  # sum of degrees = 2 * number of edges inside component\n        while stack:\n            v = stack.pop()\n            vappend(v)\n            esum += deg[v]\n            for u in adj[start[v]:start[v + 1]]:\n                if not visited[u]:\n                    visited[u] = 1\n                    spush(u)\n        k = len(verts)\n        if esum < k * (k - 1):  # edges = esum/2 < k*(k-1)/2  <=>  not a clique\n            best = verts\n            break\n\n    if best is None:\n        sys.stdout.write(\"-1\\n\")\n        return\n\n    k = len(best)\n    v0 = -1\n    for v in best:\n        if deg[v] < k - 1:  # this vertex has a non-neighbor inside its component\n            v0 = v\n            break\n\n    if v0 < 0:\n        sys.stdout.write(\"-1\\n\")\n        return\n\n    mark = bytearray(n + 1)\n    for u in adj[start[v0]:start[v0 + 1]]:\n        mark[u] = 1\n    mark[v0] = 1\n\n    res = -1\n    for u in best:\n        if not mark[u]:\n            res = u\n            break\n\n    if res < 0:\n        sys.stdout.write(\"-1\\n\")\n        return\n\n    if v0 > res:\n        v0, res = res, v0\n    sys.stdout.write(f\"{v0} {res}\\n\")\n\nmain()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.41696310000043013,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T17:28:04.785883+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 700,
+            "output_tokens": 3725,
+            "total_tokens": 4425
+        },
+        "cost_usd": {
+            "input_cost": 1.5e-05,
+            "output_cost": 0.001863,
+            "total_cost": 0.001877
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXSUM 1000000\n\nstatic int cnt[MAXSUM + 2];\n\nint main(void) {\n    int n;\n    long long s;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    if (scanf(\"%lld\", &s) != 1) return 0;\n\n    long long ans = 0;\n    long long run = 0;   /* soma dos prefixos */\n    cnt[0] = 1;          /* prefixo vazio P[0] = 0 */\n\n    for (int i = 0; i < n; i++) {\n        int x;\n        if (scanf(\"%d\", &x) != 1) break;\n        run += x;\n        if (run >= s) {\n            ans += cnt[run - s];\n        }\n        cnt[run]++;\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```\n\n**Explicação da abordagem:**\n\n- Usamos soma de prefixos: um intervalo `(i, j]` tem soma `S` se e somente se `P[j] - P[i] = S`, ou seja, `P[i] = P[j] - S`.\n- Como `Xi ≥ 0` e a soma total é no máximo `10 × 100000 = 1.000.000`, os valores de prefixo cabem em `[0, 1.000.000]`, permitindo uma tabela de contagem direta (sem hash).\n- Para cada posição `j`, somamos à resposta quantos prefixos anteriores têm valor `P[j] - S` (apenas se `P[j] ≥ S`), e depois registramos o prefixo atual na tabela — garantindo que apenas prefixos com índice menor que `j` sejam contados.\n- A resposta pode chegar a `N(N+1)/2 ≈ 5×10⁹` (caso `S = 0` e todos `Xi = 0`), por isso usamos `long long`.\n\n**Complexidade:** tempo `O(N + S)`, memória `O(S)` (~4 MB).",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXSUM 1000000\n\nstatic int cnt[MAXSUM + 2];\n\nint main(void) {\n    int n;\n    long long s;\n    if (scanf(\"%d\", &n) != 1) return 0;\n    if (scanf(\"%lld\", &s) != 1) return 0;\n\n    long long ans = 0;\n    long long run = 0;   /* soma dos prefixos */\n    cnt[0] = 1;          /* prefixo vazio P[0] = 0 */\n\n    for (int i = 0; i < n; i++) {\n        int x;\n        if (scanf(\"%d\", &x) != 1) break;\n        run += x;\n        if (run >= s) {\n            ans += cnt[run - s];\n        }\n        cnt[run]++;\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09447979999822564,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

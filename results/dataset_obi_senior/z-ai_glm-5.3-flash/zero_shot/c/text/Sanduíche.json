@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:59:02.027475+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 843,
+            "output_tokens": 2850,
+            "total_tokens": 3693
+        },
+        "cost_usd": {
+            "input_cost": 1.8e-05,
+            "output_cost": 0.001425,
+            "total_cost": 0.001443
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, M;\n\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    unsigned int adj[20];\n    for (int i = 0; i < N; i++) adj[i] = 0;\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        if (scanf(\"%d %d\", &x, &y) != 2) break;\n        x--; y--;\n        adj[x] |= 1u << y;\n        adj[y] |= 1u << x;\n    }\n\n    int total = 1 << N;\n    long long *f = (long long *)malloc(sizeof(long long) * (size_t)total);\n    if (!f) return 0;\n\n    /* f[S] = numero de subconjuntos independentes contidos em S (incluindo vazio) */\n    f[0] = 1;\n\n    for (int S = 1; S < total; S++) {\n        int v = __builtin_ctz((unsigned int)S);          /* menor ingrediente presente em S */\n        unsigned int rest = ((unsigned int)S) ^ (1u << v);\n        /*conjuntos sem v: f[rest]; conjuntos com v: v e seus vizinhos em S ficam de fora */\n        f[S] = f[rest] + f[rest & ~adj[v]];\n    }\n\n    printf(\"%lld\\n\", f[total - 1] - 1);   /* subtrai o sanduiche vazio */\n\n    free(f);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, M;\n\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    unsigned int adj[20];\n    for (int i = 0; i < N; i++) adj[i] = 0;\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        if (scanf(\"%d %d\", &x, &y) != 2) break;\n        x--; y--;\n        adj[x] |= 1u << y;\n        adj[y] |= 1u << x;\n    }\n\n    int total = 1 << N;\n    long long *f = (long long *)malloc(sizeof(long long) * (size_t)total);\n    if (!f) return 0;\n\n    /* f[S] = numero de subconjuntos independentes contidos em S (incluindo vazio) */\n    f[0] = 1;\n\n    for (int S = 1; S < total; S++) {\n        int v = __builtin_ctz((unsigned int)S);          /* menor ingrediente presente em S */\n        unsigned int rest = ((unsigned int)S) ^ (1u << v);\n        /*conjuntos sem v: f[rest]; conjuntos com v: v e seus vizinhos em S ficam de fora */\n        f[S] = f[rest] + f[rest & ~adj[v]];\n    }\n\n    printf(\"%lld\\n\", f[total - 1] - 1);   /* subtrai o sanduiche vazio */\n\n    free(f);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11344119999557734,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

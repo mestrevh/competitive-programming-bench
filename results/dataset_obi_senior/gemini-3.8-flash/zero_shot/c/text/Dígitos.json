@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:07:52.426427+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 610,
+            "output_tokens": 685,
+            "total_tokens": 3068
+        },
+        "cost_usd": {
+            "input_cost": 0.000458,
+            "output_cost": 0.002569,
+            "total_cost": 0.003026
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAXN 1005\n\nchar S[MAXN];\nchar cur[MAXN + 5];\n\n// Incrementa o número representado como string em cur\nint increment(char *num, int len) {\n    int carry = 1;\n    for (int i = len - 1; i >= 0; i--) {\n        int sum = (num[i] - '0') + carry;\n        if (sum >= 10) {\n            num[i] = '0';\n            carry = 1;\n        } else {\n            num[i] = sum + '0';\n            carry = 0;\n            break;\n        }\n    }\n    if (carry) {\n        // Desloca tudo para a direita para inserir '1' na posição 0\n        for (int i = len; i >= 1; i--) {\n            num[i] = num[i - 1];\n        }\n        num[0] = '1';\n        len++;\n        num[len] = '\\0';\n    }\n    return len;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        int d;\n        scanf(\"%d\", &d);\n        S[i] = (char)(d + '0');\n    }\n    S[n] = '\\0';\n\n    for (int L = 1; L <= n; L++) {\n        // Copia o prefixo de tamanho L como o candidato A\n        for (int i = 0; i < L; i++) {\n            cur[i] = S[i];\n        }\n        cur[L] = '\\0';\n        int cur_len = L;\n\n        int idx = L;\n        bool ok = true;\n\n        while (idx < n) {\n            cur_len = increment(cur, cur_len);\n            for (int j = 0; j < cur_len; j++) {\n                if (idx + j >= n) {\n                    if (j > 0) {\n                        ok = false;\n                    }\n                    idx += j;\n                    break;\n                }\n                if (S[idx + j] != cur[j]) {\n                    ok = false;\n                    break;\n                }\n            }\n            if (!ok) break;\n            idx += cur_len;\n        }\n\n        if (ok && idx == n) {\n            // Encontrou o menor A (pois testamos em ordem crescente de comprimento)\n            for (int i = 0; i < L; i++) {\n                putchar(S[i]);\n            }\n            putchar('\\n');\n            return 0;\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAXN 1005\n\nchar S[MAXN];\nchar cur[MAXN + 5];\n\n// Incrementa o número representado como string em cur\nint increment(char *num, int len) {\n    int carry = 1;\n    for (int i = len - 1; i >= 0; i--) {\n        int sum = (num[i] - '0') + carry;\n        if (sum >= 10) {\n            num[i] = '0';\n            carry = 1;\n        } else {\n            num[i] = sum + '0';\n            carry = 0;\n            break;\n        }\n    }\n    if (carry) {\n        // Desloca tudo para a direita para inserir '1' na posição 0\n        for (int i = len; i >= 1; i--) {\n            num[i] = num[i - 1];\n        }\n        num[0] = '1';\n        len++;\n        num[len] = '\\0';\n    }\n    return len;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        int d;\n        scanf(\"%d\", &d);\n        S[i] = (char)(d + '0');\n    }\n    S[n] = '\\0';\n\n    for (int L = 1; L <= n; L++) {\n        // Copia o prefixo de tamanho L como o candidato A\n        for (int i = 0; i < L; i++) {\n            cur[i] = S[i];\n        }\n        cur[L] = '\\0';\n        int cur_len = L;\n\n        int idx = L;\n        bool ok = true;\n\n        while (idx < n) {\n            cur_len = increment(cur, cur_len);\n            for (int j = 0; j < cur_len; j++) {\n                if (idx + j >= n) {\n                    if (j > 0) {\n                        ok = false;\n                    }\n                    idx += j;\n                    break;\n                }\n                if (S[idx + j] != cur[j]) {\n                    ok = false;\n                    break;\n                }\n            }\n            if (!ok) break;\n            idx += cur_len;\n        }\n\n        if (ok && idx == n) {\n            // Encontrou o menor A (pois testamos em ordem crescente de comprimento)\n            for (int i = 0; i < L; i++) {\n                putchar(S[i]);\n            }\n            putchar('\\n');\n            return 0;\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13308100000722334,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

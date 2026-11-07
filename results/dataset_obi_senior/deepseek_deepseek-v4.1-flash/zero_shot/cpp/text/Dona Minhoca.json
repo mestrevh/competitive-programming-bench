@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-02T20:15:17.740084+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 736,
+            "output_tokens": 16007,
+            "total_tokens": 16743
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.038417,
+            "total_cost": 0.038419
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<vector<int>> adj(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int x, y;\n        cin >> x >> y;\n        adj[x].push_back(y);\n        adj[y].push_back(x);\n    }\n\n    auto bfs = [&](int start) {\n        vector<int> dist(N + 1, -1);\n        vector<int> q(N);\n        int head = 0, tail = 0;\n\n        dist[start] = 0;\n        q[tail++] = start;\n        int far = start;\n\n        while (head < tail) {\n            int u = q[head++];\n            if (dist[u] > dist[far]) far = u;\n\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    q[tail++] = v;\n                }\n            }\n        }\n\n        return make_pair(far, dist[far]);\n    };\n\n    int A = bfs(1).first;\n    int D = bfs(A).second;\n\n    vector<int> parent(N + 1, 0);\n    vector<int> order;\n    order.reserve(N);\n\n    parent[1] = 0;\n    order.push_back(1);\n\n    for (int i = 0; i < (int)order.size(); ++i) {\n        int u = order[i];\n        for (int v : adj[u]) {\n            if (v == parent[u]) continue;\n            parent[v] = u;\n            order.push_back(v);\n        }\n    }\n\n    vector<int> downH(N + 1, 0);\n    vector<long long> downC(N + 1, 0);\n    long long answer = 0;\n\n    vector<pair<int, long long>> branches;\n\n    for (int idx = N - 1; idx >= 0; --idx) {\n        int u = order[idx];\n\n        downH[u] = 0;\n        downC[u] = 1;\n\n        branches.clear();\n        branches.push_back({0, 1});\n\n        for (int v : adj[u]) {\n            if (parent[v] == u) {\n                int h = downH[v] + 1;\n                long long c = downC[v];\n\n                branches.push_back({h, c});\n\n                if (h > downH[u]) {\n                    downH[u] = h;\n                    downC[u] = c;\n                } else if (h == downH[u]) {\n                    downC[u] += c;\n                }\n            }\n        }\n\n        sort(branches.begin(), branches.end());\n\n        vector<pair<int, long long>> groups;\n        groups.reserve(branches.size());\n\n        for (auto p : branches) {\n            if (groups.empty() || groups.back().first != p.first) {\n                groups.push_back(p);\n            } else {\n                groups.back().second += p.second;\n            }\n        }\n\n        int i = 0, j = (int)groups.size() - 1;\n\n        while (i <= j) {\n            int sum = groups[i].first + groups[j].first;\n\n            if (sum < D) {\n                ++i;\n            } else if (sum > D) {\n                --j;\n            } else {\n                if (i == j) {\n                    if (groups[i].first * 2 == D) {\n                        long long c = groups[i].second;\n                        answer += c * (c - 1) / 2;\n                    }\n                    break;\n                } else {\n                    answer += groups[i].second * groups[j].second;\n                    ++i;\n                    --j;\n                }\n            }\n        }\n    }\n\n    cout << D + 1 << '\\n' << answer << '\\n';\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<vector<int>> adj(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int x, y;\n        cin >> x >> y;\n        adj[x].push_back(y);\n        adj[y].push_back(x);\n    }\n\n    auto bfs = [&](int start) {\n        vector<int> dist(N + 1, -1);\n        vector<int> q(N);\n        int head = 0, tail = 0;\n\n        dist[start] = 0;\n        q[tail++] = start;\n        int far = start;\n\n        while (head < tail) {\n            int u = q[head++];\n            if (dist[u] > dist[far]) far = u;\n\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    q[tail++] = v;\n                }\n            }\n        }\n\n        return make_pair(far, dist[far]);\n    };\n\n    int A = bfs(1).first;\n    int D = bfs(A).second;\n\n    vector<int> parent(N + 1, 0);\n    vector<int> order;\n    order.reserve(N);\n\n    parent[1] = 0;\n    order.push_back(1);\n\n    for (int i = 0; i < (int)order.size(); ++i) {\n        int u = order[i];\n        for (int v : adj[u]) {\n            if (v == parent[u]) continue;\n            parent[v] = u;\n            order.push_back(v);\n        }\n    }\n\n    vector<int> downH(N + 1, 0);\n    vector<long long> downC(N + 1, 0);\n    long long answer = 0;\n\n    vector<pair<int, long long>> branches;\n\n    for (int idx = N - 1; idx >= 0; --idx) {\n        int u = order[idx];\n\n        downH[u] = 0;\n        downC[u] = 1;\n\n        branches.clear();\n        branches.push_back({0, 1});\n\n        for (int v : adj[u]) {\n            if (parent[v] == u) {\n                int h = downH[v] + 1;\n                long long c = downC[v];\n\n                branches.push_back({h, c});\n\n                if (h > downH[u]) {\n                    downH[u] = h;\n                    downC[u] = c;\n                } else if (h == downH[u]) {\n                    downC[u] += c;\n                }\n            }\n        }\n\n        sort(branches.begin(), branches.end());\n\n        vector<pair<int, long long>> groups;\n        groups.reserve(branches.size());\n\n        for (auto p : branches) {\n            if (groups.empty() || groups.back().first != p.first) {\n                groups.push_back(p);\n            } else {\n                groups.back().second += p.second;\n            }\n        }\n\n        int i = 0, j = (int)groups.size() - 1;\n\n        while (i <= j) {\n            int sum = groups[i].first + groups[j].first;\n\n            if (sum < D) {\n                ++i;\n            } else if (sum > D) {\n                --j;\n            } else {\n                if (i == j) {\n                    if (groups[i].first * 2 == D) {\n                        long long c = groups[i].second;\n                        answer += c * (c - 1) / 2;\n                    }\n                    break;\n                } else {\n                    answer += groups[i].second * groups[j].second;\n                    ++i;\n                    --j;\n                }\n            }\n        }\n    }\n\n    cout << D + 1 << '\\n' << answer << '\\n';\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.19322160000228905,
+            "counts": {
+                "AC": 22,
+                "WA": 7,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:53:11.915634+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 15.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1044,
+            "output_tokens": 4163,
+            "total_tokens": 5207
+        },
+        "cost_usd": {
+            "input_cost": 0.000104,
+            "output_cost": 0.002082,
+            "total_cost": 0.002186
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n\n    graph = [[] for _ in range(n)]\n    edges = []\n\n    for eid in range(m):\n        a = next(it) - 1\n        b = next(it) - 1\n        w = next(it)\n        edges.append((a, b, w))\n        graph[a].append((b, w, eid))\n        graph[b].append((a, w, eid))\n\n    sys.setrecursionlimit(1_000_000)\n    tin = [-1] * n\n    low = [0] * n\n    bridges = [False] * m\n    timer = 0\n\n    def dfs(v, parent_edge):\n        nonlocal timer\n        tin[v] = low[v] = timer\n        timer += 1\n\n        for to, _, eid in graph[v]:\n            if eid == parent_edge:\n                continue\n            if tin[to] != -1:\n                low[v] = min(low[v], tin[to])\n            else:\n                dfs(to, eid)\n                low[v] = min(low[v], low[to])\n                if low[to] > tin[v]:\n                    bridges[eid] = True\n\n    for v in range(n):\n        if tin[v] == -1:\n            dfs(v, -1)\n\n    cycle_len = [-1] * n\n    visited = [False] * n\n\n    for start in range(n):\n        if visited[start] or not any(not bridges[eid] for _, _, eid in graph[start]):\n            continue\n\n        stack = [start]\n        visited[start] = True\n        vertices = []\n        component_edges = set()\n\n        while stack:\n            v = stack.pop()\n            vertices.append(v)\n            for to, _, eid in graph[v]:\n                if bridges[eid]:\n                    continue\n                component_edges.add(eid)\n                if not visited[to]:\n                    visited[to] = True\n                    stack.append(to)\n\n        length = sum(edges[eid][2] for eid in component_edges)\n        for v in vertices:\n            cycle_len[v] = length\n\n    k = next(it)\n    answers = []\n\n    for _ in range(k):\n        x = next(it) - 1\n        train_length = next(it)\n\n        inf = 10**30\n        dist = [inf] * n\n        heap = []\n\n        for v, length in enumerate(cycle_len):\n            if length >= train_length:\n                dist[v] = length\n                heapq.heappush(heap, (length, v))\n\n        while heap:\n            d, v = heapq.heappop(heap)\n            if d != dist[v]:\n                continue\n            for to, w, _ in graph[v]:\n                nd = d + 2 * w\n                if nd < dist[to]:\n                    dist[to] = nd\n                    heapq.heappush(heap, (nd, to))\n\n        answers.append(str(dist[x] if dist[x] < inf else -1))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    it = iter(data)\n\n    n = next(it)\n    m = next(it)\n\n    graph = [[] for _ in range(n)]\n    edges = []\n\n    for eid in range(m):\n        a = next(it) - 1\n        b = next(it) - 1\n        w = next(it)\n        edges.append((a, b, w))\n        graph[a].append((b, w, eid))\n        graph[b].append((a, w, eid))\n\n    sys.setrecursionlimit(1_000_000)\n    tin = [-1] * n\n    low = [0] * n\n    bridges = [False] * m\n    timer = 0\n\n    def dfs(v, parent_edge):\n        nonlocal timer\n        tin[v] = low[v] = timer\n        timer += 1\n\n        for to, _, eid in graph[v]:\n            if eid == parent_edge:\n                continue\n            if tin[to] != -1:\n                low[v] = min(low[v], tin[to])\n            else:\n                dfs(to, eid)\n                low[v] = min(low[v], low[to])\n                if low[to] > tin[v]:\n                    bridges[eid] = True\n\n    for v in range(n):\n        if tin[v] == -1:\n            dfs(v, -1)\n\n    cycle_len = [-1] * n\n    visited = [False] * n\n\n    for start in range(n):\n        if visited[start] or not any(not bridges[eid] for _, _, eid in graph[start]):\n            continue\n\n        stack = [start]\n        visited[start] = True\n        vertices = []\n        component_edges = set()\n\n        while stack:\n            v = stack.pop()\n            vertices.append(v)\n            for to, _, eid in graph[v]:\n                if bridges[eid]:\n                    continue\n                component_edges.add(eid)\n                if not visited[to]:\n                    visited[to] = True\n                    stack.append(to)\n\n        length = sum(edges[eid][2] for eid in component_edges)\n        for v in vertices:\n            cycle_len[v] = length\n\n    k = next(it)\n    answers = []\n\n    for _ in range(k):\n        x = next(it) - 1\n        train_length = next(it)\n\n        inf = 10**30\n        dist = [inf] * n\n        heap = []\n\n        for v, length in enumerate(cycle_len):\n            if length >= train_length:\n                dist[v] = length\n                heapq.heappush(heap, (length, v))\n\n        while heap:\n            d, v = heapq.heappop(heap)\n            if d != dist[v]:\n                continue\n            for to, w, _ in graph[v]:\n                nd = d + 2 * w\n                if nd < dist[to]:\n                    dist[to] = nd\n                    heapq.heappush(heap, (nd, to))\n\n        answers.append(str(dist[x] if dist[x] < inf else -1))\n\n    sys.stdout.write(\"\\n\".join(answers))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4770808999965084,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

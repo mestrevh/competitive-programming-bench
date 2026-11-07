@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-06T03:05:00.852135+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 957,
+            "output_tokens": 1219,
+            "total_tokens": 2176
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.00061,
+            "total_cost": 0.00063
+        },
+        "raw_response": "```javascript\nconst chunks = [];\n\nprocess.stdin.on('data', (chunk) => chunks.push(chunk));\nprocess.stdin.on('end', () => {\n    const tokens = chunks\n        .join('')\n        .trim()\n        .split(/\\s+/)\n        .filter((t) => t.length > 0);\n\n    let idx = 0;\n    const R = parseInt(tokens[idx++], 10);\n    const N = parseInt(tokens[idx++], 10);\n\n    // Menor preço encontrado para cada tipo de fruta\n    const minPrice = new Map();\n    for (let i = 0; i < N; i++) {\n        const T = parseInt(tokens[idx++], 10);\n        const P = parseInt(tokens[idx++], 10);\n        const cur = minPrice.get(T);\n        if (cur === undefined || P < cur) minPrice.set(T, P);\n    }\n\n    // Para maximizar tipos distintos, basta considerar o menor preço de cada tipo\n    const prices = Array.from(minPrice.values()).sort((a, b) => a - b);\n\n    let total = 0;\n    let count = 0;\n    for (const p of prices) {\n        if (total + p <= R) {\n            total += p;\n            count++;\n        } else {\n            break;\n        }\n    }\n\n    process.stdout.write(String(count) + '\\n');\n});\n```",
+        "extracted_code": "const chunks = [];\n\nprocess.stdin.on('data', (chunk) => chunks.push(chunk));\nprocess.stdin.on('end', () => {\n    const tokens = chunks\n        .join('')\n        .trim()\n        .split(/\\s+/)\n        .filter((t) => t.length > 0);\n\n    let idx = 0;\n    const R = parseInt(tokens[idx++], 10);\n    const N = parseInt(tokens[idx++], 10);\n\n    // Menor preço encontrado para cada tipo de fruta\n    const minPrice = new Map();\n    for (let i = 0; i < N; i++) {\n        const T = parseInt(tokens[idx++], 10);\n        const P = parseInt(tokens[idx++], 10);\n        const cur = minPrice.get(T);\n        if (cur === undefined || P < cur) minPrice.set(T, P);\n    }\n\n    // Para maximizar tipos distintos, basta considerar o menor preço de cada tipo\n    const prices = Array.from(minPrice.values()).sort((a, b) => a - b);\n\n    let total = 0;\n    let count = 0;\n    for (const p of prices) {\n        if (total + p <= R) {\n            total += p;\n            count++;\n        } else {\n            break;\n        }\n    }\n\n    process.stdout.write(String(count) + '\\n');\n});",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.059788100013975054,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

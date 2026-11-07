@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-07T01:34:06.731904+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 851,
+            "output_tokens": 298,
+            "total_tokens": 1149
+        },
+        "cost_usd": {
+            "input_cost": 8.5e-05,
+            "output_cost": 0.000149,
+            "total_cost": 0.000234
+        },
+        "raw_response": "```python\nimport sys\n\ndata = sys.stdin.buffer.read().split()\nn, force = map(int, data[:2])\ngrid = [list(row) for row in data[2:2 + n]]\n\nif int(grid[0][0]) <= force:\n    stack = [(0, 0)]\n    grid[0][0] = ord('*')\n\n    while stack:\n        r, c = stack.pop()\n        for nr, nc in ((r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)):\n            if 0 <= nr < n and 0 <= nc < n and ord('1') <= grid[nr][nc] <= ord('9') and grid[nr][nc] - ord('0') <= force:\n                grid[nr][nc] = ord('*')\n                stack.append((nr, nc))\n\nsys.stdout.write('\\n'.join(''.join(chr(cell) for cell in row) for row in grid))\n```",
+        "extracted_code": "import sys\n\ndata = sys.stdin.buffer.read().split()\nn, force = map(int, data[:2])\ngrid = [list(row) for row in data[2:2 + n]]\n\nif int(grid[0][0]) <= force:\n    stack = [(0, 0)]\n    grid[0][0] = ord('*')\n\n    while stack:\n        r, c = stack.pop()\n        for nr, nc in ((r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)):\n            if 0 <= nr < n and 0 <= nc < n and ord('1') <= grid[nr][nc] <= ord('9') and grid[nr][nc] - ord('0') <= force:\n                grid[nr][nc] = ord('*')\n                stack.append((nr, nc))\n\nsys.stdout.write('\\n'.join(''.join(chr(cell) for cell in row) for row in grid))",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.08050020000518998,
+            "counts": {
+                "AC": 6,
+                "WA": 28,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

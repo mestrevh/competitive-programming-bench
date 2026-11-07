@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T12:02:08.413083+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 596,
+            "total_tokens": 2763
+        },
+        "cost_usd": {
+            "input_cost": 0.000606,
+            "output_cost": 0.002235,
+            "total_cost": 0.002841
+        },
+        "raw_response": "```C\n#include <stdio.h>\n\n#define MAXN 200005\n\nint N, M;\nlong long bitA[MAXN];\nlong long bitB[MAXN];\n\nstatic inline void update(int idx, long long valA, long long valB) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bitA[idx] += valA;\n        bitB[idx] += valB;\n    }\n}\n\nstatic inline void range_update(int L, int R, long long A, long long B) {\n    if (L > R) return;\n    update(L, A, B);\n    update(R + 1, -A, -B);\n}\n\nstatic inline long long query(int idx) {\n    long long sumA = 0;\n    long long sumB = 0;\n    int i = idx;\n    for (; i > 0; i -= i & -i) {\n        sumA += bitA[i];\n        sumB += bitB[i];\n    }\n    return sumA + sumB * idx;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int q = 0; q < M; ++q) {\n        int type;\n        if (scanf(\"%d\", &type) != 1) break;\n\n        if (type == 1) {\n            long long i, V;\n            scanf(\"%lld %lld\", &i, &V);\n            long long L = i;\n            long long R = i + V - 1;\n            if (R > N) R = N;\n            long long A = V + i;\n            long long B = -1;\n            range_update((int)L, (int)R, A, B);\n        } else if (type == 2) {\n            long long i, V;\n            scanf(\"%lld %lld\", &i, &V);\n            long long L = i - V + 1;\n            if (L < 1) L = 1;\n            long long R = i;\n            long long A = V - i;\n            long long B = 1;\n            range_update((int)L, (int)R, A, B);\n        } else if (type == 3) {\n            int i;\n            scanf(\"%d\", &i);\n            printf(\"%lld\\n\", query(i));\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 200005\n\nint N, M;\nlong long bitA[MAXN];\nlong long bitB[MAXN];\n\nstatic inline void update(int idx, long long valA, long long valB) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bitA[idx] += valA;\n        bitB[idx] += valB;\n    }\n}\n\nstatic inline void range_update(int L, int R, long long A, long long B) {\n    if (L > R) return;\n    update(L, A, B);\n    update(R + 1, -A, -B);\n}\n\nstatic inline long long query(int idx) {\n    long long sumA = 0;\n    long long sumB = 0;\n    int i = idx;\n    for (; i > 0; i -= i & -i) {\n        sumA += bitA[i];\n        sumB += bitB[i];\n    }\n    return sumA + sumB * idx;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int q = 0; q < M; ++q) {\n        int type;\n        if (scanf(\"%d\", &type) != 1) break;\n\n        if (type == 1) {\n            long long i, V;\n            scanf(\"%lld %lld\", &i, &V);\n            long long L = i;\n            long long R = i + V - 1;\n            if (R > N) R = N;\n            long long A = V + i;\n            long long B = -1;\n            range_update((int)L, (int)R, A, B);\n        } else if (type == 2) {\n            long long i, V;\n            scanf(\"%lld %lld\", &i, &V);\n            long long L = i - V + 1;\n            if (L < 1) L = 1;\n            long long R = i;\n            long long A = V - i;\n            long long B = 1;\n            range_update((int)L, (int)R, A, B);\n        } else if (type == 3) {\n            int i;\n            scanf(\"%d\", &i);\n            printf(\"%lld\\n\", query(i));\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3489021999994293,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

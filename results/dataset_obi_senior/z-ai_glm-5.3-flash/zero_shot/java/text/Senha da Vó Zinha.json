@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-05T21:57:57.089570+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "java",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1123,
+            "output_tokens": 9232,
+            "total_tokens": 10355
+        },
+        "cost_usd": {
+            "input_cost": 2.4e-05,
+            "output_cost": 0.004616,
+            "total_cost": 0.00464
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.Arrays;\n\npublic class Main {\n\n    private static String nextNonEmpty(BufferedReader br) throws IOException {\n        String s = br.readLine();\n        while (s != null && s.trim().isEmpty()) s = br.readLine();\n        return s == null ? \"\" : s.trim();\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n\n        StringTokenizer st = new StringTokenizer(nextNonEmpty(br));\n        int n = Integer.parseInt(st.nextToken());\n        int m = Integer.parseInt(st.nextToken());\n        int k = Integer.parseInt(st.nextToken());\n\n        String password = nextNonEmpty(br);\n\n        char[][] words = new char[m][];\n        for (int i = 0; i < m; i++) {\n            words[i] = nextNonEmpty(br).toCharArray();\n            Arrays.sort(words[i]); // ordem lexicográfica das opções desta posição\n        }\n\n        long p = Long.parseLong(nextNonEmpty(br));\n\n        // CAP: qualquer peso real >= CAP é maior que r (r = P-1 <= 10^9 - 1)\n        final long CAP = 2_000_000_000L;\n\n        // pow[i] = K^(m-i) limitado a CAP\n        long[] pow = new long[m + 1];\n        pow[m] = 1;\n        for (int i = m; i >= 1; i--) {\n            long v = pow[i] * k; // <= CAP * 26, sem overflow\n            pow[i - 1] = Math.min(v, CAP);\n        }\n\n        // Para a j-ésima letra borrada (0-based), o peso é K^(m-1-j) = pow[j+1]\n        long r = p - 1;\n        char[] chosen = new char[m];\n        for (int j = 0; j < m; j++) {\n            long w = pow[j + 1];\n            int idx = (int) (r / w);\n            if (idx >= k) idx = k - 1; // proteção contra entrada inválida\n            r %= w;\n            chosen[j] = words[j][idx];\n        }\n\n        StringBuilder sb = new StringBuilder(n);\n        int j = 0;\n        for (int i = 0; i < n; i++) {\n            char c = password.charAt(i);\n            if (c == '#') {\n                sb.append(chosen[j++]);\n            } else {\n                sb.append(c);\n            }\n        }\n\n        System.out.println(sb);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.Arrays;\n\npublic class Main {\n\n    private static String nextNonEmpty(BufferedReader br) throws IOException {\n        String s = br.readLine();\n        while (s != null && s.trim().isEmpty()) s = br.readLine();\n        return s == null ? \"\" : s.trim();\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n\n        StringTokenizer st = new StringTokenizer(nextNonEmpty(br));\n        int n = Integer.parseInt(st.nextToken());\n        int m = Integer.parseInt(st.nextToken());\n        int k = Integer.parseInt(st.nextToken());\n\n        String password = nextNonEmpty(br);\n\n        char[][] words = new char[m][];\n        for (int i = 0; i < m; i++) {\n            words[i] = nextNonEmpty(br).toCharArray();\n            Arrays.sort(words[i]); // ordem lexicográfica das opções desta posição\n        }\n\n        long p = Long.parseLong(nextNonEmpty(br));\n\n        // CAP: qualquer peso real >= CAP é maior que r (r = P-1 <= 10^9 - 1)\n        final long CAP = 2_000_000_000L;\n\n        // pow[i] = K^(m-i) limitado a CAP\n        long[] pow = new long[m + 1];\n        pow[m] = 1;\n        for (int i = m; i >= 1; i--) {\n            long v = pow[i] * k; // <= CAP * 26, sem overflow\n            pow[i - 1] = Math.min(v, CAP);\n        }\n\n        // Para a j-ésima letra borrada (0-based), o peso é K^(m-1-j) = pow[j+1]\n        long r = p - 1;\n        char[] chosen = new char[m];\n        for (int j = 0; j < m; j++) {\n            long w = pow[j + 1];\n            int idx = (int) (r / w);\n            if (idx >= k) idx = k - 1; // proteção contra entrada inválida\n            r %= w;\n            chosen[j] = words[j][idx];\n        }\n\n        StringBuilder sb = new StringBuilder(n);\n        int j = 0;\n        for (int i = 0; i < n; i++) {\n            char c = password.charAt(i);\n            if (c == '#') {\n                sb.append(chosen[j++]);\n            } else {\n                sb.append(c);\n            }\n        }\n\n        System.out.println(sb);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 10
+            },
+            "total_test_cases": 10
+        }
+    }
+]

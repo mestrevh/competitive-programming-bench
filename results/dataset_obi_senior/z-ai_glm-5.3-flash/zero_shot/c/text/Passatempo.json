@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-04T19:47:39.614332+00:00",
+        "model": "z-ai/glm-5.3-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 940,
+            "output_tokens": 21803,
+            "total_tokens": 22743
+        },
+        "cost_usd": {
+            "input_cost": 2e-05,
+            "output_cost": 0.010901,
+            "total_cost": 0.010922
+        },
+        "raw_response": "```C\n#include <stdio.h>\n\n#define MAXD 105\n#define MAXEQ 210\n#define MAXV 676\n\nstatic char g[MAXD][MAXD][2];\nstatic long long rowS[MAXD], colS[MAXD];\n\nstatic int eqVar[MAXEQ][MAXD];\nstatic int eqCnt[MAXEQ][MAXD];\nstatic int eqN[MAXEQ];\nstatic long long eqRem[MAXEQ];\nstatic int eqDeg[MAXEQ];\n\nstatic int occEq[MAXV][MAXEQ];\nstatic int occCnt[MAXV][MAXEQ];\nstatic int occN[MAXV];\n\nstatic int isKnown[MAXV];\nstatic long long value[MAXV];\nstatic int visible[MAXV];\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    char tok[32];\n    int i, j, t;\n\n    for (i = 0; i < L; i++)\n        for (j = 0; j < C; j++) {\n            scanf(\"%31s\", tok);\n            g[i][j][0] = tok[0];\n            g[i][j][1] = tok[1];\n        }\n    for (i = 0; i < L; i++) scanf(\"%lld\", &rowS[i]);\n    for (j = 0; j < C; j++) scanf(\"%lld\", &colS[j]);\n\n    /* row equations: ids 0..L-1 */\n    for (i = 0; i < L; i++) {\n        int e = i, n = 0;\n        for (j = 0; j < C; j++) {\n            int cur = (g[i][j][0] - 'a') * 26 + (g[i][j][1] - 'a');\n            visible[cur] = 1;\n            int f = -1;\n            for (t = 0; t < n; t++)\n                if (eqVar[e][t] == cur) { f = t; break; }\n            if (f >= 0) eqCnt[e][f]++;\n            else { eqVar[e][n] = cur; eqCnt[e][n] = 1; n++; }\n        }\n        eqN[e] = n; eqRem[e] = rowS[i]; eqDeg[e] = n;\n        for (t = 0; t < n; t++) {\n            int cur = eqVar[e][t];\n            occEq[cur][occN[cur]] = e;\n            occCnt[cur][occN[cur]] = eqCnt[e][t];\n            occN[cur]++;\n        }\n    }\n\n    /* column equations: ids L..L+C-1 */\n    for (j = 0; j < C; j++) {\n        int e = L + j, n = 0;\n        for (i = 0; i < L; i++) {\n            int cur = (g[i][j][0] - 'a') * 26 + (g[i][j][1] - 'a');\n            int f = -1;\n            for (t = 0; t < n; t++)\n                if (eqVar[e][t] == cur) { f = t; break; }\n            if (f >= 0) eqCnt[e][f]++;\n            else { eqVar[e][n] = cur; eqCnt[e][n] = 1; n++; }\n        }\n        eqN[e] = n; eqRem[e] = colS[j]; eqDeg[e] = n;\n        for (t = 0; t < n; t++) {\n            int cur = eqVar[e][t];\n            occEq[cur][occN[cur]] = e;\n            occCnt[cur][occN[cur]] = eqCnt[e][t];\n            occN[cur]++;\n        }\n    }\n\n    int total = 0, id;\n    for (id = 0; id < MAXV; id++)\n        if (visible[id]) total++;\n    int solved = 0;\n\n    while (solved < total) {\n        int progress = 0;\n        int e;\n        for (e = 0; e < L + C; e++) {\n            if (eqDeg[e] != 1) continue;\n            int x = -1, k = 0;\n            for (t = 0; t < eqN[e]; t++)\n                if (!isKnown[eqVar[e][t]]) { x = eqVar[e][t]; k = eqCnt[e][t]; break; }\n            if (x < 0) continue;\n            long long v = eqRem[e] / k;\n            value[x] = v;\n            isKnown[x] = 1;\n            solved++;\n            progress = 1;\n            for (t = 0; t < occN[x]; t++) {\n                int e2 = occEq[x][t];\n                eqRem[e2] -= (long long)occCnt[x][t] * v;\n                eqDeg[e2]--;\n            }\n        }\n        if (!progress) break;\n    }\n\n    for (id = 0; id < MAXV; id++)\n        if (visible[id])\n            printf(\"%c%c %lld\\n\", 'a' + id / 26, 'a' + id % 26, value[id]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXD 105\n#define MAXEQ 210\n#define MAXV 676\n\nstatic char g[MAXD][MAXD][2];\nstatic long long rowS[MAXD], colS[MAXD];\n\nstatic int eqVar[MAXEQ][MAXD];\nstatic int eqCnt[MAXEQ][MAXD];\nstatic int eqN[MAXEQ];\nstatic long long eqRem[MAXEQ];\nstatic int eqDeg[MAXEQ];\n\nstatic int occEq[MAXV][MAXEQ];\nstatic int occCnt[MAXV][MAXEQ];\nstatic int occN[MAXV];\n\nstatic int isKnown[MAXV];\nstatic long long value[MAXV];\nstatic int visible[MAXV];\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    char tok[32];\n    int i, j, t;\n\n    for (i = 0; i < L; i++)\n        for (j = 0; j < C; j++) {\n            scanf(\"%31s\", tok);\n            g[i][j][0] = tok[0];\n            g[i][j][1] = tok[1];\n        }\n    for (i = 0; i < L; i++) scanf(\"%lld\", &rowS[i]);\n    for (j = 0; j < C; j++) scanf(\"%lld\", &colS[j]);\n\n    /* row equations: ids 0..L-1 */\n    for (i = 0; i < L; i++) {\n        int e = i, n = 0;\n        for (j = 0; j < C; j++) {\n            int cur = (g[i][j][0] - 'a') * 26 + (g[i][j][1] - 'a');\n            visible[cur] = 1;\n            int f = -1;\n            for (t = 0; t < n; t++)\n                if (eqVar[e][t] == cur) { f = t; break; }\n            if (f >= 0) eqCnt[e][f]++;\n            else { eqVar[e][n] = cur; eqCnt[e][n] = 1; n++; }\n        }\n        eqN[e] = n; eqRem[e] = rowS[i]; eqDeg[e] = n;\n        for (t = 0; t < n; t++) {\n            int cur = eqVar[e][t];\n            occEq[cur][occN[cur]] = e;\n            occCnt[cur][occN[cur]] = eqCnt[e][t];\n            occN[cur]++;\n        }\n    }\n\n    /* column equations: ids L..L+C-1 */\n    for (j = 0; j < C; j++) {\n        int e = L + j, n = 0;\n        for (i = 0; i < L; i++) {\n            int cur = (g[i][j][0] - 'a') * 26 + (g[i][j][1] - 'a');\n            int f = -1;\n            for (t = 0; t < n; t++)\n                if (eqVar[e][t] == cur) { f = t; break; }\n            if (f >= 0) eqCnt[e][f]++;\n            else { eqVar[e][n] = cur; eqCnt[e][n] = 1; n++; }\n        }\n        eqN[e] = n; eqRem[e] = colS[j]; eqDeg[e] = n;\n        for (t = 0; t < n; t++) {\n            int cur = eqVar[e][t];\n            occEq[cur][occN[cur]] = e;\n            occCnt[cur][occN[cur]] = eqCnt[e][t];\n            occN[cur]++;\n        }\n    }\n\n    int total = 0, id;\n    for (id = 0; id < MAXV; id++)\n        if (visible[id]) total++;\n    int solved = 0;\n\n    while (solved < total) {\n        int progress = 0;\n        int e;\n        for (e = 0; e < L + C; e++) {\n            if (eqDeg[e] != 1) continue;\n            int x = -1, k = 0;\n            for (t = 0; t < eqN[e]; t++)\n                if (!isKnown[eqVar[e][t]]) { x = eqVar[e][t]; k = eqCnt[e][t]; break; }\n            if (x < 0) continue;\n            long long v = eqRem[e] / k;\n            value[x] = v;\n            isKnown[x] = 1;\n            solved++;\n            progress = 1;\n            for (t = 0; t < occN[x]; t++) {\n                int e2 = occEq[x][t];\n                eqRem[e2] -= (long long)occCnt[x][t] * v;\n                eqDeg[e2]--;\n            }\n        }\n        if (!progress) break;\n    }\n\n    for (id = 0; id < MAXV; id++)\n        if (visible[id])\n            printf(\"%c%c %lld\\n\", 'a' + id / 26, 'a' + id % 26, value[id]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "TLE",
+            "execution_time": 2.0,
+            "counts": {
+                "AC": 2,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 28,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]
