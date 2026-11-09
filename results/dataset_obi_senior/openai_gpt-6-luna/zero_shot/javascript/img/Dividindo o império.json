@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:35:41.468043+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 784,
+            "output_tokens": 378,
+            "total_tokens": 1162
+        },
+        "cost_usd": {
+            "input_cost": 7.8e-05,
+            "output_cost": 0.000189,
+            "total_cost": 0.000267
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst graph = Array.from({ length: n + 1 }, () => []);\nlet index = 1;\n\nfor (let i = 0; i < n - 1; i++) {\n  const a = input[index++];\n  const b = input[index++];\n  graph[a].push(b);\n  graph[b].push(a);\n}\n\nconst parent = new Int32Array(n + 1);\nconst order = [1];\nparent[1] = -1;\n\nfor (let i = 0; i < order.length; i++) {\n  const node = order[i];\n  for (const next of graph[node]) {\n    if (next !== parent[node]) {\n      parent[next] = node;\n      order.push(next);\n    }\n  }\n}\n\nconst subtreeSize = new Int32Array(n + 1);\nsubtreeSize.fill(1);\n\nlet answer = n;\n\nfor (let i = order.length - 1; i > 0; i--) {\n  const node = order[i];\n  const size = subtreeSize[node];\n  answer = Math.min(answer, Math.abs(n - 2 * size));\n  subtreeSize[parent[node]] += size;\n}\n\nconsole.log(answer.toString());\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst graph = Array.from({ length: n + 1 }, () => []);\nlet index = 1;\n\nfor (let i = 0; i < n - 1; i++) {\n  const a = input[index++];\n  const b = input[index++];\n  graph[a].push(b);\n  graph[b].push(a);\n}\n\nconst parent = new Int32Array(n + 1);\nconst order = [1];\nparent[1] = -1;\n\nfor (let i = 0; i < order.length; i++) {\n  const node = order[i];\n  for (const next of graph[node]) {\n    if (next !== parent[node]) {\n      parent[next] = node;\n      order.push(next);\n    }\n  }\n}\n\nconst subtreeSize = new Int32Array(n + 1);\nsubtreeSize.fill(1);\n\nlet answer = n;\n\nfor (let i = order.length - 1; i > 0; i--) {\n  const node = order[i];\n  const size = subtreeSize[node];\n  answer = Math.min(answer, Math.abs(n - 2 * size));\n  subtreeSize[parent[node]] += size;\n}\n\nconsole.log(answer.toString());",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13168140000198036,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

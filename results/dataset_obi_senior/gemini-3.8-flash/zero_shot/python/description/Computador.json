@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:59:18.595441+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1095,
+            "output_tokens": 740,
+            "total_tokens": 2748
+        },
+        "cost_usd": {
+            "input_cost": 0.000821,
+            "output_cost": 0.002775,
+            "total_cost": 0.003596
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    N = int(input_data[0])\n    M = int(input_data[1])\n    \n    # We maintain two Fenwick trees for range updates and point queries.\n    # At position p, the value is C[p] + L[p] * p.\n    # A range update [l, r] adding X is done by:\n    # bit.add(l, X) and bit.add(r + 1, -X).\n    # A point query at p is bit.query(p).\n    \n    bit_c = [0] * (N + 2)\n    bit_l = [0] * (N + 2)\n    \n    def add(bit, idx, val):\n        while idx <= N + 1:\n            bit[idx] += val\n            idx += idx & (-idx)\n            \n    def query(bit, idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n        \n    def range_add_c(l, r, val):\n        add(bit_c, l, val)\n        add(bit_c, r + 1, -val)\n        \n    def range_add_l(l, r, val):\n        add(bit_l, l, val)\n        add(bit_l, r + 1, -val)\n        \n    idx = 2\n    out = []\n    \n    for _ in range(M):\n        op = int(input_data[idx])\n        if op == 1:\n            i = int(input_data[idx + 1])\n            v = int(input_data[idx + 2])\n            idx += 3\n            r = i + v - 1\n            if r > N:\n                r = N\n            # In range [i, r], add (v + i) - p\n            range_add_c(i, r, v + i)\n            range_add_l(i, r, -1)\n        elif op == 2:\n            i = int(input_data[idx + 1])\n            v = int(input_data[idx + 2])\n            idx += 3\n            l = i - v + 1\n            if l < 1:\n                l = 1\n            # In range [l, i], add (v - i) + p\n            range_add_c(l, i, v - i)\n            range_add_l(l, i, 1)\n        else:\n            i = int(input_data[idx + 1])\n            idx += 2\n            val_c = query(bit_c, i)\n            val_l = query(bit_l, i)\n            out.append(str(val_c + val_l * i))\n            \n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    N = int(input_data[0])\n    M = int(input_data[1])\n    \n    # We maintain two Fenwick trees for range updates and point queries.\n    # At position p, the value is C[p] + L[p] * p.\n    # A range update [l, r] adding X is done by:\n    # bit.add(l, X) and bit.add(r + 1, -X).\n    # A point query at p is bit.query(p).\n    \n    bit_c = [0] * (N + 2)\n    bit_l = [0] * (N + 2)\n    \n    def add(bit, idx, val):\n        while idx <= N + 1:\n            bit[idx] += val\n            idx += idx & (-idx)\n            \n    def query(bit, idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n        \n    def range_add_c(l, r, val):\n        add(bit_c, l, val)\n        add(bit_c, r + 1, -val)\n        \n    def range_add_l(l, r, val):\n        add(bit_l, l, val)\n        add(bit_l, r + 1, -val)\n        \n    idx = 2\n    out = []\n    \n    for _ in range(M):\n        op = int(input_data[idx])\n        if op == 1:\n            i = int(input_data[idx + 1])\n            v = int(input_data[idx + 2])\n            idx += 3\n            r = i + v - 1\n            if r > N:\n                r = N\n            # In range [i, r], add (v + i) - p\n            range_add_c(i, r, v + i)\n            range_add_l(i, r, -1)\n        elif op == 2:\n            i = int(input_data[idx + 1])\n            v = int(input_data[idx + 2])\n            idx += 3\n            l = i - v + 1\n            if l < 1:\n                l = 1\n            # In range [l, i], add (v - i) + p\n            range_add_c(l, i, v - i)\n            range_add_l(l, i, 1)\n        else:\n            i = int(input_data[idx + 1])\n            idx += 2\n            val_c = query(bit_c, i)\n            val_l = query(bit_l, i)\n            out.append(str(val_c + val_l * i))\n            \n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.7692439999955241,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

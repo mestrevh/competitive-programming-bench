@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:55:53.842882+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1155,
+            "output_tokens": 8090,
+            "total_tokens": 9245
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.019416,
+            "total_cost": 0.019419
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nvoid add_edge(int u, int v, int *head, int *to, int *next, int *idx) {\n    to[*idx] = v;\n    next[*idx] = head[u];\n    head[u] = (*idx)++;\n}\n\nint bfs(int n, int *head, int *to, int *next, int start, int *dist, int *parent, int *queue) {\n    for (int i = 1; i <= n; ++i) {\n        dist[i] = -1;\n        parent[i] = -1;\n    }\n\n    int front = 0, back = 0;\n    queue[back++] = start;\n    dist[start] = 0;\n    int far = start;\n\n    while (front < back) {\n        int u = queue[front++];\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = next[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n\n    return far;\n}\n\nint get_center(int n, int *head, int *to, int *next) {\n    int *dist = (int*)malloc((n + 1) * sizeof(int));\n    int *parent = (int*)malloc((n + 1) * sizeof(int));\n    int *queue = (int*)malloc((n + 1) * sizeof(int));\n\n    int a = bfs(n, head, to, next, 1, dist, parent, queue);\n    int b = bfs(n, head, to, next, a, dist, parent, queue);\n\n    int D = dist[b];\n    int steps = D - D / 2;\n    int cur = b;\n    for (int i = 0; i < steps; ++i) {\n        cur = parent[cur];\n    }\n\n    free(dist);\n    free(parent);\n    free(queue);\n    return cur;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int *head1 = (int*)malloc((N + 1) * sizeof(int));\n    int *to1 = (int*)malloc(2 * (N - 1) * sizeof(int));\n    int *next1 = (int*)malloc(2 * (N - 1) * sizeof(int));\n    for (int i = 1; i <= N; ++i) head1[i] = -1;\n    int idx1 = 0;\n\n    for (int i = 0; i < N - 1; ++i) {\n        int A, B;\n        scanf(\"%d %d\", &A, &B);\n        add_edge(A, B, head1, to1, next1, &idx1);\n        add_edge(B, A, head1, to1, next1, &idx1);\n    }\n\n    int *head2 = (int*)malloc((M + 1) * sizeof(int));\n    int *to2 = (int*)malloc(2 * (M - 1) * sizeof(int));\n    int *next2 = (int*)malloc(2 * (M - 1) * sizeof(int));\n    for (int i = 1; i <= M; ++i) head2[i] = -1;\n    int idx2 = 0;\n\n    for (int i = 0; i < M - 1; ++i) {\n        int X, Y;\n        scanf(\"%d %d\", &X, &Y);\n        add_edge(X, Y, head2, to2, next2, &idx2);\n        add_edge(Y, X, head2, to2, next2, &idx2);\n    }\n\n    int c1 = get_center(N, head1, to1, next1);\n    int c2 = get_center(M, head2, to2, next2);\n\n    printf(\"%d %d\\n\", c1, c2);\n\n    free(head1);\n    free(to1);\n    free(next1);\n    free(head2);\n    free(to2);\n    free(next2);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid add_edge(int u, int v, int *head, int *to, int *next, int *idx) {\n    to[*idx] = v;\n    next[*idx] = head[u];\n    head[u] = (*idx)++;\n}\n\nint bfs(int n, int *head, int *to, int *next, int start, int *dist, int *parent, int *queue) {\n    for (int i = 1; i <= n; ++i) {\n        dist[i] = -1;\n        parent[i] = -1;\n    }\n\n    int front = 0, back = 0;\n    queue[back++] = start;\n    dist[start] = 0;\n    int far = start;\n\n    while (front < back) {\n        int u = queue[front++];\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = next[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n\n    return far;\n}\n\nint get_center(int n, int *head, int *to, int *next) {\n    int *dist = (int*)malloc((n + 1) * sizeof(int));\n    int *parent = (int*)malloc((n + 1) * sizeof(int));\n    int *queue = (int*)malloc((n + 1) * sizeof(int));\n\n    int a = bfs(n, head, to, next, 1, dist, parent, queue);\n    int b = bfs(n, head, to, next, a, dist, parent, queue);\n\n    int D = dist[b];\n    int steps = D - D / 2;\n    int cur = b;\n    for (int i = 0; i < steps; ++i) {\n        cur = parent[cur];\n    }\n\n    free(dist);\n    free(parent);\n    free(queue);\n    return cur;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int *head1 = (int*)malloc((N + 1) * sizeof(int));\n    int *to1 = (int*)malloc(2 * (N - 1) * sizeof(int));\n    int *next1 = (int*)malloc(2 * (N - 1) * sizeof(int));\n    for (int i = 1; i <= N; ++i) head1[i] = -1;\n    int idx1 = 0;\n\n    for (int i = 0; i < N - 1; ++i) {\n        int A, B;\n        scanf(\"%d %d\", &A, &B);\n        add_edge(A, B, head1, to1, next1, &idx1);\n        add_edge(B, A, head1, to1, next1, &idx1);\n    }\n\n    int *head2 = (int*)malloc((M + 1) * sizeof(int));\n    int *to2 = (int*)malloc(2 * (M - 1) * sizeof(int));\n    int *next2 = (int*)malloc(2 * (M - 1) * sizeof(int));\n    for (int i = 1; i <= M; ++i) head2[i] = -1;\n    int idx2 = 0;\n\n    for (int i = 0; i < M - 1; ++i) {\n        int X, Y;\n        scanf(\"%d %d\", &X, &Y);\n        add_edge(X, Y, head2, to2, next2, &idx2);\n        add_edge(Y, X, head2, to2, next2, &idx2);\n    }\n\n    int c1 = get_center(N, head1, to1, next1);\n    int c2 = get_center(M, head2, to2, next2);\n\n    printf(\"%d %d\\n\", c1, c2);\n\n    free(head1);\n    free(to1);\n    free(next1);\n    free(head2);\n    free(to2);\n    free(next2);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1325247999993735,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:59:24.824303+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1269,
+            "output_tokens": 1629,
+            "total_tokens": 2898
+        },
+        "cost_usd": {
+            "input_cost": 0.000127,
+            "output_cost": 0.000815,
+            "total_cost": 0.000941
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet pos = 0;\nconst N = Number(tokens[pos++]);\nconst X1 = BigInt(tokens[pos++]);\nconst X2 = BigInt(tokens[pos++]);\n\nconst lines = [];\n\nfor (let i = 0; i < N; i++) {\n  const a = BigInt(tokens[pos++]);\n  const b = BigInt(tokens[pos++]);\n  lines.push({\n    a,\n    y1: a * X1 + b,\n    y2: a * X2 + b,\n    id: i\n  });\n}\n\nconst byStart = lines.slice().sort((u, v) => {\n  if (u.y1 < v.y1) return -1;\n  if (u.y1 > v.y1) return 1;\n  if (u.a > v.a) return -1;\n  if (u.a < v.a) return 1;\n  return 0;\n});\n\nconst byEnd = lines.slice().sort((u, v) => {\n  if (u.y2 < v.y2) return -1;\n  if (u.y2 > v.y2) return 1;\n  if (u.a < v.a) return -1;\n  if (u.a > v.a) return 1;\n  return 0;\n});\n\nconst rank = new Int32Array(N);\nfor (let i = 0; i < N; i++) {\n  rank[byEnd[i].id] = i;\n}\n\nconst bit = new Int32Array(N + 1);\nlet inversions = 0;\n\nfor (let i = 0; i < N; i++) {\n  const r = rank[byStart[i].id];\n  let countAtMost = 0;\n\n  for (let j = r + 1; j > 0; j -= j & -j) {\n    countAtMost += bit[j];\n  }\n\n  inversions += i - countAtMost;\n\n  for (let j = r + 1; j <= N; j += j & -j) {\n    bit[j]++;\n  }\n}\n\nconsole.log(String(inversions));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet pos = 0;\nconst N = Number(tokens[pos++]);\nconst X1 = BigInt(tokens[pos++]);\nconst X2 = BigInt(tokens[pos++]);\n\nconst lines = [];\n\nfor (let i = 0; i < N; i++) {\n  const a = BigInt(tokens[pos++]);\n  const b = BigInt(tokens[pos++]);\n  lines.push({\n    a,\n    y1: a * X1 + b,\n    y2: a * X2 + b,\n    id: i\n  });\n}\n\nconst byStart = lines.slice().sort((u, v) => {\n  if (u.y1 < v.y1) return -1;\n  if (u.y1 > v.y1) return 1;\n  if (u.a > v.a) return -1;\n  if (u.a < v.a) return 1;\n  return 0;\n});\n\nconst byEnd = lines.slice().sort((u, v) => {\n  if (u.y2 < v.y2) return -1;\n  if (u.y2 > v.y2) return 1;\n  if (u.a < v.a) return -1;\n  if (u.a > v.a) return 1;\n  return 0;\n});\n\nconst rank = new Int32Array(N);\nfor (let i = 0; i < N; i++) {\n  rank[byEnd[i].id] = i;\n}\n\nconst bit = new Int32Array(N + 1);\nlet inversions = 0;\n\nfor (let i = 0; i < N; i++) {\n  const r = rank[byStart[i].id];\n  let countAtMost = 0;\n\n  for (let j = r + 1; j > 0; j -= j & -j) {\n    countAtMost += bit[j];\n  }\n\n  inversions += i - countAtMost;\n\n  for (let j = r + 1; j <= N; j += j & -j) {\n    bit[j]++;\n  }\n}\n\nconsole.log(String(inversions));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18331559999933233,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

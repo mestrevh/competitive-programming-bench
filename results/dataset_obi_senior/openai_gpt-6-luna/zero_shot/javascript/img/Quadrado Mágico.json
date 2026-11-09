@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:40:19.975514+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 608,
+            "output_tokens": 367,
+            "total_tokens": 975
+        },
+        "cost_usd": {
+            "input_cost": 6.1e-05,
+            "output_cost": 0.000183,
+            "total_cost": 0.000244
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst square = [];\nlet zeroRow = -1;\nlet zeroCol = -1;\nlet index = 1;\n\nfor (let r = 0; r < n; r++) {\n  square[r] = data.slice(index, index + n);\n  index += n;\n\n  for (let c = 0; c < n; c++) {\n    if (square[r][c] === 0) {\n      zeroRow = r;\n      zeroCol = c;\n    }\n  }\n}\n\nlet magicSum = 0;\nfor (let r = 0; r < n; r++) {\n  if (r !== zeroRow) {\n    magicSum = square[r].reduce((sum, value) => sum + value, 0);\n    break;\n  }\n}\n\nconst missingValue =\n  magicSum - square[zeroRow].reduce((sum, value) => sum + value, 0);\n\nconsole.log(`${missingValue}\\n${zeroRow + 1}\\n${zeroCol + 1}`);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst square = [];\nlet zeroRow = -1;\nlet zeroCol = -1;\nlet index = 1;\n\nfor (let r = 0; r < n; r++) {\n  square[r] = data.slice(index, index + n);\n  index += n;\n\n  for (let c = 0; c < n; c++) {\n    if (square[r][c] === 0) {\n      zeroRow = r;\n      zeroCol = c;\n    }\n  }\n}\n\nlet magicSum = 0;\nfor (let r = 0; r < n; r++) {\n  if (r !== zeroRow) {\n    magicSum = square[r].reduce((sum, value) => sum + value, 0);\n    break;\n  }\n}\n\nconst missingValue =\n  magicSum - square[zeroRow].reduce((sum, value) => sum + value, 0);\n\nconsole.log(`${missingValue}\\n${zeroRow + 1}\\n${zeroCol + 1}`);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06727980000141542,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

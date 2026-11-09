@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:52:43.975455+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1474,
+            "output_tokens": 12889,
+            "total_tokens": 14363
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.030934,
+            "total_cost": 0.030938
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdbool.h>\n\n#define MAXN 300000\n\ntypedef struct {\n    long long u, v;\n} Point;\n\nPoint p[MAXN];\nint n;\nlong long minU, maxU, minV, maxV;\n\nbool can(long long D) {\n    for (int c = 0; c < 4; ++c) {\n        long long lx, rx, ly, ry;\n\n        if (c < 2) {\n            lx = minU;\n            rx = minU + D;\n        } else {\n            lx = maxU - D;\n            rx = maxU;\n        }\n\n        if ((c & 1) == 0) {\n            ly = minV;\n            ry = minV + D;\n        } else {\n            ly = maxV - D;\n            ry = maxV;\n        }\n\n        int any = 0;\n        long long rminU = 0, rmaxU = 0, rminV = 0, rmaxV = 0;\n\n        for (int i = 0; i < n; ++i) {\n            long long u = p[i].u;\n            long long v = p[i].v;\n\n            if (u >= lx && u <= rx && v >= ly && v <= ry) continue;\n\n            if (!any) {\n                any = 1;\n                rminU = rmaxU = u;\n                rminV = rmaxV = v;\n            } else {\n                if (u < rminU) rminU = u;\n                if (u > rmaxU) rmaxU = u;\n                if (v < rminV) rminV = v;\n                if (v > rmaxV) rmaxV = v;\n            }\n        }\n\n        if (!any) return true;\n        if (rmaxU - rminU <= D && rmaxV - rminV <= D) return true;\n    }\n\n    return false;\n}\n\nint main() {\n    scanf(\"%d\", &n);\n\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%lld\", &p[i].u);\n    }\n\n    for (int i = 0; i < n; ++i) {\n        long long y;\n        scanf(\"%lld\", &y);\n\n        long long x = p[i].u;\n        p[i].u = x + y;\n        p[i].v = x - y;\n    }\n\n    minU = maxU = p[0].u;\n    minV = maxV = p[0].v;\n\n    for (int i = 1; i < n; ++i) {\n        if (p[i].u < minU) minU = p[i].u;\n        if (p[i].u > maxU) maxU = p[i].u;\n        if (p[i].v < minV) minV = p[i].v;\n        if (p[i].v > maxV) maxV = p[i].v;\n    }\n\n    long long hi = maxU - minU;\n    long long h2 = maxV - minV;\n    if (h2 > hi) hi = h2;\n\n    long long lo = -1;\n\n    while (hi - lo > 1) {\n        long long mid = lo + (hi - lo) / 2;\n\n        if (can(mid)) hi = mid;\n        else lo = mid;\n    }\n\n    printf(\"%lld\\n\", hi);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define MAXN 300000\n\ntypedef struct {\n    long long u, v;\n} Point;\n\nPoint p[MAXN];\nint n;\nlong long minU, maxU, minV, maxV;\n\nbool can(long long D) {\n    for (int c = 0; c < 4; ++c) {\n        long long lx, rx, ly, ry;\n\n        if (c < 2) {\n            lx = minU;\n            rx = minU + D;\n        } else {\n            lx = maxU - D;\n            rx = maxU;\n        }\n\n        if ((c & 1) == 0) {\n            ly = minV;\n            ry = minV + D;\n        } else {\n            ly = maxV - D;\n            ry = maxV;\n        }\n\n        int any = 0;\n        long long rminU = 0, rmaxU = 0, rminV = 0, rmaxV = 0;\n\n        for (int i = 0; i < n; ++i) {\n            long long u = p[i].u;\n            long long v = p[i].v;\n\n            if (u >= lx && u <= rx && v >= ly && v <= ry) continue;\n\n            if (!any) {\n                any = 1;\n                rminU = rmaxU = u;\n                rminV = rmaxV = v;\n            } else {\n                if (u < rminU) rminU = u;\n                if (u > rmaxU) rmaxU = u;\n                if (v < rminV) rminV = v;\n                if (v > rmaxV) rmaxV = v;\n            }\n        }\n\n        if (!any) return true;\n        if (rmaxU - rminU <= D && rmaxV - rminV <= D) return true;\n    }\n\n    return false;\n}\n\nint main() {\n    scanf(\"%d\", &n);\n\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%lld\", &p[i].u);\n    }\n\n    for (int i = 0; i < n; ++i) {\n        long long y;\n        scanf(\"%lld\", &y);\n\n        long long x = p[i].u;\n        p[i].u = x + y;\n        p[i].v = x - y;\n    }\n\n    minU = maxU = p[0].u;\n    minV = maxV = p[0].v;\n\n    for (int i = 1; i < n; ++i) {\n        if (p[i].u < minU) minU = p[i].u;\n        if (p[i].u > maxU) maxU = p[i].u;\n        if (p[i].v < minV) minV = p[i].v;\n        if (p[i].v > maxV) maxV = p[i].v;\n    }\n\n    long long hi = maxU - minU;\n    long long h2 = maxV - minV;\n    if (h2 > hi) hi = h2;\n\n    long long lo = -1;\n\n    while (hi - lo > 1) {\n        long long mid = lo + (hi - lo) / 2;\n\n        if (can(mid)) hi = mid;\n        else lo = mid;\n    }\n\n    printf(\"%lld\\n\", hi);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17798279999988154,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

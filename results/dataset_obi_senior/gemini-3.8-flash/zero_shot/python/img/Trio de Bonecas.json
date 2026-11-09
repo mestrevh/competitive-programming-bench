@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:45:43.646593+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 2131,
+            "output_tokens": 1127,
+            "total_tokens": 5683
+        },
+        "cost_usd": {
+            "input_cost": 0.001598,
+            "output_cost": 0.004226,
+            "total_cost": 0.005824
+        },
+        "raw_response": "Para resolver este problema de forma eficiente, podemos modelá-lo utilizando **Programação Dinâmica**. O problema é equivalente ao problema clássico dos *Hashis* (*Chopsticks*).\n\n### Ideia da Solução:\n1. **Ordenação Decrescente:**\n   Primeiro, ordenamos as bonecas em ordem decrescente de tamanho: $T_1 \\ge T_2 \\ge \\dots \\ge T_N$.\n   Para qualquer trio com tamanhos $A \\le B \\le C$, o balanceamento é $(A - B)^2$. Para minimizar essa diferença, é sempre ideal escolher $A$ e $B$ como elementos adjacentes no vetor ordenado ($T_i$ e $T_{i-1}$, de forma que $B = T_{i-1}$ e $A = T_i$).\n   Como o vetor está em ordem decrescente, qualquer elemento não utilizado que venha antes dessas posições terá tamanho maior ou igual a $B$, podendo servir perfeitamente como o elemento $C$ do trio.\n\n2. **Condição de Validade:**\n   Para conseguir formar $j$ trios considerando os primeiros $i$ elementos (com $T$ ordenado decrescentemente), precisamos de 2 elementos para cada par $(A, B)$ e de pelo menos $j$ elementos que sobraram antes para servirem como o terceiro elemento $C$ de cada trio.\n   Logo, precisamos que $i - 2j \\ge j \\iff i \\ge 3j$.\n\n3. **Relação de Recorrência:**\n   Seja $dp[j][i]$ o balanceamento mínimo formando $j$ trios utilizando um subconjunto dos primeiros $i$ elementos:\n   - Se não formamos um par terminando em $i$: $dp[j][i] = dp[j][i - 1]$\n   - Se formamos um par com os elementos $i-1$ e $i$: $dp[j][i] = \\min(dp[j][i], dp[j - 1][i - 2] + (T_{i-1} - T_i)^2)$\n\n4. **Otimizações:**\n   - O número de pares válidos $(i, j)$ satisfaz $3j \\le i \\le N$, totalizando cerca de $1.6 \\times 10^7$ operações no pior caso.\n   - Iterando linha por linha (por $j$ de $1$ a $K$) e usando variáveis locais, minimizamos o *overhead* do interpretador Python.\n\n### Código em Python 3:\n\n```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n\n    T = [int(x) for x in input_data[2 : 2 + N]]\n    # Ordena em ordem decrescente\n    T.sort(reverse=True)\n\n    # Pré-calcula os quadrados das diferenças entre elementos adjacentes\n    # diff_sq[i] = (T[i-1] - T[i])^2, para i de 1 até N-1 (0-indexado)\n    diff_sq = [0] * N\n    for i in range(1, N):\n        d = T[i - 1] - T[i]\n        diff_sq[i] = d * d\n\n    # DP com otimização de memória:\n    # prev_dp[i] guardará a resposta para (j - 1) trios considerando o prefixo até o índice i\n    # Para j = 0 trios, o custo é 0 para qualquer prefixo\n    prev_dp = [0] * N\n    curr_dp = [0] * N\n\n    INF = float(\"inf\")\n\n    for j in range(1, K + 1):\n        min_i = 3 * j - 1  # 0-indexado: i vai de 3*j - 1 até N - 1\n\n        # Antes de min_i, é impossível ter j trios\n        val = INF\n        curr_dp[min_i - 1] = INF\n\n        for i in range(min_i, N):\n            # Opção 1: não parear a boneca i\n            c1 = curr_dp[i - 1]\n            # Opção 2: parear a boneca i com a boneca i - 1\n            c2 = prev_dp[i - 2] + diff_sq[i]\n\n            if c2 < c1:\n                curr_dp[i] = c2\n            else:\n                curr_dp[i] = c1\n\n        # Alterna as linhas da DP\n        prev_dp, curr_dp = curr_dp, prev_dp\n\n    print(prev_dp[N - 1])\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n\n    T = [int(x) for x in input_data[2 : 2 + N]]\n    # Ordena em ordem decrescente\n    T.sort(reverse=True)\n\n    # Pré-calcula os quadrados das diferenças entre elementos adjacentes\n    # diff_sq[i] = (T[i-1] - T[i])^2, para i de 1 até N-1 (0-indexado)\n    diff_sq = [0] * N\n    for i in range(1, N):\n        d = T[i - 1] - T[i]\n        diff_sq[i] = d * d\n\n    # DP com otimização de memória:\n    # prev_dp[i] guardará a resposta para (j - 1) trios considerando o prefixo até o índice i\n    # Para j = 0 trios, o custo é 0 para qualquer prefixo\n    prev_dp = [0] * N\n    curr_dp = [0] * N\n\n    INF = float(\"inf\")\n\n    for j in range(1, K + 1):\n        min_i = 3 * j - 1  # 0-indexado: i vai de 3*j - 1 até N - 1\n\n        # Antes de min_i, é impossível ter j trios\n        val = INF\n        curr_dp[min_i - 1] = INF\n\n        for i in range(min_i, N):\n            # Opção 1: não parear a boneca i\n            c1 = curr_dp[i - 1]\n            # Opção 2: parear a boneca i com a boneca i - 1\n            c2 = prev_dp[i - 2] + diff_sq[i]\n\n            if c2 < c1:\n                curr_dp[i] = c2\n            else:\n                curr_dp[i] = c1\n\n        # Alterna as linhas da DP\n        prev_dp, curr_dp = curr_dp, prev_dp\n\n    print(prev_dp[N - 1])\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.5087805000002845,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

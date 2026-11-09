@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:56:39.096783+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 984,
+            "output_tokens": 405,
+            "total_tokens": 1389
+        },
+        "cost_usd": {
+            "input_cost": 9.8e-05,
+            "output_cost": 0.000202,
+            "total_cost": 0.000301
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst n = Number(input[0]);\nconst force = Number(input[1]);\nconst grid = input.slice(2, 2 + n).map(row => row.split(''));\n\nif (Number(grid[0][0]) <= force) {\n  const queue = [0];\n  grid[0][0] = '*';\n\n  for (let head = 0; head < queue.length; head++) {\n    const cell = queue[head];\n    const r = Math.floor(cell / n);\n    const c = cell % n;\n\n    const neighbors = [];\n    if (r > 0) neighbors.push(cell - n);\n    if (r + 1 < n) neighbors.push(cell + n);\n    if (c > 0) neighbors.push(cell - 1);\n    if (c + 1 < n) neighbors.push(cell + 1);\n\n    for (const next of neighbors) {\n      const nr = Math.floor(next / n);\n      const nc = next % n;\n      if (grid[nr][nc] !== '*' && Number(grid[nr][nc]) <= force) {\n        grid[nr][nc] = '*';\n        queue.push(next);\n      }\n    }\n  }\n}\n\nprocess.stdout.write(grid.map(row => row.join('')).join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst n = Number(input[0]);\nconst force = Number(input[1]);\nconst grid = input.slice(2, 2 + n).map(row => row.split(''));\n\nif (Number(grid[0][0]) <= force) {\n  const queue = [0];\n  grid[0][0] = '*';\n\n  for (let head = 0; head < queue.length; head++) {\n    const cell = queue[head];\n    const r = Math.floor(cell / n);\n    const c = cell % n;\n\n    const neighbors = [];\n    if (r > 0) neighbors.push(cell - n);\n    if (r + 1 < n) neighbors.push(cell + n);\n    if (c > 0) neighbors.push(cell - 1);\n    if (c + 1 < n) neighbors.push(cell + 1);\n\n    for (const next of neighbors) {\n      const nr = Math.floor(next / n);\n      const nc = next % n;\n      if (grid[nr][nc] !== '*' && Number(grid[nr][nc]) <= force) {\n        grid[nr][nc] = '*';\n        queue.push(next);\n      }\n    }\n  }\n}\n\nprocess.stdout.write(grid.map(row => row.join('')).join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10503269999753684,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

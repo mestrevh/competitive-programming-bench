@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:41:41.799000+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 783,
+            "output_tokens": 356,
+            "total_tokens": 1139
+        },
+        "cost_usd": {
+            "input_cost": 7.8e-05,
+            "output_cost": 0.000178,
+            "total_cost": 0.000256
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst number = input[0];\nconst m = Number(input[1]);\nconst digitFor = new Array(26);\n\nconst groups = [\n  ['abc', '2'], ['def', '3'], ['ghi', '4'], ['jkl', '5'],\n  ['mno', '6'], ['pqrs', '7'], ['tuv', '8'], ['wxyz', '9']\n];\n\nfor (const [letters, digit] of groups) {\n  for (const letter of letters) {\n    digitFor[letter.charCodeAt(0) - 97] = digit;\n  }\n}\n\nlet answer = 0;\n\nfor (let i = 0; i < m; i++) {\n  const word = input[i + 2];\n  if (word.length !== number.length) continue;\n\n  let matches = true;\n  for (let j = 0; j < number.length; j++) {\n    if (digitFor[word.charCodeAt(j) - 97] !== number[j]) {\n      matches = false;\n      break;\n    }\n  }\n\n  if (matches) answer++;\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst number = input[0];\nconst m = Number(input[1]);\nconst digitFor = new Array(26);\n\nconst groups = [\n  ['abc', '2'], ['def', '3'], ['ghi', '4'], ['jkl', '5'],\n  ['mno', '6'], ['pqrs', '7'], ['tuv', '8'], ['wxyz', '9']\n];\n\nfor (const [letters, digit] of groups) {\n  for (const letter of letters) {\n    digitFor[letter.charCodeAt(0) - 97] = digit;\n  }\n}\n\nlet answer = 0;\n\nfor (let i = 0; i < m; i++) {\n  const word = input[i + 2];\n  if (word.length !== number.length) continue;\n\n  let matches = true;\n  for (let j = 0; j < number.length; j++) {\n    if (digitFor[word.charCodeAt(j) - 97] !== number[j]) {\n      matches = false;\n      break;\n    }\n  }\n\n  if (matches) answer++;\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06774579999910202,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

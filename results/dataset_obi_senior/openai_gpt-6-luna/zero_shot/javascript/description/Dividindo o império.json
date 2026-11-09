@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:54:52.868978+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 716,
+            "output_tokens": 529,
+            "total_tokens": 1245
+        },
+        "cost_usd": {
+            "input_cost": 7.2e-05,
+            "output_cost": 0.000264,
+            "total_cost": 0.000336
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst n = nextInt();\nconst graph = Array.from({ length: n }, () => []);\n\nfor (let i = 0; i < n - 1; i++) {\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n  graph[a].push(b);\n  graph[b].push(a);\n}\n\nconst parent = new Int32Array(n).fill(-1);\nconst order = new Int32Array(n);\nlet count = 0;\n\nparent[0] = 0;\norder[count++] = 0;\n\nfor (let i = 0; i < count; i++) {\n  const node = order[i];\n  for (const next of graph[node]) {\n    if (parent[next] === -1) {\n      parent[next] = node;\n      order[count++] = next;\n    }\n  }\n}\n\nconst subtreeSize = new Int32Array(n).fill(1);\n\nfor (let i = n - 1; i > 0; i--) {\n  const node = order[i];\n  subtreeSize[parent[node]] += subtreeSize[node];\n}\n\nlet answer = n;\nfor (let i = 1; i < n; i++) {\n  const part = subtreeSize[order[i]];\n  answer = Math.min(answer, Math.abs(n - 2 * part));\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst n = nextInt();\nconst graph = Array.from({ length: n }, () => []);\n\nfor (let i = 0; i < n - 1; i++) {\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n  graph[a].push(b);\n  graph[b].push(a);\n}\n\nconst parent = new Int32Array(n).fill(-1);\nconst order = new Int32Array(n);\nlet count = 0;\n\nparent[0] = 0;\norder[count++] = 0;\n\nfor (let i = 0; i < count; i++) {\n  const node = order[i];\n  for (const next of graph[node]) {\n    if (parent[next] === -1) {\n      parent[next] = node;\n      order[count++] = next;\n    }\n  }\n}\n\nconst subtreeSize = new Int32Array(n).fill(1);\n\nfor (let i = n - 1; i > 0; i--) {\n  const node = order[i];\n  subtreeSize[parent[node]] += subtreeSize[node];\n}\n\nlet answer = n;\nfor (let i = 1; i < n; i++) {\n  const part = subtreeSize[order[i]];\n  answer = Math.min(answer, Math.abs(n - 2 * part));\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10768690000259085,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

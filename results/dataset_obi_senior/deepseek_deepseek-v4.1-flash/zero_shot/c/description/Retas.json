@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:15:24.551812+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1380,
+            "output_tokens": 7985,
+            "total_tokens": 9365
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.019164,
+            "total_cost": 0.019168
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long v1, v2;\n} Line;\n\nLine lines[100005];\nlong long v2s[100005];\nlong long bit[100005];\nint M;\n\nint cmpLine(const void *a, const void *b) {\n    const Line *x = (const Line *)a;\n    const Line *y = (const Line *)b;\n    if (x->v1 < y->v1) return -1;\n    if (x->v1 > y->v1) return 1;\n    if (x->v2 < y->v2) return -1;\n    if (x->v2 > y->v2) return 1;\n    return 0;\n}\n\nint cmpLL(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nvoid bit_add(int idx, int val) {\n    for (; idx <= M; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nlong long bit_sum(int idx) {\n    long long s = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        s += bit[idx];\n    }\n    return s;\n}\n\nint lower_bound_ll(long long *arr, int n, long long val) {\n    int l = 0, r = n;\n    while (l < r) {\n        int m = (l + r) / 2;\n        if (arr[m] < val) l = m + 1;\n        else r = m;\n    }\n    return l;\n}\n\nint main() {\n    int N;\n    long long X1, X2;\n\n    if (scanf(\"%d %lld %lld\", &N, &X1, &X2) != 3) return 0;\n\n    for (int i = 0; i < N; i++) {\n        long long A, B;\n        scanf(\"%lld %lld\", &A, &B);\n        lines[i].v1 = A * X1 + B;\n        lines[i].v2 = A * X2 + B;\n        v2s[i] = lines[i].v2;\n    }\n\n    qsort(lines, N, sizeof(Line), cmpLine);\n    qsort(v2s, N, sizeof(long long), cmpLL);\n\n    M = 0;\n    for (int i = 0; i < N; i++) {\n        if (i == 0 || v2s[i] != v2s[i - 1]) {\n            v2s[M++] = v2s[i];\n        }\n    }\n\n    long long ans = 0;\n    int total_prev = 0;\n    int i = 0;\n\n    while (i < N) {\n        int j = i + 1;\n        while (j < N && lines[j].v1 == lines[i].v1) j++;\n\n        int k = j - i;\n        ans += (long long)k * (k - 1) / 2;\n\n        for (int t = i; t < j; t++) {\n            int pos = lower_bound_ll(v2s, M, lines[t].v2);\n            int rank = pos + 1;\n            long long less = bit_sum(rank - 1);\n            ans += (long long)total_prev - less;\n        }\n\n        for (int t = i; t < j; t++) {\n            int pos = lower_bound_ll(v2s, M, lines[t].v2);\n            bit_add(pos + 1, 1);\n            total_prev++;\n        }\n\n        i = j;\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long v1, v2;\n} Line;\n\nLine lines[100005];\nlong long v2s[100005];\nlong long bit[100005];\nint M;\n\nint cmpLine(const void *a, const void *b) {\n    const Line *x = (const Line *)a;\n    const Line *y = (const Line *)b;\n    if (x->v1 < y->v1) return -1;\n    if (x->v1 > y->v1) return 1;\n    if (x->v2 < y->v2) return -1;\n    if (x->v2 > y->v2) return 1;\n    return 0;\n}\n\nint cmpLL(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nvoid bit_add(int idx, int val) {\n    for (; idx <= M; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nlong long bit_sum(int idx) {\n    long long s = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        s += bit[idx];\n    }\n    return s;\n}\n\nint lower_bound_ll(long long *arr, int n, long long val) {\n    int l = 0, r = n;\n    while (l < r) {\n        int m = (l + r) / 2;\n        if (arr[m] < val) l = m + 1;\n        else r = m;\n    }\n    return l;\n}\n\nint main() {\n    int N;\n    long long X1, X2;\n\n    if (scanf(\"%d %lld %lld\", &N, &X1, &X2) != 3) return 0;\n\n    for (int i = 0; i < N; i++) {\n        long long A, B;\n        scanf(\"%lld %lld\", &A, &B);\n        lines[i].v1 = A * X1 + B;\n        lines[i].v2 = A * X2 + B;\n        v2s[i] = lines[i].v2;\n    }\n\n    qsort(lines, N, sizeof(Line), cmpLine);\n    qsort(v2s, N, sizeof(long long), cmpLL);\n\n    M = 0;\n    for (int i = 0; i < N; i++) {\n        if (i == 0 || v2s[i] != v2s[i - 1]) {\n            v2s[M++] = v2s[i];\n        }\n    }\n\n    long long ans = 0;\n    int total_prev = 0;\n    int i = 0;\n\n    while (i < N) {\n        int j = i + 1;\n        while (j < N && lines[j].v1 == lines[i].v1) j++;\n\n        int k = j - i;\n        ans += (long long)k * (k - 1) / 2;\n\n        for (int t = i; t < j; t++) {\n            int pos = lower_bound_ll(v2s, M, lines[t].v2);\n            int rank = pos + 1;\n            long long less = bit_sum(rank - 1);\n            ans += (long long)total_prev - less;\n        }\n\n        for (int t = i; t < j; t++) {\n            int pos = lower_bound_ll(v2s, M, lines[t].v2);\n            bit_add(pos + 1, 1);\n            total_prev++;\n        }\n\n        i = j;\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20513560000108555,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

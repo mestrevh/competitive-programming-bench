@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:57:18.863607+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1272,
+            "output_tokens": 1199,
+            "total_tokens": 2471
+        },
+        "cost_usd": {
+            "input_cost": 0.000127,
+            "output_cost": 0.000599,
+            "total_cost": 0.000727
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst p = [];\nfor (let i = 0; i < 7; i++) {\n  p.push([data[2 * i], data[2 * i + 1]]);\n}\n\nconst [p1, p2, p3, p4, p5, p6, p7] = p;\n\nconst dot = (a, b) => a[0] * b[0] + a[1] * b[1];\nconst cross = (a, b) => a[0] * b[1] - a[1] * b[0];\nconst sub = (a, b) => [a[0] - b[0], a[1] - b[1]];\nconst dist2 = (a, b) => dot(sub(a, b), sub(a, b));\n\nconst base = sub(p3, p2);\nconst side1 = sub(p2, p1);\nconst side2 = sub(p3, p1);\nconst trunk1 = sub(p6, p4);\nconst trunk2 = sub(p7, p5);\n\nconst conditions = [\n  dot(side1, side2) > 0,\n  dist2(p1, p2) === dist2(p1, p3),\n  cross(base, sub(p4, p2)) === 0,\n  cross(base, sub(p5, p2)) === 0,\n  p2[0] + p3[0] === p4[0] + p5[0],\n  p2[1] + p3[1] === p4[1] + p5[1],\n  dist2(p2, p3) > dist2(p4, p5),\n  dot(base, trunk1) === 0,\n  dot(base, trunk2) === 0,\n  dist2(p4, p6) === dist2(p5, p7),\n];\n\nconst sideOfP1 = cross(base, sub(p1, p2));\nconst sideOfP6 = cross(base, sub(p6, p2));\nconditions.push((sideOfP1 > 0 && sideOfP6 < 0) || (sideOfP1 < 0 && sideOfP6 > 0));\n\nconsole.log(conditions.every(Boolean) ? 'S' : 'N');\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst p = [];\nfor (let i = 0; i < 7; i++) {\n  p.push([data[2 * i], data[2 * i + 1]]);\n}\n\nconst [p1, p2, p3, p4, p5, p6, p7] = p;\n\nconst dot = (a, b) => a[0] * b[0] + a[1] * b[1];\nconst cross = (a, b) => a[0] * b[1] - a[1] * b[0];\nconst sub = (a, b) => [a[0] - b[0], a[1] - b[1]];\nconst dist2 = (a, b) => dot(sub(a, b), sub(a, b));\n\nconst base = sub(p3, p2);\nconst side1 = sub(p2, p1);\nconst side2 = sub(p3, p1);\nconst trunk1 = sub(p6, p4);\nconst trunk2 = sub(p7, p5);\n\nconst conditions = [\n  dot(side1, side2) > 0,\n  dist2(p1, p2) === dist2(p1, p3),\n  cross(base, sub(p4, p2)) === 0,\n  cross(base, sub(p5, p2)) === 0,\n  p2[0] + p3[0] === p4[0] + p5[0],\n  p2[1] + p3[1] === p4[1] + p5[1],\n  dist2(p2, p3) > dist2(p4, p5),\n  dot(base, trunk1) === 0,\n  dot(base, trunk2) === 0,\n  dist2(p4, p6) === dist2(p5, p7),\n];\n\nconst sideOfP1 = cross(base, sub(p1, p2));\nconst sideOfP6 = cross(base, sub(p6, p2));\nconditions.push((sideOfP1 > 0 && sideOfP6 < 0) || (sideOfP1 < 0 && sideOfP6 > 0));\n\nconsole.log(conditions.every(Boolean) ? 'S' : 'N');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06710239999665646,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

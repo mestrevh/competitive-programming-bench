@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:37:53.375233+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 952,
+            "output_tokens": 668,
+            "total_tokens": 1620
+        },
+        "cost_usd": {
+            "input_cost": 9.5e-05,
+            "output_cost": 0.000334,
+            "total_cost": 0.000429
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst N = Number(input[0]);\nconst F = Number(input[1]);\nconst grid = input.slice(2, 2 + N).map(row => row.split(''));\nconst visited = new Uint8Array(N * N);\nconst queue = new Int32Array(N * N);\n\nlet head = 0;\nlet tail = 0;\n\nif (grid[0][0].charCodeAt(0) - 48 <= F) {\n  visited[0] = 1;\n  grid[0][0] = '*';\n  queue[tail++] = 0;\n}\n\nwhile (head < tail) {\n  const pos = queue[head++];\n  const r = Math.floor(pos / N);\n  const c = pos % N;\n\n  if (r > 0) {\n    const next = pos - N;\n    if (!visited[next] && grid[r - 1][c].charCodeAt(0) - 48 <= F) {\n      visited[next] = 1;\n      grid[r - 1][c] = '*';\n      queue[tail++] = next;\n    }\n  }\n  if (r + 1 < N) {\n    const next = pos + N;\n    if (!visited[next] && grid[r + 1][c].charCodeAt(0) - 48 <= F) {\n      visited[next] = 1;\n      grid[r + 1][c] = '*';\n      queue[tail++] = next;\n    }\n  }\n  if (c > 0) {\n    const next = pos - 1;\n    if (!visited[next] && grid[r][c - 1].charCodeAt(0) - 48 <= F) {\n      visited[next] = 1;\n      grid[r][c - 1] = '*';\n      queue[tail++] = next;\n    }\n  }\n  if (c + 1 < N) {\n    const next = pos + 1;\n    if (!visited[next] && grid[r][c + 1].charCodeAt(0) - 48 <= F) {\n      visited[next] = 1;\n      grid[r][c + 1] = '*';\n      queue[tail++] = next;\n    }\n  }\n}\n\nprocess.stdout.write(grid.map(row => row.join('')).join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nconst N = Number(input[0]);\nconst F = Number(input[1]);\nconst grid = input.slice(2, 2 + N).map(row => row.split(''));\nconst visited = new Uint8Array(N * N);\nconst queue = new Int32Array(N * N);\n\nlet head = 0;\nlet tail = 0;\n\nif (grid[0][0].charCodeAt(0) - 48 <= F) {\n  visited[0] = 1;\n  grid[0][0] = '*';\n  queue[tail++] = 0;\n}\n\nwhile (head < tail) {\n  const pos = queue[head++];\n  const r = Math.floor(pos / N);\n  const c = pos % N;\n\n  if (r > 0) {\n    const next = pos - N;\n    if (!visited[next] && grid[r - 1][c].charCodeAt(0) - 48 <= F) {\n      visited[next] = 1;\n      grid[r - 1][c] = '*';\n      queue[tail++] = next;\n    }\n  }\n  if (r + 1 < N) {\n    const next = pos + N;\n    if (!visited[next] && grid[r + 1][c].charCodeAt(0) - 48 <= F) {\n      visited[next] = 1;\n      grid[r + 1][c] = '*';\n      queue[tail++] = next;\n    }\n  }\n  if (c > 0) {\n    const next = pos - 1;\n    if (!visited[next] && grid[r][c - 1].charCodeAt(0) - 48 <= F) {\n      visited[next] = 1;\n      grid[r][c - 1] = '*';\n      queue[tail++] = next;\n    }\n  }\n  if (c + 1 < N) {\n    const next = pos + 1;\n    if (!visited[next] && grid[r][c + 1].charCodeAt(0) - 48 <= F) {\n      visited[next] = 1;\n      grid[r][c + 1] = '*';\n      queue[tail++] = next;\n    }\n  }\n}\n\nprocess.stdout.write(grid.map(row => row.join('')).join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11354820000269683,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

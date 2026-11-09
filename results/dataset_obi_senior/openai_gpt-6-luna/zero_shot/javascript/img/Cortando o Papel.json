@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:34:53.407595+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 636,
+            "output_tokens": 1723,
+            "total_tokens": 2359
+        },
+        "cost_usd": {
+            "input_cost": 6.4e-05,
+            "output_cost": 0.000861,
+            "total_cost": 0.000925
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = data[0];\nconst heights = data.slice(1);\nconst order = Array.from({ length: n }, (_, i) => i);\norder.sort((a, b) => heights[b] - heights[a]);\n\nconst parent = new Int32Array(n);\nconst size = new Int32Array(n);\nconst active = new Uint8Array(n);\n\nfunction find(x) {\n  while (parent[x] !== x) {\n    parent[x] = parent[parent[x]];\n    x = parent[x];\n  }\n  return x;\n}\n\nfunction unite(a, b) {\n  let ra = find(a);\n  let rb = find(b);\n  if (ra === rb) return false;\n\n  if (size[ra] < size[rb]) [ra, rb] = [rb, ra];\n  parent[rb] = ra;\n  size[ra] += size[rb];\n  return true;\n}\n\nlet components = 0;\nlet maxComponents = 0;\n\nfor (let i = 0; i < n;) {\n  let j = i;\n  const height = heights[order[i]];\n\n  while (j < n && heights[order[j]] === height) {\n    const idx = order[j];\n    active[idx] = 1;\n    parent[idx] = idx;\n    size[idx] = 1;\n    components++;\n    j++;\n  }\n\n  for (let k = i; k < j; k++) {\n    const idx = order[k];\n    if (idx > 0 && active[idx - 1] && unite(idx, idx - 1)) components--;\n    if (idx + 1 < n && active[idx + 1] && unite(idx, idx + 1)) components--;\n  }\n\n  maxComponents = Math.max(maxComponents, components);\n  i = j;\n}\n\nconsole.log(maxComponents + 1);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = data[0];\nconst heights = data.slice(1);\nconst order = Array.from({ length: n }, (_, i) => i);\norder.sort((a, b) => heights[b] - heights[a]);\n\nconst parent = new Int32Array(n);\nconst size = new Int32Array(n);\nconst active = new Uint8Array(n);\n\nfunction find(x) {\n  while (parent[x] !== x) {\n    parent[x] = parent[parent[x]];\n    x = parent[x];\n  }\n  return x;\n}\n\nfunction unite(a, b) {\n  let ra = find(a);\n  let rb = find(b);\n  if (ra === rb) return false;\n\n  if (size[ra] < size[rb]) [ra, rb] = [rb, ra];\n  parent[rb] = ra;\n  size[ra] += size[rb];\n  return true;\n}\n\nlet components = 0;\nlet maxComponents = 0;\n\nfor (let i = 0; i < n;) {\n  let j = i;\n  const height = heights[order[i]];\n\n  while (j < n && heights[order[j]] === height) {\n    const idx = order[j];\n    active[idx] = 1;\n    parent[idx] = idx;\n    size[idx] = 1;\n    components++;\n    j++;\n  }\n\n  for (let k = i; k < j; k++) {\n    const idx = order[k];\n    if (idx > 0 && active[idx - 1] && unite(idx, idx - 1)) components--;\n    if (idx + 1 < n && active[idx + 1] && unite(idx, idx + 1)) components--;\n  }\n\n  maxComponents = Math.max(maxComponents, components);\n  i = j;\n}\n\nconsole.log(maxComponents + 1);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1383337000006577,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

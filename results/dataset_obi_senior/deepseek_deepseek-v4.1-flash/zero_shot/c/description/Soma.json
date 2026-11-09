@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:16:19.721959+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 852,
+            "output_tokens": 10506,
+            "total_tokens": 11358
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.025214,
+            "total_cost": 0.025217
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#define MAXN 500000\n\nint x[MAXN];\n\nlong long count_leq(int limit, int n) {\n    if (limit < 0) return 0;\n    long long ans = 0;\n    int left = 0;\n    int sum = 0;\n    for (int right = 0; right < n; ++right) {\n        sum += x[right];\n        while (sum > limit && left <= right) {\n            sum -= x[left];\n            ++left;\n        }\n        ans += (long long)(right - left + 1);\n    }\n    return ans;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &x[i]);\n    }\n    long long ans = count_leq(K, N) - count_leq(K - 1, N);\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#define MAXN 500000\n\nint x[MAXN];\n\nlong long count_leq(int limit, int n) {\n    if (limit < 0) return 0;\n    long long ans = 0;\n    int left = 0;\n    int sum = 0;\n    for (int right = 0; right < n; ++right) {\n        sum += x[right];\n        while (sum > limit && left <= right) {\n            sum -= x[left];\n            ++left;\n        }\n        ans += (long long)(right - left + 1);\n    }\n    return ans;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &x[i]);\n    }\n    long long ans = count_leq(K, N) - count_leq(K - 1, N);\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15533069999946747,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

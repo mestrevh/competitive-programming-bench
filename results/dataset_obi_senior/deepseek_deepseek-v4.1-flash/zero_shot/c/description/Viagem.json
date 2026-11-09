@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:21:56.773096+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1436,
+            "output_tokens": 9821,
+            "total_tokens": 11257
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.02357,
+            "total_cost": 0.023575
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 1000000000\n\ntypedef struct {\n    int to, t, p, next;\n} Edge;\n\ntypedef struct {\n    int t, u, c;\n} HeapNode;\n\ntypedef struct {\n    HeapNode *arr;\n    int size;\n    int cap;\n} Heap;\n\nvoid heap_push(Heap *h, int t, int u, int c) {\n    int i = h->size++;\n    while (i > 0) {\n        int parent = (i - 1) / 2;\n        if (h->arr[parent].t <= t) break;\n        h->arr[i] = h->arr[parent];\n        i = parent;\n    }\n    h->arr[i].t = t;\n    h->arr[i].u = u;\n    h->arr[i].c = c;\n}\n\nHeapNode heap_pop(Heap *h) {\n    HeapNode res = h->arr[0];\n    h->size--;\n    if (h->size > 0) {\n        HeapNode last = h->arr[h->size];\n        int i = 0;\n        while (1) {\n            int left = 2 * i + 1;\n            int right = 2 * i + 2;\n            if (left >= h->size) break;\n            int child = left;\n            if (right < h->size && h->arr[right].t < h->arr[left].t)\n                child = right;\n            if (h->arr[child].t >= last.t) break;\n            h->arr[i] = h->arr[child];\n            i = child;\n        }\n        h->arr[i] = last;\n    }\n    return res;\n}\n\nint main() {\n    int V, N, M;\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n\n    int C = V + 1;\n\n    int *head = (int *)malloc((N + 1) * sizeof(int));\n    for (int i = 0; i <= N; i++) head[i] = -1;\n\n    Edge *edges = (Edge *)malloc((2 * M) * sizeof(Edge));\n    int ec = 0;\n\n    for (int i = 0; i < M; i++) {\n        int A, B, T, P;\n        scanf(\"%d %d %d %d\", &A, &B, &T, &P);\n\n        edges[ec].to = B;\n        edges[ec].t = T;\n        edges[ec].p = P;\n        edges[ec].next = head[A];\n        head[A] = ec++;\n\n        edges[ec].to = A;\n        edges[ec].t = T;\n        edges[ec].p = P;\n        edges[ec].next = head[B];\n        head[B] = ec++;\n    }\n\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n\n    int totalStates = (N + 1) * C;\n    int *dist = (int *)malloc(totalStates * sizeof(int));\n    for (int i = 0; i < totalStates; i++) dist[i] = INF;\n\n    int start = X * C + 0;\n    dist[start] = 0;\n\n    Heap h;\n    h.cap = 2 * M * C + 5;\n    h.arr = (HeapNode *)malloc(h.cap * sizeof(HeapNode));\n    h.size = 0;\n\n    heap_push(&h, 0, X, 0);\n\n    int ans = -1;\n\n    while (h.size > 0) {\n        HeapNode cur = heap_pop(&h);\n        int u = cur.u;\n        int c = cur.c;\n        int t = cur.t;\n\n        int idx = u * C + c;\n        if (t != dist[idx]) continue;\n\n        if (u == Y) {\n            ans = t;\n            break;\n        }\n\n        for (int e = head[u]; e != -1; e = edges[e].next) {\n            int nc = c + edges[e].p;\n            if (nc > V) continue;\n\n            int v = edges[e].to;\n            int nt = t + edges[e].t;\n            int nidx = v * C + nc;\n\n            if (nt < dist[nidx]) {\n                dist[nidx] = nt;\n                heap_push(&h, nt, v, nc);\n            }\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    free(head);\n    free(edges);\n    free(dist);\n    free(h.arr);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 1000000000\n\ntypedef struct {\n    int to, t, p, next;\n} Edge;\n\ntypedef struct {\n    int t, u, c;\n} HeapNode;\n\ntypedef struct {\n    HeapNode *arr;\n    int size;\n    int cap;\n} Heap;\n\nvoid heap_push(Heap *h, int t, int u, int c) {\n    int i = h->size++;\n    while (i > 0) {\n        int parent = (i - 1) / 2;\n        if (h->arr[parent].t <= t) break;\n        h->arr[i] = h->arr[parent];\n        i = parent;\n    }\n    h->arr[i].t = t;\n    h->arr[i].u = u;\n    h->arr[i].c = c;\n}\n\nHeapNode heap_pop(Heap *h) {\n    HeapNode res = h->arr[0];\n    h->size--;\n    if (h->size > 0) {\n        HeapNode last = h->arr[h->size];\n        int i = 0;\n        while (1) {\n            int left = 2 * i + 1;\n            int right = 2 * i + 2;\n            if (left >= h->size) break;\n            int child = left;\n            if (right < h->size && h->arr[right].t < h->arr[left].t)\n                child = right;\n            if (h->arr[child].t >= last.t) break;\n            h->arr[i] = h->arr[child];\n            i = child;\n        }\n        h->arr[i] = last;\n    }\n    return res;\n}\n\nint main() {\n    int V, N, M;\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n\n    int C = V + 1;\n\n    int *head = (int *)malloc((N + 1) * sizeof(int));\n    for (int i = 0; i <= N; i++) head[i] = -1;\n\n    Edge *edges = (Edge *)malloc((2 * M) * sizeof(Edge));\n    int ec = 0;\n\n    for (int i = 0; i < M; i++) {\n        int A, B, T, P;\n        scanf(\"%d %d %d %d\", &A, &B, &T, &P);\n\n        edges[ec].to = B;\n        edges[ec].t = T;\n        edges[ec].p = P;\n        edges[ec].next = head[A];\n        head[A] = ec++;\n\n        edges[ec].to = A;\n        edges[ec].t = T;\n        edges[ec].p = P;\n        edges[ec].next = head[B];\n        head[B] = ec++;\n    }\n\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n\n    int totalStates = (N + 1) * C;\n    int *dist = (int *)malloc(totalStates * sizeof(int));\n    for (int i = 0; i < totalStates; i++) dist[i] = INF;\n\n    int start = X * C + 0;\n    dist[start] = 0;\n\n    Heap h;\n    h.cap = 2 * M * C + 5;\n    h.arr = (HeapNode *)malloc(h.cap * sizeof(HeapNode));\n    h.size = 0;\n\n    heap_push(&h, 0, X, 0);\n\n    int ans = -1;\n\n    while (h.size > 0) {\n        HeapNode cur = heap_pop(&h);\n        int u = cur.u;\n        int c = cur.c;\n        int t = cur.t;\n\n        int idx = u * C + c;\n        if (t != dist[idx]) continue;\n\n        if (u == Y) {\n            ans = t;\n            break;\n        }\n\n        for (int e = head[u]; e != -1; e = edges[e].next) {\n            int nc = c + edges[e].p;\n            if (nc > V) continue;\n\n            int v = edges[e].to;\n            int nt = t + edges[e].t;\n            int nidx = v * C + nc;\n\n            if (nt < dist[nidx]) {\n                dist[nidx] = nt;\n                heap_push(&h, nt, v, nc);\n            }\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    free(head);\n    free(edges);\n    free(dist);\n    free(h.arr);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1602160999973421,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

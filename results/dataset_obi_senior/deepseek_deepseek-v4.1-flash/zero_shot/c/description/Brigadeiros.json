@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T23:57:58.134465+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1929,
+            "output_tokens": 34330,
+            "total_tokens": 36259
+        },
+        "cost_usd": {
+            "input_cost": 6e-06,
+            "output_cost": 0.082392,
+            "total_cost": 0.082398
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\n#define MAXN 305\n#define MAXR 2705\n\nint P[MAXN];\nint A[MAXN];\nint dp[MAXN][MAXR];\nint maxR[MAXN];\n\nint main() {\n    int N, K, T;\n    scanf(\"%d %d %d\", &N, &K, &T);\n\n    for (int i = 1; i <= N; ++i) {\n        scanf(\"%d\", &P[i]);\n    }\n\n    int cnt = 0;\n    for (int i = 1; i <= N; ++i) {\n        int g;\n        scanf(\"%d\", &g);\n        if (g == 1) {\n            A[++cnt] = i;\n        }\n    }\n\n    int sumP = 0;\n    for (int i = 1; i <= N; ++i) sumP += P[i];\n\n    int maxReward = sumP;\n    int INF = T + 1;\n\n    for (int i = 0; i <= K; ++i) {\n        for (int r = 0; r <= maxReward; ++r) {\n            dp[i][r] = INF;\n        }\n        maxR[i] = -1;\n    }\n\n    dp[0][0] = 0;\n    maxR[0] = 0;\n\n    for (int j = 1; j <= N; ++j) {\n        int pj = P[j];\n        int max_i = (K < j) ? K : j;\n\n        for (int i = max_i; i >= 1; --i) {\n            int prev_max = maxR[i - 1];\n            if (prev_max < 0) continue;\n\n            int cost = abs(A[i] - j);\n\n            for (int r = 0; r <= prev_max; ++r) {\n                int prev = dp[i - 1][r];\n                if (prev != INF) {\n                    int newCost = prev + cost;\n                    if (newCost < dp[i][r + pj]) {\n                        dp[i][r + pj] = newCost;\n                        if (r + pj > maxR[i]) {\n                            maxR[i] = r + pj;\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", maxR[K]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\n#define MAXN 305\n#define MAXR 2705\n\nint P[MAXN];\nint A[MAXN];\nint dp[MAXN][MAXR];\nint maxR[MAXN];\n\nint main() {\n    int N, K, T;\n    scanf(\"%d %d %d\", &N, &K, &T);\n\n    for (int i = 1; i <= N; ++i) {\n        scanf(\"%d\", &P[i]);\n    }\n\n    int cnt = 0;\n    for (int i = 1; i <= N; ++i) {\n        int g;\n        scanf(\"%d\", &g);\n        if (g == 1) {\n            A[++cnt] = i;\n        }\n    }\n\n    int sumP = 0;\n    for (int i = 1; i <= N; ++i) sumP += P[i];\n\n    int maxReward = sumP;\n    int INF = T + 1;\n\n    for (int i = 0; i <= K; ++i) {\n        for (int r = 0; r <= maxReward; ++r) {\n            dp[i][r] = INF;\n        }\n        maxR[i] = -1;\n    }\n\n    dp[0][0] = 0;\n    maxR[0] = 0;\n\n    for (int j = 1; j <= N; ++j) {\n        int pj = P[j];\n        int max_i = (K < j) ? K : j;\n\n        for (int i = max_i; i >= 1; --i) {\n            int prev_max = maxR[i - 1];\n            if (prev_max < 0) continue;\n\n            int cost = abs(A[i] - j);\n\n            for (int r = 0; r <= prev_max; ++r) {\n                int prev = dp[i - 1][r];\n                if (prev != INF) {\n                    int newCost = prev + cost;\n                    if (newCost < dp[i][r + pj]) {\n                        dp[i][r + pj] = newCost;\n                        if (r + pj > maxR[i]) {\n                            maxR[i] = r + pj;\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", maxR[K]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21087480000278447,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

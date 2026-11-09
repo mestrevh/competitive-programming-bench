@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:59:58.912920+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 657,
+            "output_tokens": 370,
+            "total_tokens": 3771
+        },
+        "cost_usd": {
+            "input_cost": 0.000493,
+            "output_cost": 0.001388,
+            "total_cost": 0.00188
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    raw_a = [int(x) for x in data[1 : n + 1]]\n\n    # Comprimir elementos consecutivos iguais\n    a = []\n    for x in raw_a:\n        if not a or a[-1] != x:\n            a.append(x)\n\n    m = len(a)\n    # Adicionar sentinelas com altura 0 nas extremidades\n    h = [0] + a + [0]\n\n    # Mapear eventos por altura\n    from collections import defaultdict\n\n    events = defaultdict(int)\n\n    for i in range(1, m + 1):\n        if h[i] > h[i - 1] and h[i] > h[i + 1]:\n            # Pico local\n            events[h[i]] -= 1\n        elif h[i] < h[i - 1] and h[i] < h[i + 1]:\n            # Vale local\n            events[h[i]] += 1\n\n    # Para H logo acima de 0, temos 1 componente\n    k = 1\n    max_pieces = k + 1\n\n    for height in sorted(events.keys()):\n        k += events[height]\n        if k > 0:\n            max_pieces = max(max_pieces, k + 1)\n\n    print(max_pieces)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    raw_a = [int(x) for x in data[1 : n + 1]]\n\n    # Comprimir elementos consecutivos iguais\n    a = []\n    for x in raw_a:\n        if not a or a[-1] != x:\n            a.append(x)\n\n    m = len(a)\n    # Adicionar sentinelas com altura 0 nas extremidades\n    h = [0] + a + [0]\n\n    # Mapear eventos por altura\n    from collections import defaultdict\n\n    events = defaultdict(int)\n\n    for i in range(1, m + 1):\n        if h[i] > h[i - 1] and h[i] > h[i + 1]:\n            # Pico local\n            events[h[i]] -= 1\n        elif h[i] < h[i - 1] and h[i] < h[i + 1]:\n            # Vale local\n            events[h[i]] += 1\n\n    # Para H logo acima de 0, temos 1 componente\n    k = 1\n    max_pieces = k + 1\n\n    for height in sorted(events.keys()):\n        k += events[height]\n        if k > 0:\n            max_pieces = max(max_pieces, k + 1)\n\n    print(max_pieces)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11024190000171075,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

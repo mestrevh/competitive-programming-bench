@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:02:02.174426+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1100,
+            "output_tokens": 292,
+            "total_tokens": 1844
+        },
+        "cost_usd": {
+            "input_cost": 0.000825,
+            "output_cost": 0.001095,
+            "total_cost": 0.00192
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    f = int(input_data[1])\n    \n    grid = [list(input_data[i + 2]) for i in range(n)]\n    \n    if int(grid[0][0]) <= f:\n        grid[0][0] = '*'\n        queue = deque([(0, 0)])\n        \n        while queue:\n            r, c = queue.popleft()\n            \n            for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < n and 0 <= nc < n and grid[nr][nc] != '*':\n                    if int(grid[nr][nc]) <= f:\n                        grid[nr][nc] = '*'\n                        queue.append((nr, nc))\n                        \n    for row in grid:\n        sys.stdout.write(\"\".join(row) + \"\\n\")\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    f = int(input_data[1])\n    \n    grid = [list(input_data[i + 2]) for i in range(n)]\n    \n    if int(grid[0][0]) <= f:\n        grid[0][0] = '*'\n        queue = deque([(0, 0)])\n        \n        while queue:\n            r, c = queue.popleft()\n            \n            for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < n and 0 <= nc < n and grid[nr][nc] != '*':\n                    if int(grid[nr][nc]) <= f:\n                        grid[nr][nc] = '*'\n                        queue.append((nr, nc))\n                        \n    for row in grid:\n        sys.stdout.write(\"\".join(row) + \"\\n\")\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1888092000008328,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

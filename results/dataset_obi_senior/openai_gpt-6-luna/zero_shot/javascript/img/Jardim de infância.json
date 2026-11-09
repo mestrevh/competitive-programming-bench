@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:38:36.404338+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1680,
+            "output_tokens": 1106,
+            "total_tokens": 2786
+        },
+        "cost_usd": {
+            "input_cost": 0.000168,
+            "output_cost": 0.000553,
+            "total_cost": 0.000721
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst points = [];\nfor (let i = 0; i < 7; i++) {\n  points.push([values[2 * i], values[2 * i + 1]]);\n}\n\nconst [p1, p2, p3, p4, p5, p6, p7] = points;\n\nconst cross = (a, b) => a[0] * b[1] - a[1] * b[0];\nconst dot = (a, b) => a[0] * b[0] + a[1] * b[1];\nconst sub = (a, b) => [a[0] - b[0], a[1] - b[1]];\nconst dist2 = (a, b) => {\n  const v = sub(a, b);\n  return dot(v, v);\n};\n\nconst v12 = sub(p2, p1);\nconst v13 = sub(p3, p1);\nconst base = sub(p3, p2);\nconst v46 = sub(p6, p4);\nconst v57 = sub(p7, p5);\n\nconst collinear =\n  cross(base, sub(p4, p2)) === 0 &&\n  cross(base, sub(p5, p2)) === 0;\n\nconst sameMidpoint =\n  p2[0] + p3[0] === p4[0] + p5[0] &&\n  p2[1] + p3[1] === p4[1] + p5[1];\n\nconst side1 = cross(base, sub(p1, p2));\nconst side6 = cross(base, sub(p6, p2));\n\nconst valid =\n  dot(v12, v13) > 0 &&\n  dist2(p1, p2) === dist2(p1, p3) &&\n  collinear &&\n  sameMidpoint &&\n  dist2(p2, p3) > dist2(p4, p5) &&\n  dot(base, v46) === 0 &&\n  dot(base, v57) === 0 &&\n  dist2(p4, p6) === dist2(p5, p7) &&\n  side1 * side6 < 0;\n\nconsole.log(valid ? 'S' : 'N');\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst values = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst points = [];\nfor (let i = 0; i < 7; i++) {\n  points.push([values[2 * i], values[2 * i + 1]]);\n}\n\nconst [p1, p2, p3, p4, p5, p6, p7] = points;\n\nconst cross = (a, b) => a[0] * b[1] - a[1] * b[0];\nconst dot = (a, b) => a[0] * b[0] + a[1] * b[1];\nconst sub = (a, b) => [a[0] - b[0], a[1] - b[1]];\nconst dist2 = (a, b) => {\n  const v = sub(a, b);\n  return dot(v, v);\n};\n\nconst v12 = sub(p2, p1);\nconst v13 = sub(p3, p1);\nconst base = sub(p3, p2);\nconst v46 = sub(p6, p4);\nconst v57 = sub(p7, p5);\n\nconst collinear =\n  cross(base, sub(p4, p2)) === 0 &&\n  cross(base, sub(p5, p2)) === 0;\n\nconst sameMidpoint =\n  p2[0] + p3[0] === p4[0] + p5[0] &&\n  p2[1] + p3[1] === p4[1] + p5[1];\n\nconst side1 = cross(base, sub(p1, p2));\nconst side6 = cross(base, sub(p6, p2));\n\nconst valid =\n  dot(v12, v13) > 0 &&\n  dist2(p1, p2) === dist2(p1, p3) &&\n  collinear &&\n  sameMidpoint &&\n  dist2(p2, p3) > dist2(p4, p5) &&\n  dot(base, v46) === 0 &&\n  dot(base, v57) === 0 &&\n  dist2(p4, p6) === dist2(p5, p7) &&\n  side1 * side6 < 0;\n\nconsole.log(valid ? 'S' : 'N');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06931120000081137,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

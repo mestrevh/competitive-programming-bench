@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:34:32.346578+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 854,
+            "output_tokens": 1091,
+            "total_tokens": 1945
+        },
+        "cost_usd": {
+            "input_cost": 8.5e-05,
+            "output_cost": 0.000545,
+            "total_cost": 0.000631
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\n\nlet pos = 0;\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst graph = Array.from({ length: N }, () => []);\n\nfor (let i = 0; i < M; i++) {\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n  graph[a].push(b);\n  graph[b].push(a);\n}\n\nconst visited = new Uint8Array(N);\nconst marked = new Uint8Array(N);\nconst stack = [];\nlet answer = '-1';\n\nfor (let start = 0; start < N; start++) {\n  if (visited[start]) continue;\n\n  const component = [];\n  visited[start] = 1;\n  stack.push(start);\n\n  while (stack.length) {\n    const v = stack.pop();\n    component.push(v);\n    for (const u of graph[v]) {\n      if (!visited[u]) {\n        visited[u] = 1;\n        stack.push(u);\n      }\n    }\n  }\n\n  if (component.length < 3) continue;\n\n  let candidate = -1;\n  for (const v of component) {\n    if (graph[v].length < component.length - 1) {\n      candidate = v;\n      break;\n    }\n  }\n\n  if (candidate !== -1) {\n    for (const u of graph[candidate]) marked[u] = 1;\n    for (const v of component) {\n      if (v !== candidate && !marked[v]) {\n        answer = `${candidate + 1} ${v + 1}`;\n        break;\n      }\n    }\n    break;\n  }\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\n\nlet pos = 0;\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst graph = Array.from({ length: N }, () => []);\n\nfor (let i = 0; i < M; i++) {\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n  graph[a].push(b);\n  graph[b].push(a);\n}\n\nconst visited = new Uint8Array(N);\nconst marked = new Uint8Array(N);\nconst stack = [];\nlet answer = '-1';\n\nfor (let start = 0; start < N; start++) {\n  if (visited[start]) continue;\n\n  const component = [];\n  visited[start] = 1;\n  stack.push(start);\n\n  while (stack.length) {\n    const v = stack.pop();\n    component.push(v);\n    for (const u of graph[v]) {\n      if (!visited[u]) {\n        visited[u] = 1;\n        stack.push(u);\n      }\n    }\n  }\n\n  if (component.length < 3) continue;\n\n  let candidate = -1;\n  for (const v of component) {\n    if (graph[v].length < component.length - 1) {\n      candidate = v;\n      break;\n    }\n  }\n\n  if (candidate !== -1) {\n    for (const u of graph[candidate]) marked[u] = 1;\n    for (const v of component) {\n      if (v !== candidate && !marked[v]) {\n        answer = `${candidate + 1} ${v + 1}`;\n        break;\n      }\n    }\n    break;\n  }\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.2562623999983771,
+            "counts": {
+                "AC": 6,
+                "WA": 7,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

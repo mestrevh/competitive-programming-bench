@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:47:04.758812+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1060,
+            "output_tokens": 4383,
+            "total_tokens": 5443
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.010519,
+            "total_cost": 0.010522
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 200005\n#define MAXE 800005\n\nint parent[MAXN], sz[MAXN], degreeArr[MAXN];\nint head[MAXN], to[MAXE], nxt[MAXE], markArr[MAXN];\n\nint find(int x) {\n    if (parent[x] != x)\n        parent[x] = find(parent[x]);\n    return parent[x];\n}\n\nvoid unite(int a, int b) {\n    a = find(a);\n    b = find(b);\n\n    if (a == b) return;\n\n    if (sz[a] < sz[b]) {\n        int tmp = a;\n        a = b;\n        b = tmp;\n    }\n\n    parent[b] = a;\n    sz[a] += sz[b];\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 1; i <= N; i++) {\n        parent[i] = i;\n        sz[i] = 1;\n        head[i] = -1;\n    }\n\n    int edgeIndex = 0;\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n\n        degreeArr[x]++;\n        degreeArr[y]++;\n\n        to[edgeIndex] = y;\n        nxt[edgeIndex] = head[x];\n        head[x] = edgeIndex++;\n\n        to[edgeIndex] = x;\n        nxt[edgeIndex] = head[y];\n        head[y] = edgeIndex++;\n\n        unite(x, y);\n    }\n\n    int chosen = 0;\n    int root = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int r = find(i);\n\n        if (sz[r] - 1 > degreeArr[i]) {\n            chosen = i;\n            root = r;\n            break;\n        }\n    }\n\n    if (chosen == 0) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    for (int e = head[chosen]; e != -1; e = nxt[e]) {\n        markArr[to[e]] = 1;\n    }\n\n    for (int v = 1; v <= N; v++) {\n        if (v == chosen) continue;\n        if (markArr[v]) continue;\n\n        if (find(v) == root) {\n            printf(\"%d %d\\n\", chosen, v);\n            return 0;\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 200005\n#define MAXE 800005\n\nint parent[MAXN], sz[MAXN], degreeArr[MAXN];\nint head[MAXN], to[MAXE], nxt[MAXE], markArr[MAXN];\n\nint find(int x) {\n    if (parent[x] != x)\n        parent[x] = find(parent[x]);\n    return parent[x];\n}\n\nvoid unite(int a, int b) {\n    a = find(a);\n    b = find(b);\n\n    if (a == b) return;\n\n    if (sz[a] < sz[b]) {\n        int tmp = a;\n        a = b;\n        b = tmp;\n    }\n\n    parent[b] = a;\n    sz[a] += sz[b];\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 1; i <= N; i++) {\n        parent[i] = i;\n        sz[i] = 1;\n        head[i] = -1;\n    }\n\n    int edgeIndex = 0;\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n\n        degreeArr[x]++;\n        degreeArr[y]++;\n\n        to[edgeIndex] = y;\n        nxt[edgeIndex] = head[x];\n        head[x] = edgeIndex++;\n\n        to[edgeIndex] = x;\n        nxt[edgeIndex] = head[y];\n        head[y] = edgeIndex++;\n\n        unite(x, y);\n    }\n\n    int chosen = 0;\n    int root = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int r = find(i);\n\n        if (sz[r] - 1 > degreeArr[i]) {\n            chosen = i;\n            root = r;\n            break;\n        }\n    }\n\n    if (chosen == 0) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    for (int e = head[chosen]; e != -1; e = nxt[e]) {\n        markArr[to[e]] = 1;\n    }\n\n    for (int v = 1; v <= N; v++) {\n        if (v == chosen) continue;\n        if (markArr[v]) continue;\n\n        if (find(v) == root) {\n            printf(\"%d %d\\n\", chosen, v);\n            return 0;\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.19118339999840828,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

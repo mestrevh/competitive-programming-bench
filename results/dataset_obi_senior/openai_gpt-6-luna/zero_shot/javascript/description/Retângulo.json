@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:59:34.498764+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 762,
+            "output_tokens": 691,
+            "total_tokens": 1453
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.000345,
+            "total_cost": 0.000422
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst positions = new Array(n);\nlet total = 0;\n\nfor (let i = 0; i < n; i++) {\n  positions[i] = total;\n  total += input[i + 1];\n}\n\nif (total % 2 !== 0) {\n  console.log('N');\n} else {\n  const half = total / 2;\n  const indexByPosition = new Map();\n\n  for (let i = 0; i < n; i++) {\n    indexByPosition.set(positions[i], i);\n  }\n\n  let pairs = 0;\n  for (let i = 0; i < n; i++) {\n    let opposite = positions[i] + half;\n    if (opposite >= total) opposite -= total;\n\n    const j = indexByPosition.get(opposite);\n    if (j !== undefined && j > i) pairs++;\n  }\n\n  console.log(pairs >= 2 ? 'S' : 'N');\n}\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst positions = new Array(n);\nlet total = 0;\n\nfor (let i = 0; i < n; i++) {\n  positions[i] = total;\n  total += input[i + 1];\n}\n\nif (total % 2 !== 0) {\n  console.log('N');\n} else {\n  const half = total / 2;\n  const indexByPosition = new Map();\n\n  for (let i = 0; i < n; i++) {\n    indexByPosition.set(positions[i], i);\n  }\n\n  let pairs = 0;\n  for (let i = 0; i < n; i++) {\n    let opposite = positions[i] + half;\n    if (opposite >= total) opposite -= total;\n\n    const j = indexByPosition.get(opposite);\n    if (j !== undefined && j > i) pairs++;\n  }\n\n  console.log(pairs >= 2 ? 'S' : 'N');\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06998610000300687,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

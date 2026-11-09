@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T23:50:16.144143+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1011,
+            "output_tokens": 3602,
+            "total_tokens": 4613
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.008645,
+            "total_cost": 0.008648
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct Node {\n    long long key;\n    unsigned int pri;\n    int cnt, sz;\n    struct Node *l, *r;\n} Node;\n\nstatic unsigned int seed = 123456789;\n\nunsigned int rng(void) {\n    seed ^= seed << 13;\n    seed ^= seed >> 17;\n    seed ^= seed << 5;\n    return seed;\n}\n\nint sz(Node *t) {\n    return t ? t->sz : 0;\n}\n\nvoid pull(Node *t) {\n    if (t) t->sz = sz(t->l) + sz(t->r) + t->cnt;\n}\n\nNode *newNode(long long key) {\n    Node *n = (Node *)malloc(sizeof(Node));\n    n->key = key;\n    n->pri = rng();\n    n->cnt = 1;\n    n->sz = 1;\n    n->l = n->r = NULL;\n    return n;\n}\n\nNode *rotateRight(Node *y) {\n    Node *x = y->l;\n    y->l = x->r;\n    x->r = y;\n    pull(y);\n    pull(x);\n    return x;\n}\n\nNode *rotateLeft(Node *x) {\n    Node *y = x->r;\n    x->r = y->l;\n    y->l = x;\n    pull(x);\n    pull(y);\n    return y;\n}\n\nNode *insert(Node *t, long long key) {\n    if (!t) return newNode(key);\n\n    if (key == t->key) {\n        t->cnt++;\n        t->sz++;\n        return t;\n    }\n\n    if (key < t->key) {\n        t->l = insert(t->l, key);\n        if (t->l->pri < t->pri) t = rotateRight(t);\n    } else {\n        t->r = insert(t->r, key);\n        if (t->r->pri < t->pri) t = rotateLeft(t);\n    }\n\n    pull(t);\n    return t;\n}\n\nint countLE(Node *t, long long key) {\n    if (!t) return 0;\n\n    if (key < t->key) {\n        return countLE(t->l, key);\n    } else if (key > t->key) {\n        return sz(t->l) + t->cnt + countLE(t->r, key);\n    } else {\n        return sz(t->l) + t->cnt;\n    }\n}\n\nint main(void) {\n    int N;\n    scanf(\"%d\", &N);\n\n    Node *root = NULL;\n    long long prevPenalty = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n\n        long long realX = x + prevPenalty;\n        long long realY = y + prevPenalty;\n\n        long long dist = realX * realX + realY * realY;\n\n        int penalty = countLE(root, dist);\n        printf(\"%d\\n\", penalty);\n\n        root = insert(root, dist);\n        prevPenalty = penalty;\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct Node {\n    long long key;\n    unsigned int pri;\n    int cnt, sz;\n    struct Node *l, *r;\n} Node;\n\nstatic unsigned int seed = 123456789;\n\nunsigned int rng(void) {\n    seed ^= seed << 13;\n    seed ^= seed >> 17;\n    seed ^= seed << 5;\n    return seed;\n}\n\nint sz(Node *t) {\n    return t ? t->sz : 0;\n}\n\nvoid pull(Node *t) {\n    if (t) t->sz = sz(t->l) + sz(t->r) + t->cnt;\n}\n\nNode *newNode(long long key) {\n    Node *n = (Node *)malloc(sizeof(Node));\n    n->key = key;\n    n->pri = rng();\n    n->cnt = 1;\n    n->sz = 1;\n    n->l = n->r = NULL;\n    return n;\n}\n\nNode *rotateRight(Node *y) {\n    Node *x = y->l;\n    y->l = x->r;\n    x->r = y;\n    pull(y);\n    pull(x);\n    return x;\n}\n\nNode *rotateLeft(Node *x) {\n    Node *y = x->r;\n    x->r = y->l;\n    y->l = x;\n    pull(x);\n    pull(y);\n    return y;\n}\n\nNode *insert(Node *t, long long key) {\n    if (!t) return newNode(key);\n\n    if (key == t->key) {\n        t->cnt++;\n        t->sz++;\n        return t;\n    }\n\n    if (key < t->key) {\n        t->l = insert(t->l, key);\n        if (t->l->pri < t->pri) t = rotateRight(t);\n    } else {\n        t->r = insert(t->r, key);\n        if (t->r->pri < t->pri) t = rotateLeft(t);\n    }\n\n    pull(t);\n    return t;\n}\n\nint countLE(Node *t, long long key) {\n    if (!t) return 0;\n\n    if (key < t->key) {\n        return countLE(t->l, key);\n    } else if (key > t->key) {\n        return sz(t->l) + t->cnt + countLE(t->r, key);\n    } else {\n        return sz(t->l) + t->cnt;\n    }\n}\n\nint main(void) {\n    int N;\n    scanf(\"%d\", &N);\n\n    Node *root = NULL;\n    long long prevPenalty = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n\n        long long realX = x + prevPenalty;\n        long long realY = y + prevPenalty;\n\n        long long dist = realX * realX + realY * realY;\n\n        int penalty = countLE(root, dist);\n        printf(\"%d\\n\", penalty);\n\n        root = insert(root, dist);\n        prevPenalty = penalty;\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3760561999952188,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

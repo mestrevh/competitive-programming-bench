@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:34:09.971454+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 950,
+            "output_tokens": 725,
+            "total_tokens": 1675
+        },
+        "cost_usd": {
+            "input_cost": 9.5e-05,
+            "output_cost": 0.000362,
+            "total_cost": 0.000458
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet p = 0;\nconst N = data[p++];\nconst M = data[p++];\n\nconst slopeBIT = new Float64Array(N + 2);\nconst interceptBIT = new Float64Array(N + 2);\n\nfunction add(bit, index, value) {\n  for (let i = index; i <= N; i += i & -i) bit[i] += value;\n}\n\nfunction rangeAdd(bit, left, right, value) {\n  add(bit, left, value);\n  if (right < N) add(bit, right + 1, -value);\n}\n\nfunction pointQuery(bit, index) {\n  let sum = 0;\n  for (let i = index; i > 0; i -= i & -i) sum += bit[i];\n  return sum;\n}\n\nconst output = [];\n\nfor (let k = 0; k < M; k++) {\n  const type = data[p++];\n  const i = data[p++];\n\n  if (type === 1) {\n    const V = data[p++];\n    const right = Math.min(N, i + V - 1);\n    rangeAdd(slopeBIT, i, right, -1);\n    rangeAdd(interceptBIT, i, right, V + i);\n  } else if (type === 2) {\n    const V = data[p++];\n    const left = Math.max(1, i - V + 1);\n    rangeAdd(slopeBIT, left, i, 1);\n    rangeAdd(interceptBIT, left, i, V - i);\n  } else {\n    const slope = pointQuery(slopeBIT, i);\n    const intercept = pointQuery(interceptBIT, i);\n    output.push(String(slope * i + intercept));\n  }\n}\n\nconsole.log(output.join('\\n'));```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet p = 0;\nconst N = data[p++];\nconst M = data[p++];\n\nconst slopeBIT = new Float64Array(N + 2);\nconst interceptBIT = new Float64Array(N + 2);\n\nfunction add(bit, index, value) {\n  for (let i = index; i <= N; i += i & -i) bit[i] += value;\n}\n\nfunction rangeAdd(bit, left, right, value) {\n  add(bit, left, value);\n  if (right < N) add(bit, right + 1, -value);\n}\n\nfunction pointQuery(bit, index) {\n  let sum = 0;\n  for (let i = index; i > 0; i -= i & -i) sum += bit[i];\n  return sum;\n}\n\nconst output = [];\n\nfor (let k = 0; k < M; k++) {\n  const type = data[p++];\n  const i = data[p++];\n\n  if (type === 1) {\n    const V = data[p++];\n    const right = Math.min(N, i + V - 1);\n    rangeAdd(slopeBIT, i, right, -1);\n    rangeAdd(interceptBIT, i, right, V + i);\n  } else if (type === 2) {\n    const V = data[p++];\n    const left = Math.max(1, i - V + 1);\n    rangeAdd(slopeBIT, left, i, 1);\n    rangeAdd(interceptBIT, left, i, V - i);\n  } else {\n    const slope = pointQuery(slopeBIT, i);\n    const intercept = pointQuery(interceptBIT, i);\n    output.push(String(slope * i + intercept));\n  }\n}\n\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17245949999778531,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

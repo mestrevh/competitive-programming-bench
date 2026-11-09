@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:38:45.927036+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 2249,
+            "output_tokens": 1299,
+            "total_tokens": 7377
+        },
+        "cost_usd": {
+            "input_cost": 0.001687,
+            "output_cost": 0.004871,
+            "total_cost": 0.006558
+        },
+        "raw_response": "Analisando o problema, podemos fazer a transformação padrão para a distância de Manhattan ($L_1 \\to L_\\infty$):\nSejam $u = X + Y$ e $v = X - Y$. A distância de Manhattan entre dois pontos torna-se a distância de Chebyshev:\n$$d((X_1, Y_1), (X_2, Y_2)) = \\max(|u_1 - u_2|, |v_1 - v_2|)$$\n\nO problema então se reduz a particionar os $N$ pontos em dois grupos, cada um com diâmetro $\\le D$, o que equivale a cobrir os pontos no plano $(u, v)$ com dois quadrados de lado $D$ alinhados aos eixos.\n\nSeja a caixa delimitadora (*bounding box*) de todos os pontos dada por $[U_{\\min}, U_{\\max}] \\times [V_{\\min}, V_{\\max}]$.\nPor propriedades geométricas clássicas de cobertura por dois quadrados (*2-piercing*), sempre que for possível cobrir os pontos com dois quadrados de lado $D$, é suficiente posicionar o primeiro quadrado $Q_1$ em um dos seguintes cantos:\n1. Canto inferior esquerdo: $[U_{\\min}, U_{\\min} + D] \\times [V_{\\min}, V_{\\min} + D]$\n2. Canto superior esquerdo: $[U_{\\min}, U_{\\min} + D] \\times [V_{\\max} - D, V_{\\max}]$\n\nPara um determinado $D$, $Q_1$ cobre um subconjunto de pontos, e a partição é válida se e somente se todos os pontos que **não** estão em $Q_1$ puderem ser cobertos por um único quadrado de lado $D$, ou seja:\n$$\\max(u_{\\text{fora}}) - \\min(u_{\\text{fora}}) \\le D \\quad \\text{e} \\quad \\max(v_{\\text{fora}}) - \\min(v_{\\text{fora}}) \\le D$$\n\nPodemos encontrar o menor $D$ através de busca binária.\n\nAqui está a solução completa e eficiente em Python:\n\n```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X = [int(x) for x in data[1 : N + 1]]\n    Y = [int(x) for x in data[N + 1 : 2 * N + 1]]\n\n    U = [x + y for x, y in zip(X, Y)]\n    V = [x - y for x, y in zip(X, Y)]\n\n    u_min = min(U)\n    u_max = max(U)\n    v_min = min(V)\n    v_max = max(V)\n\n    # Se todos os pontos já cabem em um único quadrado\n    total_span = max(u_max - u_min, v_max - v_min)\n    if total_span == 0:\n        print(0)\n        return\n\n    def can(D):\n        if total_span <= D:\n            return True\n\n        # Teste 1: Q1 no canto inferior esquerdo\n        # Q1 = [u_min, u_min + D] x [v_min, v_min + D]\n        u_lim1 = u_min + D\n        v_lim1 = v_min + D\n        min_u = float(\"inf\")\n        max_u = float(\"-inf\")\n        min_v = float(\"inf\")\n        max_v = float(\"-inf\")\n        valid1 = True\n\n        for u, v in zip(U, V):\n            if u > u_lim1 or v > v_lim1:\n                if u < min_u:\n                    min_u = u\n                if u > max_u:\n                    max_u = u\n                if v < min_v:\n                    min_v = v\n                if v > max_v:\n                    max_v = v\n\n        if min_u == float(\"inf\") or (\n            max_u - min_u <= D and max_v - min_v <= D\n        ):\n            return True\n\n        # Teste 2: Q1 no canto superior esquerdo\n        # Q1 = [u_min, u_min + D] x [v_max - D, v_max]\n        u_lim2 = u_min + D\n        v_lim2 = v_max - D\n        min_u = float(\"inf\")\n        max_u = float(\"-inf\")\n        min_v = float(\"inf\")\n        max_v = float(\"-inf\")\n\n        for u, v in zip(U, V):\n            if u > u_lim2 or v < v_lim2:\n                if u < min_u:\n                    min_u = u\n                if u > max_u:\n                    max_u = u\n                if v < min_v:\n                    min_v = v\n                if v > max_v:\n                    max_v = v\n\n        if min_u == float(\"inf\") or (\n            max_u - min_u <= D and max_v - min_v <= D\n        ):\n            return True\n\n        return False\n\n    low = 0\n    high = total_span\n    ans = high\n\n    while low <= high:\n        mid = (low + high) // 2\n        if can(mid):\n            ans = mid\n            high = mid - 1\n        else:\n            low = mid + 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X = [int(x) for x in data[1 : N + 1]]\n    Y = [int(x) for x in data[N + 1 : 2 * N + 1]]\n\n    U = [x + y for x, y in zip(X, Y)]\n    V = [x - y for x, y in zip(X, Y)]\n\n    u_min = min(U)\n    u_max = max(U)\n    v_min = min(V)\n    v_max = max(V)\n\n    # Se todos os pontos já cabem em um único quadrado\n    total_span = max(u_max - u_min, v_max - v_min)\n    if total_span == 0:\n        print(0)\n        return\n\n    def can(D):\n        if total_span <= D:\n            return True\n\n        # Teste 1: Q1 no canto inferior esquerdo\n        # Q1 = [u_min, u_min + D] x [v_min, v_min + D]\n        u_lim1 = u_min + D\n        v_lim1 = v_min + D\n        min_u = float(\"inf\")\n        max_u = float(\"-inf\")\n        min_v = float(\"inf\")\n        max_v = float(\"-inf\")\n        valid1 = True\n\n        for u, v in zip(U, V):\n            if u > u_lim1 or v > v_lim1:\n                if u < min_u:\n                    min_u = u\n                if u > max_u:\n                    max_u = u\n                if v < min_v:\n                    min_v = v\n                if v > max_v:\n                    max_v = v\n\n        if min_u == float(\"inf\") or (\n            max_u - min_u <= D and max_v - min_v <= D\n        ):\n            return True\n\n        # Teste 2: Q1 no canto superior esquerdo\n        # Q1 = [u_min, u_min + D] x [v_max - D, v_max]\n        u_lim2 = u_min + D\n        v_lim2 = v_max - D\n        min_u = float(\"inf\")\n        max_u = float(\"-inf\")\n        min_v = float(\"inf\")\n        max_v = float(\"-inf\")\n\n        for u, v in zip(U, V):\n            if u > u_lim2 or v < v_lim2:\n                if u < min_u:\n                    min_u = u\n                if u > max_u:\n                    max_u = u\n                if v < min_v:\n                    min_v = v\n                if v > max_v:\n                    max_v = v\n\n        if min_u == float(\"inf\") or (\n            max_u - min_u <= D and max_v - min_v <= D\n        ):\n            return True\n\n        return False\n\n    low = 0\n    high = total_span\n    ans = high\n\n    while low <= high:\n        mid = (low + high) // 2\n        if can(mid):\n            ans = mid\n            high = mid - 1\n        else:\n            low = mid + 1\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 1.1470466000027955,
+            "counts": {
+                "AC": 62,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 62
+        }
+    }
+]

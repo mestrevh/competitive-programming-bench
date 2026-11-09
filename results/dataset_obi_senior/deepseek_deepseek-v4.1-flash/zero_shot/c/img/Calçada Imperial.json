@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:44:00.450614+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 939,
+            "output_tokens": 3145,
+            "total_tokens": 4084
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.007548,
+            "total_cost": 0.007551
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int v[505];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &v[i]);\n    }\n\n    int ans = 1; // at least one element can be marked\n\n    // Try every pair of distinct values (a, b) with a < b\n    for (int a = 1; a <= N; a++) {\n        for (int b = a + 1; b <= N; b++) {\n            int dp0 = 0; // max length of alternating subsequence ending with a\n            int dp1 = 0; // max length of alternating subsequence ending with b\n\n            for (int i = 0; i < N; i++) {\n                int x = v[i];\n                if (x == a) {\n                    if (dp1 + 1 > dp0) dp0 = dp1 + 1;\n                } else if (x == b) {\n                    if (dp0 + 1 > dp1) dp1 = dp0 + 1;\n                }\n            }\n\n            if (dp0 > ans) ans = dp0;\n            if (dp1 > ans) ans = dp1;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int v[505];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &v[i]);\n    }\n\n    int ans = 1; // at least one element can be marked\n\n    // Try every pair of distinct values (a, b) with a < b\n    for (int a = 1; a <= N; a++) {\n        for (int b = a + 1; b <= N; b++) {\n            int dp0 = 0; // max length of alternating subsequence ending with a\n            int dp1 = 0; // max length of alternating subsequence ending with b\n\n            for (int i = 0; i < N; i++) {\n                int x = v[i];\n                if (x == a) {\n                    if (dp1 + 1 > dp0) dp0 = dp1 + 1;\n                } else if (x == b) {\n                    if (dp0 + 1 > dp1) dp1 = dp0 + 1;\n                }\n            }\n\n            if (dp0 > ans) ans = dp0;\n            if (dp1 > ans) ans = dp1;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1537668000019039,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

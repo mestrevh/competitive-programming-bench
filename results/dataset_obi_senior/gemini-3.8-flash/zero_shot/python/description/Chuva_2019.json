@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:58:54.560534+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1047,
+            "output_tokens": 412,
+            "total_tokens": 7135
+        },
+        "cost_usd": {
+            "input_cost": 0.000785,
+            "output_cost": 0.001545,
+            "total_cost": 0.00233
+        },
+        "raw_response": "```python\nfrom collections import deque\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n    grid = [list(row) for row in input_data[2 : 2 + N]]\n\n    queue = deque()\n\n    # Encontra a posição inicial do vazamento na primeira linha\n    for j in range(M):\n        if grid[0][j] == \"o\":\n            queue.append((0, j))\n            break\n\n    # Simulação do escoamento via BFS\n    while queue:\n        r, c = queue.popleft()\n\n        if r + 1 < N:\n            if grid[r + 1][c] == \".\":\n                grid[r + 1][c] = \"o\"\n                queue.append((r + 1, c))\n            elif grid[r + 1][c] == \"#\":\n                # Escorre para a esquerda sobre a prateleira\n                if c - 1 >= 0 and grid[r][c - 1] == \".\":\n                    grid[r][c - 1] = \"o\"\n                    queue.append((r, c - 1))\n                # Escorre para a direita sobre a prateleira\n                if c + 1 < M and grid[r][c + 1] == \".\":\n                    grid[r][c + 1] = \"o\"\n                    queue.append((r, c + 1))\n\n    # Impressão do resultado\n    sys.stdout.write(\"\\n\".join(\"\".join(row) for row in grid) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "from collections import deque\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n    grid = [list(row) for row in input_data[2 : 2 + N]]\n\n    queue = deque()\n\n    # Encontra a posição inicial do vazamento na primeira linha\n    for j in range(M):\n        if grid[0][j] == \"o\":\n            queue.append((0, j))\n            break\n\n    # Simulação do escoamento via BFS\n    while queue:\n        r, c = queue.popleft()\n\n        if r + 1 < N:\n            if grid[r + 1][c] == \".\":\n                grid[r + 1][c] = \"o\"\n                queue.append((r + 1, c))\n            elif grid[r + 1][c] == \"#\":\n                # Escorre para a esquerda sobre a prateleira\n                if c - 1 >= 0 and grid[r][c - 1] == \".\":\n                    grid[r][c - 1] = \"o\"\n                    queue.append((r, c - 1))\n                # Escorre para a direita sobre a prateleira\n                if c + 1 < M and grid[r][c + 1] == \".\":\n                    grid[r][c + 1] = \"o\"\n                    queue.append((r, c + 1))\n\n    # Impressão do resultado\n    sys.stdout.write(\"\\n\".join(\"\".join(row) for row in grid) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08390040000085719,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

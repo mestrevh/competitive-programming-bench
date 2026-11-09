@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:03:25.116062+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1357,
+            "output_tokens": 1502,
+            "total_tokens": 10401
+        },
+        "cost_usd": {
+            "input_cost": 0.001018,
+            "output_cost": 0.005633,
+            "total_cost": 0.00665
+        },
+        "raw_response": "Para resolver este problema, precisamos verificar rigorosamente se as 8 condições geométricas especificadas no enunciado são satisfeitas:\n\n1. **Ângulo $\\angle P_2 P_1 P_3$ agudo:** O produto escalar entre $\\vec{P_1P_2}$ e $\\vec{P_1P_3}$ deve ser estritamente positivo ($(P_2 - P_1) \\cdot (P_3 - P_1) > 0$).\n2. **$|P_1P_2| = |P_1P_3|$:** A distância ao quadrado de $P_1$ a $P_2$ deve ser igual à distância ao quadrado de $P_1$ a $P_3$.\n3. **$P_2, P_3, P_4, P_5$ colineares:** Os produtos vetoriais $(P_3 - P_2) \\times (P_4 - P_2)$ e $(P_3 - P_2) \\times (P_5 - P_2)$ devem ser ambos iguais a zero.\n4. **Pontos médios de $P_2P_3$ e $P_4P_5$ coincidentes:** As somas das coordenadas devem coincidir ($P_2 + P_3 = P_4 + P_5$).\n5. **$|P_2P_3| > |P_4P_5|$:** O comprimento ao quadrado de $P_2P_3$ deve ser estritamente maior que o de $P_4P_5$.\n6. **$P_4P_6 \\perp P_2P_3$ e $P_5P_7 \\perp P_2P_3$:** Os produtos escalares $(P_6 - P_4) \\cdot (P_3 - P_2)$ e $(P_7 - P_5) \\cdot (P_3 - P_2)$ devem ser ambos iguais a zero.\n7. **$|P_4P_6| = |P_5P_7|$:** O comprimento ao quadrado de $P_4P_6$ deve ser igual ao de $P_5P_7$.\n8. **$P_1$ e $P_6$ em lados opostos da reta $P_2P_3$:** Os produtos vetoriais de $(P_3 - P_2)$ com $(P_1 - P_2)$ e com $(P_6 - P_2)$ devem ter sinais estritamente opostos.\n\nAbaixo está a solução completa em Python:\n\n```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    coords = [int(x) for x in input_data]\n    # P1 a P7 (índices 1 a 7 para conveniência)\n    P = [None] + [(coords[2 * i], coords[2 * i + 1]) for i in range(7)]\n\n    def dist_sq(a, b):\n        return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2\n\n    def dot(a, b):\n        return a[0] * b[0] + a[1] * b[1]\n\n    def cross(a, b):\n        return a[0] * b[1] - a[1] * b[0]\n\n    def vec(a, b):\n        return (b[0] - a[0], b[1] - a[1])\n\n    # 1. Ângulo P2-P1-P3 é agudo\n    v12 = vec(P[1], P[2])\n    v13 = vec(P[1], P[3])\n    if dot(v12, v13) <= 0:\n        print(\"N\")\n        return\n\n    # 2. Segmentos P1P2 e P1P3 têm o mesmo comprimento\n    if dist_sq(P[1], P[2]) != dist_sq(P[1], P[3]):\n        print(\"N\")\n        return\n\n    # 3. P2, P3, P4, P5 são colineares\n    v23 = vec(P[2], P[3])\n    v24 = vec(P[2], P[4])\n    v25 = vec(P[2], P[5])\n    if cross(v23, v24) != 0 or cross(v23, v25) != 0:\n        print(\"N\")\n        return\n\n    # 4. Pontos médios de P2P3 e P4P5 coincidem (P2 + P3 == P4 + P5)\n    if (P[2][0] + P[3][0] != P[4][0] + P[5][0]) or (\n        P[2][1] + P[3][1] != P[4][1] + P[5][1]\n    ):\n        print(\"N\")\n        return\n\n    # 5. Segmento P2P3 tem comprimento maior que P4P5\n    if dist_sq(P[2], P[3]) <= dist_sq(P[4], P[5]):\n        print(\"N\")\n        return\n\n    # 6. P4P6 e P5P7 são perpendiculares a P2P3\n    v46 = vec(P[4], P[6])\n    v57 = vec(P[5], P[7])\n    if dot(v46, v23) != 0 or dot(v57, v23) != 0:\n        print(\"N\")\n        return\n\n    # 7. P4P6 e P5P7 têm o mesmo comprimento\n    if dist_sq(P[4], P[6]) != dist_sq(P[5], P[7]):\n        print(\"N\")\n        return\n\n    # 8. P1 e P6 separados pela reta P2P3\n    cp1 = cross(v23, vec(P[2], P[1]))\n    cp6 = cross(v23, vec(P[2], P[6]))\n    if (cp1 > 0 and cp6 >= 0) or (cp1 < 0 and cp6 <= 0) or cp1 == 0 or cp6 == 0:\n        print(\"N\")\n        return\n\n    print(\"S\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    coords = [int(x) for x in input_data]\n    # P1 a P7 (índices 1 a 7 para conveniência)\n    P = [None] + [(coords[2 * i], coords[2 * i + 1]) for i in range(7)]\n\n    def dist_sq(a, b):\n        return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2\n\n    def dot(a, b):\n        return a[0] * b[0] + a[1] * b[1]\n\n    def cross(a, b):\n        return a[0] * b[1] - a[1] * b[0]\n\n    def vec(a, b):\n        return (b[0] - a[0], b[1] - a[1])\n\n    # 1. Ângulo P2-P1-P3 é agudo\n    v12 = vec(P[1], P[2])\n    v13 = vec(P[1], P[3])\n    if dot(v12, v13) <= 0:\n        print(\"N\")\n        return\n\n    # 2. Segmentos P1P2 e P1P3 têm o mesmo comprimento\n    if dist_sq(P[1], P[2]) != dist_sq(P[1], P[3]):\n        print(\"N\")\n        return\n\n    # 3. P2, P3, P4, P5 são colineares\n    v23 = vec(P[2], P[3])\n    v24 = vec(P[2], P[4])\n    v25 = vec(P[2], P[5])\n    if cross(v23, v24) != 0 or cross(v23, v25) != 0:\n        print(\"N\")\n        return\n\n    # 4. Pontos médios de P2P3 e P4P5 coincidem (P2 + P3 == P4 + P5)\n    if (P[2][0] + P[3][0] != P[4][0] + P[5][0]) or (\n        P[2][1] + P[3][1] != P[4][1] + P[5][1]\n    ):\n        print(\"N\")\n        return\n\n    # 5. Segmento P2P3 tem comprimento maior que P4P5\n    if dist_sq(P[2], P[3]) <= dist_sq(P[4], P[5]):\n        print(\"N\")\n        return\n\n    # 6. P4P6 e P5P7 são perpendiculares a P2P3\n    v46 = vec(P[4], P[6])\n    v57 = vec(P[5], P[7])\n    if dot(v46, v23) != 0 or dot(v57, v23) != 0:\n        print(\"N\")\n        return\n\n    # 7. P4P6 e P5P7 têm o mesmo comprimento\n    if dist_sq(P[4], P[6]) != dist_sq(P[5], P[7]):\n        print(\"N\")\n        return\n\n    # 8. P1 e P6 separados pela reta P2P3\n    cp1 = cross(v23, vec(P[2], P[1]))\n    cp6 = cross(v23, vec(P[2], P[6]))\n    if (cp1 > 0 and cp6 >= 0) or (cp1 < 0 and cp6 <= 0) or cp1 == 0 or cp6 == 0:\n        print(\"N\")\n        return\n\n    print(\"S\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09307789999729721,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

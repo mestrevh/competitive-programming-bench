@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:58:36.326071+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1566,
+            "output_tokens": 7051,
+            "total_tokens": 8617
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.016922,
+            "total_cost": 0.016927
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long s;\n    long long t;\n} Line;\n\nint cmpLine(const void *a, const void *b) {\n    const Line *x = (const Line *)a;\n    const Line *y = (const Line *)b;\n\n    if (x->s < y->s) return -1;\n    if (x->s > y->s) return 1;\n    if (x->t > y->t) return -1;\n    if (x->t < y->t) return 1;\n    return 0;\n}\n\nlong long countPairs(long long *a, long long *tmp, int l, int r) {\n    if (r - l <= 1) return 0;\n\n    int m = (l + r) / 2;\n    long long ans = 0;\n\n    ans += countPairs(a, tmp, l, m);\n    ans += countPairs(a, tmp, m, r);\n\n    int i = l, j = m, k = l;\n\n    while (i < m && j < r) {\n        if (a[i] < a[j]) {\n            tmp[k++] = a[i++];\n        } else {\n            ans += (long long)(m - i);\n            tmp[k++] = a[j++];\n        }\n    }\n\n    while (i < m) tmp[k++] = a[i++];\n    while (j < r) tmp[k++] = a[j++];\n\n    for (i = l; i < r; i++) {\n        a[i] = tmp[i];\n    }\n\n    return ans;\n}\n\nint main(void) {\n    int N;\n    long long X1, X2;\n\n    scanf(\"%d %lld %lld\", &N, &X1, &X2);\n\n    Line *lines = (Line *)malloc(sizeof(Line) * N);\n\n    for (int i = 0; i < N; i++) {\n        long long A, B;\n        scanf(\"%lld %lld\", &A, &B);\n\n        lines[i].s = A * X1 + B;\n        lines[i].t = A * X2 + B;\n    }\n\n    qsort(lines, N, sizeof(Line), cmpLine);\n\n    long long *a = (long long *)malloc(sizeof(long long) * N);\n    long long *tmp = (long long *)malloc(sizeof(long long) * N);\n\n    for (int i = 0; i < N; i++) {\n        a[i] = lines[i].t;\n    }\n\n    long long answer = countPairs(a, tmp, 0, N);\n\n    printf(\"%lld\\n\", answer);\n\n    free(lines);\n    free(a);\n    free(tmp);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long s;\n    long long t;\n} Line;\n\nint cmpLine(const void *a, const void *b) {\n    const Line *x = (const Line *)a;\n    const Line *y = (const Line *)b;\n\n    if (x->s < y->s) return -1;\n    if (x->s > y->s) return 1;\n    if (x->t > y->t) return -1;\n    if (x->t < y->t) return 1;\n    return 0;\n}\n\nlong long countPairs(long long *a, long long *tmp, int l, int r) {\n    if (r - l <= 1) return 0;\n\n    int m = (l + r) / 2;\n    long long ans = 0;\n\n    ans += countPairs(a, tmp, l, m);\n    ans += countPairs(a, tmp, m, r);\n\n    int i = l, j = m, k = l;\n\n    while (i < m && j < r) {\n        if (a[i] < a[j]) {\n            tmp[k++] = a[i++];\n        } else {\n            ans += (long long)(m - i);\n            tmp[k++] = a[j++];\n        }\n    }\n\n    while (i < m) tmp[k++] = a[i++];\n    while (j < r) tmp[k++] = a[j++];\n\n    for (i = l; i < r; i++) {\n        a[i] = tmp[i];\n    }\n\n    return ans;\n}\n\nint main(void) {\n    int N;\n    long long X1, X2;\n\n    scanf(\"%d %lld %lld\", &N, &X1, &X2);\n\n    Line *lines = (Line *)malloc(sizeof(Line) * N);\n\n    for (int i = 0; i < N; i++) {\n        long long A, B;\n        scanf(\"%lld %lld\", &A, &B);\n\n        lines[i].s = A * X1 + B;\n        lines[i].t = A * X2 + B;\n    }\n\n    qsort(lines, N, sizeof(Line), cmpLine);\n\n    long long *a = (long long *)malloc(sizeof(long long) * N);\n    long long *tmp = (long long *)malloc(sizeof(long long) * N);\n\n    for (int i = 0; i < N; i++) {\n        a[i] = lines[i].t;\n    }\n\n    long long answer = countPairs(a, tmp, 0, N);\n\n    printf(\"%lld\\n\", answer);\n\n    free(lines);\n    free(a);\n    free(tmp);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17342339999595424,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

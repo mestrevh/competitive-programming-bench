@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Union
 from pydantic import BaseModel
 from .example import Example
 
@@ -10,6 +10,7 @@ class Problem(BaseModel):
     constraints: Optional[str] = None
     examples: List[Example]
     imgs: Optional[list] = None
+    imgs_description: Optional[Union[Dict[str, str], list]] = None
     rating: Optional[list[int]] = None
     year: str
     level: Optional[str] = None

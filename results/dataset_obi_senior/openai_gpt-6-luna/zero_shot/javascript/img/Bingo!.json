@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:30:51.720132+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 921,
+            "output_tokens": 639,
+            "total_tokens": 1560
+        },
+        "cost_usd": {
+            "input_cost": 9.2e-05,
+            "output_cost": 0.00032,
+            "total_cost": 0.000412
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst U = nextInt();\n\nconst cards = new Int32Array(N * K);\nfor (let i = 0; i < cards.length; i++) cards[i] = nextInt();\n\nconst position = new Int32Array(U + 1);\nfor (let i = 1; i <= U; i++) {\n  position[nextInt()] = i;\n}\n\nlet best = U + 1;\nconst winners = [];\n\nfor (let i = 0; i < N; i++) {\n  let last = 0;\n  const start = i * K;\n  for (let j = 0; j < K; j++) {\n    const drawPosition = position[cards[start + j]];\n    if (drawPosition > last) last = drawPosition;\n  }\n\n  if (last < best) {\n    best = last;\n    winners.length = 0;\n    winners.push(i + 1);\n  } else if (last === best) {\n    winners.push(i + 1);\n  }\n}\n\nprocess.stdout.write(winners.join(' '));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst U = nextInt();\n\nconst cards = new Int32Array(N * K);\nfor (let i = 0; i < cards.length; i++) cards[i] = nextInt();\n\nconst position = new Int32Array(U + 1);\nfor (let i = 1; i <= U; i++) {\n  position[nextInt()] = i;\n}\n\nlet best = U + 1;\nconst winners = [];\n\nfor (let i = 0; i < N; i++) {\n  let last = 0;\n  const start = i * K;\n  for (let j = 0; j < K; j++) {\n    const drawPosition = position[cards[start + j]];\n    if (drawPosition > last) last = drawPosition;\n  }\n\n  if (last < best) {\n    best = last;\n    winners.length = 0;\n    winners.push(i + 1);\n  } else if (last === best) {\n    winners.push(i + 1);\n  }\n}\n\nprocess.stdout.write(winners.join(' '));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11084600000322098,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

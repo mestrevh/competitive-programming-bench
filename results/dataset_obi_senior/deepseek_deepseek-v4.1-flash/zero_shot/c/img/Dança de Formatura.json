@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:49:34.427210+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1797,
+            "output_tokens": 3820,
+            "total_tokens": 5617
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.009168,
+            "total_cost": 0.009173
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define INBUF_SIZE (1 << 20)\n#define OUTBUF_SIZE (1 << 20)\n\nstatic char inbuf[INBUF_SIZE];\nstatic int inpos = 0, insize = 0;\n\nstatic char outbuf[OUTBUF_SIZE];\nstatic int outpos = 0;\n\nstatic inline int read_char(void) {\n    if (inpos >= insize) {\n        insize = (int)fread(inbuf, 1, INBUF_SIZE, stdin);\n        inpos = 0;\n        if (insize == 0) return EOF;\n    }\n    return (unsigned char)inbuf[inpos++];\n}\n\nstatic int read_int(void) {\n    int c, x = 0;\n    do {\n        c = read_char();\n    } while (c <= ' ' && c != EOF);\n\n    while (c > ' ' && c != EOF) {\n        x = x * 10 + (c - '0');\n        c = read_char();\n    }\n    return x;\n}\n\nstatic char read_op(void) {\n    int c;\n    do {\n        c = read_char();\n    } while (c <= ' ' && c != EOF);\n    return (char)c;\n}\n\nstatic inline void flush_out(void) {\n    if (outpos > 0) {\n        fwrite(outbuf, 1, outpos, stdout);\n        outpos = 0;\n    }\n}\n\nstatic inline void write_char(char c) {\n    if (outpos >= OUTBUF_SIZE) flush_out();\n    outbuf[outpos++] = c;\n}\n\nstatic void write_int(int x) {\n    char s[12];\n    int n = 0;\n\n    if (x == 0) {\n        write_char('0');\n        return;\n    }\n\n    while (x > 0) {\n        s[n++] = (char)('0' + (x % 10));\n        x /= 10;\n    }\n\n    while (n--) {\n        write_char(s[n]);\n    }\n}\n\nint main(void) {\n    int N = read_int();\n    int M = read_int();\n    int P = read_int();\n\n    int *row = (int *)malloc((size_t)(N + 1) * sizeof(int));\n    int *col = (int *)malloc((size_t)(M + 1) * sizeof(int));\n\n    for (int i = 1; i <= N; ++i) row[i] = i;\n    for (int j = 1; j <= M; ++j) col[j] = j;\n\n    for (int k = 0; k < P; ++k) {\n        char op = read_op();\n        int a = read_int();\n        int b = read_int();\n\n        if (op == 'L') {\n            int tmp = row[a];\n            row[a] = row[b];\n            row[b] = tmp;\n        } else {\n            int tmp = col[a];\n            col[a] = col[b];\n            col[b] = tmp;\n        }\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        int base = (row[i] - 1) * M;\n\n        for (int j = 1; j <= M; ++j) {\n            if (j > 1) write_char(' ');\n            write_int(base + col[j]);\n        }\n\n        write_char('\\n');\n    }\n\n    flush_out();\n\n    free(row);\n    free(col);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define INBUF_SIZE (1 << 20)\n#define OUTBUF_SIZE (1 << 20)\n\nstatic char inbuf[INBUF_SIZE];\nstatic int inpos = 0, insize = 0;\n\nstatic char outbuf[OUTBUF_SIZE];\nstatic int outpos = 0;\n\nstatic inline int read_char(void) {\n    if (inpos >= insize) {\n        insize = (int)fread(inbuf, 1, INBUF_SIZE, stdin);\n        inpos = 0;\n        if (insize == 0) return EOF;\n    }\n    return (unsigned char)inbuf[inpos++];\n}\n\nstatic int read_int(void) {\n    int c, x = 0;\n    do {\n        c = read_char();\n    } while (c <= ' ' && c != EOF);\n\n    while (c > ' ' && c != EOF) {\n        x = x * 10 + (c - '0');\n        c = read_char();\n    }\n    return x;\n}\n\nstatic char read_op(void) {\n    int c;\n    do {\n        c = read_char();\n    } while (c <= ' ' && c != EOF);\n    return (char)c;\n}\n\nstatic inline void flush_out(void) {\n    if (outpos > 0) {\n        fwrite(outbuf, 1, outpos, stdout);\n        outpos = 0;\n    }\n}\n\nstatic inline void write_char(char c) {\n    if (outpos >= OUTBUF_SIZE) flush_out();\n    outbuf[outpos++] = c;\n}\n\nstatic void write_int(int x) {\n    char s[12];\n    int n = 0;\n\n    if (x == 0) {\n        write_char('0');\n        return;\n    }\n\n    while (x > 0) {\n        s[n++] = (char)('0' + (x % 10));\n        x /= 10;\n    }\n\n    while (n--) {\n        write_char(s[n]);\n    }\n}\n\nint main(void) {\n    int N = read_int();\n    int M = read_int();\n    int P = read_int();\n\n    int *row = (int *)malloc((size_t)(N + 1) * sizeof(int));\n    int *col = (int *)malloc((size_t)(M + 1) * sizeof(int));\n\n    for (int i = 1; i <= N; ++i) row[i] = i;\n    for (int j = 1; j <= M; ++j) col[j] = j;\n\n    for (int k = 0; k < P; ++k) {\n        char op = read_op();\n        int a = read_int();\n        int b = read_int();\n\n        if (op == 'L') {\n            int tmp = row[a];\n            row[a] = row[b];\n            row[b] = tmp;\n        } else {\n            int tmp = col[a];\n            col[a] = col[b];\n            col[b] = tmp;\n        }\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        int base = (row[i] - 1) * M;\n\n        for (int j = 1; j <= M; ++j) {\n            if (j > 1) write_char(' ');\n            write_int(base + col[j]);\n        }\n\n        write_char('\\n');\n    }\n\n    flush_out();\n\n    free(row);\n    free(col);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13493719999678433,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

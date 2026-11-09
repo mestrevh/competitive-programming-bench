@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:46:05.856318+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1153,
+            "output_tokens": 38830,
+            "total_tokens": 39983
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.093192,
+            "total_cost": 0.093195
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n    \n    char **grid = (char**)malloc(N * sizeof(char*));\n    for (int i = 0; i < N; i++) {\n        grid[i] = (char*)malloc((M + 1) * sizeof(char));\n        scanf(\"%s\", grid[i]);\n    }\n    \n    int start_i = 0, start_j = 0;\n    for (int j = 0; j < M; j++) {\n        if (grid[0][j] == 'o') {\n            start_j = j;\n            break;\n        }\n    }\n    \n    int max_cells = N * M;\n    int *q_i = (int*)malloc(max_cells * sizeof(int));\n    int *q_j = (int*)malloc(max_cells * sizeof(int));\n    int front = 0, rear = 0;\n    \n    q_i[rear] = start_i;\n    q_j[rear] = start_j;\n    rear++;\n    \n    while (front < rear) {\n        int i = q_i[front];\n        int j = q_j[front];\n        front++;\n        \n        // Vertical flow downwards\n        if (i + 1 < N && grid[i+1][j] == '.') {\n            grid[i+1][j] = 'o';\n            q_i[rear] = i + 1;\n            q_j[rear] = j;\n            rear++;\n        }\n        \n        // Horizontal spread if there is a shelf directly below\n        if (i + 1 < N && grid[i+1][j] == '#') {\n            if (j - 1 >= 0 && grid[i][j-1] == '.') {\n                grid[i][j-1] = 'o';\n                q_i[rear] = i;\n                q_j[rear] = j - 1;\n                rear++;\n            }\n            if (j + 1 < M && grid[i][j+1] == '.') {\n                grid[i][j+1] = 'o';\n                q_i[rear] = i;\n                q_j[rear] = j + 1;\n                rear++;\n            }\n        }\n    }\n    \n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n    \n    for (int i = 0; i < N; i++) free(grid[i]);\n    free(grid);\n    free(q_i);\n    free(q_j);\n    \n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n    \n    char **grid = (char**)malloc(N * sizeof(char*));\n    for (int i = 0; i < N; i++) {\n        grid[i] = (char*)malloc((M + 1) * sizeof(char));\n        scanf(\"%s\", grid[i]);\n    }\n    \n    int start_i = 0, start_j = 0;\n    for (int j = 0; j < M; j++) {\n        if (grid[0][j] == 'o') {\n            start_j = j;\n            break;\n        }\n    }\n    \n    int max_cells = N * M;\n    int *q_i = (int*)malloc(max_cells * sizeof(int));\n    int *q_j = (int*)malloc(max_cells * sizeof(int));\n    int front = 0, rear = 0;\n    \n    q_i[rear] = start_i;\n    q_j[rear] = start_j;\n    rear++;\n    \n    while (front < rear) {\n        int i = q_i[front];\n        int j = q_j[front];\n        front++;\n        \n        // Vertical flow downwards\n        if (i + 1 < N && grid[i+1][j] == '.') {\n            grid[i+1][j] = 'o';\n            q_i[rear] = i + 1;\n            q_j[rear] = j;\n            rear++;\n        }\n        \n        // Horizontal spread if there is a shelf directly below\n        if (i + 1 < N && grid[i+1][j] == '#') {\n            if (j - 1 >= 0 && grid[i][j-1] == '.') {\n                grid[i][j-1] = 'o';\n                q_i[rear] = i;\n                q_j[rear] = j - 1;\n                rear++;\n            }\n            if (j + 1 < M && grid[i][j+1] == '.') {\n                grid[i][j+1] = 'o';\n                q_i[rear] = i;\n                q_j[rear] = j + 1;\n                rear++;\n            }\n        }\n    }\n    \n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n    \n    for (int i = 0; i < N; i++) free(grid[i]);\n    free(grid);\n    free(q_i);\n    free(q_j);\n    \n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1789040000003297,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

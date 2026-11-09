@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:54:40.203878+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1570,
+            "output_tokens": 1170,
+            "total_tokens": 2740
+        },
+        "cost_usd": {
+            "input_cost": 0.000157,
+            "output_cost": 0.000585,
+            "total_cost": 0.000742
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\n\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < data.length && data[pos] > 32) {\n    value = value * 10 + data[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nfunction nextChar() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  return String.fromCharCode(data[pos++]);\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst P = nextInt();\n\nconst rows = new Uint32Array(N);\nconst cols = new Uint32Array(M);\n\nfor (let i = 0; i < N; i++) rows[i] = i;\nfor (let j = 0; j < M; j++) cols[j] = j;\n\nfor (let i = 0; i < P; i++) {\n  const op = nextChar();\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n\n  const permutation = op === 'L' ? rows : cols;\n  const temp = permutation[a];\n  permutation[a] = permutation[b];\n  permutation[b] = temp;\n}\n\nconst parts = [];\nlet count = 0;\n\nfor (let i = 0; i < N; i++) {\n  const rowBase = rows[i] * M;\n  for (let j = 0; j < M; j++) {\n    parts.push(String(rowBase + cols[j] + 1));\n    parts.push(j + 1 === M ? '\\n' : ' ');\n\n    if (++count === 8192) {\n      process.stdout.write(parts.join(''));\n      parts.length = 0;\n      count = 0;\n    }\n  }\n}\n\nif (parts.length > 0) process.stdout.write(parts.join(''));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\n\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < data.length && data[pos] > 32) {\n    value = value * 10 + data[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nfunction nextChar() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  return String.fromCharCode(data[pos++]);\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst P = nextInt();\n\nconst rows = new Uint32Array(N);\nconst cols = new Uint32Array(M);\n\nfor (let i = 0; i < N; i++) rows[i] = i;\nfor (let j = 0; j < M; j++) cols[j] = j;\n\nfor (let i = 0; i < P; i++) {\n  const op = nextChar();\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n\n  const permutation = op === 'L' ? rows : cols;\n  const temp = permutation[a];\n  permutation[a] = permutation[b];\n  permutation[b] = temp;\n}\n\nconst parts = [];\nlet count = 0;\n\nfor (let i = 0; i < N; i++) {\n  const rowBase = rows[i] * M;\n  for (let j = 0; j < M; j++) {\n    parts.push(String(rowBase + cols[j] + 1));\n    parts.push(j + 1 === M ? '\\n' : ' ');\n\n    if (++count === 8192) {\n      process.stdout.write(parts.join(''));\n      parts.length = 0;\n      count = 0;\n    }\n  }\n}\n\nif (parts.length > 0) process.stdout.write(parts.join(''));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.4947738999981084,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

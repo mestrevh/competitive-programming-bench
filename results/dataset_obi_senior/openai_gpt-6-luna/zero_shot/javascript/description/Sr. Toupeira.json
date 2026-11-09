@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:59:51.231374+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1122,
+            "output_tokens": 459,
+            "total_tokens": 1581
+        },
+        "cost_usd": {
+            "input_cost": 0.000112,
+            "output_cost": 0.000229,
+            "total_cost": 0.000342
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst S = nextInt();\nconst T = nextInt();\nconst adjacency = new Uint8Array(S * S);\n\nfor (let i = 0; i < T; i++) {\n  const x = nextInt() - 1;\n  const y = nextInt() - 1;\n  adjacency[x * S + y] = 1;\n  adjacency[y * S + x] = 1;\n}\n\nconst P = nextInt();\nlet possible = 0;\n\nfor (let i = 0; i < P; i++) {\n  const N = nextInt();\n  let previous = nextInt() - 1;\n  let valid = true;\n\n  for (let j = 1; j < N; j++) {\n    const current = nextInt() - 1;\n    if (!adjacency[previous * S + current]) valid = false;\n    previous = current;\n  }\n\n  if (valid) possible++;\n}\n\nconsole.log(possible.toString());\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const c = input.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst S = nextInt();\nconst T = nextInt();\nconst adjacency = new Uint8Array(S * S);\n\nfor (let i = 0; i < T; i++) {\n  const x = nextInt() - 1;\n  const y = nextInt() - 1;\n  adjacency[x * S + y] = 1;\n  adjacency[y * S + x] = 1;\n}\n\nconst P = nextInt();\nlet possible = 0;\n\nfor (let i = 0; i < P; i++) {\n  const N = nextInt();\n  let previous = nextInt() - 1;\n  let valid = true;\n\n  for (let j = 1; j < N; j++) {\n    const current = nextInt() - 1;\n    if (!adjacency[previous * S + current]) valid = false;\n    previous = current;\n  }\n\n  if (valid) possible++;\n}\n\nconsole.log(possible.toString());",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10992059999989579,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

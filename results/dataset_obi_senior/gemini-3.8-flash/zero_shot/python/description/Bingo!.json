@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:51:16.327023+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1039,
+            "output_tokens": 277,
+            "total_tokens": 2346
+        },
+        "cost_usd": {
+            "input_cost": 0.000779,
+            "output_cost": 0.001039,
+            "total_cost": 0.001818
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    K = int(next(iterator))\n    U = int(next(iterator))\n    \n    cartelas_com_numero = [[] for _ in range(U + 1)]\n    \n    for c in range(1, N + 1):\n        for _ in range(K):\n            num = int(next(iterator))\n            cartelas_com_numero[num].append(c)\n            \n    remaining = [K] * (N + 1)\n    winners = []\n    \n    for _ in range(U):\n        drawn = int(next(iterator))\n        for c in cartelas_com_numero[drawn]:\n            remaining[c] -= 1\n            if remaining[c] == 0:\n                winners.append(c)\n        if winners:\n            break\n            \n    winners.sort()\n    print(' '.join(map(str, winners)))\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    iterator = iter(input_data)\n    N = int(next(iterator))\n    K = int(next(iterator))\n    U = int(next(iterator))\n    \n    cartelas_com_numero = [[] for _ in range(U + 1)]\n    \n    for c in range(1, N + 1):\n        for _ in range(K):\n            num = int(next(iterator))\n            cartelas_com_numero[num].append(c)\n            \n    remaining = [K] * (N + 1)\n    winners = []\n    \n    for _ in range(U):\n        drawn = int(next(iterator))\n        for c in cartelas_com_numero[drawn]:\n            remaining[c] -= 1\n            if remaining[c] == 0:\n                winners.append(c)\n        if winners:\n            break\n            \n    winners.sort()\n    print(' '.join(map(str, winners)))\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2714010000054259,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

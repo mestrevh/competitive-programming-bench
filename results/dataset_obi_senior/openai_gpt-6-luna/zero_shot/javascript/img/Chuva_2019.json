@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:33:55.028903+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 911,
+            "output_tokens": 1592,
+            "total_tokens": 2503
+        },
+        "cost_usd": {
+            "input_cost": 9.1e-05,
+            "output_cost": 0.000796,
+            "total_cost": 0.000887
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet p = 0;\nconst N = Number(input[p++]);\nconst M = Number(input[p++]);\nconst grid = Array.from({ length: N }, () => input[p++].split(''));\n\nconst queue = [];\nfor (let r = 0; r < N; r++) {\n  for (let c = 0; c < M; c++) {\n    if (grid[r][c] === 'o') queue.push(r * M + c);\n  }\n}\n\nfor (let head = 0; head < queue.length; head++) {\n  const pos = queue[head];\n  const r = Math.floor(pos / M);\n  const c = pos % M;\n\n  if (r + 1 < N && grid[r + 1][c] === '.') {\n    grid[r + 1][c] = 'o';\n    queue.push((r + 1) * M + c);\n  }\n\n  if (r + 1 < N && grid[r + 1][c] === '#') {\n    if (c > 0 && grid[r][c - 1] === '.') {\n      grid[r][c - 1] = 'o';\n      queue.push(r * M + c - 1);\n    }\n    if (c + 1 < M && grid[r][c + 1] === '.') {\n      grid[r][c + 1] = 'o';\n      queue.push(r * M + c + 1);\n    }\n  }\n}\n\nconsole.log(grid.map(row => row.join('')).join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet p = 0;\nconst N = Number(input[p++]);\nconst M = Number(input[p++]);\nconst grid = Array.from({ length: N }, () => input[p++].split(''));\n\nconst queue = [];\nfor (let r = 0; r < N; r++) {\n  for (let c = 0; c < M; c++) {\n    if (grid[r][c] === 'o') queue.push(r * M + c);\n  }\n}\n\nfor (let head = 0; head < queue.length; head++) {\n  const pos = queue[head];\n  const r = Math.floor(pos / M);\n  const c = pos % M;\n\n  if (r + 1 < N && grid[r + 1][c] === '.') {\n    grid[r + 1][c] = 'o';\n    queue.push((r + 1) * M + c);\n  }\n\n  if (r + 1 < N && grid[r + 1][c] === '#') {\n    if (c > 0 && grid[r][c - 1] === '.') {\n      grid[r][c - 1] = 'o';\n      queue.push(r * M + c - 1);\n    }\n    if (c + 1 < M && grid[r][c + 1] === '.') {\n      grid[r][c + 1] = 'o';\n      queue.push(r * M + c + 1);\n    }\n  }\n}\n\nconsole.log(grid.map(row => row.join('')).join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0994836000027135,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

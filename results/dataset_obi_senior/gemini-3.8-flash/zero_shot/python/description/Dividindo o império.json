@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:00:34.531777+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 758,
+            "output_tokens": 404,
+            "total_tokens": 1670
+        },
+        "cost_usd": {
+            "input_cost": 0.000568,
+            "output_cost": 0.001515,
+            "total_cost": 0.002084
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    \n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n        \n    parent = [0] * (n + 1)\n    order = []\n    \n    # BFS para encontrar a árvore enraizada em 1 e a ordem dos nós\n    q = deque([1])\n    parent[1] = -1\n    \n    while q:\n        u = q.popleft()\n        order.append(u)\n        for v in adj[u]:\n            if parent[v] == 0:\n                parent[v] = u\n                q.append(v)\n                \n    subtree_size = [1] * (n + 1)\n    min_diff = n\n    \n    # Processa em ordem reversa da BFS (das folhas para a raiz)\n    for u in reversed(order):\n        if u == 1:\n            continue\n        p = parent[u]\n        subtree_size[p] += subtree_size[u]\n        \n        diff = abs(n - 2 * subtree_size[u])\n        if diff < min_diff:\n            min_diff = diff\n            \n    print(min_diff)\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    \n    adj = [[] for _ in range(n + 1)]\n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n        \n    parent = [0] * (n + 1)\n    order = []\n    \n    # BFS para encontrar a árvore enraizada em 1 e a ordem dos nós\n    q = deque([1])\n    parent[1] = -1\n    \n    while q:\n        u = q.popleft()\n        order.append(u)\n        for v in adj[u]:\n            if parent[v] == 0:\n                parent[v] = u\n                q.append(v)\n                \n    subtree_size = [1] * (n + 1)\n    min_diff = n\n    \n    # Processa em ordem reversa da BFS (das folhas para a raiz)\n    for u in reversed(order):\n        if u == 1:\n            continue\n        p = parent[u]\n        subtree_size[p] += subtree_size[u]\n        \n        diff = abs(n - 2 * subtree_size[u])\n        if diff < min_diff:\n            min_diff = diff\n            \n    print(min_diff)\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15384700000140583,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:35:40.258512+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1883,
+            "output_tokens": 613,
+            "total_tokens": 4128
+        },
+        "cost_usd": {
+            "input_cost": 0.001412,
+            "output_cost": 0.002299,
+            "total_cost": 0.003711
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    n = int(next(it))\n    m = int(next(it))\n\n    # Duas Fenwick Trees (BITs): uma para as inclinações e outra para as constantes.\n    # Tamanho n + 2 para acomodar atualizações em R + 1 onde R pode ser n.\n    size = n + 2\n    bit_slope = [0] * size\n    bit_const = [0] * size\n\n    def add(idx, val_s, val_c):\n        while idx < size:\n            bit_slope[idx] += val_s\n            bit_const[idx] += val_c\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        c = 0\n        while idx > 0:\n            s += bit_slope[idx]\n            c += bit_const[idx]\n            idx -= idx & (-idx)\n        return s, c\n\n    output = []\n\n    for _ in range(m):\n        op = next(it)\n        if op == \"1\":\n            i = int(next(it))\n            v = int(next(it))\n            # FRENTE i V: soma (v + i) - x para x em [i, min(n, i + v - 1)]\n            L = i\n            R = i + v - 1\n            if R > n:\n                R = n\n            slope = -1\n            const = v + i\n\n            add(L, slope, const)\n            add(R + 1, -slope, -const)\n\n        elif op == \"2\":\n            i = int(next(it))\n            v = int(next(it))\n            # TRÁS i V: soma (v - i) + x para x em [max(1, i - v + 1), i]\n            L = i - v + 1\n            if L < 1:\n                L = 1\n            R = i\n            slope = 1\n            const = v - i\n\n            add(L, slope, const)\n            add(R + 1, -slope, -const)\n\n        else:\n            i = int(next(it))\n            s, c = query(i)\n            ans = s * i + c\n            output.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    n = int(next(it))\n    m = int(next(it))\n\n    # Duas Fenwick Trees (BITs): uma para as inclinações e outra para as constantes.\n    # Tamanho n + 2 para acomodar atualizações em R + 1 onde R pode ser n.\n    size = n + 2\n    bit_slope = [0] * size\n    bit_const = [0] * size\n\n    def add(idx, val_s, val_c):\n        while idx < size:\n            bit_slope[idx] += val_s\n            bit_const[idx] += val_c\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        c = 0\n        while idx > 0:\n            s += bit_slope[idx]\n            c += bit_const[idx]\n            idx -= idx & (-idx)\n        return s, c\n\n    output = []\n\n    for _ in range(m):\n        op = next(it)\n        if op == \"1\":\n            i = int(next(it))\n            v = int(next(it))\n            # FRENTE i V: soma (v + i) - x para x em [i, min(n, i + v - 1)]\n            L = i\n            R = i + v - 1\n            if R > n:\n                R = n\n            slope = -1\n            const = v + i\n\n            add(L, slope, const)\n            add(R + 1, -slope, -const)\n\n        elif op == \"2\":\n            i = int(next(it))\n            v = int(next(it))\n            # TRÁS i V: soma (v - i) + x para x em [max(1, i - v + 1), i]\n            L = i - v + 1\n            if L < 1:\n                L = 1\n            R = i\n            slope = 1\n            const = v - i\n\n            add(L, slope, const)\n            add(R + 1, -slope, -const)\n\n        else:\n            i = int(next(it))\n            s, c = query(i)\n            ans = s * i + c\n            output.append(str(ans))\n\n    sys.stdout.write(\"\\n\".join(output) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.6730753000010736,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

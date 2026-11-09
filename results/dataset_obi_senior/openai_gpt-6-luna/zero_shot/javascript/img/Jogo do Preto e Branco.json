@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:38:53.497470+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 849,
+            "output_tokens": 749,
+            "total_tokens": 1598
+        },
+        "cost_usd": {
+            "input_cost": 8.5e-05,
+            "output_cost": 0.000374,
+            "total_cost": 0.000459
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet i = 0;\nconst L = data[i++];\nconst C = data[i++];\nconst P = data[i++];\n\nconst black = Array.from({ length: L }, () => Array(C).fill(false));\nfor (let p = 0; p < P; p++) {\n  const x = data[i++] - 1;\n  const y = data[i++] - 1;\n  black[x][y] = true;\n}\n\nconst eligible = Array.from({ length: L }, () => Array(C).fill(false));\nconst dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];\nlet count = 0;\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (black[r][c]) continue;\n    for (const [dr, dc] of dirs) {\n      const nr = r + dr;\n      const nc = c + dc;\n      if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n        eligible[r][c] = true;\n        count++;\n        break;\n      }\n    }\n  }\n}\n\nconst match = Array.from({ length: L }, () => Array(C).fill(null));\n\nfunction findMatch(r, c, seen) {\n  for (const [dr, dc] of dirs) {\n    const nr = r + dr;\n    const nc = c + dc;\n    if (\n      nr < 0 || nr >= L || nc < 0 || nc >= C ||\n      !eligible[nr][nc] || seen[nr][nc]\n    ) continue;\n\n    seen[nr][nc] = true;\n    if (match[nr][nc] === null || findMatch(match[nr][nc][0], match[nr][nc][1], seen)) {\n      match[nr][nc] = [r, c];\n      return true;\n    }\n  }\n  return false;\n}\n\nlet matching = 0;\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (eligible[r][c] && (r + c) % 2 === 0) {\n      const seen = Array.from({ length: L }, () => Array(C).fill(false));\n      if (findMatch(r, c, seen)) matching++;\n    }\n  }\n}\n\nconsole.log(count - matching);\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet i = 0;\nconst L = data[i++];\nconst C = data[i++];\nconst P = data[i++];\n\nconst black = Array.from({ length: L }, () => Array(C).fill(false));\nfor (let p = 0; p < P; p++) {\n  const x = data[i++] - 1;\n  const y = data[i++] - 1;\n  black[x][y] = true;\n}\n\nconst eligible = Array.from({ length: L }, () => Array(C).fill(false));\nconst dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];\nlet count = 0;\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (black[r][c]) continue;\n    for (const [dr, dc] of dirs) {\n      const nr = r + dr;\n      const nc = c + dc;\n      if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n        eligible[r][c] = true;\n        count++;\n        break;\n      }\n    }\n  }\n}\n\nconst match = Array.from({ length: L }, () => Array(C).fill(null));\n\nfunction findMatch(r, c, seen) {\n  for (const [dr, dc] of dirs) {\n    const nr = r + dr;\n    const nc = c + dc;\n    if (\n      nr < 0 || nr >= L || nc < 0 || nc >= C ||\n      !eligible[nr][nc] || seen[nr][nc]\n    ) continue;\n\n    seen[nr][nc] = true;\n    if (match[nr][nc] === null || findMatch(match[nr][nc][0], match[nr][nc][1], seen)) {\n      match[nr][nc] = [r, c];\n      return true;\n    }\n  }\n  return false;\n}\n\nlet matching = 0;\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (eligible[r][c] && (r + c) % 2 === 0) {\n      const seen = Array.from({ length: L }, () => Array(C).fill(false));\n      if (findMatch(r, c, seen)) matching++;\n    }\n  }\n}\n\nconsole.log(count - matching);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07935220000217669,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

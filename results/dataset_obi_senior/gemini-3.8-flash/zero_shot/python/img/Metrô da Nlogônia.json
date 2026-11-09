@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:41:53.935492+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1958,
+            "output_tokens": 1005,
+            "total_tokens": 4115
+        },
+        "cost_usd": {
+            "input_cost": 0.001469,
+            "output_cost": 0.003769,
+            "total_cost": 0.005237
+        },
+        "raw_response": "Para resolver este problema, queremos minimizar o diâmetro do sistema de transporte resultante após a integração. O diâmetro da nova árvore será dado por:\n\n$$\\max(\\text{diam}(T_1), \\text{diam}(T_2), \\text{ecc}(u) + \\text{ecc}(v) + 1)$$\n\nonde $\\text{diam}(T)$ é o diâmetro da árvore $T$, e $\\text{ecc}(x)$ é a excentricidade do vértice $x$ (a maior distância de $x$ a qualquer outro vértice de sua árvore).\n\nComo os diâmetros originais $\\text{diam}(T_1)$ e $\\text{diam}(T_2)$ são fixos e não dependem das estações escolhidas, para minimizar o valor máximo basta minimizar individualmente a excentricidade de $u$ no sistema Círculo e de $v$ no sistema Quadrado. Os vértices que minimizam a excentricidade em uma árvore são os seus **centros**, que correspondem aos vértices centrais em qualquer caminho de comprimento máximo (diâmetro) da árvore.\n\nPodemos encontrar o centro de cada árvore de forma linear $O(N)$ utilizando duas buscas em largura (BFS):\n1. A partir de um vértice arbitrário, encontramos o vértice $A$ mais distante.\n2. A partir de $A$, encontramos o vértice $B$ mais distante e reconstruímos o caminho entre $A$ e $B$.\n3. O centro da árvore é o vértice do meio desse caminho.\n\nAbaixo está a solução completa e otimizada em Python:\n\n```python\nimport sys\nfrom collections import deque\n\ndef find_center(n, adj):\n    # Primeira BFS para encontrar um dos extremos do diâmetro\n    def bfs(start):\n        dist = [-1] * (n + 1)\n        dist[start] = 0\n        q = deque([start])\n        farthest_node = start\n        \n        while q:\n            u = q.popleft()\n            if dist[u] > dist[farthest_node]:\n                farthest_node = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    q.append(v)\n                    \n        return farthest_node\n\n    u = bfs(1)\n\n    # Segunda BFS para encontrar o outro extremo e o caminho\n    parent = [0] * (n + 1)\n    dist = [-1] * (n + 1)\n    dist[u] = 0\n    q = deque([u])\n    v = u\n\n    while q:\n        curr = q.popleft()\n        if dist[curr] > dist[v]:\n            v = curr\n        for nxt in adj[curr]:\n            if dist[nxt] == -1:\n                dist[nxt] = dist[curr] + 1\n                parent[nxt] = curr\n                q.append(nxt)\n\n    # Reconstrói o caminho de u a v\n    path = []\n    curr = v\n    while curr != 0:\n        path.append(curr)\n        curr = parent[curr]\n\n    # O centro é o nó central do diâmetro\n    return path[len(path) // 2]\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    M = int(next(it))\n\n    adj_circle = [[] for _ in range(N + 1)]\n    for _ in range(N - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj_circle[u].append(v)\n        adj_circle[v].append(u)\n\n    adj_square = [[] for _ in range(M + 1)]\n    for _ in range(M - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj_square[u].append(v)\n        adj_square[v].append(u)\n\n    c1 = find_center(N, adj_circle)\n    c2 = find_center(M, adj_square)\n\n    print(f\"{c1} {c2}\")\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef find_center(n, adj):\n    # Primeira BFS para encontrar um dos extremos do diâmetro\n    def bfs(start):\n        dist = [-1] * (n + 1)\n        dist[start] = 0\n        q = deque([start])\n        farthest_node = start\n        \n        while q:\n            u = q.popleft()\n            if dist[u] > dist[farthest_node]:\n                farthest_node = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    q.append(v)\n                    \n        return farthest_node\n\n    u = bfs(1)\n\n    # Segunda BFS para encontrar o outro extremo e o caminho\n    parent = [0] * (n + 1)\n    dist = [-1] * (n + 1)\n    dist[u] = 0\n    q = deque([u])\n    v = u\n\n    while q:\n        curr = q.popleft()\n        if dist[curr] > dist[v]:\n            v = curr\n        for nxt in adj[curr]:\n            if dist[nxt] == -1:\n                dist[nxt] = dist[curr] + 1\n                parent[nxt] = curr\n                q.append(nxt)\n\n    # Reconstrói o caminho de u a v\n    path = []\n    curr = v\n    while curr != 0:\n        path.append(curr)\n        curr = parent[curr]\n\n    # O centro é o nó central do diâmetro\n    return path[len(path) // 2]\n\ndef main():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    it = iter(input_data)\n    N = int(next(it))\n    M = int(next(it))\n\n    adj_circle = [[] for _ in range(N + 1)]\n    for _ in range(N - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj_circle[u].append(v)\n        adj_circle[v].append(u)\n\n    adj_square = [[] for _ in range(M + 1)]\n    for _ in range(M - 1):\n        u = int(next(it))\n        v = int(next(it))\n        adj_square[u].append(v)\n        adj_square[v].append(u)\n\n    c1 = find_center(N, adj_circle)\n    c2 = find_center(M, adj_square)\n\n    print(f\"{c1} {c2}\")\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.36221529999602353,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

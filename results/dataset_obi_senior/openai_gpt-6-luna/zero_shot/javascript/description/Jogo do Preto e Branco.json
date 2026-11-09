@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:57:32.919827+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 858,
+            "output_tokens": 818,
+            "total_tokens": 1676
+        },
+        "cost_usd": {
+            "input_cost": 8.6e-05,
+            "output_cost": 0.000409,
+            "total_cost": 0.000495
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet index = 0;\nconst L = input[index++];\nconst C = input[index++];\nconst P = input[index++];\n\nconst black = Array.from({ length: L }, () => Array(C).fill(false));\nfor (let i = 0; i < P; i++) {\n  const x = input[index++] - 1;\n  const y = input[index++] - 1;\n  black[x][y] = true;\n}\n\nconst eligible = Array.from({ length: L }, () => Array(C).fill(false));\nconst directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (black[r][c]) continue;\n    for (const [dr, dc] of directions) {\n      const nr = r + dr;\n      const nc = c + dc;\n      if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n        eligible[r][c] = true;\n        break;\n      }\n    }\n  }\n}\n\nconst leftCells = [];\nconst rightId = Array.from({ length: L }, () => Array(C).fill(-1));\nlet vertexCount = 0;\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (!eligible[r][c]) continue;\n    vertexCount++;\n    if ((r + c) % 2 === 0) leftCells.push([r, c]);\n    else rightId[r][c] = vertexCount - 1;\n  }\n}\n\nconst matchRight = Array(L * C).fill(-1);\nconst adjacency = leftCells.map(([r, c]) => {\n  const neighbors = [];\n  for (const [dr, dc] of directions) {\n    const nr = r + dr;\n    const nc = c + dc;\n    if (nr >= 0 && nr < L && nc >= 0 && nc < C && eligible[nr][nc]) {\n      neighbors.push(nr * C + nc);\n    }\n  }\n  return neighbors;\n});\n\nfunction augment(u, seen) {\n  for (const v of adjacency[u]) {\n    if (seen[v]) continue;\n    seen[v] = true;\n    if (matchRight[v] === -1 || augment(matchRight[v], seen)) {\n      matchRight[v] = u;\n      return true;\n    }\n  }\n  return false;\n}\n\nlet matching = 0;\nfor (let u = 0; u < leftCells.length; u++) {\n  if (augment(u, Array(L * C).fill(false))) matching++;\n}\n\nconsole.log(vertexCount - matching);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet index = 0;\nconst L = input[index++];\nconst C = input[index++];\nconst P = input[index++];\n\nconst black = Array.from({ length: L }, () => Array(C).fill(false));\nfor (let i = 0; i < P; i++) {\n  const x = input[index++] - 1;\n  const y = input[index++] - 1;\n  black[x][y] = true;\n}\n\nconst eligible = Array.from({ length: L }, () => Array(C).fill(false));\nconst directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (black[r][c]) continue;\n    for (const [dr, dc] of directions) {\n      const nr = r + dr;\n      const nc = c + dc;\n      if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n        eligible[r][c] = true;\n        break;\n      }\n    }\n  }\n}\n\nconst leftCells = [];\nconst rightId = Array.from({ length: L }, () => Array(C).fill(-1));\nlet vertexCount = 0;\n\nfor (let r = 0; r < L; r++) {\n  for (let c = 0; c < C; c++) {\n    if (!eligible[r][c]) continue;\n    vertexCount++;\n    if ((r + c) % 2 === 0) leftCells.push([r, c]);\n    else rightId[r][c] = vertexCount - 1;\n  }\n}\n\nconst matchRight = Array(L * C).fill(-1);\nconst adjacency = leftCells.map(([r, c]) => {\n  const neighbors = [];\n  for (const [dr, dc] of directions) {\n    const nr = r + dr;\n    const nc = c + dc;\n    if (nr >= 0 && nr < L && nc >= 0 && nc < C && eligible[nr][nc]) {\n      neighbors.push(nr * C + nc);\n    }\n  }\n  return neighbors;\n});\n\nfunction augment(u, seen) {\n  for (const v of adjacency[u]) {\n    if (seen[v]) continue;\n    seen[v] = true;\n    if (matchRight[v] === -1 || augment(matchRight[v], seen)) {\n      matchRight[v] = u;\n      return true;\n    }\n  }\n  return false;\n}\n\nlet matching = 0;\nfor (let u = 0; u < leftCells.length; u++) {\n  if (augment(u, Array(L * C).fill(false))) matching++;\n}\n\nconsole.log(vertexCount - matching);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06914799999503884,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:55:14.361964+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 2204,
+            "total_tokens": 3012
+        },
+        "cost_usd": {
+            "input_cost": 8.1e-05,
+            "output_cost": 0.001102,
+            "total_cost": 0.001183
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst n = input[idx++];\nconst graph = Array.from({ length: n }, () => []);\n\nfor (let i = 0; i < n - 1; i++) {\n  const x = input[idx++] - 1;\n  const y = input[idx++] - 1;\n  graph[x].push(y);\n  graph[y].push(x);\n}\n\nfunction bfs(start, withParent) {\n  const dist = new Int32Array(n);\n  dist.fill(-1);\n  const parent = withParent ? new Int32Array(n) : null;\n  const queue = new Int32Array(n);\n  let head = 0;\n  let tail = 0;\n  queue[tail++] = start;\n  dist[start] = 0;\n  let farthest = start;\n\n  while (head < tail) {\n    const u = queue[head++];\n    if (dist[u] > dist[farthest]) farthest = u;\n\n    for (const v of graph[u]) {\n      if (dist[v] !== -1) continue;\n      dist[v] = dist[u] + 1;\n      if (withParent) parent[v] = u;\n      queue[tail++] = v;\n    }\n  }\n\n  return { farthest, dist, parent };\n}\n\nconst endpointA = bfs(0, false).farthest;\nconst result = bfs(endpointA, true);\nconst endpointB = result.farthest;\nconst diameter = result.dist[endpointB];\n\nconst path = [];\nfor (let v = endpointB; ; v = result.parent[v]) {\n  path.push(v);\n  if (v === endpointA) break;\n}\npath.reverse();\n\nlet ways = 0;\n\nif (diameter % 2 === 0) {\n  const center = path[diameter / 2];\n  const targetDepth = diameter / 2;\n  let nodesSeen = 0;\n\n  for (const first of graph[center]) {\n    const stackNode = [first];\n    const stackParent = [center];\n    const stackDepth = [1];\n    let count = 0;\n\n    while (stackNode.length) {\n      const u = stackNode.pop();\n      const p = stackParent.pop();\n      const depth = stackDepth.pop();\n\n      if (depth === targetDepth) {\n        count++;\n        continue;\n      }\n\n      for (const v of graph[u]) {\n        if (v === p) continue;\n        stackNode.push(v);\n        stackParent.push(u);\n        stackDepth.push(depth + 1);\n      }\n    }\n\n    ways += nodesSeen * count;\n    nodesSeen += count;\n  }\n} else {\n  const middle = diameter >> 1;\n  const leftCenter = path[middle];\n  const rightCenter = path[middle + 1];\n  const targetDepth = middle;\n\n  function countSide(start, blocked) {\n    const stackNode = [start];\n    const stackParent = [blocked];\n    const stackDepth = [0];\n    let count = 0;\n\n    while (stackNode.length) {\n      const u = stackNode.pop();\n      const p = stackParent.pop();\n      const depth = stackDepth.pop();\n\n      if (depth === targetDepth) {\n        count++;\n        continue;\n      }\n\n      for (const v of graph[u]) {\n        if (v === p) continue;\n        stackNode.push(v);\n        stackParent.push(u);\n        stackDepth.push(depth + 1);\n      }\n    }\n\n    return count;\n  }\n\n  ways = countSide(leftCenter, rightCenter) * countSide(rightCenter, leftCenter);\n}\n\nconsole.log(`${diameter + 1}\\n${ways}`);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst n = input[idx++];\nconst graph = Array.from({ length: n }, () => []);\n\nfor (let i = 0; i < n - 1; i++) {\n  const x = input[idx++] - 1;\n  const y = input[idx++] - 1;\n  graph[x].push(y);\n  graph[y].push(x);\n}\n\nfunction bfs(start, withParent) {\n  const dist = new Int32Array(n);\n  dist.fill(-1);\n  const parent = withParent ? new Int32Array(n) : null;\n  const queue = new Int32Array(n);\n  let head = 0;\n  let tail = 0;\n  queue[tail++] = start;\n  dist[start] = 0;\n  let farthest = start;\n\n  while (head < tail) {\n    const u = queue[head++];\n    if (dist[u] > dist[farthest]) farthest = u;\n\n    for (const v of graph[u]) {\n      if (dist[v] !== -1) continue;\n      dist[v] = dist[u] + 1;\n      if (withParent) parent[v] = u;\n      queue[tail++] = v;\n    }\n  }\n\n  return { farthest, dist, parent };\n}\n\nconst endpointA = bfs(0, false).farthest;\nconst result = bfs(endpointA, true);\nconst endpointB = result.farthest;\nconst diameter = result.dist[endpointB];\n\nconst path = [];\nfor (let v = endpointB; ; v = result.parent[v]) {\n  path.push(v);\n  if (v === endpointA) break;\n}\npath.reverse();\n\nlet ways = 0;\n\nif (diameter % 2 === 0) {\n  const center = path[diameter / 2];\n  const targetDepth = diameter / 2;\n  let nodesSeen = 0;\n\n  for (const first of graph[center]) {\n    const stackNode = [first];\n    const stackParent = [center];\n    const stackDepth = [1];\n    let count = 0;\n\n    while (stackNode.length) {\n      const u = stackNode.pop();\n      const p = stackParent.pop();\n      const depth = stackDepth.pop();\n\n      if (depth === targetDepth) {\n        count++;\n        continue;\n      }\n\n      for (const v of graph[u]) {\n        if (v === p) continue;\n        stackNode.push(v);\n        stackParent.push(u);\n        stackDepth.push(depth + 1);\n      }\n    }\n\n    ways += nodesSeen * count;\n    nodesSeen += count;\n  }\n} else {\n  const middle = diameter >> 1;\n  const leftCenter = path[middle];\n  const rightCenter = path[middle + 1];\n  const targetDepth = middle;\n\n  function countSide(start, blocked) {\n    const stackNode = [start];\n    const stackParent = [blocked];\n    const stackDepth = [0];\n    let count = 0;\n\n    while (stackNode.length) {\n      const u = stackNode.pop();\n      const p = stackParent.pop();\n      const depth = stackDepth.pop();\n\n      if (depth === targetDepth) {\n        count++;\n        continue;\n      }\n\n      for (const v of graph[u]) {\n        if (v === p) continue;\n        stackNode.push(v);\n        stackParent.push(u);\n        stackDepth.push(depth + 1);\n      }\n    }\n\n    return count;\n  }\n\n  ways = countSide(leftCenter, rightCenter) * countSide(rightCenter, leftCenter);\n}\n\nconsole.log(`${diameter + 1}\\n${ways}`);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12352960000134772,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

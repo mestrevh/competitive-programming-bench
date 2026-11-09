@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:37:27.583605+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1792,
+            "output_tokens": 382,
+            "total_tokens": 2715
+        },
+        "cost_usd": {
+            "input_cost": 0.001344,
+            "output_cost": 0.001432,
+            "total_cost": 0.002776
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n    \n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n        \n    parent = [0] * (n + 1)\n    order = []\n    \n    # BFS para encontrar a ordem topológica a partir da raiz 1\n    queue = [1]\n    parent[1] = -1\n    \n    head = 0\n    while head < len(queue):\n        u = queue[head]\n        head += 1\n        for v in adj[u]:\n            if parent[v] == 0:\n                parent[v] = u\n                queue.append(v)\n                \n    sz = [1] * (n + 1)\n    min_diff = n\n    \n    # Processa os nós do mais profundo para a raiz\n    for u in reversed(queue):\n        p = parent[u]\n        if p != -1:\n            sz[p] += sz[u]\n            diff = abs(n - 2 * sz[u])\n            if diff < min_diff:\n                min_diff = diff\n\n    print(min_diff)\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n    \n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n        \n    parent = [0] * (n + 1)\n    order = []\n    \n    # BFS para encontrar a ordem topológica a partir da raiz 1\n    queue = [1]\n    parent[1] = -1\n    \n    head = 0\n    while head < len(queue):\n        u = queue[head]\n        head += 1\n        for v in adj[u]:\n            if parent[v] == 0:\n                parent[v] = u\n                queue.append(v)\n                \n    sz = [1] * (n + 1)\n    min_diff = n\n    \n    # Processa os nós do mais profundo para a raiz\n    for u in reversed(queue):\n        p = parent[u]\n        if p != -1:\n            sz[p] += sz[u]\n            diff = abs(n - 2 * sz[u])\n            if diff < min_diff:\n                min_diff = diff\n\n    print(min_diff)\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16901460000372026,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

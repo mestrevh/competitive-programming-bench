@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:57:40.038269+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 2025,
+            "output_tokens": 1116,
+            "total_tokens": 20082
+        },
+        "cost_usd": {
+            "input_cost": 0.001519,
+            "output_cost": 0.004185,
+            "total_cost": 0.005704
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n    n = int(next(iterator))\n\n    p = [0] * (n + 1)\n    adj = [[] for _ in range(n + 1)]\n    for i in range(2, n + 1):\n        pi = int(next(iterator))\n        p[i] = pi\n        adj[pi].append(i)\n\n    # Binary lifting precomputation\n    LOG = 18\n    up = [[0] * (n + 1) for _ in range(LOG)]\n    up[0][1] = 1\n    for i in range(2, n + 1):\n        up[0][i] = p[i]\n\n    for j in range(1, LOG):\n        up_prev = up[j - 1]\n        up_curr = up[j]\n        for i in range(1, n + 1):\n            up_curr[i] = up_prev[up_prev[i]]\n\n    def get_kth_ancestor(node, k):\n        for j in range(LOG):\n            if (k >> j) & 1:\n                node = up[j][node]\n        return node\n\n    # Euler Tour (tin, tout)\n    tin = [0] * (n + 1)\n    tout = [0] * (n + 1)\n    timer = 0\n\n    # Iterative DFS for Euler tour\n    stack = [1]\n    edge_idx = [0] * (n + 1)\n    timer += 1\n    tin[1] = timer\n\n    while stack:\n        u = stack[-1]\n        if edge_idx[u] < len(adj[u]):\n            v = adj[u][edge_idx[u]]\n            edge_idx[u] += 1\n            timer += 1\n            tin[v] = timer\n            stack.append(v)\n        else:\n            tout[u] = timer\n            stack.pop()\n\n    # Segment Tree with Lazy Propagation for range assignments and point queries\n    seg_size = 4 * (n + 1)\n    lazy = [0] * seg_size\n\n    def update(node, l, r, ql, qr, val):\n        if ql <= l and r <= qr:\n            lazy[node] = val\n            return\n        mid = (l + r) // 2\n        lz = lazy[node]\n        if lz != 0:\n            lazy[2 * node] = lz\n            lazy[2 * node + 1] = lz\n            lazy[node] = 0\n        if ql <= mid:\n            update(2 * node, l, mid, ql, qr, val)\n        if qr > mid:\n            update(2 * node + 1, mid + 1, r, ql, qr, val)\n\n    def query(node, l, r, pos):\n        if l == r:\n            return lazy[node]\n        mid = (l + r) // 2\n        lz = lazy[node]\n        if lz != 0:\n            lazy[2 * node] = lz\n            lazy[2 * node + 1] = lz\n            lazy[node] = 0\n        if pos <= mid:\n            return query(2 * node, l, mid, pos)\n        else:\n            return query(2 * node + 1, mid + 1, r, pos)\n\n    q = int(next(iterator))\n    out = []\n\n    for _ in range(q):\n        op = next(iterator)\n        if op == \"1\":\n            v = int(next(iterator))\n            k = int(next(iterator))\n            top_v = query(1, 1, n, tin[v])\n            if top_v == 0:\n                ans = get_kth_ancestor(v, k)\n            else:\n                if k == 1:\n                    ans = top_v\n                else:\n                    ans = get_kth_ancestor(top_v, k - 1)\n            out.append(str(ans))\n        else:\n            v = int(next(iterator))\n            val = query(1, 1, n, tin[v])\n            if val == 0:\n                ql = tin[v] + 1\n                qr = tout[v]\n                if ql <= qr:\n                    update(1, 1, n, ql, qr, v)\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    iterator = iter(input_data)\n    n = int(next(iterator))\n\n    p = [0] * (n + 1)\n    adj = [[] for _ in range(n + 1)]\n    for i in range(2, n + 1):\n        pi = int(next(iterator))\n        p[i] = pi\n        adj[pi].append(i)\n\n    # Binary lifting precomputation\n    LOG = 18\n    up = [[0] * (n + 1) for _ in range(LOG)]\n    up[0][1] = 1\n    for i in range(2, n + 1):\n        up[0][i] = p[i]\n\n    for j in range(1, LOG):\n        up_prev = up[j - 1]\n        up_curr = up[j]\n        for i in range(1, n + 1):\n            up_curr[i] = up_prev[up_prev[i]]\n\n    def get_kth_ancestor(node, k):\n        for j in range(LOG):\n            if (k >> j) & 1:\n                node = up[j][node]\n        return node\n\n    # Euler Tour (tin, tout)\n    tin = [0] * (n + 1)\n    tout = [0] * (n + 1)\n    timer = 0\n\n    # Iterative DFS for Euler tour\n    stack = [1]\n    edge_idx = [0] * (n + 1)\n    timer += 1\n    tin[1] = timer\n\n    while stack:\n        u = stack[-1]\n        if edge_idx[u] < len(adj[u]):\n            v = adj[u][edge_idx[u]]\n            edge_idx[u] += 1\n            timer += 1\n            tin[v] = timer\n            stack.append(v)\n        else:\n            tout[u] = timer\n            stack.pop()\n\n    # Segment Tree with Lazy Propagation for range assignments and point queries\n    seg_size = 4 * (n + 1)\n    lazy = [0] * seg_size\n\n    def update(node, l, r, ql, qr, val):\n        if ql <= l and r <= qr:\n            lazy[node] = val\n            return\n        mid = (l + r) // 2\n        lz = lazy[node]\n        if lz != 0:\n            lazy[2 * node] = lz\n            lazy[2 * node + 1] = lz\n            lazy[node] = 0\n        if ql <= mid:\n            update(2 * node, l, mid, ql, qr, val)\n        if qr > mid:\n            update(2 * node + 1, mid + 1, r, ql, qr, val)\n\n    def query(node, l, r, pos):\n        if l == r:\n            return lazy[node]\n        mid = (l + r) // 2\n        lz = lazy[node]\n        if lz != 0:\n            lazy[2 * node] = lz\n            lazy[2 * node + 1] = lz\n            lazy[node] = 0\n        if pos <= mid:\n            return query(2 * node, l, mid, pos)\n        else:\n            return query(2 * node + 1, mid + 1, r, pos)\n\n    q = int(next(iterator))\n    out = []\n\n    for _ in range(q):\n        op = next(iterator)\n        if op == \"1\":\n            v = int(next(iterator))\n            k = int(next(iterator))\n            top_v = query(1, 1, n, tin[v])\n            if top_v == 0:\n                ans = get_kth_ancestor(v, k)\n            else:\n                if k == 1:\n                    ans = top_v\n                else:\n                    ans = get_kth_ancestor(top_v, k - 1)\n            out.append(str(ans))\n        else:\n            v = int(next(iterator))\n            val = query(1, 1, n, tin[v])\n            if val == 0:\n                ql = tin[v] + 1\n                qr = tout[v]\n                if ql <= qr:\n                    update(1, 1, n, ql, qr, v)\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.38228499999968335,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:50:59.415203+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 930,
+            "output_tokens": 950,
+            "total_tokens": 3543
+        },
+        "cost_usd": {
+            "input_cost": 0.000697,
+            "output_cost": 0.003563,
+            "total_cost": 0.00426
+        },
+        "raw_response": "```python\nimport sys\nfrom bisect import bisect_right, insort_right\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    N = int(input_data[0])\n    \n    # Estrutura SortedList simplificada baseada em blocos\n    LOAD = 1000\n    lists = [[]]\n    maxes = []\n    # sizes[i] = len(lists[i])\n    # Como o número de blocos é pequeno (<= 300), \n    # manter as somas de prefixos ou BIT é muito simples e rápido.\n    # Com BIT sobre o número de blocos:\n    \n    class Fenwick:\n        def __init__(self, size):\n            self.tree = [0] * (size + 1)\n        \n        def add(self, i, delta):\n            i += 1\n            n = len(self.tree)\n            while i < n:\n                self.tree[i] += delta\n                i += i & (-i)\n                \n        def query(self, i):\n            # soma de 0 até i-1\n            s = 0\n            while i > 0:\n                s += self.tree[i]\n                i -= i & (-i)\n            return s\n            \n        def rebuild(self, sizes):\n            n = len(sizes)\n            self.tree = [0] * (n + 1)\n            for i in range(n):\n                self.tree[i + 1] = sizes[i]\n            for i in range(1, n + 1):\n                parent = i + (i & (-i))\n                if parent <= n:\n                    self.tree[parent] += self.tree[i]\n\n    bit = Fenwick(1)\n    \n    def count_le(val):\n        if not maxes:\n            return 0\n        b_idx = bisect_right(maxes, val)\n        if b_idx == len(lists):\n            b_idx -= 1\n        \n        # Elementos em blocos anteriores\n        ans = bit.query(b_idx)\n        # Elementos no bloco b_idx\n        ans += bisect_right(lists[b_idx], val)\n        return ans\n\n    def insert(val):\n        if not maxes:\n            lists[0].append(val)\n            maxes.append(val)\n            bit.rebuild([1])\n            return\n\n        b_idx = bisect_right(maxes, val)\n        if b_idx == len(lists):\n            b_idx -= 1\n\n        sub = lists[b_idx]\n        insort_right(sub, val)\n        maxes[b_idx] = sub[-1]\n        bit.add(b_idx, 1)\n\n        if len(sub) > 2 * LOAD:\n            # Dividir o bloco\n            half = len(sub) // 2\n            right_sub = sub[half:]\n            del sub[half:]\n            maxes[b_idx] = sub[-1]\n            lists.insert(b_idx + 1, right_sub)\n            maxes.insert(b_idx + 1, right_sub[-1])\n            bit.rebuild([len(l) for l in lists])\n\n    out = []\n    ptr = 1\n    prev_p = 0\n    \n    for _ in range(N):\n        x = int(input_data[ptr])\n        y = int(input_data[ptr + 1])\n        ptr += 2\n        \n        xr = x + prev_p\n        yr = y + prev_p\n        d = xr * xr + yr * yr\n        \n        pk = count_le(d)\n        insert(d)\n        \n        out.append(str(pk))\n        prev_p = pk\n        \n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom bisect import bisect_right, insort_right\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    N = int(input_data[0])\n    \n    # Estrutura SortedList simplificada baseada em blocos\n    LOAD = 1000\n    lists = [[]]\n    maxes = []\n    # sizes[i] = len(lists[i])\n    # Como o número de blocos é pequeno (<= 300), \n    # manter as somas de prefixos ou BIT é muito simples e rápido.\n    # Com BIT sobre o número de blocos:\n    \n    class Fenwick:\n        def __init__(self, size):\n            self.tree = [0] * (size + 1)\n        \n        def add(self, i, delta):\n            i += 1\n            n = len(self.tree)\n            while i < n:\n                self.tree[i] += delta\n                i += i & (-i)\n                \n        def query(self, i):\n            # soma de 0 até i-1\n            s = 0\n            while i > 0:\n                s += self.tree[i]\n                i -= i & (-i)\n            return s\n            \n        def rebuild(self, sizes):\n            n = len(sizes)\n            self.tree = [0] * (n + 1)\n            for i in range(n):\n                self.tree[i + 1] = sizes[i]\n            for i in range(1, n + 1):\n                parent = i + (i & (-i))\n                if parent <= n:\n                    self.tree[parent] += self.tree[i]\n\n    bit = Fenwick(1)\n    \n    def count_le(val):\n        if not maxes:\n            return 0\n        b_idx = bisect_right(maxes, val)\n        if b_idx == len(lists):\n            b_idx -= 1\n        \n        # Elementos em blocos anteriores\n        ans = bit.query(b_idx)\n        # Elementos no bloco b_idx\n        ans += bisect_right(lists[b_idx], val)\n        return ans\n\n    def insert(val):\n        if not maxes:\n            lists[0].append(val)\n            maxes.append(val)\n            bit.rebuild([1])\n            return\n\n        b_idx = bisect_right(maxes, val)\n        if b_idx == len(lists):\n            b_idx -= 1\n\n        sub = lists[b_idx]\n        insort_right(sub, val)\n        maxes[b_idx] = sub[-1]\n        bit.add(b_idx, 1)\n\n        if len(sub) > 2 * LOAD:\n            # Dividir o bloco\n            half = len(sub) // 2\n            right_sub = sub[half:]\n            del sub[half:]\n            maxes[b_idx] = sub[-1]\n            lists.insert(b_idx + 1, right_sub)\n            maxes.insert(b_idx + 1, right_sub[-1])\n            bit.rebuild([len(l) for l in lists])\n\n    out = []\n    ptr = 1\n    prev_p = 0\n    \n    for _ in range(N):\n        x = int(input_data[ptr])\n        y = int(input_data[ptr + 1])\n        ptr += 2\n        \n        xr = x + prev_p\n        yr = y + prev_p\n        d = xr * xr + yr * yr\n        \n        pk = count_le(d)\n        insert(d)\n        \n        out.append(str(pk))\n        prev_p = pk\n        \n    sys.stdout.write('\\n'.join(out) + '\\n')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3095162999961758,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

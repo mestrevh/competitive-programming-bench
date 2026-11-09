@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:06:38.596263+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 916,
+            "output_tokens": 12386,
+            "total_tokens": 13302
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.029726,
+            "total_cost": 0.029729
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 50005\n\nint N;\nint head[MAXN], to[2 * MAXN], nxt[2 * MAXN], ecnt;\nint dist[MAXN], parent[MAXN], queue[MAXN];\nint path[MAXN];\nint st_node[MAXN], st_parent[MAXN], st_depth[MAXN];\n\nvoid add_edge(int u, int v) {\n    to[ecnt] = v;\n    nxt[ecnt] = head[u];\n    head[u] = ecnt++;\n}\n\nint bfs(int start) {\n    for (int i = 1; i <= N; i++) dist[i] = -1;\n\n    int qh = 0, qt = 0;\n    queue[qt++] = start;\n    dist[start] = 0;\n    parent[start] = -1;\n\n    int far = start;\n\n    while (qh < qt) {\n        int u = queue[qh++];\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[qt++] = v;\n            }\n        }\n    }\n\n    return far;\n}\n\nint count_at_depth(int start, int forbid, int target) {\n    int top = 0;\n    st_node[top] = start;\n    st_parent[top] = forbid;\n    st_depth[top] = 0;\n    top++;\n\n    int cnt = 0;\n\n    while (top > 0) {\n        top--;\n        int u = st_node[top];\n        int p = st_parent[top];\n        int d = st_depth[top];\n\n        if (d == target) {\n            cnt++;\n            continue;\n        }\n\n        if (d < target) {\n            for (int e = head[u]; e != -1; e = nxt[e]) {\n                int v = to[e];\n                if (v == p) continue;\n\n                st_node[top] = v;\n                st_parent[top] = u;\n                st_depth[top] = d + 1;\n                top++;\n            }\n        }\n    }\n\n    return cnt;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n\n    for (int i = 1; i <= N; i++) head[i] = -1;\n    ecnt = 0;\n\n    for (int i = 0; i < N - 1; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        add_edge(x, y);\n        add_edge(y, x);\n    }\n\n    int A = bfs(1);\n    int B = bfs(A);\n    int D = dist[B];\n\n    int idx = D;\n    int cur = B;\n\n    while (1) {\n        path[idx--] = cur;\n        if (cur == A) break;\n        cur = parent[cur];\n    }\n\n    long long ans;\n\n    if (D % 2 == 0) {\n        int c = path[D / 2];\n        int r = D / 2;\n\n        long long S = 0, sumSq = 0;\n\n        for (int e = head[c]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            int cnt = count_at_depth(v, c, r - 1);\n            S += cnt;\n            sumSq += (long long)cnt * cnt;\n        }\n\n        ans = (S * S - sumSq) / 2;\n    } else {\n        int c1 = path[D / 2];\n        int c2 = path[D / 2 + 1];\n        int r = D / 2;\n\n        long long cnt1 = count_at_depth(c1, c2, r);\n        long long cnt2 = count_at_depth(c2, c1, r);\n\n        ans = cnt1 * cnt2;\n    }\n\n    printf(\"%d\\n%lld\\n\", D + 1, ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 50005\n\nint N;\nint head[MAXN], to[2 * MAXN], nxt[2 * MAXN], ecnt;\nint dist[MAXN], parent[MAXN], queue[MAXN];\nint path[MAXN];\nint st_node[MAXN], st_parent[MAXN], st_depth[MAXN];\n\nvoid add_edge(int u, int v) {\n    to[ecnt] = v;\n    nxt[ecnt] = head[u];\n    head[u] = ecnt++;\n}\n\nint bfs(int start) {\n    for (int i = 1; i <= N; i++) dist[i] = -1;\n\n    int qh = 0, qt = 0;\n    queue[qt++] = start;\n    dist[start] = 0;\n    parent[start] = -1;\n\n    int far = start;\n\n    while (qh < qt) {\n        int u = queue[qh++];\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[qt++] = v;\n            }\n        }\n    }\n\n    return far;\n}\n\nint count_at_depth(int start, int forbid, int target) {\n    int top = 0;\n    st_node[top] = start;\n    st_parent[top] = forbid;\n    st_depth[top] = 0;\n    top++;\n\n    int cnt = 0;\n\n    while (top > 0) {\n        top--;\n        int u = st_node[top];\n        int p = st_parent[top];\n        int d = st_depth[top];\n\n        if (d == target) {\n            cnt++;\n            continue;\n        }\n\n        if (d < target) {\n            for (int e = head[u]; e != -1; e = nxt[e]) {\n                int v = to[e];\n                if (v == p) continue;\n\n                st_node[top] = v;\n                st_parent[top] = u;\n                st_depth[top] = d + 1;\n                top++;\n            }\n        }\n    }\n\n    return cnt;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n\n    for (int i = 1; i <= N; i++) head[i] = -1;\n    ecnt = 0;\n\n    for (int i = 0; i < N - 1; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        add_edge(x, y);\n        add_edge(y, x);\n    }\n\n    int A = bfs(1);\n    int B = bfs(A);\n    int D = dist[B];\n\n    int idx = D;\n    int cur = B;\n\n    while (1) {\n        path[idx--] = cur;\n        if (cur == A) break;\n        cur = parent[cur];\n    }\n\n    long long ans;\n\n    if (D % 2 == 0) {\n        int c = path[D / 2];\n        int r = D / 2;\n\n        long long S = 0, sumSq = 0;\n\n        for (int e = head[c]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            int cnt = count_at_depth(v, c, r - 1);\n            S += cnt;\n            sumSq += (long long)cnt * cnt;\n        }\n\n        ans = (S * S - sumSq) / 2;\n    } else {\n        int c1 = path[D / 2];\n        int c2 = path[D / 2 + 1];\n        int r = D / 2;\n\n        long long cnt1 = count_at_depth(c1, c2, r);\n        long long cnt2 = count_at_depth(c2, c1, r);\n\n        ans = cnt1 * cnt2;\n    }\n\n    printf(\"%d\\n%lld\\n\", D + 1, ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14174069999717176,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:54:53.874545+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1587,
+            "output_tokens": 30616,
+            "total_tokens": 32203
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.073478,
+            "total_cost": 0.073483
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\ntypedef struct {\n    long long x, y;\n} Point;\n\nlong long cross(Point a, Point b) {\n    return a.x * b.y - a.y * b.x;\n}\n\nlong long dot(Point a, Point b) {\n    return a.x * b.x + a.y * b.y;\n}\n\nlong long dist2(Point a, Point b) {\n    long long dx = a.x - b.x;\n    long long dy = a.y - b.y;\n    return dx * dx + dy * dy;\n}\n\nint main() {\n    Point P[8];\n    for (int i = 1; i <= 7; i++) {\n        scanf(\"%lld %lld\", &P[i].x, &P[i].y);\n    }\n\n    // 1. Ângulo ∠P2P1P3 agudo\n    Point v12 = {P[2].x - P[1].x, P[2].y - P[1].y};\n    Point v13 = {P[3].x - P[1].x, P[3].y - P[1].y};\n    if (dot(v12, v13) <= 0) { printf(\"N\\n\"); return 0; }\n\n    // 2. |P1P2| == |P1P3|\n    if (dist2(P[1], P[2]) != dist2(P[1], P[3])) { printf(\"N\\n\"); return 0; }\n\n    // 3. P2, P3, P4, P5 colineares\n    Point d = {P[3].x - P[2].x, P[3].y - P[2].y};\n    Point v24 = {P[4].x - P[2].x, P[4].y - P[2].y};\n    Point v25 = {P[5].x - P[2].x, P[5].y - P[2].y};\n    if (cross(d, v24) != 0 || cross(d, v25) != 0) { printf(\"N\\n\"); return 0; }\n\n    // 4. Pontos médios de P2P3 e P4P5 coincidem\n    if (P[2].x + P[3].x != P[4].x + P[5].x || P[2].y + P[3].y != P[4].y + P[5].y) {\n        printf(\"N\\n\"); return 0;\n    }\n\n    // 5. |P2P3| > |P4P5|\n    if (dist2(P[2], P[3]) <= dist2(P[4], P[5])) { printf(\"N\\n\"); return 0; }\n\n    // 6. P4P6 e P5P7 perpendiculares a P2P3\n    Point v46 = {P[6].x - P[4].x, P[6].y - P[4].y};\n    Point v57 = {P[7].x - P[5].x, P[7].y - P[5].y};\n    if (dot(v46, d) != 0 || dot(v57, d) != 0) { printf(\"N\\n\"); return 0; }\n\n    // 7. |P4P6| == |P5P7|\n    if (dist2(P[4], P[6]) != dist2(P[5], P[7])) { printf(\"N\\n\"); return 0; }\n\n    // 8. P1 e P6 separados pela reta P2P3\n    Point v21 = {P[1].x - P[2].x, P[1].y - P[2].y};\n    Point v26 = {P[6].x - P[2].x, P[6].y - P[2].y};\n    long long c1 = cross(d, v21);\n    long long c6 = cross(d, v26);\n    if (c1 * c6 >= 0) { printf(\"N\\n\"); return 0; }\n\n    printf(\"S\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\ntypedef struct {\n    long long x, y;\n} Point;\n\nlong long cross(Point a, Point b) {\n    return a.x * b.y - a.y * b.x;\n}\n\nlong long dot(Point a, Point b) {\n    return a.x * b.x + a.y * b.y;\n}\n\nlong long dist2(Point a, Point b) {\n    long long dx = a.x - b.x;\n    long long dy = a.y - b.y;\n    return dx * dx + dy * dy;\n}\n\nint main() {\n    Point P[8];\n    for (int i = 1; i <= 7; i++) {\n        scanf(\"%lld %lld\", &P[i].x, &P[i].y);\n    }\n\n    // 1. Ângulo ∠P2P1P3 agudo\n    Point v12 = {P[2].x - P[1].x, P[2].y - P[1].y};\n    Point v13 = {P[3].x - P[1].x, P[3].y - P[1].y};\n    if (dot(v12, v13) <= 0) { printf(\"N\\n\"); return 0; }\n\n    // 2. |P1P2| == |P1P3|\n    if (dist2(P[1], P[2]) != dist2(P[1], P[3])) { printf(\"N\\n\"); return 0; }\n\n    // 3. P2, P3, P4, P5 colineares\n    Point d = {P[3].x - P[2].x, P[3].y - P[2].y};\n    Point v24 = {P[4].x - P[2].x, P[4].y - P[2].y};\n    Point v25 = {P[5].x - P[2].x, P[5].y - P[2].y};\n    if (cross(d, v24) != 0 || cross(d, v25) != 0) { printf(\"N\\n\"); return 0; }\n\n    // 4. Pontos médios de P2P3 e P4P5 coincidem\n    if (P[2].x + P[3].x != P[4].x + P[5].x || P[2].y + P[3].y != P[4].y + P[5].y) {\n        printf(\"N\\n\"); return 0;\n    }\n\n    // 5. |P2P3| > |P4P5|\n    if (dist2(P[2], P[3]) <= dist2(P[4], P[5])) { printf(\"N\\n\"); return 0; }\n\n    // 6. P4P6 e P5P7 perpendiculares a P2P3\n    Point v46 = {P[6].x - P[4].x, P[6].y - P[4].y};\n    Point v57 = {P[7].x - P[5].x, P[7].y - P[5].y};\n    if (dot(v46, d) != 0 || dot(v57, d) != 0) { printf(\"N\\n\"); return 0; }\n\n    // 7. |P4P6| == |P5P7|\n    if (dist2(P[4], P[6]) != dist2(P[5], P[7])) { printf(\"N\\n\"); return 0; }\n\n    // 8. P1 e P6 separados pela reta P2P3\n    Point v21 = {P[1].x - P[2].x, P[1].y - P[2].y};\n    Point v26 = {P[6].x - P[2].x, P[6].y - P[2].y};\n    long long c1 = cross(d, v21);\n    long long c6 = cross(d, v26);\n    if (c1 * c6 >= 0) { printf(\"N\\n\"); return 0; }\n\n    printf(\"S\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18095290000201203,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

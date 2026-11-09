@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:58:38.857065+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 980,
+            "output_tokens": 2565,
+            "total_tokens": 3545
+        },
+        "cost_usd": {
+            "input_cost": 9.8e-05,
+            "output_cost": 0.001283,
+            "total_cost": 0.00138
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nif (tokens.length === 1 && tokens[0] === '') process.exit(0);\n\nlet pos = 0;\nconst L = Number(tokens[pos++]);\nconst C = Number(tokens[pos++]);\nconst grid = Array.from({ length: L }, () => []);\nconst present = new Array(676).fill(false);\nconst equations = [];\n\nfunction variableId(name) {\n  return (name.charCodeAt(0) - 97) * 26 + name.charCodeAt(1) - 97;\n}\n\nfor (let r = 0; r < L; r++) {\n  const counts = new Map();\n\n  for (let c = 0; c < C; c++) {\n    const id = variableId(tokens[pos++]);\n    grid[r].push(id);\n    present[id] = true;\n    counts.set(id, (counts.get(id) || 0) + 1);\n  }\n\n  equations.push({\n    counts,\n    remaining: BigInt(tokens[pos++]),\n    unknown: counts.size\n  });\n}\n\nconst columnSums = [];\nfor (let c = 0; c < C; c++) columnSums.push(BigInt(tokens[pos++]));\n\nfor (let c = 0; c < C; c++) {\n  const counts = new Map();\n\n  for (let r = 0; r < L; r++) {\n    const id = grid[r][c];\n    counts.set(id, (counts.get(id) || 0) + 1);\n  }\n\n  equations.push({\n    counts,\n    remaining: columnSums[c],\n    unknown: counts.size\n  });\n}\n\nconst incidence = Array.from({ length: 676 }, () => []);\nfor (let e = 0; e < equations.length; e++) {\n  for (const [id, coefficient] of equations[e].counts) {\n    incidence[id].push([e, coefficient]);\n  }\n}\n\nconst values = new Array(676);\nconst known = new Array(676).fill(false);\nconst queue = [];\n\nfor (let e = 0; e < equations.length; e++) {\n  if (equations[e].unknown === 1) queue.push(e);\n}\n\nfor (let head = 0; head < queue.length; head++) {\n  const e = queue[head];\n  const equation = equations[e];\n  if (equation.unknown !== 1) continue;\n\n  let id = -1;\n  let coefficient = 0;\n  for (const [candidate, count] of equation.counts) {\n    if (!known[candidate]) {\n      id = candidate;\n      coefficient = count;\n      break;\n    }\n  }\n\n  if (id === -1) continue;\n\n  const value = equation.remaining / BigInt(coefficient);\n  values[id] = value;\n  known[id] = true;\n\n  for (const [eqIndex, count] of incidence[id]) {\n    const current = equations[eqIndex];\n    current.remaining -= BigInt(count) * value;\n    current.unknown--;\n\n    if (current.unknown === 1) queue.push(eqIndex);\n  }\n}\n\nconst output = [];\nfor (let id = 0; id < 676; id++) {\n  if (present[id]) {\n    const name = String.fromCharCode(97 + Math.floor(id / 26)) +\n      String.fromCharCode(97 + (id % 26));\n    output.push(`${name} ${values[id]}`);\n  }\n}\n\nconsole.log(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nif (tokens.length === 1 && tokens[0] === '') process.exit(0);\n\nlet pos = 0;\nconst L = Number(tokens[pos++]);\nconst C = Number(tokens[pos++]);\nconst grid = Array.from({ length: L }, () => []);\nconst present = new Array(676).fill(false);\nconst equations = [];\n\nfunction variableId(name) {\n  return (name.charCodeAt(0) - 97) * 26 + name.charCodeAt(1) - 97;\n}\n\nfor (let r = 0; r < L; r++) {\n  const counts = new Map();\n\n  for (let c = 0; c < C; c++) {\n    const id = variableId(tokens[pos++]);\n    grid[r].push(id);\n    present[id] = true;\n    counts.set(id, (counts.get(id) || 0) + 1);\n  }\n\n  equations.push({\n    counts,\n    remaining: BigInt(tokens[pos++]),\n    unknown: counts.size\n  });\n}\n\nconst columnSums = [];\nfor (let c = 0; c < C; c++) columnSums.push(BigInt(tokens[pos++]));\n\nfor (let c = 0; c < C; c++) {\n  const counts = new Map();\n\n  for (let r = 0; r < L; r++) {\n    const id = grid[r][c];\n    counts.set(id, (counts.get(id) || 0) + 1);\n  }\n\n  equations.push({\n    counts,\n    remaining: columnSums[c],\n    unknown: counts.size\n  });\n}\n\nconst incidence = Array.from({ length: 676 }, () => []);\nfor (let e = 0; e < equations.length; e++) {\n  for (const [id, coefficient] of equations[e].counts) {\n    incidence[id].push([e, coefficient]);\n  }\n}\n\nconst values = new Array(676);\nconst known = new Array(676).fill(false);\nconst queue = [];\n\nfor (let e = 0; e < equations.length; e++) {\n  if (equations[e].unknown === 1) queue.push(e);\n}\n\nfor (let head = 0; head < queue.length; head++) {\n  const e = queue[head];\n  const equation = equations[e];\n  if (equation.unknown !== 1) continue;\n\n  let id = -1;\n  let coefficient = 0;\n  for (const [candidate, count] of equation.counts) {\n    if (!known[candidate]) {\n      id = candidate;\n      coefficient = count;\n      break;\n    }\n  }\n\n  if (id === -1) continue;\n\n  const value = equation.remaining / BigInt(coefficient);\n  values[id] = value;\n  known[id] = true;\n\n  for (const [eqIndex, count] of incidence[id]) {\n    const current = equations[eqIndex];\n    current.remaining -= BigInt(count) * value;\n    current.unknown--;\n\n    if (current.unknown === 1) queue.push(eqIndex);\n  }\n}\n\nconst output = [];\nfor (let id = 0; id < 676; id++) {\n  if (present[id]) {\n    const name = String.fromCharCode(97 + Math.floor(id / 26)) +\n      String.fromCharCode(97 + (id % 26));\n    output.push(`${name} ${values[id]}`);\n  }\n}\n\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06813179999880958,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

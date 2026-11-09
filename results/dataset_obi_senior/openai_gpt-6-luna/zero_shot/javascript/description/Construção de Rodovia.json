@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:53:58.000758+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 921,
+            "output_tokens": 1715,
+            "total_tokens": 2636
+        },
+        "cost_usd": {
+            "input_cost": 9.2e-05,
+            "output_cost": 0.000857,
+            "total_cost": 0.00095
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst input = require('fs').readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const code = input.charCodeAt(pos);\n    if (code < 48 || code > 57) break;\n    value = value * 10 + code - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\n\nconst edgeU = new Int32Array(M);\nconst edgeV = new Int32Array(M);\nconst degree = new Int32Array(N);\n\nfor (let i = 0; i < M; i++) {\n  const u = nextInt() - 1;\n  const v = nextInt() - 1;\n  edgeU[i] = u;\n  edgeV[i] = v;\n  degree[u]++;\n  degree[v]++;\n}\n\nconst offset = new Int32Array(N + 1);\nfor (let i = 0; i < N; i++) offset[i + 1] = offset[i] + degree[i];\n\nconst adjacency = new Int32Array(2 * M);\nconst cursor = new Int32Array(offset);\nfor (let i = 0; i < M; i++) {\n  const u = edgeU[i];\n  const v = edgeV[i];\n  adjacency[cursor[u]++] = v;\n  adjacency[cursor[v]++] = u;\n}\n\nconst visited = new Uint8Array(N);\nconst marked = new Int32Array(N);\nconst queue = new Int32Array(N);\nlet componentToken = 0;\n\nfor (let start = 0; start < N; start++) {\n  if (visited[start]) continue;\n\n  let head = 0;\n  let tail = 0;\n  queue[tail++] = start;\n  visited[start] = 1;\n\n  while (head < tail) {\n    const u = queue[head++];\n    for (let i = offset[u]; i < offset[u + 1]; i++) {\n      const v = adjacency[i];\n      if (!visited[v]) {\n        visited[v] = 1;\n        queue[tail++] = v;\n      }\n    }\n  }\n\n  componentToken++;\n  for (let i = 0; i < tail; i++) {\n    const u = queue[i];\n    if (degree[u] < tail - 1) {\n      for (let j = offset[u]; j < offset[u + 1]; j++) {\n        marked[adjacency[j]] = componentToken;\n      }\n      for (let j = 0; j < tail; j++) {\n        const v = queue[j];\n        if (v !== u && marked[v] !== componentToken) {\n          process.stdout.write(`${u + 1} ${v + 1}\\n`);\n          process.exit(0);\n        }\n      }\n    }\n  }\n}\n\nprocess.stdout.write('-1\\n');\n```",
+        "extracted_code": "'use strict';\n\nconst input = require('fs').readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < input.length) {\n    const code = input.charCodeAt(pos);\n    if (code < 48 || code > 57) break;\n    value = value * 10 + code - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\n\nconst edgeU = new Int32Array(M);\nconst edgeV = new Int32Array(M);\nconst degree = new Int32Array(N);\n\nfor (let i = 0; i < M; i++) {\n  const u = nextInt() - 1;\n  const v = nextInt() - 1;\n  edgeU[i] = u;\n  edgeV[i] = v;\n  degree[u]++;\n  degree[v]++;\n}\n\nconst offset = new Int32Array(N + 1);\nfor (let i = 0; i < N; i++) offset[i + 1] = offset[i] + degree[i];\n\nconst adjacency = new Int32Array(2 * M);\nconst cursor = new Int32Array(offset);\nfor (let i = 0; i < M; i++) {\n  const u = edgeU[i];\n  const v = edgeV[i];\n  adjacency[cursor[u]++] = v;\n  adjacency[cursor[v]++] = u;\n}\n\nconst visited = new Uint8Array(N);\nconst marked = new Int32Array(N);\nconst queue = new Int32Array(N);\nlet componentToken = 0;\n\nfor (let start = 0; start < N; start++) {\n  if (visited[start]) continue;\n\n  let head = 0;\n  let tail = 0;\n  queue[tail++] = start;\n  visited[start] = 1;\n\n  while (head < tail) {\n    const u = queue[head++];\n    for (let i = offset[u]; i < offset[u + 1]; i++) {\n      const v = adjacency[i];\n      if (!visited[v]) {\n        visited[v] = 1;\n        queue[tail++] = v;\n      }\n    }\n  }\n\n  componentToken++;\n  for (let i = 0; i < tail; i++) {\n    const u = queue[i];\n    if (degree[u] < tail - 1) {\n      for (let j = offset[u]; j < offset[u + 1]; j++) {\n        marked[adjacency[j]] = componentToken;\n      }\n      for (let j = 0; j < tail; j++) {\n        const v = queue[j];\n        if (v !== u && marked[v] !== componentToken) {\n          process.stdout.write(`${u + 1} ${v + 1}\\n`);\n          process.exit(0);\n        }\n      }\n    }\n  }\n}\n\nprocess.stdout.write('-1\\n');",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.10436640000261832,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:50:06.937416+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1708,
+            "output_tokens": 4973,
+            "total_tokens": 6681
+        },
+        "cost_usd": {
+            "input_cost": 0.000171,
+            "output_cost": 0.002486,
+            "total_cost": 0.002657
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst N = input[idx++];\nconst K = input[idx++];\nconst T = input[idx++];\n\nconst plates = input.slice(idx, idx + N);\nidx += N;\nconst group = input.slice(idx, idx + N);\n\nconst useGroup = K <= N - K;\nconst initial = [];\nfor (let i = 0; i < N; i++) {\n  if ((group[i] === 1) === useGroup) initial.push(i + 1);\n}\n\nconst M = initial.length;\nconst width = 9 * M + 1;\nconst INF = 1e9;\nconst dp = new Int32Array((M + 1) * width);\ndp.fill(INF);\ndp[0] = 0;\n\nfor (let i = 0; i < N; i++) {\n  const maxSelected = Math.min(M, i + 1);\n  const value = plates[i];\n  const position = i + 1;\n\n  for (let j = maxSelected; j >= 1; j--) {\n    const srcBase = (j - 1) * width;\n    const dstBase = j * width + value;\n    const moveCost = Math.abs(position - initial[j - 1]);\n    const maxScore = 9 * (j - 1);\n\n    for (let score = 0; score <= maxScore; score++) {\n      const cost = dp[srcBase + score];\n      if (cost !== INF) {\n        const newCost = cost + moveCost;\n        const target = dstBase + score;\n        if (newCost < dp[target]) dp[target] = newCost;\n      }\n    }\n  }\n}\n\nlet answer;\nconst finalBase = M * width;\n\nif (useGroup) {\n  answer = 0;\n  for (let score = 0; score < width; score++) {\n    if (dp[finalBase + score] <= T) answer = score;\n  }\n} else {\n  const total = plates.reduce((sum, value) => sum + value, 0);\n  let minimumOmitted = 0;\n  while (minimumOmitted < width && dp[finalBase + minimumOmitted] > T) {\n    minimumOmitted++;\n  }\n  answer = total - minimumOmitted;\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst N = input[idx++];\nconst K = input[idx++];\nconst T = input[idx++];\n\nconst plates = input.slice(idx, idx + N);\nidx += N;\nconst group = input.slice(idx, idx + N);\n\nconst useGroup = K <= N - K;\nconst initial = [];\nfor (let i = 0; i < N; i++) {\n  if ((group[i] === 1) === useGroup) initial.push(i + 1);\n}\n\nconst M = initial.length;\nconst width = 9 * M + 1;\nconst INF = 1e9;\nconst dp = new Int32Array((M + 1) * width);\ndp.fill(INF);\ndp[0] = 0;\n\nfor (let i = 0; i < N; i++) {\n  const maxSelected = Math.min(M, i + 1);\n  const value = plates[i];\n  const position = i + 1;\n\n  for (let j = maxSelected; j >= 1; j--) {\n    const srcBase = (j - 1) * width;\n    const dstBase = j * width + value;\n    const moveCost = Math.abs(position - initial[j - 1]);\n    const maxScore = 9 * (j - 1);\n\n    for (let score = 0; score <= maxScore; score++) {\n      const cost = dp[srcBase + score];\n      if (cost !== INF) {\n        const newCost = cost + moveCost;\n        const target = dstBase + score;\n        if (newCost < dp[target]) dp[target] = newCost;\n      }\n    }\n  }\n}\n\nlet answer;\nconst finalBase = M * width;\n\nif (useGroup) {\n  answer = 0;\n  for (let score = 0; score < width; score++) {\n    if (dp[finalBase + score] <= T) answer = score;\n  }\n} else {\n  const total = plates.reduce((sum, value) => sum + value, 0);\n  let minimumOmitted = 0;\n  while (minimumOmitted < width && dp[finalBase + minimumOmitted] > T) {\n    minimumOmitted++;\n  }\n  answer = total - minimumOmitted;\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0925513000038336,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

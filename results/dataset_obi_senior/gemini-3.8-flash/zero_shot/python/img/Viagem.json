@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:46:16.567747+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 2301,
+            "output_tokens": 493,
+            "total_tokens": 4061
+        },
+        "cost_usd": {
+            "input_cost": 0.001726,
+            "output_cost": 0.001849,
+            "total_cost": 0.003574
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    V = int(data[0])\n    N = int(data[1])\n    M = int(data[2])\n\n    idx = 3\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx+1])\n        t = int(data[idx+2])\n        p = int(data[idx+3])\n        idx += 4\n        adj[u].append((v, t, p))\n        adj[v].append((u, t, p))\n\n    X = int(data[idx])\n    Y = int(data[idx+1])\n\n    if X == Y:\n        print(0)\n        return\n\n    # min_cost[u] guarda o menor custo com o qual u já foi expandido\n    # Como Dijkstra processa em ordem crescente de tempo, qualquer estado\n    # subsequente que chegue a u com custo >= min_cost[u] terá tempo >= e custo >=,\n    # sendo portanto dominado e descartável.\n    min_cost = [V + 1] * (N + 1)\n\n    # Heap de tuplas: (tempo, vertice, custo_acumulado)\n    pq = [(0, X, 0)]\n\n    ans = -1\n\n    while pq:\n        t, u, c = heapq.heappop(pq)\n\n        if c >= min_cost[u]:\n            continue\n\n        min_cost[u] = c\n\n        if u == Y:\n            ans = t\n            break\n\n        for v, time_cost, price in adj[u]:\n            next_cost = c + price\n            if next_cost <= V and next_cost < min_cost[v]:\n                heapq.heappush(pq, (t + time_cost, v, next_cost))\n\n    print(ans)\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    V = int(data[0])\n    N = int(data[1])\n    M = int(data[2])\n\n    idx = 3\n    adj = [[] for _ in range(N + 1)]\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx+1])\n        t = int(data[idx+2])\n        p = int(data[idx+3])\n        idx += 4\n        adj[u].append((v, t, p))\n        adj[v].append((u, t, p))\n\n    X = int(data[idx])\n    Y = int(data[idx+1])\n\n    if X == Y:\n        print(0)\n        return\n\n    # min_cost[u] guarda o menor custo com o qual u já foi expandido\n    # Como Dijkstra processa em ordem crescente de tempo, qualquer estado\n    # subsequente que chegue a u com custo >= min_cost[u] terá tempo >= e custo >=,\n    # sendo portanto dominado e descartável.\n    min_cost = [V + 1] * (N + 1)\n\n    # Heap de tuplas: (tempo, vertice, custo_acumulado)\n    pq = [(0, X, 0)]\n\n    ans = -1\n\n    while pq:\n        t, u, c = heapq.heappop(pq)\n\n        if c >= min_cost[u]:\n            continue\n\n        min_cost[u] = c\n\n        if u == Y:\n            ans = t\n            break\n\n        for v, time_cost, price in adj[u]:\n            next_cost = c + price\n            if next_cost <= V and next_cost < min_cost[v]:\n                heapq.heappush(pq, (t + time_cost, v, next_cost))\n\n    print(ans)\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09726770000270335,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

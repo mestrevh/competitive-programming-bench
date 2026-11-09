@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:11:28.593057+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1019,
+            "output_tokens": 4703,
+            "total_tokens": 5722
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.011287,
+            "total_cost": 0.01129
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nint L, C;\nint black[6][6];\nint inA[6][6];\nint matchR[36];\n\nint dr[4] = {-1, 1, 0, 0};\nint dc[4] = {0, 0, -1, 1};\n\nint dfs(int u, int vis[]) {\n    int r = u / C;\n    int c = u % C;\n\n    for (int i = 0; i < 4; i++) {\n        int nr = r + dr[i];\n        int nc = c + dc[i];\n\n        if (nr < 0 || nr >= L || nc < 0 || nc >= C) continue;\n        if (!inA[nr][nc]) continue;\n\n        if (((nr + nc) & 1) == 0) continue;\n\n        int v = nr * C + nc;\n        if (vis[v]) continue;\n\n        vis[v] = 1;\n        if (matchR[v] == -1 || dfs(matchR[v], vis)) {\n            matchR[v] = u;\n            return 1;\n        }\n    }\n\n    return 0;\n}\n\nint main() {\n    int P;\n\n    scanf(\"%d %d\", &L, &C);\n    scanf(\"%d\", &P);\n\n    memset(black, 0, sizeof(black));\n\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    memset(inA, 0, sizeof(inA));\n\n    int total = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            int ok = 0;\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    ok = 1;\n                    break;\n                }\n            }\n\n            if (ok) {\n                inA[r][c] = 1;\n                total++;\n            }\n        }\n    }\n\n    memset(matchR, -1, sizeof(matchR));\n\n    int matching = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (inA[r][c] && ((r + c) & 1) == 0) {\n                int vis[36] = {0};\n                if (dfs(r * C + c, vis)) {\n                    matching++;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", total - matching);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nint L, C;\nint black[6][6];\nint inA[6][6];\nint matchR[36];\n\nint dr[4] = {-1, 1, 0, 0};\nint dc[4] = {0, 0, -1, 1};\n\nint dfs(int u, int vis[]) {\n    int r = u / C;\n    int c = u % C;\n\n    for (int i = 0; i < 4; i++) {\n        int nr = r + dr[i];\n        int nc = c + dc[i];\n\n        if (nr < 0 || nr >= L || nc < 0 || nc >= C) continue;\n        if (!inA[nr][nc]) continue;\n\n        if (((nr + nc) & 1) == 0) continue;\n\n        int v = nr * C + nc;\n        if (vis[v]) continue;\n\n        vis[v] = 1;\n        if (matchR[v] == -1 || dfs(matchR[v], vis)) {\n            matchR[v] = u;\n            return 1;\n        }\n    }\n\n    return 0;\n}\n\nint main() {\n    int P;\n\n    scanf(\"%d %d\", &L, &C);\n    scanf(\"%d\", &P);\n\n    memset(black, 0, sizeof(black));\n\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    memset(inA, 0, sizeof(inA));\n\n    int total = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            int ok = 0;\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    ok = 1;\n                    break;\n                }\n            }\n\n            if (ok) {\n                inA[r][c] = 1;\n                total++;\n            }\n        }\n    }\n\n    memset(matchR, -1, sizeof(matchR));\n\n    int matching = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (inA[r][c] && ((r + c) & 1) == 0) {\n                int vis[36] = {0};\n                if (dfs(r * C + c, vis)) {\n                    matching++;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", total - matching);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12311849999969127,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

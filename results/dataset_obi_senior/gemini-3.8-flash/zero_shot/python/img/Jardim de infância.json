@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:40:59.110817+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 3295,
+            "output_tokens": 1628,
+            "total_tokens": 14842
+        },
+        "cost_usd": {
+            "input_cost": 0.002471,
+            "output_cost": 0.006105,
+            "total_cost": 0.008576
+        },
+        "raw_response": "Para resolver este problema, precisamos verificar rigorosamente cada uma das 8 condições geométricas especificadas no enunciado. Como todas as coordenadas são inteiras, podemos realizar todos os cálculos utilizando apenas aritmética inteira exata (evitando problemas de precisão de ponto flutuante).\n\nAs condições são traduzidas para operações vetoriais da seguinte forma:\n1. **Ângulo $\\angle P_2P_1P_3$ agudo:** O produto escalar entre os vetores $\\vec{P_1P_2}$ e $\\vec{P_1P_3}$ deve ser estritamente positivo: $\\vec{P_1P_2} \\cdot \\vec{P_1P_3} > 0$.\n2. **$|P_1P_2| = |P_1P_3|$:** O quadrado das distâncias deve ser igual: $\\text{dist}^2(P_1, P_2) = \\text{dist}^2(P_1, P_3)$.\n3. **$P_2, P_3, P_4, P_5$ colineares:** Os produtos vetoriais 2D $\\vec{P_2P_3} \\times \\vec{P_2P_4}$ e $\\vec{P_2P_3} \\times \\vec{P_2P_5}$ devem ser iguais a zero.\n4. **Pontos médios coincidentes:** O ponto médio de $P_2P_3$ é igual ao de $P_4P_5$, o que equivale a $P_2 + P_3 = P_4 + P_5$ para ambas as coordenadas $X$ e $Y$.\n5. **$|P_2P_3| > |P_4P_5|$:** $\\text{dist}^2(P_2, P_3) > \\text{dist}^2(P_4, P_5)$.\n6. **$P_4P_6 \\perp P_2P_3$ e $P_5P_7 \\perp P_2P_3$:** Os produtos escalares $\\vec{P_4P_6} \\cdot \\vec{P_2P_3}$ e $\\vec{P_5P_7} \\cdot \\vec{P_2P_3}$ devem ser iguais a zero.\n7. **$|P_4P_6| = |P_5P_7|$:** $\\text{dist}^2(P_4, P_6) = \\text{dist}^2(P_5, P_7)$.\n8. **$P_1$ e $P_6$ em lados opostos da reta $P_2P_3$:** Os produtos vetoriais $(\\vec{P_2P_3} \\times \\vec{P_2P_1})$ e $(\\vec{P_2P_3} \\times \\vec{P_2P_6})$ devem ter sinais opostos não-nulos, ou seja, o produto entre eles deve ser estritamente negativo.\n\nAbaixo está a implementação completa e eficiente em Python.\n\n```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    # Leitura dos 7 pontos P1 a P7 (índices de 1 a 7)\n    points = [None]\n    idx = 0\n    for _ in range(7):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        points.append((x, y))\n        idx += 2\n\n    p = points\n\n    def dist2(a, b):\n        return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2\n\n    def dot(v1, v2):\n        return v1[0] * v2[0] + v1[1] * v2[1]\n\n    def cross(v1, v2):\n        return v1[0] * v2[1] - v1[1] * v2[0]\n\n    def vec(a, b):\n        return (b[0] - a[0], b[1] - a[1])\n\n    # 1. Ângulo ∠P2P1P3 é agudo (vértice em P1)\n    v12 = vec(p[1], p[2])\n    v13 = vec(p[1], p[3])\n    cond1 = dot(v12, v13) > 0\n\n    # 2. Segmentos P1P2 e P1P3 têm o mesmo comprimento\n    cond2 = dist2(p[1], p[2]) == dist2(p[1], p[3])\n\n    # 3. Pontos P2, P3, P4 e P5 são colineares\n    v23 = vec(p[2], p[3])\n    v24 = vec(p[2], p[4])\n    v25 = vec(p[2], p[5])\n    cond3 = (cross(v23, v24) == 0) and (cross(v23, v25) == 0)\n\n    # 4. Pontos médios dos segmentos P2P3 e P4P5 são coincidentes\n    cond4 = (p[2][0] + p[3][0] == p[4][0] + p[5][0]) and (p[2][1] + p[3][1] == p[4][1] + p[5][1])\n\n    # 5. Segmento P2P3 tem comprimento maior que P4P5\n    cond5 = dist2(p[2], p[3]) > dist2(p[4], p[5])\n\n    # 6. Segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3\n    v46 = vec(p[4], p[6])\n    v57 = vec(p[5], p[7])\n    cond6 = (dot(v46, v23) == 0) and (dot(v57, v23) == 0)\n\n    # 7. Segmentos P4P6 e P5P7 têm o mesmo comprimento\n    cond7 = dist2(p[4], p[6]) == dist2(p[5], p[7])\n\n    # 8. P1 e P6 separados pela reta que contém P2P3\n    v21 = vec(p[2], p[1])\n    v26 = vec(p[2], p[6])\n    c1 = cross(v23, v21)\n    c6 = cross(v23, v26)\n    cond8 = (c1 * c6 < 0)\n\n    if cond1 and cond2 and cond3 and cond4 and cond5 and cond6 and cond7 and cond8:\n        print('S')\n    else:\n        print('N')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    # Leitura dos 7 pontos P1 a P7 (índices de 1 a 7)\n    points = [None]\n    idx = 0\n    for _ in range(7):\n        x = int(input_data[idx])\n        y = int(input_data[idx + 1])\n        points.append((x, y))\n        idx += 2\n\n    p = points\n\n    def dist2(a, b):\n        return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2\n\n    def dot(v1, v2):\n        return v1[0] * v2[0] + v1[1] * v2[1]\n\n    def cross(v1, v2):\n        return v1[0] * v2[1] - v1[1] * v2[0]\n\n    def vec(a, b):\n        return (b[0] - a[0], b[1] - a[1])\n\n    # 1. Ângulo ∠P2P1P3 é agudo (vértice em P1)\n    v12 = vec(p[1], p[2])\n    v13 = vec(p[1], p[3])\n    cond1 = dot(v12, v13) > 0\n\n    # 2. Segmentos P1P2 e P1P3 têm o mesmo comprimento\n    cond2 = dist2(p[1], p[2]) == dist2(p[1], p[3])\n\n    # 3. Pontos P2, P3, P4 e P5 são colineares\n    v23 = vec(p[2], p[3])\n    v24 = vec(p[2], p[4])\n    v25 = vec(p[2], p[5])\n    cond3 = (cross(v23, v24) == 0) and (cross(v23, v25) == 0)\n\n    # 4. Pontos médios dos segmentos P2P3 e P4P5 são coincidentes\n    cond4 = (p[2][0] + p[3][0] == p[4][0] + p[5][0]) and (p[2][1] + p[3][1] == p[4][1] + p[5][1])\n\n    # 5. Segmento P2P3 tem comprimento maior que P4P5\n    cond5 = dist2(p[2], p[3]) > dist2(p[4], p[5])\n\n    # 6. Segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3\n    v46 = vec(p[4], p[6])\n    v57 = vec(p[5], p[7])\n    cond6 = (dot(v46, v23) == 0) and (dot(v57, v23) == 0)\n\n    # 7. Segmentos P4P6 e P5P7 têm o mesmo comprimento\n    cond7 = dist2(p[4], p[6]) == dist2(p[5], p[7])\n\n    # 8. P1 e P6 separados pela reta que contém P2P3\n    v21 = vec(p[2], p[1])\n    v26 = vec(p[2], p[6])\n    c1 = cross(v23, v21)\n    c6 = cross(v23, v26)\n    cond8 = (c1 * c6 < 0)\n\n    if cond1 and cond2 and cond3 and cond4 and cond5 and cond6 and cond7 and cond8:\n        print('S')\n    else:\n        print('N')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07334089999494608,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

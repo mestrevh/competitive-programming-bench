@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:44:09.366146+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 2167,
+            "output_tokens": 320,
+            "total_tokens": 2759
+        },
+        "cost_usd": {
+            "input_cost": 0.001625,
+            "output_cost": 0.0012,
+            "total_cost": 0.002825
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n\n    if not data:\n        return\n\n    iterator = iter(data)\n\n    S = int(next(iterator))\n    T = int(next(iterator))\n\n    # Matriz de adjacência para consulta O(1)\n    # S <= 1000, logo uma matriz (S+1) x (S+1) consome pouca memória\n    adj = [[False] * (S + 1) for _ in range(S + 1)]\n\n    for _ in range(T):\n        u = int(next(iterator))\n        v = int(next(iterator))\n        adj[u][v] = True\n        adj[v][u] = True\n\n    P = int(next(iterator))\n    valid_paths_count = 0\n\n    for _ in range(P):\n        N = int(next(iterator))\n        path = [int(next(iterator)) for _ in range(N)]\n\n        possible = True\n        for i in range(N - 1):\n            if not adj[path[i]][path[i + 1]]:\n                possible = False\n                break\n\n        if possible:\n            valid_paths_count += 1\n\n    print(valid_paths_count)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n\n    if not data:\n        return\n\n    iterator = iter(data)\n\n    S = int(next(iterator))\n    T = int(next(iterator))\n\n    # Matriz de adjacência para consulta O(1)\n    # S <= 1000, logo uma matriz (S+1) x (S+1) consome pouca memória\n    adj = [[False] * (S + 1) for _ in range(S + 1)]\n\n    for _ in range(T):\n        u = int(next(iterator))\n        v = int(next(iterator))\n        adj[u][v] = True\n        adj[v][u] = True\n\n    P = int(next(iterator))\n    valid_paths_count = 0\n\n    for _ in range(P):\n        N = int(next(iterator))\n        path = [int(next(iterator)) for _ in range(N)]\n\n        possible = True\n        for i in range(N - 1):\n            if not adj[path[i]][path[i + 1]]:\n                possible = False\n                break\n\n        if possible:\n            valid_paths_count += 1\n\n    print(valid_paths_count)\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3850287000022945,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

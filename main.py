@@ -127,7 +127,7 @@ def choice_image_modality() -> str:
     print("\nEscolha a modalidade para as questões com imagens:")
     print(" 1 - Prompt com apenas texto (text)")
     print(" 2 - Prompt com as imagens na Base64 (img)")
-    print(" 3 - Prompt com as imagens em forma descritiva (description) [Plano a ser definido]")
+    print(" 3 - Prompt com as imagens em forma descritiva (description)")
     while True:
         raw = input('Escolha um número [1]: ').strip()
         if raw in ["", "1"]:
@@ -135,7 +135,6 @@ def choice_image_modality() -> str:
         elif raw == "2":
             return "img"
         elif raw == "3":
-            print("[Aviso]: O plano para a modalidade descritiva será configurado nos próximos passos.")
             return "description"
         else:
             print("[ERROR]: Opção inválida. Escolha 1, 2 ou 3.")

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:05:56.278643+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 803,
+            "output_tokens": 280,
+            "total_tokens": 1937
+        },
+        "cost_usd": {
+            "input_cost": 0.000602,
+            "output_cost": 0.00105,
+            "total_cost": 0.001652
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    l = [int(x) for x in data[1:n+1]]\n    \n    total = sum(l)\n    if total % 2 != 0:\n        print('N')\n        return\n    \n    half = total // 2\n    \n    # Prefix sums\n    pref = [0] * (n + 1)\n    for i in range(n):\n        pref[i + 1] = pref[i] + l[i]\n        \n    pairs = 0\n    j = 0\n    for i in range(n):\n        if pref[i] >= half:\n            break\n        while j < n and pref[j] - pref[i] < half:\n            j += 1\n        if j < n and pref[j] - pref[i] == half:\n            pairs += 1\n            if pairs >= 2:\n                print('S')\n                return\n\n    print('N')\n\nif __name__ == '__main__':\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    n = int(data[0])\n    l = [int(x) for x in data[1:n+1]]\n    \n    total = sum(l)\n    if total % 2 != 0:\n        print('N')\n        return\n    \n    half = total // 2\n    \n    # Prefix sums\n    pref = [0] * (n + 1)\n    for i in range(n):\n        pref[i + 1] = pref[i] + l[i]\n        \n    pairs = 0\n    j = 0\n    for i in range(n):\n        if pref[i] >= half:\n            break\n        while j < n and pref[j] - pref[i] < half:\n            j += 1\n        if j < n and pref[j] - pref[i] == half:\n            pairs += 1\n            if pairs >= 2:\n                print('S')\n                return\n\n    print('N')\n\nif __name__ == '__main__':\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08342129999800818,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

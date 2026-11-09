@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:55:17.669982+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1044,
+            "output_tokens": 5920,
+            "total_tokens": 6964
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.014208,
+            "total_cost": 0.014211
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint popcount(int x) {\n    int c = 0;\n    while (x) {\n        c += x & 1;\n        x >>= 1;\n    }\n    return c;\n}\n\nint main() {\n    int L, C;\n    scanf(\"%d %d\", &L, &C);\n\n    int P;\n    scanf(\"%d\", &P);\n\n    int black[6][6] = {0};\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    int cand[6] = {0};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            int ok = 0;\n            if (r > 0 && black[r - 1][c]) ok = 1;\n            if (r + 1 < L && black[r + 1][c]) ok = 1;\n            if (c > 0 && black[r][c - 1]) ok = 1;\n            if (c + 1 < C && black[r][c + 1]) ok = 1;\n\n            if (ok) cand[r] |= (1 << c);\n        }\n    }\n\n    int S = 1 << C;\n    int dp[64], ndp[64];\n\n    for (int i = 0; i < S; i++) dp[i] = -1000000;\n    dp[0] = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int i = 0; i < S; i++) ndp[i] = -1000000;\n\n        for (int prev = 0; prev < S; prev++) {\n            if (dp[prev] < 0) continue;\n\n            for (int mask = 0; mask < S; mask++) {\n                if (mask & ~cand[r]) continue;\n                if (mask & (mask << 1)) continue;\n                if (mask & prev) continue;\n\n                int val = dp[prev] + popcount(mask);\n                if (val > ndp[mask]) ndp[mask] = val;\n            }\n        }\n\n        for (int i = 0; i < S; i++) dp[i] = ndp[i];\n    }\n\n    int ans = 0;\n    for (int i = 0; i < S; i++) {\n        if (dp[i] > ans) ans = dp[i];\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint popcount(int x) {\n    int c = 0;\n    while (x) {\n        c += x & 1;\n        x >>= 1;\n    }\n    return c;\n}\n\nint main() {\n    int L, C;\n    scanf(\"%d %d\", &L, &C);\n\n    int P;\n    scanf(\"%d\", &P);\n\n    int black[6][6] = {0};\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    int cand[6] = {0};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            int ok = 0;\n            if (r > 0 && black[r - 1][c]) ok = 1;\n            if (r + 1 < L && black[r + 1][c]) ok = 1;\n            if (c > 0 && black[r][c - 1]) ok = 1;\n            if (c + 1 < C && black[r][c + 1]) ok = 1;\n\n            if (ok) cand[r] |= (1 << c);\n        }\n    }\n\n    int S = 1 << C;\n    int dp[64], ndp[64];\n\n    for (int i = 0; i < S; i++) dp[i] = -1000000;\n    dp[0] = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int i = 0; i < S; i++) ndp[i] = -1000000;\n\n        for (int prev = 0; prev < S; prev++) {\n            if (dp[prev] < 0) continue;\n\n            for (int mask = 0; mask < S; mask++) {\n                if (mask & ~cand[r]) continue;\n                if (mask & (mask << 1)) continue;\n                if (mask & prev) continue;\n\n                int val = dp[prev] + popcount(mask);\n                if (val > ndp[mask]) ndp[mask] = val;\n            }\n        }\n\n        for (int i = 0; i < S; i++) dp[i] = ndp[i];\n    }\n\n    int ans = 0;\n    for (int i = 0; i < S; i++) {\n        if (dp[i] > ans) ans = dp[i];\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18257489999814425,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

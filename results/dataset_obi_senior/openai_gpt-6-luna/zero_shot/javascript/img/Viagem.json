@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:43:42.100666+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1244,
+            "output_tokens": 1983,
+            "total_tokens": 3227
+        },
+        "cost_usd": {
+            "input_cost": 0.000124,
+            "output_cost": 0.000991,
+            "total_cost": 0.001116
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst V = input[idx++];\nconst N = input[idx++];\nconst M = input[idx++];\nconst width = V + 1;\n\nconst graph = Array.from({ length: N }, () => []);\n\nfor (let i = 0; i < M; i++) {\n  const a = input[idx++] - 1;\n  const b = input[idx++] - 1;\n  const time = input[idx++];\n  const cost = input[idx++];\n\n  graph[a].push([b, time, cost]);\n  graph[b].push([a, time, cost]);\n}\n\nconst start = input[idx++] - 1;\nconst destination = input[idx++] - 1;\n\nconst stateCount = N * width;\nconst dist = new Float64Array(stateCount);\ndist.fill(Infinity);\n\nconst position = new Int32Array(stateCount);\nposition.fill(-1);\n\nconst heap = new Int32Array(stateCount);\nlet heapSize = 0;\n\nfunction siftUp(i) {\n  const state = heap[i];\n  while (i > 0) {\n    const parent = (i - 1) >> 1;\n    const parentState = heap[parent];\n    if (dist[parentState] <= dist[state]) break;\n    heap[i] = parentState;\n    position[parentState] = i;\n    i = parent;\n  }\n  heap[i] = state;\n  position[state] = i;\n}\n\nfunction siftDown(i) {\n  const state = heap[i];\n  while (true) {\n    let child = i * 2 + 1;\n    if (child >= heapSize) break;\n    if (child + 1 < heapSize && dist[heap[child + 1]] < dist[heap[child]]) {\n      child++;\n    }\n    if (dist[state] <= dist[heap[child]]) break;\n    heap[i] = heap[child];\n    position[heap[i]] = i;\n    i = child;\n  }\n  heap[i] = state;\n  position[state] = i;\n}\n\nfunction insertOrDecrease(state) {\n  if (position[state] === -1) {\n    heap[heapSize] = state;\n    position[state] = heapSize;\n    siftUp(heapSize);\n    heapSize++;\n  } else {\n    siftUp(position[state]);\n  }\n}\n\nfunction popMin() {\n  const minState = heap[0];\n  position[minState] = -2;\n  heapSize--;\n\n  if (heapSize > 0) {\n    const last = heap[heapSize];\n    heap[0] = last;\n    position[last] = 0;\n    siftDown(0);\n  }\n\n  return minState;\n}\n\nconst initialState = start * width;\ndist[initialState] = 0;\ninsertOrDecrease(initialState);\n\nlet answer = -1;\n\nwhile (heapSize > 0) {\n  const state = popMin();\n  const time = dist[state];\n  const island = Math.floor(state / width);\n  const spent = state % width;\n\n  if (island === destination) {\n    answer = time;\n    break;\n  }\n\n  for (const [nextIsland, travelTime, cost] of graph[island]) {\n    const nextSpent = spent + cost;\n    if (nextSpent > V) continue;\n\n    const nextState = nextIsland * width + nextSpent;\n    const nextTime = time + travelTime;\n\n    if (nextTime < dist[nextState] && position[nextState] !== -2) {\n      dist[nextState] = nextTime;\n      insertOrDecrease(nextState);\n    }\n  }\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst V = input[idx++];\nconst N = input[idx++];\nconst M = input[idx++];\nconst width = V + 1;\n\nconst graph = Array.from({ length: N }, () => []);\n\nfor (let i = 0; i < M; i++) {\n  const a = input[idx++] - 1;\n  const b = input[idx++] - 1;\n  const time = input[idx++];\n  const cost = input[idx++];\n\n  graph[a].push([b, time, cost]);\n  graph[b].push([a, time, cost]);\n}\n\nconst start = input[idx++] - 1;\nconst destination = input[idx++] - 1;\n\nconst stateCount = N * width;\nconst dist = new Float64Array(stateCount);\ndist.fill(Infinity);\n\nconst position = new Int32Array(stateCount);\nposition.fill(-1);\n\nconst heap = new Int32Array(stateCount);\nlet heapSize = 0;\n\nfunction siftUp(i) {\n  const state = heap[i];\n  while (i > 0) {\n    const parent = (i - 1) >> 1;\n    const parentState = heap[parent];\n    if (dist[parentState] <= dist[state]) break;\n    heap[i] = parentState;\n    position[parentState] = i;\n    i = parent;\n  }\n  heap[i] = state;\n  position[state] = i;\n}\n\nfunction siftDown(i) {\n  const state = heap[i];\n  while (true) {\n    let child = i * 2 + 1;\n    if (child >= heapSize) break;\n    if (child + 1 < heapSize && dist[heap[child + 1]] < dist[heap[child]]) {\n      child++;\n    }\n    if (dist[state] <= dist[heap[child]]) break;\n    heap[i] = heap[child];\n    position[heap[i]] = i;\n    i = child;\n  }\n  heap[i] = state;\n  position[state] = i;\n}\n\nfunction insertOrDecrease(state) {\n  if (position[state] === -1) {\n    heap[heapSize] = state;\n    position[state] = heapSize;\n    siftUp(heapSize);\n    heapSize++;\n  } else {\n    siftUp(position[state]);\n  }\n}\n\nfunction popMin() {\n  const minState = heap[0];\n  position[minState] = -2;\n  heapSize--;\n\n  if (heapSize > 0) {\n    const last = heap[heapSize];\n    heap[0] = last;\n    position[last] = 0;\n    siftDown(0);\n  }\n\n  return minState;\n}\n\nconst initialState = start * width;\ndist[initialState] = 0;\ninsertOrDecrease(initialState);\n\nlet answer = -1;\n\nwhile (heapSize > 0) {\n  const state = popMin();\n  const time = dist[state];\n  const island = Math.floor(state / width);\n  const spent = state % width;\n\n  if (island === destination) {\n    answer = time;\n    break;\n  }\n\n  for (const [nextIsland, travelTime, cost] of graph[island]) {\n    const nextSpent = spent + cost;\n    if (nextSpent > V) continue;\n\n    const nextState = nextIsland * width + nextSpent;\n    const nextTime = time + travelTime;\n\n    if (nextTime < dist[nextState] && position[nextState] !== -2) {\n      dist[nextState] = nextTime;\n      insertOrDecrease(nextState);\n    }\n  }\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09607369999866933,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

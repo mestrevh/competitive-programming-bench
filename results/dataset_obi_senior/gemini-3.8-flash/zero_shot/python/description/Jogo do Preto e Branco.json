@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:03:49.582755+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 894,
+            "output_tokens": 638,
+            "total_tokens": 3179
+        },
+        "cost_usd": {
+            "input_cost": 0.000671,
+            "output_cost": 0.002393,
+            "total_cost": 0.003063
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n    P = int(input_data[2])\n\n    black_cells = set()\n    idx = 3\n    for _ in range(P):\n        r = int(input_data[idx])\n        c = int(input_data[idx + 1])\n        black_cells.add((r, c))\n        idx += 2\n\n    # Direções ortogonais\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n\n    # Identificar casas elegíveis para receber peças brancas\n    eligible_cells = set()\n    for r, c in black_cells:\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 1 <= nr <= L and 1 <= nc <= C:\n                if (nr, nc) not in black_cells:\n                    eligible_cells.add((nr, nc))\n\n    # Grafo bipartido dividido por paridade da soma (r + c)\n    set_A = []  # Paridade ímpar\n    set_B = []  # Paridade par\n\n    for r, c in eligible_cells:\n        if (r + c) % 2 == 1:\n            set_A.append((r, c))\n        else:\n            set_B.append((r, c))\n\n    adj = {u: [] for u in set_A}\n    for u in set_A:\n        r, c = u\n        for dr, dc in directions:\n            v = (r + dr, c + dc)\n            if v in eligible_cells:\n                adj[u].append(v)\n\n    # Emparelhamento bipartido máximo (Kuhn's Algorithm)\n    match_B = {}\n\n    def dfs(u, visited):\n        for v in adj[u]:\n            if v not in visited:\n                visited.add(v)\n                if v not in match_B or dfs(match_B[v], visited):\n                    match_B[v] = u\n                    return True\n        return False\n\n    max_matching = 0\n    for u in set_A:\n        visited = set()\n        if dfs(u, visited):\n            max_matching += 1\n\n    # Teorema de König: Tamanho do Conjunto Independente Máximo = |V| - Matching Máximo\n    ans = len(eligible_cells) - max_matching\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n    P = int(input_data[2])\n\n    black_cells = set()\n    idx = 3\n    for _ in range(P):\n        r = int(input_data[idx])\n        c = int(input_data[idx + 1])\n        black_cells.add((r, c))\n        idx += 2\n\n    # Direções ortogonais\n    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]\n\n    # Identificar casas elegíveis para receber peças brancas\n    eligible_cells = set()\n    for r, c in black_cells:\n        for dr, dc in directions:\n            nr, nc = r + dr, c + dc\n            if 1 <= nr <= L and 1 <= nc <= C:\n                if (nr, nc) not in black_cells:\n                    eligible_cells.add((nr, nc))\n\n    # Grafo bipartido dividido por paridade da soma (r + c)\n    set_A = []  # Paridade ímpar\n    set_B = []  # Paridade par\n\n    for r, c in eligible_cells:\n        if (r + c) % 2 == 1:\n            set_A.append((r, c))\n        else:\n            set_B.append((r, c))\n\n    adj = {u: [] for u in set_A}\n    for u in set_A:\n        r, c = u\n        for dr, dc in directions:\n            v = (r + dr, c + dc)\n            if v in eligible_cells:\n                adj[u].append(v)\n\n    # Emparelhamento bipartido máximo (Kuhn's Algorithm)\n    match_B = {}\n\n    def dfs(u, visited):\n        for v in adj[u]:\n            if v not in visited:\n                visited.add(v)\n                if v not in match_B or dfs(match_B[v], visited):\n                    match_B[v] = u\n                    return True\n        return False\n\n    max_matching = 0\n    for u in set_A:\n        visited = set()\n        if dfs(u, visited):\n            max_matching += 1\n\n    # Teorema de König: Tamanho do Conjunto Independente Máximo = |V| - Matching Máximo\n    ans = len(eligible_cells) - max_matching\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07171999999991385,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

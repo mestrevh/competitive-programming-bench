@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:04:14.193809+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1036,
+            "output_tokens": 7479,
+            "total_tokens": 8515
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.01795,
+            "total_cost": 0.017953
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint *parent, *sz;\nint *head_adj, *to, *adj_next;\nint *comp_head, *comp_next;\nint *deg;\n\nint find(int x) {\n    int r = x;\n    while (parent[r] != r) r = parent[r];\n    while (parent[x] != x) {\n        int p = parent[x];\n        parent[x] = r;\n        x = p;\n    }\n    return r;\n}\n\nvoid unite(int a, int b) {\n    a = find(a);\n    b = find(b);\n    if (a == b) return;\n    if (sz[a] < sz[b]) {\n        int t = a;\n        a = b;\n        b = t;\n    }\n    parent[b] = a;\n    sz[a] += sz[b];\n}\n\nint main() {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    parent = (int*)malloc((N + 1) * sizeof(int));\n    sz = (int*)malloc((N + 1) * sizeof(int));\n    deg = (int*)calloc(N + 1, sizeof(int));\n    head_adj = (int*)malloc((N + 1) * sizeof(int));\n\n    for (int i = 1; i <= N; i++) {\n        parent[i] = i;\n        sz[i] = 1;\n        head_adj[i] = -1;\n    }\n\n    int *eu = (int*)malloc(M * sizeof(int));\n    int *ev = (int*)malloc(M * sizeof(int));\n    to = (int*)malloc(2 * M * sizeof(int));\n    adj_next = (int*)malloc(2 * M * sizeof(int));\n\n    int ec = 0;\n    for (int i = 0; i < M; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        eu[i] = u;\n        ev[i] = v;\n\n        unite(u, v);\n\n        deg[u]++;\n        deg[v]++;\n\n        to[ec] = v;\n        adj_next[ec] = head_adj[u];\n        head_adj[u] = ec++;\n\n        to[ec] = u;\n        adj_next[ec] = head_adj[v];\n        head_adj[v] = ec++;\n    }\n\n    long long *edge_count = (long long*)calloc(N + 1, sizeof(long long));\n    for (int i = 0; i < M; i++) {\n        int r = find(eu[i]);\n        edge_count[r]++;\n    }\n\n    comp_head = (int*)calloc(N + 1, sizeof(int));\n    comp_next = (int*)malloc((N + 1) * sizeof(int));\n\n    for (int v = 1; v <= N; v++) {\n        int r = find(v);\n        comp_next[v] = comp_head[r];\n        comp_head[r] = v;\n    }\n\n    int root = -1;\n    for (int v = 1; v <= N; v++) {\n        if (parent[v] == v) {\n            long long S = sz[v];\n            long long needed = S * (S - 1) / 2;\n            if (edge_count[v] < needed) {\n                root = v;\n                break;\n            }\n        }\n    }\n\n    if (root == -1) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    int S = sz[root];\n    int u = -1;\n\n    for (int x = comp_head[root]; x != 0; x = comp_next[x]) {\n        if (deg[x] < S - 1) {\n            u = x;\n            break;\n        }\n    }\n\n    if (u == -1) u = comp_head[root];\n\n    char *mark = (char*)calloc(N + 1, sizeof(char));\n    for (int e = head_adj[u]; e != -1; e = adj_next[e]) {\n        mark[to[e]] = 1;\n    }\n\n    for (int x = comp_head[root]; x != 0; x = comp_next[x]) {\n        if (x != u && !mark[x]) {\n            printf(\"%d %d\\n\", u, x);\n            return 0;\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint *parent, *sz;\nint *head_adj, *to, *adj_next;\nint *comp_head, *comp_next;\nint *deg;\n\nint find(int x) {\n    int r = x;\n    while (parent[r] != r) r = parent[r];\n    while (parent[x] != x) {\n        int p = parent[x];\n        parent[x] = r;\n        x = p;\n    }\n    return r;\n}\n\nvoid unite(int a, int b) {\n    a = find(a);\n    b = find(b);\n    if (a == b) return;\n    if (sz[a] < sz[b]) {\n        int t = a;\n        a = b;\n        b = t;\n    }\n    parent[b] = a;\n    sz[a] += sz[b];\n}\n\nint main() {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    parent = (int*)malloc((N + 1) * sizeof(int));\n    sz = (int*)malloc((N + 1) * sizeof(int));\n    deg = (int*)calloc(N + 1, sizeof(int));\n    head_adj = (int*)malloc((N + 1) * sizeof(int));\n\n    for (int i = 1; i <= N; i++) {\n        parent[i] = i;\n        sz[i] = 1;\n        head_adj[i] = -1;\n    }\n\n    int *eu = (int*)malloc(M * sizeof(int));\n    int *ev = (int*)malloc(M * sizeof(int));\n    to = (int*)malloc(2 * M * sizeof(int));\n    adj_next = (int*)malloc(2 * M * sizeof(int));\n\n    int ec = 0;\n    for (int i = 0; i < M; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        eu[i] = u;\n        ev[i] = v;\n\n        unite(u, v);\n\n        deg[u]++;\n        deg[v]++;\n\n        to[ec] = v;\n        adj_next[ec] = head_adj[u];\n        head_adj[u] = ec++;\n\n        to[ec] = u;\n        adj_next[ec] = head_adj[v];\n        head_adj[v] = ec++;\n    }\n\n    long long *edge_count = (long long*)calloc(N + 1, sizeof(long long));\n    for (int i = 0; i < M; i++) {\n        int r = find(eu[i]);\n        edge_count[r]++;\n    }\n\n    comp_head = (int*)calloc(N + 1, sizeof(int));\n    comp_next = (int*)malloc((N + 1) * sizeof(int));\n\n    for (int v = 1; v <= N; v++) {\n        int r = find(v);\n        comp_next[v] = comp_head[r];\n        comp_head[r] = v;\n    }\n\n    int root = -1;\n    for (int v = 1; v <= N; v++) {\n        if (parent[v] == v) {\n            long long S = sz[v];\n            long long needed = S * (S - 1) / 2;\n            if (edge_count[v] < needed) {\n                root = v;\n                break;\n            }\n        }\n    }\n\n    if (root == -1) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    int S = sz[root];\n    int u = -1;\n\n    for (int x = comp_head[root]; x != 0; x = comp_next[x]) {\n        if (deg[x] < S - 1) {\n            u = x;\n            break;\n        }\n    }\n\n    if (u == -1) u = comp_head[root];\n\n    char *mark = (char*)calloc(N + 1, sizeof(char));\n    for (int e = head_adj[u]; e != -1; e = adj_next[e]) {\n        mark[to[e]] = 1;\n    }\n\n    for (int x = comp_head[root]; x != 0; x = comp_next[x]) {\n        if (x != u && !mark[x]) {\n            printf(\"%d %d\\n\", u, x);\n            return 0;\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.17474640000000363,
+            "counts": {
+                "AC": 6,
+                "WA": 7,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

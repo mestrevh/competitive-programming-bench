@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:59:45.259849+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 772,
+            "output_tokens": 762,
+            "total_tokens": 1534
+        },
+        "cost_usd": {
+            "input_cost": 7.7e-05,
+            "output_cost": 0.000381,
+            "total_cost": 0.000458
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < data.length && data[pos] > 32) {\n    value = value * 10 + data[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst values = new Int32Array(N);\n\nfor (let i = 0; i < N; i++) {\n  values[i] = nextInt();\n}\n\nfunction countAtMost(limit) {\n  if (limit < 0) return 0;\n\n  let left = 0;\n  let sum = 0;\n  let count = 0;\n\n  for (let right = 0; right < N; right++) {\n    sum += values[right];\n\n    while (sum > limit) {\n      sum -= values[left++];\n    }\n\n    count += right - left + 1;\n  }\n\n  return count;\n}\n\nconsole.log(countAtMost(K) - countAtMost(K - 1));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < data.length && data[pos] > 32) {\n    value = value * 10 + data[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst values = new Int32Array(N);\n\nfor (let i = 0; i < N; i++) {\n  values[i] = nextInt();\n}\n\nfunction countAtMost(limit) {\n  if (limit < 0) return 0;\n\n  let left = 0;\n  let sum = 0;\n  let count = 0;\n\n  for (let right = 0; right < N; right++) {\n    sum += values[right];\n\n    while (sum > limit) {\n      sum -= values[left++];\n    }\n\n    count += right - left + 1;\n  }\n\n  return count;\n}\n\nconsole.log(countAtMost(K) - countAtMost(K - 1));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07494550000410527,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

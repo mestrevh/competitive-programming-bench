@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:59:00.381110+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 925,
+            "output_tokens": 3129,
+            "total_tokens": 4054
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.00751,
+            "total_cost": 0.007512
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic int cmp_long_long(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nstatic int contains(long long *v, int n, long long key) {\n    int lo = 0, hi = n - 1;\n    while (lo <= hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (v[mid] == key) return 1;\n        if (v[mid] < key) lo = mid + 1;\n        else hi = mid - 1;\n    }\n    return 0;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *pos = (long long *)malloc(sizeof(long long) * n);\n    long long sum = 0, total = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long l;\n        scanf(\"%lld\", &l);\n        pos[i] = sum;\n        sum += l;\n        total += l;\n    }\n\n    if (total % 2 != 0) {\n        printf(\"N\\n\");\n        free(pos);\n        return 0;\n    }\n\n    qsort(pos, n, sizeof(long long), cmp_long_long);\n\n    long long half = total / 2;\n    int count = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long target = pos[i] + half;\n        if (target >= total) target -= total;\n        if (contains(pos, n, target)) count++;\n    }\n\n    int pairs = count / 2;\n\n    printf(\"%c\\n\", pairs >= 2 ? 'S' : 'N');\n\n    free(pos);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic int cmp_long_long(const void *a, const void *b) {\n    long long x = *(const long long *)a;\n    long long y = *(const long long *)b;\n    if (x < y) return -1;\n    if (x > y) return 1;\n    return 0;\n}\n\nstatic int contains(long long *v, int n, long long key) {\n    int lo = 0, hi = n - 1;\n    while (lo <= hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (v[mid] == key) return 1;\n        if (v[mid] < key) lo = mid + 1;\n        else hi = mid - 1;\n    }\n    return 0;\n}\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *pos = (long long *)malloc(sizeof(long long) * n);\n    long long sum = 0, total = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long l;\n        scanf(\"%lld\", &l);\n        pos[i] = sum;\n        sum += l;\n        total += l;\n    }\n\n    if (total % 2 != 0) {\n        printf(\"N\\n\");\n        free(pos);\n        return 0;\n    }\n\n    qsort(pos, n, sizeof(long long), cmp_long_long);\n\n    long long half = total / 2;\n    int count = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long target = pos[i] + half;\n        if (target >= total) target -= total;\n        if (contains(pos, n, target)) count++;\n    }\n\n    int pairs = count / 2;\n\n    printf(\"%c\\n\", pairs >= 2 ? 'S' : 'N');\n\n    free(pos);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1792005999959656,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

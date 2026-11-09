@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:40:48.211281+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 2172,
+            "output_tokens": 10590,
+            "total_tokens": 12762
+        },
+        "cost_usd": {
+            "input_cost": 7e-06,
+            "output_cost": 0.025416,
+            "total_cost": 0.025423
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 305\n#define MAXS 2705\n#define INF 1000000000\n\nint dp[MAXN][MAXS];\n\nint main() {\n    int N, K, T;\n    scanf(\"%d %d %d\", &N, &K, &T);\n    int P[305];\n    for (int i = 0; i < N; i++) scanf(\"%d\", &P[i]);\n    int G[305];\n    int a[305];\n    int cnt = 0;\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &G[i]);\n        if (G[i] == 1) {\n            a[cnt++] = i;\n        }\n    }\n    int S = 9 * K;\n    for (int i = 0; i <= K; i++)\n        for (int j = 0; j <= S; j++)\n            dp[i][j] = INF;\n    dp[0][0] = 0;\n    for (int i = 0; i < N; i++) {\n        int v = P[i];\n        int maxj = (i < K - 1) ? i : K - 1;\n        for (int j = maxj; j >= 0; j--) {\n            int cost_add = abs(a[j] - i);\n            int maxs = 9 * j;\n            for (int s = 0; s <= maxs; s++) {\n                if (dp[j][s] != INF) {\n                    int new_s = s + v;\n                    int new_cost = dp[j][s] + cost_add;\n                    if (new_cost < dp[j + 1][new_s]) {\n                        dp[j + 1][new_s] = new_cost;\n                    }\n                }\n            }\n        }\n    }\n    for (int s = S; s >= 0; s--) {\n        if (dp[K][s] <= T) {\n            printf(\"%d\\n\", s);\n            break;\n        }\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 305\n#define MAXS 2705\n#define INF 1000000000\n\nint dp[MAXN][MAXS];\n\nint main() {\n    int N, K, T;\n    scanf(\"%d %d %d\", &N, &K, &T);\n    int P[305];\n    for (int i = 0; i < N; i++) scanf(\"%d\", &P[i]);\n    int G[305];\n    int a[305];\n    int cnt = 0;\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &G[i]);\n        if (G[i] == 1) {\n            a[cnt++] = i;\n        }\n    }\n    int S = 9 * K;\n    for (int i = 0; i <= K; i++)\n        for (int j = 0; j <= S; j++)\n            dp[i][j] = INF;\n    dp[0][0] = 0;\n    for (int i = 0; i < N; i++) {\n        int v = P[i];\n        int maxj = (i < K - 1) ? i : K - 1;\n        for (int j = maxj; j >= 0; j--) {\n            int cost_add = abs(a[j] - i);\n            int maxs = 9 * j;\n            for (int s = 0; s <= maxs; s++) {\n                if (dp[j][s] != INF) {\n                    int new_s = s + v;\n                    int new_cost = dp[j][s] + cost_add;\n                    if (new_cost < dp[j + 1][new_s]) {\n                        dp[j + 1][new_s] = new_cost;\n                    }\n                }\n            }\n        }\n    }\n    for (int s = S; s >= 0; s--) {\n        if (dp[K][s] <= T) {\n            printf(\"%d\\n\", s);\n            break;\n        }\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.18452000000252156,
+            "counts": {
+                "AC": 65,
+                "WA": 2,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

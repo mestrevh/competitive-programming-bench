@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:32:13.779184+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 4763,
+            "output_tokens": 851,
+            "total_tokens": 16478
+        },
+        "cost_usd": {
+            "input_cost": 0.003572,
+            "output_cost": 0.003191,
+            "total_cost": 0.006764
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    K = int(data[1])\n    T = int(data[2])\n\n    P = [int(x) for x in data[3 : 3 + N]]\n    G = [int(x) for x in data[3 + N : 3 + 2 * N]]\n\n    if K == N:\n        print(sum(P))\n        return\n\n    inverted = False\n    if K > N // 2:\n        inverted = True\n        K = N - K\n        G = [1 - x for x in G]\n\n    # Prefix sums of G\n    c = [0] * (N + 1)\n    for i in range(1, N + 1):\n        c[i] = c[i - 1] + G[i - 1]\n\n    # Precompute C(i, j) = sum_{k=1}^i |c_k - j|\n    C = [[0] * (K + 1) for _ in range(N + 1)]\n    for i in range(1, N + 1):\n        c_i = c[i]\n        C_prev = C[i - 1]\n        C_curr = C[i]\n        for j in range(K + 1):\n            C_curr[j] = C_prev[j] + abs(c_i - j)\n\n    INF = 10**15\n    max_V = 9 * K\n\n    # S[j][v] stores the minimal shifted time to select j elements with sum v\n    S = [[INF] * (max_V + 1) for _ in range(K + 1)]\n    S[0][0] = 0\n\n    cur_max_v = [0] * (K + 1)\n\n    for i in range(1, N + 1):\n        p = P[i - 1]\n        limit_j = min(i, K)\n        C_prev = C[i - 1]\n\n        for j in range(limit_j, 0, -1):\n            delta = C_prev[j - 1] - C_prev[j]\n            S_prev = S[j - 1]\n            S_curr = S[j]\n            new_v_max = cur_max_v[j - 1] + p\n            if new_v_max > cur_max_v[j]:\n                cur_max_v[j] = new_v_max\n\n            for v in range(new_v_max, p - 1, -1):\n                val = S_prev[v - p] + delta\n                if val < S_curr[v]:\n                    S_curr[v] = val\n\n    final_C = C[N][K]\n\n    if not inverted:\n        ans = 0\n        for v in range(cur_max_v[K] + 1):\n            if S[K][v] + final_C <= T:\n                if v > ans:\n                    ans = v\n        print(ans)\n    else:\n        total_P = sum(P)\n        min_v = INF\n        for v in range(cur_max_v[K] + 1):\n            if S[K][v] + final_C <= T:\n                if v < min_v:\n                    min_v = v\n        print(total_P - min_v)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    K = int(data[1])\n    T = int(data[2])\n\n    P = [int(x) for x in data[3 : 3 + N]]\n    G = [int(x) for x in data[3 + N : 3 + 2 * N]]\n\n    if K == N:\n        print(sum(P))\n        return\n\n    inverted = False\n    if K > N // 2:\n        inverted = True\n        K = N - K\n        G = [1 - x for x in G]\n\n    # Prefix sums of G\n    c = [0] * (N + 1)\n    for i in range(1, N + 1):\n        c[i] = c[i - 1] + G[i - 1]\n\n    # Precompute C(i, j) = sum_{k=1}^i |c_k - j|\n    C = [[0] * (K + 1) for _ in range(N + 1)]\n    for i in range(1, N + 1):\n        c_i = c[i]\n        C_prev = C[i - 1]\n        C_curr = C[i]\n        for j in range(K + 1):\n            C_curr[j] = C_prev[j] + abs(c_i - j)\n\n    INF = 10**15\n    max_V = 9 * K\n\n    # S[j][v] stores the minimal shifted time to select j elements with sum v\n    S = [[INF] * (max_V + 1) for _ in range(K + 1)]\n    S[0][0] = 0\n\n    cur_max_v = [0] * (K + 1)\n\n    for i in range(1, N + 1):\n        p = P[i - 1]\n        limit_j = min(i, K)\n        C_prev = C[i - 1]\n\n        for j in range(limit_j, 0, -1):\n            delta = C_prev[j - 1] - C_prev[j]\n            S_prev = S[j - 1]\n            S_curr = S[j]\n            new_v_max = cur_max_v[j - 1] + p\n            if new_v_max > cur_max_v[j]:\n                cur_max_v[j] = new_v_max\n\n            for v in range(new_v_max, p - 1, -1):\n                val = S_prev[v - p] + delta\n                if val < S_curr[v]:\n                    S_curr[v] = val\n\n    final_C = C[N][K]\n\n    if not inverted:\n        ans = 0\n        for v in range(cur_max_v[K] + 1):\n            if S[K][v] + final_C <= T:\n                if v > ans:\n                    ans = v\n        print(ans)\n    else:\n        total_P = sum(P)\n        min_v = INF\n        for v in range(cur_max_v[K] + 1):\n            if S[K][v] + final_C <= T:\n                if v < min_v:\n                    min_v = v\n        print(total_P - min_v)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.9994117000023834,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:00:27.437286+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 885,
+            "output_tokens": 1517,
+            "total_tokens": 2402
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003641,
+            "total_cost": 0.003643
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *h = (long long *)malloc(sizeof(long long) * n);\n    long long *leftMax = (long long *)malloc(sizeof(long long) * n);\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &h[i]);\n    }\n\n    long long cur = 0;\n    for (int i = 0; i < n; i++) {\n        if (h[i] > cur) cur = h[i];\n        leftMax[i] = cur;\n    }\n\n    long long rightMax = 0;\n    int count = 0;\n\n    for (int i = n - 1; i >= 0; i--) {\n        if (h[i] > rightMax) rightMax = h[i];\n\n        long long level = leftMax[i] < rightMax ? leftMax[i] : rightMax;\n        if (level - h[i] >= 1) {\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n\n    free(h);\n    free(leftMax);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *h = (long long *)malloc(sizeof(long long) * n);\n    long long *leftMax = (long long *)malloc(sizeof(long long) * n);\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &h[i]);\n    }\n\n    long long cur = 0;\n    for (int i = 0; i < n; i++) {\n        if (h[i] > cur) cur = h[i];\n        leftMax[i] = cur;\n    }\n\n    long long rightMax = 0;\n    int count = 0;\n\n    for (int i = n - 1; i >= 0; i--) {\n        if (h[i] > rightMax) rightMax = h[i];\n\n        long long level = leftMax[i] < rightMax ? leftMax[i] : rightMax;\n        if (level - h[i] >= 1) {\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n\n    free(h);\n    free(leftMax);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20346549999521812,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

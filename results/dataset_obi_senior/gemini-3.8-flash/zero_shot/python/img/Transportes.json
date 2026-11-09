@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:44:56.882859+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 2901,
+            "output_tokens": 804,
+            "total_tokens": 5351
+        },
+        "cost_usd": {
+            "input_cost": 0.002176,
+            "output_cost": 0.003015,
+            "total_cost": 0.005191
+        },
+        "raw_response": "```python\nimport sys\nimport heapq\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n    \n    idx = 3\n    # P é 1-indexado para os sistemas 1..K\n    P = [0] * (K + 1)\n    for i in range(1, K + 1):\n        P[i] = int(data[idx])\n        idx += 1\n        \n    edges = []\n    # Coletar pares únicos (u, t)\n    # Nós neutros serão de 1 a N.\n    # Nós de sistema serão de N + 1 em diante.\n    node_map = {}\n    next_id = N + 1\n    \n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx+1])\n        t = int(data[idx+2])\n        idx += 3\n        edges.append((u, v, t))\n        \n        if (u, t) not in node_map:\n            node_map[(u, t)] = next_id\n            next_id += 1\n        if (v, t) not in node_map:\n            node_map[(v, t)] = next_id\n            next_id += 1\n            \n    A = int(data[idx])\n    B = int(data[idx+1])\n    \n    total_nodes = next_id\n    adj = [[] for _ in range(total_nodes)]\n    \n    # Adicionar arestas entre nó neutro u e (u, t)\n    for (u, t), ut_id in node_map.items():\n        # Entrar no sistema t a partir do nó neutro u custa P[t]\n        adj[u].append((ut_id, P[t]))\n        # Sair do sistema t para o nó neutro u custa 0\n        adj[ut_id].append((u, 0))\n        \n    # Adicionar arestas do grafo original dentro do mesmo sistema\n    for u, v, t in edges:\n        ut_id = node_map[(u, t)]\n        vt_id = node_map[(v, t)]\n        adj[ut_id].append((vt_id, 0))\n        adj[vt_id].append((ut_id, 0))\n        \n    # Dijkstra a partir do nó neutro A\n    INF = 10**18\n    dist = [INF] * total_nodes\n    dist[A] = 0\n    \n    pq = [(0, A)]\n    \n    while pq:\n        d, u = heapq.heappop(pq)\n        \n        if d > dist[u]:\n            continue\n            \n        if u == B:\n            print(d)\n            return\n            \n        for v, weight in adj[u]:\n            if dist[u] + weight < dist[v]:\n                dist[v] = dist[u] + weight\n                heapq.heappush(pq, (dist[v], v))\n                \n    ans = dist[B]\n    if ans >= INF:\n        print(-1)\n    else:\n        print(ans)\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nimport heapq\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    \n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n    \n    idx = 3\n    # P é 1-indexado para os sistemas 1..K\n    P = [0] * (K + 1)\n    for i in range(1, K + 1):\n        P[i] = int(data[idx])\n        idx += 1\n        \n    edges = []\n    # Coletar pares únicos (u, t)\n    # Nós neutros serão de 1 a N.\n    # Nós de sistema serão de N + 1 em diante.\n    node_map = {}\n    next_id = N + 1\n    \n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx+1])\n        t = int(data[idx+2])\n        idx += 3\n        edges.append((u, v, t))\n        \n        if (u, t) not in node_map:\n            node_map[(u, t)] = next_id\n            next_id += 1\n        if (v, t) not in node_map:\n            node_map[(v, t)] = next_id\n            next_id += 1\n            \n    A = int(data[idx])\n    B = int(data[idx+1])\n    \n    total_nodes = next_id\n    adj = [[] for _ in range(total_nodes)]\n    \n    # Adicionar arestas entre nó neutro u e (u, t)\n    for (u, t), ut_id in node_map.items():\n        # Entrar no sistema t a partir do nó neutro u custa P[t]\n        adj[u].append((ut_id, P[t]))\n        # Sair do sistema t para o nó neutro u custa 0\n        adj[ut_id].append((u, 0))\n        \n    # Adicionar arestas do grafo original dentro do mesmo sistema\n    for u, v, t in edges:\n        ut_id = node_map[(u, t)]\n        vt_id = node_map[(v, t)]\n        adj[ut_id].append((vt_id, 0))\n        adj[vt_id].append((ut_id, 0))\n        \n    # Dijkstra a partir do nó neutro A\n    INF = 10**18\n    dist = [INF] * total_nodes\n    dist[A] = 0\n    \n    pq = [(0, A)]\n    \n    while pq:\n        d, u = heapq.heappop(pq)\n        \n        if d > dist[u]:\n            continue\n            \n        if u == B:\n            print(d)\n            return\n            \n        for v, weight in adj[u]:\n            if dist[u] + weight < dist[v]:\n                dist[v] = dist[u] + weight\n                heapq.heappush(pq, (dist[v], v))\n                \n    ans = dist[B]\n    if ans >= INF:\n        print(-1)\n    else:\n        print(ans)\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.8214516999942134,
+            "counts": {
+                "AC": 107,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 107
+        }
+    }
+]

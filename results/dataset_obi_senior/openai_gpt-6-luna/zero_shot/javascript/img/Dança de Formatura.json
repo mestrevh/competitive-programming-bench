@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:35:26.735095+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1408,
+            "output_tokens": 1889,
+            "total_tokens": 3297
+        },
+        "cost_usd": {
+            "input_cost": 0.000141,
+            "output_cost": 0.000945,
+            "total_cost": 0.001085
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < input.length && input[pos] >= 48 && input[pos] <= 57) {\n    value = value * 10 + input[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nfunction nextChar() {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  return String.fromCharCode(input[pos++]);\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst P = nextInt();\n\nconst rows = new Int32Array(N);\nconst cols = new Int32Array(M);\n\nfor (let i = 0; i < N; i++) rows[i] = i;\nfor (let j = 0; j < M; j++) cols[j] = j;\n\nfor (let i = 0; i < P; i++) {\n  const operation = nextChar();\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n\n  if (operation === 'L') {\n    const temp = rows[a];\n    rows[a] = rows[b];\n    rows[b] = temp;\n  } else {\n    const temp = cols[a];\n    cols[a] = cols[b];\n    cols[b] = temp;\n  }\n}\n\nlet outputParts = [];\nlet outputLength = 0;\n\nfunction flush() {\n  if (outputParts.length > 0) {\n    process.stdout.write(outputParts.join(''));\n    outputParts = [];\n    outputLength = 0;\n  }\n}\n\nconst batchSize = 10000;\n\nfor (let i = 0; i < N; i++) {\n  let j = 0;\n\n  while (j < M) {\n    const end = Math.min(j + batchSize, M);\n    const values = new Array(end - j);\n\n    for (let k = j; k < end; k++) {\n      values[k - j] = String(rows[i] * M + cols[k] + 1);\n    }\n\n    let part = values.join(' ');\n    if (j > 0) part = ' ' + part;\n    outputParts.push(part);\n    outputLength += part.length;\n    j = end;\n\n    if (outputLength >= 65536) flush();\n  }\n\n  outputParts.push('\\n');\n  outputLength++;\n\n  if (outputLength >= 65536) flush();\n}\n\nflush();\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < input.length && input[pos] >= 48 && input[pos] <= 57) {\n    value = value * 10 + input[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nfunction nextChar() {\n  while (pos < input.length && input[pos] <= 32) pos++;\n  return String.fromCharCode(input[pos++]);\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst P = nextInt();\n\nconst rows = new Int32Array(N);\nconst cols = new Int32Array(M);\n\nfor (let i = 0; i < N; i++) rows[i] = i;\nfor (let j = 0; j < M; j++) cols[j] = j;\n\nfor (let i = 0; i < P; i++) {\n  const operation = nextChar();\n  const a = nextInt() - 1;\n  const b = nextInt() - 1;\n\n  if (operation === 'L') {\n    const temp = rows[a];\n    rows[a] = rows[b];\n    rows[b] = temp;\n  } else {\n    const temp = cols[a];\n    cols[a] = cols[b];\n    cols[b] = temp;\n  }\n}\n\nlet outputParts = [];\nlet outputLength = 0;\n\nfunction flush() {\n  if (outputParts.length > 0) {\n    process.stdout.write(outputParts.join(''));\n    outputParts = [];\n    outputLength = 0;\n  }\n}\n\nconst batchSize = 10000;\n\nfor (let i = 0; i < N; i++) {\n  let j = 0;\n\n  while (j < M) {\n    const end = Math.min(j + batchSize, M);\n    const values = new Array(end - j);\n\n    for (let k = j; k < end; k++) {\n      values[k - j] = String(rows[i] * M + cols[k] + 1);\n    }\n\n    let part = values.join(' ');\n    if (j > 0) part = ' ' + part;\n    outputParts.push(part);\n    outputLength += part.length;\n    j = end;\n\n    if (outputLength >= 65536) flush();\n  }\n\n  outputParts.push('\\n');\n  outputLength++;\n\n  if (outputLength >= 65536) flush();\n}\n\nflush();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.41252759999770205,
+            "counts": {
+                "AC": 55,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 55
+        }
+    }
+]

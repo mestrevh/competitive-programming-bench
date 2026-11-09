@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:08:08.815533+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1094,
+            "output_tokens": 1344,
+            "total_tokens": 2438
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003226,
+            "total_cost": 0.003229
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, F;\n    if (scanf(\"%d %d\", &N, &F) != 2) return 0;\n\n    char **grid = malloc(N * sizeof(char *));\n    for (int i = 0; i < N; i++) {\n        grid[i] = malloc((N + 1) * sizeof(char));\n        scanf(\"%s\", grid[i]);\n    }\n\n    int total = N * N;\n    int *qr = malloc(total * sizeof(int));\n    int *qc = malloc(total * sizeof(int));\n\n    int head = 0, tail = 0;\n\n    if (grid[0][0] - '0' <= F) {\n        grid[0][0] = '*';\n        qr[tail] = 0;\n        qc[tail] = 0;\n        tail++;\n    }\n\n    int dr[4] = {1, -1, 0, 0};\n    int dc[4] = {0, 0, 1, -1};\n\n    while (head < tail) {\n        int r = qr[head];\n        int c = qc[head];\n        head++;\n\n        for (int k = 0; k < 4; k++) {\n            int nr = r + dr[k];\n            int nc = c + dc[k];\n\n            if (nr >= 0 && nr < N && nc >= 0 && nc < N &&\n                grid[nr][nc] != '*' && grid[nr][nc] - '0' <= F) {\n                grid[nr][nc] = '*';\n                qr[tail] = nr;\n                qc[tail] = nc;\n                tail++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    for (int i = 0; i < N; i++) free(grid[i]);\n    free(grid);\n    free(qr);\n    free(qc);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, F;\n    if (scanf(\"%d %d\", &N, &F) != 2) return 0;\n\n    char **grid = malloc(N * sizeof(char *));\n    for (int i = 0; i < N; i++) {\n        grid[i] = malloc((N + 1) * sizeof(char));\n        scanf(\"%s\", grid[i]);\n    }\n\n    int total = N * N;\n    int *qr = malloc(total * sizeof(int));\n    int *qc = malloc(total * sizeof(int));\n\n    int head = 0, tail = 0;\n\n    if (grid[0][0] - '0' <= F) {\n        grid[0][0] = '*';\n        qr[tail] = 0;\n        qc[tail] = 0;\n        tail++;\n    }\n\n    int dr[4] = {1, -1, 0, 0};\n    int dc[4] = {0, 0, 1, -1};\n\n    while (head < tail) {\n        int r = qr[head];\n        int c = qc[head];\n        head++;\n\n        for (int k = 0; k < 4; k++) {\n            int nr = r + dr[k];\n            int nc = c + dc[k];\n\n            if (nr >= 0 && nr < N && nc >= 0 && nc < N &&\n                grid[nr][nc] != '*' && grid[nr][nc] - '0' <= F) {\n                grid[nr][nc] = '*';\n                qr[tail] = nr;\n                qc[tail] = nc;\n                tail++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    for (int i = 0; i < N; i++) free(grid[i]);\n    free(grid);\n    free(qr);\n    free(qc);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08849480000208132,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

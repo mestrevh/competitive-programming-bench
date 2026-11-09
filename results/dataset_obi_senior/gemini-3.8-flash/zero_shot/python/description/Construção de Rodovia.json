@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:59:33.649797+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 955,
+            "output_tokens": 468,
+            "total_tokens": 2586
+        },
+        "cost_usd": {
+            "input_cost": 0.000716,
+            "output_cost": 0.001755,
+            "total_cost": 0.002471
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    m = int(data[1])\n\n    adj = [[] for _ in range(n + 1)]\n    idx = 2\n    for _ in range(m):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    visited = [False] * (n + 1)\n\n    for i in range(1, n + 1):\n        if not visited[i]:\n            comp = []\n            queue = [i]\n            visited[i] = True\n            edges_count_doubled = 0\n\n            head = 0\n            while head < len(queue):\n                curr = queue[head]\n                head += 1\n                comp.append(curr)\n                deg = len(adj[curr])\n                edges_count_doubled += deg\n                for neighbor in adj[curr]:\n                    if not visited[neighbor]:\n                        visited[neighbor] = True\n                        queue.append(neighbor)\n\n            size = len(comp)\n            # Para ser um clique completo, precisa ter size * (size - 1) arestas direcionadas (ou soma de graus)\n            if edges_count_doubled < size * (size - 1):\n                # Não é um clique, existe pelo menos um par sem aresta nesta componente\n                # Encontra um vértice com grau < size - 1\n                for u in comp:\n                    if len(adj[u]) < size - 1:\n                        neighbors_set = set(adj[u])\n                        for v in comp:\n                            if v != u and v not in neighbors_set:\n                                print(f\"{u} {v}\")\n                                return\n\n    print(\"-1\")\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    m = int(data[1])\n\n    adj = [[] for _ in range(n + 1)]\n    idx = 2\n    for _ in range(m):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        idx += 2\n        adj[u].append(v)\n        adj[v].append(u)\n\n    visited = [False] * (n + 1)\n\n    for i in range(1, n + 1):\n        if not visited[i]:\n            comp = []\n            queue = [i]\n            visited[i] = True\n            edges_count_doubled = 0\n\n            head = 0\n            while head < len(queue):\n                curr = queue[head]\n                head += 1\n                comp.append(curr)\n                deg = len(adj[curr])\n                edges_count_doubled += deg\n                for neighbor in adj[curr]:\n                    if not visited[neighbor]:\n                        visited[neighbor] = True\n                        queue.append(neighbor)\n\n            size = len(comp)\n            # Para ser um clique completo, precisa ter size * (size - 1) arestas direcionadas (ou soma de graus)\n            if edges_count_doubled < size * (size - 1):\n                # Não é um clique, existe pelo menos um par sem aresta nesta componente\n                # Encontra um vértice com grau < size - 1\n                for u in comp:\n                    if len(adj[u]) < size - 1:\n                        neighbors_set = set(adj[u])\n                        for v in comp:\n                            if v != u and v not in neighbors_set:\n                                print(f\"{u} {v}\")\n                                return\n\n    print(\"-1\")\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.4243791999979294,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

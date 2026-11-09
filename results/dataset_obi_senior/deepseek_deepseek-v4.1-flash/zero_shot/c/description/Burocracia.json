@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T23:59:52.306964+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 2181,
+            "output_tokens": 31957,
+            "total_tokens": 34138
+        },
+        "cost_usd": {
+            "input_cost": 7e-06,
+            "output_cost": 0.076697,
+            "total_cost": 0.076703
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\n#define MAXN 100005\n#define LOG 18\n\nint p[MAXN];\nint head[MAXN], to[MAXN], nxt[MAXN], edge_cnt = 0;\nint tin[MAXN], tout[MAXN], timer = 0;\nint up[LOG][MAXN];\nint lazy[4 * MAXN];\n\nvoid add_edge(int u, int v) {\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt++;\n}\n\nvoid update(int node, int l, int r, int ql, int qr, int val) {\n    if (ql <= l && r <= qr) {\n        lazy[node] = val;\n        return;\n    }\n    if (lazy[node] != 0) {\n        lazy[node * 2] = lazy[node];\n        lazy[node * 2 + 1] = lazy[node];\n        lazy[node] = 0;\n    }\n    int mid = (l + r) / 2;\n    if (ql <= mid) update(node * 2, l, mid, ql, qr, val);\n    if (qr > mid) update(node * 2 + 1, mid + 1, r, ql, qr, val);\n}\n\nint query(int node, int l, int r, int pos) {\n    if (lazy[node] != 0) return lazy[node];\n    if (l == r) return 0;\n    int mid = (l + r) / 2;\n    if (pos <= mid) return query(node * 2, l, mid, pos);\n    else return query(node * 2 + 1, mid + 1, r, pos);\n}\n\nint kth_ancestor(int x, int d) {\n    for (int j = 0; j < LOG; j++) {\n        if (d & (1 << j)) {\n            x = up[j][x];\n        }\n    }\n    return x;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    memset(head, -1, sizeof(head));\n    for (int i = 2; i <= N; i++) {\n        scanf(\"%d\", &p[i]);\n        add_edge(p[i], i);\n    }\n    p[1] = 0;\n\n    int it[MAXN];\n    for (int i = 1; i <= N; i++) it[i] = head[i];\n    int stack[MAXN], top = 0;\n    stack[0] = 1;\n    while (top >= 0) {\n        int u = stack[top];\n        if (tin[u] == 0) {\n            tin[u] = ++timer;\n        }\n        if (it[u] != -1) {\n            int v = to[it[u]];\n            it[u] = nxt[it[u]];\n            stack[++top] = v;\n        } else {\n            tout[u] = timer;\n            top--;\n        }\n    }\n\n    for (int i = 1; i <= N; i++) up[0][i] = (i == 1) ? 0 : p[i];\n    for (int j = 1; j < LOG; j++) {\n        for (int i = 1; i <= N; i++) {\n            up[j][i] = up[j - 1][ up[j - 1][i] ];\n        }\n    }\n\n    memset(lazy, 0, sizeof(lazy));\n\n    int Q;\n    scanf(\"%d\", &Q);\n    while (Q--) {\n        int type;\n        scanf(\"%d\", &type);\n        if (type == 1) {\n            int v, k;\n            scanf(\"%d %d\", &v, &k);\n            int active = query(1, 1, N, tin[v]);\n            int ans;\n            if (active == 0 || active == v) {\n                ans = kth_ancestor(v, k);\n            } else {\n                if (k == 1) ans = active;\n                else ans = kth_ancestor(active, k - 1);\n            }\n            printf(\"%d\\n\", ans);\n        } else {\n            int v;\n            scanf(\"%d\", &v);\n            int active = query(1, 1, N, tin[v]);\n            if (active == 0) {\n                update(1, 1, N, tin[v], tout[v], v);\n            }\n        }\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\n#define MAXN 100005\n#define LOG 18\n\nint p[MAXN];\nint head[MAXN], to[MAXN], nxt[MAXN], edge_cnt = 0;\nint tin[MAXN], tout[MAXN], timer = 0;\nint up[LOG][MAXN];\nint lazy[4 * MAXN];\n\nvoid add_edge(int u, int v) {\n    to[edge_cnt] = v;\n    nxt[edge_cnt] = head[u];\n    head[u] = edge_cnt++;\n}\n\nvoid update(int node, int l, int r, int ql, int qr, int val) {\n    if (ql <= l && r <= qr) {\n        lazy[node] = val;\n        return;\n    }\n    if (lazy[node] != 0) {\n        lazy[node * 2] = lazy[node];\n        lazy[node * 2 + 1] = lazy[node];\n        lazy[node] = 0;\n    }\n    int mid = (l + r) / 2;\n    if (ql <= mid) update(node * 2, l, mid, ql, qr, val);\n    if (qr > mid) update(node * 2 + 1, mid + 1, r, ql, qr, val);\n}\n\nint query(int node, int l, int r, int pos) {\n    if (lazy[node] != 0) return lazy[node];\n    if (l == r) return 0;\n    int mid = (l + r) / 2;\n    if (pos <= mid) return query(node * 2, l, mid, pos);\n    else return query(node * 2 + 1, mid + 1, r, pos);\n}\n\nint kth_ancestor(int x, int d) {\n    for (int j = 0; j < LOG; j++) {\n        if (d & (1 << j)) {\n            x = up[j][x];\n        }\n    }\n    return x;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    memset(head, -1, sizeof(head));\n    for (int i = 2; i <= N; i++) {\n        scanf(\"%d\", &p[i]);\n        add_edge(p[i], i);\n    }\n    p[1] = 0;\n\n    int it[MAXN];\n    for (int i = 1; i <= N; i++) it[i] = head[i];\n    int stack[MAXN], top = 0;\n    stack[0] = 1;\n    while (top >= 0) {\n        int u = stack[top];\n        if (tin[u] == 0) {\n            tin[u] = ++timer;\n        }\n        if (it[u] != -1) {\n            int v = to[it[u]];\n            it[u] = nxt[it[u]];\n            stack[++top] = v;\n        } else {\n            tout[u] = timer;\n            top--;\n        }\n    }\n\n    for (int i = 1; i <= N; i++) up[0][i] = (i == 1) ? 0 : p[i];\n    for (int j = 1; j < LOG; j++) {\n        for (int i = 1; i <= N; i++) {\n            up[j][i] = up[j - 1][ up[j - 1][i] ];\n        }\n    }\n\n    memset(lazy, 0, sizeof(lazy));\n\n    int Q;\n    scanf(\"%d\", &Q);\n    while (Q--) {\n        int type;\n        scanf(\"%d\", &type);\n        if (type == 1) {\n            int v, k;\n            scanf(\"%d %d\", &v, &k);\n            int active = query(1, 1, N, tin[v]);\n            int ans;\n            if (active == 0 || active == v) {\n                ans = kth_ancestor(v, k);\n            } else {\n                if (k == 1) ans = active;\n                else ans = kth_ancestor(active, k - 1);\n            }\n            printf(\"%d\\n\", ans);\n        } else {\n            int v;\n            scanf(\"%d\", &v);\n            int active = query(1, 1, N, tin[v]);\n            if (active == 0) {\n                update(1, 1, N, tin[v], tout[v], v);\n            }\n        }\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2304491999966558,
+            "counts": {
+                "AC": 53,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 53
+        }
+    }
+]

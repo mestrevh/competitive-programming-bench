@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:36:01.645009+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1883,
+            "output_tokens": 765,
+            "total_tokens": 4314
+        },
+        "cost_usd": {
+            "input_cost": 0.001412,
+            "output_cost": 0.002869,
+            "total_cost": 0.004281
+        },
+        "raw_response": "Análise do problema e solução em Python:\n\nO valor da conectividade de um reino é dado pela soma de $\\binom{|C|}{2}$ para cada componente conexo $C$. Quando adicionamos uma rodovia entre as cidades $A$ e $B$, a conectividade do reino permanece a mesma se e somente se $A$ e $B$ já pertencem ao mesmo componente conexo.\n\nPortanto, o problema se resume a encontrar um par de cidades $A$ e $B$ que:\n1. Pertencem ao mesmo componente conexo;\n2. Não possuem uma rodovia direta entre si.\n\nSe todos os componentes conexos forem grafos completos (cliques), não existe nenhum par que satisfaça as condições e a resposta é `-1`. Caso contrário, existe ao menos um componente conexo com $S$ vértices e número de arestas $M_C < \\frac{S(S - 1)}{2}$. Nesse componente, obrigatoriamente existe algum vértice $r$ com grau menor que $S - 1$. Ao fixar esse vértice $r$, basta encontrar qualquer outro vértice $x$ do mesmo componente que não seja vizinho de $r$.\n\nA complexidade da solução é $O(N + M)$ em tempo e memória.\n\n```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n\n    visited = [False] * (N + 1)\n\n    for i in range(1, N + 1):\n        if not visited[i]:\n            # Encontra todos os vértices do componente conexo atual via BFS\n            comp = []\n            queue = [i]\n            visited[i] = True\n            head = 0\n\n            while head < len(queue):\n                u = queue[head]\n                head += 1\n                comp.append(u)\n                for v in adj[u]:\n                    if not visited[v]:\n                        visited[v] = True\n                        queue.append(v)\n\n            S = len(comp)\n            # Soma dos graus no componente\n            sum_deg = sum(len(adj[u]) for u in comp)\n            edges_in_comp = sum_deg // 2\n\n            # Se o componente não é uma clique, existe aresta faltante\n            if edges_in_comp < S * (S - 1) // 2:\n                # Encontra um vértice r com grau < S - 1\n                r = None\n                for u in comp:\n                    if len(adj[u]) < S - 1:\n                        r = u\n                        break\n\n                # Encontra um vértice x no mesmo componente que não é vizinho de r\n                neighbors = set(adj[r])\n                for x in comp:\n                    if x != r and x not in neighbors:\n                        print(f\"{r} {x}\")\n                        return\n\n    print(\"-1\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    M = int(data[1])\n\n    adj = [[] for _ in range(N + 1)]\n    idx = 2\n    for _ in range(M):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n\n    visited = [False] * (N + 1)\n\n    for i in range(1, N + 1):\n        if not visited[i]:\n            # Encontra todos os vértices do componente conexo atual via BFS\n            comp = []\n            queue = [i]\n            visited[i] = True\n            head = 0\n\n            while head < len(queue):\n                u = queue[head]\n                head += 1\n                comp.append(u)\n                for v in adj[u]:\n                    if not visited[v]:\n                        visited[v] = True\n                        queue.append(v)\n\n            S = len(comp)\n            # Soma dos graus no componente\n            sum_deg = sum(len(adj[u]) for u in comp)\n            edges_in_comp = sum_deg // 2\n\n            # Se o componente não é uma clique, existe aresta faltante\n            if edges_in_comp < S * (S - 1) // 2:\n                # Encontra um vértice r com grau < S - 1\n                r = None\n                for u in comp:\n                    if len(adj[u]) < S - 1:\n                        r = u\n                        break\n\n                # Encontra um vértice x no mesmo componente que não é vizinho de r\n                neighbors = set(adj[r])\n                for x in comp:\n                    if x != r and x not in neighbors:\n                        print(f\"{r} {x}\")\n                        return\n\n    print(\"-1\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.7664723999987473,
+            "counts": {
+                "AC": 4,
+                "WA": 9,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 13
+        }
+    }
+]

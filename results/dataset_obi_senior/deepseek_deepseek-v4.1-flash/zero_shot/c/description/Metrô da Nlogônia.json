@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:12:12.737796+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1084,
+            "output_tokens": 7794,
+            "total_tokens": 8878
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.018706,
+            "total_cost": 0.018709
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 100005\n\nint headA[MAXN], toA[2 * MAXN], nxtA[2 * MAXN];\nint headB[MAXN], toB[2 * MAXN], nxtB[2 * MAXN];\nint dist[MAXN], parent[MAXN], queue[MAXN];\n\nint bfs(int start, int n, int *head, int *to, int *nxt) {\n    for (int i = 1; i <= n; i++) {\n        dist[i] = -1;\n        parent[i] = 0;\n    }\n\n    int front = 0, back = 0;\n    dist[start] = 0;\n    queue[back++] = start;\n\n    int last = start;\n\n    while (front < back) {\n        int u = queue[front++];\n        last = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n\n    return last;\n}\n\nint get_center(int n, int *head, int *to, int *nxt) {\n    int s = bfs(1, n, head, to, nxt);\n    int t = bfs(s, n, head, to, nxt);\n\n    int L = dist[t];\n    int cur = t;\n    int steps = L - L / 2;\n\n    for (int i = 0; i < steps; i++) {\n        cur = parent[cur];\n    }\n\n    return cur;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 1; i <= N; i++) headA[i] = -1;\n    for (int i = 1; i <= M; i++) headB[i] = -1;\n\n    int ec = 0;\n    for (int i = 0; i < N - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        toA[ec] = b;\n        nxtA[ec] = headA[a];\n        headA[a] = ec++;\n\n        toA[ec] = a;\n        nxtA[ec] = headA[b];\n        headA[b] = ec++;\n    }\n\n    ec = 0;\n    for (int i = 0; i < M - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        toB[ec] = b;\n        nxtB[ec] = headB[a];\n        headB[a] = ec++;\n\n        toB[ec] = a;\n        nxtB[ec] = headB[b];\n        headB[b] = ec++;\n    }\n\n    int c1 = get_center(N, headA, toA, nxtA);\n    int c2 = get_center(M, headB, toB, nxtB);\n\n    printf(\"%d %d\\n\", c1, c2);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 100005\n\nint headA[MAXN], toA[2 * MAXN], nxtA[2 * MAXN];\nint headB[MAXN], toB[2 * MAXN], nxtB[2 * MAXN];\nint dist[MAXN], parent[MAXN], queue[MAXN];\n\nint bfs(int start, int n, int *head, int *to, int *nxt) {\n    for (int i = 1; i <= n; i++) {\n        dist[i] = -1;\n        parent[i] = 0;\n    }\n\n    int front = 0, back = 0;\n    dist[start] = 0;\n    queue[back++] = start;\n\n    int last = start;\n\n    while (front < back) {\n        int u = queue[front++];\n        last = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                parent[v] = u;\n                queue[back++] = v;\n            }\n        }\n    }\n\n    return last;\n}\n\nint get_center(int n, int *head, int *to, int *nxt) {\n    int s = bfs(1, n, head, to, nxt);\n    int t = bfs(s, n, head, to, nxt);\n\n    int L = dist[t];\n    int cur = t;\n    int steps = L - L / 2;\n\n    for (int i = 0; i < steps; i++) {\n        cur = parent[cur];\n    }\n\n    return cur;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 1; i <= N; i++) headA[i] = -1;\n    for (int i = 1; i <= M; i++) headB[i] = -1;\n\n    int ec = 0;\n    for (int i = 0; i < N - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        toA[ec] = b;\n        nxtA[ec] = headA[a];\n        headA[a] = ec++;\n\n        toA[ec] = a;\n        nxtA[ec] = headA[b];\n        headA[b] = ec++;\n    }\n\n    ec = 0;\n    for (int i = 0; i < M - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        toB[ec] = b;\n        nxtB[ec] = headB[a];\n        headB[a] = ec++;\n\n        toB[ec] = a;\n        nxtB[ec] = headB[b];\n        headB[b] = ec++;\n    }\n\n    int c1 = get_center(N, headA, toA, nxtA);\n    int c2 = get_center(M, headB, toB, nxtB);\n\n    printf(\"%d %d\\n\", c1, c2);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1187008999986574,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

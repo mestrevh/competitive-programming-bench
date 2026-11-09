@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:05:44.769823+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1334,
+            "output_tokens": 1037,
+            "total_tokens": 4734
+        },
+        "cost_usd": {
+            "input_cost": 0.001,
+            "output_cost": 0.003889,
+            "total_cost": 0.004889
+        },
+        "raw_response": "Para resolver este problema de forma eficiente, podemos analisar o comportamento das retas nos extremos do intervalo $[X_1, X_2]$.\n\nPara cada reta $i$, definimos:\n- $u_i = A_i \\cdot X_1 + B_i$ (o valor de $y$ em $X_1$)\n- $v_i = A_i \\cdot X_2 + B_i$ (o valor de $y$ em $X_2$)\n\nDuas retas distintas $i$ e $j$ se intersectam dentro do intervalo $[X_1, X_2]$ se, e somente se:\n$$(u_i - u_j)(v_i - v_j) \\le 0$$\n\nIsso ocorre em duas situações:\n1. **$u_i = u_j$**: as retas se cruzam exatamente em $X_1$. Para um conjunto de retas com o mesmo valor de $u$, todas se cruzam aos pares em $X_1$. Se houver $k$ retas com o mesmo $u$, haverá $\\binom{k}{2}$ interseções.\n2. **$u_i < u_j$ e $v_i \\ge v_j$**: a reta $i$ começa abaixo (ou no mesmo nível) da reta $j$ em $X_1$ e termina acima (ou no mesmo nível) em $X_2$, havendo um ponto de cruzamento no intervalo.\n\nPodemos agrupar as retas por valores iguais de $u$ em ordem crescente e utilizar uma Fenwick Tree (Binary Indexed Tree) com compressão de coordenadas em $v$ para contar o número de pares que satisfazem $v_{anterior} \\ge v_{atual}$.\n\nAbaixo está a solução completa e otimizada em Python:\n\n```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    lines = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        u = A * X1 + B\n        v = A * X2 + B\n        lines.append((u, v))\n\n    # Compressão de coordenadas para v\n    unique_v = sorted(list({v for _, v in lines}))\n    v_rank = {val: i + 1 for i, val in enumerate(unique_v)}\n    M = len(unique_v)\n\n    # Agrupar por u\n    lines.sort(key=lambda item: item[0])\n\n    # Fenwick Tree (Binary Indexed Tree)\n    bit = [0] * (M + 2)\n\n    def add(idx, val):\n        while idx <= M:\n            bit[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    total_intersections = 0\n    total_elements_in_bit = 0\n\n    i = 0\n    while i < N:\n        j = i\n        current_u = lines[i][0]\n        while j < N and lines[j][0] == current_u:\n            j += 1\n\n        k = j - i\n        # Interseções em X1 entre as retas do mesmo grupo\n        total_intersections += k * (k - 1) // 2\n\n        # Para cada reta no grupo, contar quantas retas anteriores têm v_ant >= v\n        for idx_line in range(i, j):\n            r = v_rank[lines[idx_line][1]]\n            # Queremos elementos com rank >= r\n            # count(rank >= r) = total_elements - query(r - 1)\n            total_intersections += total_elements_in_bit - query(r - 1)\n\n        # Inserir as retas do grupo atual na BIT\n        for idx_line in range(i, j):\n            r = v_rank[lines[idx_line][1]]\n            add(r, 1)\n            total_elements_in_bit += 1\n\n        i = j\n\n    print(total_intersections)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    lines = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        u = A * X1 + B\n        v = A * X2 + B\n        lines.append((u, v))\n\n    # Compressão de coordenadas para v\n    unique_v = sorted(list({v for _, v in lines}))\n    v_rank = {val: i + 1 for i, val in enumerate(unique_v)}\n    M = len(unique_v)\n\n    # Agrupar por u\n    lines.sort(key=lambda item: item[0])\n\n    # Fenwick Tree (Binary Indexed Tree)\n    bit = [0] * (M + 2)\n\n    def add(idx, val):\n        while idx <= M:\n            bit[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    total_intersections = 0\n    total_elements_in_bit = 0\n\n    i = 0\n    while i < N:\n        j = i\n        current_u = lines[i][0]\n        while j < N and lines[j][0] == current_u:\n            j += 1\n\n        k = j - i\n        # Interseções em X1 entre as retas do mesmo grupo\n        total_intersections += k * (k - 1) // 2\n\n        # Para cada reta no grupo, contar quantas retas anteriores têm v_ant >= v\n        for idx_line in range(i, j):\n            r = v_rank[lines[idx_line][1]]\n            # Queremos elementos com rank >= r\n            # count(rank >= r) = total_elements - query(r - 1)\n            total_intersections += total_elements_in_bit - query(r - 1)\n\n        # Inserir as retas do grupo atual na BIT\n        for idx_line in range(i, j):\n            r = v_rank[lines[idx_line][1]]\n            add(r, 1)\n            total_elements_in_bit += 1\n\n        i = j\n\n    print(total_intersections)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3429595999987214,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

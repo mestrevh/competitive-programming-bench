@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:48:49.689157+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 898,
+            "output_tokens": 1160,
+            "total_tokens": 2058
+        },
+        "cost_usd": {
+            "input_cost": 9e-05,
+            "output_cost": 0.00058,
+            "total_cost": 0.00067
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet pos = 0;\nconst n = data[pos++];\n\nconst key = new Float64Array(n + 1);\nconst priority = new Uint32Array(n + 1);\nconst left = new Int32Array(n + 1);\nconst right = new Int32Array(n + 1);\nconst size = new Int32Array(n + 1);\nconst count = new Int32Array(n + 1);\n\nlet nodes = 0;\nlet seed = 0x9e3779b9;\n\nfunction randomUint() {\n  seed ^= seed << 13;\n  seed ^= seed >>> 17;\n  seed ^= seed << 5;\n  return seed >>> 0;\n}\n\nfunction nodeSize(v) {\n  return v === 0 ? 0 : size[v];\n}\n\nfunction update(v) {\n  size[v] = size[left[v]] + size[right[v]] + count[v];\n}\n\nfunction rotateRight(v) {\n  const u = left[v];\n  left[v] = right[u];\n  right[u] = v;\n  update(v);\n  update(u);\n  return u;\n}\n\nfunction rotateLeft(v) {\n  const u = right[v];\n  right[v] = left[u];\n  left[u] = v;\n  update(v);\n  update(u);\n  return u;\n}\n\nfunction insert(v, k) {\n  if (v === 0) {\n    const u = ++nodes;\n    key[u] = k;\n    priority[u] = randomUint();\n    size[u] = count[u] = 1;\n    return u;\n  }\n\n  if (k === key[v]) {\n    count[v]++;\n  } else if (k < key[v]) {\n    left[v] = insert(left[v], k);\n    if (priority[left[v]] < priority[v]) v = rotateRight(v);\n  } else {\n    right[v] = insert(right[v], k);\n    if (priority[right[v]] < priority[v]) v = rotateLeft(v);\n  }\n\n  update(v);\n  return v;\n}\n\nfunction countAtMost(v, k) {\n  let result = 0;\n  while (v !== 0) {\n    if (key[v] <= k) {\n      result += nodeSize(left[v]) + count[v];\n      v = right[v];\n    } else {\n      v = left[v];\n    }\n  }\n  return result;\n}\n\nlet root = 0;\nlet previousPenalty = 0;\nconst output = [];\n\nfor (let i = 0; i < n; i++) {\n  const x = data[pos++] + previousPenalty;\n  const y = data[pos++] + previousPenalty;\n  const distanceSquared = x * x + y * y;\n\n  const penalty = countAtMost(root, distanceSquared);\n  output.push(String(penalty));\n  root = insert(root, distanceSquared);\n  previousPenalty = penalty;\n}\n\nconsole.log(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet pos = 0;\nconst n = data[pos++];\n\nconst key = new Float64Array(n + 1);\nconst priority = new Uint32Array(n + 1);\nconst left = new Int32Array(n + 1);\nconst right = new Int32Array(n + 1);\nconst size = new Int32Array(n + 1);\nconst count = new Int32Array(n + 1);\n\nlet nodes = 0;\nlet seed = 0x9e3779b9;\n\nfunction randomUint() {\n  seed ^= seed << 13;\n  seed ^= seed >>> 17;\n  seed ^= seed << 5;\n  return seed >>> 0;\n}\n\nfunction nodeSize(v) {\n  return v === 0 ? 0 : size[v];\n}\n\nfunction update(v) {\n  size[v] = size[left[v]] + size[right[v]] + count[v];\n}\n\nfunction rotateRight(v) {\n  const u = left[v];\n  left[v] = right[u];\n  right[u] = v;\n  update(v);\n  update(u);\n  return u;\n}\n\nfunction rotateLeft(v) {\n  const u = right[v];\n  right[v] = left[u];\n  left[u] = v;\n  update(v);\n  update(u);\n  return u;\n}\n\nfunction insert(v, k) {\n  if (v === 0) {\n    const u = ++nodes;\n    key[u] = k;\n    priority[u] = randomUint();\n    size[u] = count[u] = 1;\n    return u;\n  }\n\n  if (k === key[v]) {\n    count[v]++;\n  } else if (k < key[v]) {\n    left[v] = insert(left[v], k);\n    if (priority[left[v]] < priority[v]) v = rotateRight(v);\n  } else {\n    right[v] = insert(right[v], k);\n    if (priority[right[v]] < priority[v]) v = rotateLeft(v);\n  }\n\n  update(v);\n  return v;\n}\n\nfunction countAtMost(v, k) {\n  let result = 0;\n  while (v !== 0) {\n    if (key[v] <= k) {\n      result += nodeSize(left[v]) + count[v];\n      v = right[v];\n    } else {\n      v = left[v];\n    }\n  }\n  return result;\n}\n\nlet root = 0;\nlet previousPenalty = 0;\nconst output = [];\n\nfor (let i = 0; i < n; i++) {\n  const x = data[pos++] + previousPenalty;\n  const y = data[pos++] + previousPenalty;\n  const distanceSquared = x * x + y * y;\n\n  const penalty = countAtMost(root, distanceSquared);\n  output.push(String(penalty));\n  root = insert(root, distanceSquared);\n  previousPenalty = penalty;\n}\n\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16372039999987464,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

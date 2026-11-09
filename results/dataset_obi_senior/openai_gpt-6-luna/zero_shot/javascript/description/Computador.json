@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:53:39.728623+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1031,
+            "output_tokens": 961,
+            "total_tokens": 1992
+        },
+        "cost_usd": {
+            "input_cost": 0.000103,
+            "output_cost": 0.000481,
+            "total_cost": 0.000584
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst slopeTree = new Float64Array(N + 2);\nconst interceptTree = new Float64Array(N + 2);\n\nfunction add(tree, index, value) {\n  for (let i = index; i <= N + 1; i += i & -i) {\n    tree[i] += value;\n  }\n}\n\nfunction prefixSum(tree, index) {\n  let sum = 0;\n  for (let i = index; i > 0; i -= i & -i) {\n    sum += tree[i];\n  }\n  return sum;\n}\n\nconst output = [];\n\nfor (let q = 0; q < M; q++) {\n  const type = nextInt();\n  const i = nextInt();\n\n  if (type === 3) {\n    const slope = prefixSum(slopeTree, i);\n    const intercept = prefixSum(interceptTree, i);\n    output.push(String(slope * i + intercept));\n    continue;\n  }\n\n  const V = nextInt();\n  let left, right, slope, intercept;\n\n  if (type === 1) {\n    left = i;\n    right = Math.min(N, i + V - 1);\n    slope = -1;\n    intercept = V + i;\n  } else {\n    left = Math.max(1, i - V + 1);\n    right = i;\n    slope = 1;\n    intercept = V - i;\n  }\n\n  add(slopeTree, left, slope);\n  add(slopeTree, right + 1, -slope);\n  add(interceptTree, left, intercept);\n  add(interceptTree, right + 1, -intercept);\n}\n\nprocess.stdout.write(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c < 48 || c > 57) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst M = nextInt();\nconst slopeTree = new Float64Array(N + 2);\nconst interceptTree = new Float64Array(N + 2);\n\nfunction add(tree, index, value) {\n  for (let i = index; i <= N + 1; i += i & -i) {\n    tree[i] += value;\n  }\n}\n\nfunction prefixSum(tree, index) {\n  let sum = 0;\n  for (let i = index; i > 0; i -= i & -i) {\n    sum += tree[i];\n  }\n  return sum;\n}\n\nconst output = [];\n\nfor (let q = 0; q < M; q++) {\n  const type = nextInt();\n  const i = nextInt();\n\n  if (type === 3) {\n    const slope = prefixSum(slopeTree, i);\n    const intercept = prefixSum(interceptTree, i);\n    output.push(String(slope * i + intercept));\n    continue;\n  }\n\n  const V = nextInt();\n  let left, right, slope, intercept;\n\n  if (type === 1) {\n    left = i;\n    right = Math.min(N, i + V - 1);\n    slope = -1;\n    intercept = V + i;\n  } else {\n    left = Math.max(1, i - V + 1);\n    right = i;\n    slope = 1;\n    intercept = V - i;\n  }\n\n  add(slopeTree, left, slope);\n  add(slopeTree, right + 1, -slope);\n  add(interceptTree, left, intercept);\n  add(interceptTree, right + 1, -intercept);\n}\n\nprocess.stdout.write(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11433920000126818,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

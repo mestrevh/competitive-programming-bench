@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:52:57.392588+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 755,
+            "output_tokens": 1070,
+            "total_tokens": 1825
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.000535,
+            "total_cost": 0.000611
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst positions = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 0; i < n; i++) {\n  positions[input[i + 1]].push(i);\n}\n\nconst values = [];\nfor (let v = 1; v <= n; v++) {\n  if (positions[v].length > 0) values.push(v);\n}\n\nlet answer = 1;\n\nfor (let x = 0; x < values.length; x++) {\n  for (let y = x + 1; y < values.length; y++) {\n    const a = positions[values[x]];\n    const b = positions[values[y]];\n    let i = 0;\n    let j = 0;\n    let previous = -1;\n    let runs = 0;\n\n    while (i < a.length || j < b.length) {\n      let current;\n      if (j >= b.length || (i < a.length && a[i] < b[j])) {\n        current = 0;\n        i++;\n      } else {\n        current = 1;\n        j++;\n      }\n\n      if (current !== previous) {\n        runs++;\n        previous = current;\n      }\n    }\n\n    if (runs > answer) answer = runs;\n  }\n}\n\nconsole.log(answer.toString());```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst positions = Array.from({ length: n + 1 }, () => []);\n\nfor (let i = 0; i < n; i++) {\n  positions[input[i + 1]].push(i);\n}\n\nconst values = [];\nfor (let v = 1; v <= n; v++) {\n  if (positions[v].length > 0) values.push(v);\n}\n\nlet answer = 1;\n\nfor (let x = 0; x < values.length; x++) {\n  for (let y = x + 1; y < values.length; y++) {\n    const a = positions[values[x]];\n    const b = positions[values[y]];\n    let i = 0;\n    let j = 0;\n    let previous = -1;\n    let runs = 0;\n\n    while (i < a.length || j < b.length) {\n      let current;\n      if (j >= b.length || (i < a.length && a[i] < b[j])) {\n        current = 0;\n        i++;\n      } else {\n        current = 1;\n        j++;\n      }\n\n      if (current !== previous) {\n        runs++;\n        previous = current;\n      }\n    }\n\n    if (runs > answer) answer = runs;\n  }\n}\n\nconsole.log(answer.toString());",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07290620000276249,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

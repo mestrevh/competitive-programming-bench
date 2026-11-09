@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:02:52.984718+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1096,
+            "output_tokens": 21378,
+            "total_tokens": 22474
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.051307,
+            "total_cost": 0.05131
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    char grid[505][505];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    int queue[250005];\n    int front = 0, rear = 0;\n\n    // Encontra o ponto inicial de vazamento na primeira linha\n    for (int j = 0; j < M; j++) {\n        if (grid[0][j] == 'o') {\n            queue[rear++] = j; // i = 0\n            break;\n        }\n    }\n\n    while (front < rear) {\n        int idx = queue[front++];\n        int i = idx / M;\n        int j = idx % M;\n\n        // Propagação vertical para baixo\n        if (i + 1 < N && grid[i + 1][j] == '.') {\n            grid[i + 1][j] = 'o';\n            queue[rear++] = (i + 1) * M + j;\n        }\n\n        // Propagação horizontal se houver prateleira logo abaixo\n        if (i + 1 < N && grid[i + 1][j] == '#') {\n            // Esquerda\n            if (j - 1 >= 0 && grid[i][j - 1] == '.') {\n                grid[i][j - 1] = 'o';\n                queue[rear++] = i * M + (j - 1);\n            }\n            // Direita\n            if (j + 1 < M && grid[i][j + 1] == '.') {\n                grid[i][j + 1] = 'o';\n                queue[rear++] = i * M + (j + 1);\n            }\n        }\n    }\n\n    // Impressão da matriz final\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    char grid[505][505];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    int queue[250005];\n    int front = 0, rear = 0;\n\n    // Encontra o ponto inicial de vazamento na primeira linha\n    for (int j = 0; j < M; j++) {\n        if (grid[0][j] == 'o') {\n            queue[rear++] = j; // i = 0\n            break;\n        }\n    }\n\n    while (front < rear) {\n        int idx = queue[front++];\n        int i = idx / M;\n        int j = idx % M;\n\n        // Propagação vertical para baixo\n        if (i + 1 < N && grid[i + 1][j] == '.') {\n            grid[i + 1][j] = 'o';\n            queue[rear++] = (i + 1) * M + j;\n        }\n\n        // Propagação horizontal se houver prateleira logo abaixo\n        if (i + 1 < N && grid[i + 1][j] == '#') {\n            // Esquerda\n            if (j - 1 >= 0 && grid[i][j - 1] == '.') {\n                grid[i][j - 1] = 'o';\n                queue[rear++] = i * M + (j - 1);\n            }\n            // Direita\n            if (j + 1 < M && grid[i][j + 1] == '.') {\n                grid[i][j + 1] = 'o';\n                queue[rear++] = i * M + (j + 1);\n            }\n        }\n    }\n\n    // Impressão da matriz final\n    for (int i = 0; i < N; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17366369999945164,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:04:36.245157+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1035,
+            "output_tokens": 483,
+            "total_tokens": 2233
+        },
+        "cost_usd": {
+            "input_cost": 0.000776,
+            "output_cost": 0.001811,
+            "total_cost": 0.002587
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import Counter\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n\n    idx = 2\n    grid = []\n    row_sums = []\n    for _ in range(L):\n        row = input_data[idx : idx + C]\n        s = int(input_data[idx + C])\n        grid.append(row)\n        row_sums.append(s)\n        idx += C + 1\n\n    col_sums = [int(x) for x in input_data[idx : idx + C]]\n\n    all_vars = set()\n    for row in grid:\n        for v in row:\n            all_vars.add(v)\n\n    # Cada equação guarda: Counter de variáveis e o valor da soma\n    equations = []\n    for r in range(L):\n        cnt = Counter(grid[r])\n        equations.append((cnt, row_sums[r]))\n\n    for c in range(C):\n        col_vars = [grid[r][c] for r in range(L)]\n        cnt = Counter(col_vars)\n        equations.append((cnt, col_sums[c]))\n\n    values = {}\n\n    while len(values) < len(all_vars):\n        found = False\n        for cnt, target in equations:\n            unknowns = [v for v in cnt if v not in values]\n            if len(unknowns) == 1:\n                u = unknowns[0]\n                k = cnt[u]\n                known_sum = sum(cnt[v] * values[v] for v in cnt if v in values)\n                values[u] = (target - known_sum) // k\n                found = True\n                break\n        if not found:\n            break\n\n    for v in sorted(all_vars):\n        print(f\"{v} {values[v]}\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import Counter\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n\n    idx = 2\n    grid = []\n    row_sums = []\n    for _ in range(L):\n        row = input_data[idx : idx + C]\n        s = int(input_data[idx + C])\n        grid.append(row)\n        row_sums.append(s)\n        idx += C + 1\n\n    col_sums = [int(x) for x in input_data[idx : idx + C]]\n\n    all_vars = set()\n    for row in grid:\n        for v in row:\n            all_vars.add(v)\n\n    # Cada equação guarda: Counter de variáveis e o valor da soma\n    equations = []\n    for r in range(L):\n        cnt = Counter(grid[r])\n        equations.append((cnt, row_sums[r]))\n\n    for c in range(C):\n        col_vars = [grid[r][c] for r in range(L)]\n        cnt = Counter(col_vars)\n        equations.append((cnt, col_sums[c]))\n\n    values = {}\n\n    while len(values) < len(all_vars):\n        found = False\n        for cnt, target in equations:\n            unknowns = [v for v in cnt if v not in values]\n            if len(unknowns) == 1:\n                u = unknowns[0]\n                k = cnt[u]\n                known_sum = sum(cnt[v] * values[v] for v in cnt if v in values)\n                values[u] = (target - known_sum) // k\n                found = True\n                break\n        if not found:\n            break\n\n    for v in sorted(all_vars):\n        print(f\"{v} {values[v]}\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0949932000003173,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

@@ -84,7 +84,7 @@ def build_prompt_payload(
 ) -> Union[str, List[Dict[str, Any]]]:
     """
     Constrói a mensagem final para a LLM respeitando o template do prompt,
-    a linguagem, a modalidade (apenas texto ou multimodal com Base64)
+    a linguagem, a modalidade (apenas texto, multimodal com Base64 ou descrição)
     e a opção de informar os limites de tempo e memória.
     """
     problem_str = format_problem_str(problem, include_limits=include_limits)
@@ -115,7 +115,13 @@ def build_prompt_payload(
 
     # 2. Se a modalidade for imagens em forma descritiva
     if modality == "description":
-        # Será estruturado e detalhado conforme o plano nos próximos prompts
+        if problem.imgs_description:
+            if isinstance(problem.imgs_description, dict):
+                for img_name, desc in problem.imgs_description.items():
+                    text_content = text_content.replace(f"[{img_name}]", desc)
+            elif isinstance(problem.imgs_description, list):
+                for img_name, desc in zip(problem.imgs or [], problem.imgs_description):
+                    text_content = text_content.replace(f"[{img_name}]", desc)
         return text_content
 
     # 3. Se a modalidade for imagens em Base64 ("img")

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:11:07.706439+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1527,
+            "output_tokens": 816,
+            "total_tokens": 2343
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.001958,
+            "total_cost": 0.001963
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n\n    int a[50][50], b[50][50];\n    char line[55];\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", line);\n        for (int j = 0; j < N; j++) {\n            a[i][j] = line[j] - '0';\n        }\n    }\n\n    for (int step = 0; step < Q; step++) {\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                int cnt = 0;\n\n                for (int di = -1; di <= 1; di++) {\n                    for (int dj = -1; dj <= 1; dj++) {\n                        if (di == 0 && dj == 0) continue;\n\n                        int ni = i + di;\n                        int nj = j + dj;\n\n                        if (ni >= 0 && ni < N && nj >= 0 && nj < N) {\n                            cnt += a[ni][nj];\n                        }\n                    }\n                }\n\n                if (a[i][j] == 1) {\n                    if (cnt == 2 || cnt == 3) b[i][j] = 1;\n                    else b[i][j] = 0;\n                } else {\n                    if (cnt == 3) b[i][j] = 1;\n                    else b[i][j] = 0;\n                }\n            }\n        }\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                a[i][j] = b[i][j];\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            putchar(a[i][j] ? '1' : '0');\n        }\n        putchar('\\n');\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n\n    int a[50][50], b[50][50];\n    char line[55];\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", line);\n        for (int j = 0; j < N; j++) {\n            a[i][j] = line[j] - '0';\n        }\n    }\n\n    for (int step = 0; step < Q; step++) {\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                int cnt = 0;\n\n                for (int di = -1; di <= 1; di++) {\n                    for (int dj = -1; dj <= 1; dj++) {\n                        if (di == 0 && dj == 0) continue;\n\n                        int ni = i + di;\n                        int nj = j + dj;\n\n                        if (ni >= 0 && ni < N && nj >= 0 && nj < N) {\n                            cnt += a[ni][nj];\n                        }\n                    }\n                }\n\n                if (a[i][j] == 1) {\n                    if (cnt == 2 || cnt == 3) b[i][j] = 1;\n                    else b[i][j] = 0;\n                } else {\n                    if (cnt == 3) b[i][j] = 1;\n                    else b[i][j] = 0;\n                }\n            }\n        }\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                a[i][j] = b[i][j];\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            putchar(a[i][j] ? '1' : '0');\n        }\n        putchar('\\n');\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11078919999999925,
+            "counts": {
+                "AC": 19,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 19
+        }
+    }
+]

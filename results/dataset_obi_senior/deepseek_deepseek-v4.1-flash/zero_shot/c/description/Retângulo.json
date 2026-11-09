@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:15:44.054986+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 857,
+            "output_tokens": 2593,
+            "total_tokens": 3450
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.006223,
+            "total_cost": 0.006226
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 100000\n\nint main(void) {\n    int N;\n    long long pos[MAXN];\n    long long len, total = 0;\n\n    scanf(\"%d\", &N);\n\n    pos[0] = 0;\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &len);\n        total += len;\n        if (i < N - 1) {\n            pos[i + 1] = total;\n        }\n    }\n\n    if (total % 2 != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    long long half = total / 2;\n    int count = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long target = pos[i] + half;\n        if (target >= total) target -= total;\n\n        int left = 0, right = N;\n        while (left < right) {\n            int mid = (left + right) / 2;\n            if (pos[mid] < target)\n                left = mid + 1;\n            else\n                right = mid;\n        }\n\n        if (left < N && pos[left] == target) {\n            count++;\n        }\n    }\n\n    printf(\"%c\\n\", count >= 4 ? 'S' : 'N');\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 100000\n\nint main(void) {\n    int N;\n    long long pos[MAXN];\n    long long len, total = 0;\n\n    scanf(\"%d\", &N);\n\n    pos[0] = 0;\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &len);\n        total += len;\n        if (i < N - 1) {\n            pos[i + 1] = total;\n        }\n    }\n\n    if (total % 2 != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    long long half = total / 2;\n    int count = 0;\n\n    for (int i = 0; i < N; i++) {\n        long long target = pos[i] + half;\n        if (target >= total) target -= total;\n\n        int left = 0, right = N;\n        while (left < right) {\n            int mid = (left + right) / 2;\n            if (pos[mid] < target)\n                left = mid + 1;\n            else\n                right = mid;\n        }\n\n        if (left < N && pos[left] == target) {\n            count++;\n        }\n    }\n\n    printf(\"%c\\n\", count >= 4 ? 'S' : 'N');\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12676749999809545,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

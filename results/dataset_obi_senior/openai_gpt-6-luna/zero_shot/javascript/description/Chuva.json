@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:53:06.130561+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 762,
+            "output_tokens": 476,
+            "total_tokens": 1238
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.000238,
+            "total_cost": 0.000314
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst heights = input.slice(1);\nconst leftMax = new Array(n);\nconst rightMax = new Array(n);\n\nleftMax[0] = heights[0];\nfor (let i = 1; i < n; i++) {\n  leftMax[i] = Math.max(leftMax[i - 1], heights[i]);\n}\n\nrightMax[n - 1] = heights[n - 1];\nfor (let i = n - 2; i >= 0; i--) {\n  rightMax[i] = Math.max(rightMax[i + 1], heights[i]);\n}\n\nlet answer = 0;\nfor (let i = 0; i < n; i++) {\n  if (Math.min(leftMax[i], rightMax[i]) > heights[i]) answer++;\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = input[0];\nconst heights = input.slice(1);\nconst leftMax = new Array(n);\nconst rightMax = new Array(n);\n\nleftMax[0] = heights[0];\nfor (let i = 1; i < n; i++) {\n  leftMax[i] = Math.max(leftMax[i - 1], heights[i]);\n}\n\nrightMax[n - 1] = heights[n - 1];\nfor (let i = n - 2; i >= 0; i--) {\n  rightMax[i] = Math.max(rightMax[i + 1], heights[i]);\n}\n\nlet answer = 0;\nfor (let i = 0; i < n; i++) {\n  if (Math.min(leftMax[i], rightMax[i]) > heights[i]) answer++;\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10095379999984289,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

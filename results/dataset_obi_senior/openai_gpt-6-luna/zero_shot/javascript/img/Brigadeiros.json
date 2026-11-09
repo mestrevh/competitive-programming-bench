@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:31:41.019264+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1613,
+            "output_tokens": 3623,
+            "total_tokens": 5236
+        },
+        "cost_usd": {
+            "input_cost": 0.000161,
+            "output_cost": 0.001811,
+            "total_cost": 0.001973
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet p = 0;\nconst N = data[p++];\nconst K = data[p++];\nconst T = data[p++];\n\nconst plates = data.slice(p, p + N);\np += N;\nconst group = data.slice(p, p + N);\n\nconst R = 9 * K + 1;\nconst INF = 0x3fffffff;\nlet dp = new Int32Array((K + 1) * R);\nlet next = new Int32Array((K + 1) * R);\ndp.fill(INF);\ndp[0] = 0;\n\nlet prefixGroup = 0;\n\nfor (let i = 0; i < N; i++) {\n  prefixGroup += group[i];\n  next.fill(INF);\n\n  const minQ = Math.max(0, K - (N - i));\n  const maxQ = Math.min(i, K);\n  const minNextQ = Math.max(0, K - (N - i - 1));\n  const maxNextQ = Math.min(i + 1, K);\n  const edgeCost = i === N - 1 ? 0 : 1;\n\n  for (let q = minQ; q <= maxQ; q++) {\n    const base = q * R;\n    const maxReward = 9 * q;\n\n    for (let reward = 0; reward <= maxReward; reward++) {\n      const cost = dp[base + reward];\n      if (cost > T) continue;\n\n      if (q >= minNextQ && q <= maxNextQ) {\n        const newCost = cost + (edgeCost ? Math.abs(q - prefixGroup) : 0);\n        if (newCost <= T) {\n          const idx = base + reward;\n          if (newCost < next[idx]) next[idx] = newCost;\n        }\n      }\n\n      const nq = q + 1;\n      if (nq <= K && nq >= minNextQ && nq <= maxNextQ) {\n        const newReward = reward + plates[i];\n        const newCost = cost + (edgeCost ? Math.abs(nq - prefixGroup) : 0);\n        if (newCost <= T) {\n          const idx = nq * R + newReward;\n          if (newCost < next[idx]) next[idx] = newCost;\n        }\n      }\n    }\n  }\n\n  const temp = dp;\n  dp = next;\n  next = temp;\n}\n\nlet answer = 0;\nconst base = K * R;\nfor (let reward = 0; reward < R; reward++) {\n  if (dp[base + reward] <= T) answer = reward;\n}\n\nconsole.log(answer);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet p = 0;\nconst N = data[p++];\nconst K = data[p++];\nconst T = data[p++];\n\nconst plates = data.slice(p, p + N);\np += N;\nconst group = data.slice(p, p + N);\n\nconst R = 9 * K + 1;\nconst INF = 0x3fffffff;\nlet dp = new Int32Array((K + 1) * R);\nlet next = new Int32Array((K + 1) * R);\ndp.fill(INF);\ndp[0] = 0;\n\nlet prefixGroup = 0;\n\nfor (let i = 0; i < N; i++) {\n  prefixGroup += group[i];\n  next.fill(INF);\n\n  const minQ = Math.max(0, K - (N - i));\n  const maxQ = Math.min(i, K);\n  const minNextQ = Math.max(0, K - (N - i - 1));\n  const maxNextQ = Math.min(i + 1, K);\n  const edgeCost = i === N - 1 ? 0 : 1;\n\n  for (let q = minQ; q <= maxQ; q++) {\n    const base = q * R;\n    const maxReward = 9 * q;\n\n    for (let reward = 0; reward <= maxReward; reward++) {\n      const cost = dp[base + reward];\n      if (cost > T) continue;\n\n      if (q >= minNextQ && q <= maxNextQ) {\n        const newCost = cost + (edgeCost ? Math.abs(q - prefixGroup) : 0);\n        if (newCost <= T) {\n          const idx = base + reward;\n          if (newCost < next[idx]) next[idx] = newCost;\n        }\n      }\n\n      const nq = q + 1;\n      if (nq <= K && nq >= minNextQ && nq <= maxNextQ) {\n        const newReward = reward + plates[i];\n        const newCost = cost + (edgeCost ? Math.abs(nq - prefixGroup) : 0);\n        if (newCost <= T) {\n          const idx = nq * R + newReward;\n          if (newCost < next[idx]) next[idx] = newCost;\n        }\n      }\n    }\n  }\n\n  const temp = dp;\n  dp = next;\n  next = temp;\n}\n\nlet answer = 0;\nconst base = K * R;\nfor (let reward = 0; reward < R; reward++) {\n  if (dp[base + reward] <= T) answer = reward;\n}\n\nconsole.log(answer);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10315780000382802,
+            "counts": {
+                "AC": 67,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 67
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:40:09.477825+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1144,
+            "output_tokens": 2530,
+            "total_tokens": 3674
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.006072,
+            "total_cost": 0.006075
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) return 0;\n\n    int M = N * K;\n\n    int *head = (int *)malloc((U + 1) * sizeof(int));\n    int *to = (int *)malloc(M * sizeof(int));\n    int *next = (int *)malloc(M * sizeof(int));\n\n    for (int i = 1; i <= U; i++) {\n        head[i] = -1;\n    }\n\n    int edge = 0;\n\n    for (int card = 1; card <= N; card++) {\n        for (int j = 0; j < K; j++) {\n            int x;\n            scanf(\"%d\", &x);\n\n            to[edge] = card;\n            next[edge] = head[x];\n            head[x] = edge++;\n        }\n    }\n\n    int *cnt = (int *)calloc(N + 1, sizeof(int));\n    int *finish = (int *)calloc(N + 1, sizeof(int));\n\n    for (int pos = 1; pos <= U; pos++) {\n        int x;\n        scanf(\"%d\", &x);\n\n        for (int e = head[x]; e != -1; e = next[e]) {\n            int card = to[e];\n\n            if (finish[card]) continue;\n\n            cnt[card]++;\n            if (cnt[card] == K) {\n                finish[card] = pos;\n            }\n        }\n    }\n\n    int best = U + 1;\n\n    for (int card = 1; card <= N; card++) {\n        if (finish[card] < best) {\n            best = finish[card];\n        }\n    }\n\n    int first = 1;\n\n    for (int card = 1; card <= N; card++) {\n        if (finish[card] == best) {\n            if (!first) printf(\" \");\n            printf(\"%d\", card);\n            first = 0;\n        }\n    }\n\n    printf(\"\\n\");\n\n    free(head);\n    free(to);\n    free(next);\n    free(cnt);\n    free(finish);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) return 0;\n\n    int M = N * K;\n\n    int *head = (int *)malloc((U + 1) * sizeof(int));\n    int *to = (int *)malloc(M * sizeof(int));\n    int *next = (int *)malloc(M * sizeof(int));\n\n    for (int i = 1; i <= U; i++) {\n        head[i] = -1;\n    }\n\n    int edge = 0;\n\n    for (int card = 1; card <= N; card++) {\n        for (int j = 0; j < K; j++) {\n            int x;\n            scanf(\"%d\", &x);\n\n            to[edge] = card;\n            next[edge] = head[x];\n            head[x] = edge++;\n        }\n    }\n\n    int *cnt = (int *)calloc(N + 1, sizeof(int));\n    int *finish = (int *)calloc(N + 1, sizeof(int));\n\n    for (int pos = 1; pos <= U; pos++) {\n        int x;\n        scanf(\"%d\", &x);\n\n        for (int e = head[x]; e != -1; e = next[e]) {\n            int card = to[e];\n\n            if (finish[card]) continue;\n\n            cnt[card]++;\n            if (cnt[card] == K) {\n                finish[card] = pos;\n            }\n        }\n    }\n\n    int best = U + 1;\n\n    for (int card = 1; card <= N; card++) {\n        if (finish[card] < best) {\n            best = finish[card];\n        }\n    }\n\n    int first = 1;\n\n    for (int card = 1; card <= N; card++) {\n        if (finish[card] == best) {\n            if (!first) printf(\" \");\n            printf(\"%d\", card);\n            first = 0;\n        }\n    }\n\n    printf(\"\\n\");\n\n    free(head);\n    free(to);\n    free(next);\n    free(cnt);\n    free(finish);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17626620000373805,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

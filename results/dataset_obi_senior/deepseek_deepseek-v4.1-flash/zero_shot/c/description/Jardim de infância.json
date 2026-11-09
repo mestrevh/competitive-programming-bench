@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:11:04.275225+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1414,
+            "output_tokens": 45223,
+            "total_tokens": 46637
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.108535,
+            "total_cost": 0.108539
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\ntypedef struct {\n    long long x, y;\n} Point;\n\nlong long dist2(Point a, Point b) {\n    long long dx = a.x - b.x;\n    long long dy = a.y - b.y;\n    return dx * dx + dy * dy;\n}\n\nlong long dot(Point a, Point b, Point c) {\n    return (b.x - a.x) * (c.x - a.x) + (b.y - a.y) * (c.y - a.y);\n}\n\nlong long cross(Point a, Point b, Point c) {\n    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n}\n\nlong long dot_vec(Point a, Point b, Point c, Point d) {\n    return (b.x - a.x) * (d.x - c.x) + (b.y - a.y) * (d.y - c.y);\n}\n\nint main() {\n    Point p[8];\n    for (int i = 1; i <= 7; i++) {\n        if (scanf(\"%lld %lld\", &p[i].x, &p[i].y) != 2) return 1;\n    }\n\n    // 1. ângulo ∠P2P1P3 agudo\n    if (dot(p[1], p[2], p[3]) <= 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 2. P1P2 == P1P3\n    if (dist2(p[1], p[2]) != dist2(p[1], p[3])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 3. P2, P3, P4 e P5 colineares\n    if (cross(p[2], p[3], p[4]) != 0 || cross(p[2], p[3], p[5]) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 4. pontos médios coincidentes\n    if (p[2].x + p[3].x != p[4].x + p[5].x ||\n        p[2].y + p[3].y != p[4].y + p[5].y) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 5. |P2P3| > |P4P5|\n    if (dist2(p[2], p[3]) <= dist2(p[4], p[5])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 6. P4P6 e P5P7 perpendiculares a P2P3\n    if (dot_vec(p[4], p[6], p[2], p[3]) != 0 ||\n        dot_vec(p[5], p[7], p[2], p[3]) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 7. |P4P6| == |P5P7|\n    if (dist2(p[4], p[6]) != dist2(p[5], p[7])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 8. ordem correta de P4 antes de P5 ao longo de P2->P3\n    long long dx = p[3].x - p[2].x;\n    long long dy = p[3].y - p[2].y;\n    long long dot4 = (p[4].x - p[2].x) * dx + (p[4].y - p[2].y) * dy;\n    long long dot5 = (p[5].x - p[2].x) * dx + (p[5].y - p[2].y) * dy;\n    if (dot4 >= dot5) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 9. P1 e P6 separados pela reta P2P3\n    long long c1 = cross(p[2], p[3], p[1]);\n    long long c6 = cross(p[2], p[3], p[6]);\n    if (!((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0))) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 10. P1 e P7 separados pela reta P2P3\n    long long c7 = cross(p[2], p[3], p[7]);\n    if (!((c1 > 0 && c7 < 0) || (c1 < 0 && c7 > 0))) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    printf(\"S\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\ntypedef struct {\n    long long x, y;\n} Point;\n\nlong long dist2(Point a, Point b) {\n    long long dx = a.x - b.x;\n    long long dy = a.y - b.y;\n    return dx * dx + dy * dy;\n}\n\nlong long dot(Point a, Point b, Point c) {\n    return (b.x - a.x) * (c.x - a.x) + (b.y - a.y) * (c.y - a.y);\n}\n\nlong long cross(Point a, Point b, Point c) {\n    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n}\n\nlong long dot_vec(Point a, Point b, Point c, Point d) {\n    return (b.x - a.x) * (d.x - c.x) + (b.y - a.y) * (d.y - c.y);\n}\n\nint main() {\n    Point p[8];\n    for (int i = 1; i <= 7; i++) {\n        if (scanf(\"%lld %lld\", &p[i].x, &p[i].y) != 2) return 1;\n    }\n\n    // 1. ângulo ∠P2P1P3 agudo\n    if (dot(p[1], p[2], p[3]) <= 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 2. P1P2 == P1P3\n    if (dist2(p[1], p[2]) != dist2(p[1], p[3])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 3. P2, P3, P4 e P5 colineares\n    if (cross(p[2], p[3], p[4]) != 0 || cross(p[2], p[3], p[5]) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 4. pontos médios coincidentes\n    if (p[2].x + p[3].x != p[4].x + p[5].x ||\n        p[2].y + p[3].y != p[4].y + p[5].y) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 5. |P2P3| > |P4P5|\n    if (dist2(p[2], p[3]) <= dist2(p[4], p[5])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 6. P4P6 e P5P7 perpendiculares a P2P3\n    if (dot_vec(p[4], p[6], p[2], p[3]) != 0 ||\n        dot_vec(p[5], p[7], p[2], p[3]) != 0) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 7. |P4P6| == |P5P7|\n    if (dist2(p[4], p[6]) != dist2(p[5], p[7])) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 8. ordem correta de P4 antes de P5 ao longo de P2->P3\n    long long dx = p[3].x - p[2].x;\n    long long dy = p[3].y - p[2].y;\n    long long dot4 = (p[4].x - p[2].x) * dx + (p[4].y - p[2].y) * dy;\n    long long dot5 = (p[5].x - p[2].x) * dx + (p[5].y - p[2].y) * dy;\n    if (dot4 >= dot5) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 9. P1 e P6 separados pela reta P2P3\n    long long c1 = cross(p[2], p[3], p[1]);\n    long long c6 = cross(p[2], p[3], p[6]);\n    if (!((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0))) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    // 10. P1 e P7 separados pela reta P2P3\n    long long c7 = cross(p[2], p[3], p[7]);\n    if (!((c1 > 0 && c7 < 0) || (c1 < 0 && c7 > 0))) {\n        printf(\"N\\n\");\n        return 0;\n    }\n\n    printf(\"S\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13581179999891901,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

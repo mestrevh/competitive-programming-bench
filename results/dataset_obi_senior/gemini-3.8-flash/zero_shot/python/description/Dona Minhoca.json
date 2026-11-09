@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:00:54.684140+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 832,
+            "output_tokens": 960,
+            "total_tokens": 3803
+        },
+        "cost_usd": {
+            "input_cost": 0.000624,
+            "output_cost": 0.0036,
+            "total_cost": 0.004224
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n\n    # BFS para encontrar o nó mais distante a partir do nó 1\n    def bfs(start):\n        dist = [-1] * (n + 1)\n        parent = [-1] * (n + 1)\n        q = deque([start])\n        dist[start] = 0\n\n        furthest_node = start\n        while q:\n            u = q.popleft()\n            if dist[u] > dist[furthest_node]:\n                furthest_node = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    parent[v] = u\n                    q.append(v)\n\n        return furthest_node, dist, parent\n\n    # Encontrar uma extremidade do diâmetro\n    u, _, _ = bfs(1)\n    # Encontrar a outra extremidade e o caminho\n    v, dist, parent = bfs(u)\n\n    diameter = dist[v]\n    cycle_len = diameter + 1\n\n    # Reconstruir o caminho de u até v\n    path = []\n    curr = v\n    while curr != -1:\n        path.append(curr)\n        curr = parent[curr]\n    path.reverse()\n\n    if diameter % 2 == 0:\n        center = path[diameter // 2]\n        k = diameter // 2\n        counts = []\n\n        # Para cada vizinho do centro, contar quantos nós estão a distância k do centro\n        for neighbor in adj[center]:\n            # BFS na subárvore do vizinho, sem voltar para o centro\n            cnt = 0\n            q = deque([(neighbor, 1)])\n            visited = {neighbor, center}\n            while q:\n                node, d = q.popleft()\n                if d == k:\n                    cnt += 1\n                elif d < k:\n                    for nxt in adj[node]:\n                        if nxt not in visited:\n                            visited.add(nxt)\n                            q.append((nxt, d + 1))\n            counts.append(cnt)\n\n        # Número de pares é a soma de ci * cj para i < j\n        total_sum = sum(counts)\n        sum_sq = sum(c * c for c in counts)\n        ways = (total_sum * total_sum - sum_sq) // 2\n\n    else:\n        c1 = path[(diameter - 1) // 2]\n        c2 = path[(diameter + 1) // 2]\n        k = (diameter - 1) // 2\n\n        # Contar nós a distância k de c1 na sua componente (sem passar por c2)\n        def count_nodes(root, blocked, target_dist):\n            if target_dist == 0:\n                return 1\n            cnt = 0\n            q = deque([(root, 0)])\n            visited = {root, blocked}\n            while q:\n                node, d = q.popleft()\n                if d == target_dist:\n                    cnt += 1\n                elif d < target_dist:\n                    for nxt in adj[node]:\n                        if nxt not in visited:\n                            visited.add(nxt)\n                            q.append((nxt, d + 1))\n            return cnt\n\n        cnt1 = count_nodes(c1, c2, k)\n        cnt2 = count_nodes(c2, c1, k)\n        ways = cnt1 * cnt2\n\n    print(cycle_len)\n    print(ways)\n\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 1\n    for _ in range(n - 1):\n        u = int(data[idx])\n        v = int(data[idx + 1])\n        adj[u].append(v)\n        adj[v].append(u)\n        idx += 2\n\n    # BFS para encontrar o nó mais distante a partir do nó 1\n    def bfs(start):\n        dist = [-1] * (n + 1)\n        parent = [-1] * (n + 1)\n        q = deque([start])\n        dist[start] = 0\n\n        furthest_node = start\n        while q:\n            u = q.popleft()\n            if dist[u] > dist[furthest_node]:\n                furthest_node = u\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    parent[v] = u\n                    q.append(v)\n\n        return furthest_node, dist, parent\n\n    # Encontrar uma extremidade do diâmetro\n    u, _, _ = bfs(1)\n    # Encontrar a outra extremidade e o caminho\n    v, dist, parent = bfs(u)\n\n    diameter = dist[v]\n    cycle_len = diameter + 1\n\n    # Reconstruir o caminho de u até v\n    path = []\n    curr = v\n    while curr != -1:\n        path.append(curr)\n        curr = parent[curr]\n    path.reverse()\n\n    if diameter % 2 == 0:\n        center = path[diameter // 2]\n        k = diameter // 2\n        counts = []\n\n        # Para cada vizinho do centro, contar quantos nós estão a distância k do centro\n        for neighbor in adj[center]:\n            # BFS na subárvore do vizinho, sem voltar para o centro\n            cnt = 0\n            q = deque([(neighbor, 1)])\n            visited = {neighbor, center}\n            while q:\n                node, d = q.popleft()\n                if d == k:\n                    cnt += 1\n                elif d < k:\n                    for nxt in adj[node]:\n                        if nxt not in visited:\n                            visited.add(nxt)\n                            q.append((nxt, d + 1))\n            counts.append(cnt)\n\n        # Número de pares é a soma de ci * cj para i < j\n        total_sum = sum(counts)\n        sum_sq = sum(c * c for c in counts)\n        ways = (total_sum * total_sum - sum_sq) // 2\n\n    else:\n        c1 = path[(diameter - 1) // 2]\n        c2 = path[(diameter + 1) // 2]\n        k = (diameter - 1) // 2\n\n        # Contar nós a distância k de c1 na sua componente (sem passar por c2)\n        def count_nodes(root, blocked, target_dist):\n            if target_dist == 0:\n                return 1\n            cnt = 0\n            q = deque([(root, 0)])\n            visited = {root, blocked}\n            while q:\n                node, d = q.popleft()\n                if d == target_dist:\n                    cnt += 1\n                elif d < target_dist:\n                    for nxt in adj[node]:\n                        if nxt not in visited:\n                            visited.add(nxt)\n                            q.append((nxt, d + 1))\n            return cnt\n\n        cnt1 = count_nodes(c1, c2, k)\n        cnt2 = count_nodes(c2, c1, k)\n        ways = cnt1 * cnt2\n\n    print(cycle_len)\n    print(ways)\n\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12120199999480974,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:41:04.346247+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1817,
+            "output_tokens": 2379,
+            "total_tokens": 4196
+        },
+        "cost_usd": {
+            "input_cost": 0.000182,
+            "output_cost": 0.00119,
+            "total_cost": 0.001371
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet p = 0;\n\nconst N = Number(input[p++]);\nconst X1 = BigInt(input[p++]);\nconst X2 = BigInt(input[p++]);\n\nconst lines = [];\nfor (let i = 0; i < N; i++) {\n  const A = BigInt(input[p++]);\n  const B = BigInt(input[p++]);\n  lines.push({\n    left: A * X1 + B,\n    right: A * X2 + B\n  });\n}\n\nfunction countEqualPairs(sorted, key) {\n  let result = 0;\n  for (let i = 0; i < sorted.length;) {\n    let j = i + 1;\n    while (j < sorted.length && sorted[j][key] === sorted[i][key]) j++;\n    const size = j - i;\n    result += size * (size - 1) / 2;\n    i = j;\n  }\n  return result;\n}\n\nif (X1 === X2) {\n  lines.sort((a, b) => a.left < b.left ? -1 : a.left > b.left ? 1 : 0);\n  console.log(countEqualPairs(lines, 'left'));\n} else {\n  const byRight = lines.slice().sort((a, b) =>\n    a.right < b.right ? -1 : a.right > b.right ? 1 : 0\n  );\n\n  let rank = 0;\n  let previous = null;\n  let rightTies = 0;\n\n  for (let i = 0; i < byRight.length; i++) {\n    if (i === 0 || byRight[i].right !== previous) {\n      rank++;\n      previous = byRight[i].right;\n    } else {\n      rightTies += 0;\n    }\n    byRight[i].rank = rank;\n  }\n\n  rightTies = countEqualPairs(byRight, 'right');\n\n  lines.sort((a, b) => a.left < b.left ? -1 : a.left > b.left ? 1 : 0);\n\n  const bit = new Int32Array(rank + 1);\n  let inserted = 0;\n  let crossings = 0;\n  let leftTies = 0;\n\n  function query(index) {\n    let sum = 0;\n    while (index > 0) {\n      sum += bit[index];\n      index -= index & -index;\n    }\n    return sum;\n  }\n\n  function update(index) {\n    while (index <= rank) {\n      bit[index]++;\n      index += index & -index;\n    }\n  }\n\n  for (let i = 0; i < N;) {\n    let j = i + 1;\n    while (j < N && lines[j].left === lines[i].left) j++;\n\n    const size = j - i;\n    leftTies += size * (size - 1) / 2;\n\n    for (let k = i; k < j; k++) {\n      crossings += inserted - query(lines[k].rank);\n    }\n    for (let k = i; k < j; k++) {\n      update(lines[k].rank);\n      inserted++;\n    }\n    i = j;\n  }\n\n  console.log(crossings + leftTies + rightTies);\n}\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet p = 0;\n\nconst N = Number(input[p++]);\nconst X1 = BigInt(input[p++]);\nconst X2 = BigInt(input[p++]);\n\nconst lines = [];\nfor (let i = 0; i < N; i++) {\n  const A = BigInt(input[p++]);\n  const B = BigInt(input[p++]);\n  lines.push({\n    left: A * X1 + B,\n    right: A * X2 + B\n  });\n}\n\nfunction countEqualPairs(sorted, key) {\n  let result = 0;\n  for (let i = 0; i < sorted.length;) {\n    let j = i + 1;\n    while (j < sorted.length && sorted[j][key] === sorted[i][key]) j++;\n    const size = j - i;\n    result += size * (size - 1) / 2;\n    i = j;\n  }\n  return result;\n}\n\nif (X1 === X2) {\n  lines.sort((a, b) => a.left < b.left ? -1 : a.left > b.left ? 1 : 0);\n  console.log(countEqualPairs(lines, 'left'));\n} else {\n  const byRight = lines.slice().sort((a, b) =>\n    a.right < b.right ? -1 : a.right > b.right ? 1 : 0\n  );\n\n  let rank = 0;\n  let previous = null;\n  let rightTies = 0;\n\n  for (let i = 0; i < byRight.length; i++) {\n    if (i === 0 || byRight[i].right !== previous) {\n      rank++;\n      previous = byRight[i].right;\n    } else {\n      rightTies += 0;\n    }\n    byRight[i].rank = rank;\n  }\n\n  rightTies = countEqualPairs(byRight, 'right');\n\n  lines.sort((a, b) => a.left < b.left ? -1 : a.left > b.left ? 1 : 0);\n\n  const bit = new Int32Array(rank + 1);\n  let inserted = 0;\n  let crossings = 0;\n  let leftTies = 0;\n\n  function query(index) {\n    let sum = 0;\n    while (index > 0) {\n      sum += bit[index];\n      index -= index & -index;\n    }\n    return sum;\n  }\n\n  function update(index) {\n    while (index <= rank) {\n      bit[index]++;\n      index += index & -index;\n    }\n  }\n\n  for (let i = 0; i < N;) {\n    let j = i + 1;\n    while (j < N && lines[j].left === lines[i].left) j++;\n\n    const size = j - i;\n    leftTies += size * (size - 1) / 2;\n\n    for (let k = i; k < j; k++) {\n      crossings += inserted - query(lines[k].rank);\n    }\n    for (let k = i; k < j; k++) {\n      update(lines[k].rank);\n      inserted++;\n    }\n    i = j;\n  }\n\n  console.log(crossings + leftTies + rightTies);\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1984777000034228,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

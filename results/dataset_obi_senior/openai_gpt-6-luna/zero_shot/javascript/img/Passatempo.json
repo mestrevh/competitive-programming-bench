@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:39:45.048174+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 948,
+            "output_tokens": 1312,
+            "total_tokens": 2260
+        },
+        "cost_usd": {
+            "input_cost": 9.5e-05,
+            "output_cost": 0.000656,
+            "total_cost": 0.000751
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet p = 0;\n\nconst L = Number(input[p++]);\nconst C = Number(input[p++]);\n\nconst rows = [];\nconst equations = [];\nconst adjacency = Array.from({ length: 26 * 26 }, () => []);\n\nfunction addEquation(ids, sum) {\n  const counts = new Map();\n  for (const id of ids) counts.set(id, (counts.get(id) || 0) + 1);\n\n  const terms = Array.from(counts, ([id, count]) => [id, count]);\n  const index = equations.length;\n  equations.push({ terms, remaining: terms.length, rhs: sum });\n\n  for (const [id] of terms) adjacency[id].push(index);\n}\n\nfunction variableId(name) {\n  return (name.charCodeAt(0) - 97) * 26 + name.charCodeAt(1) - 97;\n}\n\nfor (let r = 0; r < L; r++) {\n  const ids = [];\n  for (let c = 0; c < C; c++) ids.push(variableId(input[p++]));\n  rows.push(ids);\n  addEquation(ids, Number(input[p++]));\n}\n\nconst columnSums = [];\nfor (let c = 0; c < C; c++) columnSums.push(Number(input[p++]));\n\nfor (let c = 0; c < C; c++) {\n  const ids = [];\n  for (let r = 0; r < L; r++) ids.push(rows[r][c]);\n  addEquation(ids, columnSums[c]);\n}\n\nconst values = Array(26 * 26).fill(undefined);\nconst queue = [];\n\nfor (let i = 0; i < equations.length; i++) {\n  if (equations[i].remaining === 1) queue.push(i);\n}\n\nlet head = 0;\nwhile (head < queue.length) {\n  const equation = equations[queue[head++]];\n  if (equation.remaining !== 1) continue;\n\n  let unknownId = -1;\n  let coefficient = 0;\n  for (const [id, count] of equation.terms) {\n    if (values[id] === undefined) {\n      unknownId = id;\n      coefficient = count;\n      break;\n    }\n  }\n  if (unknownId === -1) continue;\n\n  const value = equation.rhs / coefficient;\n  values[unknownId] = value;\n\n  for (const equationIndex of adjacency[unknownId]) {\n    const current = equations[equationIndex];\n    for (const [id, count] of current.terms) {\n      if (id === unknownId) {\n        current.rhs -= count * value;\n        current.remaining--;\n        if (current.remaining === 1) queue.push(equationIndex);\n        break;\n      }\n    }\n  }\n}\n\nconst output = [];\nfor (let id = 0; id < values.length; id++) {\n  if (values[id] !== undefined) {\n    const name = String.fromCharCode(97 + Math.floor(id / 26), 97 + (id % 26));\n    output.push(`${name} ${values[id]}`);\n  }\n}\n\nconsole.log(output.join('\\n'));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet p = 0;\n\nconst L = Number(input[p++]);\nconst C = Number(input[p++]);\n\nconst rows = [];\nconst equations = [];\nconst adjacency = Array.from({ length: 26 * 26 }, () => []);\n\nfunction addEquation(ids, sum) {\n  const counts = new Map();\n  for (const id of ids) counts.set(id, (counts.get(id) || 0) + 1);\n\n  const terms = Array.from(counts, ([id, count]) => [id, count]);\n  const index = equations.length;\n  equations.push({ terms, remaining: terms.length, rhs: sum });\n\n  for (const [id] of terms) adjacency[id].push(index);\n}\n\nfunction variableId(name) {\n  return (name.charCodeAt(0) - 97) * 26 + name.charCodeAt(1) - 97;\n}\n\nfor (let r = 0; r < L; r++) {\n  const ids = [];\n  for (let c = 0; c < C; c++) ids.push(variableId(input[p++]));\n  rows.push(ids);\n  addEquation(ids, Number(input[p++]));\n}\n\nconst columnSums = [];\nfor (let c = 0; c < C; c++) columnSums.push(Number(input[p++]));\n\nfor (let c = 0; c < C; c++) {\n  const ids = [];\n  for (let r = 0; r < L; r++) ids.push(rows[r][c]);\n  addEquation(ids, columnSums[c]);\n}\n\nconst values = Array(26 * 26).fill(undefined);\nconst queue = [];\n\nfor (let i = 0; i < equations.length; i++) {\n  if (equations[i].remaining === 1) queue.push(i);\n}\n\nlet head = 0;\nwhile (head < queue.length) {\n  const equation = equations[queue[head++]];\n  if (equation.remaining !== 1) continue;\n\n  let unknownId = -1;\n  let coefficient = 0;\n  for (const [id, count] of equation.terms) {\n    if (values[id] === undefined) {\n      unknownId = id;\n      coefficient = count;\n      break;\n    }\n  }\n  if (unknownId === -1) continue;\n\n  const value = equation.rhs / coefficient;\n  values[unknownId] = value;\n\n  for (const equationIndex of adjacency[unknownId]) {\n    const current = equations[equationIndex];\n    for (const [id, count] of current.terms) {\n      if (id === unknownId) {\n        current.rhs -= count * value;\n        current.remaining--;\n        if (current.remaining === 1) queue.push(equationIndex);\n        break;\n      }\n    }\n  }\n}\n\nconst output = [];\nfor (let id = 0; id < values.length; id++) {\n  if (values[id] !== undefined) {\n    const name = String.fromCharCode(97 + Math.floor(id / 26), 97 + (id % 26));\n    output.push(`${name} ${values[id]}`);\n  }\n}\n\nconsole.log(output.join('\\n'));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09616509999614209,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

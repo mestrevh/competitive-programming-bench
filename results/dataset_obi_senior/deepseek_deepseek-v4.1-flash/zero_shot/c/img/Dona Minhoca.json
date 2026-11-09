@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:51:07.620643+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 927,
+            "output_tokens": 7531,
+            "total_tokens": 8458
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.018074,
+            "total_cost": 0.018077
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 50005\n\nint N;\nint head[MAXN], to[2 * MAXN], nxt[2 * MAXN], ecnt;\nint dist[MAXN], parentArr[MAXN], queueArr[MAXN];\nint path[MAXN];\nint stNode[MAXN], stParent[MAXN], stDepth[MAXN];\n\nvoid addEdge(int u, int v) {\n    to[ecnt] = v;\n    nxt[ecnt] = head[u];\n    head[u] = ecnt++;\n}\n\nint bfs(int src, int *par) {\n    for (int i = 1; i <= N; i++) dist[i] = -1;\n\n    int qh = 0, qt = 0;\n    queueArr[qt++] = src;\n    dist[src] = 0;\n    if (par) par[src] = 0;\n\n    int far = src;\n\n    while (qh < qt) {\n        int u = queueArr[qh++];\n\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                if (par) par[v] = u;\n                queueArr[qt++] = v;\n            }\n        }\n    }\n\n    return far;\n}\n\nlong long countExact(int start, int blocked, int startDepth, int target) {\n    if (startDepth > target) return 0;\n\n    int top = 0;\n    stNode[top] = start;\n    stParent[top] = blocked;\n    stDepth[top] = startDepth;\n    top++;\n\n    long long cnt = 0;\n\n    while (top > 0) {\n        top--;\n\n        int u = stNode[top];\n        int p = stParent[top];\n        int d = stDepth[top];\n\n        if (d == target) {\n            cnt++;\n            continue;\n        }\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n\n            if (v == p) continue;\n\n            stNode[top] = v;\n            stParent[top] = u;\n            stDepth[top] = d + 1;\n            top++;\n        }\n    }\n\n    return cnt;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n\n    for (int i = 1; i <= N; i++) head[i] = -1;\n\n    for (int i = 0; i < N - 1; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n\n        addEdge(x, y);\n        addEdge(y, x);\n    }\n\n    int a = bfs(1, NULL);\n    int b = bfs(a, parentArr);\n\n    int D = dist[b];\n\n    int cur = b;\n    for (int i = D; i >= 0; i--) {\n        path[i] = cur;\n        cur = parentArr[cur];\n    }\n\n    long long ans = 0;\n\n    if (D % 2 == 0) {\n        int center = path[D / 2];\n        int R = D / 2;\n\n        long long total = 0;\n        long long sumSq = 0;\n\n        for (int e = head[center]; e != -1; e = nxt[e]) {\n            int v = to[e];\n\n            long long cnt = countExact(v, center, 1, R);\n\n            total += cnt;\n            sumSq += cnt * cnt;\n        }\n\n        ans = (total * total - sumSq) / 2;\n    } else {\n        int u = path[D / 2];\n        int v = path[D / 2 + 1];\n        int R = D / 2;\n\n        long long cu = countExact(u, v, 0, R);\n        long long cv = countExact(v, u, 0, R);\n\n        ans = cu * cv;\n    }\n\n    printf(\"%d\\n\", D + 1);\n    printf(\"%lld\\n\", ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 50005\n\nint N;\nint head[MAXN], to[2 * MAXN], nxt[2 * MAXN], ecnt;\nint dist[MAXN], parentArr[MAXN], queueArr[MAXN];\nint path[MAXN];\nint stNode[MAXN], stParent[MAXN], stDepth[MAXN];\n\nvoid addEdge(int u, int v) {\n    to[ecnt] = v;\n    nxt[ecnt] = head[u];\n    head[u] = ecnt++;\n}\n\nint bfs(int src, int *par) {\n    for (int i = 1; i <= N; i++) dist[i] = -1;\n\n    int qh = 0, qt = 0;\n    queueArr[qt++] = src;\n    dist[src] = 0;\n    if (par) par[src] = 0;\n\n    int far = src;\n\n    while (qh < qt) {\n        int u = queueArr[qh++];\n\n        if (dist[u] > dist[far]) far = u;\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                if (par) par[v] = u;\n                queueArr[qt++] = v;\n            }\n        }\n    }\n\n    return far;\n}\n\nlong long countExact(int start, int blocked, int startDepth, int target) {\n    if (startDepth > target) return 0;\n\n    int top = 0;\n    stNode[top] = start;\n    stParent[top] = blocked;\n    stDepth[top] = startDepth;\n    top++;\n\n    long long cnt = 0;\n\n    while (top > 0) {\n        top--;\n\n        int u = stNode[top];\n        int p = stParent[top];\n        int d = stDepth[top];\n\n        if (d == target) {\n            cnt++;\n            continue;\n        }\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n\n            if (v == p) continue;\n\n            stNode[top] = v;\n            stParent[top] = u;\n            stDepth[top] = d + 1;\n            top++;\n        }\n    }\n\n    return cnt;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n\n    for (int i = 1; i <= N; i++) head[i] = -1;\n\n    for (int i = 0; i < N - 1; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n\n        addEdge(x, y);\n        addEdge(y, x);\n    }\n\n    int a = bfs(1, NULL);\n    int b = bfs(a, parentArr);\n\n    int D = dist[b];\n\n    int cur = b;\n    for (int i = D; i >= 0; i--) {\n        path[i] = cur;\n        cur = parentArr[cur];\n    }\n\n    long long ans = 0;\n\n    if (D % 2 == 0) {\n        int center = path[D / 2];\n        int R = D / 2;\n\n        long long total = 0;\n        long long sumSq = 0;\n\n        for (int e = head[center]; e != -1; e = nxt[e]) {\n            int v = to[e];\n\n            long long cnt = countExact(v, center, 1, R);\n\n            total += cnt;\n            sumSq += cnt * cnt;\n        }\n\n        ans = (total * total - sumSq) / 2;\n    } else {\n        int u = path[D / 2];\n        int v = path[D / 2 + 1];\n        int R = D / 2;\n\n        long long cu = countExact(u, v, 0, R);\n        long long cv = countExact(v, u, 0, R);\n\n        ans = cu * cv;\n    }\n\n    printf(\"%d\\n\", D + 1);\n    printf(\"%lld\\n\", ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11911619999591494,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T23:50:25.730836+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1099,
+            "output_tokens": 1132,
+            "total_tokens": 2231
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.002717,
+            "total_cost": 0.00272
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) return 0;\n\n    int **cards = (int **)malloc(N * sizeof(int *));\n    for (int i = 0; i < N; i++) {\n        cards[i] = (int *)malloc(K * sizeof(int));\n        for (int j = 0; j < K; j++) {\n            scanf(\"%d\", &cards[i][j]);\n        }\n    }\n\n    int *pos = (int *)malloc((U + 1) * sizeof(int));\n    for (int i = 1; i <= U; i++) {\n        int x;\n        scanf(\"%d\", &x);\n        pos[x] = i;\n    }\n\n    int *finish = (int *)malloc(N * sizeof(int));\n    int best = U + 1;\n\n    for (int i = 0; i < N; i++) {\n        int mx = 0;\n        for (int j = 0; j < K; j++) {\n            int p = pos[cards[i][j]];\n            if (p > mx) mx = p;\n        }\n        finish[i] = mx;\n        if (mx < best) best = mx;\n    }\n\n    int first = 1;\n    for (int i = 0; i < N; i++) {\n        if (finish[i] == best) {\n            if (!first) printf(\" \");\n            printf(\"%d\", i + 1);\n            first = 0;\n        }\n    }\n    printf(\"\\n\");\n\n    for (int i = 0; i < N; i++) free(cards[i]);\n    free(cards);\n    free(pos);\n    free(finish);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int N, K, U;\n    if (scanf(\"%d %d %d\", &N, &K, &U) != 3) return 0;\n\n    int **cards = (int **)malloc(N * sizeof(int *));\n    for (int i = 0; i < N; i++) {\n        cards[i] = (int *)malloc(K * sizeof(int));\n        for (int j = 0; j < K; j++) {\n            scanf(\"%d\", &cards[i][j]);\n        }\n    }\n\n    int *pos = (int *)malloc((U + 1) * sizeof(int));\n    for (int i = 1; i <= U; i++) {\n        int x;\n        scanf(\"%d\", &x);\n        pos[x] = i;\n    }\n\n    int *finish = (int *)malloc(N * sizeof(int));\n    int best = U + 1;\n\n    for (int i = 0; i < N; i++) {\n        int mx = 0;\n        for (int j = 0; j < K; j++) {\n            int p = pos[cards[i][j]];\n            if (p > mx) mx = p;\n        }\n        finish[i] = mx;\n        if (mx < best) best = mx;\n    }\n\n    int first = 1;\n    for (int i = 0; i < N; i++) {\n        if (finish[i] == best) {\n            if (!first) printf(\" \");\n            printf(\"%d\", i + 1);\n            first = 0;\n        }\n    }\n    printf(\"\\n\");\n\n    for (int i = 0; i < N; i++) free(cards[i]);\n    free(cards);\n    free(pos);\n    free(finish);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1670308999964618,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

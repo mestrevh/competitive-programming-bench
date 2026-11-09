@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:08:16.376809+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1026,
+            "output_tokens": 1783,
+            "total_tokens": 2809
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.004279,
+            "total_cost": 0.004282
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define INF 1000000000\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int g[101][101];\n\n    for (int i = 1; i <= N; i++) {\n        for (int j = 1; j <= N; j++) {\n            g[i][j] = INF;\n        }\n        g[i][i] = 0;\n    }\n\n    for (int i = 0; i < M; i++) {\n        int A, B, C;\n        scanf(\"%d %d %d\", &A, &B, &C);\n\n        if (C < g[A][B]) {\n            g[A][B] = C;\n            g[B][A] = C;\n        }\n    }\n\n    int dist[101], visited[101];\n\n    for (int i = 1; i <= N; i++) {\n        dist[i] = INF;\n        visited[i] = 0;\n    }\n\n    dist[1] = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int u = -1;\n        int best = INF;\n\n        for (int j = 1; j <= N; j++) {\n            if (!visited[j] && dist[j] < best) {\n                best = dist[j];\n                u = j;\n            }\n        }\n\n        if (u == -1) break;\n\n        visited[u] = 1;\n\n        for (int v = 1; v <= N; v++) {\n            if (g[u][v] < INF && dist[u] + g[u][v] < dist[v]) {\n                dist[v] = dist[u] + g[u][v];\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dist[N]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define INF 1000000000\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int g[101][101];\n\n    for (int i = 1; i <= N; i++) {\n        for (int j = 1; j <= N; j++) {\n            g[i][j] = INF;\n        }\n        g[i][i] = 0;\n    }\n\n    for (int i = 0; i < M; i++) {\n        int A, B, C;\n        scanf(\"%d %d %d\", &A, &B, &C);\n\n        if (C < g[A][B]) {\n            g[A][B] = C;\n            g[B][A] = C;\n        }\n    }\n\n    int dist[101], visited[101];\n\n    for (int i = 1; i <= N; i++) {\n        dist[i] = INF;\n        visited[i] = 0;\n    }\n\n    dist[1] = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int u = -1;\n        int best = INF;\n\n        for (int j = 1; j <= N; j++) {\n            if (!visited[j] && dist[j] < best) {\n                best = dist[j];\n                u = j;\n            }\n        }\n\n        if (u == -1) break;\n\n        visited[u] = 1;\n\n        for (int v = 1; v <= N; v++) {\n            if (g[u][v] < INF && dist[u] + g[u][v] < dist[v]) {\n                dist[v] = dist[u] + g[u][v];\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dist[N]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10799390000465792,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

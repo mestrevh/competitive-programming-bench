@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:36:09.427694+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 790,
+            "output_tokens": 2020,
+            "total_tokens": 2810
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.00101,
+            "total_cost": 0.001089
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst n = input[idx++];\nconst graph = Array.from({ length: n }, () => []);\n\nfor (let i = 0; i < n - 1; i++) {\n  const a = input[idx++] - 1;\n  const b = input[idx++] - 1;\n  graph[a].push(b);\n  graph[b].push(a);\n}\n\nfunction bfs(start, withParent = false) {\n  const dist = new Int32Array(n);\n  dist.fill(-1);\n  const parent = withParent ? new Int32Array(n) : null;\n  const queue = new Int32Array(n);\n  let head = 0;\n  let tail = 0;\n  let farthest = start;\n\n  queue[tail++] = start;\n  dist[start] = 0;\n\n  while (head < tail) {\n    const v = queue[head++];\n    if (dist[v] > dist[farthest]) farthest = v;\n\n    for (const u of graph[v]) {\n      if (dist[u] !== -1) continue;\n      dist[u] = dist[v] + 1;\n      if (parent) parent[u] = v;\n      queue[tail++] = u;\n    }\n  }\n\n  return { dist, parent, farthest };\n}\n\nconst first = bfs(0);\nconst start = first.farthest;\nconst second = bfs(start, true);\nconst end = second.farthest;\nconst diameter = second.dist[end];\n\nconst path = [];\nfor (let v = end; ; v = second.parent[v]) {\n  path.push(v);\n  if (v === start) break;\n}\n\nconst stackNode = new Int32Array(n);\nconst stackParent = new Int32Array(n);\nconst stackDepth = new Int32Array(n);\n\nfunction countAtDepth(startNode, blockedNode, targetDepth) {\n  let top = 0;\n  let count = 0;\n\n  stackNode[top] = startNode;\n  stackParent[top] = blockedNode;\n  stackDepth[top++] = 0;\n\n  while (top > 0) {\n    top--;\n    const v = stackNode[top];\n    const parent = stackParent[top];\n    const depth = stackDepth[top];\n\n    if (depth === targetDepth) {\n      count++;\n      continue;\n    }\n\n    for (const u of graph[v]) {\n      if (u === parent) continue;\n      stackNode[top] = u;\n      stackParent[top] = v;\n      stackDepth[top++] = depth + 1;\n    }\n  }\n\n  return count;\n}\n\nlet ways = 0;\n\nif (diameter % 2 === 0) {\n  const center = path[diameter / 2];\n  const targetDepth = diameter / 2;\n  const branchCounts = [];\n\n  for (const neighbor of graph[center]) {\n    branchCounts.push(countAtDepth(neighbor, center, targetDepth - 1));\n  }\n\n  let seen = 0;\n  for (const count of branchCounts) {\n    ways += seen * count;\n    seen += count;\n  }\n} else {\n  const leftCenter = path[Math.floor(diameter / 2)];\n  const rightCenter = path[Math.floor(diameter / 2) + 1];\n  const depth = Math.floor(diameter / 2);\n\n  ways =\n    countAtDepth(leftCenter, rightCenter, depth) *\n    countAtDepth(rightCenter, leftCenter, depth);\n}\n\nconsole.log(`${diameter + 1}\\n${ways}`);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst n = input[idx++];\nconst graph = Array.from({ length: n }, () => []);\n\nfor (let i = 0; i < n - 1; i++) {\n  const a = input[idx++] - 1;\n  const b = input[idx++] - 1;\n  graph[a].push(b);\n  graph[b].push(a);\n}\n\nfunction bfs(start, withParent = false) {\n  const dist = new Int32Array(n);\n  dist.fill(-1);\n  const parent = withParent ? new Int32Array(n) : null;\n  const queue = new Int32Array(n);\n  let head = 0;\n  let tail = 0;\n  let farthest = start;\n\n  queue[tail++] = start;\n  dist[start] = 0;\n\n  while (head < tail) {\n    const v = queue[head++];\n    if (dist[v] > dist[farthest]) farthest = v;\n\n    for (const u of graph[v]) {\n      if (dist[u] !== -1) continue;\n      dist[u] = dist[v] + 1;\n      if (parent) parent[u] = v;\n      queue[tail++] = u;\n    }\n  }\n\n  return { dist, parent, farthest };\n}\n\nconst first = bfs(0);\nconst start = first.farthest;\nconst second = bfs(start, true);\nconst end = second.farthest;\nconst diameter = second.dist[end];\n\nconst path = [];\nfor (let v = end; ; v = second.parent[v]) {\n  path.push(v);\n  if (v === start) break;\n}\n\nconst stackNode = new Int32Array(n);\nconst stackParent = new Int32Array(n);\nconst stackDepth = new Int32Array(n);\n\nfunction countAtDepth(startNode, blockedNode, targetDepth) {\n  let top = 0;\n  let count = 0;\n\n  stackNode[top] = startNode;\n  stackParent[top] = blockedNode;\n  stackDepth[top++] = 0;\n\n  while (top > 0) {\n    top--;\n    const v = stackNode[top];\n    const parent = stackParent[top];\n    const depth = stackDepth[top];\n\n    if (depth === targetDepth) {\n      count++;\n      continue;\n    }\n\n    for (const u of graph[v]) {\n      if (u === parent) continue;\n      stackNode[top] = u;\n      stackParent[top] = v;\n      stackDepth[top++] = depth + 1;\n    }\n  }\n\n  return count;\n}\n\nlet ways = 0;\n\nif (diameter % 2 === 0) {\n  const center = path[diameter / 2];\n  const targetDepth = diameter / 2;\n  const branchCounts = [];\n\n  for (const neighbor of graph[center]) {\n    branchCounts.push(countAtDepth(neighbor, center, targetDepth - 1));\n  }\n\n  let seen = 0;\n  for (const count of branchCounts) {\n    ways += seen * count;\n    seen += count;\n  }\n} else {\n  const leftCenter = path[Math.floor(diameter / 2)];\n  const rightCenter = path[Math.floor(diameter / 2) + 1];\n  const depth = Math.floor(diameter / 2);\n\n  ways =\n    countAtDepth(leftCenter, rightCenter, depth) *\n    countAtDepth(rightCenter, leftCenter, depth);\n}\n\nconsole.log(`${diameter + 1}\\n${ways}`);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1002200000002631,
+            "counts": {
+                "AC": 29,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 29
+        }
+    }
+]

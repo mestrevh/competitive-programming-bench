@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:57:59.419071+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 986,
+            "output_tokens": 1616,
+            "total_tokens": 2602
+        },
+        "cost_usd": {
+            "input_cost": 9.9e-05,
+            "output_cost": 0.000808,
+            "total_cost": 0.000907
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c <= 32) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nfunction readTree(n) {\n  const adj = Array.from({ length: n }, () => []);\n  for (let i = 0; i < n - 1; i++) {\n    const a = nextInt() - 1;\n    const b = nextInt() - 1;\n    adj[a].push(b);\n    adj[b].push(a);\n  }\n  return adj;\n}\n\nfunction findCenter(adj) {\n  const n = adj.length;\n\n  function farthestFrom(start) {\n    const dist = new Int32Array(n);\n    dist.fill(-1);\n    const queue = new Int32Array(n);\n    let head = 0;\n    let tail = 0;\n    queue[tail++] = start;\n    dist[start] = 0;\n    let farthest = start;\n\n    while (head < tail) {\n      const u = queue[head++];\n      if (dist[u] > dist[farthest]) farthest = u;\n      for (const v of adj[u]) {\n        if (dist[v] === -1) {\n          dist[v] = dist[u] + 1;\n          queue[tail++] = v;\n        }\n      }\n    }\n    return farthest;\n  }\n\n  const endpoint = farthestFrom(0);\n  const parent = new Int32Array(n);\n  parent.fill(-1);\n  const dist = new Int32Array(n);\n  dist.fill(-1);\n  const queue = new Int32Array(n);\n  let head = 0;\n  let tail = 0;\n  queue[tail++] = endpoint;\n  dist[endpoint] = 0;\n  let farthest = endpoint;\n\n  while (head < tail) {\n    const u = queue[head++];\n    if (dist[u] > dist[farthest]) farthest = u;\n    for (const v of adj[u]) {\n      if (dist[v] === -1) {\n        dist[v] = dist[u] + 1;\n        parent[v] = u;\n        queue[tail++] = v;\n      }\n    }\n  }\n\n  const path = [];\n  for (let v = farthest; v !== -1; v = parent[v]) path.push(v);\n  return path[Math.floor((path.length - 1) / 2)] + 1;\n}\n\nconst n = nextInt();\nconst m = nextInt();\nconst circle = readTree(n);\nconst square = readTree(m);\n\nconsole.log(`${findCenter(circle)} ${findCenter(square)}`);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data.charCodeAt(pos) <= 32) pos++;\n  let value = 0;\n  while (pos < data.length) {\n    const c = data.charCodeAt(pos);\n    if (c <= 32) break;\n    value = value * 10 + c - 48;\n    pos++;\n  }\n  return value;\n}\n\nfunction readTree(n) {\n  const adj = Array.from({ length: n }, () => []);\n  for (let i = 0; i < n - 1; i++) {\n    const a = nextInt() - 1;\n    const b = nextInt() - 1;\n    adj[a].push(b);\n    adj[b].push(a);\n  }\n  return adj;\n}\n\nfunction findCenter(adj) {\n  const n = adj.length;\n\n  function farthestFrom(start) {\n    const dist = new Int32Array(n);\n    dist.fill(-1);\n    const queue = new Int32Array(n);\n    let head = 0;\n    let tail = 0;\n    queue[tail++] = start;\n    dist[start] = 0;\n    let farthest = start;\n\n    while (head < tail) {\n      const u = queue[head++];\n      if (dist[u] > dist[farthest]) farthest = u;\n      for (const v of adj[u]) {\n        if (dist[v] === -1) {\n          dist[v] = dist[u] + 1;\n          queue[tail++] = v;\n        }\n      }\n    }\n    return farthest;\n  }\n\n  const endpoint = farthestFrom(0);\n  const parent = new Int32Array(n);\n  parent.fill(-1);\n  const dist = new Int32Array(n);\n  dist.fill(-1);\n  const queue = new Int32Array(n);\n  let head = 0;\n  let tail = 0;\n  queue[tail++] = endpoint;\n  dist[endpoint] = 0;\n  let farthest = endpoint;\n\n  while (head < tail) {\n    const u = queue[head++];\n    if (dist[u] > dist[farthest]) farthest = u;\n    for (const v of adj[u]) {\n      if (dist[v] === -1) {\n        dist[v] = dist[u] + 1;\n        parent[v] = u;\n        queue[tail++] = v;\n      }\n    }\n  }\n\n  const path = [];\n  for (let v = farthest; v !== -1; v = parent[v]) path.push(v);\n  return path[Math.floor((path.length - 1) / 2)] + 1;\n}\n\nconst n = nextInt();\nconst m = nextInt();\nconst circle = readTree(n);\nconst square = readTree(m);\n\nconsole.log(`${findCenter(circle)} ${findCenter(square)}`);",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.17437659999995958,
+            "counts": {
+                "AC": 6,
+                "WA": 32,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

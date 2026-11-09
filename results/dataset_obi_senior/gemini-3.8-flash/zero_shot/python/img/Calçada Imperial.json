@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:34:52.091974+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1719,
+            "output_tokens": 651,
+            "total_tokens": 3006
+        },
+        "cost_usd": {
+            "input_cost": 0.001289,
+            "output_cost": 0.002441,
+            "total_cost": 0.00373
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    v = [int(x) for x in input_data[1:]]\n\n    if n <= 2:\n        print(n)\n        return\n\n    # Agrupa as posições onde cada valor aparece\n    positions = {}\n    for idx, val in enumerate(v):\n        if val not in positions:\n            positions[val] = []\n        positions[val].append(idx)\n\n    distinct_vals = list(positions.keys())\n    if len(distinct_vals) <= 2:\n        # Se há no máximo 2 valores distintos, basta comprimir repetições consecutivas na sequência\n        compressed = [v[0]]\n        for x in v[1:]:\n            if x != compressed[-1]:\n                compressed.append(x)\n        print(len(compressed))\n        return\n\n    max_len = 1\n\n    # Testa todos os pares de valores distintos\n    # Fazendo o merge ordenado das posições de A e B, o custo total é O(U * N) <= 500 * 500 = 250.000 operações\n    for i in range(len(distinct_vals)):\n        val_a = distinct_vals[i]\n        pos_a = positions[val_a]\n        for j in range(i + 1, len(distinct_vals)):\n            val_b = distinct_vals[j]\n            pos_b = positions[val_b]\n\n            # Merge de pos_a e pos_b para contar a alternância\n            ia = 0\n            ib = 0\n            len_a = len(pos_a)\n            len_b = len(pos_b)\n\n            count = 0\n            last_val = None\n\n            while ia < len_a and ib < len_b:\n                if pos_a[ia] < pos_b[ib]:\n                    curr_val = val_a\n                    ia += 1\n                else:\n                    curr_val = val_b\n                    ib += 1\n\n                if curr_val != last_val:\n                    count += 1\n                    last_val = curr_val\n\n            while ia < len_a:\n                if val_a != last_val:\n                    count += 1\n                    last_val = val_a\n                ia += 1\n\n            while ib < len_b:\n                if val_b != last_val:\n                    count += 1\n                    last_val = val_b\n                ib += 1\n\n            if count > max_len:\n                max_len = count\n\n    print(max_len)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    v = [int(x) for x in input_data[1:]]\n\n    if n <= 2:\n        print(n)\n        return\n\n    # Agrupa as posições onde cada valor aparece\n    positions = {}\n    for idx, val in enumerate(v):\n        if val not in positions:\n            positions[val] = []\n        positions[val].append(idx)\n\n    distinct_vals = list(positions.keys())\n    if len(distinct_vals) <= 2:\n        # Se há no máximo 2 valores distintos, basta comprimir repetições consecutivas na sequência\n        compressed = [v[0]]\n        for x in v[1:]:\n            if x != compressed[-1]:\n                compressed.append(x)\n        print(len(compressed))\n        return\n\n    max_len = 1\n\n    # Testa todos os pares de valores distintos\n    # Fazendo o merge ordenado das posições de A e B, o custo total é O(U * N) <= 500 * 500 = 250.000 operações\n    for i in range(len(distinct_vals)):\n        val_a = distinct_vals[i]\n        pos_a = positions[val_a]\n        for j in range(i + 1, len(distinct_vals)):\n            val_b = distinct_vals[j]\n            pos_b = positions[val_b]\n\n            # Merge de pos_a e pos_b para contar a alternância\n            ia = 0\n            ib = 0\n            len_a = len(pos_a)\n            len_b = len(pos_b)\n\n            count = 0\n            last_val = None\n\n            while ia < len_a and ib < len_b:\n                if pos_a[ia] < pos_b[ib]:\n                    curr_val = val_a\n                    ia += 1\n                else:\n                    curr_val = val_b\n                    ib += 1\n\n                if curr_val != last_val:\n                    count += 1\n                    last_val = curr_val\n\n            while ia < len_a:\n                if val_a != last_val:\n                    count += 1\n                    last_val = val_a\n                ia += 1\n\n            while ib < len_b:\n                if val_b != last_val:\n                    count += 1\n                    last_val = val_b\n                ib += 1\n\n            if count > max_len:\n                max_len = count\n\n    print(max_len)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06988509999791859,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

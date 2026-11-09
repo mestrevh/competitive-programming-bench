@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:39:55.508022+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1129,
+            "output_tokens": 5900,
+            "total_tokens": 7029
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.01416,
+            "total_cost": 0.014163
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n\nlong long key[MAXN];\nunsigned int prio[MAXN];\nint left[MAXN], right[MAXN], sz[MAXN];\nint nodeCnt = 0;\nint root = -1;\n\nunsigned int seed = 123456789;\nunsigned int rnd() {\n    seed ^= seed << 13;\n    seed ^= seed >> 17;\n    seed ^= seed << 5;\n    return seed;\n}\n\nint szof(int t) {\n    return t == -1 ? 0 : sz[t];\n}\n\nvoid update(int t) {\n    if (t != -1) {\n        sz[t] = 1 + szof(left[t]) + szof(right[t]);\n    }\n}\n\nint rotateRight(int t) {\n    int u = left[t];\n    left[t] = right[u];\n    right[u] = t;\n    update(t);\n    update(u);\n    return u;\n}\n\nint rotateLeft(int t) {\n    int u = right[t];\n    right[t] = left[u];\n    left[u] = t;\n    update(t);\n    update(u);\n    return u;\n}\n\nint insert(int t, int node) {\n    if (t == -1) return node;\n    if (key[node] < key[t]) {\n        left[t] = insert(left[t], node);\n        if (prio[left[t]] < prio[t]) {\n            t = rotateRight(t);\n        }\n    } else {\n        right[t] = insert(right[t], node);\n        if (prio[right[t]] < prio[t]) {\n            t = rotateLeft(t);\n        }\n    }\n    update(t);\n    return t;\n}\n\nint query(int t, long long d) {\n    if (t == -1) return 0;\n    if (key[t] <= d) {\n        return szof(left[t]) + 1 + query(right[t], d);\n    } else {\n        return query(left[t], d);\n    }\n}\n\nint main() {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n    long long prev = 0;\n    for (int i = 1; i <= N; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n        long long ax = x + prev;\n        long long ay = y + prev;\n        long long d = ax * ax + ay * ay;\n        int p = query(root, d);\n        printf(\"%d\\n\", p);\n\n        int node = nodeCnt++;\n        key[node] = d;\n        prio[node] = rnd();\n        left[node] = right[node] = -1;\n        sz[node] = 1;\n        root = insert(root, node);\n\n        prev = p;\n    }\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n\nlong long key[MAXN];\nunsigned int prio[MAXN];\nint left[MAXN], right[MAXN], sz[MAXN];\nint nodeCnt = 0;\nint root = -1;\n\nunsigned int seed = 123456789;\nunsigned int rnd() {\n    seed ^= seed << 13;\n    seed ^= seed >> 17;\n    seed ^= seed << 5;\n    return seed;\n}\n\nint szof(int t) {\n    return t == -1 ? 0 : sz[t];\n}\n\nvoid update(int t) {\n    if (t != -1) {\n        sz[t] = 1 + szof(left[t]) + szof(right[t]);\n    }\n}\n\nint rotateRight(int t) {\n    int u = left[t];\n    left[t] = right[u];\n    right[u] = t;\n    update(t);\n    update(u);\n    return u;\n}\n\nint rotateLeft(int t) {\n    int u = right[t];\n    right[t] = left[u];\n    left[u] = t;\n    update(t);\n    update(u);\n    return u;\n}\n\nint insert(int t, int node) {\n    if (t == -1) return node;\n    if (key[node] < key[t]) {\n        left[t] = insert(left[t], node);\n        if (prio[left[t]] < prio[t]) {\n            t = rotateRight(t);\n        }\n    } else {\n        right[t] = insert(right[t], node);\n        if (prio[right[t]] < prio[t]) {\n            t = rotateLeft(t);\n        }\n    }\n    update(t);\n    return t;\n}\n\nint query(int t, long long d) {\n    if (t == -1) return 0;\n    if (key[t] <= d) {\n        return szof(left[t]) + 1 + query(right[t], d);\n    } else {\n        return query(left[t], d);\n    }\n}\n\nint main() {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n    long long prev = 0;\n    for (int i = 1; i <= N; i++) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n        long long ax = x + prev;\n        long long ay = y + prev;\n        long long d = ax * ax + ay * ay;\n        int p = query(root, d);\n        printf(\"%d\\n\", p);\n\n        int node = nodeCnt++;\n        key[node] = d;\n        prio[node] = rnd();\n        left[node] = right[node] = -1;\n        sz[node] = 1;\n        root = insert(root, node);\n\n        prev = p;\n    }\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1691869999995106,
+            "counts": {
+                "AC": 39,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 39
+        }
+    }
+]

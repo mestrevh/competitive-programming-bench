@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:20:48.720111+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1177,
+            "output_tokens": 78557,
+            "total_tokens": 79734
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.188537,
+            "total_cost": 0.18854
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 4000000000000000000LL\n\nint cmp(const void *a, const void *b) {\n    int ia = *(const int*)a;\n    int ib = *(const int*)b;\n    return (ia > ib) - (ia < ib);\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int *T = (int*)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &T[i]);\n    }\n    qsort(T, N, sizeof(int), cmp);\n\n    long long *dp_next = (long long*)malloc((K + 1) * sizeof(long long));\n    long long *dp_next2 = (long long*)malloc((K + 1) * sizeof(long long));\n    long long *dp_cur = (long long*)malloc((K + 1) * sizeof(long long));\n\n    for (int j = 0; j <= K; j++) {\n        dp_next[j] = INF;\n        dp_next2[j] = INF;\n    }\n    dp_next[0] = 0;\n\n    for (int i = N; i >= 1; i--) {\n        for (int j = 0; j <= K; j++) {\n            dp_cur[j] = dp_next[j];\n            if (i <= N - 1 && j >= 1) {\n                if (i + 3 * j <= N + 1) {\n                    long long diff = (long long)T[i] - T[i - 1];\n                    long long cost = diff * diff;\n                    if (dp_next2[j - 1] != INF) {\n                        long long val = dp_next2[j - 1] + cost;\n                        if (val < dp_cur[j]) {\n                            dp_cur[j] = val;\n                        }\n                    }\n                }\n            }\n        }\n        // shift arrays\n        for (int j = 0; j <= K; j++) {\n            dp_next2[j] = dp_next[j];\n            dp_next[j] = dp_cur[j];\n        }\n    }\n\n    printf(\"%lld\\n\", dp_next[K]);\n\n    free(T);\n    free(dp_next);\n    free(dp_next2);\n    free(dp_cur);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 4000000000000000000LL\n\nint cmp(const void *a, const void *b) {\n    int ia = *(const int*)a;\n    int ib = *(const int*)b;\n    return (ia > ib) - (ia < ib);\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int *T = (int*)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &T[i]);\n    }\n    qsort(T, N, sizeof(int), cmp);\n\n    long long *dp_next = (long long*)malloc((K + 1) * sizeof(long long));\n    long long *dp_next2 = (long long*)malloc((K + 1) * sizeof(long long));\n    long long *dp_cur = (long long*)malloc((K + 1) * sizeof(long long));\n\n    for (int j = 0; j <= K; j++) {\n        dp_next[j] = INF;\n        dp_next2[j] = INF;\n    }\n    dp_next[0] = 0;\n\n    for (int i = N; i >= 1; i--) {\n        for (int j = 0; j <= K; j++) {\n            dp_cur[j] = dp_next[j];\n            if (i <= N - 1 && j >= 1) {\n                if (i + 3 * j <= N + 1) {\n                    long long diff = (long long)T[i] - T[i - 1];\n                    long long cost = diff * diff;\n                    if (dp_next2[j - 1] != INF) {\n                        long long val = dp_next2[j - 1] + cost;\n                        if (val < dp_cur[j]) {\n                            dp_cur[j] = val;\n                        }\n                    }\n                }\n            }\n        }\n        // shift arrays\n        for (int j = 0; j <= K; j++) {\n            dp_next2[j] = dp_next[j];\n            dp_next[j] = dp_cur[j];\n        }\n    }\n\n    printf(\"%lld\\n\", dp_next[K]);\n\n    free(T);\n    free(dp_next);\n    free(dp_next2);\n    free(dp_cur);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1266447000016342,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:48:59.824116+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 980,
+            "output_tokens": 674,
+            "total_tokens": 1654
+        },
+        "cost_usd": {
+            "input_cost": 9.8e-05,
+            "output_cost": 0.000337,
+            "total_cost": 0.000435
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < data.length && data[pos] > 32) {\n    value = value * 10 + data[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst U = nextInt();\n\nconst cards = new Uint16Array(N * K);\nfor (let i = 0; i < cards.length; i++) {\n  cards[i] = nextInt();\n}\n\nconst rank = new Uint32Array(U + 1);\nfor (let i = 1; i <= U; i++) {\n  rank[nextInt()] = i;\n}\n\nconst completion = new Uint32Array(N);\nlet earliest = Infinity;\n\nfor (let i = 0; i < N; i++) {\n  let last = 0;\n  const start = i * K;\n  for (let j = 0; j < K; j++) {\n    const drawRank = rank[cards[start + j]];\n    if (drawRank > last) last = drawRank;\n  }\n  completion[i] = last;\n  if (last < earliest) earliest = last;\n}\n\nconst winners = [];\nfor (let i = 0; i < N; i++) {\n  if (completion[i] === earliest) winners.push(i + 1);\n}\n\nprocess.stdout.write(winners.join(' ') + '\\n');\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0);\nlet pos = 0;\n\nfunction nextInt() {\n  while (pos < data.length && data[pos] <= 32) pos++;\n  let value = 0;\n  while (pos < data.length && data[pos] > 32) {\n    value = value * 10 + data[pos] - 48;\n    pos++;\n  }\n  return value;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst U = nextInt();\n\nconst cards = new Uint16Array(N * K);\nfor (let i = 0; i < cards.length; i++) {\n  cards[i] = nextInt();\n}\n\nconst rank = new Uint32Array(U + 1);\nfor (let i = 1; i <= U; i++) {\n  rank[nextInt()] = i;\n}\n\nconst completion = new Uint32Array(N);\nlet earliest = Infinity;\n\nfor (let i = 0; i < N; i++) {\n  let last = 0;\n  const start = i * K;\n  for (let j = 0; j < K; j++) {\n    const drawRank = rank[cards[start + j]];\n    if (drawRank > last) last = drawRank;\n  }\n  completion[i] = last;\n  if (last < earliest) earliest = last;\n}\n\nconst winners = [];\nfor (let i = 0; i < N; i++) {\n  if (completion[i] === earliest) winners.push(i + 1);\n}\n\nprocess.stdout.write(winners.join(' ') + '\\n');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09504620000370778,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

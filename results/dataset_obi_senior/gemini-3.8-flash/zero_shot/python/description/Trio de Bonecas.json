@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T01:07:27.639934+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1123,
+            "output_tokens": 558,
+            "total_tokens": 3277
+        },
+        "cost_usd": {
+            "input_cost": 0.000842,
+            "output_cost": 0.002093,
+            "total_cost": 0.002935
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n\n    T = [int(x) for x in input_data[2 : N + 2]]\n\n    # Ordenar em ordem decrescente\n    T.sort(reverse=True)\n\n    # diff_sq[i] será o custo de parear T[i-1] e T[i] (1-indexed para T)\n    # T indexado em 0: T[0] >= T[1] >= ... >= T[N-1]\n    # diff_sq[i] para o par (T[i-2], T[i-1]) com 1-based index i:\n    diff_sq = [0] * (N + 1)\n    for i in range(2, N + 1):\n        d = T[i - 2] - T[i - 1]\n        diff_sq[i] = d * d\n\n    # dp_prev[i] armazena o resultado para (j - 1) trios considerando prefixo de tamanho i\n    # Para j = 0, custo é 0 para qualquer i >= 0\n    dp_prev = [0] * (N + 1)\n    dp_cur = [0] * (N + 1)\n\n    INF = float(\"inf\")\n\n    for j in range(1, K + 1):\n        start = 3 * j\n\n        # O primeiro elemento válido é start = 3 * j\n        best = dp_prev[start - 2] + diff_sq[start]\n        dp_cur[start] = best\n\n        # Loop interno otimizado\n        diff_sq_ref = diff_sq\n        dp_prev_ref = dp_prev\n        dp_cur_ref = dp_cur\n\n        for i in range(start + 1, N + 1):\n            val = dp_prev_ref[i - 2] + diff_sq_ref[i]\n            if val < best:\n                best = val\n            dp_cur_ref[i] = best\n\n        dp_prev, dp_cur = dp_cur, dp_prev\n\n    print(dp_prev[N])\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    K = int(input_data[1])\n\n    T = [int(x) for x in input_data[2 : N + 2]]\n\n    # Ordenar em ordem decrescente\n    T.sort(reverse=True)\n\n    # diff_sq[i] será o custo de parear T[i-1] e T[i] (1-indexed para T)\n    # T indexado em 0: T[0] >= T[1] >= ... >= T[N-1]\n    # diff_sq[i] para o par (T[i-2], T[i-1]) com 1-based index i:\n    diff_sq = [0] * (N + 1)\n    for i in range(2, N + 1):\n        d = T[i - 2] - T[i - 1]\n        diff_sq[i] = d * d\n\n    # dp_prev[i] armazena o resultado para (j - 1) trios considerando prefixo de tamanho i\n    # Para j = 0, custo é 0 para qualquer i >= 0\n    dp_prev = [0] * (N + 1)\n    dp_cur = [0] * (N + 1)\n\n    INF = float(\"inf\")\n\n    for j in range(1, K + 1):\n        start = 3 * j\n\n        # O primeiro elemento válido é start = 3 * j\n        best = dp_prev[start - 2] + diff_sq[start]\n        dp_cur[start] = best\n\n        # Loop interno otimizado\n        diff_sq_ref = diff_sq\n        dp_prev_ref = dp_prev\n        dp_cur_ref = dp_cur\n\n        for i in range(start + 1, N + 1):\n            val = dp_prev_ref[i - 2] + diff_sq_ref[i]\n            if val < best:\n                best = val\n            dp_cur_ref[i] = best\n\n        dp_prev, dp_cur = dp_cur, dp_prev\n\n    print(dp_prev[N])\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.9196872000029543,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

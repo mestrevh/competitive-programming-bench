@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:53:05.450065+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1103,
+            "output_tokens": 2404,
+            "total_tokens": 3507
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.00577,
+            "total_cost": 0.005773
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <limits.h>\n\n#define MAXN 101\n#define INF 1000000000\n\nint main() {\n    int N, M;\n    int graph[MAXN][MAXN];\n    int dist[MAXN];\n    int visited[MAXN];\n\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 1; i <= N; i++) {\n        for (int j = 1; j <= N; j++) {\n            graph[i][j] = INF;\n        }\n        graph[i][i] = 0;\n    }\n\n    for (int i = 0; i < M; i++) {\n        int A, B, C;\n        scanf(\"%d %d %d\", &A, &B, &C);\n        if (C < graph[A][B]) {\n            graph[A][B] = C;\n            graph[B][A] = C;\n        }\n    }\n\n    for (int i = 1; i <= N; i++) {\n        dist[i] = INF;\n        visited[i] = 0;\n    }\n    dist[1] = 0;\n\n    for (int count = 0; count < N; count++) {\n        int u = -1;\n        int min = INF;\n\n        for (int i = 1; i <= N; i++) {\n            if (!visited[i] && dist[i] < min) {\n                min = dist[i];\n                u = i;\n            }\n        }\n\n        if (u == -1) break;\n        visited[u] = 1;\n\n        for (int v = 1; v <= N; v++) {\n            if (!visited[v] && graph[u][v] < INF) {\n                if (dist[u] + graph[u][v] < dist[v]) {\n                    dist[v] = dist[u] + graph[u][v];\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dist[N]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAXN 101\n#define INF 1000000000\n\nint main() {\n    int N, M;\n    int graph[MAXN][MAXN];\n    int dist[MAXN];\n    int visited[MAXN];\n\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int i = 1; i <= N; i++) {\n        for (int j = 1; j <= N; j++) {\n            graph[i][j] = INF;\n        }\n        graph[i][i] = 0;\n    }\n\n    for (int i = 0; i < M; i++) {\n        int A, B, C;\n        scanf(\"%d %d %d\", &A, &B, &C);\n        if (C < graph[A][B]) {\n            graph[A][B] = C;\n            graph[B][A] = C;\n        }\n    }\n\n    for (int i = 1; i <= N; i++) {\n        dist[i] = INF;\n        visited[i] = 0;\n    }\n    dist[1] = 0;\n\n    for (int count = 0; count < N; count++) {\n        int u = -1;\n        int min = INF;\n\n        for (int i = 1; i <= N; i++) {\n            if (!visited[i] && dist[i] < min) {\n                min = dist[i];\n                u = i;\n            }\n        }\n\n        if (u == -1) break;\n        visited[u] = 1;\n\n        for (int v = 1; v <= N; v++) {\n            if (!visited[v] && graph[u][v] < INF) {\n                if (dist[u] + graph[u][v] < dist[v]) {\n                    dist[v] = dist[u] + graph[u][v];\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dist[N]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1854749999984051,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

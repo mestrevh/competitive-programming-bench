@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T22:15:03.349201+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1452,
+            "output_tokens": 11807,
+            "total_tokens": 13259
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.028337,
+            "total_cost": 0.028341
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef long long ll;\n\nll *heapD;\nint *heapS;\nint hsz;\n\nvoid push_heap(ll d, int s) {\n    int i = hsz++;\n    heapD[i] = d;\n    heapS[i] = s;\n\n    while (i > 0) {\n        int p = (i - 1) / 2;\n        if (heapD[p] <= heapD[i]) break;\n\n        ll td = heapD[p];\n        heapD[p] = heapD[i];\n        heapD[i] = td;\n\n        int ts = heapS[p];\n        heapS[p] = heapS[i];\n        heapS[i] = ts;\n\n        i = p;\n    }\n}\n\nint pop_heap(ll *outD) {\n    int resS = heapS[0];\n    *outD = heapD[0];\n\n    --hsz;\n\n    if (hsz > 0) {\n        heapD[0] = heapD[hsz];\n        heapS[0] = heapS[hsz];\n\n        int i = 0;\n\n        while (1) {\n            int l = 2 * i + 1;\n            int r = 2 * i + 2;\n            int smallest = i;\n\n            if (l < hsz && heapD[l] < heapD[smallest]) smallest = l;\n            if (r < hsz && heapD[r] < heapD[smallest]) smallest = r;\n\n            if (smallest == i) break;\n\n            ll td = heapD[i];\n            heapD[i] = heapD[smallest];\n            heapD[smallest] = td;\n\n            int ts = heapS[i];\n            heapS[i] = heapS[smallest];\n            heapS[smallest] = ts;\n\n            i = smallest;\n        }\n    }\n\n    return resS;\n}\n\nint main(void) {\n    int V, N, M;\n\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n\n    int *head = (int *)malloc(sizeof(int) * N);\n\n    for (int i = 0; i < N; i++) {\n        head[i] = -1;\n    }\n\n    int E = 2 * M;\n\n    int *to = (int *)malloc(sizeof(int) * E);\n    int *travelTime = (int *)malloc(sizeof(int) * E);\n    int *price = (int *)malloc(sizeof(int) * E);\n    int *next = (int *)malloc(sizeof(int) * E);\n\n    int ec = 0;\n\n    for (int i = 0; i < M; i++) {\n        int A, B, T, P;\n\n        scanf(\"%d %d %d %d\", &A, &B, &T, &P);\n\n        --A;\n        --B;\n\n        to[ec] = B;\n        travelTime[ec] = T;\n        price[ec] = P;\n        next[ec] = head[A];\n        head[A] = ec++;\n\n        to[ec] = A;\n        travelTime[ec] = T;\n        price[ec] = P;\n        next[ec] = head[B];\n        head[B] = ec++;\n    }\n\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n\n    --X;\n    --Y;\n\n    int totalStates = (V + 1) * N;\n\n    ll INF = (1LL << 60);\n\n    ll *dist = (ll *)malloc(sizeof(ll) * totalStates);\n\n    for (int i = 0; i < totalStates; i++) {\n        dist[i] = INF;\n    }\n\n    int cap = (V + 1) * 2 * M + 10;\n\n    heapD = (ll *)malloc(sizeof(ll) * cap);\n    heapS = (int *)malloc(sizeof(int) * cap);\n    hsz = 0;\n\n    dist[X] = 0;\n    push_heap(0, X);\n\n    while (hsz > 0) {\n        ll d;\n        int state = pop_heap(&d);\n\n        if (d != dist[state]) continue;\n\n        int u = state % N;\n        int c = state / N;\n\n        if (u == Y) {\n            printf(\"%lld\\n\", d);\n            return 0;\n        }\n\n        for (int ei = head[u]; ei != -1; ei = next[ei]) {\n            int v = to[ei];\n            int nc = c + price[ei];\n\n            if (nc > V) continue;\n\n            ll nd = d + travelTime[ei];\n            int ns = nc * N + v;\n\n            if (nd < dist[ns]) {\n                dist[ns] = nd;\n                push_heap(nd, ns);\n            }\n        }\n    }\n\n    printf(\"-1\\n\");\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef long long ll;\n\nll *heapD;\nint *heapS;\nint hsz;\n\nvoid push_heap(ll d, int s) {\n    int i = hsz++;\n    heapD[i] = d;\n    heapS[i] = s;\n\n    while (i > 0) {\n        int p = (i - 1) / 2;\n        if (heapD[p] <= heapD[i]) break;\n\n        ll td = heapD[p];\n        heapD[p] = heapD[i];\n        heapD[i] = td;\n\n        int ts = heapS[p];\n        heapS[p] = heapS[i];\n        heapS[i] = ts;\n\n        i = p;\n    }\n}\n\nint pop_heap(ll *outD) {\n    int resS = heapS[0];\n    *outD = heapD[0];\n\n    --hsz;\n\n    if (hsz > 0) {\n        heapD[0] = heapD[hsz];\n        heapS[0] = heapS[hsz];\n\n        int i = 0;\n\n        while (1) {\n            int l = 2 * i + 1;\n            int r = 2 * i + 2;\n            int smallest = i;\n\n            if (l < hsz && heapD[l] < heapD[smallest]) smallest = l;\n            if (r < hsz && heapD[r] < heapD[smallest]) smallest = r;\n\n            if (smallest == i) break;\n\n            ll td = heapD[i];\n            heapD[i] = heapD[smallest];\n            heapD[smallest] = td;\n\n            int ts = heapS[i];\n            heapS[i] = heapS[smallest];\n            heapS[smallest] = ts;\n\n            i = smallest;\n        }\n    }\n\n    return resS;\n}\n\nint main(void) {\n    int V, N, M;\n\n    if (scanf(\"%d %d %d\", &V, &N, &M) != 3) return 0;\n\n    int *head = (int *)malloc(sizeof(int) * N);\n\n    for (int i = 0; i < N; i++) {\n        head[i] = -1;\n    }\n\n    int E = 2 * M;\n\n    int *to = (int *)malloc(sizeof(int) * E);\n    int *travelTime = (int *)malloc(sizeof(int) * E);\n    int *price = (int *)malloc(sizeof(int) * E);\n    int *next = (int *)malloc(sizeof(int) * E);\n\n    int ec = 0;\n\n    for (int i = 0; i < M; i++) {\n        int A, B, T, P;\n\n        scanf(\"%d %d %d %d\", &A, &B, &T, &P);\n\n        --A;\n        --B;\n\n        to[ec] = B;\n        travelTime[ec] = T;\n        price[ec] = P;\n        next[ec] = head[A];\n        head[A] = ec++;\n\n        to[ec] = A;\n        travelTime[ec] = T;\n        price[ec] = P;\n        next[ec] = head[B];\n        head[B] = ec++;\n    }\n\n    int X, Y;\n    scanf(\"%d %d\", &X, &Y);\n\n    --X;\n    --Y;\n\n    int totalStates = (V + 1) * N;\n\n    ll INF = (1LL << 60);\n\n    ll *dist = (ll *)malloc(sizeof(ll) * totalStates);\n\n    for (int i = 0; i < totalStates; i++) {\n        dist[i] = INF;\n    }\n\n    int cap = (V + 1) * 2 * M + 10;\n\n    heapD = (ll *)malloc(sizeof(ll) * cap);\n    heapS = (int *)malloc(sizeof(int) * cap);\n    hsz = 0;\n\n    dist[X] = 0;\n    push_heap(0, X);\n\n    while (hsz > 0) {\n        ll d;\n        int state = pop_heap(&d);\n\n        if (d != dist[state]) continue;\n\n        int u = state % N;\n        int c = state / N;\n\n        if (u == Y) {\n            printf(\"%lld\\n\", d);\n            return 0;\n        }\n\n        for (int ei = head[u]; ei != -1; ei = next[ei]) {\n            int v = to[ei];\n            int nc = c + price[ei];\n\n            if (nc > V) continue;\n\n            ll nd = d + travelTime[ei];\n            int ns = nc * N + v;\n\n            if (nd < dist[ns]) {\n                dist[ns] = nd;\n                push_heap(nd, ns);\n            }\n        }\n    }\n\n    printf(\"-1\\n\");\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12955689999944298,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

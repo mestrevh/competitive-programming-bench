@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T02:07:12.547131+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1283,
+            "output_tokens": 1542,
+            "total_tokens": 2825
+        },
+        "cost_usd": {
+            "input_cost": 0.000128,
+            "output_cost": 0.000771,
+            "total_cost": 0.000899
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nif (data.length === 0 || !data[0]) process.exit(0);\n\nlet idx = 0;\nconst budget = data[idx++];\nconst n = data[idx++];\nconst m = data[idx++];\n\nconst graph = Array.from({ length: n }, () => []);\n\nfor (let i = 0; i < m; i++) {\n  const a = data[idx++] - 1;\n  const b = data[idx++] - 1;\n  const time = data[idx++];\n  const cost = data[idx++];\n\n  graph[a].push([b, time, cost]);\n  graph[b].push([a, time, cost]);\n}\n\nconst start = data[idx++] - 1;\nconst target = data[idx++] - 1;\nconst width = budget + 1;\nconst dist = new Float64Array(n * width);\ndist.fill(Infinity);\n\nconst startState = start * width;\ndist[startState] = 0;\n\nconst heapState = [];\nconst heapTime = [];\n\nfunction push(state, time) {\n  let i = heapState.length;\n  while (i > 0) {\n    const parent = (i - 1) >> 1;\n    if (heapTime[parent] <= time) break;\n    heapState[i] = heapState[parent];\n    heapTime[i] = heapTime[parent];\n    i = parent;\n  }\n  heapState[i] = state;\n  heapTime[i] = time;\n}\n\nlet poppedTime = 0;\n\nfunction pop() {\n  const state = heapState[0];\n  poppedTime = heapTime[0];\n\n  const last = heapState.length - 1;\n  const lastState = heapState[last];\n  const lastTime = heapTime[last];\n  heapState.length = last;\n  heapTime.length = last;\n\n  if (last > 0) {\n    let i = 0;\n    while (true) {\n      const left = i * 2 + 1;\n      if (left >= last) break;\n      const right = left + 1;\n      let child = left;\n      if (right < last && heapTime[right] < heapTime[left]) child = right;\n      if (heapTime[child] >= lastTime) break;\n      heapState[i] = heapState[child];\n      heapTime[i] = heapTime[child];\n      i = child;\n    }\n    heapState[i] = lastState;\n    heapTime[i] = lastTime;\n  }\n\n  return state;\n}\n\npush(startState, 0);\n\nwhile (heapState.length > 0) {\n  const state = pop();\n  const time = poppedTime;\n\n  if (time !== dist[state]) continue;\n\n  const node = Math.floor(state / width);\n  const costSoFar = state % width;\n\n  if (node === target) {\n    console.log(time);\n    process.exit(0);\n  }\n\n  for (const [next, travelTime, price] of graph[node]) {\n    const newCost = costSoFar + price;\n    if (newCost > budget) continue;\n\n    const nextState = next * width + newCost;\n    const newTime = time + travelTime;\n\n    if (newTime < dist[nextState]) {\n      dist[nextState] = newTime;\n      push(nextState, newTime);\n    }\n  }\n}\n\nconsole.log(-1);\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nif (data.length === 0 || !data[0]) process.exit(0);\n\nlet idx = 0;\nconst budget = data[idx++];\nconst n = data[idx++];\nconst m = data[idx++];\n\nconst graph = Array.from({ length: n }, () => []);\n\nfor (let i = 0; i < m; i++) {\n  const a = data[idx++] - 1;\n  const b = data[idx++] - 1;\n  const time = data[idx++];\n  const cost = data[idx++];\n\n  graph[a].push([b, time, cost]);\n  graph[b].push([a, time, cost]);\n}\n\nconst start = data[idx++] - 1;\nconst target = data[idx++] - 1;\nconst width = budget + 1;\nconst dist = new Float64Array(n * width);\ndist.fill(Infinity);\n\nconst startState = start * width;\ndist[startState] = 0;\n\nconst heapState = [];\nconst heapTime = [];\n\nfunction push(state, time) {\n  let i = heapState.length;\n  while (i > 0) {\n    const parent = (i - 1) >> 1;\n    if (heapTime[parent] <= time) break;\n    heapState[i] = heapState[parent];\n    heapTime[i] = heapTime[parent];\n    i = parent;\n  }\n  heapState[i] = state;\n  heapTime[i] = time;\n}\n\nlet poppedTime = 0;\n\nfunction pop() {\n  const state = heapState[0];\n  poppedTime = heapTime[0];\n\n  const last = heapState.length - 1;\n  const lastState = heapState[last];\n  const lastTime = heapTime[last];\n  heapState.length = last;\n  heapTime.length = last;\n\n  if (last > 0) {\n    let i = 0;\n    while (true) {\n      const left = i * 2 + 1;\n      if (left >= last) break;\n      const right = left + 1;\n      let child = left;\n      if (right < last && heapTime[right] < heapTime[left]) child = right;\n      if (heapTime[child] >= lastTime) break;\n      heapState[i] = heapState[child];\n      heapTime[i] = heapTime[child];\n      i = child;\n    }\n    heapState[i] = lastState;\n    heapTime[i] = lastTime;\n  }\n\n  return state;\n}\n\npush(startState, 0);\n\nwhile (heapState.length > 0) {\n  const state = pop();\n  const time = poppedTime;\n\n  if (time !== dist[state]) continue;\n\n  const node = Math.floor(state / width);\n  const costSoFar = state % width;\n\n  if (node === target) {\n    console.log(time);\n    process.exit(0);\n  }\n\n  for (const [next, travelTime, price] of graph[node]) {\n    const newCost = costSoFar + price;\n    if (newCost > budget) continue;\n\n    const nextState = next * width + newCost;\n    const newTime = time + travelTime;\n\n    if (newTime < dist[nextState]) {\n      dist[nextState] = newTime;\n      push(nextState, newTime);\n    }\n  }\n}\n\nconsole.log(-1);",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08526980000169715,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
+    }
+]

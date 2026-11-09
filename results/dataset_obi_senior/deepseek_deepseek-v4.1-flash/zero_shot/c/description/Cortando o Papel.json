@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:05:10.941871+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 716,
+            "output_tokens": 14530,
+            "total_tokens": 15246
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.034872,
+            "total_cost": 0.034874
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long h;\n    int idx;\n} Item;\n\nint cmp(const void *a, const void *b) {\n    const Item *x = (const Item *)a;\n    const Item *y = (const Item *)b;\n    if (x->h > y->h) return -1;\n    if (x->h < y->h) return 1;\n    return x->idx - y->idx;\n}\n\nint main(void) {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    Item *items = (Item *)malloc((size_t)N * sizeof(Item));\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%lld\", &items[i].h);\n        items[i].idx = i;\n    }\n\n    qsort(items, (size_t)N, sizeof(Item), cmp);\n\n    char *active = (char *)calloc((size_t)N, sizeof(char));\n    int runs = 0, maxRuns = 0;\n\n    int i = 0;\n    while (i < N) {\n        long long h = items[i].h;\n        int j = i;\n\n        while (j < N && items[j].h == h) {\n            int idx = items[j].idx;\n            active[idx] = 1;\n\n            int cnt = 0;\n            if (idx > 0 && active[idx - 1]) ++cnt;\n            if (idx + 1 < N && active[idx + 1]) ++cnt;\n\n            if (cnt == 0) {\n                ++runs;\n            } else if (cnt == 2) {\n                --runs;\n            }\n\n            ++j;\n        }\n\n        if (runs > maxRuns) maxRuns = runs;\n        i = j;\n    }\n\n    printf(\"%d\\n\", maxRuns + 1);\n\n    free(items);\n    free(active);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long h;\n    int idx;\n} Item;\n\nint cmp(const void *a, const void *b) {\n    const Item *x = (const Item *)a;\n    const Item *y = (const Item *)b;\n    if (x->h > y->h) return -1;\n    if (x->h < y->h) return 1;\n    return x->idx - y->idx;\n}\n\nint main(void) {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    Item *items = (Item *)malloc((size_t)N * sizeof(Item));\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%lld\", &items[i].h);\n        items[i].idx = i;\n    }\n\n    qsort(items, (size_t)N, sizeof(Item), cmp);\n\n    char *active = (char *)calloc((size_t)N, sizeof(char));\n    int runs = 0, maxRuns = 0;\n\n    int i = 0;\n    while (i < N) {\n        long long h = items[i].h;\n        int j = i;\n\n        while (j < N && items[j].h == h) {\n            int idx = items[j].idx;\n            active[idx] = 1;\n\n            int cnt = 0;\n            if (idx > 0 && active[idx - 1]) ++cnt;\n            if (idx + 1 < N && active[idx + 1]) ++cnt;\n\n            if (cnt == 0) {\n                ++runs;\n            } else if (cnt == 2) {\n                --runs;\n            }\n\n            ++j;\n        }\n\n        if (runs > maxRuns) maxRuns = runs;\n        i = j;\n    }\n\n    printf(\"%d\\n\", maxRuns + 1);\n\n    free(items);\n    free(active);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10980429999472108,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

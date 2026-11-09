@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:03:18.179442+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1183,
+            "output_tokens": 4758,
+            "total_tokens": 5941
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.011419,
+            "total_cost": 0.011423
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 200005\n\ntypedef long long ll;\n\nint N, M;\nll bitA[MAXN], bitB[MAXN];\n\nvoid add(ll *bit, int idx, ll val) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nll query(ll *bit, int idx) {\n    ll res = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        res += bit[idx];\n    }\n    return res;\n}\n\nvoid range_add(ll *bit, int l, int r, ll val) {\n    add(bit, l, val);\n    add(bit, r + 1, -val);\n}\n\nint main() {\n    scanf(\"%d %d\", &N, &M);\n\n    for (int q = 0; q < M; q++) {\n        int type;\n        scanf(\"%d\", &type);\n\n        if (type == 1) {\n            int i, v;\n            scanf(\"%d %d\", &i, &v);\n\n            int l = i;\n            int r = i + v - 1;\n            if (r > N) r = N;\n\n            ll a = -1;\n            ll b = (ll)v + i;\n\n            range_add(bitA, l, r, a);\n            range_add(bitB, l, r, b);\n        } else if (type == 2) {\n            int i, v;\n            scanf(\"%d %d\", &i, &v);\n\n            int l = i - v + 1;\n            if (l < 1) l = 1;\n            int r = i;\n\n            ll a = 1;\n            ll b = (ll)v - i;\n\n            range_add(bitA, l, r, a);\n            range_add(bitB, l, r, b);\n        } else {\n            int i;\n            scanf(\"%d\", &i);\n\n            ll sa = query(bitA, i);\n            ll sb = query(bitB, i);\n\n            ll ans = (ll)i * sa + sb;\n            printf(\"%lld\\n\", ans);\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 200005\n\ntypedef long long ll;\n\nint N, M;\nll bitA[MAXN], bitB[MAXN];\n\nvoid add(ll *bit, int idx, ll val) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nll query(ll *bit, int idx) {\n    ll res = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        res += bit[idx];\n    }\n    return res;\n}\n\nvoid range_add(ll *bit, int l, int r, ll val) {\n    add(bit, l, val);\n    add(bit, r + 1, -val);\n}\n\nint main() {\n    scanf(\"%d %d\", &N, &M);\n\n    for (int q = 0; q < M; q++) {\n        int type;\n        scanf(\"%d\", &type);\n\n        if (type == 1) {\n            int i, v;\n            scanf(\"%d %d\", &i, &v);\n\n            int l = i;\n            int r = i + v - 1;\n            if (r > N) r = N;\n\n            ll a = -1;\n            ll b = (ll)v + i;\n\n            range_add(bitA, l, r, a);\n            range_add(bitB, l, r, b);\n        } else if (type == 2) {\n            int i, v;\n            scanf(\"%d %d\", &i, &v);\n\n            int l = i - v + 1;\n            if (l < 1) l = 1;\n            int r = i;\n\n            ll a = 1;\n            ll b = (ll)v - i;\n\n            range_add(bitA, l, r, a);\n            range_add(bitB, l, r, b);\n        } else {\n            int i;\n            scanf(\"%d\", &i);\n\n            ll sa = query(bitA, i);\n            ll sb = query(bitB, i);\n\n            ll ans = (ll)i * sa + sb;\n            printf(\"%lld\\n\", ans);\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2231988999992609,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

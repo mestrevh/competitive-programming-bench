@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-08T21:57:19.688608+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "language": "c",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1171,
+            "output_tokens": 7144,
+            "total_tokens": 8315
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.017146,
+            "total_cost": 0.017149
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\n#define MAXL 100\n#define MAXC 100\n#define MAXV 676\n\nint L, C;\nint grid[MAXL][MAXC];\nint present[MAXV];\nint knownVar[MAXV];\n__int128 valueVar[MAXV];\nlong long rowTarget[MAXL], colTarget[MAXC];\n\nvoid print128(__int128 x) {\n    if (x == 0) {\n        putchar('0');\n        return;\n    }\n    if (x < 0) {\n        putchar('-');\n        x = -x;\n    }\n    char buf[64];\n    int n = 0;\n    while (x > 0) {\n        buf[n++] = (char)('0' + (int)(x % 10));\n        x /= 10;\n    }\n    while (n > 0) {\n        putchar(buf[--n]);\n    }\n}\n\nint solveRow(int i) {\n    __int128 knownSum = 0;\n    int unknownVar = -1;\n    int coeff = 0;\n    int distinct = 0;\n\n    for (int j = 0; j < C; j++) {\n        int v = grid[i][j];\n        if (knownVar[v]) {\n            knownSum += valueVar[v];\n        } else {\n            if (distinct == 0) {\n                unknownVar = v;\n                coeff = 1;\n                distinct = 1;\n            } else if (v == unknownVar) {\n                coeff++;\n            } else {\n                distinct = 2;\n            }\n        }\n    }\n\n    if (distinct == 1) {\n        valueVar[unknownVar] = ((__int128)rowTarget[i] - knownSum) / coeff;\n        knownVar[unknownVar] = 1;\n        return 1;\n    }\n\n    return 0;\n}\n\nint solveCol(int j) {\n    __int128 knownSum = 0;\n    int unknownVar = -1;\n    int coeff = 0;\n    int distinct = 0;\n\n    for (int i = 0; i < L; i++) {\n        int v = grid[i][j];\n        if (knownVar[v]) {\n            knownSum += valueVar[v];\n        } else {\n            if (distinct == 0) {\n                unknownVar = v;\n                coeff = 1;\n                distinct = 1;\n            } else if (v == unknownVar) {\n                coeff++;\n            } else {\n                distinct = 2;\n            }\n        }\n    }\n\n    if (distinct == 1) {\n        valueVar[unknownVar] = ((__int128)colTarget[j] - knownSum) / coeff;\n        knownVar[unknownVar] = 1;\n        return 1;\n    }\n\n    return 0;\n}\n\nint main(void) {\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    char name[10];\n    long long s;\n\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            scanf(\"%s\", name);\n            int id = (name[0] - 'a') * 26 + (name[1] - 'a');\n            grid[i][j] = id;\n            present[id] = 1;\n        }\n        scanf(\"%lld\", &s);\n        rowTarget[i] = s;\n    }\n\n    for (int j = 0; j < C; j++) {\n        scanf(\"%lld\", &s);\n        colTarget[j] = s;\n    }\n\n    while (1) {\n        int solved = 0;\n\n        for (int i = 0; i < L; i++) {\n            if (solveRow(i)) {\n                solved = 1;\n                break;\n            }\n        }\n\n        if (!solved) {\n            for (int j = 0; j < C; j++) {\n                if (solveCol(j)) {\n                    solved = 1;\n                    break;\n                }\n            }\n        }\n\n        if (!solved) break;\n    }\n\n    for (int id = 0; id < MAXV; id++) {\n        if (present[id]) {\n            char a = (char)('a' + id / 26);\n            char b = (char)('a' + id % 26);\n            printf(\"%c%c \", a, b);\n            print128(valueVar[id]);\n            putchar('\\n');\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\n#define MAXL 100\n#define MAXC 100\n#define MAXV 676\n\nint L, C;\nint grid[MAXL][MAXC];\nint present[MAXV];\nint knownVar[MAXV];\n__int128 valueVar[MAXV];\nlong long rowTarget[MAXL], colTarget[MAXC];\n\nvoid print128(__int128 x) {\n    if (x == 0) {\n        putchar('0');\n        return;\n    }\n    if (x < 0) {\n        putchar('-');\n        x = -x;\n    }\n    char buf[64];\n    int n = 0;\n    while (x > 0) {\n        buf[n++] = (char)('0' + (int)(x % 10));\n        x /= 10;\n    }\n    while (n > 0) {\n        putchar(buf[--n]);\n    }\n}\n\nint solveRow(int i) {\n    __int128 knownSum = 0;\n    int unknownVar = -1;\n    int coeff = 0;\n    int distinct = 0;\n\n    for (int j = 0; j < C; j++) {\n        int v = grid[i][j];\n        if (knownVar[v]) {\n            knownSum += valueVar[v];\n        } else {\n            if (distinct == 0) {\n                unknownVar = v;\n                coeff = 1;\n                distinct = 1;\n            } else if (v == unknownVar) {\n                coeff++;\n            } else {\n                distinct = 2;\n            }\n        }\n    }\n\n    if (distinct == 1) {\n        valueVar[unknownVar] = ((__int128)rowTarget[i] - knownSum) / coeff;\n        knownVar[unknownVar] = 1;\n        return 1;\n    }\n\n    return 0;\n}\n\nint solveCol(int j) {\n    __int128 knownSum = 0;\n    int unknownVar = -1;\n    int coeff = 0;\n    int distinct = 0;\n\n    for (int i = 0; i < L; i++) {\n        int v = grid[i][j];\n        if (knownVar[v]) {\n            knownSum += valueVar[v];\n        } else {\n            if (distinct == 0) {\n                unknownVar = v;\n                coeff = 1;\n                distinct = 1;\n            } else if (v == unknownVar) {\n                coeff++;\n            } else {\n                distinct = 2;\n            }\n        }\n    }\n\n    if (distinct == 1) {\n        valueVar[unknownVar] = ((__int128)colTarget[j] - knownSum) / coeff;\n        knownVar[unknownVar] = 1;\n        return 1;\n    }\n\n    return 0;\n}\n\nint main(void) {\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    char name[10];\n    long long s;\n\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            scanf(\"%s\", name);\n            int id = (name[0] - 'a') * 26 + (name[1] - 'a');\n            grid[i][j] = id;\n            present[id] = 1;\n        }\n        scanf(\"%lld\", &s);\n        rowTarget[i] = s;\n    }\n\n    for (int j = 0; j < C; j++) {\n        scanf(\"%lld\", &s);\n        colTarget[j] = s;\n    }\n\n    while (1) {\n        int solved = 0;\n\n        for (int i = 0; i < L; i++) {\n            if (solveRow(i)) {\n                solved = 1;\n                break;\n            }\n        }\n\n        if (!solved) {\n            for (int j = 0; j < C; j++) {\n                if (solveCol(j)) {\n                    solved = 1;\n                    break;\n                }\n            }\n        }\n\n        if (!solved) break;\n    }\n\n    for (int id = 0; id < MAXV; id++) {\n        if (present[id]) {\n            char a = (char)('a' + id / 26);\n            char b = (char)('a' + id % 26);\n            printf(\"%c%c \", a, b);\n            print128(valueVar[id]);\n            putchar('\\n');\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12406399999599671,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

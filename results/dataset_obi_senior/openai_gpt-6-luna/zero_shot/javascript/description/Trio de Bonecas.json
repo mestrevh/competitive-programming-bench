@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T02:06:49.776788+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "language": "javascript",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1055,
+            "output_tokens": 33283,
+            "total_tokens": 34338
+        },
+        "cost_usd": {
+            "input_cost": 0.000106,
+            "output_cost": 0.016642,
+            "total_cost": 0.016747
+        },
+        "raw_response": "```javascript\n'use strict';\n\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = input[0];\nconst K = input[1];\nconst sizes = input.slice(2).sort((a, b) => a - b);\n\nconst INF = Infinity;\nlet prev2 = new Float64Array(K + 1);\nprev2.fill(INF);\n\nlet prev1 = new Float64Array(K + 1);\nprev1.fill(INF);\nprev1[0] = 0;\n\nlet current = new Float64Array(K + 1);\n\nfor (let i = 1; i <= N; i++) {\n  for (let j = 0; j <= K; j++) {\n    current[j] = prev1[j];\n  }\n\n  if (i >= 2) {\n    const gap = sizes[i - 1] - sizes[i - 2];\n    const cost = gap * gap;\n    const maxPairs = Math.min(K, Math.floor(i / 2));\n\n    for (let j = 1; j <= maxPairs; j++) {\n      const deadline = N - 3 * (K - j) - 1;\n      if (i <= deadline) {\n        const candidate = prev2[j - 1] + cost;\n        if (candidate < current[j]) current[j] = candidate;\n      }\n    }\n  }\n\n  const temp = prev2;\n  prev2 = prev1;\n  prev1 = current;\n  current = temp;\n}\n\nconsole.log(String(prev1[K]));\n```",
+        "extracted_code": "'use strict';\n\nconst fs = require('fs');\n\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = input[0];\nconst K = input[1];\nconst sizes = input.slice(2).sort((a, b) => a - b);\n\nconst INF = Infinity;\nlet prev2 = new Float64Array(K + 1);\nprev2.fill(INF);\n\nlet prev1 = new Float64Array(K + 1);\nprev1.fill(INF);\nprev1[0] = 0;\n\nlet current = new Float64Array(K + 1);\n\nfor (let i = 1; i <= N; i++) {\n  for (let j = 0; j <= K; j++) {\n    current[j] = prev1[j];\n  }\n\n  if (i >= 2) {\n    const gap = sizes[i - 1] - sizes[i - 2];\n    const cost = gap * gap;\n    const maxPairs = Math.min(K, Math.floor(i / 2));\n\n    for (let j = 1; j <= maxPairs; j++) {\n      const deadline = N - 3 * (K - j) - 1;\n      if (i <= deadline) {\n        const candidate = prev2[j - 1] + cost;\n        if (candidate < current[j]) current[j] = candidate;\n      }\n    }\n  }\n\n  const temp = prev2;\n  prev2 = prev1;\n  prev1 = current;\n  current = temp;\n}\n\nconsole.log(String(prev1[K]));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14790789999824483,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

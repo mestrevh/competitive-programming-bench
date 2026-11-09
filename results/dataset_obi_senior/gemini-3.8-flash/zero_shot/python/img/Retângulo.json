@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:43:45.069787+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1777,
+            "output_tokens": 335,
+            "total_tokens": 2903
+        },
+        "cost_usd": {
+            "input_cost": 0.001333,
+            "output_cost": 0.001256,
+            "total_cost": 0.002589
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    l = [int(x) for x in input_data[1:n+1]]\n    \n    total_circumference = sum(l)\n    \n    if total_circumference % 2 != 0:\n        print(\"N\")\n        return\n    \n    half = total_circumference // 2\n    \n    # Construir prefix sums das posições das árvores\n    # P[i] é a posição da i-ésima árvore (0-indexed)\n    p = [0] * n\n    for i in range(1, n):\n        p[i] = p[i - 1] + l[i - 1]\n    \n    diametral_pairs = 0\n    j = 0\n    for i in range(n):\n        if p[i] >= half:\n            break\n        while j < n and p[j] - p[i] < half:\n            j += 1\n        if j < n and p[j] - p[i] == half:\n            diametral_pairs += 1\n            if diametral_pairs >= 2:\n                print(\"S\")\n                return\n\n    print(\"N\")\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    n = int(input_data[0])\n    l = [int(x) for x in input_data[1:n+1]]\n    \n    total_circumference = sum(l)\n    \n    if total_circumference % 2 != 0:\n        print(\"N\")\n        return\n    \n    half = total_circumference // 2\n    \n    # Construir prefix sums das posições das árvores\n    # P[i] é a posição da i-ésima árvore (0-indexed)\n    p = [0] * n\n    for i in range(1, n):\n        p[i] = p[i - 1] + l[i - 1]\n    \n    diametral_pairs = 0\n    j = 0\n    for i in range(n):\n        if p[i] >= half:\n            break\n        while j < n and p[j] - p[i] < half:\n            j += 1\n        if j < n and p[j] - p[i] == half:\n            diametral_pairs += 1\n            if diametral_pairs >= 2:\n                print(\"S\")\n                return\n\n    print(\"N\")\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07382759999745758,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

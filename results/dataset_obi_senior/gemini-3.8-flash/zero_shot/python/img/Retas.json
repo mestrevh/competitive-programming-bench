@@ -1,0 +1,38 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-09T00:43:32.180069+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "language": "python",
+        "modality": "img",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 3287,
+            "output_tokens": 534,
+            "total_tokens": 7050
+        },
+        "cost_usd": {
+            "input_cost": 0.002465,
+            "output_cost": 0.002002,
+            "total_cost": 0.004468
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    pts = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        y1 = A * X1 + B\n        y2 = A * X2 + B\n        pts.append((y1, y2))\n\n    # Ordenamos com chave (y1, -y2)\n    # Se y1 for diferente, ordem crescente de y1.\n    # Se y1 for igual, ordem decrescente de y2 (para que empates não contem como y2_i < y2_j).\n    pts.sort(key=lambda p: (p[0], -p[1]))\n\n    # Compressão de coordenadas para os valores de y2\n    unique_y2 = sorted(list(set(p[1] for p in pts)))\n    y2_rank = {val: i + 1 for i, val in enumerate(unique_y2)}\n    m = len(unique_y2)\n\n    # Fenwick Tree (Binary Indexed Tree)\n    bit = [0] * (m + 1)\n\n    def add(idx, val):\n        while idx <= m:\n            bit[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    concordant_pairs = 0\n    for p in pts:\n        r = y2_rank[p[1]]\n        # Queremos contar elementos anteriores com y2 estritamente menor que o atual: rank < r\n        concordant_pairs += query(r - 1)\n        add(r, 1)\n\n    total_pairs = N * (N - 1) // 2\n    ans = total_pairs - concordant_pairs\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    pts = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        y1 = A * X1 + B\n        y2 = A * X2 + B\n        pts.append((y1, y2))\n\n    # Ordenamos com chave (y1, -y2)\n    # Se y1 for diferente, ordem crescente de y1.\n    # Se y1 for igual, ordem decrescente de y2 (para que empates não contem como y2_i < y2_j).\n    pts.sort(key=lambda p: (p[0], -p[1]))\n\n    # Compressão de coordenadas para os valores de y2\n    unique_y2 = sorted(list(set(p[1] for p in pts)))\n    y2_rank = {val: i + 1 for i, val in enumerate(unique_y2)}\n    m = len(unique_y2)\n\n    # Fenwick Tree (Binary Indexed Tree)\n    bit = [0] * (m + 1)\n\n    def add(idx, val):\n        while idx <= m:\n            bit[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    concordant_pairs = 0\n    for p in pts:\n        r = y2_rank[p[1]]\n        # Queremos contar elementos anteriores com y2 estritamente menor que o atual: rank < r\n        concordant_pairs += query(r - 1)\n        add(r, 1)\n\n    total_pairs = N * (N - 1) // 2\n    ans = total_pairs - concordant_pairs\n\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.39149470000120346,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]
