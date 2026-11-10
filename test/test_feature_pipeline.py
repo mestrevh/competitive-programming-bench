@@ -223,15 +223,19 @@ def test_orchestrator_json_accumulation_and_judge_csv():
         assert isinstance(records, list)
         assert len(records) == 2, f"Expected 2 accumulated records, got {len(records)}"
         assert records[0]["attempt"] == 1
+        assert "prompt" in records[0]
+        assert "Mock Problem" in records[0]["prompt"]
         assert records[0]["include_limits"] == True
         assert records[0]["time_limit"] == 2.0
         assert records[0]["memory_limit"] == 1024
 
         assert records[1]["attempt"] == 2
+        assert "prompt" in records[1]
+        assert "Mock Problem" in records[1]["prompt"]
         assert records[1]["include_limits"] == False
         assert records[0]["judge_result"]["judge_predict"] == "AC"
         assert records[1]["judge_result"]["judge_predict"] == "AC"
-        print(f"[PASS] JSON accumulated array properly verified with {len(records)} attempts and limit tracking.")
+        print(f"[PASS] JSON accumulated array properly verified with {len(records)} attempts, prompt field, and limit tracking.")
 
         # Verify Judge CSV
         csv_file = tmp_path / "results" / "test_dataset" / "judge" / "mock-model.csv"

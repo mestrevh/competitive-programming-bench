@@ -315,6 +315,7 @@ class Orchestrator:
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "model": self.__model_name,
             "prompt_name": prompt_name,
+            "prompt": payload,
             "language": self.__language,
             "modality": modality,
             "include_limits": include_limits,
