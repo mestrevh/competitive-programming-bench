@@ -35,5 +35,42 @@
             },
             "total_test_cases": 61
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T10:51:54.045663+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Alfabeto Alienígena\n\n## Enunciado\nMais uma vez, o OBI (Órgão Brasileiro de Inteligência) está preocupado com a possibilidade da existência de vida alienígena. Os diretores do órgão suspeitam que os alienígenas existem, conseguiram se infiltrar dentro da instituição e têm se comunicado secretamente. Os agentes do OBI se comunicam usando o dispositivo de mensagens oficial do órgão, que possui as seguintes teclas: letras maiúsculas de A a Z, letras minúsculas de a a z, dígitos de 0 a 9, operadores aritméticos (+, -, *, /), hashtag (#) e ponto de exclamação (!).\n\nO OBI descobriu que, sempre que dois alienígenas se comunicam entre si usando o dispositivo, eles usam um alfabeto alienígena que possui um conjunto específico de símbolos. Assim, uma mensagem pode ter sido escrita por alienígenas se, e somente se, todos os símbolos que compõem ela pertencem ao alfabeto alienígena. Por exemplo, se o alfabeto alienígena for composto pelas caracteres !, 1, o e b, a mensagem ob1!! é uma mensagem que poderia ser escrita por alienígenas. Por outro lado, a mensagem 0bi! não poderia ter sido escrita por alienígenas pois tanto o primeiro caractere 0 (maiúsculo) quanto o terceiro caractere i não fazem parte do alfabeto alienígena.\n\nVocê foi contratado para ajudar o OBI a identificar os invasores: dadas a lista de caracteres usados no alfabeto alienígena e uma mensagem enviada pelo dispositivo, determine se a mensagem poderia ter sido escrita por alienígenas ou não.\n\n## Formato de Entrada\nA primeira linha de entrada contém dois inteiros K e N separados por um espaço em branco, indicando, respectivamente, o número de caracteres presentes no alfabeto alienígena e o número de caracteres da mensagem enviada.\n\nA segunda linha de entrada contém K caracteres distintos representando os caracteres pertencentes ao alfabeto alienígena.\n\nA terceira linha de entrada contém N caracteres (não necessariamente distintos) representando a mensagem enviada.\n\n## Formato de Saída\nSeu programa deverá imprimir uma única linha contendo um único caractere: se a mensagem pode ter sido escrita no alfabeto alienígena, imprima a letra 'S' maiúscula; caso contrário, imprima a letra 'N' maiúscula.\n\n## Restrições\n1 ≤ K ≤ 68\n1 ≤ N ≤ 1000\nTodos os caracteres usados no alfabeto ou na mensagem pertencem à lista a seguir:\nabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*/#!\n\n## Limites de Execução\n- Tempo Limite: 1.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4 5\n!1ob\nob1!!\n```\nSaída:\n```\nS\n```\n\nExemplo 2:\nEntrada:\n```\n1 5\na\naabab\n```\nSaída:\n```\nN\n```\n\nExemplo 3:\nEntrada:\n```\n26 32\nabcdefghijklmnopqrstuvwxyz\nolimpiadabrasileiradeinformatica\n```\nSaída:\n```\nS\n```\n\nExemplo 4:\nEntrada:\n```\n11 7\n0123+-!ABCD\nOBI!OBI\n```\nSaída:\n```\nN\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 875,
+            "output_tokens": 368,
+            "total_tokens": 1491
+        },
+        "cost_usd": {
+            "input_cost": 0.000656,
+            "output_cost": 0.00138,
+            "total_cost": 0.002036
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int k = Integer.parseInt(st.nextToken());\n        int n = Integer.parseInt(st.nextToken());\n\n        String alphabet = reader.readLine();\n        while (alphabet != null && alphabet.isEmpty()) {\n            alphabet = reader.readLine();\n        }\n\n        String message = reader.readLine();\n        while (message != null && message.isEmpty()) {\n            message = reader.readLine();\n        }\n\n        boolean[] inAlphabet = new boolean[256];\n        for (int i = 0; i < alphabet.length(); i++) {\n            inAlphabet[alphabet.charAt(i)] = true;\n        }\n\n        boolean valid = true;\n        for (int i = 0; i < message.length(); i++) {\n            if (!inAlphabet[message.charAt(i)]) {\n                valid = false;\n                break;\n            }\n        }\n\n        if (valid) {\n            System.out.println(\"S\");\n        } else {\n            System.out.println(\"N\");\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        int k = Integer.parseInt(st.nextToken());\n        int n = Integer.parseInt(st.nextToken());\n\n        String alphabet = reader.readLine();\n        while (alphabet != null && alphabet.isEmpty()) {\n            alphabet = reader.readLine();\n        }\n\n        String message = reader.readLine();\n        while (message != null && message.isEmpty()) {\n            message = reader.readLine();\n        }\n\n        boolean[] inAlphabet = new boolean[256];\n        for (int i = 0; i < alphabet.length(); i++) {\n            inAlphabet[alphabet.charAt(i)] = true;\n        }\n\n        boolean valid = true;\n        for (int i = 0; i < message.length(); i++) {\n            if (!inAlphabet[message.charAt(i)]) {\n                valid = false;\n                break;\n            }\n        }\n\n        if (valid) {\n            System.out.println(\"S\");\n        } else {\n            System.out.println(\"N\");\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06470219997572713,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
     }
 ]

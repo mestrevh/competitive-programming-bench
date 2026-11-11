@@ -35,5 +35,42 @@
             },
             "total_test_cases": 80
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T03:58:21.342123+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Jardim de infância\n\n## Enunciado\nVívian é uma professora do jardim de infância. Todos os dias, ao final da aula, ela tem que olhar os desenhos que seus alunos fizeram naquele dia e fazer algum comentário. Esta é uma tarefa muito repetitiva, já que as crianças costumam desenhar coisas semelhantes, portanto Vívian decidiu automatizar o processo. Ela fez um programa capaz de processar a imagem e procurar padrões conhecidos para fazer comentários predeterminados. Em particular, ela percebeu que na maioria dos desenhos as crianças incluem um pinheiro. Porém, ela está tendo dificuldades para reconhecê-los e pediu sua ajuda. O programa dela já é capaz de reconhecer uma figura que pode ser um pinheiro e transformá-la em sete pontos P1, P2, ... P7. O candidato a pinheiro seria a região interna do polígono P1P2P4P6P7P5P3, como mostra a figura a seguir de um pinheiro válido.\n[1.png]\nLogo, dados os sete pontos que formam a imagem, você deve decidir se ela é ou não um pinheiro. Ao analisar os desenhos das crianças, você decidiu que as condições para que os pontos formem um pinheiro são as seguintes:\n\n• O ângulo ∠P2P1P3 é agudo (vértice em P1);\n• Os segmentos P1P2 e P1P3 têm o mesmo comprimento;\n• Os pontos P2, P3, P4 e P5 são colineares;\n• Os pontos médios dos segmentos P2P3 e P4P5 são coincidentes;\n• O segmento P2P3 tem comprimento maior que o segmento P4P5;\n• Os segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3;\n• Os segmentos P4P6 e P5P7 têm o mesmo comprimento;\n• Os pontos P1 e P6 devem estar separados pela reta que contém o segmento P2P3. Formalmente, o segmento P1P6 deve interceptar a reta que contém o segmento P2P3 em um único ponto.\n\nA imagem a seguir mostra os polígonos formados pelos exemplos de entrada.\n[2.png]\n\n\n## Formato de Entrada\nA entrada contém sete linhas. A i-ésima linha da entrada contém dois inteiros X_i e Y_i, indicando as coordenadas cartesianas do ponto P_i.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo uma única letra, 'S' se os pontos formam um pinheiro pelas condições descritas e 'N', caso contrário.\n\n## Restrições\n-2 × 10^4 ≤ X_i, Y_i ≤ 2 × 10^4.\nTodos os pontos são diferentes.\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste equivalente a 50 pontos, o segmento P2P3 será paralelo ao eixo X do plano cartesiano (exemplos 1 e 4).\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n2 -4\n5 3\n-1 3\n3 3\n1 3\n3 5\n1 5\n```\nSaída:\n```\nS\n```\n\nExemplo 2:\nEntrada:\n```\n2 -1\n5 45\n-43 9\n-11 33\n-27 21\n-20 45\n-36 33\n```\nSaída:\n```\nS\n```\n\nExemplo 3:\nEntrada:\n```\n-1 -3\n11 -23\n11 17\n11 -7\n11 1\n19 -7\n19 1\n```\nSaída:\n```\nN\n```\n\nExemplo 4:\nEntrada:\n```\n2 4\n18 22\n-14 22\n6 24\n-2 20\n6 26\n-2 22\n```\nSaída:\n```\nN\n```\n\nExemplo 5:\nEntrada:\n```\n4 1\n-36 -4\n-12 -36\n-30 -12\n-18 -28\n-39 -25\n-27 -41\n```\nSaída:\n```\nN\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1036,
+            "output_tokens": 1563,
+            "total_tokens": 2599
+        },
+        "cost_usd": {
+            "input_cost": 0.000104,
+            "output_cost": 0.000781,
+            "total_cost": 0.000885
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static long cross(long ax, long ay, long bx, long by) {\n        return ax * by - ay * bx;\n    }\n\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        long[] x = new long[7];\n        long[] y = new long[7];\n\n        for (int i = 0; i < 7; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            x[i] = Long.parseLong(st.nextToken());\n            y[i] = Long.parseLong(st.nextToken());\n        }\n\n        long v12x = x[1] - x[0], v12y = y[1] - y[0];\n        long v13x = x[2] - x[0], v13y = y[2] - y[0];\n\n        boolean valid = v12x * v13x + v12y * v13y > 0\n                && v12x * v12x + v12y * v12y == v13x * v13x + v13y * v13y;\n\n        long dx = x[2] - x[1], dy = y[2] - y[1];\n\n        valid &= cross(dx, dy, x[3] - x[1], y[3] - y[1]) == 0;\n        valid &= cross(dx, dy, x[4] - x[1], y[4] - y[1]) == 0;\n\n        valid &= x[1] + x[2] == x[3] + x[4]\n                && y[1] + y[2] == y[3] + y[4];\n\n        long shortDx = x[4] - x[3], shortDy = y[4] - y[3];\n        valid &= dx * dx + dy * dy > shortDx * shortDx + shortDy * shortDy;\n\n        long v46x = x[5] - x[3], v46y = y[5] - y[3];\n        long v57x = x[6] - x[4], v57y = y[6] - y[4];\n\n        valid &= v46x * dx + v46y * dy == 0;\n        valid &= v57x * dx + v57y * dy == 0;\n        valid &= v46x * v46x + v46y * v46y == v57x * v57x + v57y * v57y;\n\n        long sideP1 = cross(dx, dy, x[0] - x[1], y[0] - y[1]);\n        long sideP6 = cross(dx, dy, x[5] - x[1], y[5] - y[1]);\n        valid &= (sideP1 > 0 && sideP6 < 0) || (sideP1 < 0 && sideP6 > 0);\n\n        System.out.println(valid ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static long cross(long ax, long ay, long bx, long by) {\n        return ax * by - ay * bx;\n    }\n\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        long[] x = new long[7];\n        long[] y = new long[7];\n\n        for (int i = 0; i < 7; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            x[i] = Long.parseLong(st.nextToken());\n            y[i] = Long.parseLong(st.nextToken());\n        }\n\n        long v12x = x[1] - x[0], v12y = y[1] - y[0];\n        long v13x = x[2] - x[0], v13y = y[2] - y[0];\n\n        boolean valid = v12x * v13x + v12y * v13y > 0\n                && v12x * v12x + v12y * v12y == v13x * v13x + v13y * v13y;\n\n        long dx = x[2] - x[1], dy = y[2] - y[1];\n\n        valid &= cross(dx, dy, x[3] - x[1], y[3] - y[1]) == 0;\n        valid &= cross(dx, dy, x[4] - x[1], y[4] - y[1]) == 0;\n\n        valid &= x[1] + x[2] == x[3] + x[4]\n                && y[1] + y[2] == y[3] + y[4];\n\n        long shortDx = x[4] - x[3], shortDy = y[4] - y[3];\n        valid &= dx * dx + dy * dy > shortDx * shortDx + shortDy * shortDy;\n\n        long v46x = x[5] - x[3], v46y = y[5] - y[3];\n        long v57x = x[6] - x[4], v57y = y[6] - y[4];\n\n        valid &= v46x * dx + v46y * dy == 0;\n        valid &= v57x * dx + v57y * dy == 0;\n        valid &= v46x * v46x + v46y * v46y == v57x * v57x + v57y * v57y;\n\n        long sideP1 = cross(dx, dy, x[0] - x[1], y[0] - y[1]);\n        long sideP6 = cross(dx, dy, x[5] - x[1], y[5] - y[1]);\n        valid &= (sideP1 > 0 && sideP6 < 0) || (sideP1 < 0 && sideP6 > 0);\n\n        System.out.println(valid ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07366230001207441,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
     }
 ]

@@ -35,5 +35,42 @@
             },
             "total_test_cases": 20
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T11:14:41.252648+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Fotografia\n\n## Enunciado\nChegou o final do ano, e os alunos resolveram dar um presente para a profa. Vilma: um quadro com a fotografia dos alunos da classe. João está pesquisando os preços de molduras em um site da internet, e precisa de sua ajuda. Ele quer encontrar uma moldura tal que\n\n- a fotografia seja inteiramente contida dentro da moldura; e\n- a área da moldura que a fotografia não ocupa seja a menor possível; e\n- uma moldura pode ser rotacionada para acomodar a fotografia, mas a fotografia deve ser acomodada de forma que seus lados sejam paralelos aos lados da moldura.\n\nDadas as dimensões da fotografia e das molduras disponíveis, escreva um programa para ajudar João a escolher a melhor moldura, segundo os critérios acima.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros A e L indicando respectivamente a altura e largura da fotografia, em centímetros. A segunda linha da entrada contém um inteiro N, a quantidade de molduras disponíveis. As molduras são identificadas por números de 1 a N. Cada uma das N linhas seguintes contém dois inteiros X_i e Y_i indicando as dimensões em centímetros da moldura de número i, para 1 ≤ i ≤ N.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha na saída, contendo um único número inteiro, o identificador da melhor moldura de acordo com os critérios acima. Se houver mais de uma moldura que satisfaz os critérios, o programa deve produzir o menor identificador entre as molduras que satisfazem os critérios. Se nenhuma moldura satisfaz os critérios, a linha deve conter -1.\n\n## Restrições\n1 ≤ A ≤ 100\n1 ≤ L ≤ 100\n1 ≤ N ≤ 100\n1 ≤ X_i ≤ 200 para 1 ≤ i ≤ N\n1 ≤ Y_i ≤ 200 para 1 ≤ i ≤ N\nnão há duas molduras com as mesmas dimensões\n\n## Limites de Execução\n- Tempo Limite: 1.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10 20\n3\n20 20\n25 10\n5 5\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n24 30\n1\n25 25\n```\nSaída:\n```\n-1\n```\n\nExemplo 3:\nEntrada:\n```\n20 20\n4\n30 30\n30 10\n35 40\n25 36\n```\nSaída:\n```\n1\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 748,
+            "output_tokens": 263,
+            "total_tokens": 1376
+        },
+        "cost_usd": {
+            "input_cost": 0.000561,
+            "output_cost": 0.000986,
+            "total_cost": 0.001547
+        },
+        "raw_response": "```java\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        if (!scanner.hasNextInt()) {\n            return;\n        }\n        int a = scanner.nextInt();\n        int l = scanner.nextInt();\n        int n = scanner.nextInt();\n        \n        int bestIndex = -1;\n        int minArea = Integer.MAX_VALUE;\n        \n        for (int i = 1; i <= n; i++) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            \n            // Verifica se a foto cabe na orientação original ou rotacionada\n            boolean fits = (a <= x && l <= y) || (a <= y && l <= x);\n            \n            if (fits) {\n                int area = x * y;\n                if (area < minArea) {\n                    minArea = area;\n                    bestIndex = i;\n                }\n            }\n        }\n        \n        System.out.println(bestIndex);\n        scanner.close();\n    }\n}\n```",
+        "extracted_code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        if (!scanner.hasNextInt()) {\n            return;\n        }\n        int a = scanner.nextInt();\n        int l = scanner.nextInt();\n        int n = scanner.nextInt();\n        \n        int bestIndex = -1;\n        int minArea = Integer.MAX_VALUE;\n        \n        for (int i = 1; i <= n; i++) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            \n            // Verifica se a foto cabe na orientação original ou rotacionada\n            boolean fits = (a <= x && l <= y) || (a <= y && l <= x);\n            \n            if (fits) {\n                int area = x * y;\n                if (area < minArea) {\n                    minArea = area;\n                    bestIndex = i;\n                }\n            }\n        }\n        \n        System.out.println(bestIndex);\n        scanner.close();\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09711969998897985,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
     }
 ]

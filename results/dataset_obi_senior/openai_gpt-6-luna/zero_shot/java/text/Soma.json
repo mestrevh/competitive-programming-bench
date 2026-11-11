@@ -35,5 +35,42 @@
             },
             "total_test_cases": 46
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T04:09:25.525567+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Soma\n\n## Enunciado\nTemos uma sequência de N quadrados desenhados lado a lado. Cada quadrado possui um número natural anotado dentro dele. Dados a sequência dos N quadrados e um valor K, quantos retângulos distintos existem cuja soma dos números dentro do retângulo é exatamente igual a K? Por exemplo, a figura mostra uma sequência de N = 10 quadrados para a qual existem 5 retângulos cuja soma dos números é igual a K = 4.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e K representando o número de quadrados na sequência e o valor da soma desejada. A segunda linha da entrada contém N números naturais X_i, para 1 ≤ i ≤ N, indicando a sequência de números anotados dentro dos quadrados.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um número inteiro representando quantos retângulos existem na sequência cuja soma é igual a K.\n\n## Restrições\n1 ≤ N ≤ 500000 (5 × 10^5)\n0 ≤ K ≤ 10^6\n0 ≤ X_i ≤ 100 para 1 ≤ i ≤ N\n\nPontuação:\n- Em um conjunto de casos de teste somando 10 pontos, N ≤ 500\n- Em um conjunto de casos de teste somando 20 pontos, N ≤ 10^4\n- Em um conjunto de casos de teste somando 30 pontos, K > 0 e X_i > 0 para 1 ≤ i ≤ N\n- Em um conjunto de casos de teste somando 40 pontos, nenhuma restrição adicional (note que para esta subtarefa o inteiro da saída pode não caber em 32 bits.)\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 1024 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10 4\n2 0 1 1 0 0 8 4 1 3\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n15 0\n0 0 0 0 0 0 5 12 0 1 0 0 0 51 0 0\n```\nSaída:\n```\n25\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 621,
+            "output_tokens": 632,
+            "total_tokens": 1253
+        },
+        "cost_usd": {
+            "input_cost": 6.2e-05,
+            "output_cost": 0.000316,
+            "total_cost": 0.000378
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static final class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    private static long countAtMost(int[] values, int limit) {\n        if (limit < 0) return 0;\n\n        int left = 0;\n        long sum = 0;\n        long count = 0;\n\n        for (int right = 0; right < values.length; right++) {\n            sum += values[right];\n            while (sum > limit) {\n                sum -= values[left++];\n            }\n            count += right - left + 1L;\n        }\n        return count;\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int k = fs.nextInt();\n\n        int[] values = new int[n];\n        for (int i = 0; i < n; i++) {\n            values[i] = fs.nextInt();\n        }\n\n        System.out.println(countAtMost(values, k) - countAtMost(values, k - 1));\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static final class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    private static long countAtMost(int[] values, int limit) {\n        if (limit < 0) return 0;\n\n        int left = 0;\n        long sum = 0;\n        long count = 0;\n\n        for (int right = 0; right < values.length; right++) {\n            sum += values[right];\n            while (sum > limit) {\n                sum -= values[left++];\n            }\n            count += right - left + 1L;\n        }\n        return count;\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int k = fs.nextInt();\n\n        int[] values = new int[n];\n        for (int i = 0; i < n; i++) {\n            values[i] = fs.nextInt();\n        }\n\n        System.out.println(countAtMost(values, k) - countAtMost(values, k - 1));\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10322009999072179,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
     }
 ]

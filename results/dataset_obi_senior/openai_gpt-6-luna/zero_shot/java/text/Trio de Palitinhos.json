@@ -35,5 +35,42 @@
             },
             "total_test_cases": 33
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T04:14:05.622640+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Trio de Palitinhos\n\n## Enunciado\nElisa está muito empolgada com o novo lançamento da OBI (Organização de Brincadeiras Infantis), o jogo Trio de Palitinhos, inspirado no clássico jogo dos palitos coloridos conhecido em algumas regiões como Pega Varetas.\n\nNo Trio de Palitinhos, existem N palitinhos retos de diversos tamanhos e numerados de 1 a N. O objetivo do jogo é selecionar três palitinhos e formar um triângulo com eles, de modo que cada palitinho represente exatamente um lado do triângulo. Não é permitido que algum lado possua um buraco, nem que um pedaço de algum palitinho “sobre” para fora do triângulo. A figura (a) abaixo ilustra um trio permitido e as figuras (b) e (c) ilustram trios proibidos de acordo com as regras do jogo.\n[1.png]\nNa aula de geometria, Elisa aprendeu sobre a desigualdade triangular, que diz que, em todo triângulo, a soma dos tamanhos de quaisquer dois lados é estritamente maior que o tamanho do terceiro lado. Enquanto jogava, Elisa percebeu que a recíproca também é verdadeira: dados três tamanhos satisfazendo essa condição, sempre é possível formar um triângulo com lados destes tamanhos. Isso explica porque é possível formar um triângulo com lados de tamanhos 3, 4 e 6, mas é impossível formar um triângulo com lados de tamanhos 3, 4 e 7 (3 + 4 não é estritamente maior que 7).\n\nAgora, Elisa está curiosa para saber o quão difícil é ganhar o jogo, e por isso pediu a sua ajuda. Dados os tamanhos dos N palitinhos, determine quantos trios distintos de palitinhos existem com os quais é possível formar um triângulo (ou seja, que satisfazem a desigualdade triangular). Observe que a ordem de escolha dos três palitinhos não importa, mas palitinhos diferentes devem ser considerados diferentes mesmo que possuam o mesmo tamanho (veja a explicação do exemplo 1).\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N indicando o número de palitinhos no jogo de Elisa.\n\nA segunda linha da entrada contém N inteiros Ai separados por um espaço em branco, onde Ai é o tamanho em centímetros do i-ésimo palitinho.\n\n## Formato de Saída\nSeu programa deverá imprimir uma única linha contendo um único inteiro, o número de trios (não ordenados) de palitinhos com os quais é possível formar um triângulo.\n\n## Restrições\n3 ≤ N ≤ 1500\n1 ≤ Ai ≤ 100000000 para 1 ≤ i ≤ N\n\nSubtarefas:\n- Subtarefa 1 (0 pontos): composta apenas pelos exemplos.\n- Subtarefa 2 (30 pontos): N ≤ 100.\n- Subtarefa 3 (24 pontos): existem exatamente dois tamanhos distintos de palitinhos, ou seja, A1 ≠ AN e Ai = A1 ou Ai = AN para todo 1 ≤ i ≤ N.\n- Subtarefa 4 (17 pontos): Ai ≤ 100 para todo 1 ≤ i ≤ N.\n- Subtarefa 5 (29 pontos): sem restrições adicionais.\n\n## Limites de Execução\n- Tempo Limite: 4.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5\n7 4 3 6 3\n```\nSaída:\n```\n6\n```\n\nExemplo 2:\nEntrada:\n```\n8\n20 4 7 1 3 7 6 12\n```\nSaída:\n```\n12\n```\n\nExemplo 3:\nEntrada:\n```\n6\n9 5 5 5 9 5\n```\nSaída:\n```\n20\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 4.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 962,
+            "output_tokens": 502,
+            "total_tokens": 1464
+        },
+        "cost_usd": {
+            "input_cost": 9.6e-05,
+            "output_cost": 0.000251,
+            "total_cost": 0.000347
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int pointer = 0;\n        private int length = 0;\n\n        private int read() throws IOException {\n            if (pointer >= length) {\n                length = in.read(buffer);\n                pointer = 0;\n                if (length <= 0) return -1;\n            }\n            return buffer[pointer++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        int[] sticks = new int[n];\n\n        for (int i = 0; i < n; i++) {\n            sticks[i] = scanner.nextInt();\n        }\n\n        Arrays.sort(sticks);\n\n        long count = 0;\n        for (int k = n - 1; k >= 2; k--) {\n            int i = 0;\n            int j = k - 1;\n\n            while (i < j) {\n                if ((long) sticks[i] + sticks[j] > sticks[k]) {\n                    count += j - i;\n                    j--;\n                } else {\n                    i++;\n                }\n            }\n        }\n\n        System.out.println(count);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int pointer = 0;\n        private int length = 0;\n\n        private int read() throws IOException {\n            if (pointer >= length) {\n                length = in.read(buffer);\n                pointer = 0;\n                if (length <= 0) return -1;\n            }\n            return buffer[pointer++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        int[] sticks = new int[n];\n\n        for (int i = 0; i < n; i++) {\n            sticks[i] = scanner.nextInt();\n        }\n\n        Arrays.sort(sticks);\n\n        long count = 0;\n        for (int k = n - 1; k >= 2; k--) {\n            int i = 0;\n            int j = k - 1;\n\n            while (i < j) {\n                if ((long) sticks[i] + sticks[j] > sticks[k]) {\n                    count += j - i;\n                    j--;\n                } else {\n                    i++;\n                }\n            }\n        }\n\n        System.out.println(count);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08201819998794235,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
     }
 ]

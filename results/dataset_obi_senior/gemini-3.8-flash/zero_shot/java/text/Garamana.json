@@ -35,5 +35,42 @@
             },
             "total_test_cases": 49
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T11:15:36.369250+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Garamana\n\n## Enunciado\nUm anagrama de uma palavra é um rearranjo das letras da palavra. Por exemplo,\n\n1. \"rota\" é um anagrama de \"ator\";\n2. \"amor\" é um anagrama de \"roma\"; e\n3. os anagramas de \"aab\" são \"aab\", \"aba\" e \"baa\".\n\nUm anagrama curinga de uma palavra é um anagrama em que algumas das letras podem ter sido substituídas pelo caractere '*' (asterisco). Por exemplo, três possíveis anagramas curingas de \"amor\" são \"*mor\", \"a**r\" e \"r**a\".\n\nDadas duas palavras, escreva um programa para determinar se a segunda palavra é um anagrama curinga da primeira palavra.\n\n## Formato de Entrada\nA primeira linha da entrada contém P, a primeira palavra. A segunda linha contém A, a segunda palavra.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único caractere, que deve ser 'S' se A é um anagrama curinga de P, ou 'N' caso contrário.\n\n## Restrições\n1 ≤ comprimento de P ≤ 100\ncomprimento de A = comprimento de P\nP é composta por letras minúsculas não acentuadas\nA é composta por letras minúsculas não acentuadas e o caractere '*' (asterisco)\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 50 pontos, A contém apenas letras minúsculas não acentuadas.\n\n## Limites de Execução\n- Tempo Limite: 1.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\nroma\nator\n```\nSaída:\n```\nN\n```\n\nExemplo 2:\nEntrada:\n```\nolimpíada\npoliamida\n```\nSaída:\n```\nS\n```\n\nExemplo 3:\nEntrada:\n```\nmicrofone\n*conform*\n```\nSaída:\n```\nS\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 592,
+            "output_tokens": 278,
+            "total_tokens": 1935
+        },
+        "cost_usd": {
+            "input_cost": 0.000444,
+            "output_cost": 0.001043,
+            "total_cost": 0.001486
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String p = reader.readLine();\n        String a = reader.readLine();\n\n        if (p == null || a == null) {\n            return;\n        }\n\n        int[] countP = new int[65536];\n\n        for (int i = 0; i < p.length(); i++) {\n            countP[p.charAt(i)]++;\n        }\n\n        boolean possible = true;\n        for (int i = 0; i < a.length(); i++) {\n            char c = a.charAt(i);\n            if (c != '*') {\n                countP[c]--;\n                if (countP[c] < 0) {\n                    possible = false;\n                    break;\n                }\n            }\n        }\n\n        if (possible) {\n            System.out.println(\"S\");\n        } else {\n            System.out.println(\"N\");\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String p = reader.readLine();\n        String a = reader.readLine();\n\n        if (p == null || a == null) {\n            return;\n        }\n\n        int[] countP = new int[65536];\n\n        for (int i = 0; i < p.length(); i++) {\n            countP[p.charAt(i)]++;\n        }\n\n        boolean possible = true;\n        for (int i = 0; i < a.length(); i++) {\n            char c = a.charAt(i);\n            if (c != '*') {\n                countP[c]--;\n                if (countP[c] < 0) {\n                    possible = false;\n                    break;\n                }\n            }\n        }\n\n        if (possible) {\n            System.out.println(\"S\");\n        } else {\n            System.out.println(\"N\");\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06731589999981225,
+            "counts": {
+                "AC": 49,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 49
+        }
     }
 ]

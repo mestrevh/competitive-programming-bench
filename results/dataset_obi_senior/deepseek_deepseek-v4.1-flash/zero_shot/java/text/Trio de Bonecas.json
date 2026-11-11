@@ -35,5 +35,42 @@
             },
             "total_test_cases": 76
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T10:47:20.286533+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Trio de Bonecas\n\n## Enunciado\nAlice é a gerente de produção de uma fábrica de bonecas chinesas. Nessa fábrica, todas as bonecas possuem o mesmo formato, variando apenas de tamanho. As bonecas são vendidas sempre em trios.\n[1.png]\nPara um trio formado por bonecas de tamanhos A, B e C, com A ≤ B ≤ C, o balanceamento do trio é definido como (A − B)^2. De acordo com o controle de qualidade da fábrica, idealmente cada trio deveria ter balanceamento 0, ou seja, conter duas bonecas de mesmo tamanho e uma terceira boneca de tamanho maior ou igual a essas duas; porém, isso nem sempre é possível devido a limitações de estoque.\n\nAlice acabou de receber um pedido urgente: o consulado Chinês fará um grande evento no qual pretende distribuir K trios de bonecas, e precisa que Alice envie imediatamente todos os trios. Existem na fábrica N bonecas de diversos tamanhos, ainda não separadas em trios, e Alice não sabe se conseguirá formar K trios ideais.\n\nDevido à urgência do evento, Alice e o consulado fizeram um acordo: o consulado aceitará trios que não sejam ideais; porém, para garantir um bom evento, Alice deve enviar uma caixa com K trios de bonecas cuja soma dos balanceamentos seja a menor possível.\n\nPor exemplo, suponha que Alice possua 7 bonecas com tamanhos 11, 1, 7, 5, 16, 8 e 15, e que o consulado tenha solicitado 2 trios de bonecas. Algumas configurações possíveis para envio são:\n• Configuração 1: trios (7, 8, 15) e (1, 5, 16).\n– O primeiro trio possui balanceamento (8 − 7)^2 = 1.\n– O segundo trio possui balanceamento (5 − 1)^2 = 16.\n– O balanceamento total dessa configuração é 1 + 16 = 17.\n\n• Configuração 2: trios (5, 7, 16) e (8, 11, 15).\n– O primeiro trio possui balanceamento (7 − 5)^2 = 4.\n– O segundo trio possui balanceamento (11 − 8)^2 = 9.\n– O balanceamento total dessa configuração é 4 + 9 = 13.\n\nExistem outras configurações possíveis, mas a menor soma de balanceamentos possível é 13 (correspondente à configuração 2).\n\nAjude Alice a calcular a soma de balanceamentos minima em um conjunto com K trios de bonecas.\n\n## Formato de Entrada\nA primeira linha de entrada contém dois inteiros N e K, representando, respectivamente, o número de bonecas e a quantidade de trios solicitados pelo consulado Chinês.\nA segunda linha contém N números inteiros. O i-ésimo desses números será Ti, representando o tamanho da i-ésima boneca.\n\n## Formato de Saída\nSeu programa deverá imprimir uma única linha contendo um único inteiro, a menor soma de balanceamentos possível em uma caixa com K trios de bonecas.\n\n## Restrições\n3 ≤ N ≤ 10000\n1 ≤ K ≤ 3000\n3K ≤ N\n1 ≤ Ti ≤ 100000 para todo 1 ≤ i ≤ N\n\nSubtarefa 1 (13 pontos): 1 ≤ Ti ≤ 2 para todo 1 ≤ i ≤ N.\nSubtarefa 2 (28 pontos): N ≤ 30.\nSubtarefa 3 (33 pontos): N ≤ 1000 e K ≤ 100.\nSubtarefa 4 (26 pontos): Nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 2.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n7 2\n11 1 7 5 16 8 15\n```\nSaída:\n```\n13\n```\n\nExemplo 2:\nEntrada:\n```\n8 2\n2 1 2 2 2 1 2 2\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1124,
+            "output_tokens": 67213,
+            "total_tokens": 68337
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.161311,
+            "total_cost": 0.161315
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n        int[] a = new int[N + 2];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 1; i <= N; i++) {\n            a[i] = Integer.parseInt(st.nextToken());\n        }\n        Arrays.sort(a, 1, N + 1);\n        long INF = Long.MAX_VALUE / 4;\n        long[] dp1 = new long[K + 1];\n        long[] dp2 = new long[K + 1];\n        Arrays.fill(dp1, INF);\n        Arrays.fill(dp2, INF);\n        dp1[0] = 0;\n        for (int i = N; i >= 1; i--) {\n            long[] dpCur = new long[K + 1];\n            Arrays.fill(dpCur, INF);\n            for (int p = 0; p <= K; p++) {\n                if (dp1[p] != INF) {\n                    dpCur[p] = Math.min(dpCur[p], dp1[p]);\n                }\n                if (i < N && p >= 1) {\n                    if (3L * p <= N - i + 1) {\n                        if (dp2[p - 1] != INF) {\n                            long diff = a[i + 1] - a[i];\n                            long cost = diff * diff;\n                            long val = dp2[p - 1] + cost;\n                            if (val < dpCur[p]) {\n                                dpCur[p] = val;\n                            }\n                        }\n                    }\n                }\n            }\n            dp2 = dp1;\n            dp1 = dpCur;\n        }\n        System.out.println(dp1[K]);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n        int[] a = new int[N + 2];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 1; i <= N; i++) {\n            a[i] = Integer.parseInt(st.nextToken());\n        }\n        Arrays.sort(a, 1, N + 1);\n        long INF = Long.MAX_VALUE / 4;\n        long[] dp1 = new long[K + 1];\n        long[] dp2 = new long[K + 1];\n        Arrays.fill(dp1, INF);\n        Arrays.fill(dp2, INF);\n        dp1[0] = 0;\n        for (int i = N; i >= 1; i--) {\n            long[] dpCur = new long[K + 1];\n            Arrays.fill(dpCur, INF);\n            for (int p = 0; p <= K; p++) {\n                if (dp1[p] != INF) {\n                    dpCur[p] = Math.min(dpCur[p], dp1[p]);\n                }\n                if (i < N && p >= 1) {\n                    if (3L * p <= N - i + 1) {\n                        if (dp2[p - 1] != INF) {\n                            long diff = a[i + 1] - a[i];\n                            long cost = diff * diff;\n                            long val = dp2[p - 1] + cost;\n                            if (val < dpCur[p]) {\n                                dpCur[p] = val;\n                            }\n                        }\n                    }\n                }\n            }\n            dp2 = dp1;\n            dp1 = dpCur;\n        }\n        System.out.println(dp1[K]);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17987079999875277,
+            "counts": {
+                "AC": 76,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
     }
 ]

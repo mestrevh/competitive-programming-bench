@@ -35,5 +35,42 @@
             },
             "total_test_cases": 23
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T10:30:15.503845+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Sanduíche\n\n## Enunciado\nUma nova lanchonete abriu na cidade, prometendo um menu com a maior variedade de sanduíches da região. A cada dia o Chef de cozinha compra N ingredientes distintos e prepara o menu usando esses N ingredientes. Infelizmente não é possível ter sanduíches com qualquer combinação de ingredientes: a cada dia o Chef determina que M pares de ingredientes não podem ser realizados no mesmo sanduíche, porque ele considera que esses ingredientes \"não combinam\".\n\nPor exemplo, suponha que num determinado dia N é igual a quatro e os ingredientes são queijo, presunto, goiabada e azeitona, e M é igual a dois: os pares (goiabada, presunto) e (azeitona, goiabada) não podem ser realizados no mesmo sanduíche. Nesse dia, alguns dos sanduíches que podem ser feitos são:\n- presunto, queijo\n- azeitona\n- presunto, azeitona, queijo\n- goiabada, queijo\n\nAlguns dos sanduíches que não podem ser feitos são:\n- presunto, queijo, goiabada\n- azeitona, goiabada\n- goiabada, presunto, azeitona\n\nDados os N ingredientes e os M pares de ingredientes que não combinam, sua tarefa é determinar qual o máximo número de sanduíches diferentes que podem ser feitos. Dois sanduíches A e B são considerados diferentes se A contém um ingrediente X que não está presente em B ou se B contém um ingrediente Y que não está presente em A. Um sanduíche deve conter ao menos um ingrediente.\n\n## Formato de Entrada\nA primeira linha contém dois números inteiros N e M, indicando respectivamente o número de ingredientes e o número de pares de ingredientes que não combinam. Os ingredientes são identificados por números de 1 a N. Cada uma das M linhas seguintes contém dois números inteiros X e Y que representam um par de ingredientes que não combinam.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, o número de sanduíches diferentes que podem ser feitos.\n\n## Restrições\n1 ≤ N ≤ 20\n0 ≤ M ≤ 400\n1 ≤ X ≤ N\n1 ≤ X < Y\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 10 pontos, N ≤ 5.\n- Para um conjunto de casos de testes valendo outros 40 pontos, N ≤ 10.\n- Para um conjunto de casos de testes valendo outros 50 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 2\n2 3\n1 2\n```\nSaída:\n```\n4\n```\n\nExemplo 2:\nEntrada:\n```\n3 0\n```\nSaída:\n```\n7\n```\n\nExemplo 3:\nEntrada:\n```\n3 3\n1 2\n2 3\n1 3\n```\nSaída:\n```\n3\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 892,
+            "output_tokens": 1652,
+            "total_tokens": 2544
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003965,
+            "total_cost": 0.003967
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        int[] adj = new int[N];\n\n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int x = Integer.parseInt(st.nextToken()) - 1;\n            int y = Integer.parseInt(st.nextToken()) - 1;\n\n            adj[x] |= 1 << y;\n            adj[y] |= 1 << x;\n        }\n\n        int limit = 1 << N;\n        int answer = 0;\n\n        for (int mask = 1; mask < limit; mask++) {\n            boolean ok = true;\n            int cur = mask;\n\n            while (cur != 0) {\n                int bit = cur & -cur;\n                int v = Integer.numberOfTrailingZeros(bit);\n\n                if ((adj[v] & mask) != 0) {\n                    ok = false;\n                    break;\n                }\n\n                cur ^= bit;\n            }\n\n            if (ok) {\n                answer++;\n            }\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        int[] adj = new int[N];\n\n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int x = Integer.parseInt(st.nextToken()) - 1;\n            int y = Integer.parseInt(st.nextToken()) - 1;\n\n            adj[x] |= 1 << y;\n            adj[y] |= 1 << x;\n        }\n\n        int limit = 1 << N;\n        int answer = 0;\n\n        for (int mask = 1; mask < limit; mask++) {\n            boolean ok = true;\n            int cur = mask;\n\n            while (cur != 0) {\n                int bit = cur & -cur;\n                int v = Integer.numberOfTrailingZeros(bit);\n\n                if ((adj[v] & mask) != 0) {\n                    ok = false;\n                    break;\n                }\n\n                cur ^= bit;\n            }\n\n            if (ok) {\n                answer++;\n            }\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.08469970000442117,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
     }
 ]

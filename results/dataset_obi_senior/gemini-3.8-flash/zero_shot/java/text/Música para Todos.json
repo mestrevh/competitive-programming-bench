@@ -35,5 +35,42 @@
             },
             "total_test_cases": 21
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T11:27:46.250874+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Música para Todos\n\n## Enunciado\nUma empresa de streaming de músicas lançou uma nova funcionalidade, para grupos de amigos ouvirem em seus aparelhos a mesma música ao mesmo tempo, compartilhando assim um momento de alegria nestes tempos difíceis de pandemia.\n\nCada amigo no grupo tem que declarar uma música que adora e uma música que detesta. Um amigo fica satisfeito se a música que está sendo compartilhada não é a música que ele detesta. Se a música que está sendo compartilhada é detestada por um dos amigos, ele pode trocar a música sendo compartilhada pela música que ele adora. Se há mais de um amigo que detesta a música que está sendo compartilhada, somente o amigo que é cliente há mais tempo da empresa é que pode trocar a música (e troca pela música que adora).\n\nObviamente, após a troca da música compartilhada pode ser que outro amigo deteste a nova música, e uma nova troca pode ocorrer. E as trocas podem ser intermináveis!\n\nDadas as preferências de um grupo de amigos e a música sendo compartilhada, e considerando que sempre ocorre troca enquanto houver cliente não satisfeito, escreva um programa para determinar quantas trocas ocorrem até que todos os amigos estejam satisfeitos.\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros N, M e C, respectivamente o número de amigos, o número de músicas e a música que está sendo compartilhada. As músicas são identificadas por inteiros de 1 a M. Cada uma das N linhas seguintes descreve as escolhas de um amigo e contém dois inteiros A e D, identificando respectivamente a música adorada e a música detestada. A ordem dos amigos na entrada obedece à ordem em que os amigos se tornaram clientes da empresa (o amigo que aparece antes é cliente há mais tempo).\n\n## Formato de Saída\nSeu programa deve produzir uma única linha na saída, contendo um único inteiro, o número de trocas até que todos os amigos fiquem satisfeitos ou o número -1 se as trocas continuam indefinidamente.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ M ≤ 10^5\n1 ≤ C ≤ M\n1 ≤ A, D ≤ M e A ≠ D\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 40 pontos, 1 ≤ N, M ≤ 1000.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 4 2\n1 2\n2 3\n3 2\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n4 5 2\n1 3\n2 3\n3 2\n5 1\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 3 1\n1 2\n2 3\n3 1\n```\nSaída:\n```\n-1\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 813,
+            "output_tokens": 568,
+            "total_tokens": 2339
+        },
+        "cost_usd": {
+            "input_cost": 0.00061,
+            "output_cost": 0.00213,
+            "total_cost": 0.00274
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            return hasNextByte() ? buffer[ptr++] : -1;\n        }\n\n        public int nextInt() {\n            int b = readByte();\n            while (b <= ' ' && b != -1) {\n                b = readByte();\n            }\n            if (b == -1) return -1;\n            int res = 0;\n            while (b >= '0' && b <= '9') {\n                res = res * 10 + (b - '0');\n                b = readByte();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int m = scanner.nextInt();\n        int c = scanner.nextInt();\n\n        int[] nextSong = new int[m + 1];\n\n        for (int i = 0; i < n; i++) {\n            int a = scanner.nextInt();\n            int d = scanner.nextInt();\n            if (nextSong[d] == 0) {\n                nextSong[d] = a;\n            }\n        }\n\n        int curr = c;\n        int switches = 0;\n        boolean[] visited = new boolean[m + 1];\n\n        while (true) {\n            if (visited[curr]) {\n                System.out.println(-1);\n                return;\n            }\n            visited[curr] = true;\n\n            int nxt = nextSong[curr];\n            if (nxt == 0) {\n                System.out.println(switches);\n                return;\n            }\n            curr = nxt;\n            switches++;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int buflen = 0;\n\n        private boolean hasNextByte() {\n            if (ptr < buflen) return true;\n            ptr = 0;\n            try {\n                buflen = in.read(buffer);\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n            return buflen > 0;\n        }\n\n        private int readByte() {\n            return hasNextByte() ? buffer[ptr++] : -1;\n        }\n\n        public int nextInt() {\n            int b = readByte();\n            while (b <= ' ' && b != -1) {\n                b = readByte();\n            }\n            if (b == -1) return -1;\n            int res = 0;\n            while (b >= '0' && b <= '9') {\n                res = res * 10 + (b - '0');\n                b = readByte();\n            }\n            return res;\n        }\n    }\n\n    public static void main(String[] args) {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        if (n == -1) return;\n        int m = scanner.nextInt();\n        int c = scanner.nextInt();\n\n        int[] nextSong = new int[m + 1];\n\n        for (int i = 0; i < n; i++) {\n            int a = scanner.nextInt();\n            int d = scanner.nextInt();\n            if (nextSong[d] == 0) {\n                nextSong[d] = a;\n            }\n        }\n\n        int curr = c;\n        int switches = 0;\n        boolean[] visited = new boolean[m + 1];\n\n        while (true) {\n            if (visited[curr]) {\n                System.out.println(-1);\n                return;\n            }\n            visited[curr] = true;\n\n            int nxt = nextSong[curr];\n            if (nxt == 0) {\n                System.out.println(switches);\n                return;\n            }\n            curr = nxt;\n            switches++;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0886622000252828,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
     }
 ]

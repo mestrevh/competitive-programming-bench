@@ -35,5 +35,42 @@
             },
             "total_test_cases": 51
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T11:35:14.259076+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Subsequência\n\n## Enunciado\nVocê foi contratado pela Agência Extra-Espacial Brasileira, que procura indícios de vida extra-terrestre.\n\nUm dos telescópios da Agência, para o espectro ultravioleta, gera uma sequência de valores inteiros positivos que devem ser analisados continuamente. Dadas as sequências S_A e S_B, sua primeira missão é determinar se S_B é uma subsequência de S_A.\n\nUma subsequência de uma dada sequência S é um conjunto de elementos de S que não são necessariamente adjacentes mas que mantém a mesma ordem em que aparecem em S. Por exemplo, [2], [1,4], [1,2,4] e [1,2,3,4] são subsequências de [1,2,3,4], mas [4,3], [3,4,1] e [1,3,5] não são.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros A e B, o número de elementos das sequências. A segunda linha contém A inteiros X_i, os números da sequência S_A. A seguir a entrada contém B inteiros Y_i, os números da sequência S_B.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único caractere, que deve ser a letra maiúscula 'S' se S_B é uma subsequência da S_A ou a letra maiúscula 'N' caso contrário.\n\n## Restrições\n1 ≤ A ≤ 10^5\n1 ≤ B ≤ A\n-10^9 ≤ X_i ≤ 10^9 para 1 ≤ i ≤ A\n-10^9 ≤ Y_i ≤ 10^9 para 1 ≤ i ≤ B\n\n## Limites de Execução\n- Tempo Limite: 2.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5 3\n1 2 3 4 5\n2 3 5\n```\nSaída:\n```\nS\n```\n\nExemplo 2:\nEntrada:\n```\n5 4\n8 17 8 21 23\n8 8 21 22\n```\nSaída:\n```\nN\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 644,
+            "output_tokens": 564,
+            "total_tokens": 1444
+        },
+        "cost_usd": {
+            "input_cost": 0.000483,
+            "output_cost": 0.002115,
+            "total_cost": 0.002598
+        },
+        "raw_response": "```java\nimport java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private InputStream stream;\n        private byte[] buf = new byte[1024 * 64];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream stream) {\n            this.stream = stream;\n        }\n\n        private int read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = stream.read(buf, 0, buf.length);\n                if (tail <= 0) return -1;\n            }\n            return buf[head++];\n        }\n\n        public long nextLong() throws IOException {\n            int c = read();\n            while (c <= ' ') {\n                if (c == -1) return Long.MIN_VALUE;\n                c = read();\n            }\n            boolean neg = false;\n            if (c == '-') {\n                neg = true;\n                c = read();\n            }\n            long res = 0;\n            while (c >= '0' && c <= '9') {\n                res = res * 10 + (c - '0');\n                c = read();\n            }\n            return neg ? -res : res;\n        }\n\n        public int nextInt() throws IOException {\n            return (int) nextLong();\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n        int a = scanner.nextInt();\n        int b = scanner.nextInt();\n\n        long[] sa = new long[a];\n        for (int i = 0; i < a; i++) {\n            sa[i] = scanner.nextLong();\n        }\n\n        long[] sb = new long[b];\n        for (int i = 0; i < b; i++) {\n            sb[i] = scanner.nextLong();\n        }\n\n        int ptrB = 0;\n        for (int i = 0; i < a && ptrB < b; i++) {\n            if (sa[i] == sb[ptrB]) {\n                ptrB++;\n            }\n        }\n\n        if (ptrB == b) {\n            System.out.println(\"S\");\n        } else {\n            System.out.println(\"N\");\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.InputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private InputStream stream;\n        private byte[] buf = new byte[1024 * 64];\n        private int head = 0;\n        private int tail = 0;\n\n        public FastScanner(InputStream stream) {\n            this.stream = stream;\n        }\n\n        private int read() throws IOException {\n            if (head >= tail) {\n                head = 0;\n                tail = stream.read(buf, 0, buf.length);\n                if (tail <= 0) return -1;\n            }\n            return buf[head++];\n        }\n\n        public long nextLong() throws IOException {\n            int c = read();\n            while (c <= ' ') {\n                if (c == -1) return Long.MIN_VALUE;\n                c = read();\n            }\n            boolean neg = false;\n            if (c == '-') {\n                neg = true;\n                c = read();\n            }\n            long res = 0;\n            while (c >= '0' && c <= '9') {\n                res = res * 10 + (c - '0');\n                c = read();\n            }\n            return neg ? -res : res;\n        }\n\n        public int nextInt() throws IOException {\n            return (int) nextLong();\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner scanner = new FastScanner(System.in);\n        int a = scanner.nextInt();\n        int b = scanner.nextInt();\n\n        long[] sa = new long[a];\n        for (int i = 0; i < a; i++) {\n            sa[i] = scanner.nextLong();\n        }\n\n        long[] sb = new long[b];\n        for (int i = 0; i < b; i++) {\n            sb[i] = scanner.nextLong();\n        }\n\n        int ptrB = 0;\n        for (int i = 0; i < a && ptrB < b; i++) {\n            if (sa[i] == sb[ptrB]) {\n                ptrB++;\n            }\n        }\n\n        if (ptrB == b) {\n            System.out.println(\"S\");\n        } else {\n            System.out.println(\"N\");\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0808586000057403,
+            "counts": {
+                "AC": 51,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 51
+        }
     }
 ]

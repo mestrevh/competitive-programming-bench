@@ -35,5 +35,42 @@
             },
             "total_test_cases": 38
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T11:02:13.922818+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Construtora\n\n## Enunciado\nEm uma rua existem N prédios adjacentes, o i-ésimo entre eles (da esquerda para a direita) possui ai andares. Uma construtora acabou de comprar todos os prédios da rua, e fará uma obra para que eles tenham a mesma altura (quantidade de andares), porém, para realizar esta obra ela deve seguir as regras definidas pela Sociedade Brasileira de Construção (SBC).\n\nSegundo as regras da SBC, cada fase da obra só pode aumentar em uma unidade a quantidade de andares de prédios consecutivos que já possuam uma mesma quantidade de andares. Sendo mais específico, para cada fase:\n- A construtora deve definir um índice inicial L\n- A construtora deve definir um índice final R\n- Todos os prédios entre L e R (incluindo L e R) devem possuir a mesma quantidade de andares, digamos a\n- Ao final desta fase da obra, todos os prédios entre L e R (incluindo L e R) vão possuir a + 1 andares\n\nPor exemplo, suponha que N seja igual a 8, e que as alturas iniciais sejam: a1 = 5, a2 = 4, a3 = 4, a4 = 4, a5 = 5, a6 = 4, a7 = 4 e a8 = 7, perceba que:\n- A construtora não pode definir L = 2 e R = 7 para a primeira fase, pois nem todas as quantidades de andares nesse intervalo de prédios são iguais\n- A construtora não pode definir L = 1 e R = 5 para a primeira fase, pois nem todas as quantidades de andares nesse intervalo de prédios são iguais\n- A construtora pode definir L = 8 e R = 8 para a primeira fase, e a quantidade de andares final seria: a1 = 5, a2 = 4, a3 = 4, a4 = 4, a5 = 5, a6 = 4, a7 = 4 e a8 = 8\n- A construtora pode definir L = 2 e R = 4 para a primeira fase, e a quantidade de andares final seria: a1 = 5, a2 = 5, a3 = 5, a4 = 5, a5 = 5, a6 = 4, a7 = 4 e a8 = 7\n\nPara cada fase da obra, a construtora deve pagar impostos para a prefeitura, portanto, ela deseja completar a tarefa usando a menor quantidade possível de fases. No exemplo mostrado anteriormente a menor quantidade de fases é 4.\n\nDadas a quantidade inicial de andares de cada um dos N prédios, sua tarefa é determinar a quantidade mínima de fases para completar a obra.\n\n## Formato de Entrada\nA primeira linha da entrada contém um único inteiro N, o número de prédios da rua.\n\nA segunda linha contém N inteiros, o i-ésimo entre esses inteiros é ai, a quantidade de andares do i-ésimo prédio.\n\n## Formato de Saída\nA saída deve conter um único número inteiro, a menor quantidade de fases necessárias para a construtora completar a obra, ou seja, deixar todos os prédios com a mesma altura.\n\n## Restrições\n2 ≤ N ≤ 100\n1 ≤ ai ≤ 100\n\nSubtarefas:\n- Subtarefa 1 (0 pontos): exemplos.\n- Subtarefa 2 (17 pontos): ai = aj para todo 1 ≤ i, j ≤ N - 1, ou seja, todos os N - 1 primeiros prédios possuem a mesma altura inicial.\n- Subtarefa 3 (18 pontos): 1 ≤ ai ≤ 2.\n- Subtarefa 4 (19 pontos): 1 ≤ ai ≤ 3.\n- Subtarefa 5 (20 pontos): ai > aj para todo 1 ≤ i < j ≤ N, ou seja, as alturas iniciais dos prédios são decrescentes da esquerda para a direita.\n- Subtarefa 6 (26 pontos): Sem restrições adicionais.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 1024 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n3 1 1 2\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n8\n5 4 4 4 5 4 4 7\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n3\n100 100 100\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1189,
+            "output_tokens": 410,
+            "total_tokens": 3359
+        },
+        "cost_usd": {
+            "input_cost": 0.000892,
+            "output_cost": 0.001538,
+            "total_cost": 0.002429
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        \n        int n = Integer.parseInt(line.trim());\n        int[] a = new int[n];\n        \n        StringTokenizer st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < n; i++) {\n            a[i] = Integer.parseInt(st.nextToken());\n        }\n\n        int operations = 0;\n\n        while (true) {\n            int minVal = a[0];\n            int maxVal = a[0];\n            for (int i = 1; i < n; i++) {\n                if (a[i] < minVal) minVal = a[i];\n                if (a[i] > maxVal) maxVal = a[i];\n            }\n\n            // Se todos os prédios já têm a mesma altura, terminamos\n            if (minVal == maxVal) {\n                break;\n            }\n\n            // Identifica segmentos maximais com valor igual a minVal e incrementa\n            int i = 0;\n            while (i < n) {\n                if (a[i] == minVal) {\n                    operations++;\n                    while (i < n && a[i] == minVal) {\n                        a[i]++;\n                        i++;\n                    }\n                } else {\n                    i++;\n                }\n            }\n        }\n\n        System.out.println(operations);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line = br.readLine();\n        if (line == null) return;\n        \n        int n = Integer.parseInt(line.trim());\n        int[] a = new int[n];\n        \n        StringTokenizer st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < n; i++) {\n            a[i] = Integer.parseInt(st.nextToken());\n        }\n\n        int operations = 0;\n\n        while (true) {\n            int minVal = a[0];\n            int maxVal = a[0];\n            for (int i = 1; i < n; i++) {\n                if (a[i] < minVal) minVal = a[i];\n                if (a[i] > maxVal) maxVal = a[i];\n            }\n\n            // Se todos os prédios já têm a mesma altura, terminamos\n            if (minVal == maxVal) {\n                break;\n            }\n\n            // Identifica segmentos maximais com valor igual a minVal e incrementa\n            int i = 0;\n            while (i < n) {\n                if (a[i] == minVal) {\n                    operations++;\n                    while (i < n && a[i] == minVal) {\n                        a[i]++;\n                        i++;\n                    }\n                } else {\n                    i++;\n                }\n            }\n        }\n\n        System.out.println(operations);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07651390001410618,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
     }
 ]

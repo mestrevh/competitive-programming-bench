@@ -35,5 +35,42 @@
             },
             "total_test_cases": 28
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T04:08:51.529697+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Salada de Frutas\n\n## Enunciado\nPara a sobremesa do almoço de domingo, a mãe de Juninho vai preparar uma salada de frutas. Como ela é uma pessoa muito ocupada, pediu a Juninho que vá à feira para comprar as frutas. A mãe de Juninho deseja que a salada de frutas seja bem diversificada (da última vez, Juninho mencionou que tinha laranja demais). Por isso, ela deu a Juninho R reais e pediu para que ele volte da feira com o máximo de tipos de fruta diferentes que ele puder comprar.\n\nPara simplificar a tarefa de Juninho, sua mãe lhe deu a tabela de preços da feira do bairro, onde existem diversas barracas. A tabela de preços é uma lista na qual cada item indica que uma determinada fruta está sendo vendida por um determinado preço na feira. Como a mesma fruta pode ser vendida em barracas diferentes, na tabela de preços é possível encontrar a mesma fruta várias vezes, cada vez com um preço diferente.\n\nJuninho até poderia fazer as contas no papel para descobrir quantos tipos de fruta ele pode levar para casa, mas ele prefere ir à feira o quanto antes para voltar logo e assistir anime. Por isso, ele te contratou como programador.\n\nSua tarefa é: dada a tabela da feira contendo os tipos e preços das frutas, determine o número máximo de tipos de fruta que Juninho consegue comprar com os R reais que sua mãe lhe deu.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros R e N indicando, respectivamente, o valor em reais que a mãe de Juninho deu a ele e o número de frutas listadas na tabela da feira.\n\nAs próximas N linhas descrevem a tabela de preços. A i-ésima destas linhas contém dois inteiros Ti e Pi, o tipo e o preço em reais, respectivamente, da i-ésima fruta da tabela. O tipo de uma fruta é representado por um inteiro entre 1 e 100.\n\n## Formato de Saída\nSeu programa deverá imprimir uma única linha contendo um único inteiro, o número máximo de tipos de fruta diferentes que Juninho consegue comprar usando os R reais de sua mãe.\n\n## Restrições\n1 ≤ R ≤ 10000\n1 ≤ N ≤ 100\n1 ≤ Ti ≤ 100 para 1 ≤ i ≤ N\n1 ≤ Pi ≤ 100 para 1 ≤ i ≤ N\n\nSubtarefas:\n- Subtarefa 1 (0 pontos): composta apenas pelos exemplos.\n- Subtarefa 2 (33 pontos): Ti = 1 para todo 1 ≤ i ≤ N (existe apenas um tipo de fruta na tabela).\n- Subtarefa 3 (29 pontos): Ti ≠ Tj para i ≠ j (todos os tipos de fruta na tabela são distintos).\n- Subtarefa 4 (38 pontos): sem restrições adicionais.\n\n## Limites de Execução\n- Tempo Limite: 1.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n50 6\n1 22\n3 30\n2 10\n4 12\n3 19\n2 25\n```\nSaída:\n```\n3\n```\n\nExemplo 2:\nEntrada:\n```\n10 4\n1 18\n1 11\n1 31\n1 14\n```\nSaída:\n```\n0\n```\n\nExemplo 3:\nEntrada:\n```\n42 6\n3 5\n8 22\n1 58\n72 14\n37 22\n5 100\n```\nSaída:\n```\n3\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 1.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 881,
+            "output_tokens": 538,
+            "total_tokens": 1419
+        },
+        "cost_usd": {
+            "input_cost": 8.8e-05,
+            "output_cost": 0.000269,
+            "total_cost": 0.000357
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner(System.in);\n        int budget = fs.nextInt();\n        int n = fs.nextInt();\n\n        int[] cheapest = new int[101];\n        Arrays.fill(cheapest, Integer.MAX_VALUE);\n\n        for (int i = 0; i < n; i++) {\n            int type = fs.nextInt();\n            int price = fs.nextInt();\n            cheapest[type] = Math.min(cheapest[type], price);\n        }\n\n        int[] prices = new int[100];\n        int count = 0;\n        for (int type = 1; type <= 100; type++) {\n            if (cheapest[type] != Integer.MAX_VALUE) {\n                prices[count++] = cheapest[type];\n            }\n        }\n\n        Arrays.sort(prices, 0, count);\n\n        int answer = 0;\n        for (int i = 0; i < count && budget >= prices[i]; i++) {\n            budget -= prices[i];\n            answer++;\n        }\n\n        System.out.println(answer);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner(System.in);\n        int budget = fs.nextInt();\n        int n = fs.nextInt();\n\n        int[] cheapest = new int[101];\n        Arrays.fill(cheapest, Integer.MAX_VALUE);\n\n        for (int i = 0; i < n; i++) {\n            int type = fs.nextInt();\n            int price = fs.nextInt();\n            cheapest[type] = Math.min(cheapest[type], price);\n        }\n\n        int[] prices = new int[100];\n        int count = 0;\n        for (int type = 1; type <= 100; type++) {\n            if (cheapest[type] != Integer.MAX_VALUE) {\n                prices[count++] = cheapest[type];\n            }\n        }\n\n        Arrays.sort(prices, 0, count);\n\n        int answer = 0;\n        for (int i = 0; i < count && budget >= prices[i]; i++) {\n            budget -= prices[i];\n            answer++;\n        }\n\n        System.out.println(answer);\n    }\n\n    static class FastScanner {\n        private final InputStream in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        FastScanner(InputStream in) {\n            this.in = in;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06966730000567622,
+            "counts": {
+                "AC": 28,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 28
+        }
     }
 ]

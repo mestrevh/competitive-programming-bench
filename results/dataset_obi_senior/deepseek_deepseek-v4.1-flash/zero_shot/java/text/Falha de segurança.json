@@ -35,5 +35,42 @@
             },
             "total_test_cases": 30
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T09:49:40.070587+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Falha de segurança\n\n## Enunciado\nRafael foi contratado como programador por um grande banco que está atualizando todo o sistema computacional. O novo sistema vai ser instalado amanhã, mas Rafael acabou de descobrir uma falha grave na nova autenticação para acesso às contas do banco: se um usuário digitar como senha uma cadeia de caracteres que contenha, como sub-cadeia contígua, a senha correta para esse usuário, o sistema se confunde e permite o acesso.\n\nPor exemplo, se a senha correta é 'senha fraca' e o usuário digitar 'quesenha fracameu' ou 'senha fraca123', o sistema permite o acesso. Note que nesse caso o sistema não permite o acesso se o usuário digitar 'senha' ou 'nhafra' ou 'senha123fraca'.\n\nO chefe de Rafael chamou um programador mais experiente para alterar a autenticação do novo sistema, mas solicitou que Rafael determinasse, para o conjunto de senhas existentes, quantos pares ordenados (A,B) de usuários distintos existem tal que o usuário A, usando sua senha, consegue acesso à conta do usuário B. Você poderia por favor ajudar Rafael?\n\n## Formato de Entrada\nA primeira linha da entrada contém um número inteiro N, o número de usuários no sistema. Cada uma das N linhas seguintes contém uma senha Si, a senha do i-ésimo usuário.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o número de pares ordenados (A,B) de usuários distintos tal que o usuário A, usando sua senha, consegue acesso à conta do usuário B.\n\n## Restrições\n1 ≤ N ≤ 20000\nSi inicia com letra minúscula sem acento e contém apenas letras minúsculas sem acento e dígitos de 0 a 9, para 1 ≤ i ≤ N\n1 ≤ comprimento de Si ≤ 10\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3\nxxx\nx23\nxx\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n3\na\na\na8\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n5\njus\njusta\nta\nus\nt\n```\nSaída:\n```\n6\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 773,
+            "output_tokens": 4537,
+            "total_tokens": 5310
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.010889,
+            "total_cost": 0.010891
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int N = Integer.parseInt(br.readLine().trim());\n        Map<String, Integer> freq = new HashMap<>();\n        Map<String, Integer> containing = new HashMap<>();\n\n        for (int i = 0; i < N; i++) {\n            String s = br.readLine().trim();\n            freq.merge(s, 1, Integer::sum);\n\n            Set<String> seen = new HashSet<>();\n            int len = s.length();\n            for (int j = 0; j < len; j++) {\n                for (int k = j + 1; k <= len; k++) {\n                    String sub = s.substring(j, k);\n                    if (seen.add(sub)) {\n                        containing.merge(sub, 1, Integer::sum);\n                    }\n                }\n            }\n        }\n\n        long ans = 0;\n        for (Map.Entry<String, Integer> e : freq.entrySet()) {\n            String p = e.getKey();\n            int c = e.getValue();\n            int total = containing.getOrDefault(p, 0);\n            ans += (long) c * (total - 1);\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int N = Integer.parseInt(br.readLine().trim());\n        Map<String, Integer> freq = new HashMap<>();\n        Map<String, Integer> containing = new HashMap<>();\n\n        for (int i = 0; i < N; i++) {\n            String s = br.readLine().trim();\n            freq.merge(s, 1, Integer::sum);\n\n            Set<String> seen = new HashSet<>();\n            int len = s.length();\n            for (int j = 0; j < len; j++) {\n                for (int k = j + 1; k <= len; k++) {\n                    String sub = s.substring(j, k);\n                    if (seen.add(sub)) {\n                        containing.merge(sub, 1, Integer::sum);\n                    }\n                }\n            }\n        }\n\n        long ans = 0;\n        for (Map.Entry<String, Integer> e : freq.entrySet()) {\n            String p = e.getKey();\n            int c = e.getValue();\n            int total = containing.getOrDefault(p, 0);\n            ans += (long) c * (total - 1);\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.20641490002162755,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
     }
 ]

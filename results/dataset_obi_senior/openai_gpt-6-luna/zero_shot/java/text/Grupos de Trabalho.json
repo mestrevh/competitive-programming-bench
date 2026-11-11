@@ -35,5 +35,42 @@
             },
             "total_test_cases": 25
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T03:55:44.282154+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Grupos de Trabalho\n\n## Enunciado\nA professora Paula divide a classe em grupos de três estudantes para os trabalhos da sua disciplina. Para minimizar descontentamentos, ela fez uma enquete no início do ano, de forma que ela tem uma lista de pares de estudantes que gostariam de estar no mesmo grupo, e uma lista de pares de estudantes que não gostariam de estar no mesmo grupo.\n\nPara cada trabalho ela faz uma nova divisão de grupos, e claro que nem sempre vai ser possível satisfazer todas as restrições da classe!\n\nDados os pares de estudantes que gostariam estar no mesmo grupo, os pares de estudantes que não gostariam estar no mesmo grupo, e uma possível distribuição dos estudantes em grupos de três, sua tarefa é determinar o número total de restrições que são violadas com essa distribuição.\n\nInformações sobre a pontuação\nA tarefa vale 100 pontos. Estes pontos estão distribuídos em subtarefas, cada uma com suas restrições adicionais às definidas acima:\n- Subtarefa 1 (39 pontos): E ≤ 999, M ≤ 1000 e D ≤ 1000.\n- Subtarefa 2 (61 pontos): Nenhuma restrição adicional.\n\nSeu programa pode resolver corretamente ambas ou somente uma das subtarefas. Sua pontuação final na tarefa é a soma dos pontos das subtarefas resolvidas corretamente por alguma das suas submissões.\n\n## Formato de Entrada\nA primeira linha contém três inteiros E, M e D, indicando, respectivamente, o número total de estudantes, o número de pares de estudantes que gostariam de estar no mesmo grupo e o número de pares de estudantes que não gostariam de estar no mesmo grupo. Os estudantes são identificados por números inteiros de 1 a E.\n\nCada uma das M linhas seguintes descreve um par de estudantes que gostariam de estar no mesmo grupo e contém dois inteiros X e Y indicando os estudantes do par. Cada uma das D linhas seguintes descreve um par de estudantes que não gostariam de estar no mesmo grupo e contém dois inteiros U e V indicando os estudantes do par.\n\nFinalmente, cada uma das E/3 linhas seguintes descreve um grupo de estudantes e contém três inteiros I, J e K indicando os estudantes do grupo.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o número total de restrições que são violadas nos grupos da entrada.\n\n## Restrições\n3 ≤ E ≤ 999 999 e E é divisível por 3.\n0 ≤ M ≤ 100 000\n0 ≤ D ≤ 100 000\nM + D > 0 e, entre todos os M + D pares, cada par de estudantes aparece no máximo uma vez.\n1 ≤ X ≤ E, 1 ≤ Y ≤ E e X ≠ Y.\n1 ≤ U ≤ E, 1 ≤ V ≤ E e U ≠ V.\n1 ≤ I ≤ E, 1 ≤ J ≤ E e 1 ≤ K ≤ E\nCada estudante aparece em exatamente um dos E/3 grupos.\n\n## Limites de Execução\n- Tempo Limite: 3.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 1 0\n1 2\n2 1 3\n```\nSaída:\n```\n0\n```\n\nExemplo 2:\nEntrada:\n```\n9 1 3\n1 9\n1 3\n5 6\n2 8\n1 2 3\n4 5 6\n7 8 9\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n6 0 3\n1 5\n5 2\n2 3\n5 2 1\n3 4 6\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 928,
+            "output_tokens": 651,
+            "total_tokens": 1579
+        },
+        "cost_usd": {
+            "input_cost": 9.3e-05,
+            "output_cost": 0.000325,
+            "total_cost": 0.000418
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static final class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int e = fs.nextInt();\n        int m = fs.nextInt();\n        int d = fs.nextInt();\n\n        int total = m + d;\n        int[] first = new int[total];\n        int[] second = new int[total];\n\n        for (int i = 0; i < total; i++) {\n            first[i] = fs.nextInt();\n            second[i] = fs.nextInt();\n        }\n\n        int[] group = new int[e + 1];\n        for (int g = 0; g < e / 3; g++) {\n            group[fs.nextInt()] = g;\n            group[fs.nextInt()] = g;\n            group[fs.nextInt()] = g;\n        }\n\n        int violations = 0;\n        for (int i = 0; i < m; i++) {\n            if (group[first[i]] != group[second[i]]) violations++;\n        }\n        for (int i = m; i < total; i++) {\n            if (group[first[i]] == group[second[i]]) violations++;\n        }\n\n        System.out.println(violations);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static final class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0;\n        private int len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n\n        int e = fs.nextInt();\n        int m = fs.nextInt();\n        int d = fs.nextInt();\n\n        int total = m + d;\n        int[] first = new int[total];\n        int[] second = new int[total];\n\n        for (int i = 0; i < total; i++) {\n            first[i] = fs.nextInt();\n            second[i] = fs.nextInt();\n        }\n\n        int[] group = new int[e + 1];\n        for (int g = 0; g < e / 3; g++) {\n            group[fs.nextInt()] = g;\n            group[fs.nextInt()] = g;\n            group[fs.nextInt()] = g;\n        }\n\n        int violations = 0;\n        for (int i = 0; i < m; i++) {\n            if (group[first[i]] != group[second[i]]) violations++;\n        }\n        for (int i = m; i < total; i++) {\n            if (group[first[i]] == group[second[i]]) violations++;\n        }\n\n        System.out.println(violations);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15760199999203905,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
     }
 ]

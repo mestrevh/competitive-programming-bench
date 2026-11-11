@@ -35,5 +35,42 @@
             },
             "total_test_cases": 18
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T03:46:57.756353+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dividindo o império\n\n## Enunciado\nUm grande Império é composto por N cidades, numeradas de 1 até N. Alguns pares de cidades estão ligados diretamente por estradas bidirecionais e, por uma antiga tradição, esses pares são escolhidos de maneira que sempre é possível ir de qualquer cidade para qualquer outra cidade por exatamente um caminho (um caminho é uma sequência de estradas).\nO imperador quer dividir seu império em dois para deixar de herança para seus dois filhos. Ele percebeu que basta destruir exatamente uma estrada, qualquer estrada, para dividir seu império em dois menores que, separadamente, preservam a antiga tradição. Ele agora precisa da sua ajuda para computar a menor diferença possível no número de cidades entre os dois impérios resultantes.\n[1.png]\nPor exemplo, na figura, se o imperador destruir a estrada entre as cidades 3 e 12, os impérios resultantes terão 5 e 11 cidades, uma diferença de 6 cidades. Porém, se ele destruir a estrada entre as cidades 3 e 5, a diferença será de apenas 4 cidades. Você consegue ver que essa é a menor diferença possível para esse exemplo da figura?\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de cidades no império. As N - 1 linhas seguintes contêm, cada uma, dois inteiros A e B, indicando que existe uma estrada bidirecional ligando diretamente as cidades A e B.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um inteiro representando a menor diferença possível no número de cidades entre os dois impérios resultantes.\n\n## Restrições\n2 ≤ N ≤ 10^5\n1 ≤ A ≤ N\n1 ≤ B ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 10000\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n1 2\n2 3\n3 4\n```\nSaída:\n```\n0\n```\n\nExemplo 2:\nEntrada:\n```\n16\n3 5\n12 3\n5 1\n2 1\n4 1\n6 1\n7 1\n12 8\n12 9\n12 10\n12 11\n3 13\n13 14\n15 13\n15 16\n```\nSaída:\n```\n4\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 669,
+            "output_tokens": 781,
+            "total_tokens": 1450
+        },
+        "cost_usd": {
+            "input_cost": 6.7e-05,
+            "output_cost": 0.000391,
+            "total_cost": 0.000457
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n\n        int[] head = new int[n];\n        java.util.Arrays.fill(head, -1);\n        int[] to = new int[2 * (n - 1)];\n        int[] next = new int[2 * (n - 1)];\n        int edgeIndex = 0;\n\n        for (int i = 0; i < n - 1; i++) {\n            int a = fs.nextInt() - 1;\n            int b = fs.nextInt() - 1;\n\n            to[edgeIndex] = b;\n            next[edgeIndex] = head[a];\n            head[a] = edgeIndex++;\n\n            to[edgeIndex] = a;\n            next[edgeIndex] = head[b];\n            head[b] = edgeIndex++;\n        }\n\n        int[] parent = new int[n];\n        int[] order = new int[n];\n        int[] subtreeSize = new int[n];\n        java.util.Arrays.fill(parent, -1);\n\n        order[0] = 0;\n        parent[0] = 0;\n        int count = 1;\n\n        for (int i = 0; i < count; i++) {\n            int u = order[i];\n            for (int e = head[u]; e != -1; e = next[e]) {\n                int v = to[e];\n                if (v == parent[u]) continue;\n                parent[v] = u;\n                order[count++] = v;\n            }\n        }\n\n        java.util.Arrays.fill(subtreeSize, 1);\n        int answer = n;\n\n        for (int i = n - 1; i > 0; i--) {\n            int u = order[i];\n            int size = subtreeSize[u];\n            answer = Math.min(answer, Math.abs(n - 2 * size));\n            subtreeSize[parent[u]] += size;\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n\n        int[] head = new int[n];\n        java.util.Arrays.fill(head, -1);\n        int[] to = new int[2 * (n - 1)];\n        int[] next = new int[2 * (n - 1)];\n        int edgeIndex = 0;\n\n        for (int i = 0; i < n - 1; i++) {\n            int a = fs.nextInt() - 1;\n            int b = fs.nextInt() - 1;\n\n            to[edgeIndex] = b;\n            next[edgeIndex] = head[a];\n            head[a] = edgeIndex++;\n\n            to[edgeIndex] = a;\n            next[edgeIndex] = head[b];\n            head[b] = edgeIndex++;\n        }\n\n        int[] parent = new int[n];\n        int[] order = new int[n];\n        int[] subtreeSize = new int[n];\n        java.util.Arrays.fill(parent, -1);\n\n        order[0] = 0;\n        parent[0] = 0;\n        int count = 1;\n\n        for (int i = 0; i < count; i++) {\n            int u = order[i];\n            for (int e = head[u]; e != -1; e = next[e]) {\n                int v = to[e];\n                if (v == parent[u]) continue;\n                parent[v] = u;\n                order[count++] = v;\n            }\n        }\n\n        java.util.Arrays.fill(subtreeSize, 1);\n        int answer = n;\n\n        for (int i = n - 1; i > 0; i--) {\n            int u = order[i];\n            int size = subtreeSize[u];\n            answer = Math.min(answer, Math.abs(n - 2 * size));\n            subtreeSize[parent[u]] += size;\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09494780001114123,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
     }
 ]

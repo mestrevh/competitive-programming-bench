@@ -35,5 +35,42 @@
             },
             "total_test_cases": 23
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T03:51:53.738226+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Estoque\n\n## Enunciado\nVocê foi contratado(a) para desenvolver um programa de controle de estoque, para uma loja de roupas que está iniciando vendas online. A loja mantém um estoque de roupas, em que cada peça de roupa é identificada por um tipo (por exemplo camisa, calça, saia, vestido, ...) e um tamanho (por exemplo bebê, infantil, pequeno, médio, ...).\n\nO estoque da loja pode ser visto como uma tabela em que cada linha representa um tipo de roupa e cada coluna representa um tamanho, como mostrado na figura (a) abaixo. Na figura, tipos de roupa são representados por números de 1 a 4 e tamanhos são representados por números de 1 a 3.\n[1.png]\nAssim, a tabela da figura (a) mostra que o estoque da peça de roupa de tipo 1 e tamanho 1 é 5 unidades, e o estoque da peça de roupa de tipo 4 e tamanho 2 é 3 unidades.\n\nQuando uma peça de roupa é vendida, o estoque deve ser atualizado. Por exemplo, se uma peça de roupa de tipo 1 e tamanho 1 for vendida, o estoque atualizado é mostrado na figura (b). Se o estoque para um tipo e tamanho de peça de roupa tem valor zero, peças de roupa desse tipo e tamanho não podem ser vendidas (por exemplo a peça de roupa de tipo 2 e tamanho 3 na figura). Ou seja, a venda não é efetivada.\n\nDados o estoque inicial e a lista de pedidos de clientes, escreva um programa para determinar quantas peças de roupa são efetivamente vendidas no total. Cada pedido se refere a uma única peça de roupa. As vendas são processadas sequencialmente, na ordem em que os pedidos foram feitos. Se uma venda não é possível por falta de estoque, o pedido correspondente é ignorado.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois números inteiros M e N, indicando respectivamente o número de tipos e o número de tamanhos de peças de roupa no estoque. Tipos são identificados por inteiros de 1 a M e tamanhos são identificados por inteiros de 1 a N. Cada uma das M linhas seguintes contém N inteiros X_{i,j}, indicando a quantidade de roupas do tipo i e tamanho j, para 1 ≤ i ≤ M e 1 ≤ j ≤ N. A seguir a entrada contém uma linha com um número inteiro P, o número de pedidos recebidos pela loja. Cada uma das P linhas seguintes contém dois inteiros I e J representando respectivamente o tipo e o tamanho da peça de roupa de um pedido. Os pedidos são dados na ordem em que foram feitos.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o número total de peças de roupas efetivamente vendidas.\n\n## Restrições\n1 ≤ M ≤ 500\n1 ≤ N ≤ 500\n0 ≤ X_{i,j} ≤ 10 para 1 ≤ i ≤ M e 1 ≤ j ≤ N\n1 ≤ P ≤ 1000\n1 ≤ I ≤ M\n1 ≤ J ≤ N\n\n## Limites de Execução\n- Tempo Limite: 2.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4 3\n5 2 2\n6 4 0\n2 1 4\n1 3 2\n2\n1 1\n2 3\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n1 4\n1 3 2 5\n4\n1 3\n1 3\n1 3\n1 4\n```\nSaída:\n```\n3\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 914,
+            "output_tokens": 438,
+            "total_tokens": 1352
+        },
+        "cost_usd": {
+            "input_cost": 9.1e-05,
+            "output_cost": 0.000219,
+            "total_cost": 0.00031
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int m = fs.nextInt();\n        int n = fs.nextInt();\n\n        int[][] stock = new int[m + 1][n + 1];\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                stock[i][j] = fs.nextInt();\n            }\n        }\n\n        int p = fs.nextInt();\n        int sold = 0;\n        for (int k = 0; k < p; k++) {\n            int type = fs.nextInt();\n            int size = fs.nextInt();\n            if (stock[type][size] > 0) {\n                stock[type][size]--;\n                sold++;\n            }\n        }\n\n        System.out.println(sold);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int m = fs.nextInt();\n        int n = fs.nextInt();\n\n        int[][] stock = new int[m + 1][n + 1];\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                stock[i][j] = fs.nextInt();\n            }\n        }\n\n        int p = fs.nextInt();\n        int sold = 0;\n        for (int k = 0; k < p; k++) {\n            int type = fs.nextInt();\n            int size = fs.nextInt();\n            if (stock[type][size] > 0) {\n                stock[type][size]--;\n                sold++;\n            }\n        }\n\n        System.out.println(sold);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09493819999624975,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
     }
 ]

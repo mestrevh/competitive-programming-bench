@@ -35,5 +35,42 @@
             },
             "total_test_cases": 46
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T10:32:11.825734+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Soma\n\n## Enunciado\nTemos uma sequência de N quadrados desenhados lado a lado. Cada quadrado possui um número natural anotado dentro dele. Dados a sequência dos N quadrados e um valor K, quantos retângulos distintos existem cuja soma dos números dentro do retângulo é exatamente igual a K? Por exemplo, a figura mostra uma sequência de N = 10 quadrados para a qual existem 5 retângulos cuja soma dos números é igual a K = 4.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e K representando o número de quadrados na sequência e o valor da soma desejada. A segunda linha da entrada contém N números naturais X_i, para 1 ≤ i ≤ N, indicando a sequência de números anotados dentro dos quadrados.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um número inteiro representando quantos retângulos existem na sequência cuja soma é igual a K.\n\n## Restrições\n1 ≤ N ≤ 500000 (5 × 10^5)\n0 ≤ K ≤ 10^6\n0 ≤ X_i ≤ 100 para 1 ≤ i ≤ N\n\nPontuação:\n- Em um conjunto de casos de teste somando 10 pontos, N ≤ 500\n- Em um conjunto de casos de teste somando 20 pontos, N ≤ 10^4\n- Em um conjunto de casos de teste somando 30 pontos, K > 0 e X_i > 0 para 1 ≤ i ≤ N\n- Em um conjunto de casos de teste somando 40 pontos, nenhuma restrição adicional (note que para esta subtarefa o inteiro da saída pode não caber em 32 bits.)\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 1024 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10 4\n2 0 1 1 0 0 8 4 1 3\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n15 0\n0 0 0 0 0 0 5 12 0 1 0 0 0 51 0 0\n```\nSaída:\n```\n25\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 716,
+            "output_tokens": 12474,
+            "total_tokens": 13190
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.029938,
+            "total_cost": 0.02994
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n\n        int[] X = new int[N];\n        int idx = 0;\n        while (idx < N) {\n            if (!st.hasMoreTokens()) {\n                st = new StringTokenizer(br.readLine());\n            }\n            X[idx++] = Integer.parseInt(st.nextToken());\n        }\n\n        long ans = 0;\n\n        if (K == 0) {\n            long run = 0;\n            for (int i = 0; i < N; i++) {\n                if (X[i] == 0) {\n                    run++;\n                } else {\n                    ans += run * (run + 1) / 2;\n                    run = 0;\n                }\n            }\n            ans += run * (run + 1) / 2;\n        } else {\n            int[] zeroRun = new int[N + 1];\n            for (int i = N - 1; i >= 0; i--) {\n                if (X[i] == 0) {\n                    zeroRun[i] = zeroRun[i + 1] + 1;\n                } else {\n                    zeroRun[i] = 0;\n                }\n            }\n\n            int left = 0;\n            int sum = 0;\n            for (int right = 0; right < N; right++) {\n                sum += X[right];\n                while (sum > K) {\n                    sum -= X[left];\n                    left++;\n                }\n                if (sum == K) {\n                    ans += zeroRun[left] + 1;\n                }\n            }\n        }\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n\n        int[] X = new int[N];\n        int idx = 0;\n        while (idx < N) {\n            if (!st.hasMoreTokens()) {\n                st = new StringTokenizer(br.readLine());\n            }\n            X[idx++] = Integer.parseInt(st.nextToken());\n        }\n\n        long ans = 0;\n\n        if (K == 0) {\n            long run = 0;\n            for (int i = 0; i < N; i++) {\n                if (X[i] == 0) {\n                    run++;\n                } else {\n                    ans += run * (run + 1) / 2;\n                    run = 0;\n                }\n            }\n            ans += run * (run + 1) / 2;\n        } else {\n            int[] zeroRun = new int[N + 1];\n            for (int i = N - 1; i >= 0; i--) {\n                if (X[i] == 0) {\n                    zeroRun[i] = zeroRun[i + 1] + 1;\n                } else {\n                    zeroRun[i] = 0;\n                }\n            }\n\n            int left = 0;\n            int sum = 0;\n            for (int right = 0; right < N; right++) {\n                sum += X[right];\n                while (sum > K) {\n                    sum -= X[left];\n                    left++;\n                }\n                if (sum == K) {\n                    ans += zeroRun[left] + 1;\n                }\n            }\n        }\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12622460001148283,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
     }
 ]

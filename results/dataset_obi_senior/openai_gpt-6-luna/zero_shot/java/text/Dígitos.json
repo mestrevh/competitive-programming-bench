@@ -35,5 +35,42 @@
             },
             "total_test_cases": 33
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T03:49:22.110207+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dígitos\n\n## Enunciado\nJoãozinho te propôs o seguinte desafio: ele escolheu dois inteiros A e B, com 1 ≤ A ≤ B ≤ 10^1000, e escreveu na lousa todos os inteiros entre A e B, em sequência, porém colocando um espaço após cada dígito, de forma a não ser possível ver quando um número termina ou começa. Por exemplo, se Joãozinho escolher A = 98 e B = 102, ele escreveu a sequência \"9 8 9 9 1 0 0 1 0 1 1 0 2\".\n\nSeu desafio é: dada a lista de dígitos escritos na lousa, encontrar os valores de A e B. Caso exista mais de uma possibilidade para os valores que gerariam a lista, você deve encontrar uma em que o valor de A é o menor possível.\n\nÉ garantido que a lista de dígitos da lousa tem no máximo tamanho 1000.\n\n## Formato de Entrada\nA primeira linha da entrada contém um único inteiro N, indicando o número de dígitos. A segunda linha contém N inteiros di, indicando os dígitos escritos.\n\n## Formato de Saída\nImprima o menor valor possível de A.\n\n## Restrições\n1 ≤ N ≤ 1000\n0 ≤ di ≤ 9\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 21 pontos, 1000 ≤ A ≤ B ≤ 9999.\n- Para outro conjunto de casos de testes valendo 23 pontos, B = A + 1.\n- Para outro conjunto de casos de testes valendo 40 pontos, A, B < 10^6.\n- Para outro conjunto de casos de testes valendo 16 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n6\n1 2 3 1 2 4\n```\nSaída:\n```\n123\n```\n\nExemplo 2:\nEntrada:\n```\n6\n8 9 1 0 1 1\n```\nSaída:\n```\n8\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 606,
+            "output_tokens": 1457,
+            "total_tokens": 2063
+        },
+        "cost_usd": {
+            "input_cost": 6.1e-05,
+            "output_cost": 0.000728,
+            "total_cost": 0.000789
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    private static String increment(String s) {\n        char[] digits = s.toCharArray();\n        int i = digits.length - 1;\n\n        while (i >= 0 && digits[i] == '9') {\n            digits[i] = '0';\n            i--;\n        }\n\n        if (i < 0) {\n            return \"1\" + new String(digits);\n        }\n\n        digits[i]++;\n        return new String(digits);\n    }\n\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n\n        int[] digits = new int[n];\n        int index = 0;\n        StringTokenizer st = null;\n\n        while (index < n) {\n            if (st == null || !st.hasMoreTokens()) {\n                st = new StringTokenizer(br.readLine());\n                continue;\n            }\n            digits[index++] = Integer.parseInt(st.nextToken());\n        }\n\n        for (int length = 1; length <= n; length++) {\n            if (digits[0] == 0) {\n                break;\n            }\n\n            String current = \"\";\n            for (int i = 0; i < length; i++) {\n                current += (char) ('0' + digits[i]);\n            }\n\n            int pos = 0;\n            boolean valid = true;\n\n            while (pos < n) {\n                int currentLength = current.length();\n                if (pos + currentLength > n) {\n                    valid = false;\n                    break;\n                }\n\n                for (int i = 0; i < currentLength; i++) {\n                    if (digits[pos + i] != current.charAt(i) - '0') {\n                        valid = false;\n                        break;\n                    }\n                }\n\n                if (!valid) {\n                    break;\n                }\n\n                pos += currentLength;\n                if (pos < n) {\n                    current = increment(current);\n                }\n            }\n\n            if (valid && pos == n) {\n                System.out.println(current.substring(0, length));\n                return;\n            }\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    private static String increment(String s) {\n        char[] digits = s.toCharArray();\n        int i = digits.length - 1;\n\n        while (i >= 0 && digits[i] == '9') {\n            digits[i] = '0';\n            i--;\n        }\n\n        if (i < 0) {\n            return \"1\" + new String(digits);\n        }\n\n        digits[i]++;\n        return new String(digits);\n    }\n\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine().trim());\n\n        int[] digits = new int[n];\n        int index = 0;\n        StringTokenizer st = null;\n\n        while (index < n) {\n            if (st == null || !st.hasMoreTokens()) {\n                st = new StringTokenizer(br.readLine());\n                continue;\n            }\n            digits[index++] = Integer.parseInt(st.nextToken());\n        }\n\n        for (int length = 1; length <= n; length++) {\n            if (digits[0] == 0) {\n                break;\n            }\n\n            String current = \"\";\n            for (int i = 0; i < length; i++) {\n                current += (char) ('0' + digits[i]);\n            }\n\n            int pos = 0;\n            boolean valid = true;\n\n            while (pos < n) {\n                int currentLength = current.length();\n                if (pos + currentLength > n) {\n                    valid = false;\n                    break;\n                }\n\n                for (int i = 0; i < currentLength; i++) {\n                    if (digits[pos + i] != current.charAt(i) - '0') {\n                        valid = false;\n                        break;\n                    }\n                }\n\n                if (!valid) {\n                    break;\n                }\n\n                pos += currentLength;\n                if (pos < n) {\n                    current = increment(current);\n                }\n            }\n\n            if (valid && pos == n) {\n                System.out.println(current.substring(0, length));\n                return;\n            }\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.14864090000628494,
+            "counts": {
+                "AC": 6,
+                "WA": 27,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
     }
 ]

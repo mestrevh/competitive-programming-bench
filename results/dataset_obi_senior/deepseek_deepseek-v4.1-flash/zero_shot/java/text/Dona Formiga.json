@@ -35,5 +35,42 @@
             },
             "total_test_cases": 22
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T09:35:51.661076+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dona Formiga\n\n## Enunciado\nDona Formiga é uma ótima trabalhadora e todos os dias coleta muitas folhas para seu formigueiro. Mas no final de semana, quando todas as outras formigas estão descansando, ela gosta de se divertir escorregando pelos túneis do formigueiro.\n\nO formigueiro de Dona Formiga tem muitos túneis e salões. Cada túnel conecta exatamente dois salões diferentes. Cada salão está a uma altura no formigueiro. Se existe um túnel ligando um salão I a um salão J e o salão I está a uma altura maior do que o salão J, então Dona Formiga pode escorregar do salão I para o salão J usando esse túnel.\n\nDados o mapa dos túneis do formigueiro, as alturas em que estão os salões e o salão de onde Dona Formiga quer partir, escreva um programa para determinar o maior número de salões que ela pode visitar (não contando o salão do qual ela parte), usando túneis exclusivamente para escorregar entre os salões.\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros S, T e P, respectivamente o número de salões, o número de túneis e o salão do formigueiro do qual Dona Formiga quer partir. Os salões são numerados de 1 a S. A segunda linha contém S números inteiros A_i, a altura em que o salão i está no formigueiro. Cada uma das T linhas seguintes contém dois inteiros I e J, indicando que há um túnel entre o salão I e o salão J.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o maior número de salões que Dona Formiga pode visitar (não contando o salão do qual ela parte), usando os túneis exclusivamente para escorregar entre os salões do formigueiro.\n\n## Restrições\n1 ≤ S ≤ 200\n1 ≤ T ≤ S × (S − 1)/2\n1 ≤ P ≤ S\n−1000 ≤ A_i ≤ 1000 para 1 ≤ i ≤ S\n1 ≤ I < J ≤ S\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 20 pontos, 1 ≤ S ≤ 10.\n- Para um conjunto de casos de testes valendo 80 pontos adicionais, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 1.5 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4 5 2\n100 150 -50 200\n1 2\n2 4\n1 4\n3 4\n1 3\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n4 5 3\n100 150 -50 200\n1 2\n2 4\n1 4\n3 4\n1 3\n```\nSaída:\n```\n0\n```\n\nExemplo 3:\nEntrada:\n```\n4 5 4\n100 150 -50 200\n1 2\n2 4\n1 4\n3 4\n1 3\n```\nSaída:\n```\n3\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 1.5,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 919,
+            "output_tokens": 1522,
+            "total_tokens": 2441
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.003653,
+            "total_cost": 0.003656
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int S, T, P;\n    static int[] altura;\n    static ArrayList<Integer>[] adj;\n    static int[] memo;\n\n    static int dfs(int u) {\n        if (memo[u] != -1) return memo[u];\n\n        int melhor = 0;\n        for (int v : adj[u]) {\n            if (altura[u] > altura[v]) {\n                melhor = Math.max(melhor, 1 + dfs(v));\n            }\n        }\n\n        memo[u] = melhor;\n        return melhor;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        S = Integer.parseInt(st.nextToken());\n        T = Integer.parseInt(st.nextToken());\n        P = Integer.parseInt(st.nextToken());\n\n        altura = new int[S + 1];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 1; i <= S; i++) {\n            altura[i] = Integer.parseInt(st.nextToken());\n        }\n\n        adj = new ArrayList[S + 1];\n        for (int i = 1; i <= S; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int k = 0; k < T; k++) {\n            st = new StringTokenizer(br.readLine());\n            int i = Integer.parseInt(st.nextToken());\n            int j = Integer.parseInt(st.nextToken());\n\n            adj[i].add(j);\n            adj[j].add(i);\n        }\n\n        memo = new int[S + 1];\n        Arrays.fill(memo, -1);\n\n        System.out.println(dfs(P));\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int S, T, P;\n    static int[] altura;\n    static ArrayList<Integer>[] adj;\n    static int[] memo;\n\n    static int dfs(int u) {\n        if (memo[u] != -1) return memo[u];\n\n        int melhor = 0;\n        for (int v : adj[u]) {\n            if (altura[u] > altura[v]) {\n                melhor = Math.max(melhor, 1 + dfs(v));\n            }\n        }\n\n        memo[u] = melhor;\n        return melhor;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n\n        S = Integer.parseInt(st.nextToken());\n        T = Integer.parseInt(st.nextToken());\n        P = Integer.parseInt(st.nextToken());\n\n        altura = new int[S + 1];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 1; i <= S; i++) {\n            altura[i] = Integer.parseInt(st.nextToken());\n        }\n\n        adj = new ArrayList[S + 1];\n        for (int i = 1; i <= S; i++) {\n            adj[i] = new ArrayList<>();\n        }\n\n        for (int k = 0; k < T; k++) {\n            st = new StringTokenizer(br.readLine());\n            int i = Integer.parseInt(st.nextToken());\n            int j = Integer.parseInt(st.nextToken());\n\n            adj[i].add(j);\n            adj[j].add(i);\n        }\n\n        memo = new int[S + 1];\n        Arrays.fill(memo, -1);\n\n        System.out.println(dfs(P));\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09934200000134297,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
     }
 ]

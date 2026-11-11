@@ -35,5 +35,42 @@
             },
             "total_test_cases": 10
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T10:22:50.589606+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Poligrama\n\n## Enunciado\nDuas palavras A e B são anagramas entre si se podemos transformar a palavra A na palavra B apenas trocando de posição as letras da palavra A. Por exemplo, \"duetos\" e \"estudo\" são anagramas entre si. Um outro exemplo é \"bba\" e \"bab\".\n\nVamos chamar de poligrama uma palavra que consiste na concatenação de duas ou mais palavras que são anagramas entre si. A primeira dessas palavras é chamada de raiz do poligrama. Por exemplo, a palavra \"bbabab\" é um poligrama com raiz \"bba\", pois ela é a concatenação dos anagramas \"bba\" e \"bab\".\n\nDada uma palavra, escreva um programa que determine se ela é um poligrama e encontre a sua raiz.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, indicando o número de letras da palavra. A segunda linha contém a palavra P.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha. Se a palavra dada é um poligrama, a linha deve conter a raiz do poligrama. Caso contrário, a linha deve conter o caractere asterisco ('*'). Se houver mais de uma raiz possível, seu programa deve imprimir a de menor comprimento.\n\n## Restrições\n1 ≤ N ≤ 100000\nO número de caracteres de P é igual a N.\nOs únicos caracteres em P são letras minúsculas não acentuadas.\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 40 pontos, N ≤ 1000.\n- Para um conjunto de casos de testes valendo outros 70 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5\nxxxxx\n```\nSaída:\n```\nx\n```\n\nExemplo 2:\nEntrada:\n```\n2\nxy\n```\nSaída:\n```\n*\n```\n\nExemplo 3:\nEntrada:\n```\n6\nbbabab\n```\nSaída:\n```\nbba\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 667,
+            "output_tokens": 3198,
+            "total_tokens": 3865
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.007675,
+            "total_cost": 0.007677
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n\n        String first = br.readLine();\n        if (first == null) return;\n\n        int N = Integer.parseInt(first.trim());\n        char[] s = br.readLine().trim().toCharArray();\n\n        for (int L = 1; L <= N / 2; L++) {\n            if (N % L != 0) continue;\n\n            int parts = N / L;\n            if (parts >= 2 && isPoligrama(s, L, parts)) {\n                System.out.println(new String(s, 0, L));\n                return;\n            }\n        }\n\n        System.out.println(\"*\");\n    }\n\n    private static boolean isPoligrama(char[] s, int L, int parts) {\n        int[] target = new int[26];\n        for (int i = 0; i < L; i++) {\n            target[s[i] - 'a']++;\n        }\n\n        int[] current = new int[26];\n\n        for (int p = 1; p < parts; p++) {\n            Arrays.fill(current, 0);\n\n            int start = p * L;\n            for (int i = start; i < start + L; i++) {\n                current[s[i] - 'a']++;\n            }\n\n            for (int i = 0; i < 26; i++) {\n                if (target[i] != current[i]) {\n                    return false;\n                }\n            }\n        }\n\n        return true;\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n\n        String first = br.readLine();\n        if (first == null) return;\n\n        int N = Integer.parseInt(first.trim());\n        char[] s = br.readLine().trim().toCharArray();\n\n        for (int L = 1; L <= N / 2; L++) {\n            if (N % L != 0) continue;\n\n            int parts = N / L;\n            if (parts >= 2 && isPoligrama(s, L, parts)) {\n                System.out.println(new String(s, 0, L));\n                return;\n            }\n        }\n\n        System.out.println(\"*\");\n    }\n\n    private static boolean isPoligrama(char[] s, int L, int parts) {\n        int[] target = new int[26];\n        for (int i = 0; i < L; i++) {\n            target[s[i] - 'a']++;\n        }\n\n        int[] current = new int[26];\n\n        for (int p = 1; p < parts; p++) {\n            Arrays.fill(current, 0);\n\n            int start = p * L;\n            for (int i = start; i < start + L; i++) {\n                current[s[i] - 'a']++;\n            }\n\n            for (int i = 0; i < 26; i++) {\n                if (target[i] != current[i]) {\n                    return false;\n                }\n            }\n        }\n\n        return true;\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09112280001863837,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
     }
 ]

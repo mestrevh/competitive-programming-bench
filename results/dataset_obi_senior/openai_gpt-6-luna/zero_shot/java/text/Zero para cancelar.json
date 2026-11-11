@@ -35,5 +35,42 @@
             },
             "total_test_cases": 5
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T04:15:20.184217+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Zero para cancelar\n\n## Enunciado\nSeu chefe está ao telefone, nervoso. Ele quer que você compute a soma de uma sequência de números que ele vai falar para você ao telefone, para saber o total das vendas em sua mais recente viagem de negócios.\n\nInfelizmente, de vez em quando seu chefe fala números errados para você ao telefone.\n\nFelizmente, seu chefe rapidamente percebe que falou um número errado e diz “zero”, que como combinado previamente quer dizer ignore o último número corrente.\n\nInfelizmente, seu chefe pode cometer erros repetidos, e diz “zero” para cada erro.\n\nPor exemplo, seu chefe pode falar ao telefone “Um, três, cinco, quatro, zero, zero, sete, zero, zero, seis”, o que significa uma soma total igual a 7, conforme explicado na tabela abaixo:\n[1.png]\nPara não deixar seu chefe ainda mais nervoso, escreva um programa que determine a soma total dos números falados por seu chefe ao telefone.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, a quantidade de números inteiros (incluindo os \"zeros\") que o seu chefe falou ao telefone. Cada uma das N linhas seguintes contém um número inteiro Xi.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha na saída, contendo um único inteiro, a soma correta dos números, levando em conta que o valor 0 significa erro, conforme descrito.\n\n## Restrições\n1 ≤ N ≤ 100000\n0 ≤ Xi ≤ 100, para (1 ≤ i ≤ N)\n0 ≤ resultado ≤ 1000000\n\n## Limites de Execução\n- Tempo Limite: 2.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n3\n0\n4\n0\n```\nSaída:\n```\n0\n```\n\nExemplo 2:\nEntrada:\n```\n10\n1\n3\n5\n4\n0\n0\n7\n0\n0\n6\n```\nSaída:\n```\n7\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 556,
+            "output_tokens": 384,
+            "total_tokens": 940
+        },
+        "cost_usd": {
+            "input_cost": 5.6e-05,
+            "output_cost": 0.000192,
+            "total_cost": 0.000248
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int pointer = 0;\n        private int length = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (pointer >= length) {\n                length = in.read(buffer);\n                pointer = 0;\n                if (length == -1) return -1;\n            }\n            return buffer[pointer++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        int[] stack = new int[n];\n        int size = 0;\n        int sum = 0;\n\n        for (int i = 0; i < n; i++) {\n            int value = scanner.nextInt();\n            if (value == 0) {\n                sum -= stack[--size];\n            } else {\n                stack[size++] = value;\n                sum += value;\n            }\n        }\n\n        System.out.println(sum);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int pointer = 0;\n        private int length = 0;\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n\n        private int read() throws IOException {\n            if (pointer >= length) {\n                length = in.read(buffer);\n                pointer = 0;\n                if (length == -1) return -1;\n            }\n            return buffer[pointer++];\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner scanner = new FastScanner();\n        int n = scanner.nextInt();\n        int[] stack = new int[n];\n        int size = 0;\n        int sum = 0;\n\n        for (int i = 0; i < n; i++) {\n            int value = scanner.nextInt();\n            if (value == 0) {\n                sum -= stack[--size];\n            } else {\n                stack[size++] = value;\n                sum += value;\n            }\n        }\n\n        System.out.println(sum);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09175799999502487,
+            "counts": {
+                "AC": 5,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 5
+        }
     }
 ]

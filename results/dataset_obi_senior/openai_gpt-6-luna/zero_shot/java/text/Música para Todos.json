@@ -35,5 +35,42 @@
             },
             "total_test_cases": 21
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T04:03:29.877038+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Música para Todos\n\n## Enunciado\nUma empresa de streaming de músicas lançou uma nova funcionalidade, para grupos de amigos ouvirem em seus aparelhos a mesma música ao mesmo tempo, compartilhando assim um momento de alegria nestes tempos difíceis de pandemia.\n\nCada amigo no grupo tem que declarar uma música que adora e uma música que detesta. Um amigo fica satisfeito se a música que está sendo compartilhada não é a música que ele detesta. Se a música que está sendo compartilhada é detestada por um dos amigos, ele pode trocar a música sendo compartilhada pela música que ele adora. Se há mais de um amigo que detesta a música que está sendo compartilhada, somente o amigo que é cliente há mais tempo da empresa é que pode trocar a música (e troca pela música que adora).\n\nObviamente, após a troca da música compartilhada pode ser que outro amigo deteste a nova música, e uma nova troca pode ocorrer. E as trocas podem ser intermináveis!\n\nDadas as preferências de um grupo de amigos e a música sendo compartilhada, e considerando que sempre ocorre troca enquanto houver cliente não satisfeito, escreva um programa para determinar quantas trocas ocorrem até que todos os amigos estejam satisfeitos.\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros N, M e C, respectivamente o número de amigos, o número de músicas e a música que está sendo compartilhada. As músicas são identificadas por inteiros de 1 a M. Cada uma das N linhas seguintes descreve as escolhas de um amigo e contém dois inteiros A e D, identificando respectivamente a música adorada e a música detestada. A ordem dos amigos na entrada obedece à ordem em que os amigos se tornaram clientes da empresa (o amigo que aparece antes é cliente há mais tempo).\n\n## Formato de Saída\nSeu programa deve produzir uma única linha na saída, contendo um único inteiro, o número de trocas até que todos os amigos fiquem satisfeitos ou o número -1 se as trocas continuam indefinidamente.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ M ≤ 10^5\n1 ≤ C ≤ M\n1 ≤ A, D ≤ M e A ≠ D\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 40 pontos, 1 ≤ N, M ≤ 1000.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 4 2\n1 2\n2 3\n3 2\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n4 5 2\n1 3\n2 3\n3 2\n5 1\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 3 1\n1 2\n2 3\n3 1\n```\nSaída:\n```\n-1\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 777,
+            "output_tokens": 726,
+            "total_tokens": 1503
+        },
+        "cost_usd": {
+            "input_cost": 7.8e-05,
+            "output_cost": 0.000363,
+            "total_cost": 0.000441
+        },
+        "raw_response": "```java\nimport java.io.*;\n\npublic class Main {\n    private static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ');\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n        int current = fs.nextInt();\n\n        int[] nextSong = new int[m + 1];\n        for (int i = 0; i < n; i++) {\n            int adore = fs.nextInt();\n            int detest = fs.nextInt();\n            if (nextSong[detest] == 0) {\n                nextSong[detest] = adore;\n            }\n        }\n\n        boolean[] visited = new boolean[m + 1];\n        int swaps = 0;\n\n        while (true) {\n            if (nextSong[current] == 0) {\n                System.out.println(swaps);\n                return;\n            }\n            if (visited[current]) {\n                System.out.println(-1);\n                return;\n            }\n            visited[current] = true;\n            current = nextSong[current];\n            swaps++;\n        }\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\n\npublic class Main {\n    private static class FastScanner {\n        private final InputStream in = System.in;\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ');\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int m = fs.nextInt();\n        int current = fs.nextInt();\n\n        int[] nextSong = new int[m + 1];\n        for (int i = 0; i < n; i++) {\n            int adore = fs.nextInt();\n            int detest = fs.nextInt();\n            if (nextSong[detest] == 0) {\n                nextSong[detest] = adore;\n            }\n        }\n\n        boolean[] visited = new boolean[m + 1];\n        int swaps = 0;\n\n        while (true) {\n            if (nextSong[current] == 0) {\n                System.out.println(swaps);\n                return;\n            }\n            if (visited[current]) {\n                System.out.println(-1);\n                return;\n            }\n            visited[current] = true;\n            current = nextSong[current];\n            swaps++;\n        }\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09120310001890175,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
     }
 ]

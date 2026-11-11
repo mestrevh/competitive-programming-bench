@@ -35,5 +35,42 @@
             },
             "total_test_cases": 23
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T11:34:08.936699+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Sanduíche\n\n## Enunciado\nUma nova lanchonete abriu na cidade, prometendo um menu com a maior variedade de sanduíches da região. A cada dia o Chef de cozinha compra N ingredientes distintos e prepara o menu usando esses N ingredientes. Infelizmente não é possível ter sanduíches com qualquer combinação de ingredientes: a cada dia o Chef determina que M pares de ingredientes não podem ser realizados no mesmo sanduíche, porque ele considera que esses ingredientes \"não combinam\".\n\nPor exemplo, suponha que num determinado dia N é igual a quatro e os ingredientes são queijo, presunto, goiabada e azeitona, e M é igual a dois: os pares (goiabada, presunto) e (azeitona, goiabada) não podem ser realizados no mesmo sanduíche. Nesse dia, alguns dos sanduíches que podem ser feitos são:\n- presunto, queijo\n- azeitona\n- presunto, azeitona, queijo\n- goiabada, queijo\n\nAlguns dos sanduíches que não podem ser feitos são:\n- presunto, queijo, goiabada\n- azeitona, goiabada\n- goiabada, presunto, azeitona\n\nDados os N ingredientes e os M pares de ingredientes que não combinam, sua tarefa é determinar qual o máximo número de sanduíches diferentes que podem ser feitos. Dois sanduíches A e B são considerados diferentes se A contém um ingrediente X que não está presente em B ou se B contém um ingrediente Y que não está presente em A. Um sanduíche deve conter ao menos um ingrediente.\n\n## Formato de Entrada\nA primeira linha contém dois números inteiros N e M, indicando respectivamente o número de ingredientes e o número de pares de ingredientes que não combinam. Os ingredientes são identificados por números de 1 a N. Cada uma das M linhas seguintes contém dois números inteiros X e Y que representam um par de ingredientes que não combinam.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, o número de sanduíches diferentes que podem ser feitos.\n\n## Restrições\n1 ≤ N ≤ 20\n0 ≤ M ≤ 400\n1 ≤ X ≤ N\n1 ≤ X < Y\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 10 pontos, N ≤ 5.\n- Para um conjunto de casos de testes valendo outros 40 pontos, N ≤ 10.\n- Para um conjunto de casos de testes valendo outros 50 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 2\n2 3\n1 2\n```\nSaída:\n```\n4\n```\n\nExemplo 2:\nEntrada:\n```\n3 0\n```\nSaída:\n```\n7\n```\n\nExemplo 3:\nEntrada:\n```\n3 3\n1 2\n2 3\n1 3\n```\nSaída:\n```\n3\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 828,
+            "output_tokens": 497,
+            "total_tokens": 2252
+        },
+        "cost_usd": {
+            "input_cost": 0.000621,
+            "output_cost": 0.001864,
+            "total_cost": 0.002485
+        },
+        "raw_response": "```java\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static int n, m;\n    static int[] adj;\n\n    static int countIndependentSets(int u, int currentMask) {\n        if (u == n) {\n            return 1;\n        }\n\n        // Opção 1: Não incluir o ingrediente u\n        int count = countIndependentSets(u + 1, currentMask);\n\n        // Opção 2: Incluir o ingrediente u (se compatível com os já escolhidos)\n        if ((adj[u] & currentMask) == 0) {\n            count += countIndependentSets(u + 1, currentMask | (1 << u));\n        }\n\n        return count;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        n = Integer.parseInt(st.nextToken());\n        m = Integer.parseInt(st.nextToken());\n\n        adj = new int[n];\n\n        for (int i = 0; i < m; i++) {\n            line = reader.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = reader.readLine();\n            }\n            if (line == null) break;\n            st = new StringTokenizer(line);\n            int u = Integer.parseInt(st.nextToken()) - 1;\n            int v = Integer.parseInt(st.nextToken()) - 1;\n            adj[u] |= (1 << v);\n            adj[v] |= (1 << u);\n        }\n\n        // Subtrai 1 pois o sanduíche não pode ser vazio\n        int ans = countIndependentSets(0, 0) - 1;\n\n        System.out.println(ans);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    static int n, m;\n    static int[] adj;\n\n    static int countIndependentSets(int u, int currentMask) {\n        if (u == n) {\n            return 1;\n        }\n\n        // Opção 1: Não incluir o ingrediente u\n        int count = countIndependentSets(u + 1, currentMask);\n\n        // Opção 2: Incluir o ingrediente u (se compatível com os já escolhidos)\n        if ((adj[u] & currentMask) == 0) {\n            count += countIndependentSets(u + 1, currentMask | (1 << u));\n        }\n\n        return count;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line = reader.readLine();\n        while (line != null && line.trim().isEmpty()) {\n            line = reader.readLine();\n        }\n        if (line == null) return;\n\n        StringTokenizer st = new StringTokenizer(line);\n        n = Integer.parseInt(st.nextToken());\n        m = Integer.parseInt(st.nextToken());\n\n        adj = new int[n];\n\n        for (int i = 0; i < m; i++) {\n            line = reader.readLine();\n            while (line != null && line.trim().isEmpty()) {\n                line = reader.readLine();\n            }\n            if (line == null) break;\n            st = new StringTokenizer(line);\n            int u = Integer.parseInt(st.nextToken()) - 1;\n            int v = Integer.parseInt(st.nextToken()) - 1;\n            adj[u] |= (1 << v);\n            adj[v] |= (1 << u);\n        }\n\n        // Subtrai 1 pois o sanduíche não pode ser vazio\n        int ans = countIndependentSets(0, 0) - 1;\n\n        System.out.println(ans);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09311200000229292,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
     }
 ]

@@ -35,5 +35,42 @@
             },
             "total_test_cases": 40
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T04:09:40.628756+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Subcadeias\n\n## Enunciado\nUma cadeia de caracteres é um palíndromo se os caracteres aparecem exatamente na mesma sequência quando lemos a cadeia da esquerda para a direita, ou da direita para a esquerda. Por exemplo, as cadeias osso e arara são palíndromos, mas as cadeias xy e abbbab não são palíndromos.\n\nUma subcadeia de uma dada cadeia de caracteres é um trecho contínuo da cadeia. Por exemplo, abc, bc e d são subcadeias de abcde, mas abe e ded não são.\n\nO comprimento de uma cadeia de caracteres (ou subcadeia) é o número de caracteres da cadeia (ou subcadeia).\n\nDada uma cadeia de caracteres, determine o comprimento da maior subcadeia que é um palíndromo.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, o comprimento da cadeia de caracteres. A segunda linha da entrada contém os N caracteres C_i que compõem a cadeia de caracteres.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o comprimento da maior subcadeia da cadeia da entrada que é um palíndromo.\n\n## Restrições\n1 ≤ N ≤ 500\nC_i é uma letra minúscula não acentuada, para 1 ≤ i ≤ N.\n\n## Limites de Execução\n- Tempo Limite: 3.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n15\nvovossorirmirim\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n8\nabxxxxba\n```\nSaída:\n```\n8\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 494,
+            "output_tokens": 493,
+            "total_tokens": 987
+        },
+        "cost_usd": {
+            "input_cost": 4.9e-05,
+            "output_cost": 0.000246,
+            "total_cost": 0.000296
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        String next() throws IOException {\n            StringBuilder sb = new StringBuilder();\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            while (c > ' ') {\n                sb.append((char) c);\n                c = read();\n            }\n            return sb.toString();\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = Integer.parseInt(fs.next());\n        String s = fs.next();\n\n        int best = 1;\n        for (int center = 0; center < n; center++) {\n            int left = center, right = center;\n            while (left >= 0 && right < n && s.charAt(left) == s.charAt(right)) {\n                best = Math.max(best, right - left + 1);\n                left--;\n                right++;\n            }\n\n            left = center;\n            right = center + 1;\n            while (left >= 0 && right < n && s.charAt(left) == s.charAt(right)) {\n                best = Math.max(best, right - left + 1);\n                left--;\n                right++;\n            }\n        }\n\n        System.out.println(best);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        String next() throws IOException {\n            StringBuilder sb = new StringBuilder();\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            while (c > ' ') {\n                sb.append((char) c);\n                c = read();\n            }\n            return sb.toString();\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = Integer.parseInt(fs.next());\n        String s = fs.next();\n\n        int best = 1;\n        for (int center = 0; center < n; center++) {\n            int left = center, right = center;\n            while (left >= 0 && right < n && s.charAt(left) == s.charAt(right)) {\n                best = Math.max(best, right - left + 1);\n                left--;\n                right++;\n            }\n\n            left = center;\n            right = center + 1;\n            while (left >= 0 && right < n && s.charAt(left) == s.charAt(right)) {\n                best = Math.max(best, right - left + 1);\n                left--;\n                right++;\n            }\n        }\n\n        System.out.println(best);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06720289998338558,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
     }
 ]

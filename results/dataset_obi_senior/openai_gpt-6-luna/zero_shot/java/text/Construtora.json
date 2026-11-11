@@ -35,5 +35,42 @@
             },
             "total_test_cases": 38
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T03:45:07.608981+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Construtora\n\n## Enunciado\nEm uma rua existem N prédios adjacentes, o i-ésimo entre eles (da esquerda para a direita) possui ai andares. Uma construtora acabou de comprar todos os prédios da rua, e fará uma obra para que eles tenham a mesma altura (quantidade de andares), porém, para realizar esta obra ela deve seguir as regras definidas pela Sociedade Brasileira de Construção (SBC).\n\nSegundo as regras da SBC, cada fase da obra só pode aumentar em uma unidade a quantidade de andares de prédios consecutivos que já possuam uma mesma quantidade de andares. Sendo mais específico, para cada fase:\n- A construtora deve definir um índice inicial L\n- A construtora deve definir um índice final R\n- Todos os prédios entre L e R (incluindo L e R) devem possuir a mesma quantidade de andares, digamos a\n- Ao final desta fase da obra, todos os prédios entre L e R (incluindo L e R) vão possuir a + 1 andares\n\nPor exemplo, suponha que N seja igual a 8, e que as alturas iniciais sejam: a1 = 5, a2 = 4, a3 = 4, a4 = 4, a5 = 5, a6 = 4, a7 = 4 e a8 = 7, perceba que:\n- A construtora não pode definir L = 2 e R = 7 para a primeira fase, pois nem todas as quantidades de andares nesse intervalo de prédios são iguais\n- A construtora não pode definir L = 1 e R = 5 para a primeira fase, pois nem todas as quantidades de andares nesse intervalo de prédios são iguais\n- A construtora pode definir L = 8 e R = 8 para a primeira fase, e a quantidade de andares final seria: a1 = 5, a2 = 4, a3 = 4, a4 = 4, a5 = 5, a6 = 4, a7 = 4 e a8 = 8\n- A construtora pode definir L = 2 e R = 4 para a primeira fase, e a quantidade de andares final seria: a1 = 5, a2 = 5, a3 = 5, a4 = 5, a5 = 5, a6 = 4, a7 = 4 e a8 = 7\n\nPara cada fase da obra, a construtora deve pagar impostos para a prefeitura, portanto, ela deseja completar a tarefa usando a menor quantidade possível de fases. No exemplo mostrado anteriormente a menor quantidade de fases é 4.\n\nDadas a quantidade inicial de andares de cada um dos N prédios, sua tarefa é determinar a quantidade mínima de fases para completar a obra.\n\n## Formato de Entrada\nA primeira linha da entrada contém um único inteiro N, o número de prédios da rua.\n\nA segunda linha contém N inteiros, o i-ésimo entre esses inteiros é ai, a quantidade de andares do i-ésimo prédio.\n\n## Formato de Saída\nA saída deve conter um único número inteiro, a menor quantidade de fases necessárias para a construtora completar a obra, ou seja, deixar todos os prédios com a mesma altura.\n\n## Restrições\n2 ≤ N ≤ 100\n1 ≤ ai ≤ 100\n\nSubtarefas:\n- Subtarefa 1 (0 pontos): exemplos.\n- Subtarefa 2 (17 pontos): ai = aj para todo 1 ≤ i, j ≤ N - 1, ou seja, todos os N - 1 primeiros prédios possuem a mesma altura inicial.\n- Subtarefa 3 (18 pontos): 1 ≤ ai ≤ 2.\n- Subtarefa 4 (19 pontos): 1 ≤ ai ≤ 3.\n- Subtarefa 5 (20 pontos): ai > aj para todo 1 ≤ i < j ≤ N, ou seja, as alturas iniciais dos prédios são decrescentes da esquerda para a direita.\n- Subtarefa 6 (26 pontos): Sem restrições adicionais.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 1024 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n3 1 1 2\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n8\n5 4 4 4 5 4 4 7\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n3\n100 100 100\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1125,
+            "output_tokens": 1407,
+            "total_tokens": 2532
+        },
+        "cost_usd": {
+            "input_cost": 0.000112,
+            "output_cost": 0.000704,
+            "total_cost": 0.000816
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int[] a = new int[n];\n        int max = 0;\n\n        for (int i = 0; i < n; i++) {\n            a[i] = fs.nextInt();\n            max = Math.max(max, a[i]);\n        }\n\n        int answer = 0;\n        for (int h = 1; h < max; h++) {\n            boolean inRun = false;\n            for (int value : a) {\n                if (value <= h) {\n                    if (!inRun) answer++;\n                    inRun = true;\n                } else {\n                    inRun = false;\n                }\n            }\n        }\n\n        System.out.println(answer);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    private static class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + (c - '0');\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int[] a = new int[n];\n        int max = 0;\n\n        for (int i = 0; i < n; i++) {\n            a[i] = fs.nextInt();\n            max = Math.max(max, a[i]);\n        }\n\n        int answer = 0;\n        for (int h = 1; h < max; h++) {\n            boolean inRun = false;\n            for (int value : a) {\n                if (value <= h) {\n                    if (!inRun) answer++;\n                    inRun = true;\n                } else {\n                    inRun = false;\n                }\n            }\n        }\n\n        System.out.println(answer);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0697943999839481,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
     }
 ]

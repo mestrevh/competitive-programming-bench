@@ -35,5 +35,42 @@
             },
             "total_test_cases": 41
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T04:14:13.427318+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Três por Dois\n\n## Enunciado\nUma loja de chocolates está fazendo uma promoção do tipo \"leve três pague dois\". Mais precisamente, você pode escolher quaisquer três chocolates da loja e paga apenas pelos dois mais caros que escolher, levando o mais barato gratuitamente. Se você levar mais do que três chocolates, você pode agrupá-los em grupos de três e levar o chocolate mais barato de cada grupo gratuitamente.\n\nPor exemplo, se você escolher chocolates de preços (em reais) 8, 5, 10, 2, 5, 10 e 4, você pode agrupá-los como (8,5,10), (2,5,10) e (4), pagará um total de (10+8) + (10+5) + 4, ou seja, 37 reais. Mas você pode agrupá-los de uma forma melhor e assim conseguir pagar menos. Você consegue ver como?\n\nDados os preços dos chocolates escolhidos, escreva um programa para determinar o menor preço a pagar.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, o número de chocolates escolhidos. Cada uma das N linhas seguintes contém um número inteiro P, o preço de um chocolate escolhido.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único número inteiro, o menor preço a pagar pelos chocolates escolhidos.\n\n## Restrições\n1 ≤ N ≤ 100000\n1 ≤ P ≤ 1000\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n5\n6\n6\n5\n```\nSaída:\n```\n17\n```\n\nExemplo 2:\nEntrada:\n```\n4\n3\n3\n3\n3\n```\nSaída:\n```\n9\n```\n\nExemplo 3:\nEntrada:\n```\n6\n7\n8\n7\n7\n5\n7\n```\nSaída:\n```\n29\n```\n\nExemplo 4:\nEntrada:\n```\n7\n8\n5\n10\n2\n5\n10\n4\n```\nSaída:\n```\n32\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 588,
+            "output_tokens": 438,
+            "total_tokens": 1026
+        },
+        "cost_usd": {
+            "input_cost": 5.9e-05,
+            "output_cost": 0.000219,
+            "total_cost": 0.000278
+        },
+        "raw_response": "```java\nimport java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    private static final class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int[] prices = new int[n];\n\n        for (int i = 0; i < n; i++) {\n            prices[i] = fs.nextInt();\n        }\n\n        Arrays.sort(prices);\n\n        long total = 0;\n        for (int i = 0; i < n; i++) {\n            total += prices[i];\n        }\n\n        for (int i = n - 3; i >= 0; i -= 3) {\n            total -= prices[i];\n        }\n\n        System.out.println(total);\n    }\n}\n```",
+        "extracted_code": "import java.io.BufferedInputStream;\nimport java.io.IOException;\nimport java.util.Arrays;\n\npublic class Main {\n    private static final class FastScanner {\n        private final BufferedInputStream in = new BufferedInputStream(System.in);\n        private final byte[] buffer = new byte[1 << 16];\n        private int ptr = 0, len = 0;\n\n        private int read() throws IOException {\n            if (ptr >= len) {\n                len = in.read(buffer);\n                ptr = 0;\n                if (len <= 0) return -1;\n            }\n            return buffer[ptr++];\n        }\n\n        int nextInt() throws IOException {\n            int c;\n            do {\n                c = read();\n            } while (c <= ' ' && c != -1);\n\n            int value = 0;\n            while (c > ' ') {\n                value = value * 10 + c - '0';\n                c = read();\n            }\n            return value;\n        }\n    }\n\n    public static void main(String[] args) throws Exception {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n        int[] prices = new int[n];\n\n        for (int i = 0; i < n; i++) {\n            prices[i] = fs.nextInt();\n        }\n\n        Arrays.sort(prices);\n\n        long total = 0;\n        for (int i = 0; i < n; i++) {\n            total += prices[i];\n        }\n\n        for (int i = n - 3; i >= 0; i -= 3) {\n            total -= prices[i];\n        }\n\n        System.out.println(total);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10388500001863576,
+            "counts": {
+                "AC": 41,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 41
+        }
     }
 ]

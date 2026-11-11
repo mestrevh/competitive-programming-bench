@@ -35,5 +35,42 @@
             },
             "total_test_cases": 51
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T10:32:44.465628+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Subsequência\n\n## Enunciado\nVocê foi contratado pela Agência Extra-Espacial Brasileira, que procura indícios de vida extra-terrestre.\n\nUm dos telescópios da Agência, para o espectro ultravioleta, gera uma sequência de valores inteiros positivos que devem ser analisados continuamente. Dadas as sequências S_A e S_B, sua primeira missão é determinar se S_B é uma subsequência de S_A.\n\nUma subsequência de uma dada sequência S é um conjunto de elementos de S que não são necessariamente adjacentes mas que mantém a mesma ordem em que aparecem em S. Por exemplo, [2], [1,4], [1,2,4] e [1,2,3,4] são subsequências de [1,2,3,4], mas [4,3], [3,4,1] e [1,3,5] não são.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros A e B, o número de elementos das sequências. A segunda linha contém A inteiros X_i, os números da sequência S_A. A seguir a entrada contém B inteiros Y_i, os números da sequência S_B.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único caractere, que deve ser a letra maiúscula 'S' se S_B é uma subsequência da S_A ou a letra maiúscula 'N' caso contrário.\n\n## Restrições\n1 ≤ A ≤ 10^5\n1 ≤ B ≤ A\n-10^9 ≤ X_i ≤ 10^9 para 1 ≤ i ≤ A\n-10^9 ≤ Y_i ≤ 10^9 para 1 ≤ i ≤ B\n\n## Limites de Execução\n- Tempo Limite: 2.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5 3\n1 2 3 4 5\n2 3 5\n```\nSaída:\n```\nS\n```\n\nExemplo 2:\nEntrada:\n```\n5 4\n8 17 8 21 23\n8 8 21 22\n```\nSaída:\n```\nN\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 691,
+            "output_tokens": 1153,
+            "total_tokens": 1844
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.002767,
+            "total_cost": 0.002769
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedReader br;\n        private StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        int nextInt() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return -1;\n                st = new StringTokenizer(line);\n            }\n            return Integer.parseInt(st.nextToken());\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n\n        int A = fs.nextInt();\n        int B = fs.nextInt();\n\n        int[] seqA = new int[A];\n        for (int i = 0; i < A; i++) {\n            seqA[i] = fs.nextInt();\n        }\n\n        int j = 0;\n        boolean ok = true;\n\n        for (int i = 0; i < B; i++) {\n            int y = fs.nextInt();\n\n            while (j < A && seqA[j] != y) {\n                j++;\n            }\n\n            if (j == A) {\n                ok = false;\n                break;\n            }\n\n            j++;\n        }\n\n        System.out.println(ok ? \"S\" : \"N\");\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        private final BufferedReader br;\n        private StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        int nextInt() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return -1;\n                st = new StringTokenizer(line);\n            }\n            return Integer.parseInt(st.nextToken());\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n\n        int A = fs.nextInt();\n        int B = fs.nextInt();\n\n        int[] seqA = new int[A];\n        for (int i = 0; i < A; i++) {\n            seqA[i] = fs.nextInt();\n        }\n\n        int j = 0;\n        boolean ok = true;\n\n        for (int i = 0; i < B; i++) {\n            int y = fs.nextInt();\n\n            while (j < A && seqA[j] != y) {\n                j++;\n            }\n\n            if (j == A) {\n                ok = false;\n                break;\n            }\n\n            j++;\n        }\n\n        System.out.println(ok ? \"S\" : \"N\");\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11046290001831949,
+            "counts": {
+                "AC": 51,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 51
+        }
     }
 ]

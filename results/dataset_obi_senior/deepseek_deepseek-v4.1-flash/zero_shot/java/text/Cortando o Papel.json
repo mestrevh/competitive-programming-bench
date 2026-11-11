@@ -35,5 +35,42 @@
             },
             "total_test_cases": 22
         }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-10T09:33:38.960008+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em java. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Cortando o Papel\n\n## Enunciado\nUma folha de papel é composta de uma sequência de retângulos com diferentes alturas mas com larguras fixas, tal que as bases dos retângulos estão assentadas em uma linha horizontal. A figura ilustra uma folha exemplo com 33 retângulos. Nós gostaríamos de fazer um único corte horizontal, com a ajuda de um estilete e uma régua, que maximize o número resultante de pedaços separados pelo corte. A figura mostra quatro diferentes cortes que resultariam, respectivamente, em 4, 11, 10 e 3 pedaços.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de retângulos na folha de papel.\nA segunda linha contém N inteiros Ai, 1 ≤ i ≤ N, representando a sequência de alturas dos retângulos.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo um inteiro representando o número máximo de pedaços possível, com um único corte horizontal.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ Ai ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 1000\n\n## Limites de Execução\n- Tempo Limite: 3.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n20 5 10 5 15 15 15 5 6 22\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n5\n10 20 30 40 50\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```java ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "java",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 575,
+            "output_tokens": 18938,
+            "total_tokens": 19513
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.045451,
+            "total_cost": 0.045453
+        },
+        "raw_response": "```java\nimport java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n\n        long[] pairs = new long[n];\n        for (int i = 0; i < n; i++) {\n            int h = fs.nextInt();\n            pairs[i] = ((long) h << 20) | i;\n        }\n\n        Arrays.sort(pairs);\n\n        boolean[] active = new boolean[n];\n        Arrays.fill(active, true);\n\n        int intervals = 1;\n        int maxIntervals = 1;\n\n        int i = 0;\n        final int MASK = (1 << 20) - 1;\n\n        while (i < n) {\n            long curHeight = pairs[i] >>> 20;\n            int j = i;\n\n            while (j < n && (pairs[j] >>> 20) == curHeight) {\n                int idx = (int) (pairs[j] & MASK);\n                active[idx] = false;\n\n                boolean left = idx > 0 && active[idx - 1];\n                boolean right = idx + 1 < n && active[idx + 1];\n\n                if (left && right) {\n                    intervals++;\n                } else if (!left && !right) {\n                    intervals--;\n                }\n\n                j++;\n            }\n\n            if (intervals > maxIntervals) {\n                maxIntervals = intervals;\n            }\n\n            i = j;\n        }\n\n        System.out.println(maxIntervals + 1);\n    }\n}\n```",
+        "extracted_code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class FastScanner {\n        BufferedReader br;\n        StringTokenizer st;\n\n        FastScanner() {\n            br = new BufferedReader(new InputStreamReader(System.in));\n        }\n\n        String next() throws IOException {\n            while (st == null || !st.hasMoreTokens()) {\n                String line = br.readLine();\n                if (line == null) return null;\n                st = new StringTokenizer(line);\n            }\n            return st.nextToken();\n        }\n\n        int nextInt() throws IOException {\n            return Integer.parseInt(next());\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        FastScanner fs = new FastScanner();\n        int n = fs.nextInt();\n\n        long[] pairs = new long[n];\n        for (int i = 0; i < n; i++) {\n            int h = fs.nextInt();\n            pairs[i] = ((long) h << 20) | i;\n        }\n\n        Arrays.sort(pairs);\n\n        boolean[] active = new boolean[n];\n        Arrays.fill(active, true);\n\n        int intervals = 1;\n        int maxIntervals = 1;\n\n        int i = 0;\n        final int MASK = (1 << 20) - 1;\n\n        while (i < n) {\n            long curHeight = pairs[i] >>> 20;\n            int j = i;\n\n            while (j < n && (pairs[j] >>> 20) == curHeight) {\n                int idx = (int) (pairs[j] & MASK);\n                active[idx] = false;\n\n                boolean left = idx > 0 && active[idx - 1];\n                boolean right = idx + 1 < n && active[idx + 1];\n\n                if (left && right) {\n                    intervals++;\n                } else if (!left && !right) {\n                    intervals--;\n                }\n\n                j++;\n            }\n\n            if (intervals > maxIntervals) {\n                maxIntervals = intervals;\n            }\n\n            i = j;\n        }\n\n        System.out.println(maxIntervals + 1);\n    }\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.14476149997790344,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
     }
 ]
