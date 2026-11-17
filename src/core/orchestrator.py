@@ -21,7 +21,7 @@ class Orchestrator:
                  output: str = "default",
                  language: str = "python",
                  llm_provider: Optional[ProviderConfig] = None,
-                 temperature: float = 1.0):
+                 temperature: float = 0.0):
         self.__dataset_name: str = output
         self.__output: Path = Path(f"results/{output}/")
         self.__language: str = language
