@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T04:09:25.462201+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Trio de Bonecas\n\n## Enunciado\nAlice é a gerente de produção de uma fábrica de bonecas chinesas. Nessa fábrica, todas as bonecas possuem o mesmo formato, variando apenas de tamanho. As bonecas são vendidas sempre em trios.\n[1.png]\nPara um trio formado por bonecas de tamanhos A, B e C, com A ≤ B ≤ C, o balanceamento do trio é definido como (A − B)^2. De acordo com o controle de qualidade da fábrica, idealmente cada trio deveria ter balanceamento 0, ou seja, conter duas bonecas de mesmo tamanho e uma terceira boneca de tamanho maior ou igual a essas duas; porém, isso nem sempre é possível devido a limitações de estoque.\n\nAlice acabou de receber um pedido urgente: o consulado Chinês fará um grande evento no qual pretende distribuir K trios de bonecas, e precisa que Alice envie imediatamente todos os trios. Existem na fábrica N bonecas de diversos tamanhos, ainda não separadas em trios, e Alice não sabe se conseguirá formar K trios ideais.\n\nDevido à urgência do evento, Alice e o consulado fizeram um acordo: o consulado aceitará trios que não sejam ideais; porém, para garantir um bom evento, Alice deve enviar uma caixa com K trios de bonecas cuja soma dos balanceamentos seja a menor possível.\n\nPor exemplo, suponha que Alice possua 7 bonecas com tamanhos 11, 1, 7, 5, 16, 8 e 15, e que o consulado tenha solicitado 2 trios de bonecas. Algumas configurações possíveis para envio são:\n• Configuração 1: trios (7, 8, 15) e (1, 5, 16).\n– O primeiro trio possui balanceamento (8 − 7)^2 = 1.\n– O segundo trio possui balanceamento (5 − 1)^2 = 16.\n– O balanceamento total dessa configuração é 1 + 16 = 17.\n\n• Configuração 2: trios (5, 7, 16) e (8, 11, 15).\n– O primeiro trio possui balanceamento (7 − 5)^2 = 4.\n– O segundo trio possui balanceamento (11 − 8)^2 = 9.\n– O balanceamento total dessa configuração é 4 + 9 = 13.\n\nExistem outras configurações possíveis, mas a menor soma de balanceamentos possível é 13 (correspondente à configuração 2).\n\nAjude Alice a calcular a soma de balanceamentos minima em um conjunto com K trios de bonecas.\n\n## Formato de Entrada\nA primeira linha de entrada contém dois inteiros N e K, representando, respectivamente, o número de bonecas e a quantidade de trios solicitados pelo consulado Chinês.\nA segunda linha contém N números inteiros. O i-ésimo desses números será Ti, representando o tamanho da i-ésima boneca.\n\n## Formato de Saída\nSeu programa deverá imprimir uma única linha contendo um único inteiro, a menor soma de balanceamentos possível em uma caixa com K trios de bonecas.\n\n## Restrições\n3 ≤ N ≤ 10000\n1 ≤ K ≤ 3000\n3K ≤ N\n1 ≤ Ti ≤ 100000 para todo 1 ≤ i ≤ N\n\nSubtarefa 1 (13 pontos): 1 ≤ Ti ≤ 2 para todo 1 ≤ i ≤ N.\nSubtarefa 2 (28 pontos): N ≤ 30.\nSubtarefa 3 (33 pontos): N ≤ 1000 e K ≤ 100.\nSubtarefa 4 (26 pontos): Nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n7 2\n11 1 7 5 16 8 15\n```\nSaída:\n```\n13\n```\n\nExemplo 2:\nEntrada:\n```\n8 2\n2 1 2 2 2 1 2 2\n```\nSaída:\n```\n0\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1661,
+            "output_tokens": 131072,
+            "total_tokens": 132733
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.314573,
+            "total_cost": 0.314578
+        },
+        "raw_response": "",
+        "extracted_code": "",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 76
+            },
+            "total_test_cases": 76
+        }
+    }
+]

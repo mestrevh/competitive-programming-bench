@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:25:52.883515+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Computador\n\n## Enunciado\nUma grande empresa está construindo uma nova arquitetura de computadores que permita a execução eficiente de duas instruções especiais de soma. O computador possui N posições de memória, endereçadas de 1 a N, e cada posição pode guardar um inteiro maior ou igual a zero. Inicialmente, todas as posições contêm o valor zero. As instruções especiais de soma são:\n\n• FRENTE i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i + 1, V − 2 em i + 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for menor ou igual a N;\n\n• TRÁS i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i − 1, V − 2 em i − 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for maior ou igual a 1.\n\nPor exemplo, para N = 16, uma possível sequência de instruções é dada abaixo:\n[1.png]\nAlém disso, o computador possui a instrução IMPRIME i, que deve imprimir na saída o valor atual armazenado na posição i da memória.\n\nDados N e uma sequência de M instruções, seu programa deve imprimir, para cada instrução do tipo IMPRIME i, uma linha contendo o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e M, representando o número de posições de memória e o número de instruções, respectivamente. As M linhas seguintes contêm, cada uma, a descrição de uma instrução em uma de três formas possíveis: 1 I V, representando FRENTE I V; 2 I V, representando TRAS I V; e 3 I, representando IMPRIME I.\n\n## Formato de Saída\nPara cada instrução do tipo IMPRIME i, seu programa deve imprimir uma linha contendo um inteiro representando o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Restrições\n1 ≤ N ≤ 200000\n1 ≤ M ≤ 200000\n1 ≤ I ≤ N\n1 ≤ V ≤ 200000\nAo menos uma instrução será do tipo 3\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n16 7\n1 4 8\n2 16 3\n3 14\n2 2 12\n1 8 7\n3 10\n3 14\n```\nSaída:\n```\n1\n7\n2\n```\n\nExemplo 2:\nEntrada:\n```\n200000 2\n1 2345 193290\n3 112230\n```\nSaída:\n```\n83405\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 757,
+            "output_tokens": 980,
+            "total_tokens": 1737
+        },
+        "cost_usd": {
+            "input_cost": 7.6e-05,
+            "output_cost": 0.00049,
+            "total_cost": 0.000566
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long *slope_tree;\nstatic long long *intercept_tree;\nstatic int n;\n\nstatic void add(long long *tree, int index, long long value) {\n    for (; index <= n; index += index & -index) {\n        tree[index] += value;\n    }\n}\n\nstatic long long sum(long long *tree, int index) {\n    long long result = 0;\n    for (; index > 0; index -= index & -index) {\n        result += tree[index];\n    }\n    return result;\n}\n\nstatic void range_add(long long *tree, int left, int right, long long value) {\n    add(tree, left, value);\n    if (right < n) {\n        add(tree, right + 1, -value);\n    }\n}\n\nint main(void) {\n    int m;\n    if (scanf(\"%d %d\", &n, &m) != 2) {\n        return 0;\n    }\n\n    slope_tree = calloc((size_t)n + 1, sizeof(long long));\n    intercept_tree = calloc((size_t)n + 1, sizeof(long long));\n\n    for (int q = 0; q < m; ++q) {\n        int type, i;\n        long long v;\n\n        scanf(\"%d %d\", &type, &i);\n\n        if (type == 1) {\n            scanf(\"%lld\", &v);\n            int right = i + (int)v - 1;\n            if (right > n) right = n;\n\n            range_add(slope_tree, i, right, -1);\n            range_add(intercept_tree, i, right, v + i);\n        } else if (type == 2) {\n            scanf(\"%lld\", &v);\n            int left = i - (int)v + 1;\n            if (left < 1) left = 1;\n\n            range_add(slope_tree, left, i, 1);\n            range_add(intercept_tree, left, i, v - i);\n        } else {\n            long long slope = sum(slope_tree, i);\n            long long intercept = sum(intercept_tree, i);\n            printf(\"%lld\\n\", slope * i + intercept);\n        }\n    }\n\n    free(slope_tree);\n    free(intercept_tree);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long *slope_tree;\nstatic long long *intercept_tree;\nstatic int n;\n\nstatic void add(long long *tree, int index, long long value) {\n    for (; index <= n; index += index & -index) {\n        tree[index] += value;\n    }\n}\n\nstatic long long sum(long long *tree, int index) {\n    long long result = 0;\n    for (; index > 0; index -= index & -index) {\n        result += tree[index];\n    }\n    return result;\n}\n\nstatic void range_add(long long *tree, int left, int right, long long value) {\n    add(tree, left, value);\n    if (right < n) {\n        add(tree, right + 1, -value);\n    }\n}\n\nint main(void) {\n    int m;\n    if (scanf(\"%d %d\", &n, &m) != 2) {\n        return 0;\n    }\n\n    slope_tree = calloc((size_t)n + 1, sizeof(long long));\n    intercept_tree = calloc((size_t)n + 1, sizeof(long long));\n\n    for (int q = 0; q < m; ++q) {\n        int type, i;\n        long long v;\n\n        scanf(\"%d %d\", &type, &i);\n\n        if (type == 1) {\n            scanf(\"%lld\", &v);\n            int right = i + (int)v - 1;\n            if (right > n) right = n;\n\n            range_add(slope_tree, i, right, -1);\n            range_add(intercept_tree, i, right, v + i);\n        } else if (type == 2) {\n            scanf(\"%lld\", &v);\n            int left = i - (int)v + 1;\n            if (left < 1) left = 1;\n\n            range_add(slope_tree, left, i, 1);\n            range_add(intercept_tree, left, i, v - i);\n        } else {\n            long long slope = sum(slope_tree, i);\n            long long intercept = sum(intercept_tree, i);\n            printf(\"%lld\\n\", slope * i + intercept);\n        }\n    }\n\n    free(slope_tree);\n    free(intercept_tree);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2528576999975485,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T21:56:53.878938+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Computador\n\n## Enunciado\nUma grande empresa está construindo uma nova arquitetura de computadores que permita a execução eficiente de duas instruções especiais de soma. O computador possui N posições de memória, endereçadas de 1 a N, e cada posição pode guardar um inteiro maior ou igual a zero. Inicialmente, todas as posições contêm o valor zero. As instruções especiais de soma são:\n\n• FRENTE i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i + 1, V − 2 em i + 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for menor ou igual a N;\n\n• TRÁS i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i − 1, V − 2 em i − 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for maior ou igual a 1.\n\nPor exemplo, para N = 16, uma possível sequência de instruções é dada abaixo:\n[1.png]\nAlém disso, o computador possui a instrução IMPRIME i, que deve imprimir na saída o valor atual armazenado na posição i da memória.\n\nDados N e uma sequência de M instruções, seu programa deve imprimir, para cada instrução do tipo IMPRIME i, uma linha contendo o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e M, representando o número de posições de memória e o número de instruções, respectivamente. As M linhas seguintes contêm, cada uma, a descrição de uma instrução em uma de três formas possíveis: 1 I V, representando FRENTE I V; 2 I V, representando TRAS I V; e 3 I, representando IMPRIME I.\n\n## Formato de Saída\nPara cada instrução do tipo IMPRIME i, seu programa deve imprimir uma linha contendo um inteiro representando o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Restrições\n1 ≤ N ≤ 200000\n1 ≤ M ≤ 200000\n1 ≤ I ≤ N\n1 ≤ V ≤ 200000\nAo menos uma instrução será do tipo 3\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 1024 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n16 7\n1 4 8\n2 16 3\n3 14\n2 2 12\n1 8 7\n3 10\n3 14\n```\nSaída:\n```\n1\n7\n2\n```\n\nExemplo 2:\nEntrada:\n```\n200000 2\n1 2345 193290\n3 112230\n```\nSaída:\n```\n83405\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 788,
+            "output_tokens": 969,
+            "total_tokens": 1757
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000485,
+            "total_cost": 0.000563
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 200000\n\nstatic long long bit_a[MAXN + 1];\nstatic long long bit_b[MAXN + 1];\nstatic int n;\n\nstatic void add(long long bit[], int index, long long value) {\n    while (index <= n) {\n        bit[index] += value;\n        index += index & -index;\n    }\n}\n\nstatic long long sum(long long bit[], int index) {\n    long long result = 0;\n    while (index > 0) {\n        result += bit[index];\n        index -= index & -index;\n    }\n    return result;\n}\n\nstatic void range_add(int left, int right, long long a, long long b) {\n    add(bit_a, left, a);\n    add(bit_b, left, b);\n\n    if (right < n) {\n        add(bit_a, right + 1, -a);\n        add(bit_b, right + 1, -b);\n    }\n}\n\nint main(void) {\n    int m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int k = 0; k < m; ++k) {\n        int type, i;\n        scanf(\"%d %d\", &type, &i);\n\n        if (type == 1) {\n            int v;\n            scanf(\"%d\", &v);\n            int right = i + v - 1;\n            if (right > n) right = n;\n            range_add(i, right, -1, (long long)v + i);\n        } else if (type == 2) {\n            int v;\n            scanf(\"%d\", &v);\n            int left = i - v + 1;\n            if (left < 1) left = 1;\n            range_add(left, i, 1, (long long)v - i);\n        } else {\n            long long a = sum(bit_a, i);\n            long long b = sum(bit_b, i);\n            printf(\"%lld\\n\", a * i + b);\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 200000\n\nstatic long long bit_a[MAXN + 1];\nstatic long long bit_b[MAXN + 1];\nstatic int n;\n\nstatic void add(long long bit[], int index, long long value) {\n    while (index <= n) {\n        bit[index] += value;\n        index += index & -index;\n    }\n}\n\nstatic long long sum(long long bit[], int index) {\n    long long result = 0;\n    while (index > 0) {\n        result += bit[index];\n        index -= index & -index;\n    }\n    return result;\n}\n\nstatic void range_add(int left, int right, long long a, long long b) {\n    add(bit_a, left, a);\n    add(bit_b, left, b);\n\n    if (right < n) {\n        add(bit_a, right + 1, -a);\n        add(bit_b, right + 1, -b);\n    }\n}\n\nint main(void) {\n    int m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int k = 0; k < m; ++k) {\n        int type, i;\n        scanf(\"%d %d\", &type, &i);\n\n        if (type == 1) {\n            int v;\n            scanf(\"%d\", &v);\n            int right = i + v - 1;\n            if (right > n) right = n;\n            range_add(i, right, -1, (long long)v + i);\n        } else if (type == 2) {\n            int v;\n            scanf(\"%d\", &v);\n            int left = i - v + 1;\n            if (left < 1) left = 1;\n            range_add(left, i, 1, (long long)v - i);\n        } else {\n            long long a = sum(bit_a, i);\n            long long b = sum(bit_b, i);\n            printf(\"%lld\\n\", a * i + b);\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18272650000290014,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

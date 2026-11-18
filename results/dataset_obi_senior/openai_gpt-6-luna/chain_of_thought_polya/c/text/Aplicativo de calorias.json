@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T04:12:51.940284+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Aplicativo de calorias\n\n## Enunciado\nUm aplicativo de celular está sendo desenvolvido para, a partir da foto de um prato contendo uma refeição, estimar a quantidade de calorias da refeição.\n\nO algoritmo de inteligência artificial (IA) utilizado no aplicativo produz três números inteiros, E1, E2 e E3. E1 é a quantidade mínima de calorias estimada e E2 a quantidade máxima de calorias estimada para a refeição da fotografia. E3 só tem significado se a diferença entre as quantidades estimadas mínima e máxima for maior do que um valor pré-definido X; nesse caso, E3 é a quantidade de calorias estimada por um método alternativo.\n\nDepois de vários testes, os desenvolvedores do aplicativo determinaram que os melhores resultados são obtidos usando as estimativas produzidas pelo algoritmo de IA da seguinte forma:\n\n- se a diferença entre E1 e E2 for menor ou igual ao valor de X, o aplicativo deve mostrar ao usuário o valor de E2 como o número de calorias;\n- se a diferença entre E1 e E2 for maior do que o valor de X, o aplicativo deve mostrar ao usuário o valor de E3 como o número de calorias.\n\nDados o valor de X e as três estimativas produzidas pelo algoritmo de IA, escreva um programa que determine o resultado que deve ser mostrado para o usuário.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro, o valor de E1. A segunda linha contém um inteiro, o valor de E2. A terceira linha contém um inteiro, o valor de E3. A quarta linha contém um inteiro, o valor de X.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o resultado que deve ser mostrado para o usuário do aplicativo.\n\n## Restrições\n0 ≤ E1 ≤ E2 ≤ 10000\n0 ≤ E3 ≤ 10000\n0 ≤ X ≤ 10000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n1500\n2000\n2500\n1000\n```\nSaída:\n```\n2000\n```\n\nExemplo 2:\nEntrada:\n```\n1000\n1300\n1050\n200\n```\nSaída:\n```\n1050\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1124,
+            "output_tokens": 495,
+            "total_tokens": 1619
+        },
+        "cost_usd": {
+            "input_cost": 0.000112,
+            "output_cost": 0.000247,
+            "total_cost": 0.00036
+        },
+        "raw_response": "## 1. Compreensão do problema\n\nO objetivo é determinar qual estimativa deve ser exibida:\n\n- Se `E2 - E1` for menor ou igual a `X`, mostrar `E2`.\n- Caso contrário, mostrar `E3`.\n\nA entrada contém quatro inteiros, cada um em uma linha, na ordem `E1`, `E2`, `E3` e `X`. A saída deve conter somente o inteiro escolhido.\n\nPelas restrições, `E1 ≤ E2` e todos os valores estão entre `0` e `10000`. Portanto, a subtração `E2 - E1` é não negativa e não há risco de overflow.\n\n## 2. Planejamento e design algorítmico\n\nBasta calcular a diferença entre `E2` e `E1` e compará-la com `X`. Não são necessárias estruturas de dados adicionais.\n\n- **Tempo:** `O(1)`\n- **Espaço:** `O(1)`\n\n## 3. Codificação em C\n\n```c\n#include <stdio.h>\n\nint main(void) {\n    int E1, E2, E3, X;\n\n    if (scanf(\"%d %d %d %d\", &E1, &E2, &E3, &X) != 4) {\n        return 0;\n    }\n\n    if (E2 - E1 <= X) {\n        printf(\"%d\\n\", E2);\n    } else {\n        printf(\"%d\\n\", E3);\n    }\n\n    return 0;\n}\n```\n\n## 4. Retrospecto e verificação\n\n- **Exemplo 1:** `2000 - 1500 = 500`, que é menor ou igual a `1000`; a saída é `2000`.\n- **Exemplo 2:** `1300 - 1000 = 300`, que é maior que `200`; a saída é `1050`.\n\nA comparação também cobre corretamente o caso de a diferença ser exatamente igual a `X`, exibindo `E2`. A solução usa tempo e memória constantes.",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int E1, E2, E3, X;\n\n    if (scanf(\"%d %d %d %d\", &E1, &E2, &E3, &X) != 4) {\n        return 0;\n    }\n\n    if (E2 - E1 <= X) {\n        printf(\"%d\\n\", E2);\n    } else {\n        printf(\"%d\\n\", E3);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15476989999297075,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T13:48:04.656852+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Etiquetas\n\n## Enunciado\nUma fita esticada horizontalmente é composta de N quadrados de dimensão 1×1, cada um deles contendo um número inteiro anotado. Temos também K etiquetas retangulares idênticas, de dimensão 1×C, onde C é um inteiro. Nosso objetivo é colar todas as etiquetas sobre a fita de modo que a soma dos inteiros que não estiverem cobertos por nenhuma etiqueta ao final seja a maior possível. Cada etiqueta deve ser colada na horizontal, ao longo da fita. Duas etiquetas não podem estar sobrepostas e cada quadrado da fita deve estar ou totalmente coberto por uma etiqueta, ou totalmente descoberto.\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros N, K e C, representando, respectivamente, o comprimento da fita, o número de etiquetas e o comprimento das etiquetas. A segunda linha da entrada contém N inteiros Ai indicando a sequência de números anotados nos quadrados da fita.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um inteiro indicando a soma maior possível de inteiros descobertos na fita depois que todas as etiquetas sejam coladas seguindo as condições do enunciado.\n\n## Restrições\n1 ≤ N ≤ 10000\n-10000 ≤ Ai ≤ 10000\n1 ≤ K ≤ 10000\n1 ≤ C ≤ 10000\nK×C ≤ N\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n12 2 3\n1 22 4 -8 9 2 10 -1 5 5 32 -11\n```\nSaída:\n```\n58\n```\n\nExemplo 2:\nEntrada:\n```\n1 1 1\n10000\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 497,
+            "output_tokens": 2341,
+            "total_tokens": 2838
+        },
+        "cost_usd": {
+            "input_cost": 5e-05,
+            "output_cost": 0.001171,
+            "total_cost": 0.00122
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, k, c = data[0], data[1], data[2]\n    a = data[3:3 + n]\n    total = sum(a)\n\n    if c == 1:\n        print(total - sum(sorted(a)[:k]))\n        return\n\n    prefix = [0] * (n + 1)\n    for i, value in enumerate(a):\n        prefix[i + 1] = prefix[i] + value\n\n    slack = n - k * c\n    dp = [\n        prefix[x + c] - prefix[x]\n        for x in range(slack + 1)\n    ]\n\n    for block in range(1, k):\n        offset = block * c\n        next_dp = [0] * (slack + 1)\n        best = float('inf')\n\n        for x in range(slack + 1):\n            if dp[x] < best:\n                best = dp[x]\n            start = offset + x\n            next_dp[x] = best + prefix[start + c] - prefix[start]\n\n        dp = next_dp\n\n    print(total - min(dp))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n, k, c = data[0], data[1], data[2]\n    a = data[3:3 + n]\n    total = sum(a)\n\n    if c == 1:\n        print(total - sum(sorted(a)[:k]))\n        return\n\n    prefix = [0] * (n + 1)\n    for i, value in enumerate(a):\n        prefix[i + 1] = prefix[i] + value\n\n    slack = n - k * c\n    dp = [\n        prefix[x + c] - prefix[x]\n        for x in range(slack + 1)\n    ]\n\n    for block in range(1, k):\n        offset = block * c\n        next_dp = [0] * (slack + 1)\n        best = float('inf')\n\n        for x in range(slack + 1):\n            if dp[x] < best:\n                best = dp[x]\n            start = offset + x\n            next_dp[x] = best + prefix[start + c] - prefix[start]\n\n        dp = next_dp\n\n    print(total - min(dp))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.8550743000014336,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

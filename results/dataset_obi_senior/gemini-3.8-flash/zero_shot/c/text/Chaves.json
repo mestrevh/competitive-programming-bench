@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:44:40.235826+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Chaves\n\n## Enunciado\nSeu amigo Juca está enfrentando problemas com programação. Na linguagem C, algumas partes do código devem ser colocadas entre chaves \"{ }\" e ele frequentemente esquece de colocá-las ou as coloca de forma errada. Porém, como Juca tem dificuldade para entender os erros de compilação, ele nunca sabe exatamente o que procurar. Por isso ele te pediu para fazer um programa que determine se um código está com as chaves balanceadas, ou seja, se é válido. Um código está com as chaves balanceadas se:\n\n- Não há chaves (como por exemplo \"Bom\" ou \"Correto\");\n- O código é composto por uma sequência de códigos válidos (como por exemplo \"Bom Correto\" ou \"{}{}\" ou \"{}Correto\"); ou\n- O código é formado por um código válido entre chaves (como por exemplo \"{{}}\" ou \"{Bom}\").\n\nO código de Juca é composto por N linhas de até 100 caracteres cada. Pode haver linhas vazias e espaços consecutivos.\n\n## Formato de Entrada\nA primeira linha contém um inteiro N, representando o número de linhas no código. As N linhas seguintes contêm até 100 caracteres.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo uma única letra, \"S\" se o código está com as chaves balanceadas e \"N\", caso contrário.\n\n## Restrições\n1 <= N <= 10^3.\n\nInformações sobre a pontuação: Em um conjunto de casos de teste equivalente a 50 pontos, N = 1 e todos os caracteres são \"{\" ou \"}\" (como no terceiro exemplo).\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n6\n#include <stdio.h>\nint main(void)\n{\n  printf(\"Hello World\\n\");\n}\n```\nSaída:\n```\nS\n```\n\nExemplo 2:\nEntrada:\n```\n5\n{I{N\n {F{}}\n }0}R{\n {M}A{T}I{C@!!{onze}!!}\n```\nSaída:\n```\nS\n```\n\nExemplo 3:\nEntrada:\n```\n1\n{{}}{{}}}\n```\nSaída:\n```\nN\n```\n\nExemplo 4:\nEntrada:\n```\n1\n{{{3}}}({{2}}a{{1}}}{0}\n```\nSaída:\n```\nN\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 671,
+            "output_tokens": 267,
+            "total_tokens": 1591
+        },
+        "cost_usd": {
+            "input_cost": 0.000503,
+            "output_cost": 0.001001,
+            "total_cost": 0.001504
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    // Consome o restante da linha após o número N\n    int c;\n    while ((c = getchar()) != '\\n' && c != EOF);\n\n    int balance = 0;\n    int ok = 1;\n    char buffer[200];\n\n    for (int i = 0; i < n; i++) {\n        if (fgets(buffer, sizeof(buffer), stdin) == NULL) break;\n        for (int j = 0; buffer[j] != '\\0'; j++) {\n            if (buffer[j] == '{') {\n                balance++;\n            } else if (buffer[j] == '}') {\n                balance--;\n                if (balance < 0) {\n                    ok = 0;\n                }\n            }\n        }\n    }\n\n    if (ok && balance == 0) {\n        printf(\"S\\n\");\n    } else {\n        printf(\"N\\n\");\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    // Consome o restante da linha após o número N\n    int c;\n    while ((c = getchar()) != '\\n' && c != EOF);\n\n    int balance = 0;\n    int ok = 1;\n    char buffer[200];\n\n    for (int i = 0; i < n; i++) {\n        if (fgets(buffer, sizeof(buffer), stdin) == NULL) break;\n        for (int j = 0; buffer[j] != '\\0'; j++) {\n            if (buffer[j] == '{') {\n                balance++;\n            } else if (buffer[j] == '}') {\n                balance--;\n                if (balance < 0) {\n                    ok = 0;\n                }\n            }\n        }\n    }\n\n    if (ok && balance == 0) {\n        printf(\"S\\n\");\n    } else {\n        printf(\"N\\n\");\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17240769999989425,
+            "counts": {
+                "AC": 78,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 78
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:30:50.728834+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Chaves\n\n## Enunciado\nSeu amigo Juca está enfrentando problemas com programação. Na linguagem C, algumas partes do código devem ser colocadas entre chaves \"{ }\" e ele frequentemente esquece de colocá-las ou as coloca de forma errada. Porém, como Juca tem dificuldade para entender os erros de compilação, ele nunca sabe exatamente o que procurar. Por isso ele te pediu para fazer um programa que determine se um código está com as chaves balanceadas, ou seja, se é válido. Um código está com as chaves balanceadas se:\n\n- Não há chaves (como por exemplo \"Bom\" ou \"Correto\");\n- O código é composto por uma sequência de códigos válidos (como por exemplo \"Bom Correto\" ou \"{}{}\" ou \"{}Correto\"); ou\n- O código é formado por um código válido entre chaves (como por exemplo \"{{}}\" ou \"{Bom}\").\n\nO código de Juca é composto por N linhas de até 100 caracteres cada. Pode haver linhas vazias e espaços consecutivos.\n\n## Formato de Entrada\nA primeira linha contém um inteiro N, representando o número de linhas no código. As N linhas seguintes contêm até 100 caracteres.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo uma única letra, \"S\" se o código está com as chaves balanceadas e \"N\", caso contrário.\n\n## Restrições\n1 <= N <= 10^3.\n\nInformações sobre a pontuação: Em um conjunto de casos de teste equivalente a 50 pontos, N = 1 e todos os caracteres são \"{\" ou \"}\" (como no terceiro exemplo).\n\n## Limites de Execução\n- Tempo Limite: 2.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n6\n#include <stdio.h>\nint main(void)\n{\n  printf(\"Hello World\\n\");\n}\n```\nSaída:\n```\nS\n```\n\nExemplo 2:\nEntrada:\n```\n5\n{I{N\n {F{}}\n }0}R{\n {M}A{T}I{C@!!{onze}!!}\n```\nSaída:\n```\nS\n```\n\nExemplo 3:\nEntrada:\n```\n1\n{{}}{{}}}\n```\nSaída:\n```\nN\n```\n\nExemplo 4:\nEntrada:\n```\n1\n{{{3}}}({{2}}a{{1}}}{0}\n```\nSaída:\n```\nN\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 705,
+            "output_tokens": 277,
+            "total_tokens": 2640
+        },
+        "cost_usd": {
+            "input_cost": 0.000529,
+            "output_cost": 0.001039,
+            "total_cost": 0.001567
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) {\n        return 0;\n    }\n\n    // Consome o resto da linha onde estava o número N\n    int c;\n    while ((c = getchar()) != '\\n' && c != EOF);\n\n    int balance = 0;\n    int ok = 1;\n    char line[256];\n\n    for (int i = 0; i < n; i++) {\n        if (!fgets(line, sizeof(line), stdin)) {\n            break;\n        }\n        for (int j = 0; line[j] != '\\0'; j++) {\n            if (line[j] == '{') {\n                balance++;\n            } else if (line[j] == '}') {\n                balance--;\n                if (balance < 0) {\n                    ok = 0;\n                }\n            }\n        }\n    }\n\n    if (ok && balance == 0) {\n        printf(\"S\\n\");\n    } else {\n        printf(\"N\\n\");\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) {\n        return 0;\n    }\n\n    // Consome o resto da linha onde estava o número N\n    int c;\n    while ((c = getchar()) != '\\n' && c != EOF);\n\n    int balance = 0;\n    int ok = 1;\n    char line[256];\n\n    for (int i = 0; i < n; i++) {\n        if (!fgets(line, sizeof(line), stdin)) {\n            break;\n        }\n        for (int j = 0; line[j] != '\\0'; j++) {\n            if (line[j] == '{') {\n                balance++;\n            } else if (line[j] == '}') {\n                balance--;\n                if (balance < 0) {\n                    ok = 0;\n                }\n            }\n        }\n    }\n\n    if (ok && balance == 0) {\n        printf(\"S\\n\");\n    } else {\n        printf(\"N\\n\");\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17473579999932554,
+            "counts": {
+                "AC": 78,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 78
+        }
+    }
+]

@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T05:34:50.705277+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Calçada Imperial\n\n## Enunciado\nNa calçada em frente ao Palácio Imperial, não se sabe a razão, existe uma sequência de N números desenhados no chão. A sequência é composta apenas pelos números de 1 a N. Veja um exemplo na coluna (a) da figura ao lado, para N = 12.\nNinguém sabe o significado da sequência e, justamente por isso, várias teorias malucas surgiram. Uma delas diz que a sequência representa, na verdade, apenas um valor que estaria relacionado a um grande segredo dos imperadores. Esse valor é a quantidade máxima de números da sequência que poderiam ser marcados com um círculo, de modo que a sequência de números marcados não contenha dois números iguais consecutivos e seja composta de no máximo dois números distintos.\nA coluna (b) da figura ilustra uma sequência de 4 números marcados que obedece a restrição acima. Você consegue verificar que essa é, de fato, a quantidade máxima possível de números numa sequência marcada?\n[1.png]\nNeste problema, dada a sequência original de números desenhados no chão da calçada, seu programa deve computar e imprimir a quantidade máxima de números da sequência que poderiam ser marcados com um círculo sem que haja dois números iguais consecutivos na sequência marcada e tal que ela seja composta de no máximo dois números distintos.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N representando o tamanho da sequência. As N linhas seguintes contêm, cada uma, um inteiro V_i, para 1 ≤ i ≤ N, definindo a sequência de números desenhados no chão da calçada imperial.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um número inteiro representando a quantidade máxima de números da sequência que poderiam ser marcados com um círculo sem que haja dois números iguais consecutivos na sequência marcada e tal que ela seja composta de no máximo dois números distintos.\n\n## Restrições\n1 ≤ N ≤ 500\n1 ≤ V_i ≤ N, para 1 ≤ i ≤ N\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n1\n1\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n12\n3\n2\n5\n2\n10\n4\n4\n7\n12\n2\n8\n10\n```\nSaída:\n```\n4\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 729,
+            "output_tokens": 9738,
+            "total_tokens": 10467
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.023371,
+            "total_cost": 0.023373
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    n = int(data[0])\n    arr = list(map(int, data[1:1+n]))\n    unique = list(set(arr))\n    \n    if len(unique) <= 1:\n        print(1)\n        return\n    \n    size = n + 1\n    last = [[0] * size for _ in range(size)]\n    cnt = [[0] * size for _ in range(size)]\n    \n    for v in arr:\n        for u in unique:\n            if u == v:\n                continue\n            if last[v][u] != v:\n                cnt[v][u] += 1\n                cnt[u][v] += 1\n                last[v][u] = v\n                last[u][v] = v\n    \n    ans = 1\n    for row in cnt:\n        m = max(row)\n        if m > ans:\n            ans = m\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    n = int(data[0])\n    arr = list(map(int, data[1:1+n]))\n    unique = list(set(arr))\n    \n    if len(unique) <= 1:\n        print(1)\n        return\n    \n    size = n + 1\n    last = [[0] * size for _ in range(size)]\n    cnt = [[0] * size for _ in range(size)]\n    \n    for v in arr:\n        for u in unique:\n            if u == v:\n                continue\n            if last[v][u] != v:\n                cnt[v][u] += 1\n                cnt[u][v] += 1\n                last[v][u] = v\n                last[u][v] = v\n    \n    ans = 1\n    for row in cnt:\n        m = max(row)\n        if m > ans:\n            ans = m\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07660969999960798,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

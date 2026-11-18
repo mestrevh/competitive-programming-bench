@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T04:48:23.451809+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Lâmpadas do hotel\n\n## Enunciado\nVocê está de volta em seu hotel na Tailândia depois de um dia de mergulhos. O seu quarto tem duas lâmpadas. Vamos chamá-las de A e B. No hotel há dois interruptores, que chamaremos de C1 e C2. Ao apertar C1, a lâmpada A acende se estiver apagada, e apaga se estiver acesa. Se apertar C2, cada uma das lâmpadas A e a B troca de estado: se estiver apagada, fica acesa e se estiver acesa apaga.\n\nVocê chegou no hotel e encontrou as lâmpadas em um determinado estado, como foram deixadas por seu amigo. Vamos chamar o estado inicial da lâmpada A de I_A e o estado inicial da lâmpada B de I_B. Você gostaria de deixar as lâmpadas em uma certa configuração final, que chamaremos de F_A e F_B, respectivamente, apertando os interruptores a menor quantidade de vezes possível. Por exemplo, se as duas lâmpadas começam apagadas, e você quer que apenas a lâmpada A termine acesa, basta apertar o interruptor C1.\n\nDados os estados iniciais e desejados das duas lâmpadas (acesa/apagada), determine o número mínimo de vezes que interruptores devem ser apertados.\n\n## Formato de Entrada\nA entrada contém quatro inteiros: I_A, I_B, F_A e F_B, os estados iniciais das lâmpadas A e B e os estados finais desejados das lâmpadas A e B, respectivamente e nesta ordem. Os valores de I_A, I_B, F_A e F_B possíveis são 0, se a lâmpada estiver apagada e 1 caso contrário.\n\n## Formato de Saída\nSeu programa deverá imprimir um único número, o número mínimo de interruptores que devem ser apertados.\n\n## Restrições\nOs valores de I_A, I_B, F_A e F_B são 0 ou 1.\n\nInformações sobre a pontuação: Em um conjunto de casos de teste equivalente a 25 pontos, as duas lâmpadas começam sempre apagadas (I_A = I_B = 0).\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n0 0 1 1\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n0 0 0 1\n```\nSaída:\n```\n2\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1168,
+            "output_tokens": 879,
+            "total_tokens": 2047
+        },
+        "cost_usd": {
+            "input_cost": 0.000117,
+            "output_cost": 0.00044,
+            "total_cost": 0.000556
+        },
+        "raw_response": "## 1. Compreensão do problema\n\nO objetivo é transformar os estados iniciais das lâmpadas A e B nos estados finais desejados, apertando os interruptores o menor número de vezes possível.\n\nA entrada contém quatro inteiros binários: `IA`, `IB`, `FA` e `FB`. A saída deve ser um único inteiro: a quantidade mínima de apertos.\n\nNão há limites de tempo ou memória especificados. Como os estados são binários, o resultado é sempre pequeno, entre 0 e 2. Casos importantes incluem não precisar alterar nenhuma lâmpada e alterar apenas B.\n\n## 2. Planejamento e design algorítmico\n\nDefina `dA = IA XOR FA` e `dB = IB XOR FB`. Esses valores indicam quais lâmpadas precisam mudar de estado.\n\n- O interruptor C2 muda B, então sua paridade de apertos precisa ser `dB`.\n- C2 também muda A. Portanto, a paridade de apertos em C1 precisa ser `dA XOR dB`, para que a mudança total de A seja `dA`.\n\nPara cada interruptor, basta apertá-lo zero vezes se sua paridade necessária for 0, ou uma vez se for 1. Assim, a resposta é:\n\n`dB + (dA XOR dB)`\n\nA solução usa tempo **O(1)** e espaço **O(1)**, sem estruturas de dados adicionais.\n\n## 3. Codificação em C\n\n```c\n#include <stdio.h>\n\nint main(void) {\n    int IA, IB, FA, FB;\n\n    if (scanf(\"%d %d %d %d\", &IA, &IB, &FA, &FB) != 4) {\n        return 0;\n    }\n\n    int dA = IA ^ FA;\n    int dB = IB ^ FB;\n\n    int apertos = dB + (dA ^ dB);\n\n    printf(\"%d\\n\", apertos);\n    return 0;\n}\n```\n\n## 4. Retrospecto e verificação\n\n- Exemplo 1: `0 0 1 1` → ambas mudam; basta apertar C2 uma vez. Resultado: `1`.\n- Exemplo 2: `0 0 0 1` → somente B muda; é preciso apertar C2 e depois C1. Resultado: `2`.\n- Se nenhuma lâmpada precisar mudar, o resultado é `0`.\n- Se apenas A precisar mudar, basta apertar C1 uma vez.\n\nA complexidade constante garante execução eficiente e a implementação cobre todos os estados binários possíveis.",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int IA, IB, FA, FB;\n\n    if (scanf(\"%d %d %d %d\", &IA, &IB, &FA, &FB) != 4) {\n        return 0;\n    }\n\n    int dA = IA ^ FA;\n    int dB = IB ^ FB;\n\n    int apertos = dB + (dA ^ dB);\n\n    printf(\"%d\\n\", apertos);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17716490000020713,
+            "counts": {
+                "AC": 54,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 54
+        }
+    }
+]

@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T11:56:52.681526+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em javascript. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Bingo!\n\n## Enunciado\nO grande prêmio do Bingo de São João será um carro zero-quilômetro. Todo mundo quer ser o primeiro a completar sua cartela, claro. São N cartelas identificadas de 1 até N que contêm, cada uma, K números distintos entre os números naturais de 1 até U, para K < U. Um número, claro, pode aparecer em mais de uma cartela e duas cartelas podem até ser iguais, ter o mesmo conjunto de números. Justamente por isso, veja que pode acontecer empate com mais de uma cartela sendo completada no mesmo instante.\nNeste problema, serão dados na entrada os conjuntos de números de todas as cartelas e a sequência de números sorteados, que será uma permutação dos naturais de 1 até U. Seu programa deve determinar qual ou quais cartelas vão ser completadas primeiro e ganhar o carro.\nPor exemplo, para N = 4, K = 5 e U = 10, com as cartelas dadas pela tabela abaixo, se a sequência de números sorteados for [7, 3, 5, 2, 6, 1, 9, 10, 4, 8], então haverá uma cartela vencedora, a número 3.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros N, K e U, representando respectivamente o número de cartelas, quantos números cada cartela contém e o maior natural que pode ocorrer numa cartela. As N linhas seguintes contêm, cada uma, K inteiros distintos Ci, para 1 ≤ i ≤ K, representando o conjunto de números de cada cartela, da cartela 1 até a N. A última linha da entrada contém U inteiros indicando a sequência de números sorteados, uma permutação dos naturais entre 1 e U.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo os números identificadores das cartelas vencedoras do carro, em ordem crescente.\n\n## Restrições\n1 ≤ N ≤ 1000\n1 ≤ K ≤ 1000\n1 ≤ U ≤ 10000\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 15 pontos, N ≤ 100, K ≤ 50, U ≤ 100, e apenas uma cartela é vencedora.\n- Em um conjunto de casos de teste somando 15 pontos, N ≤ 100, K ≤ 50, U ≤ 100.\n- Em um conjunto de casos de teste somando 30 pontos, N ≤ 100, K ≤ 500, U ≤ 1000.\n- Em um conjunto de casos de teste somando 40 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4 5 10\n3 10 8 7 2\n4 1 7 10 9\n9 1 5 3 6\n6 8 1 5 7\n7 3 5 6 1 9 2 10 4 8\n```\nSaída:\n```\n3\n```\n\nExemplo 2:\nEntrada:\n```\n5 4 9\n1 9 3 2\n4 5 6 7\n2 3 5 4\n2 6 8 1\n2 5 7 9\n1 9 7 4 5 3 2 8 6\n```\nSaída:\n```\n1 3 5\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```javascript ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 958,
+            "output_tokens": 5073,
+            "total_tokens": 6031
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.012175,
+            "total_cost": 0.012178
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\n\nfunction nextInt() {\n  while (idx < data.length && data.charCodeAt(idx) <= 32) idx++;\n  let num = 0;\n  while (idx < data.length && data.charCodeAt(idx) > 32) {\n    num = num * 10 + (data.charCodeAt(idx) - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst U = nextInt();\n\nconst occ = Array.from({ length: U + 1 }, () => []);\n\nfor (let i = 1; i <= N; i++) {\n  for (let j = 0; j < K; j++) {\n    const x = nextInt();\n    occ[x].push(i);\n  }\n}\n\nconst remaining = new Int32Array(N + 1);\nremaining.fill(K);\n\nlet minTime = Infinity;\nlet winners = [];\n\nfor (let t = 1; t <= U; t++) {\n  const x = nextInt();\n  const list = occ[x];\n\n  for (let p = 0; p < list.length; p++) {\n    const card = list[p];\n    const rem = --remaining[card];\n\n    if (rem === 0) {\n      if (t < minTime) {\n        minTime = t;\n        winners = [card];\n      } else if (t === minTime) {\n        winners.push(card);\n      }\n    }\n  }\n}\n\nwinners.sort((a, b) => a - b);\nconsole.log(winners.join(' '));\n```",
+        "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\n\nfunction nextInt() {\n  while (idx < data.length && data.charCodeAt(idx) <= 32) idx++;\n  let num = 0;\n  while (idx < data.length && data.charCodeAt(idx) > 32) {\n    num = num * 10 + (data.charCodeAt(idx) - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst U = nextInt();\n\nconst occ = Array.from({ length: U + 1 }, () => []);\n\nfor (let i = 1; i <= N; i++) {\n  for (let j = 0; j < K; j++) {\n    const x = nextInt();\n    occ[x].push(i);\n  }\n}\n\nconst remaining = new Int32Array(N + 1);\nremaining.fill(K);\n\nlet minTime = Infinity;\nlet winners = [];\n\nfor (let t = 1; t <= U; t++) {\n  const x = nextInt();\n  const list = occ[x];\n\n  for (let p = 0; p < list.length; p++) {\n    const card = list[p];\n    const rem = --remaining[card];\n\n    if (rem === 0) {\n      if (t < minTime) {\n        minTime = t;\n        winners = [card];\n      } else if (t === minTime) {\n        winners.push(card);\n      }\n    }\n  }\n}\n\nwinners.sort((a, b) => a - b);\nconsole.log(winners.join(' '));",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.09255310000298778,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

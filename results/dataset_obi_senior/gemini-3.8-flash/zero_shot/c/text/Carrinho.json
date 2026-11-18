@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:44:30.232342+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Carrinho\n\n## Enunciado\nUm carrinho elétrico, que usa apenas uma bateria com carga inicial de C coulombs, tem uma característica incrível: ele só pode ir a uma velocidade constante, mas pode escolher qualquer velocidade constante V, maior do que zero, em metros por segundo. Só que, quanto maior a velocidade, menor a autonomia. De maneira mais rigorosa, a distância máxima d_max, em metros, que ele pode percorrer é diretamente proporcional à carga inicial da bateria e inversamente proporcional à velocidade: d_max = C/V. É incrível, mas veja que, mesmo que a carga seja muito pequena, o carrinho sempre pode percorrer qualquer distância, desde que vá a uma velocidade suficientemente pequena!\n\nO carrinho está na posição zero de uma pista reta com comprimento D metros. Há N baterias, com diferentes cargas, colocadas em posições distintas ao longo da pista, uma delas na posição zero. Considere que nosso carrinho ideal consegue fazer um pit-stop instantâneo, trocando de bateria sem perder tempo algum. Ao passar por uma nova bateria ele pode decidir ou não fazer a troca; e ele pode alterar sua velocidade apenas num instante em que troca de bateria. Qual é o tempo mínimo possível para o carrinho chegar ao final da pista?\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N e um real D, respectivamente, o número de baterias e o comprimento da pista. As N linhas seguintes contêm, cada uma, dois reais P e C definindo, respectivamente, a posição e a carga das baterias. Sempre existe uma bateria na posição 0.0 e as baterias são dadas em ordem estritamente crescente de posição.\n\n## Formato de Saída\nImprima uma linha contendo um real, com exatamente três casas decimais, o tempo mínimo possível em segundos para o carrinho chegar ao final da pista.\n\n## Restrições\n1 ≤ N ≤ 1000 e 1.0 ≤ D ≤ 10000.0\n0.0 ≤ P < D e 0.0 < C < 100.0\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4 10.000\n0.000 1.000\n1.200 0.100\n3.000 10.000\n7.700 1.000\n```\nSaída:\n```\n13.900\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 655,
+            "output_tokens": 349,
+            "total_tokens": 1940
+        },
+        "cost_usd": {
+            "input_cost": 0.000491,
+            "output_cost": 0.001309,
+            "total_cost": 0.0018
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 1005\n#define INF 1e18\n\ntypedef struct {\n    double p;\n    double c;\n} Bateria;\n\nBateria b[MAXN];\ndouble dp[MAXN];\n\nint main() {\n    int n;\n    double d;\n\n    if (scanf(\"%d %lf\", &n, &d) != 2) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &b[i].p, &b[i].c);\n    }\n\n    // Ponto final na posição D\n    b[n].p = d;\n    b[n].c = 0.0;\n\n    for (int i = 0; i <= n; i++) {\n        dp[i] = INF;\n    }\n    dp[0] = 0.0;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j <= n; j++) {\n            double dist = b[j].p - b[i].p;\n            double time = (dist * dist) / b[i].c;\n            if (dp[i] + time < dp[j]) {\n                dp[j] = dp[i] + time;\n            }\n        }\n    }\n\n    printf(\"%.3f\\n\", dp[n]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 1005\n#define INF 1e18\n\ntypedef struct {\n    double p;\n    double c;\n} Bateria;\n\nBateria b[MAXN];\ndouble dp[MAXN];\n\nint main() {\n    int n;\n    double d;\n\n    if (scanf(\"%d %lf\", &n, &d) != 2) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &b[i].p, &b[i].c);\n    }\n\n    // Ponto final na posição D\n    b[n].p = d;\n    b[n].c = 0.0;\n\n    for (int i = 0; i <= n; i++) {\n        dp[i] = INF;\n    }\n    dp[0] = 0.0;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j <= n; j++) {\n            double dist = b[j].p - b[i].p;\n            double time = (dist * dist) / b[i].c;\n            if (dp[i] + time < dp[j]) {\n                dp[j] = dp[i] + time;\n            }\n        }\n    }\n\n    printf(\"%.3f\\n\", dp[n]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11987430000044696,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:30:33.513679+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Carrinho\n\n## Enunciado\nUm carrinho elétrico, que usa apenas uma bateria com carga inicial de C coulombs, tem uma característica incrível: ele só pode ir a uma velocidade constante, mas pode escolher qualquer velocidade constante V, maior do que zero, em metros por segundo. Só que, quanto maior a velocidade, menor a autonomia. De maneira mais rigorosa, a distância máxima d_max, em metros, que ele pode percorrer é diretamente proporcional à carga inicial da bateria e inversamente proporcional à velocidade: d_max = C/V. É incrível, mas veja que, mesmo que a carga seja muito pequena, o carrinho sempre pode percorrer qualquer distância, desde que vá a uma velocidade suficientemente pequena!\n\nO carrinho está na posição zero de uma pista reta com comprimento D metros. Há N baterias, com diferentes cargas, colocadas em posições distintas ao longo da pista, uma delas na posição zero. Considere que nosso carrinho ideal consegue fazer um pit-stop instantâneo, trocando de bateria sem perder tempo algum. Ao passar por uma nova bateria ele pode decidir ou não fazer a troca; e ele pode alterar sua velocidade apenas num instante em que troca de bateria. Qual é o tempo mínimo possível para o carrinho chegar ao final da pista?\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N e um real D, respectivamente, o número de baterias e o comprimento da pista. As N linhas seguintes contêm, cada uma, dois reais P e C definindo, respectivamente, a posição e a carga das baterias. Sempre existe uma bateria na posição 0.0 e as baterias são dadas em ordem estritamente crescente de posição.\n\n## Formato de Saída\nImprima uma linha contendo um real, com exatamente três casas decimais, o tempo mínimo possível em segundos para o carrinho chegar ao final da pista.\n\n## Restrições\n1 ≤ N ≤ 1000 e 1.0 ≤ D ≤ 10000.0\n0.0 ≤ P < D e 0.0 < C < 100.0\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4 10.000\n0.000 1.000\n1.200 0.100\n3.000 10.000\n7.700 1.000\n```\nSaída:\n```\n13.900\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 689,
+            "output_tokens": 352,
+            "total_tokens": 1876
+        },
+        "cost_usd": {
+            "input_cost": 0.000517,
+            "output_cost": 0.00132,
+            "total_cost": 0.001837
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 1005\n#define INF 1e18\n\ntypedef struct {\n    double p;\n    double c;\n} Battery;\n\nint main() {\n    int n;\n    double d;\n    if (scanf(\"%d %lf\", &n, &d) != 2) return 0;\n\n    Battery b[MAXN];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &b[i].p, &b[i].c);\n    }\n    // O destino final pode ser considerado o ponto n\n    b[n].p = d;\n    b[n].c = 0.0;\n\n    double dp[MAXN];\n    for (int i = 0; i <= n; i++) {\n        dp[i] = INF;\n    }\n    dp[0] = 0.0;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j <= n; j++) {\n            double dist = b[j].p - b[i].p;\n            double t = (dist * dist) / b[i].c;\n            if (dp[i] + t < dp[j]) {\n                dp[j] = dp[i] + t;\n            }\n        }\n    }\n\n    printf(\"%.3f\\n\", dp[n]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 1005\n#define INF 1e18\n\ntypedef struct {\n    double p;\n    double c;\n} Battery;\n\nint main() {\n    int n;\n    double d;\n    if (scanf(\"%d %lf\", &n, &d) != 2) return 0;\n\n    Battery b[MAXN];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &b[i].p, &b[i].c);\n    }\n    // O destino final pode ser considerado o ponto n\n    b[n].p = d;\n    b[n].c = 0.0;\n\n    double dp[MAXN];\n    for (int i = 0; i <= n; i++) {\n        dp[i] = INF;\n    }\n    dp[0] = 0.0;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j <= n; j++) {\n            double dist = b[j].p - b[i].p;\n            double t = (dist * dist) / b[i].c;\n            if (dp[i] + t < dp[j]) {\n                dp[j] = dp[i] + t;\n            }\n        }\n    }\n\n    printf(\"%.3f\\n\", dp[n]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1734444000030635,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

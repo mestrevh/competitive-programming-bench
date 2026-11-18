@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T07:26:20.546934+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dividindo o império\n\n## Enunciado\nUm grande Império é composto por N cidades, numeradas de 1 até N. Alguns pares de cidades estão ligados diretamente por estradas bidirecionais e, por uma antiga tradição, esses pares são escolhidos de maneira que sempre é possível ir de qualquer cidade para qualquer outra cidade por exatamente um caminho (um caminho é uma sequência de estradas).\nO imperador quer dividir seu império em dois para deixar de herança para seus dois filhos. Ele percebeu que basta destruir exatamente uma estrada, qualquer estrada, para dividir seu império em dois menores que, separadamente, preservam a antiga tradição. Ele agora precisa da sua ajuda para computar a menor diferença possível no número de cidades entre os dois impérios resultantes.\n[1.png]\nPor exemplo, na figura, se o imperador destruir a estrada entre as cidades 3 e 12, os impérios resultantes terão 5 e 11 cidades, uma diferença de 6 cidades. Porém, se ele destruir a estrada entre as cidades 3 e 5, a diferença será de apenas 4 cidades. Você consegue ver que essa é a menor diferença possível para esse exemplo da figura?\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de cidades no império. As N - 1 linhas seguintes contêm, cada uma, dois inteiros A e B, indicando que existe uma estrada bidirecional ligando diretamente as cidades A e B.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um inteiro representando a menor diferença possível no número de cidades entre os dois impérios resultantes.\n\n## Restrições\n2 ≤ N ≤ 10^5\n1 ≤ A ≤ N\n1 ≤ B ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 10000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n1 2\n2 3\n3 4\n```\nSaída:\n```\n0\n```\n\nExemplo 2:\nEntrada:\n```\n16\n3 5\n12 3\n5 1\n2 1\n4 1\n6 1\n7 1\n12 8\n12 9\n12 10\n12 11\n3 13\n13 14\n15 13\n15 16\n```\nSaída:\n```\n4\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 740,
+            "output_tokens": 2040,
+            "total_tokens": 2780
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.004896,
+            "total_cost": 0.004898
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    int m = 2 * (N - 1);\n    int *head = malloc((N + 1) * sizeof(int));\n    int *to = malloc(m * sizeof(int));\n    int *nxt = malloc(m * sizeof(int));\n\n    for (int i = 1; i <= N; i++) head[i] = -1;\n\n    int idx = 0;\n    for (int i = 0; i < N - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[idx] = b;\n        nxt[idx] = head[a];\n        head[a] = idx++;\n\n        to[idx] = a;\n        nxt[idx] = head[b];\n        head[b] = idx++;\n    }\n\n    int *parent = calloc(N + 1, sizeof(int));\n    int *order = malloc(N * sizeof(int));\n    int *stack = malloc(N * sizeof(int));\n\n    int top = 0, cnt = 0;\n    stack[top++] = 1;\n    parent[1] = -1;\n\n    while (top > 0) {\n        int v = stack[--top];\n        order[cnt++] = v;\n\n        for (int e = head[v]; e != -1; e = nxt[e]) {\n            int u = to[e];\n            if (u == parent[v]) continue;\n            parent[u] = v;\n            stack[top++] = u;\n        }\n    }\n\n    int *sz = malloc((N + 1) * sizeof(int));\n    for (int i = 1; i <= N; i++) sz[i] = 1;\n\n    for (int i = N - 1; i >= 0; i--) {\n        int v = order[i];\n        if (parent[v] > 0) {\n            sz[parent[v]] += sz[v];\n        }\n    }\n\n    int ans = N;\n    for (int v = 2; v <= N; v++) {\n        int s = sz[v];\n        int diff = N - 2 * s;\n        if (diff < 0) diff = -diff;\n        if (diff < ans) ans = diff;\n    }\n\n    printf(\"%d\\n\", ans);\n\n    free(head);\n    free(to);\n    free(nxt);\n    free(parent);\n    free(order);\n    free(stack);\n    free(sz);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    int m = 2 * (N - 1);\n    int *head = malloc((N + 1) * sizeof(int));\n    int *to = malloc(m * sizeof(int));\n    int *nxt = malloc(m * sizeof(int));\n\n    for (int i = 1; i <= N; i++) head[i] = -1;\n\n    int idx = 0;\n    for (int i = 0; i < N - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[idx] = b;\n        nxt[idx] = head[a];\n        head[a] = idx++;\n\n        to[idx] = a;\n        nxt[idx] = head[b];\n        head[b] = idx++;\n    }\n\n    int *parent = calloc(N + 1, sizeof(int));\n    int *order = malloc(N * sizeof(int));\n    int *stack = malloc(N * sizeof(int));\n\n    int top = 0, cnt = 0;\n    stack[top++] = 1;\n    parent[1] = -1;\n\n    while (top > 0) {\n        int v = stack[--top];\n        order[cnt++] = v;\n\n        for (int e = head[v]; e != -1; e = nxt[e]) {\n            int u = to[e];\n            if (u == parent[v]) continue;\n            parent[u] = v;\n            stack[top++] = u;\n        }\n    }\n\n    int *sz = malloc((N + 1) * sizeof(int));\n    for (int i = 1; i <= N; i++) sz[i] = 1;\n\n    for (int i = N - 1; i >= 0; i--) {\n        int v = order[i];\n        if (parent[v] > 0) {\n            sz[parent[v]] += sz[v];\n        }\n    }\n\n    int ans = N;\n    for (int v = 2; v <= N; v++) {\n        int s = sz[v];\n        int diff = N - 2 * s;\n        if (diff < 0) diff = -diff;\n        if (diff < ans) ans = diff;\n    }\n\n    printf(\"%d\\n\", ans);\n\n    free(head);\n    free(to);\n    free(nxt);\n    free(parent);\n    free(order);\n    free(stack);\n    free(sz);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17154779999691527,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T20:32:28.964888+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dividindo o império\n\n## Enunciado\nUm grande Império é composto por N cidades, numeradas de 1 até N. Alguns pares de cidades estão ligados diretamente por estradas bidirecionais e, por uma antiga tradição, esses pares são escolhidos de maneira que sempre é possível ir de qualquer cidade para qualquer outra cidade por exatamente um caminho (um caminho é uma sequência de estradas).\nO imperador quer dividir seu império em dois para deixar de herança para seus dois filhos. Ele percebeu que basta destruir exatamente uma estrada, qualquer estrada, para dividir seu império em dois menores que, separadamente, preservam a antiga tradição. Ele agora precisa da sua ajuda para computar a menor diferença possível no número de cidades entre os dois impérios resultantes.\n[1.png]\nPor exemplo, na figura, se o imperador destruir a estrada entre as cidades 3 e 12, os impérios resultantes terão 5 e 11 cidades, uma diferença de 6 cidades. Porém, se ele destruir a estrada entre as cidades 3 e 5, a diferença será de apenas 4 cidades. Você consegue ver que essa é a menor diferença possível para esse exemplo da figura?\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de cidades no império. As N - 1 linhas seguintes contêm, cada uma, dois inteiros A e B, indicando que existe uma estrada bidirecional ligando diretamente as cidades A e B.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um inteiro representando a menor diferença possível no número de cidades entre os dois impérios resultantes.\n\n## Restrições\n2 ≤ N ≤ 10^5\n1 ≤ A ≤ N\n1 ≤ B ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 10000\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n1 2\n2 3\n3 4\n```\nSaída:\n```\n0\n```\n\nExemplo 2:\nEntrada:\n```\n16\n3 5\n12 3\n5 1\n2 1\n4 1\n6 1\n7 1\n12 8\n12 9\n12 10\n12 11\n3 13\n13 14\n15 13\n15 16\n```\nSaída:\n```\n4\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 771,
+            "output_tokens": 1327,
+            "total_tokens": 2098
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.003185,
+            "total_cost": 0.003187
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n#define MAXE 200005\n\nint head[MAXN], to[MAXE], nxt[MAXE];\nint parent[MAXN], order[MAXN], sub[MAXN];\n\nint main(void) {\n    int n;\n    scanf(\"%d\", &n);\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    int ec = 0;\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[ec] = b;\n        nxt[ec] = head[a];\n        head[a] = ec++;\n\n        to[ec] = a;\n        nxt[ec] = head[b];\n        head[b] = ec++;\n    }\n\n    int top = 0;\n    order[top++] = 1;\n    parent[1] = 0;\n\n    for (int i = 0; i < top; i++) {\n        int u = order[i];\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n\n            if (v != parent[u]) {\n                parent[v] = u;\n                order[top++] = v;\n            }\n        }\n    }\n\n    for (int i = 1; i <= n; i++) {\n        sub[i] = 1;\n    }\n\n    for (int i = n - 1; i > 0; i--) {\n        int u = order[i];\n        sub[parent[u]] += sub[u];\n    }\n\n    int ans = n;\n\n    for (int i = 1; i < n; i++) {\n        int u = order[i];\n        int a = sub[u];\n        int b = n - a;\n        int diff = a > b ? a - b : b - a;\n\n        if (diff < ans) {\n            ans = diff;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100005\n#define MAXE 200005\n\nint head[MAXN], to[MAXE], nxt[MAXE];\nint parent[MAXN], order[MAXN], sub[MAXN];\n\nint main(void) {\n    int n;\n    scanf(\"%d\", &n);\n\n    for (int i = 1; i <= n; i++) {\n        head[i] = -1;\n    }\n\n    int ec = 0;\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[ec] = b;\n        nxt[ec] = head[a];\n        head[a] = ec++;\n\n        to[ec] = a;\n        nxt[ec] = head[b];\n        head[b] = ec++;\n    }\n\n    int top = 0;\n    order[top++] = 1;\n    parent[1] = 0;\n\n    for (int i = 0; i < top; i++) {\n        int u = order[i];\n\n        for (int e = head[u]; e != -1; e = nxt[e]) {\n            int v = to[e];\n\n            if (v != parent[u]) {\n                parent[v] = u;\n                order[top++] = v;\n            }\n        }\n    }\n\n    for (int i = 1; i <= n; i++) {\n        sub[i] = 1;\n    }\n\n    for (int i = n - 1; i > 0; i--) {\n        int u = order[i];\n        sub[parent[u]] += sub[u];\n    }\n\n    int ans = n;\n\n    for (int i = 1; i < n; i++) {\n        int u = order[i];\n        int a = sub[u];\n        int b = n - a;\n        int diff = a > b ? a - b : b - a;\n\n        if (diff < ans) {\n            ans = diff;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12036470000748523,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

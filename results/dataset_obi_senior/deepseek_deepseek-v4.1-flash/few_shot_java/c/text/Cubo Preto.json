@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T23:32:11.568544+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "few_shot_java",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o problema de programação competitiva a seguir de forma correta, ótima e eficiente.\n\n### DIRETRIZES TÉCNICAS ESSENCIAIS:\n1. **Corretude e Casos de Borda:** Trate rigorosamente valores limites (N = 0, N = 1, valores negativos, limites máximos do enunciado).\n2. **Prevenção de Overflow:** Use tipos inteiros de 64 bits (`long long`) sempre que operações de soma, multiplicação ou contagem acumulada puderem exceder 2 × 10^9.\n3. **Complexidade de Tempo e Memória:** O algoritmo deve respeitar os limites de execução do problema, evitando complexidades assintóticas inadequadas (como O(N^2) quando N >= 10^5).\n4. **Entrada e Saída Estritas (stdin/stdout):**\n   - Leia da entrada padrão e escreva na saída padrão exatamente no formato especificado.\n   - NUNCA imprima mensagens auxiliares, avisos ou cabeçalhos interativos (\"Digite N:\", \"Resultado:\").\n   - Atente para separadores de espaço e quebras de linha (evite espaços extras no final da linha se o problema proibir).\n5. **Estrutura Executável Limpa:**\n   - O código deve ser autocontido, completo e pronto para compilação/execução.\n   - Em C: inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, etc.) e use `int main(void)` retornando `0`.\n6. **Formato de Resposta:** Retorne APENAS o código da solução delimitado por um bloco markdown (```c ... ```). Não inclua explicações ou texto antes ou depois do bloco.\n\n### EXEMPLOS DE REFERÊNCIA:\nAbaixo estão exemplos canônicos de problemas e soluções estruturadas para servir de modelo de raciocínio, prevenção de bugs e formatação de I/O:\n\n#### Exemplo 1: I/O Básico e Prevenção de Overflow\n**Problema:** Leia dois inteiros e imprima a soma deles.\n**Entrada:**\n```\n1000000000 2000000000\n```\n**Saída:**\n```\n3000000000\n```\n**Solução esperada:**\n```c\n#include <stdio.h>\n\nint main(void) {\n    long long a, b;\n    if (scanf(\"%lld %lld\", &a, &b) == 2) {\n        printf(\"%lld\\n\", a + b);\n    }\n    return 0;\n}\n```\n\n#### Exemplo 2: Matriz, Strings e Contagem\n**Problema:** Dada uma grade de N linhas e M colunas de caracteres, conte quantos caracteres '1' existem.\n**Entrada:**\n```\n2 3\n101\n010\n```\n**Saída:**\n```\n3\n```\n**Solução esperada:**\n```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    char *row = (char *)malloc((m + 5) * sizeof(char));\n    long long count = 0;\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", row);\n        for (int j = 0; j < m; j++) {\n            if (row[j] == '1') {\n                count++;\n            }\n        }\n    }\n    free(row);\n\n    printf(\"%lld\\n\", count);\n    return 0;\n}\n```\n\n#### Exemplo 3: Grafos, Indexação 1-Based, Ordenação e Formatação de Saída\n**Problema:** Dado um grafo não-direcionado com N vértices (indexados de 1 a N) e M arestas, liste os vizinhos do vértice 1 em ordem crescente, separados por espaço.\n**Entrada:**\n```\n4 3\n1 3\n1 2\n3 4\n```\n**Saída:**\n```\n2 3\n```\n**Solução esperada:**\n```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint cmp_int(const void *a, const void *b) {\n    int va = *(const int *)a;\n    int vb = *(const int *)b;\n    return (va > vb) - (va < vb);\n}\n\nint main(void) {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    int *neighbors = (int *)malloc((m + 1) * sizeof(int));\n    int deg = 0;\n\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        if (u == 1) {\n            neighbors[deg++] = v;\n        } else if (v == 1) {\n            neighbors[deg++] = u;\n        }\n    }\n\n    qsort(neighbors, deg, sizeof(int), cmp_int);\n\n    for (int i = 0; i < deg; i++) {\n        if (i > 0) printf(\" \");\n        printf(\"%d\", neighbors[i]);\n    }\n    printf(\"\\n\");\n\n    free(neighbors);\n    return 0;\n}\n```\n\n---\n\n### PROBLEMA A SER RESOLVIDO:\n# Cubo Preto\n\n## Enunciado\nAna comprou um cubo de madeira de lado N cm (ou seja, dimensões N × N × N centímetros) e o pintou todo de preto. Depois disso, ela cortou o cubo em N³ cubinhos de lado 1 cm (ou seja, dimensões 1 × 1 × 1 centímetro). Após o corte, alguns cubinhos terão nenhuma face pintada de preto, alguns terão exatamente uma face pintada, alguns terão exatamente duas faces pintadas e outros terão exatamente três faces pintadas.\n\nAbaixo podemos ver um cubo de lado 4 cm (N = 4) após Ana pintá-lo e cortá-lo.\n[1.png]\nAna contou quantas faces estavam pintadas em cada cubinho cortado do cubo acima e concluiu que, entre os 64 cubinhos, existem 8 cubinhos com nenhuma face pintada de preto, 24 cubinhos com exatamente uma face pintada, 24 cubinhos com exatamente duas faces pintadas e 8 cubinhos com exatamente três faces pintadas.\n\nA sua tarefa é: dada a dimensão N do lado do cubo em centímetros, determine quantos cubinhos terão exatamente nenhuma, uma, duas e três faces pintadas de preto após Ana pintar e cortar o cubo.\n\n## Formato de Entrada\nA entrada contém uma única linha com um único inteiro N, a dimensão do cubo em centímetros.\n\n## Formato de Saída\nSeu programa deverá imprimir quatro linhas, cada uma contendo um único inteiro:\n- A primeira linha deve conter o número de cubinhos com nenhuma face pintada de preto.\n- A segunda linha deve conter o número de cubinhos com exatamente uma face pintada.\n- A terceira linha deve conter o número de cubinhos com exatamente duas faces pintadas.\n- A quarta e última linha deve conter o número de cubinhos com exatamente três faces pintadas.\n\n## Restrições\n2 ≤ N ≤ 100\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n```\nSaída:\n```\n8\n24\n24\n8\n```\n\nExemplo 2:\nEntrada:\n```\n2\n```\nSaída:\n```\n0\n0\n0\n8\n```\n\n---\nIMPORTANTE: Agora, resolva o problema acima na linguagem C. Retorne exclusivamente o bloco de código markdown (```c ... ```) com a solução completa e eficiente.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1833,
+            "output_tokens": 416,
+            "total_tokens": 2249
+        },
+        "cost_usd": {
+            "input_cost": 5e-06,
+            "output_cost": 0.000998,
+            "total_cost": 0.001004
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    long long n;\n    if (scanf(\"%lld\", &n) != 1) return 0;\n\n    long long none = (n - 2) * (n - 2) * (n - 2);\n    long long one = 6 * (n - 2) * (n - 2);\n    long long two = 12 * (n - 2);\n    long long three = 8;\n\n    printf(\"%lld\\n\", none);\n    printf(\"%lld\\n\", one);\n    printf(\"%lld\\n\", two);\n    printf(\"%lld\\n\", three);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    long long n;\n    if (scanf(\"%lld\", &n) != 1) return 0;\n\n    long long none = (n - 2) * (n - 2) * (n - 2);\n    long long one = 6 * (n - 2) * (n - 2);\n    long long two = 12 * (n - 2);\n    long long three = 8;\n\n    printf(\"%lld\\n\", none);\n    printf(\"%lld\\n\", one);\n    printf(\"%lld\\n\", two);\n    printf(\"%lld\\n\", three);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16033620000234805,
+            "counts": {
+                "AC": 11,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 11
+        }
+    }
+]

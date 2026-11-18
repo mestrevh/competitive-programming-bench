@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:55:10.349706+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Soma\n\n## Enunciado\nTemos uma sequência de N quadrados desenhados lado a lado. Cada quadrado possui um número natural anotado dentro dele. Dados a sequência dos N quadrados e um valor K, quantos retângulos distintos existem cuja soma dos números dentro do retângulo é exatamente igual a K? Por exemplo, a figura mostra uma sequência de N = 10 quadrados para a qual existem 5 retângulos cuja soma dos números é igual a K = 4.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e K representando o número de quadrados na sequência e o valor da soma desejada. A segunda linha da entrada contém N números naturais X_i, para 1 ≤ i ≤ N, indicando a sequência de números anotados dentro dos quadrados.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um número inteiro representando quantos retângulos existem na sequência cuja soma é igual a K.\n\n## Restrições\n1 ≤ N ≤ 500000 (5 × 10^5)\n0 ≤ K ≤ 10^6\n0 ≤ X_i ≤ 100 para 1 ≤ i ≤ N\n\nPontuação:\n- Em um conjunto de casos de teste somando 10 pontos, N ≤ 500\n- Em um conjunto de casos de teste somando 20 pontos, N ≤ 10^4\n- Em um conjunto de casos de teste somando 30 pontos, K > 0 e X_i > 0 para 1 ≤ i ≤ N\n- Em um conjunto de casos de teste somando 40 pontos, nenhuma restrição adicional (note que para esta subtarefa o inteiro da saída pode não caber em 32 bits.)\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10 4\n2 0 1 1 0 0 8 4 1 3\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n15 0\n0 0 0 0 0 0 5 12 0 1 0 0 0 51 0 0\n```\nSaída:\n```\n25\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 590,
+            "output_tokens": 685,
+            "total_tokens": 1275
+        },
+        "cost_usd": {
+            "input_cost": 5.9e-05,
+            "output_cost": 0.000342,
+            "total_cost": 0.000402
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n#include <inttypes.h>\n\nstatic int64_t count_at_most(const int *a, int n, int64_t limit) {\n    int left = 0;\n    int64_t sum = 0;\n    int64_t count = 0;\n\n    for (int right = 0; right < n; right++) {\n        sum += a[right];\n        while (sum > limit) {\n            sum -= a[left++];\n        }\n        count += right - left + 1;\n    }\n\n    return count;\n}\n\nint main(void) {\n    int n;\n    int64_t k;\n\n    if (scanf(\"%d %\" SCNd64, &n, &k) != 2) {\n        return 0;\n    }\n\n    int *a = malloc((size_t)n * sizeof(*a));\n    if (a == NULL) {\n        return 0;\n    }\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    int64_t answer = count_at_most(a, n, k) - count_at_most(a, n, k - 1);\n    printf(\"%\" PRId64 \"\\n\", answer);\n\n    free(a);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n#include <inttypes.h>\n\nstatic int64_t count_at_most(const int *a, int n, int64_t limit) {\n    int left = 0;\n    int64_t sum = 0;\n    int64_t count = 0;\n\n    for (int right = 0; right < n; right++) {\n        sum += a[right];\n        while (sum > limit) {\n            sum -= a[left++];\n        }\n        count += right - left + 1;\n    }\n\n    return count;\n}\n\nint main(void) {\n    int n;\n    int64_t k;\n\n    if (scanf(\"%d %\" SCNd64, &n, &k) != 2) {\n        return 0;\n    }\n\n    int *a = malloc((size_t)n * sizeof(*a));\n    if (a == NULL) {\n        return 0;\n    }\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    int64_t answer = count_at_most(a, n, k) - count_at_most(a, n, k - 1);\n    printf(\"%\" PRId64 \"\\n\", answer);\n\n    free(a);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 5.0,
+            "counts": {
+                "AC": 40,
+                "WA": 4,
+                "RE": 1,
+                "TLE": 1,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T22:24:20.730695+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Soma\n\n## Enunciado\nTemos uma sequência de N quadrados desenhados lado a lado. Cada quadrado possui um número natural anotado dentro dele. Dados a sequência dos N quadrados e um valor K, quantos retângulos distintos existem cuja soma dos números dentro do retângulo é exatamente igual a K? Por exemplo, a figura mostra uma sequência de N = 10 quadrados para a qual existem 5 retângulos cuja soma dos números é igual a K = 4.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e K representando o número de quadrados na sequência e o valor da soma desejada. A segunda linha da entrada contém N números naturais X_i, para 1 ≤ i ≤ N, indicando a sequência de números anotados dentro dos quadrados.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um número inteiro representando quantos retângulos existem na sequência cuja soma é igual a K.\n\n## Restrições\n1 ≤ N ≤ 500000 (5 × 10^5)\n0 ≤ K ≤ 10^6\n0 ≤ X_i ≤ 100 para 1 ≤ i ≤ N\n\nPontuação:\n- Em um conjunto de casos de teste somando 10 pontos, N ≤ 500\n- Em um conjunto de casos de teste somando 20 pontos, N ≤ 10^4\n- Em um conjunto de casos de teste somando 30 pontos, K > 0 e X_i > 0 para 1 ≤ i ≤ N\n- Em um conjunto de casos de teste somando 40 pontos, nenhuma restrição adicional (note que para esta subtarefa o inteiro da saída pode não caber em 32 bits.)\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 1024 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10 4\n2 0 1 1 0 0 8 4 1 3\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n15 0\n0 0 0 0 0 0 5 12 0 1 0 0 0 51 0 0\n```\nSaída:\n```\n25\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 621,
+            "output_tokens": 709,
+            "total_tokens": 1330
+        },
+        "cost_usd": {
+            "input_cost": 6.2e-05,
+            "output_cost": 0.000354,
+            "total_cost": 0.000417
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long count_at_most(const int *a, int n, int limit) {\n    if (limit < 0) return 0;\n\n    int left = 0;\n    long long sum = 0;\n    long long count = 0;\n\n    for (int right = 0; right < n; right++) {\n        sum += a[right];\n        while (sum > limit) {\n            sum -= a[left++];\n        }\n        count += right - left + 1;\n    }\n\n    return count;\n}\n\nint main(void) {\n    int n, k;\n    if (scanf(\"%d %d\", &n, &k) != 2) return 0;\n\n    int *a = malloc((size_t)n * sizeof(int));\n    if (a == NULL) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    long long answer = count_at_most(a, n, k) - count_at_most(a, n, k - 1);\n    printf(\"%lld\\n\", answer);\n\n    free(a);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic long long count_at_most(const int *a, int n, int limit) {\n    if (limit < 0) return 0;\n\n    int left = 0;\n    long long sum = 0;\n    long long count = 0;\n\n    for (int right = 0; right < n; right++) {\n        sum += a[right];\n        while (sum > limit) {\n            sum -= a[left++];\n        }\n        count += right - left + 1;\n    }\n\n    return count;\n}\n\nint main(void) {\n    int n, k;\n    if (scanf(\"%d %d\", &n, &k) != 2) return 0;\n\n    int *a = malloc((size_t)n * sizeof(int));\n    if (a == NULL) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    long long answer = count_at_most(a, n, k) - count_at_most(a, n, k - 1);\n    printf(\"%lld\\n\", answer);\n\n    free(a);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17866799999319483,
+            "counts": {
+                "AC": 46,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 46
+        }
+    }
+]

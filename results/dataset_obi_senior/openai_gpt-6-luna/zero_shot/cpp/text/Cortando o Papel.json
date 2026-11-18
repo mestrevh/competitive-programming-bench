@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T15:10:58.517181+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Cortando o Papel\n\n## Enunciado\nUma folha de papel é composta de uma sequência de retângulos com diferentes alturas mas com larguras fixas, tal que as bases dos retângulos estão assentadas em uma linha horizontal. A figura ilustra uma folha exemplo com 33 retângulos. Nós gostaríamos de fazer um único corte horizontal, com a ajuda de um estilete e uma régua, que maximize o número resultante de pedaços separados pelo corte. A figura mostra quatro diferentes cortes que resultariam, respectivamente, em 4, 11, 10 e 3 pedaços.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de retângulos na folha de papel.\nA segunda linha contém N inteiros Ai, 1 ≤ i ≤ N, representando a sequência de alturas dos retângulos.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo um inteiro representando o número máximo de pedaços possível, com um único corte horizontal.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ Ai ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 1000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n20 5 10 5 15 15 15 5 6 22\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n5\n10 20 30 40 50\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 476,
+            "output_tokens": 1327,
+            "total_tokens": 1803
+        },
+        "cost_usd": {
+            "input_cost": 4.8e-05,
+            "output_cost": 0.000664,
+            "total_cost": 0.000711
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<long long> A(N);\n    vector<int> order(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n        order[i] = i;\n    }\n\n    sort(order.begin(), order.end(), [&](int x, int y) {\n        return A[x] < A[y];\n    });\n\n    vector<bool> active(N, false);\n    int runs = 0;\n    int maxRuns = 0;\n\n    for (int i = 0; i < N;) {\n        int j = i;\n        while (j < N && A[order[j]] == A[order[i]]) {\n            int pos = order[j];\n            active[pos] = true;\n\n            bool left = pos > 0 && active[pos - 1];\n            bool right = pos + 1 < N && active[pos + 1];\n\n            if (!left && !right) ++runs;\n            else if (left && right) --runs;\n\n            ++j;\n        }\n\n        maxRuns = max(maxRuns, runs);\n        i = j;\n    }\n\n    cout << maxRuns + 1 << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<long long> A(N);\n    vector<int> order(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n        order[i] = i;\n    }\n\n    sort(order.begin(), order.end(), [&](int x, int y) {\n        return A[x] < A[y];\n    });\n\n    vector<bool> active(N, false);\n    int runs = 0;\n    int maxRuns = 0;\n\n    for (int i = 0; i < N;) {\n        int j = i;\n        while (j < N && A[order[j]] == A[order[i]]) {\n            int pos = order[j];\n            active[pos] = true;\n\n            bool left = pos > 0 && active[pos - 1];\n            bool right = pos + 1 < N && active[pos + 1];\n\n            if (!left && !right) ++runs;\n            else if (left && right) --runs;\n\n            ++j;\n        }\n\n        maxRuns = max(maxRuns, runs);\n        i = j;\n    }\n\n    cout << maxRuns + 1 << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.1756387999994331,
+            "counts": {
+                "AC": 11,
+                "WA": 11,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

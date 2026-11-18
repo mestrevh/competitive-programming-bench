@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:52:58.556851+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Remove Dígitos\n\n## Enunciado\nBeatriz continua se divertindo inventando jogos sobre dígitos. Sua mais nova invenção é o jogo Remove Dígitos.\n\nDurante o jogo, Beatriz possui um número inteiro positivo N. A cada rodada, ela pode subtrair de N o valor de um dos dígitos presentes nele, reduzindo o valor de N. Por exemplo, se N = 437, Beatriz pode escolher uma das seguintes operações:\n\n• subtrair 4, obtendo 433;\n• subtrair 3, obtendo 434;\n• subtrair 7, obtendo 430.\n\nObserve que, após cada rodada, o número de Beatriz diminui. O objetivo do jogo é transformar o número em 0 o mais rápido possível.\n\nO exemplo abaixo ilustra uma das maneiras de ganhar o jogo começando com N = 23, para o qual o mínimo de rodadas necessárias é 5. Observe que existe mais de uma sequência de operações que transforma 23 em 0 com cinco rodadas, mas é impossível transformar 23 em 0 com quatro ou menos rodadas.\n[1.png]\nBeatriz pediu sua ajuda para verificar os resultados do jogo: dado o número inicial N, determine o número mínimo necessário de rodadas de Remove Dígitos para transformar N em 0.\n\n## Formato de Entrada\nA entrada é composta por uma única linha contendo um único inteiro, o número N com o qual Beatriz inicia o jogo.\n\n## Formato de Saída\nSeu programa deverá imprimir uma única linha contendo um único inteiro, o número mínimo de rodadas de Remove Dígitos necessárias para transformar o número N em 0.\n\n## Restrições\n1 ≤ N ≤ 100000\n\nSubtarefas:\n- Subtarefa 1 (0 pontos): composta apenas pelos exemplos.\n- Subtarefa 2 (18 pontos): N ≤ 20.\n- Subtarefa 3 (36 pontos): N ≤ 100.\n- Subtarefa 4 (46 pontos): sem restrições adicionais.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n23\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n14\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n437\n```\nSaída:\n```\n75\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 615,
+            "output_tokens": 211,
+            "total_tokens": 826
+        },
+        "cost_usd": {
+            "input_cost": 6.2e-05,
+            "output_cost": 0.000106,
+            "total_cost": 0.000167
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int n;\n    scanf(\"%d\", &n);\n\n    int dp[100001];\n    dp[0] = 0;\n\n    for (int i = 1; i <= n; i++) {\n        dp[i] = 100001;\n        int x = i;\n\n        while (x > 0) {\n            int digit = x % 10;\n            if (digit > 0 && dp[i - digit] + 1 < dp[i]) {\n                dp[i] = dp[i - digit] + 1;\n            }\n            x /= 10;\n        }\n    }\n\n    printf(\"%d\\n\", dp[n]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    scanf(\"%d\", &n);\n\n    int dp[100001];\n    dp[0] = 0;\n\n    for (int i = 1; i <= n; i++) {\n        dp[i] = 100001;\n        int x = i;\n\n        while (x > 0) {\n            int digit = x % 10;\n            if (digit > 0 && dp[i - digit] + 1 < dp[i]) {\n                dp[i] = dp[i - digit] + 1;\n            }\n            x /= 10;\n        }\n    }\n\n    printf(\"%d\\n\", dp[n]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10990339999989374,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T22:22:01.797186+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Remove Dígitos\n\n## Enunciado\nBeatriz continua se divertindo inventando jogos sobre dígitos. Sua mais nova invenção é o jogo Remove Dígitos.\n\nDurante o jogo, Beatriz possui um número inteiro positivo N. A cada rodada, ela pode subtrair de N o valor de um dos dígitos presentes nele, reduzindo o valor de N. Por exemplo, se N = 437, Beatriz pode escolher uma das seguintes operações:\n\n• subtrair 4, obtendo 433;\n• subtrair 3, obtendo 434;\n• subtrair 7, obtendo 430.\n\nObserve que, após cada rodada, o número de Beatriz diminui. O objetivo do jogo é transformar o número em 0 o mais rápido possível.\n\nO exemplo abaixo ilustra uma das maneiras de ganhar o jogo começando com N = 23, para o qual o mínimo de rodadas necessárias é 5. Observe que existe mais de uma sequência de operações que transforma 23 em 0 com cinco rodadas, mas é impossível transformar 23 em 0 com quatro ou menos rodadas.\n[1.png]\nBeatriz pediu sua ajuda para verificar os resultados do jogo: dado o número inicial N, determine o número mínimo necessário de rodadas de Remove Dígitos para transformar N em 0.\n\n## Formato de Entrada\nA entrada é composta por uma única linha contendo um único inteiro, o número N com o qual Beatriz inicia o jogo.\n\n## Formato de Saída\nSeu programa deverá imprimir uma única linha contendo um único inteiro, o número mínimo de rodadas de Remove Dígitos necessárias para transformar o número N em 0.\n\n## Restrições\n1 ≤ N ≤ 100000\n\nSubtarefas:\n- Subtarefa 1 (0 pontos): composta apenas pelos exemplos.\n- Subtarefa 2 (18 pontos): N ≤ 20.\n- Subtarefa 3 (36 pontos): N ≤ 100.\n- Subtarefa 4 (46 pontos): sem restrições adicionais.\n\n## Limites de Execução\n- Tempo Limite: 2.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n23\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n14\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n437\n```\nSaída:\n```\n75\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 645,
+            "output_tokens": 202,
+            "total_tokens": 847
+        },
+        "cost_usd": {
+            "input_cost": 6.4e-05,
+            "output_cost": 0.000101,
+            "total_cost": 0.000166
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int n;\n    scanf(\"%d\", &n);\n\n    int dp[100001] = {0};\n\n    for (int i = 1; i <= n; i++) {\n        dp[i] = 1000000;\n        int x = i;\n\n        while (x > 0) {\n            int digit = x % 10;\n            if (digit > 0 && dp[i - digit] + 1 < dp[i]) {\n                dp[i] = dp[i - digit] + 1;\n            }\n            x /= 10;\n        }\n    }\n\n    printf(\"%d\\n\", dp[n]);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    scanf(\"%d\", &n);\n\n    int dp[100001] = {0};\n\n    for (int i = 1; i <= n; i++) {\n        dp[i] = 1000000;\n        int x = i;\n\n        while (x > 0) {\n            int digit = x % 10;\n            if (digit > 0 && dp[i - digit] + 1 < dp[i]) {\n                dp[i] = dp[i - digit] + 1;\n            }\n            x /= 10;\n        }\n    }\n\n    printf(\"%d\\n\", dp[n]);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16326280000794213,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

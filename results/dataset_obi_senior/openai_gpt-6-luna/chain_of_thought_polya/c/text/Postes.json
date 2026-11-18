@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T04:53:54.988091+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Postes\n\n## Enunciado\nSeu João é proprietário de uma enorme fazenda, protegida por uma cerca formada por postes de madeira e arame farpado. Cada poste da cerca tem 1 metro de altura. Os postes são colocados separados dois metros uns dos outros, ao redor de toda a fazenda, e portanto muitos postes são utilizados.\n\nInfelizmente um incêndio destruiu uma grande parte dos postes da cerca. Alguns postes, mesmo um pouco queimados, ainda podem ser utilizados, desde que sejam reforçados. Outros estão irremediavelmente inutilizados e devem ser substituídos por postes novos.\n\nO engenheiro que trabalha para o Seu João percorreu toda a cerca e fez uma lista dos tamanhos de cada poste depois do incêndio. O engenheiro determinou que, se o poste tem menos do que 50 cm, ele deve ser substituído. Se o poste tem ao menos 50 cm, mas menos do que 85 cm, ele deve ser consertado. Se o poste tem 85 cm ou mais, ele não necessita conserto e pode ser usado normalmente.\n\nDada a lista com os tamanhos de cada poste, você deve escrever um programa para determinar o número de postes que devem ser substituídos e o número de postes que devem ser reforçados para consertar a cerca da fazenda do Seu João.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, indicando o número de postes da cerca. A segunda linha contém N números inteiros X_i, indicando os tamanhos dos postes após o incêndio.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo dois inteiros: o número de postes que devem ser substituídos, seguido do número de postes que devem ser consertados.\n\n## Restrições\n3 ≤ N ≤ 1000\n0 ≤ X_i ≤ 100\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5\n85 49 50 84 50\n```\nSaída:\n```\n1 3\n```\n\nExemplo 2:\nEntrada:\n```\n4\n48 49 30 47\n```\nSaída:\n```\n4 0\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1101,
+            "output_tokens": 648,
+            "total_tokens": 1749
+        },
+        "cost_usd": {
+            "input_cost": 0.00011,
+            "output_cost": 0.000324,
+            "total_cost": 0.000434
+        },
+        "raw_response": "## 1. Compreensão do problema\n\nO objetivo é contar quantos postes precisam ser **substituídos** e quantos precisam ser **consertados**:\n\n- Altura menor que 50 cm: substituir.\n- Altura de 50 cm até menos de 85 cm: consertar.\n- Altura igual ou maior que 85 cm: não precisa de intervenção.\n\nA entrada contém um inteiro `N` e, em seguida, `N` alturas inteiras. A saída deve conter dois inteiros: primeiro a quantidade de postes substituídos e depois a quantidade de postes consertados.\n\nPelas restrições, `3 ≤ N ≤ 1000` e `0 ≤ X_i ≤ 100`. Assim, os contadores cabem em `int`. Os casos nos limites das faixas — alturas 49, 50, 84 e 85 — são importantes para classificar corretamente os postes.\n\n## 2. Planejamento e design algorítmico\n\nBasta percorrer as alturas uma vez e atualizar um dos dois contadores conforme a faixa correspondente. Postes com altura igual ou superior a 85 não alteram nenhum contador.\n\n- **Tempo:** `O(N)`.\n- **Espaço adicional:** `O(1)`.\n- **Estruturas de dados:** apenas duas variáveis inteiras para os contadores; não é necessário armazenar as alturas.\n\n## 3. Codificação em C\n\n```c\n#include <stdio.h>\n\nint main(void) {\n    int N;\n    int substituidos = 0;\n    int consertados = 0;\n\n    if (scanf(\"%d\", &N) != 1) {\n        return 0;\n    }\n\n    for (int i = 0; i < N; i++) {\n        int altura;\n        scanf(\"%d\", &altura);\n\n        if (altura < 50) {\n            substituidos++;\n        } else if (altura < 85) {\n            consertados++;\n        }\n    }\n\n    printf(\"%d %d\\n\", substituidos, consertados);\n\n    return 0;\n}\n```\n\n## 4. Retrospecto e verificação\n\nNo primeiro exemplo, as alturas 49, 50, 84 e 50 correspondem a 1 poste substituído e 3 consertados; o poste de 85 cm não exige intervenção. A saída é `1 3`.\n\nNo segundo exemplo, as quatro alturas são menores que 50 cm, resultando em `4 0`.\n\nA implementação também trata corretamente os limites: 50 cm entra na categoria de conserto, 85 cm não exige intervenção. A leitura e a classificação são lineares e atendem com folga às restrições.",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N;\n    int substituidos = 0;\n    int consertados = 0;\n\n    if (scanf(\"%d\", &N) != 1) {\n        return 0;\n    }\n\n    for (int i = 0; i < N; i++) {\n        int altura;\n        scanf(\"%d\", &altura);\n\n        if (altura < 50) {\n            substituidos++;\n        } else if (altura < 85) {\n            consertados++;\n        }\n    }\n\n    printf(\"%d %d\\n\", substituidos, consertados);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10779779999575112,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

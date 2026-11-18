@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T12:36:02.927887+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em javascript. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Jardim de infância\n\n## Enunciado\nVívian é uma professora do jardim de infância. Todos os dias, ao final da aula, ela tem que olhar os desenhos que seus alunos fizeram naquele dia e fazer algum comentário. Esta é uma tarefa muito repetitiva, já que as crianças costumam desenhar coisas semelhantes, portanto Vívian decidiu automatizar o processo. Ela fez um programa capaz de processar a imagem e procurar padrões conhecidos para fazer comentários predeterminados. Em particular, ela percebeu que na maioria dos desenhos as crianças incluem um pinheiro. Porém, ela está tendo dificuldades para reconhecê-los e pediu sua ajuda. O programa dela já é capaz de reconhecer uma figura que pode ser um pinheiro e transformá-la em sete pontos P1, P2, ... P7. O candidato a pinheiro seria a região interna do polígono P1P2P4P6P7P5P3, como mostra a figura a seguir de um pinheiro válido.\n[1.png]\nLogo, dados os sete pontos que formam a imagem, você deve decidir se ela é ou não um pinheiro. Ao analisar os desenhos das crianças, você decidiu que as condições para que os pontos formem um pinheiro são as seguintes:\n\n• O ângulo ∠P2P1P3 é agudo (vértice em P1);\n• Os segmentos P1P2 e P1P3 têm o mesmo comprimento;\n• Os pontos P2, P3, P4 e P5 são colineares;\n• Os pontos médios dos segmentos P2P3 e P4P5 são coincidentes;\n• O segmento P2P3 tem comprimento maior que o segmento P4P5;\n• Os segmentos P4P6 e P5P7 são perpendiculares ao segmento P2P3;\n• Os segmentos P4P6 e P5P7 têm o mesmo comprimento;\n• Os pontos P1 e P6 devem estar separados pela reta que contém o segmento P2P3. Formalmente, o segmento P1P6 deve interceptar a reta que contém o segmento P2P3 em um único ponto.\n\nA imagem a seguir mostra os polígonos formados pelos exemplos de entrada.\n[2.png]\n\n\n## Formato de Entrada\nA entrada contém sete linhas. A i-ésima linha da entrada contém dois inteiros X_i e Y_i, indicando as coordenadas cartesianas do ponto P_i.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo uma única letra, 'S' se os pontos formam um pinheiro pelas condições descritas e 'N', caso contrário.\n\n## Restrições\n-2 × 10^4 ≤ X_i, Y_i ≤ 2 × 10^4.\nTodos os pontos são diferentes.\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste equivalente a 50 pontos, o segmento P2P3 será paralelo ao eixo X do plano cartesiano (exemplos 1 e 4).\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n2 -4\n5 3\n-1 3\n3 3\n1 3\n3 5\n1 5\n```\nSaída:\n```\nS\n```\n\nExemplo 2:\nEntrada:\n```\n2 -1\n5 45\n-43 9\n-11 33\n-27 21\n-20 45\n-36 33\n```\nSaída:\n```\nS\n```\n\nExemplo 3:\nEntrada:\n```\n-1 -3\n11 -23\n11 17\n11 -7\n11 1\n19 -7\n19 1\n```\nSaída:\n```\nN\n```\n\nExemplo 4:\nEntrada:\n```\n2 4\n18 22\n-14 22\n6 24\n-2 20\n6 26\n-2 22\n```\nSaída:\n```\nN\n```\n\nExemplo 5:\nEntrada:\n```\n4 1\n-36 -4\n-12 -36\n-30 -12\n-18 -28\n-39 -25\n-27 -41\n```\nSaída:\n```\nN\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```javascript ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1119,
+            "output_tokens": 22965,
+            "total_tokens": 24084
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.055116,
+            "total_cost": 0.055119
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst P = [];\nfor (let i = 0; i < 7; i++) {\n    P.push({ x: input[2 * i], y: input[2 * i + 1] });\n}\nconst [P1, P2, P3, P4, P5, P6, P7] = P;\n\nfunction dist2(A, B) {\n    const dx = A.x - B.x;\n    const dy = A.y - B.y;\n    return dx * dx + dy * dy;\n}\n\nfunction cross(A, B, C) {\n    return (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x);\n}\n\nlet ok = true;\n\n// 1. Ângulo ∠P2P1P3 agudo\nconst v12 = { x: P2.x - P1.x, y: P2.y - P1.y };\nconst v13 = { x: P3.x - P1.x, y: P3.y - P1.y };\nif (v12.x * v13.x + v12.y * v13.y <= 0) ok = false;\n\n// 2. |P1P2| = |P1P3|\nif (dist2(P1, P2) !== dist2(P1, P3)) ok = false;\n\n// 3. P2, P3, P4, P5 colineares\nif (cross(P2, P3, P4) !== 0 || cross(P2, P3, P5) !== 0) ok = false;\n\n// 4. Pontos médios de P2P3 e P4P5 coincidem\nif (P2.x + P3.x !== P4.x + P5.x || P2.y + P3.y !== P4.y + P5.y) ok = false;\n\n// 5. |P2P3| > |P4P5|\nif (dist2(P2, P3) <= dist2(P4, P5)) ok = false;\n\n// 6. P4P6 e P5P7 perpendiculares a P2P3\nconst dx = P3.x - P2.x;\nconst dy = P3.y - P2.y;\nif ((P6.x - P4.x) * dx + (P6.y - P4.y) * dy !== 0) ok = false;\nif ((P7.x - P5.x) * dx + (P7.y - P5.y) * dy !== 0) ok = false;\n\n// 7. |P4P6| = |P5P7|\nif (dist2(P4, P6) !== dist2(P5, P7)) ok = false;\n\n// 8. P1 e P6 separados pela reta P2P3\nconst c1 = cross(P2, P3, P1);\nconst c6 = cross(P2, P3, P6);\nif (!((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0))) ok = false;\n\nconsole.log(ok ? 'S' : 'N');\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst P = [];\nfor (let i = 0; i < 7; i++) {\n    P.push({ x: input[2 * i], y: input[2 * i + 1] });\n}\nconst [P1, P2, P3, P4, P5, P6, P7] = P;\n\nfunction dist2(A, B) {\n    const dx = A.x - B.x;\n    const dy = A.y - B.y;\n    return dx * dx + dy * dy;\n}\n\nfunction cross(A, B, C) {\n    return (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x);\n}\n\nlet ok = true;\n\n// 1. Ângulo ∠P2P1P3 agudo\nconst v12 = { x: P2.x - P1.x, y: P2.y - P1.y };\nconst v13 = { x: P3.x - P1.x, y: P3.y - P1.y };\nif (v12.x * v13.x + v12.y * v13.y <= 0) ok = false;\n\n// 2. |P1P2| = |P1P3|\nif (dist2(P1, P2) !== dist2(P1, P3)) ok = false;\n\n// 3. P2, P3, P4, P5 colineares\nif (cross(P2, P3, P4) !== 0 || cross(P2, P3, P5) !== 0) ok = false;\n\n// 4. Pontos médios de P2P3 e P4P5 coincidem\nif (P2.x + P3.x !== P4.x + P5.x || P2.y + P3.y !== P4.y + P5.y) ok = false;\n\n// 5. |P2P3| > |P4P5|\nif (dist2(P2, P3) <= dist2(P4, P5)) ok = false;\n\n// 6. P4P6 e P5P7 perpendiculares a P2P3\nconst dx = P3.x - P2.x;\nconst dy = P3.y - P2.y;\nif ((P6.x - P4.x) * dx + (P6.y - P4.y) * dy !== 0) ok = false;\nif ((P7.x - P5.x) * dx + (P7.y - P5.y) * dy !== 0) ok = false;\n\n// 7. |P4P6| = |P5P7|\nif (dist2(P4, P6) !== dist2(P5, P7)) ok = false;\n\n// 8. P1 e P6 separados pela reta P2P3\nconst c1 = cross(P2, P3, P1);\nconst c6 = cross(P2, P3, P6);\nif (!((c1 > 0 && c6 < 0) || (c1 < 0 && c6 > 0))) ok = false;\n\nconsole.log(ok ? 'S' : 'N');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05242540000472218,
+            "counts": {
+                "AC": 80,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 80
+        }
+    }
+]

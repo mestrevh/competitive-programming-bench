@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T04:48:31.502099+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Maior valor\n\n## Enunciado\nNesta tarefa, dados três números inteiros N, M e S você deve escrever um programa para determinar o maior número inteiro I tal que:\n\n- I está dentro do intervalo [N, M] (ou seja, I ≥ N e I ≤ M).\n- A soma dos dígitos de I é igual a S.\n\n## Formato de Entrada\nA primeira linha contém um inteiro N, o menor valor do intervalo. A segunda linha contém um inteiro M, o maior valor do intervalo. A terceira linha contém um inteiro S, o valor da soma dos dígitos, conforme descrito.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, que deve ser o valor de I obedecendo as restrições acima, ou -1 se não existir.\n\n## Restrições\n1 ≤ N ≤ M ≤ 10000\n1 ≤ S ≤ 36\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n1\n100\n6\n```\nSaída:\n```\n60\n```\n\nExemplo 2:\nEntrada:\n```\n1000\n1001\n3\n```\nSaída:\n```\n-1\n```\n\nExemplo 3:\nEntrada:\n```\n80\n500\n12\n```\nSaída:\n```\n480\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 921,
+            "output_tokens": 761,
+            "total_tokens": 1682
+        },
+        "cost_usd": {
+            "input_cost": 9.2e-05,
+            "output_cost": 0.00038,
+            "total_cost": 0.000473
+        },
+        "raw_response": "## 1. COMPREENSÃO DO PROBLEMA\n\nO objetivo é encontrar o maior inteiro `I` no intervalo inclusivo `[N, M]` cuja soma dos dígitos seja `S`. Se nenhum número satisfizer essa condição, devemos imprimir `-1`.\n\nA entrada contém três inteiros, cada um em uma linha:\n- `N`: limite inferior;\n- `M`: limite superior;\n- `S`: soma desejada dos dígitos.\n\nA saída deve conter apenas o maior número válido ou `-1`.\n\nAs restrições são `1 ≤ N ≤ M ≤ 10000` e `1 ≤ S ≤ 36`. Não são informados limites de tempo ou memória. Não há valores negativos nem risco de overflow. Como `N` é pelo menos 1, o número zero não precisa ser considerado.\n\n## 2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n\nComo o intervalo contém no máximo 10.000 números, podemos verificar seus valores em ordem decrescente, começando por `M`. O primeiro número cuja soma dos dígitos seja `S` será necessariamente o maior que atende às condições.\n\nPara calcular a soma dos dígitos, repetimos a divisão por 10 e acumulamos o resto.\n\n- **Tempo:** `O((M - N + 1) × D)`, onde `D` é o número de dígitos. Com os limites dados, isso é eficiente.\n- **Espaço:** `O(1)`.\n- **Estruturas:** apenas variáveis inteiras.\n\n## 3. CODIFICAÇÃO EM C\n\n```c\n#include <stdio.h>\n\nint soma_digitos(int numero) {\n    int soma = 0;\n\n    while (numero > 0) {\n        soma += numero % 10;\n        numero /= 10;\n    }\n\n    return soma;\n}\n\nint main(void) {\n    int N, M, S;\n\n    if (scanf(\"%d\", &N) != 1 ||\n        scanf(\"%d\", &M) != 1 ||\n        scanf(\"%d\", &S) != 1) {\n        return 0;\n    }\n\n    for (int i = M; i >= N; i--) {\n        if (soma_digitos(i) == S) {\n            printf(\"%d\\n\", i);\n            return 0;\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}\n```\n\n## 4. RETROSPECTO E VERIFICAÇÃO\n\n- No exemplo 1, a busca encontra `60`, cuja soma dos dígitos é `6`.\n- No exemplo 2, nenhum número entre `1000` e `1001` tem soma dos dígitos igual a `3`; a saída é `-1`.\n- No exemplo 3, a busca encontra `480`, cuja soma dos dígitos é `12`.\n- Se `N = M`, o único número do intervalo também é verificado.\n- A varredura descendente garante que o primeiro resultado encontrado seja o maior válido.\n\nA quantidade máxima de verificações é pequena, então a solução atende às restrições com folga.",
+        "extracted_code": "#include <stdio.h>\n\nint soma_digitos(int numero) {\n    int soma = 0;\n\n    while (numero > 0) {\n        soma += numero % 10;\n        numero /= 10;\n    }\n\n    return soma;\n}\n\nint main(void) {\n    int N, M, S;\n\n    if (scanf(\"%d\", &N) != 1 ||\n        scanf(\"%d\", &M) != 1 ||\n        scanf(\"%d\", &S) != 1) {\n        return 0;\n    }\n\n    for (int i = M; i >= N; i--) {\n        if (soma_digitos(i) == S) {\n            printf(\"%d\\n\", i);\n            return 0;\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.226925900002243,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

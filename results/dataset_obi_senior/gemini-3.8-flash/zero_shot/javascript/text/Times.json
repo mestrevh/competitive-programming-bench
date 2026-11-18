@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T05:20:16.596965+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em javascript. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Times\n\n## Enunciado\nChegou a hora da caça ao tesouro na gincana escolar! Para jogar, sua turma de N pessoas deve se dividir em dois times. A divisão será feita com base no número de chamada de cada aluno, um número entre 1 e N. Só que mais importante que fazer uma divisão balanceada é evitar que pessoas que não se gostam fiquem no mesmo time. Você receberá o número N de alunos e, para cada pessoa, você receberá a lista de pessoas que ela não gosta. Se a pessoa A não gosta da pessoa B então a pessoa B também não gosta da pessoa A. O aluno de número 1 sempre ficará no primeiro time. Você deve dividir os outros alunos entre os dois times de forma que dentro de cada time não haja duas pessoas que não se gostam.\n\n## Formato de Entrada\nA primeira linha contém um inteiro N, representando o número de alunos na turma. As N linhas seguintes, para 1 ≤ i ≤ N, contêm um inteiro M_i, indicando de quantas pessoas o aluno i não gosta, e em seguida M_i inteiros X_j, indicando que a pessoa i não gosta da pessoa X_j.\n\n## Formato de Saída\nSeu programa deve produzir duas linhas, a primeira contendo os números dos integrantes do primeiro time e a segunda contendo os números dos integrantes do segundo time, ambas em ordem crescente. Lembre-se que o aluno 1 sempre estará no primeiro time. Sempre há uma única solução.\n\n## Restrições\n2 ≤ N ≤ 10^5.\n1 ≤ M_i ≤ N - 1.\n1 ≤ X_j ≤ N.\n1 ≤ Σ_{i=1}^{N} M_i ≤ 6 × 10^5.\nOu seja, a soma de todos os M_i descritos na entrada é no máximo 6 × 10^5.\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste equivalente a 40 pontos, N ≤ 15.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n13\n2 12 9\n1 10\n3 8 12 13\n5 8 10 13 6 5\n2 11 4\n1 4\n1 8\n3 4 3 7\n1 1\n2 2 4\n1 5\n2 3 1\n2 4 3\n```\nSaída:\n```\n1 2 3 4 7 11\n5 6 8 9 10 12 13\n```\n\nExemplo 2:\nEntrada:\n```\n15\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n14 11 7 1 10 8 6 14 12 3 2 15 5 4 9\n1 13\n1 13\n```\nSaída:\n```\n1 2 3 4 5 6 7 8 9 10 11 12 14 15\n13\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```javascript ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 858,
+            "output_tokens": 674,
+            "total_tokens": 2243
+        },
+        "cost_usd": {
+            "input_cost": 0.000643,
+            "output_cost": 0.002528,
+            "total_cost": 0.003171
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n\n    // Head, to, next para grafo em lista encadeada plana\n    // Máximo de arestas direcionadas é a soma dos M_i <= 6 * 10^5\n    const head = new Int32Array(N + 1).fill(-1);\n    const to = new Int32Array(600005);\n    const next = new Int32Array(600005);\n    let edgeCount = 0;\n\n    for (let i = 1; i <= N; i++) {\n        const m = nextInt();\n        for (let j = 0; j < m; j++) {\n            const v = nextInt();\n            to[edgeCount] = v;\n            next[edgeCount] = head[i];\n            head[i] = edgeCount++;\n        }\n    }\n\n    // BFS para colorir o grafo com 1 e 2\n    const team = new Int8Array(N + 1);\n    const queue = new Int32Array(N + 5);\n    let headQ = 0;\n    let tailQ = 0;\n\n    team[1] = 1;\n    queue[tailQ++] = 1;\n\n    while (headQ < tailQ) {\n        const u = queue[headQ++];\n        const t = team[u];\n        const nextTeam = (t === 1) ? 2 : 1;\n\n        for (let e = head[u]; e !== -1; e = next[e]) {\n            const v = to[e];\n            if (team[v] === 0) {\n                team[v] = nextTeam;\n                queue[tailQ++] = v;\n            }\n        }\n    }\n\n    const team1 = [];\n    const team2 = [];\n\n    for (let i = 1; i <= N; i++) {\n        if (team[i] === 1) {\n            team1.push(i);\n        } else {\n            team2.push(i);\n        }\n    }\n\n    process.stdout.write(team1.join(' ') + '\\n' + team2.join(' ') + '\\n');\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function nextInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = nextInt();\n    if (N === null) return;\n\n    // Head, to, next para grafo em lista encadeada plana\n    // Máximo de arestas direcionadas é a soma dos M_i <= 6 * 10^5\n    const head = new Int32Array(N + 1).fill(-1);\n    const to = new Int32Array(600005);\n    const next = new Int32Array(600005);\n    let edgeCount = 0;\n\n    for (let i = 1; i <= N; i++) {\n        const m = nextInt();\n        for (let j = 0; j < m; j++) {\n            const v = nextInt();\n            to[edgeCount] = v;\n            next[edgeCount] = head[i];\n            head[i] = edgeCount++;\n        }\n    }\n\n    // BFS para colorir o grafo com 1 e 2\n    const team = new Int8Array(N + 1);\n    const queue = new Int32Array(N + 5);\n    let headQ = 0;\n    let tailQ = 0;\n\n    team[1] = 1;\n    queue[tailQ++] = 1;\n\n    while (headQ < tailQ) {\n        const u = queue[headQ++];\n        const t = team[u];\n        const nextTeam = (t === 1) ? 2 : 1;\n\n        for (let e = head[u]; e !== -1; e = next[e]) {\n            const v = to[e];\n            if (team[v] === 0) {\n                team[v] = nextTeam;\n                queue[tailQ++] = v;\n            }\n        }\n    }\n\n    const team1 = [];\n    const team2 = [];\n\n    for (let i = 1; i <= N; i++) {\n        if (team[i] === 1) {\n            team1.push(i);\n        } else {\n            team2.push(i);\n        }\n    }\n\n    process.stdout.write(team1.join(' ') + '\\n' + team2.join(' ') + '\\n');\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.0687264000007417,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

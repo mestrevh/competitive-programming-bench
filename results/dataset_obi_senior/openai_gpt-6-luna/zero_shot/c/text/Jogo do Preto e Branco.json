@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:44:17.521914+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Jogo do Preto e Branco\n\n## Enunciado\nVocê gosta de quebra-cabeças? O jogo do Preto e Branco é um quebra-cabeças que usa um tabuleiro retangular com L linhas e C colunas, formando L×C casas. No tabuleiro são posicionadas algumas peças pretas, cada peça em uma casa diferente.\n\nO objetivo do jogo é colocar o maior número possível de peças brancas no tabuleiro, obedecendo às seguintes restrições:\n\n• cada casa do tabuleiro pode conter no máximo uma peça;\n• uma peça branca deve ter ao menos uma peça preta como vizinha, à direita, à esquerda, acima ou abaixo;\n• uma peça branca não pode ter outra peça branca como vizinha, à direita, à esquerda, acima ou abaixo;\n\nA figura abaixo mostra dois exemplos de jogos, com as respectivas soluções, um com um tabuleiro 3 × 3 e outro com um tabuleiro 3 × 5.\n[1.png]\nSua tarefa é escrever um programa que, dadas as descrições do tabuleiro e das peças pretas posicionadas, determine o maior número de peças brancas que podem ser colocadas.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C, o número de linhas e o número de colunas do tabuleiro. As linhas são numeradas de 1 a L e as colunas são numeradas de 1 a C. A segunda linha contém um inteiro P, o número de peças pretas colocadas no tabuleiro. Cada uma das P linhas seguintes descreve a posição de uma peça preta e contém dois inteiros X_i e Y_i, indicando a linha e a coluna em que a peça foi colocada.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o maior número de peças brancas que podem ser colocadas no tabuleiro.\n\n## Restrições\n1 ≤ L ≤ 6\n1 ≤ C ≤ 6\n1 ≤ P ≤ 10\n1 ≤ X_i ≤ L, para 1 ≤ i ≤ P\n1 ≤ Y_i ≤ C, para 1 ≤ i ≤ P\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 20 pontos, L = 1.\n- Para um conjunto adicional de casos de testes valendo 80 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n3\n1 1\n1 3\n3 2\n```\nSaída:\n```\n3\n```\n\nExemplo 2:\nEntrada:\n```\n1 6\n2\n1 2\n1 5\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 5\n3\n2 2\n2 3\n3 5\n```\nSaída:\n```\n5\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 722,
+            "output_tokens": 803,
+            "total_tokens": 1525
+        },
+        "cost_usd": {
+            "input_cost": 7.2e-05,
+            "output_cost": 0.000402,
+            "total_cost": 0.000474
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nint L, C;\nint black[6][6];\nint eligible[6][6];\nint match[6][6];\nint visited[6][6];\n\nint augment(int r, int c) {\n    static const int dr[] = {-1, 1, 0, 0};\n    static const int dc[] = {0, 0, -1, 1};\n\n    for (int k = 0; k < 4; k++) {\n        int nr = r + dr[k];\n        int nc = c + dc[k];\n\n        if (nr < 0 || nr >= L || nc < 0 || nc >= C ||\n            !eligible[nr][nc] || visited[nr][nc]) {\n            continue;\n        }\n\n        visited[nr][nc] = 1;\n        if (match[nr][nc] == -1 ||\n            augment(match[nr][nc] / C, match[nr][nc] % C)) {\n            match[nr][nc] = r * C + c;\n            return 1;\n        }\n    }\n\n    return 0;\n}\n\nint main(void) {\n    int P;\n    scanf(\"%d %d\", &L, &C);\n    scanf(\"%d\", &P);\n\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    int count = 0;\n    static const int dr[] = {-1, 1, 0, 0};\n    static const int dc[] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            for (int k = 0; k < 4; k++) {\n                int nr = r + dr[k];\n                int nc = c + dc[k];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C &&\n                    black[nr][nc]) {\n                    eligible[r][c] = 1;\n                    count++;\n                    break;\n                }\n            }\n        }\n    }\n\n    memset(match, -1, sizeof(match));\n    int matching = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (eligible[r][c] && (r + c) % 2 == 0) {\n                memset(visited, 0, sizeof(visited));\n                matching += augment(r, c);\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count - matching);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nint L, C;\nint black[6][6];\nint eligible[6][6];\nint match[6][6];\nint visited[6][6];\n\nint augment(int r, int c) {\n    static const int dr[] = {-1, 1, 0, 0};\n    static const int dc[] = {0, 0, -1, 1};\n\n    for (int k = 0; k < 4; k++) {\n        int nr = r + dr[k];\n        int nc = c + dc[k];\n\n        if (nr < 0 || nr >= L || nc < 0 || nc >= C ||\n            !eligible[nr][nc] || visited[nr][nc]) {\n            continue;\n        }\n\n        visited[nr][nc] = 1;\n        if (match[nr][nc] == -1 ||\n            augment(match[nr][nc] / C, match[nr][nc] % C)) {\n            match[nr][nc] = r * C + c;\n            return 1;\n        }\n    }\n\n    return 0;\n}\n\nint main(void) {\n    int P;\n    scanf(\"%d %d\", &L, &C);\n    scanf(\"%d\", &P);\n\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    int count = 0;\n    static const int dr[] = {-1, 1, 0, 0};\n    static const int dc[] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            for (int k = 0; k < 4; k++) {\n                int nr = r + dr[k];\n                int nc = c + dc[k];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C &&\n                    black[nr][nc]) {\n                    eligible[r][c] = 1;\n                    count++;\n                    break;\n                }\n            }\n        }\n    }\n\n    memset(match, -1, sizeof(match));\n    int matching = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (eligible[r][c] && (r + c) % 2 == 0) {\n                memset(visited, 0, sizeof(visited));\n                matching += augment(r, c);\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count - matching);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1712829999960377,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T22:16:17.956106+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Jogo do Preto e Branco\n\n## Enunciado\nVocê gosta de quebra-cabeças? O jogo do Preto e Branco é um quebra-cabeças que usa um tabuleiro retangular com L linhas e C colunas, formando L×C casas. No tabuleiro são posicionadas algumas peças pretas, cada peça em uma casa diferente.\n\nO objetivo do jogo é colocar o maior número possível de peças brancas no tabuleiro, obedecendo às seguintes restrições:\n\n• cada casa do tabuleiro pode conter no máximo uma peça;\n• uma peça branca deve ter ao menos uma peça preta como vizinha, à direita, à esquerda, acima ou abaixo;\n• uma peça branca não pode ter outra peça branca como vizinha, à direita, à esquerda, acima ou abaixo;\n\nA figura abaixo mostra dois exemplos de jogos, com as respectivas soluções, um com um tabuleiro 3 × 3 e outro com um tabuleiro 3 × 5.\n[1.png]\nSua tarefa é escrever um programa que, dadas as descrições do tabuleiro e das peças pretas posicionadas, determine o maior número de peças brancas que podem ser colocadas.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C, o número de linhas e o número de colunas do tabuleiro. As linhas são numeradas de 1 a L e as colunas são numeradas de 1 a C. A segunda linha contém um inteiro P, o número de peças pretas colocadas no tabuleiro. Cada uma das P linhas seguintes descreve a posição de uma peça preta e contém dois inteiros X_i e Y_i, indicando a linha e a coluna em que a peça foi colocada.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o maior número de peças brancas que podem ser colocadas no tabuleiro.\n\n## Restrições\n1 ≤ L ≤ 6\n1 ≤ C ≤ 6\n1 ≤ P ≤ 10\n1 ≤ X_i ≤ L, para 1 ≤ i ≤ P\n1 ≤ Y_i ≤ C, para 1 ≤ i ≤ P\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 20 pontos, L = 1.\n- Para um conjunto adicional de casos de testes valendo 80 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n3\n1 1\n1 3\n3 2\n```\nSaída:\n```\n3\n```\n\nExemplo 2:\nEntrada:\n```\n1 6\n2\n1 2\n1 5\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 5\n3\n2 2\n2 3\n3 5\n```\nSaída:\n```\n5\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 752,
+            "output_tokens": 817,
+            "total_tokens": 1569
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.000409,
+            "total_cost": 0.000484
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nint L, C;\nint candidate[6][6];\nint match[6][6];\nint visited[6][6];\n\nint dx[4] = {-1, 1, 0, 0};\nint dy[4] = {0, 0, -1, 1};\n\nint augment(int x, int y) {\n    for (int k = 0; k < 4; k++) {\n        int nx = x + dx[k];\n        int ny = y + dy[k];\n\n        if (nx < 0 || nx >= L || ny < 0 || ny >= C ||\n            !candidate[nx][ny] || visited[nx][ny]) {\n            continue;\n        }\n\n        visited[nx][ny] = 1;\n\n        if (match[nx][ny] == -1 || augment(match[nx][ny] / C, match[nx][ny] % C)) {\n            match[nx][ny] = x * C + y;\n            return 1;\n        }\n    }\n\n    return 0;\n}\n\nint main(void) {\n    int black[6][6] = {0};\n    scanf(\"%d %d\", &L, &C);\n\n    int P;\n    scanf(\"%d\", &P);\n\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    for (int x = 0; x < L; x++) {\n        for (int y = 0; y < C; y++) {\n            if (black[x][y]) continue;\n\n            for (int k = 0; k < 4; k++) {\n                int nx = x + dx[k];\n                int ny = y + dy[k];\n                if (nx >= 0 && nx < L && ny >= 0 && ny < C && black[nx][ny]) {\n                    candidate[x][y] = 1;\n                    break;\n                }\n            }\n        }\n    }\n\n    int count = 0;\n    memset(match, -1, sizeof(match));\n\n    for (int x = 0; x < L; x++) {\n        for (int y = 0; y < C; y++) {\n            if (candidate[x][y]) count++;\n        }\n    }\n\n    int matching = 0;\n    for (int x = 0; x < L; x++) {\n        for (int y = 0; y < C; y++) {\n            if (candidate[x][y] && (x + y) % 2 == 0) {\n                memset(visited, 0, sizeof(visited));\n                matching += augment(x, y);\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count - matching);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nint L, C;\nint candidate[6][6];\nint match[6][6];\nint visited[6][6];\n\nint dx[4] = {-1, 1, 0, 0};\nint dy[4] = {0, 0, -1, 1};\n\nint augment(int x, int y) {\n    for (int k = 0; k < 4; k++) {\n        int nx = x + dx[k];\n        int ny = y + dy[k];\n\n        if (nx < 0 || nx >= L || ny < 0 || ny >= C ||\n            !candidate[nx][ny] || visited[nx][ny]) {\n            continue;\n        }\n\n        visited[nx][ny] = 1;\n\n        if (match[nx][ny] == -1 || augment(match[nx][ny] / C, match[nx][ny] % C)) {\n            match[nx][ny] = x * C + y;\n            return 1;\n        }\n    }\n\n    return 0;\n}\n\nint main(void) {\n    int black[6][6] = {0};\n    scanf(\"%d %d\", &L, &C);\n\n    int P;\n    scanf(\"%d\", &P);\n\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    for (int x = 0; x < L; x++) {\n        for (int y = 0; y < C; y++) {\n            if (black[x][y]) continue;\n\n            for (int k = 0; k < 4; k++) {\n                int nx = x + dx[k];\n                int ny = y + dy[k];\n                if (nx >= 0 && nx < L && ny >= 0 && ny < C && black[nx][ny]) {\n                    candidate[x][y] = 1;\n                    break;\n                }\n            }\n        }\n    }\n\n    int count = 0;\n    memset(match, -1, sizeof(match));\n\n    for (int x = 0; x < L; x++) {\n        for (int y = 0; y < C; y++) {\n            if (candidate[x][y]) count++;\n        }\n    }\n\n    int matching = 0;\n    for (int x = 0; x < L; x++) {\n        for (int y = 0; y < C; y++) {\n            if (candidate[x][y] && (x + y) % 2 == 0) {\n                memset(visited, 0, sizeof(visited));\n                matching += augment(x, y);\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count - matching);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1266646000003675,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

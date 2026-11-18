@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T03:15:00.990668+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Teclado\n\n## Enunciado\nOs teclados de telefones mostram teclas com os dígitos de 0 a 9, para que possamos digitar o número do telefone que queremos contactar, como na figura abaixo. Mas as teclas também mostram letras, que podem ser usadas por exemplo para facilitar a memorização de um número de telefone em particular. Por exemplo, para memorizar o número (74) 7622 3623 podemos associar esse número à cadeia de caracteres pipocadoce:\n[1.png]\nClaramente, um número pode ser representado por diferentes cadeias de caracteres. Por exemplo, o número 3482 pode ser representado por fita, diva, dita, egua, e muitas outras cadeias de caracteres.\n\nDados um número e uma lista de cadeias de caracteres, sua tarefa é determinar quantas cadeias de caracteres da lista podem representar o número dado.\n\n## Formato de Entrada\nA primeira linha da entrada contém uma cadeia de caracteres N, o número de telefone. A segunda linha contém um inteiro M, o número de cadeias de caracteres na lista. Cada uma das M linhas seguintes contém uma cadeia de caracteres Ci.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha na saída, contendo um único inteiro, o número de cadeias de caracteres da lista que podem representar o número dado.\n\n## Restrições\n1 ≤ comprimento de N ≤ 1000\nN contém apenas dígitos entre 2 e 9\n1 ≤ M ≤ 1000\nCi contém apenas letras minúsculas não acentuadas, para 1 ≤ i ≤ M\n1 ≤ comprimento de Ci ≤ 1000, para 1 ≤ i ≤ M\nCi são todas distintas para 1 ≤ i ≤ M\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3482\n4\nfita\nregua\nmilho\ndiva\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n7476223623\n5\npipoca\npipocadoce\nmisobafobe\ndoce\ndocpipoca\n```\nSaída:\n```\n1\n```\n\nExemplo 3:\nEntrada:\n```\n4444\n3\nmono\ntudo\nnada\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 644,
+            "output_tokens": 447,
+            "total_tokens": 1917
+        },
+        "cost_usd": {
+            "input_cost": 0.000483,
+            "output_cost": 0.001676,
+            "total_cost": 0.002159
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nstatic const char map_letter[26] = {\n    '2', '2', '2',      // a, b, c\n    '3', '3', '3',      // d, e, f\n    '4', '4', '4',      // g, h, i\n    '5', '5', '5',      // j, k, l\n    '6', '6', '6',      // m, n, o\n    '7', '7', '7', '7', // p, q, r, s\n    '8', '8', '8',      // t, u, v\n    '9', '9', '9', '9'  // w, x, y, z\n};\n\nint main() {\n    char n[1005];\n    if (scanf(\"%1004s\", n) != 1) return 0;\n\n    int len_n = strlen(n);\n\n    int m;\n    if (scanf(\"%d\", &m) != 1) return 0;\n\n    int count = 0;\n    char c[1005];\n\n    for (int i = 0; i < m; i++) {\n        if (scanf(\"%1004s\", c) != 1) break;\n\n        int len_c = strlen(c);\n        if (len_c != len_n) {\n            continue;\n        }\n\n        int matches = 1;\n        for (int j = 0; j < len_n; j++) {\n            if (map_letter[c[j] - 'a'] != n[j]) {\n                matches = 0;\n                break;\n            }\n        }\n\n        if (matches) {\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nstatic const char map_letter[26] = {\n    '2', '2', '2',      // a, b, c\n    '3', '3', '3',      // d, e, f\n    '4', '4', '4',      // g, h, i\n    '5', '5', '5',      // j, k, l\n    '6', '6', '6',      // m, n, o\n    '7', '7', '7', '7', // p, q, r, s\n    '8', '8', '8',      // t, u, v\n    '9', '9', '9', '9'  // w, x, y, z\n};\n\nint main() {\n    char n[1005];\n    if (scanf(\"%1004s\", n) != 1) return 0;\n\n    int len_n = strlen(n);\n\n    int m;\n    if (scanf(\"%d\", &m) != 1) return 0;\n\n    int count = 0;\n    char c[1005];\n\n    for (int i = 0; i < m; i++) {\n        if (scanf(\"%1004s\", c) != 1) break;\n\n        int len_c = strlen(c);\n        if (len_c != len_n) {\n            continue;\n        }\n\n        int matches = 1;\n        for (int j = 0; j < len_n; j++) {\n            if (map_letter[c[j] - 'a'] != n[j]) {\n                matches = 0;\n                break;\n            }\n        }\n\n        if (matches) {\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11797659999956522,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:58:17.568504+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Teclado\n\n## Enunciado\nOs teclados de telefones mostram teclas com os dígitos de 0 a 9, para que possamos digitar o número do telefone que queremos contactar, como na figura abaixo. Mas as teclas também mostram letras, que podem ser usadas por exemplo para facilitar a memorização de um número de telefone em particular. Por exemplo, para memorizar o número (74) 7622 3623 podemos associar esse número à cadeia de caracteres pipocadoce:\n[1.png]\nClaramente, um número pode ser representado por diferentes cadeias de caracteres. Por exemplo, o número 3482 pode ser representado por fita, diva, dita, egua, e muitas outras cadeias de caracteres.\n\nDados um número e uma lista de cadeias de caracteres, sua tarefa é determinar quantas cadeias de caracteres da lista podem representar o número dado.\n\n## Formato de Entrada\nA primeira linha da entrada contém uma cadeia de caracteres N, o número de telefone. A segunda linha contém um inteiro M, o número de cadeias de caracteres na lista. Cada uma das M linhas seguintes contém uma cadeia de caracteres Ci.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha na saída, contendo um único inteiro, o número de cadeias de caracteres da lista que podem representar o número dado.\n\n## Restrições\n1 ≤ comprimento de N ≤ 1000\nN contém apenas dígitos entre 2 e 9\n1 ≤ M ≤ 1000\nCi contém apenas letras minúsculas não acentuadas, para 1 ≤ i ≤ M\n1 ≤ comprimento de Ci ≤ 1000, para 1 ≤ i ≤ M\nCi são todas distintas para 1 ≤ i ≤ M\n\n## Limites de Execução\n- Tempo Limite: 3.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3482\n4\nfita\nregua\nmilho\ndiva\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n7476223623\n5\npipoca\npipocadoce\nmisobafobe\ndoce\ndocpipoca\n```\nSaída:\n```\n1\n```\n\nExemplo 3:\nEntrada:\n```\n4444\n3\nmono\ntudo\nnada\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 678,
+            "output_tokens": 435,
+            "total_tokens": 1826
+        },
+        "cost_usd": {
+            "input_cost": 0.000509,
+            "output_cost": 0.001631,
+            "total_cost": 0.00214
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char N[1005];\n    if (scanf(\"%1000s\", N) != 1) return 0;\n    \n    int M;\n    if (scanf(\"%d\", &M) != 1) return 0;\n\n    const char map[] = {\n        '2', '2', '2',      // a, b, c\n        '3', '3', '3',      // d, e, f\n        '4', '4', '4',      // g, h, i\n        '5', '5', '5',      // j, k, l\n        '6', '6', '6',      // m, n, o\n        '7', '7', '7', '7', // p, q, r, s\n        '8', '8', '8',      // t, u, v\n        '9', '9', '9', '9'  // w, x, y, z\n    };\n\n    int n_len = strlen(N);\n    int ans = 0;\n    char word[1005];\n\n    for (int i = 0; i < M; i++) {\n        scanf(\"%1000s\", word);\n        int w_len = strlen(word);\n        if (w_len != n_len) {\n            continue;\n        }\n\n        int match = 1;\n        for (int j = 0; j < n_len; j++) {\n            if (map[word[j] - 'a'] != N[j]) {\n                match = 0;\n                break;\n            }\n        }\n\n        if (match) {\n            ans++;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char N[1005];\n    if (scanf(\"%1000s\", N) != 1) return 0;\n    \n    int M;\n    if (scanf(\"%d\", &M) != 1) return 0;\n\n    const char map[] = {\n        '2', '2', '2',      // a, b, c\n        '3', '3', '3',      // d, e, f\n        '4', '4', '4',      // g, h, i\n        '5', '5', '5',      // j, k, l\n        '6', '6', '6',      // m, n, o\n        '7', '7', '7', '7', // p, q, r, s\n        '8', '8', '8',      // t, u, v\n        '9', '9', '9', '9'  // w, x, y, z\n    };\n\n    int n_len = strlen(N);\n    int ans = 0;\n    char word[1005];\n\n    for (int i = 0; i < M; i++) {\n        scanf(\"%1000s\", word);\n        int w_len = strlen(word);\n        if (w_len != n_len) {\n            continue;\n        }\n\n        int match = 1;\n        for (int j = 0; j < n_len; j++) {\n            if (map[word[j] - 'a'] != N[j]) {\n                match = 0;\n                break;\n            }\n        }\n\n        if (match) {\n            ans++;\n        }\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15303770000173245,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

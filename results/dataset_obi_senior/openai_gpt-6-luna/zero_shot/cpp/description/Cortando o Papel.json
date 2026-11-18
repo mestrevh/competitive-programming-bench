@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T19:16:20.238513+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Cortando o Papel\n\n## Enunciado\nUma folha de papel é composta de uma sequência de retângulos com diferentes alturas mas com larguras fixas, tal que as bases dos retângulos estão assentadas em uma linha horizontal. A figura ilustra uma folha exemplo com 33 retângulos. Nós gostaríamos de fazer um único corte horizontal, com a ajuda de um estilete e uma régua, que maximize o número resultante de pedaços separados pelo corte. A figura mostra quatro diferentes cortes que resultariam, respectivamente, em 4, 11, 10 e 3 pedaços.\n[Descrição da imagem: Desenho de uma folha de papel formada por 33 retângulos contíguos de larguras iguais e alturas variadas sobre uma linha de base horizontal. Quatro linhas de corte horizontais retas cortam a folha em diferentes alturas: a linha superior intercepta 3 picos isolados (resultando em 3 pedaços de papel soltos acima do corte); a segunda linha intercepta a silhueta em 10 segmentos (10 pedaços); a terceira linha intercepta em 11 segmentos (11 pedaços); e a linha inferior próxima à base intercepta 4 seções largas (4 pedaços).]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de retângulos na folha de papel.\nA segunda linha contém N inteiros Ai, 1 ≤ i ≤ N, representando a sequência de alturas dos retângulos.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo um inteiro representando o número máximo de pedaços possível, com um único corte horizontal.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ Ai ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 1000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n20 5 10 5 15 15 15 5 6 22\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n5\n10 20 30 40 50\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 606,
+            "output_tokens": 1890,
+            "total_tokens": 2496
+        },
+        "cost_usd": {
+            "input_cost": 6.1e-05,
+            "output_cost": 0.000945,
+            "total_cost": 0.001006
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<pair<long long, int>> heights(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> heights[i].first;\n        heights[i].second = i;\n    }\n\n    sort(heights.begin(), heights.end(), greater<>());\n\n    vector<bool> active(N, false);\n    int runs = 0;\n    int maxRuns = 0;\n\n    for (int i = 0; i < N;) {\n        int j = i;\n        while (j < N && heights[j].first == heights[i].first) {\n            int pos = heights[j].second;\n            int activeNeighbors = 0;\n\n            if (pos > 0 && active[pos - 1]) ++activeNeighbors;\n            if (pos + 1 < N && active[pos + 1]) ++activeNeighbors;\n\n            runs += 1 - activeNeighbors;\n            active[pos] = true;\n            ++j;\n        }\n\n        maxRuns = max(maxRuns, runs);\n        i = j;\n    }\n\n    cout << maxRuns + 1 << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<pair<long long, int>> heights(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> heights[i].first;\n        heights[i].second = i;\n    }\n\n    sort(heights.begin(), heights.end(), greater<>());\n\n    vector<bool> active(N, false);\n    int runs = 0;\n    int maxRuns = 0;\n\n    for (int i = 0; i < N;) {\n        int j = i;\n        while (j < N && heights[j].first == heights[i].first) {\n            int pos = heights[j].second;\n            int activeNeighbors = 0;\n\n            if (pos > 0 && active[pos - 1]) ++activeNeighbors;\n            if (pos + 1 < N && active[pos + 1]) ++activeNeighbors;\n\n            runs += 1 - activeNeighbors;\n            active[pos] = true;\n            ++j;\n        }\n\n        maxRuns = max(maxRuns, runs);\n        i = j;\n    }\n\n    cout << maxRuns + 1 << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12590349999663886,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

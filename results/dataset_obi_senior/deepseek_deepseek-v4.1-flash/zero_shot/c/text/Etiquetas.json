@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T07:40:56.235161+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Etiquetas\n\n## Enunciado\nUma fita esticada horizontalmente é composta de N quadrados de dimensão 1×1, cada um deles contendo um número inteiro anotado. Temos também K etiquetas retangulares idênticas, de dimensão 1×C, onde C é um inteiro. Nosso objetivo é colar todas as etiquetas sobre a fita de modo que a soma dos inteiros que não estiverem cobertos por nenhuma etiqueta ao final seja a maior possível. Cada etiqueta deve ser colada na horizontal, ao longo da fita. Duas etiquetas não podem estar sobrepostas e cada quadrado da fita deve estar ou totalmente coberto por uma etiqueta, ou totalmente descoberto.\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros N, K e C, representando, respectivamente, o comprimento da fita, o número de etiquetas e o comprimento das etiquetas. A segunda linha da entrada contém N inteiros Ai indicando a sequência de números anotados nos quadrados da fita.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um inteiro indicando a soma maior possível de inteiros descobertos na fita depois que todas as etiquetas sejam coladas seguindo as condições do enunciado.\n\n## Restrições\n1 ≤ N ≤ 10000\n-10000 ≤ Ai ≤ 10000\n1 ≤ K ≤ 10000\n1 ≤ C ≤ 10000\nK×C ≤ N\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n12 2 3\n1 22 4 -8 9 2 10 -1 5 5 32 -11\n```\nSaída:\n```\n58\n```\n\nExemplo 2:\nEntrada:\n```\n1 1 1\n10000\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 597,
+            "output_tokens": 17997,
+            "total_tokens": 18594
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.043193,
+            "total_cost": 0.043195
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define INF (1LL << 60)\n\nint main(void) {\n    int N, K, C;\n    scanf(\"%d %d %d\", &N, &K, &C);\n\n    long long prefix[10005];\n    prefix[0] = 0;\n    for (int i = 1; i <= N; ++i) {\n        long long x;\n        scanf(\"%lld\", &x);\n        prefix[i] = prefix[i - 1] + x;\n    }\n\n    long long a[10005], b[10005];\n    long long *prev = a, *cur = b;\n\n    for (int i = 0; i <= N; ++i) prev[i] = 0;\n\n    for (int j = 1; j <= K; ++j) {\n        int limit = N - (K - j) * C;\n        cur[0] = INF;\n\n        for (int i = 1; i <= limit; ++i) {\n            long long best = cur[i - 1];\n\n            if (i >= C && prev[i - C] < INF / 2) {\n                long long val = prev[i - C] + prefix[i] - prefix[i - C];\n                if (val < best) best = val;\n            }\n\n            cur[i] = best;\n        }\n\n        long long *tmp = prev;\n        prev = cur;\n        cur = tmp;\n    }\n\n    long long total = prefix[N];\n    printf(\"%lld\\n\", total - prev[N]);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define INF (1LL << 60)\n\nint main(void) {\n    int N, K, C;\n    scanf(\"%d %d %d\", &N, &K, &C);\n\n    long long prefix[10005];\n    prefix[0] = 0;\n    for (int i = 1; i <= N; ++i) {\n        long long x;\n        scanf(\"%lld\", &x);\n        prefix[i] = prefix[i - 1] + x;\n    }\n\n    long long a[10005], b[10005];\n    long long *prev = a, *cur = b;\n\n    for (int i = 0; i <= N; ++i) prev[i] = 0;\n\n    for (int j = 1; j <= K; ++j) {\n        int limit = N - (K - j) * C;\n        cur[0] = INF;\n\n        for (int i = 1; i <= limit; ++i) {\n            long long best = cur[i - 1];\n\n            if (i >= C && prev[i - C] < INF / 2) {\n                long long val = prev[i - C] + prefix[i] - prefix[i - C];\n                if (val < best) best = val;\n            }\n\n            cur[i] = best;\n        }\n\n        long long *tmp = prev;\n        prev = cur;\n        cur = tmp;\n    }\n\n    long long total = prefix[N];\n    printf(\"%lld\\n\", total - prev[N]);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18311759999778587,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T20:37:52.563365+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Etiquetas\n\n## Enunciado\nUma fita esticada horizontalmente é composta de N quadrados de dimensão 1×1, cada um deles contendo um número inteiro anotado. Temos também K etiquetas retangulares idênticas, de dimensão 1×C, onde C é um inteiro. Nosso objetivo é colar todas as etiquetas sobre a fita de modo que a soma dos inteiros que não estiverem cobertos por nenhuma etiqueta ao final seja a maior possível. Cada etiqueta deve ser colada na horizontal, ao longo da fita. Duas etiquetas não podem estar sobrepostas e cada quadrado da fita deve estar ou totalmente coberto por uma etiqueta, ou totalmente descoberto.\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros N, K e C, representando, respectivamente, o comprimento da fita, o número de etiquetas e o comprimento das etiquetas. A segunda linha da entrada contém N inteiros Ai indicando a sequência de números anotados nos quadrados da fita.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um inteiro indicando a soma maior possível de inteiros descobertos na fita depois que todas as etiquetas sejam coladas seguindo as condições do enunciado.\n\n## Restrições\n1 ≤ N ≤ 10000\n-10000 ≤ Ai ≤ 10000\n1 ≤ K ≤ 10000\n1 ≤ C ≤ 10000\nK×C ≤ N\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 1024 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n12 2 3\n1 22 4 -8 9 2 10 -1 5 5 32 -11\n```\nSaída:\n```\n58\n```\n\nExemplo 2:\nEntrada:\n```\n1 1 1\n10000\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 629,
+            "output_tokens": 3258,
+            "total_tokens": 3887
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.007819,
+            "total_cost": 0.007821
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int N, K, C;\n    scanf(\"%d %d %d\", &N, &K, &C);\n\n    int pref[10005];\n    pref[0] = 0;\n    int total = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int x;\n        scanf(\"%d\", &x);\n        total += x;\n        pref[i] = pref[i - 1] + x;\n    }\n\n    int dp0[10005], dp1[10005];\n    int *prev = dp0, *cur = dp1;\n\n    for (int i = 0; i <= N; i++) {\n        prev[i] = 0;\n    }\n\n    const int INF = 1000000000;\n\n    for (int j = 1; j <= K; j++) {\n        cur[0] = INF;\n\n        for (int i = 1; i <= N; i++) {\n            int best = cur[i - 1];\n\n            if (i >= C) {\n                int covered = prev[i - C] + pref[i] - pref[i - C];\n                if (covered < best) {\n                    best = covered;\n                }\n            }\n\n            cur[i] = best;\n        }\n\n        int *tmp = prev;\n        prev = cur;\n        cur = tmp;\n    }\n\n    int minCovered = prev[N];\n    int answer = total - minCovered;\n\n    printf(\"%d\\n\", answer);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, K, C;\n    scanf(\"%d %d %d\", &N, &K, &C);\n\n    int pref[10005];\n    pref[0] = 0;\n    int total = 0;\n\n    for (int i = 1; i <= N; i++) {\n        int x;\n        scanf(\"%d\", &x);\n        total += x;\n        pref[i] = pref[i - 1] + x;\n    }\n\n    int dp0[10005], dp1[10005];\n    int *prev = dp0, *cur = dp1;\n\n    for (int i = 0; i <= N; i++) {\n        prev[i] = 0;\n    }\n\n    const int INF = 1000000000;\n\n    for (int j = 1; j <= K; j++) {\n        cur[0] = INF;\n\n        for (int i = 1; i <= N; i++) {\n            int best = cur[i - 1];\n\n            if (i >= C) {\n                int covered = prev[i - C] + pref[i] - pref[i - C];\n                if (covered < best) {\n                    best = covered;\n                }\n            }\n\n            cur[i] = best;\n        }\n\n        int *tmp = prev;\n        prev = cur;\n        cur = tmp;\n    }\n\n    int minCovered = prev[N];\n    int answer = total - minCovered;\n\n    printf(\"%d\\n\", answer);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1653507000009995,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T04:49:37.221620+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em javascript. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Cortando o Papel\n\n## Enunciado\nUma folha de papel é composta de uma sequência de retângulos com diferentes alturas mas com larguras fixas, tal que as bases dos retângulos estão assentadas em uma linha horizontal. A figura ilustra uma folha exemplo com 33 retângulos. Nós gostaríamos de fazer um único corte horizontal, com a ajuda de um estilete e uma régua, que maximize o número resultante de pedaços separados pelo corte. A figura mostra quatro diferentes cortes que resultariam, respectivamente, em 4, 11, 10 e 3 pedaços.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de retângulos na folha de papel.\nA segunda linha contém N inteiros Ai, 1 ≤ i ≤ N, representando a sequência de alturas dos retângulos.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo um inteiro representando o número máximo de pedaços possível, com um único corte horizontal.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ Ai ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 1000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n20 5 10 5 15 15 15 5 6 22\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n5\n10 20 30 40 50\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```javascript ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 518,
+            "output_tokens": 592,
+            "total_tokens": 3091
+        },
+        "cost_usd": {
+            "input_cost": 0.000389,
+            "output_cost": 0.00222,
+            "total_cost": 0.002608
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n\n    // Leitura e remoção de duplicatas consecutivas\n    const B = [0];\n    let prev = -1;\n    for (let i = 0; i < N; i++) {\n        const val = readInt();\n        if (val !== prev) {\n            B.push(val);\n            prev = val;\n        }\n    }\n    B.push(0);\n\n    const m = B.length - 2;\n    if (m === 0) {\n        console.log(1);\n        return;\n    }\n\n    // Mapear eventos por altura\n    // delta: vales aumentam componentes, picos diminuem\n    const events = new Map();\n\n    for (let i = 1; i <= m; i++) {\n        const left = B[i - 1];\n        const right = B[i + 1];\n        const curr = B[i];\n\n        let change = 0;\n        if (curr < left && curr < right) {\n            change = 1; // vale\n        } else if (curr > left && curr > right) {\n            change = -1; // pico\n        }\n\n        if (change !== 0) {\n            events.set(curr, (events.get(curr) || 0) + change);\n        }\n    }\n\n    // Ordenar as alturas distintas com eventos\n    const heights = Array.from(events.keys()).sort((a, b) => a - b);\n\n    let comp = 1;\n    let maxComp = 1;\n\n    for (let i = 0; i < heights.length; i++) {\n        comp += events.get(heights[i]);\n        if (comp > maxComp) {\n            maxComp = comp;\n        }\n    }\n\n    console.log(maxComp + 1);\n}\n\nsolve();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n    const buffer = fs.readFileSync(0);\n    let offset = 0;\n\n    function readInt() {\n        while (offset < buffer.length && buffer[offset] <= 32) {\n            offset++;\n        }\n        if (offset >= buffer.length) return null;\n        let res = 0;\n        while (offset < buffer.length && buffer[offset] > 32) {\n            res = res * 10 + (buffer[offset] - 48);\n            offset++;\n        }\n        return res;\n    }\n\n    const N = readInt();\n    if (N === null) return;\n\n    // Leitura e remoção de duplicatas consecutivas\n    const B = [0];\n    let prev = -1;\n    for (let i = 0; i < N; i++) {\n        const val = readInt();\n        if (val !== prev) {\n            B.push(val);\n            prev = val;\n        }\n    }\n    B.push(0);\n\n    const m = B.length - 2;\n    if (m === 0) {\n        console.log(1);\n        return;\n    }\n\n    // Mapear eventos por altura\n    // delta: vales aumentam componentes, picos diminuem\n    const events = new Map();\n\n    for (let i = 1; i <= m; i++) {\n        const left = B[i - 1];\n        const right = B[i + 1];\n        const curr = B[i];\n\n        let change = 0;\n        if (curr < left && curr < right) {\n            change = 1; // vale\n        } else if (curr > left && curr > right) {\n            change = -1; // pico\n        }\n\n        if (change !== 0) {\n            events.set(curr, (events.get(curr) || 0) + change);\n        }\n    }\n\n    // Ordenar as alturas distintas com eventos\n    const heights = Array.from(events.keys()).sort((a, b) => a - b);\n\n    let comp = 1;\n    let maxComp = 1;\n\n    for (let i = 0; i < heights.length; i++) {\n        comp += events.get(heights[i]);\n        if (comp > maxComp) {\n            maxComp = comp;\n        }\n    }\n\n    console.log(maxComp + 1);\n}\n\nsolve();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06635860000096727,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

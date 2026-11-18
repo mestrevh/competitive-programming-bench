@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T03:08:59.103263+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Matriz super-legal\n\n## Enunciado\nDenotando por A_{i,j} o elemento na i-ésima linha e j-ésima coluna da matriz A, dizemos que uma matriz é \"legal\" se a condição\n\nA_{1,1} + A_{lin,col} ≤ A_{1,col} + A_{lin,1}\n\né verdadeira para todo lin > 1 e col > 1.\n\nAdicionalmente, dizemos que a matriz é \"super-legal\" se cada uma de suas submatrizes com pelo menos duas linhas e duas colunas é legal. Lembre que uma submatriz S de uma matriz M_{L×C} é uma matriz que inclui todos os elementos M_{i,j} tais que l1 ≤ i ≤ l2 e c1 ≤ j ≤ c2, para 1 ≤ l1 ≤ l2 ≤ L e 1 ≤ c1 ≤ c2 ≤ C.\n\nA sua tarefa é, dada uma matriz A, determinar a maior quantidade de elementos de uma submatriz super-legal da matriz A.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C indicando respectivamente o número de linhas e o número de colunas da matriz. Cada uma das L linhas seguintes contém C inteiros Xi representando os elementos da matriz.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, com apenas um número inteiro, a maior quantidade de elementos de uma submatriz super-legal da matriz da entrada, ou zero no caso de não existir uma submatriz super-legal.\n\n## Restrições\n2 ≤ L, C ≤ 1000\n-10^6 ≤ Xi ≤ 10^6\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n1 4 10\n5 2 6\n11 1 3\n```\nSaída:\n```\n9\n```\n\nExemplo 2:\nEntrada:\n```\n3 3\n1 3 1\n2 1 2\n1 1 1\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n5 6\n1 1 4 0 3 3\n4 4 9 7 11 13\n-3 -1 4 2 8 11\n1 5 9 5 9 10\n4 8 10 5 8 8\n```\nSaída:\n```\n15\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 685,
+            "output_tokens": 730,
+            "total_tokens": 3280
+        },
+        "cost_usd": {
+            "input_cost": 0.000514,
+            "output_cost": 0.002737,
+            "total_cost": 0.003251
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 1005\n\nint A[MAXN][MAXN];\nint B[MAXN][MAXN];\nint height[MAXN];\nint stack[MAXN];\nint L_bound[MAXN];\nint R_bound[MAXN];\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            scanf(\"%d\", &A[i][j]);\n        }\n    }\n\n    int rows = L - 1;\n    int cols = C - 1;\n\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            if ((long long)A[i][j] + A[i + 1][j + 1] <= (long long)A[i][j + 1] + A[i + 1][j]) {\n                B[i][j] = 1;\n            } else {\n                B[i][j] = 0;\n            }\n        }\n    }\n\n    long long max_ans = 0;\n\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            if (B[i][j] == 1) {\n                height[j]++;\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        int top = -1;\n        for (int j = 0; j < cols; j++) {\n            while (top >= 0 && height[stack[top]] >= height[j]) {\n                top--;\n            }\n            L_bound[j] = (top >= 0) ? stack[top] + 1 : 0;\n            stack[++top] = j;\n        }\n\n        top = -1;\n        for (int j = cols - 1; j >= 0; j--) {\n            while (top >= 0 && height[stack[top]] >= height[j]) {\n                top--;\n            }\n            R_bound[j] = (top >= 0) ? stack[top] - 1 : cols - 1;\n            stack[++top] = j;\n        }\n\n        for (int j = 0; j < cols; j++) {\n            if (height[j] > 0) {\n                long long h_prime = height[j];\n                long long w_prime = R_bound[j] - L_bound[j] + 1;\n                long long area = (h_prime + 1) * (w_prime + 1);\n                if (area > max_ans) {\n                    max_ans = area;\n                }\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", max_ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 1005\n\nint A[MAXN][MAXN];\nint B[MAXN][MAXN];\nint height[MAXN];\nint stack[MAXN];\nint L_bound[MAXN];\nint R_bound[MAXN];\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    for (int i = 0; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            scanf(\"%d\", &A[i][j]);\n        }\n    }\n\n    int rows = L - 1;\n    int cols = C - 1;\n\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            if ((long long)A[i][j] + A[i + 1][j + 1] <= (long long)A[i][j + 1] + A[i + 1][j]) {\n                B[i][j] = 1;\n            } else {\n                B[i][j] = 0;\n            }\n        }\n    }\n\n    long long max_ans = 0;\n\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            if (B[i][j] == 1) {\n                height[j]++;\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        int top = -1;\n        for (int j = 0; j < cols; j++) {\n            while (top >= 0 && height[stack[top]] >= height[j]) {\n                top--;\n            }\n            L_bound[j] = (top >= 0) ? stack[top] + 1 : 0;\n            stack[++top] = j;\n        }\n\n        top = -1;\n        for (int j = cols - 1; j >= 0; j--) {\n            while (top >= 0 && height[stack[top]] >= height[j]) {\n                top--;\n            }\n            R_bound[j] = (top >= 0) ? stack[top] - 1 : cols - 1;\n            stack[++top] = j;\n        }\n\n        for (int j = 0; j < cols; j++) {\n            if (height[j] > 0) {\n                long long h_prime = height[j];\n                long long w_prime = R_bound[j] - L_bound[j] + 1;\n                long long area = (h_prime + 1) * (w_prime + 1);\n                if (area > max_ans) {\n                    max_ans = area;\n                }\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", max_ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.17012339999928372,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:51:58.088229+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Matriz super-legal\n\n## Enunciado\nDenotando por A_{i,j} o elemento na i-ésima linha e j-ésima coluna da matriz A, dizemos que uma matriz é \"legal\" se a condição\n\nA_{1,1} + A_{lin,col} ≤ A_{1,col} + A_{lin,1}\n\né verdadeira para todo lin > 1 e col > 1.\n\nAdicionalmente, dizemos que a matriz é \"super-legal\" se cada uma de suas submatrizes com pelo menos duas linhas e duas colunas é legal. Lembre que uma submatriz S de uma matriz M_{L×C} é uma matriz que inclui todos os elementos M_{i,j} tais que l1 ≤ i ≤ l2 e c1 ≤ j ≤ c2, para 1 ≤ l1 ≤ l2 ≤ L e 1 ≤ c1 ≤ c2 ≤ C.\n\nA sua tarefa é, dada uma matriz A, determinar a maior quantidade de elementos de uma submatriz super-legal da matriz A.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C indicando respectivamente o número de linhas e o número de colunas da matriz. Cada uma das L linhas seguintes contém C inteiros Xi representando os elementos da matriz.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, com apenas um número inteiro, a maior quantidade de elementos de uma submatriz super-legal da matriz da entrada, ou zero no caso de não existir uma submatriz super-legal.\n\n## Restrições\n2 ≤ L, C ≤ 1000\n-10^6 ≤ Xi ≤ 10^6\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n1 4 10\n5 2 6\n11 1 3\n```\nSaída:\n```\n9\n```\n\nExemplo 2:\nEntrada:\n```\n3 3\n1 3 1\n2 1 2\n1 1 1\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n5 6\n1 1 4 0 3 3\n4 4 9 7 11 13\n-3 -1 4 2 8 11\n1 5 9 5 9 10\n4 8 10 5 8 8\n```\nSaída:\n```\n15\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 719,
+            "output_tokens": 519,
+            "total_tokens": 3484
+        },
+        "cost_usd": {
+            "input_cost": 0.000539,
+            "output_cost": 0.001946,
+            "total_cost": 0.002485
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 1005\n\nint A[MAXN][MAXN];\nint height[MAXN];\nint stack[MAXN];\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    for (int i = 0; i < L; ++i) {\n        for (int j = 0; j < C; ++j) {\n            scanf(\"%d\", &A[i][j]);\n        }\n    }\n\n    int R = L - 1;\n    int K = C - 1;\n    long long max_elements = 0;\n\n    for (int j = 0; j < K; ++j) {\n        height[j] = 0;\n    }\n\n    for (int i = 0; i < R; ++i) {\n        for (int j = 0; j < K; ++j) {\n            if ((long long)A[i][j] + A[i + 1][j + 1] <= (long long)A[i][j + 1] + A[i + 1][j]) {\n                height[j]++;\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        int top = 0;\n        for (int j = 0; j <= K; ++j) {\n            int cur_h = (j == K) ? 0 : height[j];\n            while (top > 0 && cur_h < height[stack[top - 1]]) {\n                int h = height[stack[--top]];\n                int left = (top == 0) ? 0 : stack[top - 1] + 1;\n                int w = j - left;\n                long long elements = (long long)(h + 1) * (w + 1);\n                if (elements > max_elements) {\n                    max_elements = elements;\n                }\n            }\n            stack[top++] = j;\n        }\n    }\n\n    printf(\"%lld\\n\", max_elements);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 1005\n\nint A[MAXN][MAXN];\nint height[MAXN];\nint stack[MAXN];\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    for (int i = 0; i < L; ++i) {\n        for (int j = 0; j < C; ++j) {\n            scanf(\"%d\", &A[i][j]);\n        }\n    }\n\n    int R = L - 1;\n    int K = C - 1;\n    long long max_elements = 0;\n\n    for (int j = 0; j < K; ++j) {\n        height[j] = 0;\n    }\n\n    for (int i = 0; i < R; ++i) {\n        for (int j = 0; j < K; ++j) {\n            if ((long long)A[i][j] + A[i + 1][j + 1] <= (long long)A[i][j + 1] + A[i + 1][j]) {\n                height[j]++;\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        int top = 0;\n        for (int j = 0; j <= K; ++j) {\n            int cur_h = (j == K) ? 0 : height[j];\n            while (top > 0 && cur_h < height[stack[top - 1]]) {\n                int h = height[stack[--top]];\n                int left = (top == 0) ? 0 : stack[top - 1] + 1;\n                int w = j - left;\n                long long elements = (long long)(h + 1) * (w + 1);\n                if (elements > max_elements) {\n                    max_elements = elements;\n                }\n            }\n            stack[top++] = j;\n        }\n    }\n\n    printf(\"%lld\\n\", max_elements);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.15368149999994785,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

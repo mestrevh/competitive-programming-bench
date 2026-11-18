@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T08:10:13.941459+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Música para Todos\n\n## Enunciado\nUma empresa de streaming de músicas lançou uma nova funcionalidade, para grupos de amigos ouvirem em seus aparelhos a mesma música ao mesmo tempo, compartilhando assim um momento de alegria nestes tempos difíceis de pandemia.\n\nCada amigo no grupo tem que declarar uma música que adora e uma música que detesta. Um amigo fica satisfeito se a música que está sendo compartilhada não é a música que ele detesta. Se a música que está sendo compartilhada é detestada por um dos amigos, ele pode trocar a música sendo compartilhada pela música que ele adora. Se há mais de um amigo que detesta a música que está sendo compartilhada, somente o amigo que é cliente há mais tempo da empresa é que pode trocar a música (e troca pela música que adora).\n\nObviamente, após a troca da música compartilhada pode ser que outro amigo deteste a nova música, e uma nova troca pode ocorrer. E as trocas podem ser intermináveis!\n\nDadas as preferências de um grupo de amigos e a música sendo compartilhada, e considerando que sempre ocorre troca enquanto houver cliente não satisfeito, escreva um programa para determinar quantas trocas ocorrem até que todos os amigos estejam satisfeitos.\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros N, M e C, respectivamente o número de amigos, o número de músicas e a música que está sendo compartilhada. As músicas são identificadas por inteiros de 1 a M. Cada uma das N linhas seguintes descreve as escolhas de um amigo e contém dois inteiros A e D, identificando respectivamente a música adorada e a música detestada. A ordem dos amigos na entrada obedece à ordem em que os amigos se tornaram clientes da empresa (o amigo que aparece antes é cliente há mais tempo).\n\n## Formato de Saída\nSeu programa deve produzir uma única linha na saída, contendo um único inteiro, o número de trocas até que todos os amigos fiquem satisfeitos ou o número -1 se as trocas continuam indefinidamente.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ M ≤ 10^5\n1 ≤ C ≤ M\n1 ≤ A, D ≤ M e A ≠ D\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 40 pontos, 1 ≤ N, M ≤ 1000.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 4 2\n1 2\n2 3\n3 2\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n4 5 2\n1 3\n2 3\n3 2\n5 1\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 3 1\n1 2\n2 3\n3 1\n```\nSaída:\n```\n-1\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 853,
+            "output_tokens": 2240,
+            "total_tokens": 3093
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.005376,
+            "total_cost": 0.005379
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int N, M, C;\n    if (scanf(\"%d %d %d\", &N, &M, &C) != 3) return 0;\n\n    int next[100005] = {0};\n    int visited[100005] = {0};\n\n    for (int i = 0; i < N; i++) {\n        int A, D;\n        scanf(\"%d %d\", &A, &D);\n        if (next[D] == 0) {\n            next[D] = A;\n        }\n    }\n\n    int cur = C;\n    int swaps = 0;\n\n    while (1) {\n        if (next[cur] == 0) {\n            printf(\"%d\\n\", swaps);\n            return 0;\n        }\n\n        if (visited[cur]) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n\n        visited[cur] = 1;\n        cur = next[cur];\n        swaps++;\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int N, M, C;\n    if (scanf(\"%d %d %d\", &N, &M, &C) != 3) return 0;\n\n    int next[100005] = {0};\n    int visited[100005] = {0};\n\n    for (int i = 0; i < N; i++) {\n        int A, D;\n        scanf(\"%d %d\", &A, &D);\n        if (next[D] == 0) {\n            next[D] = A;\n        }\n    }\n\n    int cur = C;\n    int swaps = 0;\n\n    while (1) {\n        if (next[cur] == 0) {\n            printf(\"%d\\n\", swaps);\n            return 0;\n        }\n\n        if (visited[cur]) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n\n        visited[cur] = 1;\n        cur = next[cur];\n        swaps++;\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15765879999889876,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T21:16:50.705510+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Música para Todos\n\n## Enunciado\nUma empresa de streaming de músicas lançou uma nova funcionalidade, para grupos de amigos ouvirem em seus aparelhos a mesma música ao mesmo tempo, compartilhando assim um momento de alegria nestes tempos difíceis de pandemia.\n\nCada amigo no grupo tem que declarar uma música que adora e uma música que detesta. Um amigo fica satisfeito se a música que está sendo compartilhada não é a música que ele detesta. Se a música que está sendo compartilhada é detestada por um dos amigos, ele pode trocar a música sendo compartilhada pela música que ele adora. Se há mais de um amigo que detesta a música que está sendo compartilhada, somente o amigo que é cliente há mais tempo da empresa é que pode trocar a música (e troca pela música que adora).\n\nObviamente, após a troca da música compartilhada pode ser que outro amigo deteste a nova música, e uma nova troca pode ocorrer. E as trocas podem ser intermináveis!\n\nDadas as preferências de um grupo de amigos e a música sendo compartilhada, e considerando que sempre ocorre troca enquanto houver cliente não satisfeito, escreva um programa para determinar quantas trocas ocorrem até que todos os amigos estejam satisfeitos.\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros N, M e C, respectivamente o número de amigos, o número de músicas e a música que está sendo compartilhada. As músicas são identificadas por inteiros de 1 a M. Cada uma das N linhas seguintes descreve as escolhas de um amigo e contém dois inteiros A e D, identificando respectivamente a música adorada e a música detestada. A ordem dos amigos na entrada obedece à ordem em que os amigos se tornaram clientes da empresa (o amigo que aparece antes é cliente há mais tempo).\n\n## Formato de Saída\nSeu programa deve produzir uma única linha na saída, contendo um único inteiro, o número de trocas até que todos os amigos fiquem satisfeitos ou o número -1 se as trocas continuam indefinidamente.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ M ≤ 10^5\n1 ≤ C ≤ M\n1 ≤ A, D ≤ M e A ≠ D\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 40 pontos, 1 ≤ N, M ≤ 1000.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 4 2\n1 2\n2 3\n3 2\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n4 5 2\n1 3\n2 3\n3 2\n5 1\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 3 1\n1 2\n2 3\n3 1\n```\nSaída:\n```\n-1\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 884,
+            "output_tokens": 2542,
+            "total_tokens": 3426
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.006101,
+            "total_cost": 0.006103
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int N, M, C;\n    if (scanf(\"%d %d %d\", &N, &M, &C) != 3) return 0;\n\n    int f[100005] = {0};\n    int seen[100005] = {0};\n\n    for (int i = 0; i < N; i++) {\n        int A, D;\n        scanf(\"%d %d\", &A, &D);\n        if (f[D] == 0) {\n            f[D] = A;\n        }\n    }\n\n    int cur = C;\n    int steps = 0;\n\n    while (1) {\n        if (f[cur] == 0) {\n            printf(\"%d\\n\", steps);\n            return 0;\n        }\n        if (seen[cur]) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n        seen[cur] = 1;\n        cur = f[cur];\n        steps++;\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int N, M, C;\n    if (scanf(\"%d %d %d\", &N, &M, &C) != 3) return 0;\n\n    int f[100005] = {0};\n    int seen[100005] = {0};\n\n    for (int i = 0; i < N; i++) {\n        int A, D;\n        scanf(\"%d %d\", &A, &D);\n        if (f[D] == 0) {\n            f[D] = A;\n        }\n    }\n\n    int cur = C;\n    int steps = 0;\n\n    while (1) {\n        if (f[cur] == 0) {\n            printf(\"%d\\n\", steps);\n            return 0;\n        }\n        if (seen[cur]) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n        seen[cur] = 1;\n        cur = f[cur];\n        steps++;\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10885309999866877,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

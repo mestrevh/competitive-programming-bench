@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T12:31:57.786778+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em javascript. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Garamana\n\n## Enunciado\nUm anagrama de uma palavra é um rearranjo das letras da palavra. Por exemplo,\n\n1. \"rota\" é um anagrama de \"ator\";\n2. \"amor\" é um anagrama de \"roma\"; e\n3. os anagramas de \"aab\" são \"aab\", \"aba\" e \"baa\".\n\nUm anagrama curinga de uma palavra é um anagrama em que algumas das letras podem ter sido substituídas pelo caractere '*' (asterisco). Por exemplo, três possíveis anagramas curingas de \"amor\" são \"*mor\", \"a**r\" e \"r**a\".\n\nDadas duas palavras, escreva um programa para determinar se a segunda palavra é um anagrama curinga da primeira palavra.\n\n## Formato de Entrada\nA primeira linha da entrada contém P, a primeira palavra. A segunda linha contém A, a segunda palavra.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único caractere, que deve ser 'S' se A é um anagrama curinga de P, ou 'N' caso contrário.\n\n## Restrições\n1 ≤ comprimento de P ≤ 100\ncomprimento de A = comprimento de P\nP é composta por letras minúsculas não acentuadas\nA é composta por letras minúsculas não acentuadas e o caractere '*' (asterisco)\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 50 pontos, A contém apenas letras minúsculas não acentuadas.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\nroma\nator\n```\nSaída:\n```\nN\n```\n\nExemplo 2:\nEntrada:\n```\nolimpíada\npoliamida\n```\nSaída:\n```\nS\n```\n\nExemplo 3:\nEntrada:\n```\nmicrofone\n*conform*\n```\nSaída:\n```\nS\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```javascript ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 607,
+            "output_tokens": 2585,
+            "total_tokens": 3192
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.006204,
+            "total_cost": 0.006206
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nlet P = input[0];\nlet A = input[1];\n\nfunction normalize(s) {\n  return s.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');\n}\n\nP = normalize(P);\nA = normalize(A);\n\nconst count = {};\nfor (const ch of P) {\n  count[ch] = (count[ch] || 0) + 1;\n}\n\nfor (const ch of A) {\n  if (ch === '*') continue;\n  if (!count[ch]) {\n    console.log('N');\n    process.exit(0);\n  }\n  count[ch]--;\n}\n\nconsole.log('S');\n```",
+        "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nlet P = input[0];\nlet A = input[1];\n\nfunction normalize(s) {\n  return s.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');\n}\n\nP = normalize(P);\nA = normalize(A);\n\nconst count = {};\nfor (const ch of P) {\n  count[ch] = (count[ch] || 0) + 1;\n}\n\nfor (const ch of A) {\n  if (ch === '*') continue;\n  if (!count[ch]) {\n    console.log('N');\n    process.exit(0);\n  }\n  count[ch]--;\n}\n\nconsole.log('S');",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.04949289999785833,
+            "counts": {
+                "AC": 49,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 49
+        }
+    }
+]

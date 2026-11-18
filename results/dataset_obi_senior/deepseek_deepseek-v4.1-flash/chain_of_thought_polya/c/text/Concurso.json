@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T02:47:03.812309+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Concurso\n\n## Enunciado\nCláudia trabalha na OBI (Organização dos Bons Informáticos), que recentemente realizou um concurso para contratar novos funcionários. Agora, Cláudia tem a tarefa de determinar a nota de corte para o concurso. Chamamos de nota de corte a nota mínima necessária para ser aprovado no concurso. Ou seja, se a nota de corte do concurso for C, então todos os participantes com uma nota maior ou igual a C serão aprovados no concurso e todos com nota menor que C serão reprovados.\n\nSeu chefe pediu para que Cláudia aprove no mínimo K candidatos do concurso para a próxima fase, mas ela também não quer que a nota de corte seja muito baixa. Por isso, Cláudia decidiu que a nota de corte deverá ser a maior nota C que faz com que no mínimo K candidatos sejam aprovados.\n\nSua tarefa é: dados o número N de candidatos, as notas A1, A2, ..., AN dos candidatos e a quantidade mínima de aprovados K, diga qual deve ser a maior nota de corte C para que pelo menos K candidatos sejam aprovados.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros, N e K, representando, respectivamente, o número de participantes e o número mínimo de candidatos que devem ser aprovados.\n\nA segunda linha da entrada contém N inteiros Ai, representando as notas dos participantes.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um único inteiro C, a nota de corte que deve ser escolhida por Cláudia.\n\n## Restrições\n1 ≤ K ≤ N ≤ 500\n1 ≤ Ai ≤ 100 para todo 1 ≤ i ≤ N\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 1\n92 83 98\n```\nSaída:\n```\n98\n```\n\nExemplo 2:\nEntrada:\n```\n4 2\n1 2 3 4\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n5 3\n20 20 10 20 30\n```\nSaída:\n```\n20\n```\n\nExemplo 4:\nEntrada:\n```\n10 5\n1 2 2 1 2 2 1 1 1 1\n```\nSaída:\n```\n1\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1267,
+            "output_tokens": 2339,
+            "total_tokens": 3606
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.005614,
+            "total_cost": 0.005617
+        },
+        "raw_response": "## 1. COMPREENSÃO DO PROBLEMA\n\nO objetivo é escolher a **maior nota de corte inteira `C`** tal que pelo menos `K` candidatos tenham nota `Ai >= C`.\n\nEntrada:\n- `N`, `K`\n- `N` notas inteiras `Ai`\n\nSaída:\n- Um único inteiro `C`.\n\nRestrições:\n- `1 <= K <= N <= 500`\n- `1 <= Ai <= 100`\n\nCasos de borda:\n- `K = 1`: a resposta é a maior nota.\n- `K = N`: a resposta é a menor nota.\n- Notas repetidas: devem ser contadas individualmente.\n- Como as notas são limitadas a `1..100`, não há risco de overflow.\n\n## 2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n\nComo as notas estão limitadas ao intervalo `1..100`, podemos usar um vetor de frequência `freq[101]`.\n\nEstratégia:\n1. Contar quantos candidatos possuem cada nota.\n2. Percorrer `C` de `100` até `1`.\n3. Acumular quantos candidatos têm nota maior ou igual a `C`.\n4. A primeira posição em que esse acumulado for `>= K` é a maior nota de corte possível.\n\nComplexidade:\n- Tempo: `O(N + 100)`\n- Espaço: `O(100)`\n\n## 3. CODIFICAÇÃO EM C\n\n```c\n#include <stdio.h>\n\nint main(void) {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    int freq[101] = {0};\n\n    for (int i = 0; i < N; i++) {\n        int nota;\n        scanf(\"%d\", &nota);\n        freq[nota]++;\n    }\n\n    int aprovados = 0;\n\n    for (int c = 100; c >= 1; c--) {\n        aprovados += freq[c];\n\n        if (aprovados >= K) {\n            printf(\"%d\\n\", c);\n            return 0;\n        }\n    }\n\n    return 0;\n}\n```\n\n## 4. RETROSPECTO E VERIFICAÇÃO\n\nVerificando os exemplos:\n\n- Exemplo 1: `K = 1`. Ao chegar em `c = 98`, o acumulado é `1`, então a saída é `98`.\n- Exemplo 2: notas `1,2,3,4`, `K = 2`. Em `c = 3`, o acumulado é `2`, então a saída é `3`.\n- Exemplo 3: notas `20,20,10,20,30`, `K = 3`. Em `c = 20`, o acumulado é `4 >= 3`, então a saída é `20`.\n- Exemplo 4: notas com muitos `1` e `2`, `K = 5`. Em `c = 2`, o acumulado é `4 < 5`; em `c = 1`, o acumulado é `10 >= 5`, então a saída é `1`.\n\nA solução cobre casos de notas repetidas, `K = 1`, `K = N` e respeita todos os limites do problema.",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    int freq[101] = {0};\n\n    for (int i = 0; i < N; i++) {\n        int nota;\n        scanf(\"%d\", &nota);\n        freq[nota]++;\n    }\n\n    int aprovados = 0;\n\n    for (int c = 100; c >= 1; c--) {\n        aprovados += freq[c];\n\n        if (aprovados >= K) {\n            printf(\"%d\\n\", c);\n            return 0;\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10867580000194721,
+            "counts": {
+                "AC": 45,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 45
+        }
+    }
+]

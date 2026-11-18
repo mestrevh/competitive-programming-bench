@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T03:13:50.894021+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Hotel\n\n## Enunciado\nO hotel da Colônia de Férias dos Professores está com uma promoção para as férias de julho. A promoção é válida para quem chegar a partir do dia 1 de julho e sair no dia 1 de agosto.\n\nO preço da diária do hotel é menor para quem chegar mais cedo, e vai aumentando a cada dia. Mais precisamente, a promoção funciona assim:\n\n- A diária do hotel para quem chegar no dia 1 é D Reais. Assim, quem chegar no dia 1 vai pagar um total de 31 × D Reais.\n- A diária do hotel aumenta A reais por dia. Ou seja, a diária é D + A Reais para quem chegar no dia 2; D + 2 × A Reais no dia 3; D + 3 × A Reais no dia 4 e assim por diante.\n- A partir do dia 16 a diária não aumenta mais.\n\nNote que quem chegar no dia 2 vai pagar um total de 30 × (D + A) reais; quem chegar no dia 3 vai pagar um total de 29 × (D + 2 × A) reais, e assim por diante.\n\nBruno gosta muito da professora Vilma, e para agradá-la quer ajudá-la a planejar suas férias, escrevendo um programa para calcular o total (em Reais) que a professora Vilma vai gastar, dependendo do dia em que chegar no hotel.\n\n## Formato de Entrada\nA primeira linha contém um inteiro D, o valor da diária no dia 1. A segunda linha contém um inteiro A, o aumento da diária a cada dia a partir do dia 2 até o dia 15 (inclusive). A terceira linha contém um inteiro N, o dia de chegada no hotel.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, que deve ser o valor total a ser pago ao hotel pela estadia.\n\n## Restrições\n1 ≤ D ≤ 1000\n1 ≤ A ≤ 1000\n1 ≤ N ≤ 31\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n100\n10\n1\n```\nSaída:\n```\n3100\n```\n\nExemplo 2:\nEntrada:\n```\n100\n20\n15\n```\nSaída:\n```\n6460\n```\n\nExemplo 3:\nEntrada:\n```\n100\n5\n16\n```\nSaída:\n```\n2720\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1300,
+            "output_tokens": 1914,
+            "total_tokens": 3214
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.004594,
+            "total_cost": 0.004598
+        },
+        "raw_response": "## 1. COMPREENSÃO DO PROBLEMA\n\nO objetivo é calcular o valor total pago pela estadia no hotel, dado:\n- `D`: diária no dia 1 de julho.\n- `A`: aumento diário da diária até o dia 15.\n- `N`: dia de chegada.\n\nA diária é:\n- Para chegada no dia `N <= 15`: `D + (N - 1) * A`\n- Para chegada no dia `N >= 16`: permanece igual à diária do dia 15, ou seja, `D + 14 * A`\n\nO número de dias de estadia é `32 - N`, pois a saída é no dia 1 de agosto.\n\nA saída deve ser um único inteiro com o total pago.\n\nRestrições pequenas: `1 <= D, A <= 1000` e `1 <= N <= 31`. Ainda assim, usaremos `long long` para evitar qualquer risco de overflow.\n\nCasos de borda:\n- `N = 1`: 31 dias, diária `D`.\n- `N = 15`: diária `D + 14A`, 17 dias.\n- `N = 16`: diária continua `D + 14A`, 16 dias.\n- `N = 31`: 1 dia, diária `D + 14A`.\n\n## 2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n\nA solução é puramente aritmética, sem necessidade de laços ou estruturas de dados complexas.\n\nPassos:\n1. Ler `D`, `A` e `N`.\n2. Calcular a diária:\n   - Se `N <= 15`, usar `D + (N - 1) * A`.\n   - Caso contrário, usar `D + 14 * A`.\n3. Calcular os dias de estadia: `32 - N`.\n4. Multiplicar diária por dias e imprimir o resultado.\n\nComplexidade:\n- Tempo: `O(1)`\n- Espaço: `O(1)`\n\n## 3. CODIFICAÇÃO EM C\n\n```c\n#include <stdio.h>\n\nint main(void) {\n    long long D, A, N;\n    long long diaria, dias, total;\n\n    scanf(\"%lld\", &D);\n    scanf(\"%lld\", &A);\n    scanf(\"%lld\", &N);\n\n    if (N <= 15) {\n        diaria = D + (N - 1) * A;\n    } else {\n        diaria = D + 14 * A;\n    }\n\n    dias = 32 - N;\n    total = dias * diaria;\n\n    printf(\"%lld\\n\", total);\n\n    return 0;\n}\n```\n\n## 4. RETROSPECTO E VERIFICAÇÃO\n\nVerificando os exemplos:\n\n- Exemplo 1: `D = 100`, `A = 10`, `N = 1`\n  - `diaria = 100`\n  - `dias = 31`\n  - `total = 3100` ✅\n\n- Exemplo 2: `D = 100`, `A = 20`, `N = 15`\n  - `diaria = 100 + 14 * 20 = 380`\n  - `dias = 17`\n  - `total = 6460` ✅\n\n- Exemplo 3: `D = 100`, `A = 5`, `N = 16`\n  - `diaria = 100 + 14 * 5 = 170`\n  - `dias = 16`\n  - `total = 2720` ✅\n\nA solução cobre todos os casos de borda e executa em tempo e memória constantes.",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    long long D, A, N;\n    long long diaria, dias, total;\n\n    scanf(\"%lld\", &D);\n    scanf(\"%lld\", &A);\n    scanf(\"%lld\", &N);\n\n    if (N <= 15) {\n        diaria = D + (N - 1) * A;\n    } else {\n        diaria = D + 14 * A;\n    }\n\n    dias = 32 - N;\n    total = dias * diaria;\n\n    printf(\"%lld\\n\", total);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12997059999906924,
+            "counts": {
+                "AC": 30,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 30
+        }
+    }
+]

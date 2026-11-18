@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:56:16.987809+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Times\n\n## Enunciado\nChegou a hora da caça ao tesouro na gincana escolar! Para jogar, sua turma de N pessoas deve se dividir em dois times. A divisão será feita com base no número de chamada de cada aluno, um número entre 1 e N. Só que mais importante que fazer uma divisão balanceada é evitar que pessoas que não se gostam fiquem no mesmo time. Você receberá o número N de alunos e, para cada pessoa, você receberá a lista de pessoas que ela não gosta. Se a pessoa A não gosta da pessoa B então a pessoa B também não gosta da pessoa A. O aluno de número 1 sempre ficará no primeiro time. Você deve dividir os outros alunos entre os dois times de forma que dentro de cada time não haja duas pessoas que não se gostam.\n\n## Formato de Entrada\nA primeira linha contém um inteiro N, representando o número de alunos na turma. As N linhas seguintes, para 1 ≤ i ≤ N, contêm um inteiro M_i, indicando de quantas pessoas o aluno i não gosta, e em seguida M_i inteiros X_j, indicando que a pessoa i não gosta da pessoa X_j.\n\n## Formato de Saída\nSeu programa deve produzir duas linhas, a primeira contendo os números dos integrantes do primeiro time e a segunda contendo os números dos integrantes do segundo time, ambas em ordem crescente. Lembre-se que o aluno 1 sempre estará no primeiro time. Sempre há uma única solução.\n\n## Restrições\n2 ≤ N ≤ 10^5.\n1 ≤ M_i ≤ N - 1.\n1 ≤ X_j ≤ N.\n1 ≤ Σ_{i=1}^{N} M_i ≤ 6 × 10^5.\nOu seja, a soma de todos os M_i descritos na entrada é no máximo 6 × 10^5.\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste equivalente a 40 pontos, N ≤ 15.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n13\n2 12 9\n1 10\n3 8 12 13\n5 8 10 13 6 5\n2 11 4\n1 4\n1 8\n3 4 3 7\n1 1\n2 2 4\n1 5\n2 3 1\n2 4 3\n```\nSaída:\n```\n1 2 3 4 7 11\n5 6 8 9 10 12 13\n```\n\nExemplo 2:\nEntrada:\n```\n15\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n14 11 7 1 10 8 6 14 12 3 2 15 5 4 9\n1 13\n1 13\n```\nSaída:\n```\n1 2 3 4 5 6 7 8 9 10 11 12 14 15\n13\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 781,
+            "output_tokens": 831,
+            "total_tokens": 1612
+        },
+        "cost_usd": {
+            "input_cost": 7.8e-05,
+            "output_cost": 0.000416,
+            "total_cost": 0.000494
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100000\n#define MAX_E 600000\n\nstatic int head[MAX_N + 1];\nstatic int to[MAX_E];\nstatic int next_edge[MAX_E];\nstatic int color[MAX_N + 1];\nstatic int queue[MAX_N];\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int edge_count = 0;\n    for (int i = 1; i <= n; i++) {\n        int m;\n        scanf(\"%d\", &m);\n        while (m--) {\n            int x;\n            scanf(\"%d\", &x);\n            to[edge_count] = x;\n            next_edge[edge_count] = head[i];\n            head[i] = edge_count++;\n        }\n    }\n\n    for (int i = 1; i <= n; i++) color[i] = -1;\n\n    for (int start = 1; start <= n; start++) {\n        if (color[start] != -1) continue;\n\n        int front = 0, back = 0;\n        color[start] = 0;\n        queue[back++] = start;\n\n        while (front < back) {\n            int u = queue[front++];\n            for (int e = head[u]; e != -1; e = next_edge[e]) {\n                int v = to[e];\n                if (color[v] == -1) {\n                    color[v] = color[u] ^ 1;\n                    queue[back++] = v;\n                }\n            }\n        }\n    }\n\n    for (int team = 0; team <= 1; team++) {\n        int first = 1;\n        for (int i = 1; i <= n; i++) {\n            if (color[i] == team) {\n                if (!first) putchar(' ');\n                printf(\"%d\", i);\n                first = 0;\n            }\n        }\n        putchar('\\n');\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100000\n#define MAX_E 600000\n\nstatic int head[MAX_N + 1];\nstatic int to[MAX_E];\nstatic int next_edge[MAX_E];\nstatic int color[MAX_N + 1];\nstatic int queue[MAX_N];\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int edge_count = 0;\n    for (int i = 1; i <= n; i++) {\n        int m;\n        scanf(\"%d\", &m);\n        while (m--) {\n            int x;\n            scanf(\"%d\", &x);\n            to[edge_count] = x;\n            next_edge[edge_count] = head[i];\n            head[i] = edge_count++;\n        }\n    }\n\n    for (int i = 1; i <= n; i++) color[i] = -1;\n\n    for (int start = 1; start <= n; start++) {\n        if (color[start] != -1) continue;\n\n        int front = 0, back = 0;\n        color[start] = 0;\n        queue[back++] = start;\n\n        while (front < back) {\n            int u = queue[front++];\n            for (int e = head[u]; e != -1; e = next_edge[e]) {\n                int v = to[e];\n                if (color[v] == -1) {\n                    color[v] = color[u] ^ 1;\n                    queue[back++] = v;\n                }\n            }\n        }\n    }\n\n    for (int team = 0; team <= 1; team++) {\n        int first = 1;\n        for (int i = 1; i <= n; i++) {\n            if (color[i] == team) {\n                if (!first) putchar(' ');\n                printf(\"%d\", i);\n                first = 0;\n            }\n        }\n        putchar('\\n');\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16671150000183843,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T22:25:12.995065+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Times\n\n## Enunciado\nChegou a hora da caça ao tesouro na gincana escolar! Para jogar, sua turma de N pessoas deve se dividir em dois times. A divisão será feita com base no número de chamada de cada aluno, um número entre 1 e N. Só que mais importante que fazer uma divisão balanceada é evitar que pessoas que não se gostam fiquem no mesmo time. Você receberá o número N de alunos e, para cada pessoa, você receberá a lista de pessoas que ela não gosta. Se a pessoa A não gosta da pessoa B então a pessoa B também não gosta da pessoa A. O aluno de número 1 sempre ficará no primeiro time. Você deve dividir os outros alunos entre os dois times de forma que dentro de cada time não haja duas pessoas que não se gostam.\n\n## Formato de Entrada\nA primeira linha contém um inteiro N, representando o número de alunos na turma. As N linhas seguintes, para 1 ≤ i ≤ N, contêm um inteiro M_i, indicando de quantas pessoas o aluno i não gosta, e em seguida M_i inteiros X_j, indicando que a pessoa i não gosta da pessoa X_j.\n\n## Formato de Saída\nSeu programa deve produzir duas linhas, a primeira contendo os números dos integrantes do primeiro time e a segunda contendo os números dos integrantes do segundo time, ambas em ordem crescente. Lembre-se que o aluno 1 sempre estará no primeiro time. Sempre há uma única solução.\n\n## Restrições\n2 ≤ N ≤ 10^5.\n1 ≤ M_i ≤ N - 1.\n1 ≤ X_j ≤ N.\n1 ≤ Σ_{i=1}^{N} M_i ≤ 6 × 10^5.\nOu seja, a soma de todos os M_i descritos na entrada é no máximo 6 × 10^5.\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste equivalente a 40 pontos, N ≤ 15.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n13\n2 12 9\n1 10\n3 8 12 13\n5 8 10 13 6 5\n2 11 4\n1 4\n1 8\n3 4 3 7\n1 1\n2 2 4\n1 5\n2 3 1\n2 4 3\n```\nSaída:\n```\n1 2 3 4 7 11\n5 6 8 9 10 12 13\n```\n\nExemplo 2:\nEntrada:\n```\n15\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n14 11 7 1 10 8 6 14 12 3 2 15 5 4 9\n1 13\n1 13\n```\nSaída:\n```\n1 2 3 4 5 6 7 8 9 10 11 12 14 15\n13\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 811,
+            "output_tokens": 1138,
+            "total_tokens": 1949
+        },
+        "cost_usd": {
+            "input_cost": 8.1e-05,
+            "output_cost": 0.000569,
+            "total_cost": 0.00065
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_N 100000\n#define MAX_E 600000\n\nstatic int head[MAX_N + 1];\nstatic int to[MAX_E];\nstatic int next_edge[MAX_E];\nstatic signed char color[MAX_N + 1];\nstatic int queue[MAX_N];\n\nstatic int read_int(void) {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n\n    int value = 0;\n    while (c > ' ') {\n        value = value * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return value;\n}\n\nint main(void) {\n    int n = read_int();\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int edge_count = 0;\n    for (int i = 1; i <= n; i++) {\n        int m = read_int();\n        for (int j = 0; j < m; j++) {\n            int x = read_int();\n            to[edge_count] = x;\n            next_edge[edge_count] = head[i];\n            head[i] = edge_count++;\n        }\n    }\n\n    memset(color, -1, sizeof(color));\n\n    for (int start = 1; start <= n; start++) {\n        if (color[start] != -1) continue;\n\n        int front = 0, back = 0;\n        color[start] = 0;\n        queue[back++] = start;\n\n        while (front < back) {\n            int u = queue[front++];\n            for (int e = head[u]; e != -1; e = next_edge[e]) {\n                int v = to[e];\n                if (color[v] == -1) {\n                    color[v] = 1 - color[u];\n                    queue[back++] = v;\n                }\n            }\n        }\n    }\n\n    for (int team = 0; team < 2; team++) {\n        int first = 1;\n        for (int i = 1; i <= n; i++) {\n            if (color[i] == team) {\n                if (!first) putchar_unlocked(' ');\n                printf(\"%d\", i);\n                first = 0;\n            }\n        }\n        putchar_unlocked('\\n');\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_N 100000\n#define MAX_E 600000\n\nstatic int head[MAX_N + 1];\nstatic int to[MAX_E];\nstatic int next_edge[MAX_E];\nstatic signed char color[MAX_N + 1];\nstatic int queue[MAX_N];\n\nstatic int read_int(void) {\n    int c = getchar_unlocked();\n    while (c <= ' ' && c != EOF) c = getchar_unlocked();\n\n    int value = 0;\n    while (c > ' ') {\n        value = value * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return value;\n}\n\nint main(void) {\n    int n = read_int();\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int edge_count = 0;\n    for (int i = 1; i <= n; i++) {\n        int m = read_int();\n        for (int j = 0; j < m; j++) {\n            int x = read_int();\n            to[edge_count] = x;\n            next_edge[edge_count] = head[i];\n            head[i] = edge_count++;\n        }\n    }\n\n    memset(color, -1, sizeof(color));\n\n    for (int start = 1; start <= n; start++) {\n        if (color[start] != -1) continue;\n\n        int front = 0, back = 0;\n        color[start] = 0;\n        queue[back++] = start;\n\n        while (front < back) {\n            int u = queue[front++];\n            for (int e = head[u]; e != -1; e = next_edge[e]) {\n                int v = to[e];\n                if (color[v] == -1) {\n                    color[v] = 1 - color[u];\n                    queue[back++] = v;\n                }\n            }\n        }\n    }\n\n    for (int team = 0; team < 2; team++) {\n        int first = 1;\n        for (int i = 1; i <= n; i++) {\n            if (color[i] == team) {\n                if (!first) putchar_unlocked(' ');\n                printf(\"%d\", i);\n                first = 0;\n            }\n        }\n        putchar_unlocked('\\n');\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 32
+            },
+            "total_test_cases": 32
+        }
+    }
+]

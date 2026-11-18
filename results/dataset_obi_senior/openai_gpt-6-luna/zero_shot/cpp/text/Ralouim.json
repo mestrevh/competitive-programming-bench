@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T15:34:37.010824+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Ralouim\n\n## Enunciado\nPara a tradicional festa infantil de Ralouim, o rei da Nlogônia instalou tendas de distribuição de guloseimas no seu extenso Jardim Real, onde está também situado o Palácio Real.\n\nCada tenda tem uma quantidade ilimitada de guloseimas. As crianças devem sair do Palácio Real e visitar as tendas para ganhar guloseimas, mas o Rei estabeleceu algumas regras:\n\n- a cada visita a uma tenda, a criança ganha exatamente uma guloseima.\n- uma tenda pode ser visitada mais de uma vez pela mesma criança, desde que as visitas não sejam consecutivas (ou seja, uma imediatamente após a outra).\n- as distâncias que uma criança percorre para chegar à \"próxima tenda\" devem ser estritamente decrescentes. Ou seja, a distância que a criança percorre do Palácio até a primeira tenda que a criança visita deve ser maior do que a distância que a criança percorre entre a primeira tenda e a segunda tenda, que por sua vez deve ser maior do que a distância que a criança percorre entre a segunda tenda e a terceira tenda, e assim por diante.\n\nPedrinho percebeu que se planejar direito suas visitas, pode ganhar muitas guloseimas! Escreva um programa para ajudar Pedrinho a ganhar o maior número possível de guloseimas no Ralouim.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, o número de tendas. Cada uma das N linhas seguintes contém dois inteiros X e Y, as coordenadas de uma tenda no Jardim Real. A localização do Palácio Real é (0,0) e não existe tenda com essas coordenadas, todas as tendas têm localizações distintas.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o maior número de guloseimas que Pedrinho pode ganhar.\n\n## Restrições\n1 ≤ N ≤ 2000\n-10000 ≤ X ≤ 10000\n-10000 ≤ Y ≤ 10000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n6 0\n5 0\n1 0\n2 0\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n2\n0 3\n3 0\n```\nSaída:\n```\n1\n```\n\nExemplo 3:\nEntrada:\n```\n5\n6 8\n2 1\n2 2\n2 3\n5 9\n```\nSaída:\n```\n6\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 675,
+            "output_tokens": 3068,
+            "total_tokens": 3743
+        },
+        "cost_usd": {
+            "input_cost": 6.8e-05,
+            "output_cost": 0.001534,
+            "total_cost": 0.001602
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    long long distanceSquared;\n    int a, b; // a == -1 denotes an edge from the palace to b\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<pair<int, int>> tents(N);\n    for (auto &[x, y] : tents) cin >> x >> y;\n\n    vector<Edge> edges;\n    edges.reserve(N * (N - 1) / 2 + N);\n\n    for (int i = 0; i < N; ++i) {\n        long long x = tents[i].first;\n        long long y = tents[i].second;\n        edges.push_back({x * x + y * y, -1, i});\n\n        for (int j = 0; j < i; ++j) {\n            long long dx = x - tents[j].first;\n            long long dy = y - tents[j].second;\n            edges.push_back({dx * dx + dy * dy, j, i});\n        }\n    }\n\n    sort(edges.begin(), edges.end(), [](const Edge &x, const Edge &y) {\n        return x.distanceSquared > y.distanceSquared;\n    });\n\n    vector<int> best(N, -1), candidate(N, -1), touched;\n    int answer = 1;\n\n    for (size_t i = 0; i < edges.size();) {\n        size_t j = i;\n        while (j < edges.size() &&\n               edges[j].distanceSquared == edges[i].distanceSquared) {\n            const auto &[distanceSquared, a, b] = edges[j];\n\n            if (a == -1) {\n                if (candidate[b] == -1) touched.push_back(b);\n                candidate[b] = max(candidate[b], 1);\n            } else {\n                if (best[a] >= 0) {\n                    if (candidate[b] == -1) touched.push_back(b);\n                    candidate[b] = max(candidate[b], best[a] + 1);\n                }\n                if (best[b] >= 0) {\n                    if (candidate[a] == -1) touched.push_back(a);\n                    candidate[a] = max(candidate[a], best[b] + 1);\n                }\n            }\n            ++j;\n        }\n\n        for (int v : touched) {\n            best[v] = max(best[v], candidate[v]);\n            answer = max(answer, candidate[v]);\n            candidate[v] = -1;\n        }\n        touched.clear();\n        i = j;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Edge {\n    long long distanceSquared;\n    int a, b; // a == -1 denotes an edge from the palace to b\n};\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    vector<pair<int, int>> tents(N);\n    for (auto &[x, y] : tents) cin >> x >> y;\n\n    vector<Edge> edges;\n    edges.reserve(N * (N - 1) / 2 + N);\n\n    for (int i = 0; i < N; ++i) {\n        long long x = tents[i].first;\n        long long y = tents[i].second;\n        edges.push_back({x * x + y * y, -1, i});\n\n        for (int j = 0; j < i; ++j) {\n            long long dx = x - tents[j].first;\n            long long dy = y - tents[j].second;\n            edges.push_back({dx * dx + dy * dy, j, i});\n        }\n    }\n\n    sort(edges.begin(), edges.end(), [](const Edge &x, const Edge &y) {\n        return x.distanceSquared > y.distanceSquared;\n    });\n\n    vector<int> best(N, -1), candidate(N, -1), touched;\n    int answer = 1;\n\n    for (size_t i = 0; i < edges.size();) {\n        size_t j = i;\n        while (j < edges.size() &&\n               edges[j].distanceSquared == edges[i].distanceSquared) {\n            const auto &[distanceSquared, a, b] = edges[j];\n\n            if (a == -1) {\n                if (candidate[b] == -1) touched.push_back(b);\n                candidate[b] = max(candidate[b], 1);\n            } else {\n                if (best[a] >= 0) {\n                    if (candidate[b] == -1) touched.push_back(b);\n                    candidate[b] = max(candidate[b], best[a] + 1);\n                }\n                if (best[b] >= 0) {\n                    if (candidate[a] == -1) touched.push_back(a);\n                    candidate[a] = max(candidate[a], best[b] + 1);\n                }\n            }\n            ++j;\n        }\n\n        for (int v : touched) {\n            best[v] = max(best[v], candidate[v]);\n            answer = max(answer, candidate[v]);\n            candidate[v] = -1;\n        }\n        touched.clear();\n        i = j;\n    }\n\n    cout << answer << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17939119999937247,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

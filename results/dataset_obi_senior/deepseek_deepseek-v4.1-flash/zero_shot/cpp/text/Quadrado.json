@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T09:46:20.147110+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Quadrado\n\n## Enunciado\nUm quadrado fantástico é um conjunto de números inteiros positivos dispostos em N linhas por N colunas tal que:\n\n- Não há números repetidos no quadrado.\n- A média dos números em cada linha é um número inteiro que está presente na linha.\n- A média dos números em cada coluna é um número inteiro que está presente na coluna.\n\n## Formato de Entrada\nA primeira e única linha da entrada contém um número inteiro N, indicando a dimensão do quadrado.\n\n## Formato de Saída\nSeu programa deve produzir N linhas, cada uma contendo N números inteiros Xi, representando um quadrado fantástico.\n\n## Restrições\n1 ≤ N ≤ 40\n1 ≤ Xi ≤ 1000000\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 44 pontos, 1 ≤ N é ímpar.\n- Para outro conjunto de casos de testes valendo 56 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n1\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n2\n```\nSaída:\n```\n-1\n```\n\nExemplo 3:\nEntrada:\n```\n3\n```\nSaída:\n```\n1 2 3\n4 5 6\n7 8 9\n```\n\nExemplo 4:\nEntrada:\n```\n4\n```\nSaída:\n```\n1 2 3 6\n7 8 9 12\n13 14 15 18\n31 32 33 36\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 521,
+            "output_tokens": 14286,
+            "total_tokens": 14807
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.034286,
+            "total_cost": 0.034288
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nvector<int> makeSet(int n, int scale) {\n    vector<int> v;\n    v.push_back(0);\n\n    if (n % 2 == 1) {\n        int m = n / 2;\n        for (int i = 1; i <= m; ++i) {\n            v.push_back(i * scale);\n            v.push_back(-i * scale);\n        }\n    } else {\n        int m = n / 2;\n        for (int i = 1; i <= m - 2; ++i) {\n            v.push_back(i * scale);\n            v.push_back(-i * scale);\n        }\n        v.push_back(-m * scale);\n        v.push_back(-(m + 1) * scale);\n        v.push_back((2 * m + 1) * scale);\n    }\n\n    return v;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    if (N == 2) {\n        cout << -1 << '\\n';\n        return 0;\n    }\n\n    if (N == 1) {\n        cout << 1 << '\\n';\n        return 0;\n    }\n\n    const int B = 1000;\n    const int D = 100000;\n\n    vector<int> U = makeSet(N, B);\n    vector<int> V = makeSet(N, 1);\n\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            if (j) cout << ' ';\n            cout << D + U[i] + V[j];\n        }\n        cout << '\\n';\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nvector<int> makeSet(int n, int scale) {\n    vector<int> v;\n    v.push_back(0);\n\n    if (n % 2 == 1) {\n        int m = n / 2;\n        for (int i = 1; i <= m; ++i) {\n            v.push_back(i * scale);\n            v.push_back(-i * scale);\n        }\n    } else {\n        int m = n / 2;\n        for (int i = 1; i <= m - 2; ++i) {\n            v.push_back(i * scale);\n            v.push_back(-i * scale);\n        }\n        v.push_back(-m * scale);\n        v.push_back(-(m + 1) * scale);\n        v.push_back((2 * m + 1) * scale);\n    }\n\n    return v;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    if (N == 2) {\n        cout << -1 << '\\n';\n        return 0;\n    }\n\n    if (N == 1) {\n        cout << 1 << '\\n';\n        return 0;\n    }\n\n    const int B = 1000;\n    const int D = 100000;\n\n    vector<int> U = makeSet(N, B);\n    vector<int> V = makeSet(N, 1);\n\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            if (j) cout << ' ';\n            cout << D + U[i] + V[j];\n        }\n        cout << '\\n';\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.20674719999806257,
+            "counts": {
+                "AC": 0,
+                "WA": 15,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 15
+        }
+    }
+]

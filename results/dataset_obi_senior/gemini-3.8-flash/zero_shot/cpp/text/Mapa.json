@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T03:44:24.651435+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Mapa\n\n## Enunciado\nHarry ganhou um mapa mágico no qual ele pode visualizar o trajeto realizado por seus amigos. Ele agora precisa de sua colaboração para, com a ajuda do mapa, determinar onde Hermione se encontra.\n\nO mapa tem L linhas e C colunas de caracteres, que podem ser '.' (ponto), a letra 'o' (minúscula) ou a letra 'H' (maiúscula). A posição inicial de Hermione no mapa é indicada pela letra 'o', que aparece exatamente uma vez no mapa. A letra 'H' indica uma posição em que Hermione pode ter passado - o mapa é impreciso, e nem toda letra 'H' no mapa representa realmente uma posição pela qual Hermione passou. Mas todas as posições pelas quais Hermione passou são representadas pela letra 'H' no mapa.\n\nA partir da posição inicial de Hermione, Harry sabe determinar a posição atual de sua amiga, apesar da imprecisão do mapa, porque eles combinaram que Hermione somente se moveria de forma que seu movimento apareceria no mapa como estritamente horizontal ou estritamente vertical (nunca diagonal). Além disso, Hermione combinou que não se moveria de forma a deixar que Harry tivesse dúvidas sobre seu caminho (por exemplo, Hermione não passa duas vezes pela mesma posição). Considere o mapa abaixo, com 6 linhas e 7 colunas:\n\n...HHH.\nHHH...H\nH.HHH..\nH...HH.\nH.o....\nHHH..HH\n\nA posição inicial de Hermione no mapa é (5,3), e sua posição atual é (4,6). As posições marcadas em negrito (H) são erros no mapa.\n\nDado um mapa e a posição inicial de Hermione, você deve escrever um programa para determinar a posição atual de Hermione.\n\n## Formato de Entrada\nA primeira linha contém dois números inteiros L e C, indicando respectivamente o número de linhas e o número de colunas. Cada uma das seguintes L linhas contém C caracteres.\n\n## Formato de Saída\nSeu programa deve produzir uma única LINHA na saída, contendo dois números inteiros: o número da linha e o número da coluna da posição atual de Hermione.\n\n## Restrições\n2 ≤ L ≤ 100\n2 ≤ C ≤ 100\nApenas os caracteres '.', 'o' e 'H' aparecem no mapa.\nA letra 'o' aparece exatamente uma vez no mapa.\nA letra 'H' aparece ao menos uma vez no mapa.\nO caminho de Hermione está totalmente contido no mapa.\nNa posição da letra 'o' no mapa, há apenas uma letra 'H' como vizinho imediato na vertical ou horizontal.\nNa posição atual de Hermione no mapa, há apenas uma letra 'H' como vizinho imediato na vertical ou horizontal.\nEm cada uma das posições intermediárias do caminho de Hermione, há exatamente duas letras 'H' como vizinhas imediatas na vertical ou horizontal.\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 20 pontos, L, C ≤ 8\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 4\nHHHH\nH...\no.HH\n```\nSaída:\n```\n1 4\n```\n\nExemplo 2:\nEntrada:\n```\n6 7\n...HHH.\nHHH...H\nH.HHH..\nH...HH.\nH.o....\nHHH..HH\n```\nSaída:\n```\n4 6\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 883,
+            "output_tokens": 424,
+            "total_tokens": 1771
+        },
+        "cost_usd": {
+            "input_cost": 0.000662,
+            "output_cost": 0.00159,
+            "total_cost": 0.002252
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int L, C;\n    if (!(cin >> L >> C)) return 0;\n\n    vector<string> mapa(L);\n    int r = -1, c = -1;\n\n    for (int i = 0; i < L; ++i) {\n        cin >> mapa[i];\n        for (int j = 0; j < C; ++j) {\n            if (mapa[i][j] == 'o') {\n                r = i;\n                c = j;\n            }\n        }\n    }\n\n    int dr[] = {-1, 1, 0, 0};\n    int dc[] = {0, 0, -1, 1};\n\n    // Marca a posição inicial como visitada\n    mapa[r][c] = '.';\n\n    while (true) {\n        bool moved = false;\n        for (int d = 0; d < 4; ++d) {\n            int nr = r + dr[d];\n            int nc = c + dc[d];\n\n            if (nr >= 0 && nr < L && nc >= 0 && nc < C && mapa[nr][nc] == 'H') {\n                mapa[nr][nc] = '.'; // Marca como visitado\n                r = nr;\n                c = nc;\n                moved = true;\n                break;\n            }\n        }\n        if (!moved) {\n            break;\n        }\n    }\n\n    // Saída com 1-indexado\n    cout << r + 1 << \" \" << c + 1 << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int L, C;\n    if (!(cin >> L >> C)) return 0;\n\n    vector<string> mapa(L);\n    int r = -1, c = -1;\n\n    for (int i = 0; i < L; ++i) {\n        cin >> mapa[i];\n        for (int j = 0; j < C; ++j) {\n            if (mapa[i][j] == 'o') {\n                r = i;\n                c = j;\n            }\n        }\n    }\n\n    int dr[] = {-1, 1, 0, 0};\n    int dc[] = {0, 0, -1, 1};\n\n    // Marca a posição inicial como visitada\n    mapa[r][c] = '.';\n\n    while (true) {\n        bool moved = false;\n        for (int d = 0; d < 4; ++d) {\n            int nr = r + dr[d];\n            int nc = c + dc[d];\n\n            if (nr >= 0 && nr < L && nc >= 0 && nc < C && mapa[nr][nc] == 'H') {\n                mapa[nr][nc] = '.'; // Marca como visitado\n                r = nr;\n                c = nc;\n                moved = true;\n                break;\n            }\n        }\n        if (!moved) {\n            break;\n        }\n    }\n\n    // Saída com 1-indexado\n    cout << r + 1 << \" \" << c + 1 << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16909640000085346,
+            "counts": {
+                "AC": 21,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 21
+        }
+    }
+]

@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T03:13:55.591630+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Sanduíche\n\n## Enunciado\nUma nova lanchonete abriu na cidade, prometendo um menu com a maior variedade de sanduíches da região. A cada dia o Chef de cozinha compra N ingredientes distintos e prepara o menu usando esses N ingredientes. Infelizmente não é possível ter sanduíches com qualquer combinação de ingredientes: a cada dia o Chef determina que M pares de ingredientes não podem ser realizados no mesmo sanduíche, porque ele considera que esses ingredientes \"não combinam\".\n\nPor exemplo, suponha que num determinado dia N é igual a quatro e os ingredientes são queijo, presunto, goiabada e azeitona, e M é igual a dois: os pares (goiabada, presunto) e (azeitona, goiabada) não podem ser realizados no mesmo sanduíche. Nesse dia, alguns dos sanduíches que podem ser feitos são:\n- presunto, queijo\n- azeitona\n- presunto, azeitona, queijo\n- goiabada, queijo\n\nAlguns dos sanduíches que não podem ser feitos são:\n- presunto, queijo, goiabada\n- azeitona, goiabada\n- goiabada, presunto, azeitona\n\nDados os N ingredientes e os M pares de ingredientes que não combinam, sua tarefa é determinar qual o máximo número de sanduíches diferentes que podem ser feitos. Dois sanduíches A e B são considerados diferentes se A contém um ingrediente X que não está presente em B ou se B contém um ingrediente Y que não está presente em A. Um sanduíche deve conter ao menos um ingrediente.\n\n## Formato de Entrada\nA primeira linha contém dois números inteiros N e M, indicando respectivamente o número de ingredientes e o número de pares de ingredientes que não combinam. Os ingredientes são identificados por números de 1 a N. Cada uma das M linhas seguintes contém dois números inteiros X e Y que representam um par de ingredientes que não combinam.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, o número de sanduíches diferentes que podem ser feitos.\n\n## Restrições\n1 ≤ N ≤ 20\n0 ≤ M ≤ 400\n1 ≤ X ≤ N\n1 ≤ X < Y\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 10 pontos, N ≤ 5.\n- Para um conjunto de casos de testes valendo outros 40 pontos, N ≤ 10.\n- Para um conjunto de casos de testes valendo outros 50 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 2\n2 3\n1 2\n```\nSaída:\n```\n4\n```\n\nExemplo 2:\nEntrada:\n```\n3 0\n```\nSaída:\n```\n7\n```\n\nExemplo 3:\nEntrada:\n```\n3 3\n1 2\n2 3\n1 3\n```\nSaída:\n```\n3\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 794,
+            "output_tokens": 295,
+            "total_tokens": 1917
+        },
+        "cost_usd": {
+            "input_cost": 0.000596,
+            "output_cost": 0.001106,
+            "total_cost": 0.001702
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nstatic int n, m;\nstatic int adj[20];\nstatic int ans = 0;\n\nvoid dfs(int u, int forbidden) {\n    if (u == n) {\n        ans++;\n        return;\n    }\n    // Não incluir o ingrediente u\n    dfs(u + 1, forbidden);\n    \n    // Incluir o ingrediente u (se não for proibido)\n    if (!(forbidden & (1 << u))) {\n        dfs(u + 1, forbidden | adj[u]);\n    }\n}\n\nint main(void) {\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        if (scanf(\"%d %d\", &u, &v) == 2) {\n            u--; v--;\n            adj[u] |= (1 << v);\n            adj[v] |= (1 << u);\n        }\n    }\n\n    dfs(0, 0);\n\n    // Subtrai 1 para desconsiderar o sanduíche vazio\n    printf(\"%d\\n\", ans - 1);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nstatic int n, m;\nstatic int adj[20];\nstatic int ans = 0;\n\nvoid dfs(int u, int forbidden) {\n    if (u == n) {\n        ans++;\n        return;\n    }\n    // Não incluir o ingrediente u\n    dfs(u + 1, forbidden);\n    \n    // Incluir o ingrediente u (se não for proibido)\n    if (!(forbidden & (1 << u))) {\n        dfs(u + 1, forbidden | adj[u]);\n    }\n}\n\nint main(void) {\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        if (scanf(\"%d %d\", &u, &v) == 2) {\n            u--; v--;\n            adj[u] |= (1 << v);\n            adj[v] |= (1 << u);\n        }\n    }\n\n    dfs(0, 0);\n\n    // Subtrai 1 para desconsiderar o sanduíche vazio\n    printf(\"%d\\n\", ans - 1);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12502259999928356,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:57:02.203084+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Sanduíche\n\n## Enunciado\nUma nova lanchonete abriu na cidade, prometendo um menu com a maior variedade de sanduíches da região. A cada dia o Chef de cozinha compra N ingredientes distintos e prepara o menu usando esses N ingredientes. Infelizmente não é possível ter sanduíches com qualquer combinação de ingredientes: a cada dia o Chef determina que M pares de ingredientes não podem ser realizados no mesmo sanduíche, porque ele considera que esses ingredientes \"não combinam\".\n\nPor exemplo, suponha que num determinado dia N é igual a quatro e os ingredientes são queijo, presunto, goiabada e azeitona, e M é igual a dois: os pares (goiabada, presunto) e (azeitona, goiabada) não podem ser realizados no mesmo sanduíche. Nesse dia, alguns dos sanduíches que podem ser feitos são:\n- presunto, queijo\n- azeitona\n- presunto, azeitona, queijo\n- goiabada, queijo\n\nAlguns dos sanduíches que não podem ser feitos são:\n- presunto, queijo, goiabada\n- azeitona, goiabada\n- goiabada, presunto, azeitona\n\nDados os N ingredientes e os M pares de ingredientes que não combinam, sua tarefa é determinar qual o máximo número de sanduíches diferentes que podem ser feitos. Dois sanduíches A e B são considerados diferentes se A contém um ingrediente X que não está presente em B ou se B contém um ingrediente Y que não está presente em A. Um sanduíche deve conter ao menos um ingrediente.\n\n## Formato de Entrada\nA primeira linha contém dois números inteiros N e M, indicando respectivamente o número de ingredientes e o número de pares de ingredientes que não combinam. Os ingredientes são identificados por números de 1 a N. Cada uma das M linhas seguintes contém dois números inteiros X e Y que representam um par de ingredientes que não combinam.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, o número de sanduíches diferentes que podem ser feitos.\n\n## Restrições\n1 ≤ N ≤ 20\n0 ≤ M ≤ 400\n1 ≤ X ≤ N\n1 ≤ X < Y\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 10 pontos, N ≤ 5.\n- Para um conjunto de casos de testes valendo outros 40 pontos, N ≤ 10.\n- Para um conjunto de casos de testes valendo outros 50 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 2\n2 3\n1 2\n```\nSaída:\n```\n4\n```\n\nExemplo 2:\nEntrada:\n```\n3 0\n```\nSaída:\n```\n7\n```\n\nExemplo 3:\nEntrada:\n```\n3 3\n1 2\n2 3\n1 3\n```\nSaída:\n```\n3\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 828,
+            "output_tokens": 301,
+            "total_tokens": 1967
+        },
+        "cost_usd": {
+            "input_cost": 0.000621,
+            "output_cost": 0.001129,
+            "total_cost": 0.00175
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint N, M;\nint adj[20];\nlong long ans = 0;\n\nvoid solve(int u, int forbidden) {\n    if (u == N) {\n        ans++;\n        return;\n    }\n    \n    // Opção 1: Não incluir o ingrediente u\n    solve(u + 1, forbidden);\n    \n    // Opção 2: Incluir o ingrediente u (se não for proibido)\n    if (!(forbidden & (1 << u))) {\n        solve(u + 1, forbidden | adj[u]);\n    }\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n    \n    for (int i = 0; i < M; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        u--; v--;\n        adj[u] |= (1 << v);\n        adj[v] |= (1 << u);\n    }\n    \n    solve(0, 0);\n    \n    // Subtrai 1 para desconsiderar o sanduíche vazio\n    printf(\"%lld\\n\", ans - 1);\n    \n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint N, M;\nint adj[20];\nlong long ans = 0;\n\nvoid solve(int u, int forbidden) {\n    if (u == N) {\n        ans++;\n        return;\n    }\n    \n    // Opção 1: Não incluir o ingrediente u\n    solve(u + 1, forbidden);\n    \n    // Opção 2: Incluir o ingrediente u (se não for proibido)\n    if (!(forbidden & (1 << u))) {\n        solve(u + 1, forbidden | adj[u]);\n    }\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n    \n    for (int i = 0; i < M; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        u--; v--;\n        adj[u] |= (1 << v);\n        adj[v] |= (1 << u);\n    }\n    \n    solve(0, 0);\n    \n    // Subtrai 1 para desconsiderar o sanduíche vazio\n    printf(\"%lld\\n\", ans - 1);\n    \n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17172380001284182,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

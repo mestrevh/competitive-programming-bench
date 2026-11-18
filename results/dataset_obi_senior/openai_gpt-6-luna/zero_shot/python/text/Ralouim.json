@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:08:20.841078+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Ralouim\n\n## Enunciado\nPara a tradicional festa infantil de Ralouim, o rei da Nlogônia instalou tendas de distribuição de guloseimas no seu extenso Jardim Real, onde está também situado o Palácio Real.\n\nCada tenda tem uma quantidade ilimitada de guloseimas. As crianças devem sair do Palácio Real e visitar as tendas para ganhar guloseimas, mas o Rei estabeleceu algumas regras:\n\n- a cada visita a uma tenda, a criança ganha exatamente uma guloseima.\n- uma tenda pode ser visitada mais de uma vez pela mesma criança, desde que as visitas não sejam consecutivas (ou seja, uma imediatamente após a outra).\n- as distâncias que uma criança percorre para chegar à \"próxima tenda\" devem ser estritamente decrescentes. Ou seja, a distância que a criança percorre do Palácio até a primeira tenda que a criança visita deve ser maior do que a distância que a criança percorre entre a primeira tenda e a segunda tenda, que por sua vez deve ser maior do que a distância que a criança percorre entre a segunda tenda e a terceira tenda, e assim por diante.\n\nPedrinho percebeu que se planejar direito suas visitas, pode ganhar muitas guloseimas! Escreva um programa para ajudar Pedrinho a ganhar o maior número possível de guloseimas no Ralouim.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, o número de tendas. Cada uma das N linhas seguintes contém dois inteiros X e Y, as coordenadas de uma tenda no Jardim Real. A localização do Palácio Real é (0,0) e não existe tenda com essas coordenadas, todas as tendas têm localizações distintas.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o maior número de guloseimas que Pedrinho pode ganhar.\n\n## Restrições\n1 ≤ N ≤ 2000\n-10000 ≤ X ≤ 10000\n-10000 ≤ Y ≤ 10000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n6 0\n5 0\n1 0\n2 0\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n2\n0 3\n3 0\n```\nSaída:\n```\n1\n```\n\nExemplo 3:\nEntrada:\n```\n5\n6 8\n2 1\n2 2\n2 3\n5 9\n```\nSaída:\n```\n6\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 10.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 675,
+            "output_tokens": 4471,
+            "total_tokens": 5146
+        },
+        "cost_usd": {
+            "input_cost": 6.8e-05,
+            "output_cost": 0.002236,
+            "total_cost": 0.002303
+        },
+        "raw_response": "```python\nimport sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\npoints = [(data[i], data[i + 1]) for i in range(1, len(data), 2)]\n\nkeys = []\nfor i in range(n):\n    x1, y1 = points[i]\n    for j in range(i + 1, n):\n        x2, y2 = points[j]\n        dx = x1 - x2\n        dy = y1 - y2\n        dist = dx * dx + dy * dy\n        keys.append((dist << 22) | (i << 11) | j)\n\nkeys.sort(reverse=True)\n\nsources = []\nfor i, (x, y) in enumerate(points):\n    sources.append((x * x + y * y, i))\nsources.sort(reverse=True)\n\nbest = [0] * n\npending = [0] * n\ntouched = []\nsource_idx = 0\nanswer = 1\ncurrent_dist = -1\n\nfor key in keys:\n    dist = key >> 22\n\n    if dist != current_dist:\n        for v in touched:\n            if pending[v] > best[v]:\n                best[v] = pending[v]\n            pending[v] = 0\n        touched.clear()\n\n        while source_idx < n and sources[source_idx][0] > dist:\n            _, v = sources[source_idx]\n            if best[v] < 1:\n                best[v] = 1\n            source_idx += 1\n\n        current_dist = dist\n\n    i = (key >> 11) & 2047\n    j = key & 2047\n\n    bi = best[i]\n    if bi:\n        value = bi + 1\n        if value > pending[j]:\n            if pending[j] == 0:\n                touched.append(j)\n            pending[j] = value\n        if value > answer:\n            answer = value\n\n    bj = best[j]\n    if bj:\n        value = bj + 1\n        if value > pending[i]:\n            if pending[i] == 0:\n                touched.append(i)\n            pending[i] = value\n        if value > answer:\n            answer = value\n\nprint(answer)\n```",
+        "extracted_code": "import sys\n\ndata = list(map(int, sys.stdin.buffer.read().split()))\nn = data[0]\npoints = [(data[i], data[i + 1]) for i in range(1, len(data), 2)]\n\nkeys = []\nfor i in range(n):\n    x1, y1 = points[i]\n    for j in range(i + 1, n):\n        x2, y2 = points[j]\n        dx = x1 - x2\n        dy = y1 - y2\n        dist = dx * dx + dy * dy\n        keys.append((dist << 22) | (i << 11) | j)\n\nkeys.sort(reverse=True)\n\nsources = []\nfor i, (x, y) in enumerate(points):\n    sources.append((x * x + y * y, i))\nsources.sort(reverse=True)\n\nbest = [0] * n\npending = [0] * n\ntouched = []\nsource_idx = 0\nanswer = 1\ncurrent_dist = -1\n\nfor key in keys:\n    dist = key >> 22\n\n    if dist != current_dist:\n        for v in touched:\n            if pending[v] > best[v]:\n                best[v] = pending[v]\n            pending[v] = 0\n        touched.clear()\n\n        while source_idx < n and sources[source_idx][0] > dist:\n            _, v = sources[source_idx]\n            if best[v] < 1:\n                best[v] = 1\n            source_idx += 1\n\n        current_dist = dist\n\n    i = (key >> 11) & 2047\n    j = key & 2047\n\n    bi = best[i]\n    if bi:\n        value = bi + 1\n        if value > pending[j]:\n            if pending[j] == 0:\n                touched.append(j)\n            pending[j] = value\n        if value > answer:\n            answer = value\n\n    bj = best[j]\n    if bj:\n        value = bj + 1\n        if value > pending[i]:\n            if pending[i] == 0:\n                touched.append(i)\n            pending[i] = value\n        if value > answer:\n            answer = value\n\nprint(answer)",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 4.517050800001016,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

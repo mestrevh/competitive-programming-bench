@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T13:38:13.999656+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Código\n\n## Enunciado\nA professora Maryam está tentando construir um código constituído de uma sequência de N strings de 10 letras minúsculas, S_1, S_2, S_3, ..., S_N. Essas strings da sequência são, no futuro, concatenadas de diversas maneiras para formar strings maiores. Mas, para que o código seja válido, a sequência de strings tem que satisfazer uma propriedade bastante específica: nenhuma string da sequência pode ser substring de uma concatenação de duas strings anteriores na sequência. De forma mais rigorosa, o código é inválido se existirem três inteiros a, b e k, tais que:\n\n- 1 ≤ a < k ≤ N, 1 ≤ b < k ≤ N (a pode ser igual a b); e\n- S_k é substring da concatenação S_a S_b.\n\nPor exemplo, o código S = {aaaaaaabbb, yyuudiwwkl, kkfidaaooa} é válido. Mas se adicionarmos a string aooaaaaaaa no final da sequência, o código resultante, S' = {aaaaaaabbb, yyuudiwwkl, kkfidaaooa, aooaaaaaaa}, será inválido, pois S'_4 é substring da concatenação S'_3 S'_1.\n\nDada a sequência de strings, seu programa deve determinar se o código é válido ou não.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de strings na sequência. As N linhas seguintes contêm, cada uma, uma string de 10 letras minúsculas, definindo a sequência de strings do código.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo a string \"ok\" caso o código seja válido, ou contendo a primeira string na sequência que invalida o código. Quer dizer, contendo S_k onde k é o menor possível tal que S_k seja substring de uma concatenação de duas strings anteriores na sequência.\n\n## Restrições\n1 ≤ N ≤ 10000\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 100\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3\naaaaaaabbb\nyyuudiwwkl\nkkfidaaooa\n```\nSaída:\n```\nok\n```\n\nExemplo 2:\nEntrada:\n```\n4\naaaaaaabbb\nyyuudiwwkl\nkkfidaaooa\naooaaaaaaa\n```\nSaída:\n```\naooaaaaaaa\n```\n\nExemplo 3:\nEntrada:\n```\n1\njfjshiddds\n```\nSaída:\n```\nok\n```\n\nExemplo 4:\nEntrada:\n```\n2\nabcdefghij\nabcdefghij\n```\nSaída:\n```\nabcdefghij\n```\n\nExemplo 5:\nEntrada:\n```\n8\nxfwvjuydq\nhcprvezofg\nhwkgagqawu\ngivfzndqpy\nyvfiqgadfc\nwuhcprvezo\nqaswiksscl\nuchskpkcit\n```\nSaída:\n```\nwuhcprvezo\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 789,
+            "output_tokens": 1686,
+            "total_tokens": 2475
+        },
+        "cost_usd": {
+            "input_cost": 7.9e-05,
+            "output_cost": 0.000843,
+            "total_cost": 0.000922
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    strings = [x.decode() for x in data[1:1 + n]]\n    max_len = max(map(len, strings), default=0)\n\n    prefixes = [set() for _ in range(max_len + 1)]\n    suffixes = [set() for _ in range(max_len + 1)]\n    substrings = [set() for _ in range(max_len + 1)]\n\n    for s in strings:\n        length = len(s)\n\n        if s in substrings[length]:\n            print(s)\n            return\n\n        for split in range(1, length):\n            if s[:split] in suffixes[split] and s[split:] in prefixes[length - split]:\n                print(s)\n                return\n\n        for size in range(1, length + 1):\n            prefixes[size].add(s[:size])\n            suffixes[size].add(s[-size:])\n            for start in range(length - size + 1):\n                substrings[size].add(s[start:start + size])\n\n    print(\"ok\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    n = int(data[0])\n    strings = [x.decode() for x in data[1:1 + n]]\n    max_len = max(map(len, strings), default=0)\n\n    prefixes = [set() for _ in range(max_len + 1)]\n    suffixes = [set() for _ in range(max_len + 1)]\n    substrings = [set() for _ in range(max_len + 1)]\n\n    for s in strings:\n        length = len(s)\n\n        if s in substrings[length]:\n            print(s)\n            return\n\n        for split in range(1, length):\n            if s[:split] in suffixes[split] and s[split:] in prefixes[length - split]:\n                print(s)\n                return\n\n        for size in range(1, length + 1):\n            prefixes[size].add(s[:size])\n            suffixes[size].add(s[-size:])\n            for start in range(length - size + 1):\n                substrings[size].add(s[start:start + size])\n\n    print(\"ok\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3065872000006493,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

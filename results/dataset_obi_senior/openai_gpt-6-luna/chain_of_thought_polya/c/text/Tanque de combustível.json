@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T05:00:14.568975+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Tanque de combustível\n\n## Enunciado\nCássio alugou um carro para a viagem de férias. O carro tem consumo de combustível constante (em kilometros rodados por litro de combustível), independente da velocidade com que trafega. Ao fim da viagem, Cássio deve devolver o carro no aeroporto.\n\nCássio está terminando sua viagem de férias e está no momento na rodovia que leva ao aeroporto, em direção ao aeroporto para devolver o carro. Mais precisamente Cássio está no último posto de combustível existente na rodovia em que ele pode abastecer o carro antes de devolvê-lo.\n\nPara economizar o máximo possível em combustível, Cássio quer devolver o carro com o menor número de litros possível no tanque – idealmente, com o tanque zerado, ou seja, sem combustível.\n\nDados o consumo do carro, a distância em que se encontra do aeroporto e a quantidade de combustível presente no tanque antes do abastecimento, determine qual deve ser a menor quantidade de combustível que Cássio deve comprar.\n\n## Formato de Entrada\nA primeira linha contém um inteiro, C, o consumo do carro em kilómetros rodados por litro de combustível. A segunda linha contém um inteiro D, a distância do aeroporto, em kilómetros. A terceira linha contém um inteiro T, o número de litros de combustível presente no tanque antes do abastecimento. Você pode assumir que o tanque tem capacidade suficiente para armazenar todo o combustível que Cássio comprar.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único valor, com um dígito de precisão, indicando a quantidade de combustível que Cássio deve comprar, para chegar ao aeroporto com o tanque contendo a menor quantidade de combustível possível.\n\n## Restrições\n1 ≤ C ≤ 50\n1 ≤ D ≤ 1000\n0 ≤ T ≤ 100\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n2\n10\n0\n```\nSaída:\n```\n5.0\n```\n\nExemplo 2:\nEntrada:\n```\n30\n100\n2\n```\nSaída:\n```\n1.3\n```\n\nExemplo 3:\nEntrada:\n```\n50\n120\n3\n```\nSaída:\n```\n0.0\n```\n\nExemplo 4:\nEntrada:\n```\n50\n73\n0\n```\nSaída:\n```\n1.5\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1137,
+            "output_tokens": 662,
+            "total_tokens": 1799
+        },
+        "cost_usd": {
+            "input_cost": 0.000114,
+            "output_cost": 0.000331,
+            "total_cost": 0.000445
+        },
+        "raw_response": "## 1. Compreensão do problema\n\nO objetivo é calcular a menor quantidade de combustível que Cássio precisa comprar para chegar ao aeroporto com o tanque o mais vazio possível.\n\nA entrada contém três inteiros, em linhas separadas:\n\n- `C`: consumo do carro em quilômetros por litro;\n- `D`: distância até o aeroporto, em quilômetros;\n- `T`: combustível já presente no tanque, em litros.\n\nA saída deve conter a quantidade a comprar, com uma casa decimal.\n\nComo `C` e `D` são positivos, o combustível necessário para percorrer a distância é `D / C`. Se `T` já for suficiente, não é necessário comprar combustível. Portanto, a resposta nunca é negativa.\n\n## 2. Planejamento e design algorítmico\n\nCalculamos o combustível necessário para chegar ao aeroporto e subtraímos o que já está no tanque:\n\n\\[\n\\text{compra} = \\max\\left(0,\\frac{D}{C}-T\\right)\n\\]\n\nBasta usar ponto flutuante para representar a divisão e imprimir o resultado com uma casa decimal.\n\n- **Tempo:** `O(1)`.\n- **Espaço:** `O(1)`.\n- **Estruturas de dados:** apenas variáveis escalares.\n\n## 3. Codificação em C\n\n```c\n#include <stdio.h>\n\nint main(void) {\n    int C, D, T;\n\n    if (scanf(\"%d%d%d\", &C, &D, &T) != 3) {\n        return 0;\n    }\n\n    double necessario = (double)D / C;\n    double comprar = necessario - T;\n\n    if (comprar < 0.0) {\n        comprar = 0.0;\n    }\n\n    printf(\"%.1f\\n\", comprar);\n\n    return 0;\n}\n```\n\n## 4. Retrospecto e verificação\n\n- `C = 2`, `D = 10`, `T = 0`: são necessários `5.0` litros; compra `5.0`.\n- `C = 30`, `D = 100`, `T = 2`: são necessários aproximadamente `3.3` litros; compra `1.3`.\n- `C = 50`, `D = 120`, `T = 3`: são necessários `2.4` litros; como já há combustível suficiente, compra `0.0`.\n\nA solução também cobre o caso `T = 0` e o caso em que o combustível existente é suficiente. A complexidade constante garante execução eficiente.",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int C, D, T;\n\n    if (scanf(\"%d%d%d\", &C, &D, &T) != 3) {\n        return 0;\n    }\n\n    double necessario = (double)D / C;\n    double comprar = necessario - T;\n\n    if (comprar < 0.0) {\n        comprar = 0.0;\n    }\n\n    printf(\"%.1f\\n\", comprar);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17362329999741632,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

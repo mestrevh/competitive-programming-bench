@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T06:06:49.721224+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Etiquetas\n\n## Enunciado\nUma fita esticada horizontalmente é composta de N quadrados de dimensão 1×1, cada um deles contendo um número inteiro anotado. Temos também K etiquetas retangulares idênticas, de dimensão 1×C, onde C é um inteiro. Nosso objetivo é colar todas as etiquetas sobre a fita de modo que a soma dos inteiros que não estiverem cobertos por nenhuma etiqueta ao final seja a maior possível. Cada etiqueta deve ser colada na horizontal, ao longo da fita. Duas etiquetas não podem estar sobrepostas e cada quadrado da fita deve estar ou totalmente coberto por uma etiqueta, ou totalmente descoberto.\n\n## Formato de Entrada\nA primeira linha da entrada contém três inteiros N, K e C, representando, respectivamente, o comprimento da fita, o número de etiquetas e o comprimento das etiquetas. A segunda linha da entrada contém N inteiros Ai indicando a sequência de números anotados nos quadrados da fita.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um inteiro indicando a soma maior possível de inteiros descobertos na fita depois que todas as etiquetas sejam coladas seguindo as condições do enunciado.\n\n## Restrições\n1 ≤ N ≤ 10000\n-10000 ≤ Ai ≤ 10000\n1 ≤ K ≤ 10000\n1 ≤ C ≤ 10000\nK×C ≤ N\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n12 2 3\n1 22 4 -8 9 2 10 -1 5 5 32 -11\n```\nSaída:\n```\n58\n```\n\nExemplo 2:\nEntrada:\n```\n1 1 1\n10000\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 597,
+            "output_tokens": 25655,
+            "total_tokens": 26252
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.061572,
+            "total_cost": 0.061574
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    N, K, C = data[0], data[1], data[2]\n    A = data[3:3 + N]\n    total = sum(A)\n\n    M = N - C + 1\n\n    pref = [0] * (N + 1)\n    for i in range(N):\n        pref[i + 1] = pref[i] + A[i]\n\n    cost = [0] * M\n    for s in range(M):\n        cost[s] = pref[s + C] - pref[s]\n\n    INF = 10**18\n    prev = [INF] * (M + 1)\n    curr = [INF] * (M + 1)\n\n    # j = 1\n    max1 = M - (K - 1) * C\n    best = INF\n    for i in range(1, max1 + 1):\n        c = cost[i - 1]\n        if c < best:\n            best = c\n        prev[i] = best\n\n    if K == 1:\n        min_covered = prev[M]\n        print(total - min_covered)\n        return\n\n    for j in range(2, K + 1):\n        min_i = (j - 1) * C + 1\n        max_i = M - (K - j) * C\n        best = INF\n        p = prev\n        c = cost\n        cur = curr\n        for i in range(min_i, max_i + 1):\n            val = p[i - C] + c[i - 1]\n            if val < best:\n                best = val\n            cur[i] = best\n        prev, curr = curr, prev\n\n    min_covered = prev[M]\n    print(total - min_covered)\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    N, K, C = data[0], data[1], data[2]\n    A = data[3:3 + N]\n    total = sum(A)\n\n    M = N - C + 1\n\n    pref = [0] * (N + 1)\n    for i in range(N):\n        pref[i + 1] = pref[i] + A[i]\n\n    cost = [0] * M\n    for s in range(M):\n        cost[s] = pref[s + C] - pref[s]\n\n    INF = 10**18\n    prev = [INF] * (M + 1)\n    curr = [INF] * (M + 1)\n\n    # j = 1\n    max1 = M - (K - 1) * C\n    best = INF\n    for i in range(1, max1 + 1):\n        c = cost[i - 1]\n        if c < best:\n            best = c\n        prev[i] = best\n\n    if K == 1:\n        min_covered = prev[M]\n        print(total - min_covered)\n        return\n\n    for j in range(2, K + 1):\n        min_i = (j - 1) * C + 1\n        max_i = M - (K - j) * C\n        best = INF\n        p = prev\n        c = cost\n        cur = curr\n        for i in range(min_i, max_i + 1):\n            val = p[i - C] + c[i - 1]\n            if val < best:\n                best = val\n            cur[i] = best\n        prev, curr = curr, prev\n\n    min_covered = prev[M]\n    print(total - min_covered)\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.744392799999332,
+            "counts": {
+                "AC": 61,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 61
+        }
+    }
+]

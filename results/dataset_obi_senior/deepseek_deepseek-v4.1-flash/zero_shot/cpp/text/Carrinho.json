@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T08:56:03.632287+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Carrinho\n\n## Enunciado\nUm carrinho elétrico, que usa apenas uma bateria com carga inicial de C coulombs, tem uma característica incrível: ele só pode ir a uma velocidade constante, mas pode escolher qualquer velocidade constante V, maior do que zero, em metros por segundo. Só que, quanto maior a velocidade, menor a autonomia. De maneira mais rigorosa, a distância máxima d_max, em metros, que ele pode percorrer é diretamente proporcional à carga inicial da bateria e inversamente proporcional à velocidade: d_max = C/V. É incrível, mas veja que, mesmo que a carga seja muito pequena, o carrinho sempre pode percorrer qualquer distância, desde que vá a uma velocidade suficientemente pequena!\n\nO carrinho está na posição zero de uma pista reta com comprimento D metros. Há N baterias, com diferentes cargas, colocadas em posições distintas ao longo da pista, uma delas na posição zero. Considere que nosso carrinho ideal consegue fazer um pit-stop instantâneo, trocando de bateria sem perder tempo algum. Ao passar por uma nova bateria ele pode decidir ou não fazer a troca; e ele pode alterar sua velocidade apenas num instante em que troca de bateria. Qual é o tempo mínimo possível para o carrinho chegar ao final da pista?\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N e um real D, respectivamente, o número de baterias e o comprimento da pista. As N linhas seguintes contêm, cada uma, dois reais P e C definindo, respectivamente, a posição e a carga das baterias. Sempre existe uma bateria na posição 0.0 e as baterias são dadas em ordem estritamente crescente de posição.\n\n## Formato de Saída\nImprima uma linha contendo um real, com exatamente três casas decimais, o tempo mínimo possível em segundos para o carrinho chegar ao final da pista.\n\n## Restrições\n1 ≤ N ≤ 1000 e 1.0 ≤ D ≤ 10000.0\n0.0 ≤ P < D e 0.0 < C < 100.0\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4 10.000\n0.000 1.000\n1.200 0.100\n3.000 10.000\n7.700 1.000\n```\nSaída:\n```\n13.900\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 737,
+            "output_tokens": 4303,
+            "total_tokens": 5040
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.010327,
+            "total_cost": 0.010329
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    long double D;\n    cin >> N >> D;\n\n    vector<long double> P(N), C(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> P[i] >> C[i];\n    }\n\n    vector<long double> dp(N, 1e100L);\n    dp[0] = 0.0L;\n\n    long double ans = 1e100L;\n\n    for (int i = 0; i < N; ++i) {\n        if (dp[i] >= 1e99L) continue;\n\n        long double distEnd = D - P[i];\n        ans = min(ans, dp[i] + distEnd * distEnd / C[i]);\n\n        for (int j = i + 1; j < N; ++j) {\n            long double dist = P[j] - P[i];\n            long double cost = dist * dist / C[i];\n            if (dp[i] + cost < dp[j]) {\n                dp[j] = dp[i] + cost;\n            }\n        }\n    }\n\n    cout << fixed << setprecision(3) << ans << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    long double D;\n    cin >> N >> D;\n\n    vector<long double> P(N), C(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> P[i] >> C[i];\n    }\n\n    vector<long double> dp(N, 1e100L);\n    dp[0] = 0.0L;\n\n    long double ans = 1e100L;\n\n    for (int i = 0; i < N; ++i) {\n        if (dp[i] >= 1e99L) continue;\n\n        long double distEnd = D - P[i];\n        ans = min(ans, dp[i] + distEnd * distEnd / C[i]);\n\n        for (int j = i + 1; j < N; ++j) {\n            long double dist = P[j] - P[i];\n            long double cost = dist * dist / C[i];\n            if (dp[i] + cost < dp[j]) {\n                dp[j] = dp[i] + cost;\n            }\n        }\n    }\n\n    cout << fixed << setprecision(3) << ans << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1577378999973007,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

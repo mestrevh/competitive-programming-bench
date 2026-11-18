@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:02:33.334177+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Código\n\n## Enunciado\nA professora Maryam está tentando construir um código constituído de uma sequência de N strings de 10 letras minúsculas, S_1, S_2, S_3, ..., S_N. Essas strings da sequência são, no futuro, concatenadas de diversas maneiras para formar strings maiores. Mas, para que o código seja válido, a sequência de strings tem que satisfazer uma propriedade bastante específica: nenhuma string da sequência pode ser substring de uma concatenação de duas strings anteriores na sequência. De forma mais rigorosa, o código é inválido se existirem três inteiros a, b e k, tais que:\n\n- 1 ≤ a < k ≤ N, 1 ≤ b < k ≤ N (a pode ser igual a b); e\n- S_k é substring da concatenação S_a S_b.\n\nPor exemplo, o código S = {aaaaaaabbb, yyuudiwwkl, kkfidaaooa} é válido. Mas se adicionarmos a string aooaaaaaaa no final da sequência, o código resultante, S' = {aaaaaaabbb, yyuudiwwkl, kkfidaaooa, aooaaaaaaa}, será inválido, pois S'_4 é substring da concatenação S'_3 S'_1.\n\nDada a sequência de strings, seu programa deve determinar se o código é válido ou não.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de strings na sequência. As N linhas seguintes contêm, cada uma, uma string de 10 letras minúsculas, definindo a sequência de strings do código.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo a string \"ok\" caso o código seja válido, ou contendo a primeira string na sequência que invalida o código. Quer dizer, contendo S_k onde k é o menor possível tal que S_k seja substring de uma concatenação de duas strings anteriores na sequência.\n\n## Restrições\n1 ≤ N ≤ 10000\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 100\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3\naaaaaaabbb\nyyuudiwwkl\nkkfidaaooa\n```\nSaída:\n```\nok\n```\n\nExemplo 2:\nEntrada:\n```\n4\naaaaaaabbb\nyyuudiwwkl\nkkfidaaooa\naooaaaaaaa\n```\nSaída:\n```\naooaaaaaaa\n```\n\nExemplo 3:\nEntrada:\n```\n1\njfjshiddds\n```\nSaída:\n```\nok\n```\n\nExemplo 4:\nEntrada:\n```\n2\nabcdefghij\nabcdefghij\n```\nSaída:\n```\nabcdefghij\n```\n\nExemplo 5:\nEntrada:\n```\n8\nxfwvjuydq\nhcprvezofg\nhwkgagqawu\ngivfzndqpy\nyvfiqgadfc\nwuhcprvezo\nqaswiksscl\nuchskpkcit\n```\nSaída:\n```\nwuhcprvezo\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 839,
+            "output_tokens": 711,
+            "total_tokens": 4970
+        },
+        "cost_usd": {
+            "input_cost": 0.000629,
+            "output_cost": 0.002666,
+            "total_cost": 0.003296
+        },
+        "raw_response": "Para resolver este problema, precisamos verificar para cada string $S_k$ (com $k \\ge 2$) se ela é substring de alguma concatenação $S_a S_b$ com $a, b < k$.\n\nComo $a$ e $b$ podem ser escolhidos independentemente dentre as strings anteriores ($1 \\le a, b < k$), uma string $S_k$ é substring de $S_a S_b$ se e somente se:\n1. $S_k$ está totalmente contida em $S_a$ ou $S_b$, o que significa que $S_k$ é substring de alguma string anterior; **OU**\n2. $S_k$ cruza a fronteira entre $S_a$ e $S_b$, o que significa que existe algum ponto de corte $i$ ($1 \\le i < |S_k|$) tal que o prefixo $S_k[:i]$ é um **sufixo** de alguma string anterior $S_a$, e o sufixo $S_k[i:]$ é um **prefixo** de alguma string anterior $S_b$.\n\nComo o comprimento das strings é no máximo 10, o número de prefixos, sufixos e substrings de cada string é muito pequeno ($\\le 10$ prefixos, $\\le 10$ sufixos, $\\le 55$ substrings). Podemos manter conjuntos (`set`) com todos os prefixos, sufixos e substrings já vistos para verificar cada $S_k$ em tempo $O(|S_k|)$, resultando em uma solução muito rápida e eficiente para $N \\le 10000$.\n\n```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    strings = input_data[1 : n + 1]\n\n    seen_prefixes = set()\n    seen_suffixes = set()\n    seen_substrings = set()\n\n    for k in range(n):\n        s = strings[k]\n        m = len(s)\n\n        if k > 0:\n            # Verifica se s já é substring de alguma string anterior\n            is_invalid = s in seen_substrings\n\n            # Verifica se cruza a fronteira de alguma concatenação Sa + Sb\n            if not is_invalid:\n                for i in range(1, m):\n                    if s[:i] in seen_suffixes and s[i:] in seen_prefixes:\n                        is_invalid = True\n                        break\n\n            if is_invalid:\n                print(s)\n                return\n\n        # Adiciona prefixos, sufixos e substrings de s aos conjuntos\n        for i in range(1, m + 1):\n            seen_prefixes.add(s[:i])\n            seen_suffixes.add(s[m - i :])\n\n        for i in range(m):\n            for j in range(i + 1, m + 1):\n                seen_substrings.add(s[i:j])\n\n    print(\"ok\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    n = int(input_data[0])\n    strings = input_data[1 : n + 1]\n\n    seen_prefixes = set()\n    seen_suffixes = set()\n    seen_substrings = set()\n\n    for k in range(n):\n        s = strings[k]\n        m = len(s)\n\n        if k > 0:\n            # Verifica se s já é substring de alguma string anterior\n            is_invalid = s in seen_substrings\n\n            # Verifica se cruza a fronteira de alguma concatenação Sa + Sb\n            if not is_invalid:\n                for i in range(1, m):\n                    if s[:i] in seen_suffixes and s[i:] in seen_prefixes:\n                        is_invalid = True\n                        break\n\n            if is_invalid:\n                print(s)\n                return\n\n        # Adiciona prefixos, sufixos e substrings de s aos conjuntos\n        for i in range(1, m + 1):\n            seen_prefixes.add(s[:i])\n            seen_suffixes.add(s[m - i :])\n\n        for i in range(m):\n            for j in range(i + 1, m + 1):\n                seen_substrings.add(s[i:j])\n\n    print(\"ok\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.21164470000030633,
+            "counts": {
+                "AC": 27,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 27
+        }
+    }
+]

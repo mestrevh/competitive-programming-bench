@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:47:53.743200+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Computador\n\n## Enunciado\nUma grande empresa está construindo uma nova arquitetura de computadores que permita a execução eficiente de duas instruções especiais de soma. O computador possui N posições de memória, endereçadas de 1 a N, e cada posição pode guardar um inteiro maior ou igual a zero. Inicialmente, todas as posições contêm o valor zero. As instruções especiais de soma são:\n\n• FRENTE i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i + 1, V − 2 em i + 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for menor ou igual a N;\n\n• TRÁS i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i − 1, V − 2 em i − 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for maior ou igual a 1.\n\nPor exemplo, para N = 16, uma possível sequência de instruções é dada abaixo:\n[1.png]\nAlém disso, o computador possui a instrução IMPRIME i, que deve imprimir na saída o valor atual armazenado na posição i da memória.\n\nDados N e uma sequência de M instruções, seu programa deve imprimir, para cada instrução do tipo IMPRIME i, uma linha contendo o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e M, representando o número de posições de memória e o número de instruções, respectivamente. As M linhas seguintes contêm, cada uma, a descrição de uma instrução em uma de três formas possíveis: 1 I V, representando FRENTE I V; 2 I V, representando TRAS I V; e 3 I, representando IMPRIME I.\n\n## Formato de Saída\nPara cada instrução do tipo IMPRIME i, seu programa deve imprimir uma linha contendo um inteiro representando o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Restrições\n1 ≤ N ≤ 200000\n1 ≤ M ≤ 200000\n1 ≤ I ≤ N\n1 ≤ V ≤ 200000\nAo menos uma instrução será do tipo 3\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n16 7\n1 4 8\n2 16 3\n3 14\n2 2 12\n1 8 7\n3 10\n3 14\n```\nSaída:\n```\n1\n7\n2\n```\n\nExemplo 2:\nEntrada:\n```\n200000 2\n1 2345 193290\n3 112230\n```\nSaída:\n```\n83405\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 744,
+            "total_tokens": 2682
+        },
+        "cost_usd": {
+            "input_cost": 0.000606,
+            "output_cost": 0.00279,
+            "total_cost": 0.003396
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 200005\n\nint N, M;\nlong long bit_a[MAXN + 2];\nlong long bit_b[MAXN + 2];\n\nstatic inline void add_a(int idx, long long val) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bit_a[idx] += val;\n    }\n}\n\nstatic inline void add_b(int idx, long long val) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bit_b[idx] += val;\n    }\n}\n\nstatic inline long long query_a(int idx) {\n    long long sum = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        sum += bit_a[idx];\n    }\n    return sum;\n}\n\nstatic inline long long query_b(int idx) {\n    long long sum = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        sum += bit_b[idx];\n    }\n    return sum;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int k = 0; k < M; k++) {\n        int type;\n        if (scanf(\"%d\", &type) != 1) break;\n\n        if (type == 1) {\n            long long i, v;\n            scanf(\"%lld %lld\", &i, &v);\n            long long L = i;\n            long long R = i + v - 1;\n            if (R > N) R = N;\n\n            // Adiciona (v + i) - x = -1 * x + (v + i)\n            long long A = -1;\n            long long B = v + i;\n\n            add_a(L, A);\n            add_a(R + 1, -A);\n            add_b(L, B);\n            add_b(R + 1, -B);\n        } else if (type == 2) {\n            long long i, v;\n            scanf(\"%lld %lld\", &i, &v);\n            long long L = i - v + 1;\n            if (L < 1) L = 1;\n            long long R = i;\n\n            // Adiciona (v - i) + x = 1 * x + (v - i)\n            long long A = 1;\n            long long B = v - i;\n\n            add_a(L, A);\n            add_a(R + 1, -A);\n            add_b(L, B);\n            add_b(R + 1, -B);\n        } else if (type == 3) {\n            int i;\n            scanf(\"%d\", &i);\n            long long a = query_a(i);\n            long long b = query_b(i);\n            long long ans = a * i + b;\n            printf(\"%lld\\n\", ans);\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 200005\n\nint N, M;\nlong long bit_a[MAXN + 2];\nlong long bit_b[MAXN + 2];\n\nstatic inline void add_a(int idx, long long val) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bit_a[idx] += val;\n    }\n}\n\nstatic inline void add_b(int idx, long long val) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bit_b[idx] += val;\n    }\n}\n\nstatic inline long long query_a(int idx) {\n    long long sum = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        sum += bit_a[idx];\n    }\n    return sum;\n}\n\nstatic inline long long query_b(int idx) {\n    long long sum = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        sum += bit_b[idx];\n    }\n    return sum;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int k = 0; k < M; k++) {\n        int type;\n        if (scanf(\"%d\", &type) != 1) break;\n\n        if (type == 1) {\n            long long i, v;\n            scanf(\"%lld %lld\", &i, &v);\n            long long L = i;\n            long long R = i + v - 1;\n            if (R > N) R = N;\n\n            // Adiciona (v + i) - x = -1 * x + (v + i)\n            long long A = -1;\n            long long B = v + i;\n\n            add_a(L, A);\n            add_a(R + 1, -A);\n            add_b(L, B);\n            add_b(R + 1, -B);\n        } else if (type == 2) {\n            long long i, v;\n            scanf(\"%lld %lld\", &i, &v);\n            long long L = i - v + 1;\n            if (L < 1) L = 1;\n            long long R = i;\n\n            // Adiciona (v - i) + x = 1 * x + (v - i)\n            long long A = 1;\n            long long B = v - i;\n\n            add_a(L, A);\n            add_a(R + 1, -A);\n            add_b(L, B);\n            add_b(R + 1, -B);\n        } else if (type == 3) {\n            int i;\n            scanf(\"%d\", &i);\n            long long a = query_a(i);\n            long long b = query_b(i);\n            long long ans = a * i + b;\n            printf(\"%lld\\n\", ans);\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1751417000004949,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:32:08.496044+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Computador\n\n## Enunciado\nUma grande empresa está construindo uma nova arquitetura de computadores que permita a execução eficiente de duas instruções especiais de soma. O computador possui N posições de memória, endereçadas de 1 a N, e cada posição pode guardar um inteiro maior ou igual a zero. Inicialmente, todas as posições contêm o valor zero. As instruções especiais de soma são:\n\n• FRENTE i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i + 1, V − 2 em i + 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for menor ou igual a N;\n\n• TRÁS i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i − 1, V − 2 em i − 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for maior ou igual a 1.\n\nPor exemplo, para N = 16, uma possível sequência de instruções é dada abaixo:\n[1.png]\nAlém disso, o computador possui a instrução IMPRIME i, que deve imprimir na saída o valor atual armazenado na posição i da memória.\n\nDados N e uma sequência de M instruções, seu programa deve imprimir, para cada instrução do tipo IMPRIME i, uma linha contendo o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e M, representando o número de posições de memória e o número de instruções, respectivamente. As M linhas seguintes contêm, cada uma, a descrição de uma instrução em uma de três formas possíveis: 1 I V, representando FRENTE I V; 2 I V, representando TRAS I V; e 3 I, representando IMPRIME I.\n\n## Formato de Saída\nPara cada instrução do tipo IMPRIME i, seu programa deve imprimir uma linha contendo um inteiro representando o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Restrições\n1 ≤ N ≤ 200000\n1 ≤ M ≤ 200000\n1 ≤ I ≤ N\n1 ≤ V ≤ 200000\nAo menos uma instrução será do tipo 3\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 1024 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n16 7\n1 4 8\n2 16 3\n3 14\n2 2 12\n1 8 7\n3 10\n3 14\n```\nSaída:\n```\n1\n7\n2\n```\n\nExemplo 2:\nEntrada:\n```\n200000 2\n1 2345 193290\n3 112230\n```\nSaída:\n```\n83405\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 843,
+            "output_tokens": 629,
+            "total_tokens": 2983
+        },
+        "cost_usd": {
+            "input_cost": 0.000632,
+            "output_cost": 0.002359,
+            "total_cost": 0.002991
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 200005\n\nint N, M;\nlong long bitA[MAXN];\nlong long bitB[MAXN];\n\nstatic inline void add(long long *bit, int idx, long long val) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nstatic inline void range_add(long long *bit, int l, int r, long long val) {\n    if (l > r) return;\n    add(bit, l, val);\n    add(bit, r + 1, -val);\n}\n\nstatic inline long long query(long long *bit, int idx) {\n    long long sum = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        sum += bit[idx];\n    }\n    return sum;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int k = 0; k < M; ++k) {\n        int type;\n        scanf(\"%d\", &type);\n        if (type == 1) {\n            long long i, v;\n            scanf(\"%lld %lld\", &i, &v);\n            long long l = i;\n            long long r = i + v - 1;\n            if (r > N) r = N;\n            \n            // Adiciona: -1 * j + (v + i)\n            range_add(bitA, (int)l, (int)r, -1);\n            range_add(bitB, (int)l, (int)r, v + i);\n        } else if (type == 2) {\n            long long i, v;\n            scanf(\"%lld %lld\", &i, &v);\n            long long l = i - v + 1;\n            if (l < 1) l = 1;\n            long long r = i;\n            \n            // Adiciona: 1 * j + (v - i)\n            range_add(bitA, (int)l, (int)r, 1);\n            range_add(bitB, (int)l, (int)r, v - i);\n        } else if (type == 3) {\n            int p;\n            scanf(\"%d\", &p);\n            long long a = query(bitA, p);\n            long long b = query(bitB, p);\n            long long ans = a * p + b;\n            printf(\"%lld\\n\", ans);\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 200005\n\nint N, M;\nlong long bitA[MAXN];\nlong long bitB[MAXN];\n\nstatic inline void add(long long *bit, int idx, long long val) {\n    for (; idx <= N + 1; idx += idx & -idx) {\n        bit[idx] += val;\n    }\n}\n\nstatic inline void range_add(long long *bit, int l, int r, long long val) {\n    if (l > r) return;\n    add(bit, l, val);\n    add(bit, r + 1, -val);\n}\n\nstatic inline long long query(long long *bit, int idx) {\n    long long sum = 0;\n    for (; idx > 0; idx -= idx & -idx) {\n        sum += bit[idx];\n    }\n    return sum;\n}\n\nint main() {\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    for (int k = 0; k < M; ++k) {\n        int type;\n        scanf(\"%d\", &type);\n        if (type == 1) {\n            long long i, v;\n            scanf(\"%lld %lld\", &i, &v);\n            long long l = i;\n            long long r = i + v - 1;\n            if (r > N) r = N;\n            \n            // Adiciona: -1 * j + (v + i)\n            range_add(bitA, (int)l, (int)r, -1);\n            range_add(bitB, (int)l, (int)r, v + i);\n        } else if (type == 2) {\n            long long i, v;\n            scanf(\"%lld %lld\", &i, &v);\n            long long l = i - v + 1;\n            if (l < 1) l = 1;\n            long long r = i;\n            \n            // Adiciona: 1 * j + (v - i)\n            range_add(bitA, (int)l, (int)r, 1);\n            range_add(bitB, (int)l, (int)r, v - i);\n        } else if (type == 3) {\n            int p;\n            scanf(\"%d\", &p);\n            long long a = query(bitA, p);\n            long long b = query(bitB, p);\n            long long ans = a * p + b;\n            printf(\"%lld\\n\", ans);\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1764223999925889,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

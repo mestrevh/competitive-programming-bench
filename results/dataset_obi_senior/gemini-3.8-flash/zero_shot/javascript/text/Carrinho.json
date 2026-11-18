@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T04:44:14.383249+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em javascript. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Carrinho\n\n## Enunciado\nUm carrinho elétrico, que usa apenas uma bateria com carga inicial de C coulombs, tem uma característica incrível: ele só pode ir a uma velocidade constante, mas pode escolher qualquer velocidade constante V, maior do que zero, em metros por segundo. Só que, quanto maior a velocidade, menor a autonomia. De maneira mais rigorosa, a distância máxima d_max, em metros, que ele pode percorrer é diretamente proporcional à carga inicial da bateria e inversamente proporcional à velocidade: d_max = C/V. É incrível, mas veja que, mesmo que a carga seja muito pequena, o carrinho sempre pode percorrer qualquer distância, desde que vá a uma velocidade suficientemente pequena!\n\nO carrinho está na posição zero de uma pista reta com comprimento D metros. Há N baterias, com diferentes cargas, colocadas em posições distintas ao longo da pista, uma delas na posição zero. Considere que nosso carrinho ideal consegue fazer um pit-stop instantâneo, trocando de bateria sem perder tempo algum. Ao passar por uma nova bateria ele pode decidir ou não fazer a troca; e ele pode alterar sua velocidade apenas num instante em que troca de bateria. Qual é o tempo mínimo possível para o carrinho chegar ao final da pista?\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N e um real D, respectivamente, o número de baterias e o comprimento da pista. As N linhas seguintes contêm, cada uma, dois reais P e C definindo, respectivamente, a posição e a carga das baterias. Sempre existe uma bateria na posição 0.0 e as baterias são dadas em ordem estritamente crescente de posição.\n\n## Formato de Saída\nImprima uma linha contendo um real, com exatamente três casas decimais, o tempo mínimo possível em segundos para o carrinho chegar ao final da pista.\n\n## Restrições\n1 ≤ N ≤ 1000 e 1.0 ≤ D ≤ 10000.0\n0.0 ≤ P < D e 0.0 < C < 100.0\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4 10.000\n0.000 1.000\n1.200 0.100\n3.000 10.000\n7.700 1.000\n```\nSaída:\n```\n13.900\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```javascript ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 655,
+            "output_tokens": 442,
+            "total_tokens": 2044
+        },
+        "cost_usd": {
+            "input_cost": 0.000491,
+            "output_cost": 0.001658,
+            "total_cost": 0.002149
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nToken = nextToken();\n    if (!nToken) return;\n    const N = parseInt(nToken, 10);\n    const D = parseFloat(nextToken());\n\n    const P = new Float64Array(N + 1);\n    const C = new Float64Array(N);\n\n    for (let i = 0; i < N; i++) {\n        P[i] = parseFloat(nextToken());\n        C[i] = parseFloat(nextToken());\n    }\n    P[N] = D;\n\n    const dp = new Float64Array(N + 1);\n    dp.fill(Infinity);\n    dp[0] = 0;\n\n    for (let i = 0; i < N; i++) {\n        const curDist = P[i];\n        const curCharge = C[i];\n        const curTime = dp[i];\n\n        for (let j = i + 1; j <= N; j++) {\n            const d = P[j] - curDist;\n            const t = (d * d) / curCharge;\n            if (curTime + t < dp[j]) {\n                dp[j] = curTime + t;\n            }\n        }\n    }\n\n    console.log(dp[N].toFixed(3));\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nToken = nextToken();\n    if (!nToken) return;\n    const N = parseInt(nToken, 10);\n    const D = parseFloat(nextToken());\n\n    const P = new Float64Array(N + 1);\n    const C = new Float64Array(N);\n\n    for (let i = 0; i < N; i++) {\n        P[i] = parseFloat(nextToken());\n        C[i] = parseFloat(nextToken());\n    }\n    P[N] = D;\n\n    const dp = new Float64Array(N + 1);\n    dp.fill(Infinity);\n    dp[0] = 0;\n\n    for (let i = 0; i < N; i++) {\n        const curDist = P[i];\n        const curCharge = C[i];\n        const curTime = dp[i];\n\n        for (let j = i + 1; j <= N; j++) {\n            const d = P[j] - curDist;\n            const t = (d * d) / curCharge;\n            if (curTime + t < dp[j]) {\n                dp[j] = curTime + t;\n            }\n        }\n    }\n\n    console.log(dp[N].toFixed(3));\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.04939420000118844,
+            "counts": {
+                "AC": 26,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 26
+        }
+    }
+]

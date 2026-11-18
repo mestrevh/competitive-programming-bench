@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:27:22.046189+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Poligrama\n\n## Enunciado\nDuas palavras A e B são anagramas entre si se podemos transformar a palavra A na palavra B apenas trocando de posição as letras da palavra A. Por exemplo, \"duetos\" e \"estudo\" são anagramas entre si. Um outro exemplo é \"bba\" e \"bab\".\n\nVamos chamar de poligrama uma palavra que consiste na concatenação de duas ou mais palavras que são anagramas entre si. A primeira dessas palavras é chamada de raiz do poligrama. Por exemplo, a palavra \"bbabab\" é um poligrama com raiz \"bba\", pois ela é a concatenação dos anagramas \"bba\" e \"bab\".\n\nDada uma palavra, escreva um programa que determine se ela é um poligrama e encontre a sua raiz.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, indicando o número de letras da palavra. A segunda linha contém a palavra P.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha. Se a palavra dada é um poligrama, a linha deve conter a raiz do poligrama. Caso contrário, a linha deve conter o caractere asterisco ('*'). Se houver mais de uma raiz possível, seu programa deve imprimir a de menor comprimento.\n\n## Restrições\n1 ≤ N ≤ 100000\nO número de caracteres de P é igual a N.\nOs únicos caracteres em P são letras minúsculas não acentuadas.\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 40 pontos, N ≤ 1000.\n- Para um conjunto de casos de testes valendo outros 70 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5\nxxxxx\n```\nSaída:\n```\nx\n```\n\nExemplo 2:\nEntrada:\n```\n2\nxy\n```\nSaída:\n```\n*\n```\n\nExemplo 3:\nEntrada:\n```\n6\nbbabab\n```\nSaída:\n```\nbba\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 584,
+            "output_tokens": 642,
+            "total_tokens": 2138
+        },
+        "cost_usd": {
+            "input_cost": 0.000438,
+            "output_cost": 0.002407,
+            "total_cost": 0.002845
+        },
+        "raw_response": "```python\nimport sys\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    n = int(data[0])\n    p = data[1]\n    \n    if n <= 1:\n        print('*')\n        return\n\n    # Pré-computa divisores próprios de n em ordem crescente\n    divisors = []\n    for d in range(1, int(n**0.5) + 1):\n        if n % d == 0:\n            divisors.append(d)\n            if d * d != n and d != 1:\n                divisors.append(n // d)\n    if n > 1 and 1 not in divisors:\n        divisors.append(1)\n    \n    # Adiciona n // d para d = 1, ou seja, n / 1 = n não é divisor próprio (precisamos k >= 2)\n    # Mas para outros divisores d > 1, n // d pode estar na lista.\n    # Exemplo: n = 6, d = 2 -> 2 e 3. d = 1 -> 1.\n    divisors.sort()\n\n    # Contagem total de caracteres em p\n    total_count = [0] * 26\n    for char in p:\n        total_count[ord(char) - 97] += 1\n\n    p_encoded = [ord(c) - 97 for c in p]\n\n    for L in divisors:\n        k = n // L\n        if k < 2:\n            continue\n        \n        # Contagem do primeiro bloco\n        block1_count = [0] * 26\n        for i in range(L):\n            block1_count[p_encoded[i]] += 1\n        \n        # Verificação rápida: total_count[c] deve ser block1_count[c] * k\n        possible = True\n        for c in range(26):\n            if total_count[c] != block1_count[c] * k:\n                possible = False\n                break\n        if not possible:\n            continue\n        \n        # Verificação completa de todos os blocos\n        all_match = True\n        for b in range(1, k):\n            curr_count = [0] * 26\n            start = b * L\n            end = start + L\n            for i in range(start, end):\n                curr_count[p_encoded[i]] += 1\n            if curr_count != block1_count:\n                all_match = False\n                break\n        \n        if all_match:\n            print(p[:L])\n            return\n\n    print('*')\n\nif __name__ == '__main__':\n    solve()\n```",
+        "extracted_code": "import sys\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n    n = int(data[0])\n    p = data[1]\n    \n    if n <= 1:\n        print('*')\n        return\n\n    # Pré-computa divisores próprios de n em ordem crescente\n    divisors = []\n    for d in range(1, int(n**0.5) + 1):\n        if n % d == 0:\n            divisors.append(d)\n            if d * d != n and d != 1:\n                divisors.append(n // d)\n    if n > 1 and 1 not in divisors:\n        divisors.append(1)\n    \n    # Adiciona n // d para d = 1, ou seja, n / 1 = n não é divisor próprio (precisamos k >= 2)\n    # Mas para outros divisores d > 1, n // d pode estar na lista.\n    # Exemplo: n = 6, d = 2 -> 2 e 3. d = 1 -> 1.\n    divisors.sort()\n\n    # Contagem total de caracteres em p\n    total_count = [0] * 26\n    for char in p:\n        total_count[ord(char) - 97] += 1\n\n    p_encoded = [ord(c) - 97 for c in p]\n\n    for L in divisors:\n        k = n // L\n        if k < 2:\n            continue\n        \n        # Contagem do primeiro bloco\n        block1_count = [0] * 26\n        for i in range(L):\n            block1_count[p_encoded[i]] += 1\n        \n        # Verificação rápida: total_count[c] deve ser block1_count[c] * k\n        possible = True\n        for c in range(26):\n            if total_count[c] != block1_count[c] * k:\n                possible = False\n                break\n        if not possible:\n            continue\n        \n        # Verificação completa de todos os blocos\n        all_match = True\n        for b in range(1, k):\n            curr_count = [0] * 26\n            start = b * L\n            end = start + L\n            for i in range(start, end):\n                curr_count[p_encoded[i]] += 1\n            if curr_count != block1_count:\n                all_match = False\n                break\n        \n        if all_match:\n            print(p[:L])\n            return\n\n    print('*')\n\nif __name__ == '__main__':\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07439809999959834,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

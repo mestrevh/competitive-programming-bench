@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T13:37:47.371721+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Cortando o Papel\n\n## Enunciado\nUma folha de papel é composta de uma sequência de retângulos com diferentes alturas mas com larguras fixas, tal que as bases dos retângulos estão assentadas em uma linha horizontal. A figura ilustra uma folha exemplo com 33 retângulos. Nós gostaríamos de fazer um único corte horizontal, com a ajuda de um estilete e uma régua, que maximize o número resultante de pedaços separados pelo corte. A figura mostra quatro diferentes cortes que resultariam, respectivamente, em 4, 11, 10 e 3 pedaços.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de retângulos na folha de papel.\nA segunda linha contém N inteiros Ai, 1 ≤ i ≤ N, representando a sequência de alturas dos retângulos.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo um inteiro representando o número máximo de pedaços possível, com um único corte horizontal.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ Ai ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 1000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n20 5 10 5 15 15 15 5 6 22\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n5\n10 20 30 40 50\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 476,
+            "output_tokens": 1693,
+            "total_tokens": 2169
+        },
+        "cost_usd": {
+            "input_cost": 4.8e-05,
+            "output_cost": 0.000847,
+            "total_cost": 0.000894
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    heights = data[1:]\n\n    order = sorted(range(n), key=heights.__getitem__, reverse=True)\n    parent = list(range(n))\n    size = [1] * n\n    active = [False] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    components = 0\n    max_components = 0\n    i = 0\n\n    while i < n:\n        j = i + 1\n        height = heights[order[i]]\n        while j < n and heights[order[j]] == height:\n            j += 1\n\n        for k in range(i, j):\n            active[order[k]] = True\n            components += 1\n\n        for k in range(i, j):\n            x = order[k]\n            for y in (x - 1, x + 1):\n                if 0 <= y < n and active[y]:\n                    root_x = find(x)\n                    root_y = find(y)\n                    if root_x != root_y:\n                        if size[root_x] < size[root_y]:\n                            root_x, root_y = root_y, root_x\n                        parent[root_y] = root_x\n                        size[root_x] += size[root_y]\n                        components -= 1\n\n        max_components = max(max_components, components)\n        i = j\n\n    print(max_components + 1)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    n = data[0]\n    heights = data[1:]\n\n    order = sorted(range(n), key=heights.__getitem__, reverse=True)\n    parent = list(range(n))\n    size = [1] * n\n    active = [False] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    components = 0\n    max_components = 0\n    i = 0\n\n    while i < n:\n        j = i + 1\n        height = heights[order[i]]\n        while j < n and heights[order[j]] == height:\n            j += 1\n\n        for k in range(i, j):\n            active[order[k]] = True\n            components += 1\n\n        for k in range(i, j):\n            x = order[k]\n            for y in (x - 1, x + 1):\n                if 0 <= y < n and active[y]:\n                    root_x = find(x)\n                    root_y = find(y)\n                    if root_x != root_y:\n                        if size[root_x] < size[root_y]:\n                            root_x, root_y = root_y, root_x\n                        parent[root_y] = root_x\n                        size[root_x] += size[root_y]\n                        components -= 1\n\n        max_components = max(max_components, components)\n        i = j\n\n    print(max_components + 1)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.2597639000014169,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

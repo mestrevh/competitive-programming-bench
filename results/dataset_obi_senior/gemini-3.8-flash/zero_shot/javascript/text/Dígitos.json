@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T04:52:23.682538+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em javascript. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dígitos\n\n## Enunciado\nJoãozinho te propôs o seguinte desafio: ele escolheu dois inteiros A e B, com 1 ≤ A ≤ B ≤ 10^1000, e escreveu na lousa todos os inteiros entre A e B, em sequência, porém colocando um espaço após cada dígito, de forma a não ser possível ver quando um número termina ou começa. Por exemplo, se Joãozinho escolher A = 98 e B = 102, ele escreveu a sequência \"9 8 9 9 1 0 0 1 0 1 1 0 2\".\n\nSeu desafio é: dada a lista de dígitos escritos na lousa, encontrar os valores de A e B. Caso exista mais de uma possibilidade para os valores que gerariam a lista, você deve encontrar uma em que o valor de A é o menor possível.\n\nÉ garantido que a lista de dígitos da lousa tem no máximo tamanho 1000.\n\n## Formato de Entrada\nA primeira linha da entrada contém um único inteiro N, indicando o número de dígitos. A segunda linha contém N inteiros di, indicando os dígitos escritos.\n\n## Formato de Saída\nImprima o menor valor possível de A.\n\n## Restrições\n1 ≤ N ≤ 1000\n0 ≤ di ≤ 9\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 21 pontos, 1000 ≤ A ≤ B ≤ 9999.\n- Para outro conjunto de casos de testes valendo 23 pontos, B = A + 1.\n- Para outro conjunto de casos de testes valendo 40 pontos, A, B < 10^6.\n- Para outro conjunto de casos de testes valendo 16 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n6\n1 2 3 1 2 4\n```\nSaída:\n```\n123\n```\n\nExemplo 2:\nEntrada:\n```\n6\n8 9 1 0 1 1\n```\nSaída:\n```\n8\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```javascript ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "javascript",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 610,
+            "output_tokens": 475,
+            "total_tokens": 2786
+        },
+        "cost_usd": {
+            "input_cost": 0.000458,
+            "output_cost": 0.001781,
+            "total_cost": 0.002239
+        },
+        "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    // Função rápida para pular whitespace e pegar tokens\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nToken = nextToken();\n    if (!nToken) return;\n    const n = parseInt(nToken, 10);\n\n    let s = '';\n    for (let i = 0; i < n; i++) {\n        s += nextToken();\n    }\n\n    for (let L = 1; L <= n; L++) {\n        // Se L < n e o primeiro dígito é '0', não pode ser um inteiro válido >= 1\n        // Mas o problema garante que a entrada é válida, e s[0] != '0' se A >= 1.\n        const aStr = s.slice(0, L);\n        let cur = BigInt(aStr);\n        let idx = 0;\n        let match = true;\n\n        while (idx < n) {\n            const curStr = cur.toString();\n            const len = curStr.length;\n            if (idx + len > n) {\n                match = false;\n                break;\n            }\n\n            // Comparação direta com a substring de s\n            if (s.startsWith(curStr, idx)) {\n                idx += len;\n                cur += 1n;\n            } else {\n                match = false;\n                break;\n            }\n        }\n\n        if (match && idx === n) {\n            console.log(aStr);\n            return;\n        }\n    }\n}\n\nmain();\n```",
+        "extracted_code": "const fs = require('fs');\n\nfunction main() {\n    const input = fs.readFileSync(0, 'utf-8');\n    let pos = 0;\n\n    // Função rápida para pular whitespace e pegar tokens\n    function nextToken() {\n        while (pos < input.length && input.charCodeAt(pos) <= 32) {\n            pos++;\n        }\n        if (pos >= input.length) return null;\n        const start = pos;\n        while (pos < input.length && input.charCodeAt(pos) > 32) {\n            pos++;\n        }\n        return input.slice(start, pos);\n    }\n\n    const nToken = nextToken();\n    if (!nToken) return;\n    const n = parseInt(nToken, 10);\n\n    let s = '';\n    for (let i = 0; i < n; i++) {\n        s += nextToken();\n    }\n\n    for (let L = 1; L <= n; L++) {\n        // Se L < n e o primeiro dígito é '0', não pode ser um inteiro válido >= 1\n        // Mas o problema garante que a entrada é válida, e s[0] != '0' se A >= 1.\n        const aStr = s.slice(0, L);\n        let cur = BigInt(aStr);\n        let idx = 0;\n        let match = true;\n\n        while (idx < n) {\n            const curStr = cur.toString();\n            const len = curStr.length;\n            if (idx + len > n) {\n                match = false;\n                break;\n            }\n\n            // Comparação direta com a substring de s\n            if (s.startsWith(curStr, idx)) {\n                idx += len;\n                cur += 1n;\n            } else {\n                match = false;\n                break;\n            }\n        }\n\n        if (match && idx === n) {\n            console.log(aStr);\n            return;\n        }\n    }\n}\n\nmain();",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.05628239999896323,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

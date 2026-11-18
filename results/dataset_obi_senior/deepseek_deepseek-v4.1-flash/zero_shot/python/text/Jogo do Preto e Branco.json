@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T06:34:01.962032+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Jogo do Preto e Branco\n\n## Enunciado\nVocê gosta de quebra-cabeças? O jogo do Preto e Branco é um quebra-cabeças que usa um tabuleiro retangular com L linhas e C colunas, formando L×C casas. No tabuleiro são posicionadas algumas peças pretas, cada peça em uma casa diferente.\n\nO objetivo do jogo é colocar o maior número possível de peças brancas no tabuleiro, obedecendo às seguintes restrições:\n\n• cada casa do tabuleiro pode conter no máximo uma peça;\n• uma peça branca deve ter ao menos uma peça preta como vizinha, à direita, à esquerda, acima ou abaixo;\n• uma peça branca não pode ter outra peça branca como vizinha, à direita, à esquerda, acima ou abaixo;\n\nA figura abaixo mostra dois exemplos de jogos, com as respectivas soluções, um com um tabuleiro 3 × 3 e outro com um tabuleiro 3 × 5.\n[1.png]\nSua tarefa é escrever um programa que, dadas as descrições do tabuleiro e das peças pretas posicionadas, determine o maior número de peças brancas que podem ser colocadas.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C, o número de linhas e o número de colunas do tabuleiro. As linhas são numeradas de 1 a L e as colunas são numeradas de 1 a C. A segunda linha contém um inteiro P, o número de peças pretas colocadas no tabuleiro. Cada uma das P linhas seguintes descreve a posição de uma peça preta e contém dois inteiros X_i e Y_i, indicando a linha e a coluna em que a peça foi colocada.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o maior número de peças brancas que podem ser colocadas no tabuleiro.\n\n## Restrições\n1 ≤ L ≤ 6\n1 ≤ C ≤ 6\n1 ≤ P ≤ 10\n1 ≤ X_i ≤ L, para 1 ≤ i ≤ P\n1 ≤ Y_i ≤ C, para 1 ≤ i ≤ P\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 20 pontos, L = 1.\n- Para um conjunto adicional de casos de testes valendo 80 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n3\n1 1\n1 3\n3 2\n```\nSaída:\n```\n3\n```\n\nExemplo 2:\nEntrada:\n```\n1 6\n2\n1 2\n1 5\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 5\n3\n2 2\n2 3\n3 5\n```\nSaída:\n```\n5\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 841,
+            "output_tokens": 3033,
+            "total_tokens": 3874
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.007279,
+            "total_cost": 0.007282
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    L = next(it)\n    C = next(it)\n    P = next(it)\n\n    black = set()\n    for _ in range(P):\n        x = next(it) - 1\n        y = next(it) - 1\n        black.add((x, y))\n\n    valid = [0] * L\n\n    for r in range(L):\n        for c in range(C):\n            if (r, c) in black:\n                continue\n\n            ok = False\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < L and 0 <= nc < C and (nr, nc) in black:\n                    ok = True\n                    break\n\n            if ok:\n                valid[r] |= 1 << c\n\n    M = 1 << C\n\n    pc = [0] * M\n    for i in range(1, M):\n        pc[i] = pc[i >> 1] + (i & 1)\n\n    possible = []\n    for r in range(L):\n        row_masks = []\n        for mask in range(M):\n            if mask & ~valid[r]:\n                continue\n            if mask & (mask << 1):\n                continue\n            row_masks.append(mask)\n        possible.append(row_masks)\n\n    NEG = -10**9\n    dp = [NEG] * M\n    dp[0] = 0\n\n    for r in range(L):\n        ndp = [NEG] * M\n        for prev, val in enumerate(dp):\n            if val == NEG:\n                continue\n            for mask in possible[r]:\n                if mask & prev:\n                    continue\n                nv = val + pc[mask]\n                if nv > ndp[mask]:\n                    ndp[mask] = nv\n        dp = ndp\n\n    print(max(dp))\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    L = next(it)\n    C = next(it)\n    P = next(it)\n\n    black = set()\n    for _ in range(P):\n        x = next(it) - 1\n        y = next(it) - 1\n        black.add((x, y))\n\n    valid = [0] * L\n\n    for r in range(L):\n        for c in range(C):\n            if (r, c) in black:\n                continue\n\n            ok = False\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < L and 0 <= nc < C and (nr, nc) in black:\n                    ok = True\n                    break\n\n            if ok:\n                valid[r] |= 1 << c\n\n    M = 1 << C\n\n    pc = [0] * M\n    for i in range(1, M):\n        pc[i] = pc[i >> 1] + (i & 1)\n\n    possible = []\n    for r in range(L):\n        row_masks = []\n        for mask in range(M):\n            if mask & ~valid[r]:\n                continue\n            if mask & (mask << 1):\n                continue\n            row_masks.append(mask)\n        possible.append(row_masks)\n\n    NEG = -10**9\n    dp = [NEG] * M\n    dp[0] = 0\n\n    for r in range(L):\n        ndp = [NEG] * M\n        for prev, val in enumerate(dp):\n            if val == NEG:\n                continue\n            for mask in possible[r]:\n                if mask & prev:\n                    continue\n                nv = val + pc[mask]\n                if nv > ndp[mask]:\n                    ndp[mask] = nv\n        dp = ndp\n\n    print(max(dp))\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.07818820000102278,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

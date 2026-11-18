@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:59:03.817867+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Grupos de Trabalho\n\n## Enunciado\nA professora Paula divide a classe em grupos de três estudantes para os trabalhos da sua disciplina. Para minimizar descontentamentos, ela fez uma enquete no início do ano, de forma que ela tem uma lista de pares de estudantes que gostariam de estar no mesmo grupo, e uma lista de pares de estudantes que não gostariam de estar no mesmo grupo.\n\nPara cada trabalho ela faz uma nova divisão de grupos, e claro que nem sempre vai ser possível satisfazer todas as restrições da classe!\n\nDados os pares de estudantes que gostariam estar no mesmo grupo, os pares de estudantes que não gostariam estar no mesmo grupo, e uma possível distribuição dos estudantes em grupos de três, sua tarefa é determinar o número total de restrições que são violadas com essa distribuição.\n\nInformações sobre a pontuação\nA tarefa vale 100 pontos. Estes pontos estão distribuídos em subtarefas, cada uma com suas restrições adicionais às definidas acima:\n- Subtarefa 1 (39 pontos): E ≤ 999, M ≤ 1000 e D ≤ 1000.\n- Subtarefa 2 (61 pontos): Nenhuma restrição adicional.\n\nSeu programa pode resolver corretamente ambas ou somente uma das subtarefas. Sua pontuação final na tarefa é a soma dos pontos das subtarefas resolvidas corretamente por alguma das suas submissões.\n\n## Formato de Entrada\nA primeira linha contém três inteiros E, M e D, indicando, respectivamente, o número total de estudantes, o número de pares de estudantes que gostariam de estar no mesmo grupo e o número de pares de estudantes que não gostariam de estar no mesmo grupo. Os estudantes são identificados por números inteiros de 1 a E.\n\nCada uma das M linhas seguintes descreve um par de estudantes que gostariam de estar no mesmo grupo e contém dois inteiros X e Y indicando os estudantes do par. Cada uma das D linhas seguintes descreve um par de estudantes que não gostariam de estar no mesmo grupo e contém dois inteiros U e V indicando os estudantes do par.\n\nFinalmente, cada uma das E/3 linhas seguintes descreve um grupo de estudantes e contém três inteiros I, J e K indicando os estudantes do grupo.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o número total de restrições que são violadas nos grupos da entrada.\n\n## Restrições\n3 ≤ E ≤ 999 999 e E é divisível por 3.\n0 ≤ M ≤ 100 000\n0 ≤ D ≤ 100 000\nM + D > 0 e, entre todos os M + D pares, cada par de estudantes aparece no máximo uma vez.\n1 ≤ X ≤ E, 1 ≤ Y ≤ E e X ≠ Y.\n1 ≤ U ≤ E, 1 ≤ V ≤ E e U ≠ V.\n1 ≤ I ≤ E, 1 ≤ J ≤ E e 1 ≤ K ≤ E\nCada estudante aparece em exatamente um dos E/3 grupos.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 1 0\n1 2\n2 1 3\n```\nSaída:\n```\n0\n```\n\nExemplo 2:\nEntrada:\n```\n9 1 3\n1 9\n1 3\n5 6\n2 8\n1 2 3\n4 5 6\n7 8 9\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n6 0 3\n1 5\n5 2\n2 3\n5 2 1\n3 4 6\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 960,
+            "output_tokens": 575,
+            "total_tokens": 2176
+        },
+        "cost_usd": {
+            "input_cost": 0.00072,
+            "output_cost": 0.002156,
+            "total_cost": 0.002876
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_E 1000005\n#define MAX_M 100005\n#define MAX_D 100005\n\nstatic int grupo[MAX_E];\n\ntypedef struct {\n    int u, v;\n} Par;\n\nstatic Par amigos[MAX_M];\nstatic Par inimigos[MAX_D];\n\n// Leitura rápida de inteiros\nstatic inline int read_int() {\n    int c = getchar_unlocked();\n    while (c < '0' || c > '9') {\n        if (c == EOF) return -1;\n        c = getchar_unlocked();\n    }\n    int res = 0;\n    while (c >= '0' && c <= '9') {\n        res = res * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return res;\n}\n\nint main() {\n    int E = read_int();\n    int M = read_int();\n    int D = read_int();\n\n    for (int i = 0; i < M; i++) {\n        amigos[i].u = read_int();\n        amigos[i].v = read_int();\n    }\n\n    for (int i = 0; i < D; i++) {\n        inimigos[i].u = read_int();\n        inimigos[i].v = read_int();\n    }\n\n    int num_grupos = E / 3;\n    for (int g = 1; g <= num_grupos; g++) {\n        int a = read_int();\n        int b = read_int();\n        int c = read_int();\n        grupo[a] = g;\n        grupo[b] = g;\n        grupo[c] = g;\n    }\n\n    int violacoes = 0;\n\n    for (int i = 0; i < M; i++) {\n        if (grupo[amigos[i].u] != grupo[amigos[i].v]) {\n            violacoes++;\n        }\n    }\n\n    for (int i = 0; i < D; i++) {\n        if (grupo[inimigos[i].u] == grupo[inimigos[i].v]) {\n            violacoes++;\n        }\n    }\n\n    printf(\"%d\\n\", violacoes);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_E 1000005\n#define MAX_M 100005\n#define MAX_D 100005\n\nstatic int grupo[MAX_E];\n\ntypedef struct {\n    int u, v;\n} Par;\n\nstatic Par amigos[MAX_M];\nstatic Par inimigos[MAX_D];\n\n// Leitura rápida de inteiros\nstatic inline int read_int() {\n    int c = getchar_unlocked();\n    while (c < '0' || c > '9') {\n        if (c == EOF) return -1;\n        c = getchar_unlocked();\n    }\n    int res = 0;\n    while (c >= '0' && c <= '9') {\n        res = res * 10 + (c - '0');\n        c = getchar_unlocked();\n    }\n    return res;\n}\n\nint main() {\n    int E = read_int();\n    int M = read_int();\n    int D = read_int();\n\n    for (int i = 0; i < M; i++) {\n        amigos[i].u = read_int();\n        amigos[i].v = read_int();\n    }\n\n    for (int i = 0; i < D; i++) {\n        inimigos[i].u = read_int();\n        inimigos[i].v = read_int();\n    }\n\n    int num_grupos = E / 3;\n    for (int g = 1; g <= num_grupos; g++) {\n        int a = read_int();\n        int b = read_int();\n        int c = read_int();\n        grupo[a] = g;\n        grupo[b] = g;\n        grupo[c] = g;\n    }\n\n    int violacoes = 0;\n\n    for (int i = 0; i < M; i++) {\n        if (grupo[amigos[i].u] != grupo[amigos[i].v]) {\n            violacoes++;\n        }\n    }\n\n    for (int i = 0; i < D; i++) {\n        if (grupo[inimigos[i].u] == grupo[inimigos[i].v]) {\n            violacoes++;\n        }\n    }\n\n    printf(\"%d\\n\", violacoes);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "CE",
+            "execution_time": 0.0,
+            "counts": {
+                "AC": 0,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 25
+            },
+            "total_test_cases": 25
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:45:47.956283+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Grupos de Trabalho\n\n## Enunciado\nA professora Paula divide a classe em grupos de três estudantes para os trabalhos da sua disciplina. Para minimizar descontentamentos, ela fez uma enquete no início do ano, de forma que ela tem uma lista de pares de estudantes que gostariam de estar no mesmo grupo, e uma lista de pares de estudantes que não gostariam de estar no mesmo grupo.\n\nPara cada trabalho ela faz uma nova divisão de grupos, e claro que nem sempre vai ser possível satisfazer todas as restrições da classe!\n\nDados os pares de estudantes que gostariam estar no mesmo grupo, os pares de estudantes que não gostariam estar no mesmo grupo, e uma possível distribuição dos estudantes em grupos de três, sua tarefa é determinar o número total de restrições que são violadas com essa distribuição.\n\nInformações sobre a pontuação\nA tarefa vale 100 pontos. Estes pontos estão distribuídos em subtarefas, cada uma com suas restrições adicionais às definidas acima:\n- Subtarefa 1 (39 pontos): E ≤ 999, M ≤ 1000 e D ≤ 1000.\n- Subtarefa 2 (61 pontos): Nenhuma restrição adicional.\n\nSeu programa pode resolver corretamente ambas ou somente uma das subtarefas. Sua pontuação final na tarefa é a soma dos pontos das subtarefas resolvidas corretamente por alguma das suas submissões.\n\n## Formato de Entrada\nA primeira linha contém três inteiros E, M e D, indicando, respectivamente, o número total de estudantes, o número de pares de estudantes que gostariam de estar no mesmo grupo e o número de pares de estudantes que não gostariam de estar no mesmo grupo. Os estudantes são identificados por números inteiros de 1 a E.\n\nCada uma das M linhas seguintes descreve um par de estudantes que gostariam de estar no mesmo grupo e contém dois inteiros X e Y indicando os estudantes do par. Cada uma das D linhas seguintes descreve um par de estudantes que não gostariam de estar no mesmo grupo e contém dois inteiros U e V indicando os estudantes do par.\n\nFinalmente, cada uma das E/3 linhas seguintes descreve um grupo de estudantes e contém três inteiros I, J e K indicando os estudantes do grupo.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o número total de restrições que são violadas nos grupos da entrada.\n\n## Restrições\n3 ≤ E ≤ 999 999 e E é divisível por 3.\n0 ≤ M ≤ 100 000\n0 ≤ D ≤ 100 000\nM + D > 0 e, entre todos os M + D pares, cada par de estudantes aparece no máximo uma vez.\n1 ≤ X ≤ E, 1 ≤ Y ≤ E e X ≠ Y.\n1 ≤ U ≤ E, 1 ≤ V ≤ E e U ≠ V.\n1 ≤ I ≤ E, 1 ≤ J ≤ E e 1 ≤ K ≤ E\nCada estudante aparece em exatamente um dos E/3 grupos.\n\n## Limites de Execução\n- Tempo Limite: 3.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 1 0\n1 2\n2 1 3\n```\nSaída:\n```\n0\n```\n\nExemplo 2:\nEntrada:\n```\n9 1 3\n1 9\n1 3\n5 6\n2 8\n1 2 3\n4 5 6\n7 8 9\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n6 0 3\n1 5\n5 2\n2 3\n5 2 1\n3 4 6\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 994,
+            "output_tokens": 452,
+            "total_tokens": 2186
+        },
+        "cost_usd": {
+            "input_cost": 0.000746,
+            "output_cost": 0.001695,
+            "total_cost": 0.00244
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_E 1000005\n#define MAX_MD 100005\n\ntypedef struct {\n    int u, v;\n} Pair;\n\nint group[MAX_E];\nPair same_group[MAX_MD];\nPair diff_group[MAX_MD];\n\nint main() {\n    int E, M, D;\n    if (scanf(\"%d %d %d\", &E, &M, &D) != 3) {\n        return 0;\n    }\n\n    for (int i = 0; i < M; i++) {\n        scanf(\"%d %d\", &same_group[i].u, &same_group[i].v);\n    }\n\n    for (int i = 0; i < D; i++) {\n        scanf(\"%d %d\", &diff_group[i].u, &diff_group[i].v);\n    }\n\n    int num_groups = E / 3;\n    for (int g = 0; g < num_groups; g++) {\n        int a, b, c;\n        scanf(\"%d %d %d\", &a, &b, &c);\n        group[a] = g;\n        group[b] = g;\n        group[c] = g;\n    }\n\n    int violations = 0;\n\n    for (int i = 0; i < M; i++) {\n        if (group[same_group[i].u] != group[same_group[i].v]) {\n            violations++;\n        }\n    }\n\n    for (int i = 0; i < D; i++) {\n        if (group[diff_group[i].u] == group[diff_group[i].v]) {\n            violations++;\n        }\n    }\n\n    printf(\"%d\\n\", violations);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_E 1000005\n#define MAX_MD 100005\n\ntypedef struct {\n    int u, v;\n} Pair;\n\nint group[MAX_E];\nPair same_group[MAX_MD];\nPair diff_group[MAX_MD];\n\nint main() {\n    int E, M, D;\n    if (scanf(\"%d %d %d\", &E, &M, &D) != 3) {\n        return 0;\n    }\n\n    for (int i = 0; i < M; i++) {\n        scanf(\"%d %d\", &same_group[i].u, &same_group[i].v);\n    }\n\n    for (int i = 0; i < D; i++) {\n        scanf(\"%d %d\", &diff_group[i].u, &diff_group[i].v);\n    }\n\n    int num_groups = E / 3;\n    for (int g = 0; g < num_groups; g++) {\n        int a, b, c;\n        scanf(\"%d %d %d\", &a, &b, &c);\n        group[a] = g;\n        group[b] = g;\n        group[c] = g;\n    }\n\n    int violations = 0;\n\n    for (int i = 0; i < M; i++) {\n        if (group[same_group[i].u] != group[same_group[i].v]) {\n            violations++;\n        }\n    }\n\n    for (int i = 0; i < D; i++) {\n        if (group[diff_group[i].u] == group[diff_group[i].v]) {\n            violations++;\n        }\n    }\n\n    printf(\"%d\\n\", violations);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13294729999324773,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

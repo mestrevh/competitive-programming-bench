@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T03:31:49.483994+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Ogro\n\n## Enunciado\nOgro e Bicho-Papão têm fama de malvados, mas na verdade são amáveis, honestos e trabalhadores, além de vizinhos e amigos. O Bicho-Papão tem dificuldades em aprender aritmética e por isso o Ogro inventou uma brincadeira simples para auxiliar seu amigo: o Ogro inicia mostrando um certo número de dedos na sua mão esquerda (vamos chamar esse valor de E) e um número de dedos diferente na mão direita (vamos chamar esse valor de D). Então, Bicho-Papão deve falar o resultado da brincadeira, definido assim:\n- se o número de dedos na mão esquerda é maior do que o número de dedos na mão direita (ou seja E > D) então o resultado é a soma dos dois números (ou seja E + D);\n- caso contrário, o resultado é o dobro da diferença entre o número de dedos na mão direita e o número de dedos na mão esquerda (ou seja, 2 × (D - E)).\n\nO problema é que o Ogro também não é lá muito bom em aritmética, e pediu sua ajuda para conferir se o Bicho-Papão falou a resposta correta.\n\nDados o número de dedos mostrados na mão esquerda (E) e o número de dedos mostrados na mão direita (D), escreva um programa para determinar a resposta da brincadeira.\n\n## Formato de Entrada\nA entrada é composta por duas linhas. A primeira linha contém um inteiro E, o número de dedos mostrados na mão esquerda. A segunda linha contém um inteiro D, o número de dedos mostrados na mão direita.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha na saída, contendo um único número inteiro, o resultado da brincadeira.\n\n## Restrições\n0 ≤ E ≤ 5\n0 ≤ D ≤ 5\nE ≠ D\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n1\n0\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n2\n5\n```\nSaída:\n```\n6\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1249,
+            "output_tokens": 1014,
+            "total_tokens": 2263
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.002434,
+            "total_cost": 0.002437
+        },
+        "raw_response": "## 1. COMPREENSÃO DO PROBLEMA\n\nO objetivo é calcular o resultado da brincadeira a partir de dois inteiros:\n\n- `E`: número de dedos na mão esquerda.\n- `D`: número de dedos na mão direita.\n\nRegras:\n\n- Se `E > D`, resposta é `E + D`.\n- Caso contrário, resposta é `2 * (D - E)`.\n\nRestrições:\n\n- `0 ≤ E ≤ 5`\n- `0 ≤ D ≤ 5`\n- `E ≠ D`\n\nA entrada possui dois inteiros, um por linha. A saída deve conter apenas o resultado inteiro.\n\nCasos de borda:\n\n- `E = 0`, `D = 5` → `2 * (5 - 0) = 10`\n- `E = 5`, `D = 0` → `5 + 0 = 5`\n- `E = 0`, `D = 1` → `2 * (1 - 0) = 2`\n- `E = 4`, `D = 5` → `2 * (5 - 4) = 2`\n\nComo os valores são muito pequenos, não há risco de overflow, mas usaremos `long long` por segurança.\n\n## 2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n\nA solução é uma simples verificação condicional.\n\nPassos:\n\n1. Ler `E` e `D`.\n2. Se `E > D`, calcular `E + D`.\n3. Caso contrário, calcular `2 * (D - E)`.\n4. Imprimir o resultado.\n\nComplexidade:\n\n- Tempo: `O(1)`\n- Espaço: `O(1)`\n\nEstruturas de dados:\n\n- Apenas variáveis inteiras simples.\n\n## 3. CODIFICAÇÃO EM C\n\n```c\n#include <stdio.h>\n\nint main(void) {\n    long long E, D;\n    long long resultado;\n\n    scanf(\"%lld\", &E);\n    scanf(\"%lld\", &D);\n\n    if (E > D) {\n        resultado = E + D;\n    } else {\n        resultado = 2 * (D - E);\n    }\n\n    printf(\"%lld\\n\", resultado);\n\n    return 0;\n}\n```\n\n## 4. RETROSPECTO E VERIFICAÇÃO\n\nVerificando os exemplos:\n\n- Exemplo 1: `E = 1`, `D = 0`. Como `E > D`, resultado = `1 + 0 = 1`. Correto.\n- Exemplo 2: `E = 2`, `D = 5`. Como `E <= D`, resultado = `2 * (5 - 2) = 6`. Correto.\n\nCasos de borda também são cobertos pela mesma lógica condicional. A solução executa em tempo constante e usa memória constante, portanto não há risco de TLE ou MLE.",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    long long E, D;\n    long long resultado;\n\n    scanf(\"%lld\", &E);\n    scanf(\"%lld\", &D);\n\n    if (E > D) {\n        resultado = E + D;\n    } else {\n        resultado = 2 * (D - E);\n    }\n\n    printf(\"%lld\\n\", resultado);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16485329999704845,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:54:30.619735+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Sanduíche\n\n## Enunciado\nUma nova lanchonete abriu na cidade, prometendo um menu com a maior variedade de sanduíches da região. A cada dia o Chef de cozinha compra N ingredientes distintos e prepara o menu usando esses N ingredientes. Infelizmente não é possível ter sanduíches com qualquer combinação de ingredientes: a cada dia o Chef determina que M pares de ingredientes não podem ser realizados no mesmo sanduíche, porque ele considera que esses ingredientes \"não combinam\".\n\nPor exemplo, suponha que num determinado dia N é igual a quatro e os ingredientes são queijo, presunto, goiabada e azeitona, e M é igual a dois: os pares (goiabada, presunto) e (azeitona, goiabada) não podem ser realizados no mesmo sanduíche. Nesse dia, alguns dos sanduíches que podem ser feitos são:\n- presunto, queijo\n- azeitona\n- presunto, azeitona, queijo\n- goiabada, queijo\n\nAlguns dos sanduíches que não podem ser feitos são:\n- presunto, queijo, goiabada\n- azeitona, goiabada\n- goiabada, presunto, azeitona\n\nDados os N ingredientes e os M pares de ingredientes que não combinam, sua tarefa é determinar qual o máximo número de sanduíches diferentes que podem ser feitos. Dois sanduíches A e B são considerados diferentes se A contém um ingrediente X que não está presente em B ou se B contém um ingrediente Y que não está presente em A. Um sanduíche deve conter ao menos um ingrediente.\n\n## Formato de Entrada\nA primeira linha contém dois números inteiros N e M, indicando respectivamente o número de ingredientes e o número de pares de ingredientes que não combinam. Os ingredientes são identificados por números de 1 a N. Cada uma das M linhas seguintes contém dois números inteiros X e Y que representam um par de ingredientes que não combinam.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, o número de sanduíches diferentes que podem ser feitos.\n\n## Restrições\n1 ≤ N ≤ 20\n0 ≤ M ≤ 400\n1 ≤ X ≤ N\n1 ≤ X < Y\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 10 pontos, N ≤ 5.\n- Para um conjunto de casos de testes valendo outros 40 pontos, N ≤ 10.\n- Para um conjunto de casos de testes valendo outros 50 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 2\n2 3\n1 2\n```\nSaída:\n```\n4\n```\n\nExemplo 2:\nEntrada:\n```\n3 0\n```\nSaída:\n```\n7\n```\n\nExemplo 3:\nEntrada:\n```\n3 3\n1 2\n2 3\n1 3\n```\nSaída:\n```\n3\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 750,
+            "output_tokens": 437,
+            "total_tokens": 1187
+        },
+        "cost_usd": {
+            "input_cost": 7.5e-05,
+            "output_cost": 0.000218,
+            "total_cost": 0.000294
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    unsigned int neighbors[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        --x;\n        --y;\n        neighbors[x] |= 1u << y;\n        neighbors[y] |= 1u << x;\n    }\n\n    int total = 1 << N;\n    unsigned char independent[1 << 20] = {0};\n    independent[0] = 1;\n\n    int count = 0;\n    for (int mask = 1; mask < total; mask++) {\n        int bit = __builtin_ctz((unsigned int)mask);\n        int rest = mask & (mask - 1);\n\n        if (independent[rest] && !(neighbors[bit] & (unsigned int)rest)) {\n            independent[mask] = 1;\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    unsigned int neighbors[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        --x;\n        --y;\n        neighbors[x] |= 1u << y;\n        neighbors[y] |= 1u << x;\n    }\n\n    int total = 1 << N;\n    unsigned char independent[1 << 20] = {0};\n    independent[0] = 1;\n\n    int count = 0;\n    for (int mask = 1; mask < total; mask++) {\n        int bit = __builtin_ctz((unsigned int)mask);\n        int rest = mask & (mask - 1);\n\n        if (independent[rest] && !(neighbors[bit] & (unsigned int)rest)) {\n            independent[mask] = 1;\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1684047000017017,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T22:23:48.390089+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Sanduíche\n\n## Enunciado\nUma nova lanchonete abriu na cidade, prometendo um menu com a maior variedade de sanduíches da região. A cada dia o Chef de cozinha compra N ingredientes distintos e prepara o menu usando esses N ingredientes. Infelizmente não é possível ter sanduíches com qualquer combinação de ingredientes: a cada dia o Chef determina que M pares de ingredientes não podem ser realizados no mesmo sanduíche, porque ele considera que esses ingredientes \"não combinam\".\n\nPor exemplo, suponha que num determinado dia N é igual a quatro e os ingredientes são queijo, presunto, goiabada e azeitona, e M é igual a dois: os pares (goiabada, presunto) e (azeitona, goiabada) não podem ser realizados no mesmo sanduíche. Nesse dia, alguns dos sanduíches que podem ser feitos são:\n- presunto, queijo\n- azeitona\n- presunto, azeitona, queijo\n- goiabada, queijo\n\nAlguns dos sanduíches que não podem ser feitos são:\n- presunto, queijo, goiabada\n- azeitona, goiabada\n- goiabada, presunto, azeitona\n\nDados os N ingredientes e os M pares de ingredientes que não combinam, sua tarefa é determinar qual o máximo número de sanduíches diferentes que podem ser feitos. Dois sanduíches A e B são considerados diferentes se A contém um ingrediente X que não está presente em B ou se B contém um ingrediente Y que não está presente em A. Um sanduíche deve conter ao menos um ingrediente.\n\n## Formato de Entrada\nA primeira linha contém dois números inteiros N e M, indicando respectivamente o número de ingredientes e o número de pares de ingredientes que não combinam. Os ingredientes são identificados por números de 1 a N. Cada uma das M linhas seguintes contém dois números inteiros X e Y que representam um par de ingredientes que não combinam.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, o número de sanduíches diferentes que podem ser feitos.\n\n## Restrições\n1 ≤ N ≤ 20\n0 ≤ M ≤ 400\n1 ≤ X ≤ N\n1 ≤ X < Y\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 10 pontos, N ≤ 5.\n- Para um conjunto de casos de testes valendo outros 40 pontos, N ≤ 10.\n- Para um conjunto de casos de testes valendo outros 50 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 2\n2 3\n1 2\n```\nSaída:\n```\n4\n```\n\nExemplo 2:\nEntrada:\n```\n3 0\n```\nSaída:\n```\n7\n```\n\nExemplo 3:\nEntrada:\n```\n3 3\n1 2\n2 3\n1 3\n```\nSaída:\n```\n3\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 780,
+            "output_tokens": 487,
+            "total_tokens": 1267
+        },
+        "cost_usd": {
+            "input_cost": 7.8e-05,
+            "output_cost": 0.000244,
+            "total_cost": 0.000322
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdint.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    uint32_t adjacent[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        --x;\n        --y;\n        adjacent[x] |= 1u << y;\n        adjacent[y] |= 1u << x;\n    }\n\n    uint32_t total = 1u << N;\n    unsigned char independent[1u << 20] = {0};\n    independent[0] = 1;\n\n    int answer = 0;\n    for (uint32_t mask = 1; mask < total; mask++) {\n        uint32_t bit = mask & -mask;\n        int vertex = __builtin_ctz(bit);\n        uint32_t rest = mask ^ bit;\n\n        independent[mask] = independent[rest] &&\n                            ((adjacent[vertex] & rest) == 0);\n        answer += independent[mask];\n    }\n\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdint.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    uint32_t adjacent[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        --x;\n        --y;\n        adjacent[x] |= 1u << y;\n        adjacent[y] |= 1u << x;\n    }\n\n    uint32_t total = 1u << N;\n    unsigned char independent[1u << 20] = {0};\n    independent[0] = 1;\n\n    int answer = 0;\n    for (uint32_t mask = 1; mask < total; mask++) {\n        uint32_t bit = mask & -mask;\n        int vertex = __builtin_ctz(bit);\n        uint32_t rest = mask ^ bit;\n\n        independent[mask] = independent[rest] &&\n                            ((adjacent[vertex] & rest) == 0);\n        answer += independent[mask];\n    }\n\n    printf(\"%d\\n\", answer);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10907150000275578,
+            "counts": {
+                "AC": 23,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 23
+        }
+    }
+]

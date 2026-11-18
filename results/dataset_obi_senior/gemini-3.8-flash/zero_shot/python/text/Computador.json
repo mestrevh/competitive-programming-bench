@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:00:32.425105+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Computador\n\n## Enunciado\nUma grande empresa está construindo uma nova arquitetura de computadores que permita a execução eficiente de duas instruções especiais de soma. O computador possui N posições de memória, endereçadas de 1 a N, e cada posição pode guardar um inteiro maior ou igual a zero. Inicialmente, todas as posições contêm o valor zero. As instruções especiais de soma são:\n\n• FRENTE i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i + 1, V − 2 em i + 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for menor ou igual a N;\n\n• TRÁS i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i − 1, V − 2 em i − 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for maior ou igual a 1.\n\nPor exemplo, para N = 16, uma possível sequência de instruções é dada abaixo:\n[1.png]\nAlém disso, o computador possui a instrução IMPRIME i, que deve imprimir na saída o valor atual armazenado na posição i da memória.\n\nDados N e uma sequência de M instruções, seu programa deve imprimir, para cada instrução do tipo IMPRIME i, uma linha contendo o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e M, representando o número de posições de memória e o número de instruções, respectivamente. As M linhas seguintes contêm, cada uma, a descrição de uma instrução em uma de três formas possíveis: 1 I V, representando FRENTE I V; 2 I V, representando TRAS I V; e 3 I, representando IMPRIME I.\n\n## Formato de Saída\nPara cada instrução do tipo IMPRIME i, seu programa deve imprimir uma linha contendo um inteiro representando o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Restrições\n1 ≤ N ≤ 200000\n1 ≤ M ≤ 200000\n1 ≤ I ≤ N\n1 ≤ V ≤ 200000\nAo menos uma instrução será do tipo 3\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n16 7\n1 4 8\n2 16 3\n3 14\n2 2 12\n1 8 7\n3 10\n3 14\n```\nSaída:\n```\n1\n7\n2\n```\n\nExemplo 2:\nEntrada:\n```\n200000 2\n1 2345 193290\n3 112230\n```\nSaída:\n```\n83405\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 593,
+            "total_tokens": 2685
+        },
+        "cost_usd": {
+            "input_cost": 0.000606,
+            "output_cost": 0.002224,
+            "total_cost": 0.00283
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n\n    tree0 = [0] * (N + 2)\n    tree1 = [0] * (N + 2)\n\n    def add0(idx, val):\n        while idx <= N + 1:\n            tree0[idx] += val\n            idx += idx & (-idx)\n\n    def add1(idx, val):\n        while idx <= N + 1:\n            tree1[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s0 = 0\n        s1 = 0\n        i = idx\n        while i > 0:\n            s0 += tree0[i]\n            s1 += tree1[i]\n            i -= i & (-i)\n        return s0 + s1 * idx\n\n    idx = 2\n    out = []\n    for _ in range(M):\n        op = int(input_data[idx])\n        if op == 1:\n            I = int(input_data[idx + 1])\n            V = int(input_data[idx + 2])\n            idx += 3\n            L = I\n            R = min(N, I + V - 1)\n            c0 = V + I\n            c1 = -1\n            add0(L, c0)\n            add0(R + 1, -c0)\n            add1(L, c1)\n            add1(R + 1, -c1)\n        elif op == 2:\n            I = int(input_data[idx + 1])\n            V = int(input_data[idx + 2])\n            idx += 3\n            L = max(1, I - V + 1)\n            R = I\n            c0 = V - I\n            c1 = 1\n            add0(L, c0)\n            add0(R + 1, -c0)\n            add1(L, c1)\n            add1(R + 1, -c1)\n        else:\n            I = int(input_data[idx + 1])\n            idx += 2\n            out.append(str(query(I)))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    N = int(input_data[0])\n    M = int(input_data[1])\n\n    tree0 = [0] * (N + 2)\n    tree1 = [0] * (N + 2)\n\n    def add0(idx, val):\n        while idx <= N + 1:\n            tree0[idx] += val\n            idx += idx & (-idx)\n\n    def add1(idx, val):\n        while idx <= N + 1:\n            tree1[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s0 = 0\n        s1 = 0\n        i = idx\n        while i > 0:\n            s0 += tree0[i]\n            s1 += tree1[i]\n            i -= i & (-i)\n        return s0 + s1 * idx\n\n    idx = 2\n    out = []\n    for _ in range(M):\n        op = int(input_data[idx])\n        if op == 1:\n            I = int(input_data[idx + 1])\n            V = int(input_data[idx + 2])\n            idx += 3\n            L = I\n            R = min(N, I + V - 1)\n            c0 = V + I\n            c1 = -1\n            add0(L, c0)\n            add0(R + 1, -c0)\n            add1(L, c1)\n            add1(R + 1, -c1)\n        elif op == 2:\n            I = int(input_data[idx + 1])\n            V = int(input_data[idx + 2])\n            idx += 3\n            L = max(1, I - V + 1)\n            R = I\n            c0 = V - I\n            c1 = 1\n            add0(L, c0)\n            add0(R + 1, -c0)\n            add1(L, c1)\n            add1(R + 1, -c1)\n        else:\n            I = int(input_data[idx + 1])\n            idx += 2\n            out.append(str(query(I)))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.9613699999999881,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

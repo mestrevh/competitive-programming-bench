@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T09:12:47.958113+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dona Minhoca\n\n## Enunciado\nDona Minhoca construiu uma bela casa, composta de N salas conectadas por N − 1 túneis. Cada túnel conecta exatamente duas salas distintas, e pode ser percorrido em qualquer direção. A casa de dona Minhoca foi construída de modo que, percorrendo os túneis, é possível partir de qualquer sala e chegar a qualquer outra sala da casa.\n\nPara deixar sua casa mais segura, Dona Minhoca decidiu instalar radares anti-furto em algumas das salas. Ela comprou K radares, e deve agora decidir em quais salas colocará um radar. Além disso, todos os radares terão um raio de alcance, cujo valor R também deve ser decidido. Quando um radar com raio de alcance R é instalado na sala s, todas as salas com distância menor ou igual a R da sala s (incluindo a própria s) ficam sob o alcance do radar, e estarão protegidas.\n\nDevido à política estranha de cobrança da Empresa de radares, todos os K radares devem ter o mesmo raio de alcance. Dona Minhoca então se pergunta: qual será o menor valor possível para R, tal que, se o raio de alcance dos radares for R, é possível escolher K salas para instalar os radares de forma que todas as N salas estejam protegidas?\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e K, indicando o número de salas e de radares que Dona Minhoca possui. As N − 1 linhas seguintes contêm dois inteiros ai e bi cada, indicando que existe um túnel conectando estas duas salas.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o menor valor possível para R.\n\n## Restrições\n1 ≤ N ≤ 300000\n1 ≤ K < N\nai ≠ bi\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 25 pontos, K = 1.\n- Para outro conjunto de casos de testes valendo 17 pontos, o túnel i conecta as salas i e i + 1 (1 ≤ i ≤ N − 1), ou seja, a casa possui o formato de uma linha reta.\n- Para outro conjunto de casos de testes valendo 17 pontos, N, K ≤ 100.\n- Para outro conjunto de casos de testes valendo 41 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n6 1\n1 2\n2 3\n3 4\n4 5\n4 6\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n6 2\n1 2\n2 3\n3 4\n4 5\n4 6\n```\nSaída:\n```\n1\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 826,
+            "output_tokens": 21359,
+            "total_tokens": 22185
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.051262,
+            "total_cost": 0.051264
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    cin >> N >> K;\n    vector<vector<int>> adj(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int a, b;\n        cin >> a >> b;\n        adj[a].push_back(b);\n        adj[b].push_back(a);\n    }\n\n    vector<int> parent(N + 1, -1);\n    vector<int> order;\n    order.reserve(N);\n    vector<int> st;\n    st.reserve(N);\n    st.push_back(1);\n    parent[1] = 0;\n    while (!st.empty()) {\n        int u = st.back();\n        st.pop_back();\n        order.push_back(u);\n        for (int v : adj[u]) {\n            if (v == parent[u]) continue;\n            parent[v] = u;\n            st.push_back(v);\n        }\n    }\n\n    vector<int> down(N + 1), up(N + 1);\n    auto can = [&](int R) -> bool {\n        const int INF = 1e9;\n        int cnt = 0;\n        for (int i = N - 1; i >= 0; --i) {\n            int u = order[i];\n            int d = 0;\n            int mn = INF;\n            for (int v : adj[u]) {\n                if (parent[v] == u) {\n                    int cd = down[v] + 1;\n                    if (cd > d) d = cd;\n                    int cm = up[v] + 1;\n                    if (cm < mn) mn = cm;\n                }\n            }\n            if (d >= 0 && mn <= R && d + mn <= R) {\n                d = -INF;\n            }\n            if (d == R) {\n                ++cnt;\n                d = -INF;\n                mn = 0;\n            }\n            down[u] = d;\n            up[u] = mn;\n        }\n        if (down[order[0]] >= 0) ++cnt;\n        return cnt <= K;\n    };\n\n    int lo = 0, hi = N;\n    while (lo < hi) {\n        int mid = (lo + hi) / 2;\n        if (can(mid)) hi = mid;\n        else lo = mid + 1;\n    }\n    cout << lo << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    cin >> N >> K;\n    vector<vector<int>> adj(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int a, b;\n        cin >> a >> b;\n        adj[a].push_back(b);\n        adj[b].push_back(a);\n    }\n\n    vector<int> parent(N + 1, -1);\n    vector<int> order;\n    order.reserve(N);\n    vector<int> st;\n    st.reserve(N);\n    st.push_back(1);\n    parent[1] = 0;\n    while (!st.empty()) {\n        int u = st.back();\n        st.pop_back();\n        order.push_back(u);\n        for (int v : adj[u]) {\n            if (v == parent[u]) continue;\n            parent[v] = u;\n            st.push_back(v);\n        }\n    }\n\n    vector<int> down(N + 1), up(N + 1);\n    auto can = [&](int R) -> bool {\n        const int INF = 1e9;\n        int cnt = 0;\n        for (int i = N - 1; i >= 0; --i) {\n            int u = order[i];\n            int d = 0;\n            int mn = INF;\n            for (int v : adj[u]) {\n                if (parent[v] == u) {\n                    int cd = down[v] + 1;\n                    if (cd > d) d = cd;\n                    int cm = up[v] + 1;\n                    if (cm < mn) mn = cm;\n                }\n            }\n            if (d >= 0 && mn <= R && d + mn <= R) {\n                d = -INF;\n            }\n            if (d == R) {\n                ++cnt;\n                d = -INF;\n                mn = 0;\n            }\n            down[u] = d;\n            up[u] = mn;\n        }\n        if (down[order[0]] >= 0) ++cnt;\n        return cnt <= K;\n    };\n\n    int lo = 0, hi = N;\n    while (lo < hi) {\n        int mid = (lo + hi) / 2;\n        if (can(mid)) hi = mid;\n        else lo = mid + 1;\n    }\n    cout << lo << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.28117090000159806,
+            "counts": {
+                "AC": 56,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 56
+        }
+    }
+]

@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:49:17.015548+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Cortando o Papel\n\n## Enunciado\nUma folha de papel é composta de uma sequência de retângulos com diferentes alturas mas com larguras fixas, tal que as bases dos retângulos estão assentadas em uma linha horizontal. A figura ilustra uma folha exemplo com 33 retângulos. Nós gostaríamos de fazer um único corte horizontal, com a ajuda de um estilete e uma régua, que maximize o número resultante de pedaços separados pelo corte. A figura mostra quatro diferentes cortes que resultariam, respectivamente, em 4, 11, 10 e 3 pedaços.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de retângulos na folha de papel.\nA segunda linha contém N inteiros Ai, 1 ≤ i ≤ N, representando a sequência de alturas dos retângulos.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo um inteiro representando o número máximo de pedaços possível, com um único corte horizontal.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ Ai ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 1000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n20 5 10 5 15 15 15 5 6 22\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n5\n10 20 30 40 50\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 518,
+            "output_tokens": 837,
+            "total_tokens": 4280
+        },
+        "cost_usd": {
+            "input_cost": 0.000389,
+            "output_cost": 0.003139,
+            "total_cost": 0.003527
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int val;\n    int idx;\n} Element;\n\nint cmp(const void *a, const void *b) {\n    Element *ea = (Element *)a;\n    Element *eb = (Element *)b;\n    if (ea->val != eb->val) {\n        return (ea->val < eb->val) ? -1 : 1;\n    }\n    return ea->idx - eb->idx;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int *raw = (int *)malloc((n + 2) * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &raw[i]);\n    }\n\n    // Comprimir elementos consecutivos iguais\n    int *a = (int *)malloc((n + 2) * sizeof(int));\n    int m = 0;\n    a[0] = 0;\n    for (int i = 0; i < n; i++) {\n        if (i == 0 || raw[i] != raw[i - 1]) {\n            m++;\n            a[m] = raw[i];\n        }\n    }\n    a[m + 1] = 0;\n    free(raw);\n\n    Element *elements = (Element *)malloc(m * sizeof(Element));\n    for (int i = 1; i <= m; i++) {\n        elements[i - 1].val = a[i];\n        elements[i - 1].idx = i;\n    }\n\n    qsort(elements, m, sizeof(Element), cmp);\n\n    // active[i] indica se o retângulo i ainda é mais alto que o corte atual\n    char *active = (char *)calloc(m + 2, sizeof(char));\n    for (int i = 1; i <= m; i++) {\n        active[i] = 1;\n    }\n\n    int current_components = 1;\n    int max_pieces = current_components + 1;\n\n    int i = 0;\n    while (i < m) {\n        int j = i;\n        // Encontrar todos os elementos com a mesma altura\n        while (j < m && elements[j].val == elements[i].val) {\n            j++;\n        }\n\n        // Para todos com esta altura, calcular o impacto ao desativá-los\n        for (int k = i; k < j; k++) {\n            int idx = elements[k].idx;\n            int left_active = active[idx - 1];\n            int right_active = active[idx + 1];\n\n            if (left_active && right_active) {\n                current_components++;\n            } else if (!left_active && !right_active) {\n                current_components--;\n            }\n        }\n\n        // Marcar como inativos\n        for (int k = i; k < j; k++) {\n            active[elements[k].idx] = 0;\n        }\n\n        // Se ainda restarem componentes acima do corte\n        if (current_components > 0) {\n            int pieces = current_components + 1;\n            if (pieces > max_pieces) {\n                max_pieces = pieces;\n            }\n        }\n\n        i = j;\n    }\n\n    printf(\"%d\\n\", max_pieces);\n\n    free(a);\n    free(elements);\n    free(active);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int val;\n    int idx;\n} Element;\n\nint cmp(const void *a, const void *b) {\n    Element *ea = (Element *)a;\n    Element *eb = (Element *)b;\n    if (ea->val != eb->val) {\n        return (ea->val < eb->val) ? -1 : 1;\n    }\n    return ea->idx - eb->idx;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int *raw = (int *)malloc((n + 2) * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &raw[i]);\n    }\n\n    // Comprimir elementos consecutivos iguais\n    int *a = (int *)malloc((n + 2) * sizeof(int));\n    int m = 0;\n    a[0] = 0;\n    for (int i = 0; i < n; i++) {\n        if (i == 0 || raw[i] != raw[i - 1]) {\n            m++;\n            a[m] = raw[i];\n        }\n    }\n    a[m + 1] = 0;\n    free(raw);\n\n    Element *elements = (Element *)malloc(m * sizeof(Element));\n    for (int i = 1; i <= m; i++) {\n        elements[i - 1].val = a[i];\n        elements[i - 1].idx = i;\n    }\n\n    qsort(elements, m, sizeof(Element), cmp);\n\n    // active[i] indica se o retângulo i ainda é mais alto que o corte atual\n    char *active = (char *)calloc(m + 2, sizeof(char));\n    for (int i = 1; i <= m; i++) {\n        active[i] = 1;\n    }\n\n    int current_components = 1;\n    int max_pieces = current_components + 1;\n\n    int i = 0;\n    while (i < m) {\n        int j = i;\n        // Encontrar todos os elementos com a mesma altura\n        while (j < m && elements[j].val == elements[i].val) {\n            j++;\n        }\n\n        // Para todos com esta altura, calcular o impacto ao desativá-los\n        for (int k = i; k < j; k++) {\n            int idx = elements[k].idx;\n            int left_active = active[idx - 1];\n            int right_active = active[idx + 1];\n\n            if (left_active && right_active) {\n                current_components++;\n            } else if (!left_active && !right_active) {\n                current_components--;\n            }\n        }\n\n        // Marcar como inativos\n        for (int k = i; k < j; k++) {\n            active[elements[k].idx] = 0;\n        }\n\n        // Se ainda restarem componentes acima do corte\n        if (current_components > 0) {\n            int pieces = current_components + 1;\n            if (pieces > max_pieces) {\n                max_pieces = pieces;\n            }\n        }\n\n        i = j;\n    }\n\n    printf(\"%d\\n\", max_pieces);\n\n    free(a);\n    free(elements);\n    free(active);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15767589999995835,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:33:40.623834+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Cortando o Papel\n\n## Enunciado\nUma folha de papel é composta de uma sequência de retângulos com diferentes alturas mas com larguras fixas, tal que as bases dos retângulos estão assentadas em uma linha horizontal. A figura ilustra uma folha exemplo com 33 retângulos. Nós gostaríamos de fazer um único corte horizontal, com a ajuda de um estilete e uma régua, que maximize o número resultante de pedaços separados pelo corte. A figura mostra quatro diferentes cortes que resultariam, respectivamente, em 4, 11, 10 e 3 pedaços.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de retângulos na folha de papel.\nA segunda linha contém N inteiros Ai, 1 ≤ i ≤ N, representando a sequência de alturas dos retângulos.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo um inteiro representando o número máximo de pedaços possível, com um único corte horizontal.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ Ai ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 1000\n\n## Limites de Execução\n- Tempo Limite: 3.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n20 5 10 5 15 15 15 5 6 22\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n5\n10 20 30 40 50\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 552,
+            "output_tokens": 512,
+            "total_tokens": 4458
+        },
+        "cost_usd": {
+            "input_cost": 0.000414,
+            "output_cost": 0.00192,
+            "total_cost": 0.002334
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\ntypedef struct {\n    int height;\n    int index;\n} Rectangle;\n\nint compare(const void *a, const void *b) {\n    Rectangle *r1 = (Rectangle *)a;\n    Rectangle *r2 = (Rectangle *)b;\n    if (r2->height != r1->height) {\n        return (r2->height > r1->height) ? 1 : -1;\n    }\n    return r1->index - r2->index;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    Rectangle *rects = (Rectangle *)malloc(n * sizeof(Rectangle));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &rects[i].height);\n        rects[i].index = i;\n    }\n\n    qsort(rects, n, sizeof(Rectangle), compare);\n\n    bool *active = (bool *)calloc(n, sizeof(bool));\n    int current_components = 0;\n    int max_pieces = 1;\n\n    int i = 0;\n    while (i < n) {\n        int j = i;\n        while (j < n && rects[j].height == rects[i].height) {\n            int idx = rects[j].index;\n            active[idx] = true;\n\n            bool left = (idx > 0 && active[idx - 1]);\n            bool right = (idx < n - 1 && active[idx + 1]);\n\n            if (!left && !right) {\n                current_components++;\n            } else if (left && right) {\n                current_components--;\n            }\n            j++;\n        }\n\n        int pieces = 1 + current_components;\n        if (pieces > max_pieces) {\n            max_pieces = pieces;\n        }\n\n        i = j;\n    }\n\n    printf(\"%d\\n\", max_pieces);\n\n    free(rects);\n    free(active);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\ntypedef struct {\n    int height;\n    int index;\n} Rectangle;\n\nint compare(const void *a, const void *b) {\n    Rectangle *r1 = (Rectangle *)a;\n    Rectangle *r2 = (Rectangle *)b;\n    if (r2->height != r1->height) {\n        return (r2->height > r1->height) ? 1 : -1;\n    }\n    return r1->index - r2->index;\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    Rectangle *rects = (Rectangle *)malloc(n * sizeof(Rectangle));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &rects[i].height);\n        rects[i].index = i;\n    }\n\n    qsort(rects, n, sizeof(Rectangle), compare);\n\n    bool *active = (bool *)calloc(n, sizeof(bool));\n    int current_components = 0;\n    int max_pieces = 1;\n\n    int i = 0;\n    while (i < n) {\n        int j = i;\n        while (j < n && rects[j].height == rects[i].height) {\n            int idx = rects[j].index;\n            active[idx] = true;\n\n            bool left = (idx > 0 && active[idx - 1]);\n            bool right = (idx < n - 1 && active[idx + 1]);\n\n            if (!left && !right) {\n                current_components++;\n            } else if (left && right) {\n                current_components--;\n            }\n            j++;\n        }\n\n        int pieces = 1 + current_components;\n        if (pieces > max_pieces) {\n            max_pieces = pieces;\n        }\n\n        i = j;\n    }\n\n    printf(\"%d\\n\", max_pieces);\n\n    free(rects);\n    free(active);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17198710000957362,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

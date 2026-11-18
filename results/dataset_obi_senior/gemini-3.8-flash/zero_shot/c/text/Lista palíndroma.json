@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T03:08:01.779788+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Lista palíndroma\n\n## Enunciado\nUma palavra é chamada de palíndromo se a primeira letra da palavra é igual à última letra da palavra, a segunda letra é igual à penúltima letra, a terceira letra é igual à antepenúltima letra, e assim por diante. Por exemplo, as palavras osso e sopapos são palíndromos.\n\nNesta tarefa estamos interessados não em palavras, mas em listas de números inteiros. Nesse caso, vamos definir que uma lista é palíndroma se L[i] = L[N - i + 1], onde L[i] representa o i-ésimo elemento da lista (note que nesta notação os índices variam de 1 a N).\n\nVocê pode modificar uma lista usando a operação de contração, que é definida da seguinte forma: escolha dois elementos adjacentes da lista e substitua os dois elementos por um único elemento de valor igual à soma dos elementos substituídos. Note que ao efetuar uma operação de contração o número de elementos da lista decresce em um elemento.\n\nDada uma lista de números inteiros, você deve escrever um programa para determinar o menor número de operações de contração que devem ser realizadas de modo que a lista resultante seja palíndroma.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, o número de elementos da lista. A segunda linha contém N inteiros L_i, os elementos da lista.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o menor número de operações de contração necessárias para tornar a lista palíndroma.\n\n## Restrições\n1 ≤ N ≤ 10^6\n1 ≤ L_i ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 30 pontos, N ≤ 10.\n- Para um conjunto de casos de testes valendo outros 30 pontos, N ≤ 10^3.\n- Para um conjunto de casos de testes valendo outros 40 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5\n10 60 20 40 10\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n5\n999 1 999 1 999\n```\nSaída:\n```\n0\n```\n\nExemplo 3:\nEntrada:\n```\n4\n10 40 30 20\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 710,
+            "output_tokens": 281,
+            "total_tokens": 1447
+        },
+        "cost_usd": {
+            "input_cost": 0.000532,
+            "output_cost": 0.001054,
+            "total_cost": 0.001586
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 1000005\n\nlong long L[MAXN];\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &L[i]);\n    }\n\n    int left = 0;\n    int right = n - 1;\n    long long sum_left = L[left];\n    long long sum_right = L[right];\n    int ops = 0;\n\n    while (left < right) {\n        if (sum_left == sum_right) {\n            left++;\n            right--;\n            sum_left = L[left];\n            sum_right = L[right];\n        } else if (sum_left < sum_right) {\n            left++;\n            sum_left += L[left];\n            ops++;\n        } else {\n            right--;\n            sum_right += L[right];\n            ops++;\n        }\n    }\n\n    printf(\"%d\\n\", ops);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 1000005\n\nlong long L[MAXN];\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &L[i]);\n    }\n\n    int left = 0;\n    int right = n - 1;\n    long long sum_left = L[left];\n    long long sum_right = L[right];\n    int ops = 0;\n\n    while (left < right) {\n        if (sum_left == sum_right) {\n            left++;\n            right--;\n            sum_left = L[left];\n            sum_right = L[right];\n        } else if (sum_left < sum_right) {\n            left++;\n            sum_left += L[left];\n            ops++;\n        } else {\n            right--;\n            sum_right += L[right];\n            ops++;\n        }\n    }\n\n    printf(\"%d\\n\", ops);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10736639999959152,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:50:51.859069+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Lista palíndroma\n\n## Enunciado\nUma palavra é chamada de palíndromo se a primeira letra da palavra é igual à última letra da palavra, a segunda letra é igual à penúltima letra, a terceira letra é igual à antepenúltima letra, e assim por diante. Por exemplo, as palavras osso e sopapos são palíndromos.\n\nNesta tarefa estamos interessados não em palavras, mas em listas de números inteiros. Nesse caso, vamos definir que uma lista é palíndroma se L[i] = L[N - i + 1], onde L[i] representa o i-ésimo elemento da lista (note que nesta notação os índices variam de 1 a N).\n\nVocê pode modificar uma lista usando a operação de contração, que é definida da seguinte forma: escolha dois elementos adjacentes da lista e substitua os dois elementos por um único elemento de valor igual à soma dos elementos substituídos. Note que ao efetuar uma operação de contração o número de elementos da lista decresce em um elemento.\n\nDada uma lista de números inteiros, você deve escrever um programa para determinar o menor número de operações de contração que devem ser realizadas de modo que a lista resultante seja palíndroma.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, o número de elementos da lista. A segunda linha contém N inteiros L_i, os elementos da lista.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o menor número de operações de contração necessárias para tornar a lista palíndroma.\n\n## Restrições\n1 ≤ N ≤ 10^6\n1 ≤ L_i ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 30 pontos, N ≤ 10.\n- Para um conjunto de casos de testes valendo outros 30 pontos, N ≤ 10^3.\n- Para um conjunto de casos de testes valendo outros 40 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 3.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5\n10 60 20 40 10\n```\nSaída:\n```\n1\n```\n\nExemplo 2:\nEntrada:\n```\n5\n999 1 999 1 999\n```\nSaída:\n```\n0\n```\n\nExemplo 3:\nEntrada:\n```\n4\n10 40 30 20\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 3.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 744,
+            "output_tokens": 282,
+            "total_tokens": 1630
+        },
+        "cost_usd": {
+            "input_cost": 0.000558,
+            "output_cost": 0.001058,
+            "total_cost": 0.001616
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 1000005\n\nlong long L[MAXN];\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int k = 0; k < n; ++k) {\n        scanf(\"%lld\", &L[k]);\n    }\n\n    int i = 0, j = n - 1;\n    long long left_sum = L[0];\n    long long right_sum = L[n - 1];\n    int ops = 0;\n\n    while (i < j) {\n        if (left_sum == right_sum) {\n            i++;\n            j--;\n            left_sum = L[i];\n            right_sum = L[j];\n        } else if (left_sum < right_sum) {\n            i++;\n            left_sum += L[i];\n            ops++;\n        } else {\n            j--;\n            right_sum += L[j];\n            ops++;\n        }\n    }\n\n    printf(\"%d\\n\", ops);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 1000005\n\nlong long L[MAXN];\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int k = 0; k < n; ++k) {\n        scanf(\"%lld\", &L[k]);\n    }\n\n    int i = 0, j = n - 1;\n    long long left_sum = L[0];\n    long long right_sum = L[n - 1];\n    int ops = 0;\n\n    while (i < j) {\n        if (left_sum == right_sum) {\n            i++;\n            j--;\n            left_sum = L[i];\n            right_sum = L[j];\n        } else if (left_sum < right_sum) {\n            i++;\n            left_sum += L[i];\n            ops++;\n        } else {\n            j--;\n            right_sum += L[j];\n            ops++;\n        }\n    }\n\n    printf(\"%d\\n\", ops);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12131990000489168,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

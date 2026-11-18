@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:37:15.259587+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Festa olímpica\n\n## Enunciado\nOs atletas da Nlogônia obtiveram o melhor resultado do país em olimpíadas, e para comemorar o rei decidiu dar uma grande festa no Palácio Real. Todos os atletas foram convidados, mas o rei quer também convidar alguns de seus súditos.\n\nComo não é possível convidar todos os súditos, o rei determinou que a seguinte Lei seja utilizada para calcular a lista de convidados:\n\nLEI ESPECIAL SOBRE COMEMORAÇÃO DAS OLIMPÍADAS\n\nPor ordem de Sua Majestade, fiquem todos sabendo que:\n- Os N súditos de Nlogônia serão numerados 1,2,3,...,N e uma lista ordenada será criada com os números dos súditos. A primeira posição da lista será 1.\n- Um número M de turnos serão então executados; em cada turno i, será sorteado um número Ti que será usado para remover súditos da lista, da seguinte forma: no turno i, devem ser removidos da lista todos os súditos que ainda continuam na lista e que ocupam posições que são múltiplas de Ti; ou seja, devem ser removidos os súditos que estão nas posições (Ti, 2Ti, 3Ti, ...) da lista corrente. Ao final do turno, para não haver posições vazias na lista (cujos súditos foram removidos) a lista é reagrupada, mantendo-se a mesma ordem relativa, e contendo apenas os números dos súditos remanescentes.\n- Os súditos que permanecerem na lista ao final dos M turnos serão convidados para a grande festa de comemoração do resultado das olimpíadas.\n\nDados o número de súditos e os números sorteados em cada turno, sua tarefa é determinar os súditos que serão convidados de acordo com a Lei Especial.\n\n## Formato de Entrada\nA primeira linha da entrada contém um número inteiro N, o número de súditos de Nlogônia. A segunda linha contém um inteiro M, o número de turnos. Cada uma das M linhas seguintes contém um inteiro Ti, o número que foi sorteado para o turno i.\n\n## Formato de Saída\nSeu programa deve produzir a lista de convidados de acordo com a Lei Especial, com uma linha para cada convidado, cada linha contendo somente o número de um convidado. Como a lista total dos convidados pode ser muito grande, o rei ordenou que, caso o número de convidados seja maior que 10.000, você deve listar apenas os 10.000 primeiros (ou seja, os com menores números) convidados.\n\n## Restrições\n2 ≤ N ≤ 100000000\n1 ≤ M ≤ 5000\n2 ≤ Ti ≤ 100000 para 1 ≤ i ≤ M\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n2\n2\n3\n```\nSaída:\n```\n1\n3\n7\n9\n```\n\nExemplo 2:\nEntrada:\n```\n6\n3\n2\n2\n2\n```\nSaída:\n```\n1\n```\n\nExemplo 3:\nEntrada:\n```\n5\n1\n10\n```\nSaída:\n```\n1\n2\n3\n4\n5\n```\n\nExemplo 4:\nEntrada:\n```\n1000000\n3\n2\n15\n3\n```\nSaída:\n```\n1\n3\n7\n9\n...\n32137\n32139\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 848,
+            "output_tokens": 1384,
+            "total_tokens": 2232
+        },
+        "cost_usd": {
+            "input_cost": 8.5e-05,
+            "output_cost": 0.000692,
+            "total_cost": 0.000777
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    long long n;\n    int m;\n\n    if (scanf(\"%lld\", &n) != 1) return 0;\n    scanf(\"%d\", &m);\n\n    int t[5000];\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d\", &t[i]);\n    }\n\n    long long size = n;\n    for (int i = 0; i < m; i++) {\n        size -= size / t[i];\n    }\n\n    int count = size < 10000 ? (int)size : 10000;\n    long long guests[10000];\n\n    for (int i = 0; i < count; i++) {\n        guests[i] = i + 1;\n    }\n\n    for (int i = m - 1; i >= 0; i--) {\n        long long step = t[i] - 1;\n        for (int j = 0; j < count; j++) {\n            guests[j] += (guests[j] - 1) / step;\n        }\n    }\n\n    for (int i = 0; i < count; i++) {\n        printf(\"%lld\\n\", guests[i]);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    long long n;\n    int m;\n\n    if (scanf(\"%lld\", &n) != 1) return 0;\n    scanf(\"%d\", &m);\n\n    int t[5000];\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d\", &t[i]);\n    }\n\n    long long size = n;\n    for (int i = 0; i < m; i++) {\n        size -= size / t[i];\n    }\n\n    int count = size < 10000 ? (int)size : 10000;\n    long long guests[10000];\n\n    for (int i = 0; i < count; i++) {\n        guests[i] = i + 1;\n    }\n\n    for (int i = m - 1; i >= 0; i--) {\n        long long step = t[i] - 1;\n        for (int j = 0; j < count; j++) {\n            guests[j] += (guests[j] - 1) / step;\n        }\n    }\n\n    for (int i = 0; i < count; i++) {\n        printf(\"%lld\\n\", guests[i]);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16805369999929098,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T22:08:08.645715+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Festa olímpica\n\n## Enunciado\nOs atletas da Nlogônia obtiveram o melhor resultado do país em olimpíadas, e para comemorar o rei decidiu dar uma grande festa no Palácio Real. Todos os atletas foram convidados, mas o rei quer também convidar alguns de seus súditos.\n\nComo não é possível convidar todos os súditos, o rei determinou que a seguinte Lei seja utilizada para calcular a lista de convidados:\n\nLEI ESPECIAL SOBRE COMEMORAÇÃO DAS OLIMPÍADAS\n\nPor ordem de Sua Majestade, fiquem todos sabendo que:\n- Os N súditos de Nlogônia serão numerados 1,2,3,...,N e uma lista ordenada será criada com os números dos súditos. A primeira posição da lista será 1.\n- Um número M de turnos serão então executados; em cada turno i, será sorteado um número Ti que será usado para remover súditos da lista, da seguinte forma: no turno i, devem ser removidos da lista todos os súditos que ainda continuam na lista e que ocupam posições que são múltiplas de Ti; ou seja, devem ser removidos os súditos que estão nas posições (Ti, 2Ti, 3Ti, ...) da lista corrente. Ao final do turno, para não haver posições vazias na lista (cujos súditos foram removidos) a lista é reagrupada, mantendo-se a mesma ordem relativa, e contendo apenas os números dos súditos remanescentes.\n- Os súditos que permanecerem na lista ao final dos M turnos serão convidados para a grande festa de comemoração do resultado das olimpíadas.\n\nDados o número de súditos e os números sorteados em cada turno, sua tarefa é determinar os súditos que serão convidados de acordo com a Lei Especial.\n\n## Formato de Entrada\nA primeira linha da entrada contém um número inteiro N, o número de súditos de Nlogônia. A segunda linha contém um inteiro M, o número de turnos. Cada uma das M linhas seguintes contém um inteiro Ti, o número que foi sorteado para o turno i.\n\n## Formato de Saída\nSeu programa deve produzir a lista de convidados de acordo com a Lei Especial, com uma linha para cada convidado, cada linha contendo somente o número de um convidado. Como a lista total dos convidados pode ser muito grande, o rei ordenou que, caso o número de convidados seja maior que 10.000, você deve listar apenas os 10.000 primeiros (ou seja, os com menores números) convidados.\n\n## Restrições\n2 ≤ N ≤ 100000000\n1 ≤ M ≤ 5000\n2 ≤ Ti ≤ 100000 para 1 ≤ i ≤ M\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n2\n2\n3\n```\nSaída:\n```\n1\n3\n7\n9\n```\n\nExemplo 2:\nEntrada:\n```\n6\n3\n2\n2\n2\n```\nSaída:\n```\n1\n```\n\nExemplo 3:\nEntrada:\n```\n5\n1\n10\n```\nSaída:\n```\n1\n2\n3\n4\n5\n```\n\nExemplo 4:\nEntrada:\n```\n1000000\n3\n2\n15\n3\n```\nSaída:\n```\n1\n3\n7\n9\n...\n32137\n32139\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 878,
+            "output_tokens": 1035,
+            "total_tokens": 1913
+        },
+        "cost_usd": {
+            "input_cost": 8.8e-05,
+            "output_cost": 0.000517,
+            "total_cost": 0.000605
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    long long n;\n    int m;\n\n    if (scanf(\"%lld\", &n) != 1) return 0;\n    scanf(\"%d\", &m);\n\n    int t[5000];\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d\", &t[i]);\n        n -= n / t[i];\n    }\n\n    long long count = n < 10000 ? n : 10000;\n\n    for (long long k = 1; k <= count; k++) {\n        long long rank = k;\n        for (int i = m - 1; i >= 0; i--) {\n            rank += (rank - 1) / (t[i] - 1);\n        }\n        printf(\"%lld\\n\", rank);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    long long n;\n    int m;\n\n    if (scanf(\"%lld\", &n) != 1) return 0;\n    scanf(\"%d\", &m);\n\n    int t[5000];\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d\", &t[i]);\n        n -= n / t[i];\n    }\n\n    long long count = n < 10000 ? n : 10000;\n\n    for (long long k = 1; k <= count; k++) {\n        long long rank = k;\n        for (int i = m - 1; i >= 0; i--) {\n            rank += (rank - 1) / (t[i] - 1);\n        }\n        printf(\"%lld\\n\", rank);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.22964930000307504,
+            "counts": {
+                "AC": 34,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 34
+        }
+    }
+]

@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:48:18.625947+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Construtora\n\n## Enunciado\nEm uma rua existem N prédios adjacentes, o i-ésimo entre eles (da esquerda para a direita) possui ai andares. Uma construtora acabou de comprar todos os prédios da rua, e fará uma obra para que eles tenham a mesma altura (quantidade de andares), porém, para realizar esta obra ela deve seguir as regras definidas pela Sociedade Brasileira de Construção (SBC).\n\nSegundo as regras da SBC, cada fase da obra só pode aumentar em uma unidade a quantidade de andares de prédios consecutivos que já possuam uma mesma quantidade de andares. Sendo mais específico, para cada fase:\n- A construtora deve definir um índice inicial L\n- A construtora deve definir um índice final R\n- Todos os prédios entre L e R (incluindo L e R) devem possuir a mesma quantidade de andares, digamos a\n- Ao final desta fase da obra, todos os prédios entre L e R (incluindo L e R) vão possuir a + 1 andares\n\nPor exemplo, suponha que N seja igual a 8, e que as alturas iniciais sejam: a1 = 5, a2 = 4, a3 = 4, a4 = 4, a5 = 5, a6 = 4, a7 = 4 e a8 = 7, perceba que:\n- A construtora não pode definir L = 2 e R = 7 para a primeira fase, pois nem todas as quantidades de andares nesse intervalo de prédios são iguais\n- A construtora não pode definir L = 1 e R = 5 para a primeira fase, pois nem todas as quantidades de andares nesse intervalo de prédios são iguais\n- A construtora pode definir L = 8 e R = 8 para a primeira fase, e a quantidade de andares final seria: a1 = 5, a2 = 4, a3 = 4, a4 = 4, a5 = 5, a6 = 4, a7 = 4 e a8 = 8\n- A construtora pode definir L = 2 e R = 4 para a primeira fase, e a quantidade de andares final seria: a1 = 5, a2 = 5, a3 = 5, a4 = 5, a5 = 5, a6 = 4, a7 = 4 e a8 = 7\n\nPara cada fase da obra, a construtora deve pagar impostos para a prefeitura, portanto, ela deseja completar a tarefa usando a menor quantidade possível de fases. No exemplo mostrado anteriormente a menor quantidade de fases é 4.\n\nDadas a quantidade inicial de andares de cada um dos N prédios, sua tarefa é determinar a quantidade mínima de fases para completar a obra.\n\n## Formato de Entrada\nA primeira linha da entrada contém um único inteiro N, o número de prédios da rua.\n\nA segunda linha contém N inteiros, o i-ésimo entre esses inteiros é ai, a quantidade de andares do i-ésimo prédio.\n\n## Formato de Saída\nA saída deve conter um único número inteiro, a menor quantidade de fases necessárias para a construtora completar a obra, ou seja, deixar todos os prédios com a mesma altura.\n\n## Restrições\n2 ≤ N ≤ 100\n1 ≤ ai ≤ 100\n\nSubtarefas:\n- Subtarefa 1 (0 pontos): exemplos.\n- Subtarefa 2 (17 pontos): ai = aj para todo 1 ≤ i, j ≤ N - 1, ou seja, todos os N - 1 primeiros prédios possuem a mesma altura inicial.\n- Subtarefa 3 (18 pontos): 1 ≤ ai ≤ 2.\n- Subtarefa 4 (19 pontos): 1 ≤ ai ≤ 3.\n- Subtarefa 5 (20 pontos): ai > aj para todo 1 ≤ i < j ≤ N, ou seja, as alturas iniciais dos prédios são decrescentes da esquerda para a direita.\n- Subtarefa 6 (26 pontos): Sem restrições adicionais.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n3 1 1 2\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n8\n5 4 4 4 5 4 4 7\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n3\n100 100 100\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1154,
+            "output_tokens": 379,
+            "total_tokens": 2916
+        },
+        "cost_usd": {
+            "input_cost": 0.000866,
+            "output_cost": 0.001421,
+            "total_cost": 0.002287
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int a[105];\n    int max_val = 0;\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n        if (a[i] > max_val) {\n            max_val = a[i];\n        }\n    }\n\n    int ans = 0;\n    while (1) {\n        int min_val = max_val;\n        for (int i = 0; i < n; i++) {\n            if (a[i] < min_val) {\n                min_val = a[i];\n            }\n        }\n\n        // Se o valor mínimo já é igual ao máximo, todos os prédios têm a mesma altura.\n        if (min_val == max_val) {\n            break;\n        }\n\n        // Encontra o primeiro segmento maximal de elementos iguais a min_val\n        int l = 0;\n        while (l < n && a[l] != min_val) {\n            l++;\n        }\n\n        int r = l;\n        while (r < n && a[r] == min_val) {\n            r++;\n        }\n\n        // Incrementa o segmento [l, r - 1]\n        for (int i = l; i < r; i++) {\n            a[i]++;\n        }\n\n        ans++;\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int a[105];\n    int max_val = 0;\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n        if (a[i] > max_val) {\n            max_val = a[i];\n        }\n    }\n\n    int ans = 0;\n    while (1) {\n        int min_val = max_val;\n        for (int i = 0; i < n; i++) {\n            if (a[i] < min_val) {\n                min_val = a[i];\n            }\n        }\n\n        // Se o valor mínimo já é igual ao máximo, todos os prédios têm a mesma altura.\n        if (min_val == max_val) {\n            break;\n        }\n\n        // Encontra o primeiro segmento maximal de elementos iguais a min_val\n        int l = 0;\n        while (l < n && a[l] != min_val) {\n            l++;\n        }\n\n        int r = l;\n        while (r < n && a[r] == min_val) {\n            r++;\n        }\n\n        // Incrementa o segmento [l, r - 1]\n        for (int i = l; i < r; i++) {\n            a[i]++;\n        }\n\n        ans++;\n    }\n\n    printf(\"%d\\n\", ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1673635999995895,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:32:39.541677+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Construtora\n\n## Enunciado\nEm uma rua existem N prédios adjacentes, o i-ésimo entre eles (da esquerda para a direita) possui ai andares. Uma construtora acabou de comprar todos os prédios da rua, e fará uma obra para que eles tenham a mesma altura (quantidade de andares), porém, para realizar esta obra ela deve seguir as regras definidas pela Sociedade Brasileira de Construção (SBC).\n\nSegundo as regras da SBC, cada fase da obra só pode aumentar em uma unidade a quantidade de andares de prédios consecutivos que já possuam uma mesma quantidade de andares. Sendo mais específico, para cada fase:\n- A construtora deve definir um índice inicial L\n- A construtora deve definir um índice final R\n- Todos os prédios entre L e R (incluindo L e R) devem possuir a mesma quantidade de andares, digamos a\n- Ao final desta fase da obra, todos os prédios entre L e R (incluindo L e R) vão possuir a + 1 andares\n\nPor exemplo, suponha que N seja igual a 8, e que as alturas iniciais sejam: a1 = 5, a2 = 4, a3 = 4, a4 = 4, a5 = 5, a6 = 4, a7 = 4 e a8 = 7, perceba que:\n- A construtora não pode definir L = 2 e R = 7 para a primeira fase, pois nem todas as quantidades de andares nesse intervalo de prédios são iguais\n- A construtora não pode definir L = 1 e R = 5 para a primeira fase, pois nem todas as quantidades de andares nesse intervalo de prédios são iguais\n- A construtora pode definir L = 8 e R = 8 para a primeira fase, e a quantidade de andares final seria: a1 = 5, a2 = 4, a3 = 4, a4 = 4, a5 = 5, a6 = 4, a7 = 4 e a8 = 8\n- A construtora pode definir L = 2 e R = 4 para a primeira fase, e a quantidade de andares final seria: a1 = 5, a2 = 5, a3 = 5, a4 = 5, a5 = 5, a6 = 4, a7 = 4 e a8 = 7\n\nPara cada fase da obra, a construtora deve pagar impostos para a prefeitura, portanto, ela deseja completar a tarefa usando a menor quantidade possível de fases. No exemplo mostrado anteriormente a menor quantidade de fases é 4.\n\nDadas a quantidade inicial de andares de cada um dos N prédios, sua tarefa é determinar a quantidade mínima de fases para completar a obra.\n\n## Formato de Entrada\nA primeira linha da entrada contém um único inteiro N, o número de prédios da rua.\n\nA segunda linha contém N inteiros, o i-ésimo entre esses inteiros é ai, a quantidade de andares do i-ésimo prédio.\n\n## Formato de Saída\nA saída deve conter um único número inteiro, a menor quantidade de fases necessárias para a construtora completar a obra, ou seja, deixar todos os prédios com a mesma altura.\n\n## Restrições\n2 ≤ N ≤ 100\n1 ≤ ai ≤ 100\n\nSubtarefas:\n- Subtarefa 1 (0 pontos): exemplos.\n- Subtarefa 2 (17 pontos): ai = aj para todo 1 ≤ i, j ≤ N - 1, ou seja, todos os N - 1 primeiros prédios possuem a mesma altura inicial.\n- Subtarefa 3 (18 pontos): 1 ≤ ai ≤ 2.\n- Subtarefa 4 (19 pontos): 1 ≤ ai ≤ 3.\n- Subtarefa 5 (20 pontos): ai > aj para todo 1 ≤ i < j ≤ N, ou seja, as alturas iniciais dos prédios são decrescentes da esquerda para a direita.\n- Subtarefa 6 (26 pontos): Sem restrições adicionais.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 1024 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n3 1 1 2\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n8\n5 4 4 4 5 4 4 7\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n3\n100 100 100\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1189,
+            "output_tokens": 304,
+            "total_tokens": 3477
+        },
+        "cost_usd": {
+            "input_cost": 0.000892,
+            "output_cost": 0.00114,
+            "total_cost": 0.002032
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int a[105];\n    int min_h = 1000, max_h = 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n        if (a[i] < min_h) min_h = a[i];\n        if (a[i] > max_h) max_h = a[i];\n    }\n\n    int total_fases = 0;\n\n    for (int h = min_h; h < max_h; h++) {\n        int componentes = 0;\n        int em_componente = 0;\n\n        for (int i = 0; i < n; i++) {\n            if (a[i] <= h) {\n                if (!em_componente) {\n                    componentes++;\n                    em_componente = 1;\n                }\n            } else {\n                em_componente = 0;\n            }\n        }\n        total_fases += componentes;\n    }\n\n    printf(\"%d\\n\", total_fases);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int a[105];\n    int min_h = 1000, max_h = 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n        if (a[i] < min_h) min_h = a[i];\n        if (a[i] > max_h) max_h = a[i];\n    }\n\n    int total_fases = 0;\n\n    for (int h = min_h; h < max_h; h++) {\n        int componentes = 0;\n        int em_componente = 0;\n\n        for (int i = 0; i < n; i++) {\n            if (a[i] <= h) {\n                if (!em_componente) {\n                    componentes++;\n                    em_componente = 1;\n                }\n            } else {\n                em_componente = 0;\n            }\n        }\n        total_fases += componentes;\n    }\n\n    printf(\"%d\\n\", total_fases);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1806042999960482,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

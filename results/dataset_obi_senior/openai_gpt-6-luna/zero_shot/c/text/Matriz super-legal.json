@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:47:50.253195+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Matriz super-legal\n\n## Enunciado\nDenotando por A_{i,j} o elemento na i-ésima linha e j-ésima coluna da matriz A, dizemos que uma matriz é \"legal\" se a condição\n\nA_{1,1} + A_{lin,col} ≤ A_{1,col} + A_{lin,1}\n\né verdadeira para todo lin > 1 e col > 1.\n\nAdicionalmente, dizemos que a matriz é \"super-legal\" se cada uma de suas submatrizes com pelo menos duas linhas e duas colunas é legal. Lembre que uma submatriz S de uma matriz M_{L×C} é uma matriz que inclui todos os elementos M_{i,j} tais que l1 ≤ i ≤ l2 e c1 ≤ j ≤ c2, para 1 ≤ l1 ≤ l2 ≤ L e 1 ≤ c1 ≤ c2 ≤ C.\n\nA sua tarefa é, dada uma matriz A, determinar a maior quantidade de elementos de uma submatriz super-legal da matriz A.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C indicando respectivamente o número de linhas e o número de colunas da matriz. Cada uma das L linhas seguintes contém C inteiros Xi representando os elementos da matriz.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, com apenas um número inteiro, a maior quantidade de elementos de uma submatriz super-legal da matriz da entrada, ou zero no caso de não existir uma submatriz super-legal.\n\n## Restrições\n2 ≤ L, C ≤ 1000\n-10^6 ≤ Xi ≤ 10^6\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n1 4 10\n5 2 6\n11 1 3\n```\nSaída:\n```\n9\n```\n\nExemplo 2:\nEntrada:\n```\n3 3\n1 3 1\n2 1 2\n1 1 1\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n5 6\n1 1 4 0 3 3\n4 4 9 7 11 13\n-3 -1 4 2 8 11\n1 5 9 5 9 10\n4 8 10 5 8 8\n```\nSaída:\n```\n15\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 649,
+            "output_tokens": 2713,
+            "total_tokens": 3362
+        },
+        "cost_usd": {
+            "input_cost": 6.5e-05,
+            "output_cost": 0.001357,
+            "total_cost": 0.001421
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int prev[1000], cur[1000];\n    int height[1000] = {0};\n    int stack[1000];\n    long long best = 0;\n\n    for (int j = 0; j < C; ++j) scanf(\"%d\", &prev[j]);\n\n    for (int i = 1; i < L; ++i) {\n        for (int j = 0; j < C; ++j) scanf(\"%d\", &cur[j]);\n\n        int n = C - 1;\n        for (int j = 0; j < n; ++j) {\n            if ((long long)prev[j] + cur[j + 1] <=\n                (long long)prev[j + 1] + cur[j]) {\n                ++height[j];\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        int top = -1;\n        for (int j = 0; j <= n; ++j) {\n            int current = (j == n) ? 0 : height[j];\n            while (top >= 0 && height[stack[top]] > current) {\n                int h = height[stack[top--]];\n                int left = (top >= 0) ? stack[top] + 1 : 0;\n                int width = j - left;\n                long long area = (long long)(h + 1) * (width + 1);\n                if (area > best) best = area;\n            }\n            if (j < n) stack[++top] = j;\n        }\n\n        for (int j = 0; j < C; ++j) prev[j] = cur[j];\n    }\n\n    printf(\"%lld\\n\", best);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int prev[1000], cur[1000];\n    int height[1000] = {0};\n    int stack[1000];\n    long long best = 0;\n\n    for (int j = 0; j < C; ++j) scanf(\"%d\", &prev[j]);\n\n    for (int i = 1; i < L; ++i) {\n        for (int j = 0; j < C; ++j) scanf(\"%d\", &cur[j]);\n\n        int n = C - 1;\n        for (int j = 0; j < n; ++j) {\n            if ((long long)prev[j] + cur[j + 1] <=\n                (long long)prev[j + 1] + cur[j]) {\n                ++height[j];\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        int top = -1;\n        for (int j = 0; j <= n; ++j) {\n            int current = (j == n) ? 0 : height[j];\n            while (top >= 0 && height[stack[top]] > current) {\n                int h = height[stack[top--]];\n                int left = (top >= 0) ? stack[top] + 1 : 0;\n                int width = j - left;\n                long long area = (long long)(h + 1) * (width + 1);\n                if (area > best) best = area;\n            }\n            if (j < n) stack[++top] = j;\n        }\n\n        for (int j = 0; j < C; ++j) prev[j] = cur[j];\n    }\n\n    printf(\"%lld\\n\", best);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.16122170000016922,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T22:17:55.632996+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Matriz super-legal\n\n## Enunciado\nDenotando por A_{i,j} o elemento na i-ésima linha e j-ésima coluna da matriz A, dizemos que uma matriz é \"legal\" se a condição\n\nA_{1,1} + A_{lin,col} ≤ A_{1,col} + A_{lin,1}\n\né verdadeira para todo lin > 1 e col > 1.\n\nAdicionalmente, dizemos que a matriz é \"super-legal\" se cada uma de suas submatrizes com pelo menos duas linhas e duas colunas é legal. Lembre que uma submatriz S de uma matriz M_{L×C} é uma matriz que inclui todos os elementos M_{i,j} tais que l1 ≤ i ≤ l2 e c1 ≤ j ≤ c2, para 1 ≤ l1 ≤ l2 ≤ L e 1 ≤ c1 ≤ c2 ≤ C.\n\nA sua tarefa é, dada uma matriz A, determinar a maior quantidade de elementos de uma submatriz super-legal da matriz A.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C indicando respectivamente o número de linhas e o número de colunas da matriz. Cada uma das L linhas seguintes contém C inteiros Xi representando os elementos da matriz.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, com apenas um número inteiro, a maior quantidade de elementos de uma submatriz super-legal da matriz da entrada, ou zero no caso de não existir uma submatriz super-legal.\n\n## Restrições\n2 ≤ L, C ≤ 1000\n-10^6 ≤ Xi ≤ 10^6\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n1 4 10\n5 2 6\n11 1 3\n```\nSaída:\n```\n9\n```\n\nExemplo 2:\nEntrada:\n```\n3 3\n1 3 1\n2 1 2\n1 1 1\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n5 6\n1 1 4 0 3 3\n4 4 9 7 11 13\n-3 -1 4 2 8 11\n1 5 9 5 9 10\n4 8 10 5 8 8\n```\nSaída:\n```\n15\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 679,
+            "output_tokens": 1458,
+            "total_tokens": 2137
+        },
+        "cost_usd": {
+            "input_cost": 6.8e-05,
+            "output_cost": 0.000729,
+            "total_cost": 0.000797
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int previous[1000], current[1000];\n    int heights[1000] = {0};\n    int stack[1000];\n\n    for (int j = 0; j < C; ++j) {\n        scanf(\"%d\", &previous[j]);\n    }\n\n    long long best = 0;\n    int width = C - 1;\n\n    for (int i = 1; i < L; ++i) {\n        for (int j = 0; j < C; ++j) {\n            scanf(\"%d\", &current[j]);\n        }\n\n        for (int j = 0; j < width; ++j) {\n            if (previous[j] + current[j + 1] <= previous[j + 1] + current[j])\n                ++heights[j];\n            else\n                heights[j] = 0;\n        }\n\n        int top = -1;\n        for (int j = 0; j <= width; ++j) {\n            int h = (j == width) ? 0 : heights[j];\n            while (top >= 0 && heights[stack[top]] > h) {\n                int height = heights[stack[top--]];\n                int rectWidth = (top < 0) ? j : j - stack[top] - 1;\n                if (height > 0) {\n                    long long area = (long long)(height + 1) * (rectWidth + 1);\n                    if (area > best) best = area;\n                }\n            }\n            if (j < width) stack[++top] = j;\n        }\n\n        for (int j = 0; j < C; ++j) {\n            previous[j] = current[j];\n        }\n    }\n\n    printf(\"%lld\\n\", best);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int previous[1000], current[1000];\n    int heights[1000] = {0};\n    int stack[1000];\n\n    for (int j = 0; j < C; ++j) {\n        scanf(\"%d\", &previous[j]);\n    }\n\n    long long best = 0;\n    int width = C - 1;\n\n    for (int i = 1; i < L; ++i) {\n        for (int j = 0; j < C; ++j) {\n            scanf(\"%d\", &current[j]);\n        }\n\n        for (int j = 0; j < width; ++j) {\n            if (previous[j] + current[j + 1] <= previous[j + 1] + current[j])\n                ++heights[j];\n            else\n                heights[j] = 0;\n        }\n\n        int top = -1;\n        for (int j = 0; j <= width; ++j) {\n            int h = (j == width) ? 0 : heights[j];\n            while (top >= 0 && heights[stack[top]] > h) {\n                int height = heights[stack[top--]];\n                int rectWidth = (top < 0) ? j : j - stack[top] - 1;\n                if (height > 0) {\n                    long long area = (long long)(height + 1) * (rectWidth + 1);\n                    if (area > best) best = area;\n                }\n            }\n            if (j < width) stack[++top] = j;\n        }\n\n        for (int j = 0; j < C; ++j) {\n            previous[j] = current[j];\n        }\n    }\n\n    printf(\"%lld\\n\", best);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.17501130000164267,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

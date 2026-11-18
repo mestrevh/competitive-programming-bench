@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T08:05:32.490111+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Jogo do Preto e Branco\n\n## Enunciado\nVocê gosta de quebra-cabeças? O jogo do Preto e Branco é um quebra-cabeças que usa um tabuleiro retangular com L linhas e C colunas, formando L×C casas. No tabuleiro são posicionadas algumas peças pretas, cada peça em uma casa diferente.\n\nO objetivo do jogo é colocar o maior número possível de peças brancas no tabuleiro, obedecendo às seguintes restrições:\n\n• cada casa do tabuleiro pode conter no máximo uma peça;\n• uma peça branca deve ter ao menos uma peça preta como vizinha, à direita, à esquerda, acima ou abaixo;\n• uma peça branca não pode ter outra peça branca como vizinha, à direita, à esquerda, acima ou abaixo;\n\nA figura abaixo mostra dois exemplos de jogos, com as respectivas soluções, um com um tabuleiro 3 × 3 e outro com um tabuleiro 3 × 5.\n[1.png]\nSua tarefa é escrever um programa que, dadas as descrições do tabuleiro e das peças pretas posicionadas, determine o maior número de peças brancas que podem ser colocadas.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C, o número de linhas e o número de colunas do tabuleiro. As linhas são numeradas de 1 a L e as colunas são numeradas de 1 a C. A segunda linha contém um inteiro P, o número de peças pretas colocadas no tabuleiro. Cada uma das P linhas seguintes descreve a posição de uma peça preta e contém dois inteiros X_i e Y_i, indicando a linha e a coluna em que a peça foi colocada.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o maior número de peças brancas que podem ser colocadas no tabuleiro.\n\n## Restrições\n1 ≤ L ≤ 6\n1 ≤ C ≤ 6\n1 ≤ P ≤ 10\n1 ≤ X_i ≤ L, para 1 ≤ i ≤ P\n1 ≤ Y_i ≤ C, para 1 ≤ i ≤ P\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 20 pontos, L = 1.\n- Para um conjunto adicional de casos de testes valendo 80 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n3\n1 1\n1 3\n3 2\n```\nSaída:\n```\n3\n```\n\nExemplo 2:\nEntrada:\n```\n1 6\n2\n1 2\n1 5\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 5\n3\n2 2\n2 3\n3 5\n```\nSaída:\n```\n5\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 841,
+            "output_tokens": 3574,
+            "total_tokens": 4415
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.008578,
+            "total_cost": 0.00858
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int L, C, P;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n    scanf(\"%d\", &P);\n\n    int black[6][6] = {0};\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    int cand[6] = {0};\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            int ok = 0;\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    ok = 1;\n                    break;\n                }\n            }\n\n            if (ok) cand[r] |= (1 << c);\n        }\n    }\n\n    int maxMask = 1 << C;\n    int dp[64], ndp[64];\n\n    for (int i = 0; i < maxMask; i++) dp[i] = -1000000;\n    dp[0] = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int i = 0; i < maxMask; i++) ndp[i] = -1000000;\n\n        for (int prev = 0; prev < maxMask; prev++) {\n            if (dp[prev] < 0) continue;\n\n            for (int mask = 0; mask < maxMask; mask++) {\n                if ((mask & ~cand[r]) != 0) continue;\n                if ((mask & (mask << 1)) != 0) continue;\n                if ((mask & prev) != 0) continue;\n\n                int val = dp[prev] + __builtin_popcount(mask);\n                if (val > ndp[mask]) ndp[mask] = val;\n            }\n        }\n\n        for (int i = 0; i < maxMask; i++) dp[i] = ndp[i];\n    }\n\n    int ans = 0;\n    for (int i = 0; i < maxMask; i++) {\n        if (dp[i] > ans) ans = dp[i];\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int L, C, P;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n    scanf(\"%d\", &P);\n\n    int black[6][6] = {0};\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    int cand[6] = {0};\n    int dr[4] = {-1, 1, 0, 0};\n    int dc[4] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            int ok = 0;\n            for (int d = 0; d < 4; d++) {\n                int nr = r + dr[d];\n                int nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    ok = 1;\n                    break;\n                }\n            }\n\n            if (ok) cand[r] |= (1 << c);\n        }\n    }\n\n    int maxMask = 1 << C;\n    int dp[64], ndp[64];\n\n    for (int i = 0; i < maxMask; i++) dp[i] = -1000000;\n    dp[0] = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int i = 0; i < maxMask; i++) ndp[i] = -1000000;\n\n        for (int prev = 0; prev < maxMask; prev++) {\n            if (dp[prev] < 0) continue;\n\n            for (int mask = 0; mask < maxMask; mask++) {\n                if ((mask & ~cand[r]) != 0) continue;\n                if ((mask & (mask << 1)) != 0) continue;\n                if ((mask & prev) != 0) continue;\n\n                int val = dp[prev] + __builtin_popcount(mask);\n                if (val > ndp[mask]) ndp[mask] = val;\n            }\n        }\n\n        for (int i = 0; i < maxMask; i++) dp[i] = ndp[i];\n    }\n\n    int ans = 0;\n    for (int i = 0; i < maxMask; i++) {\n        if (dp[i] > ans) ans = dp[i];\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12462039999809349,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T21:10:15.706230+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Jogo do Preto e Branco\n\n## Enunciado\nVocê gosta de quebra-cabeças? O jogo do Preto e Branco é um quebra-cabeças que usa um tabuleiro retangular com L linhas e C colunas, formando L×C casas. No tabuleiro são posicionadas algumas peças pretas, cada peça em uma casa diferente.\n\nO objetivo do jogo é colocar o maior número possível de peças brancas no tabuleiro, obedecendo às seguintes restrições:\n\n• cada casa do tabuleiro pode conter no máximo uma peça;\n• uma peça branca deve ter ao menos uma peça preta como vizinha, à direita, à esquerda, acima ou abaixo;\n• uma peça branca não pode ter outra peça branca como vizinha, à direita, à esquerda, acima ou abaixo;\n\nA figura abaixo mostra dois exemplos de jogos, com as respectivas soluções, um com um tabuleiro 3 × 3 e outro com um tabuleiro 3 × 5.\n[1.png]\nSua tarefa é escrever um programa que, dadas as descrições do tabuleiro e das peças pretas posicionadas, determine o maior número de peças brancas que podem ser colocadas.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C, o número de linhas e o número de colunas do tabuleiro. As linhas são numeradas de 1 a L e as colunas são numeradas de 1 a C. A segunda linha contém um inteiro P, o número de peças pretas colocadas no tabuleiro. Cada uma das P linhas seguintes descreve a posição de uma peça preta e contém dois inteiros X_i e Y_i, indicando a linha e a coluna em que a peça foi colocada.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o maior número de peças brancas que podem ser colocadas no tabuleiro.\n\n## Restrições\n1 ≤ L ≤ 6\n1 ≤ C ≤ 6\n1 ≤ P ≤ 10\n1 ≤ X_i ≤ L, para 1 ≤ i ≤ P\n1 ≤ Y_i ≤ C, para 1 ≤ i ≤ P\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 20 pontos, L = 1.\n- Para um conjunto adicional de casos de testes valendo 80 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n3\n1 1\n1 3\n3 2\n```\nSaída:\n```\n3\n```\n\nExemplo 2:\nEntrada:\n```\n1 6\n2\n1 2\n1 5\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 5\n3\n2 2\n2 3\n3 5\n```\nSaída:\n```\n5\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 872,
+            "output_tokens": 3356,
+            "total_tokens": 4228
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.008054,
+            "total_cost": 0.008057
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int P;\n    scanf(\"%d\", &P);\n\n    int black[6][6] = {0};\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    int eligible[6] = {0};\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            int adj = 0;\n            if (r > 0 && black[r - 1][c]) adj = 1;\n            if (r + 1 < L && black[r + 1][c]) adj = 1;\n            if (c > 0 && black[r][c - 1]) adj = 1;\n            if (c + 1 < C && black[r][c + 1]) adj = 1;\n\n            if (adj) eligible[r] |= (1 << c);\n        }\n    }\n\n    int totalMasks = 1 << C;\n    int pop[64];\n    for (int m = 0; m < totalMasks; m++) {\n        int cnt = 0;\n        for (int i = 0; i < C; i++) {\n            if (m & (1 << i)) cnt++;\n        }\n        pop[m] = cnt;\n    }\n\n    int dp[64], ndp[64];\n    for (int m = 0; m < totalMasks; m++) dp[m] = -1;\n    dp[0] = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int m = 0; m < totalMasks; m++) ndp[m] = -1;\n\n        for (int prev = 0; prev < totalMasks; prev++) {\n            if (dp[prev] < 0) continue;\n\n            for (int mask = 0; mask < totalMasks; mask++) {\n                if ((mask & ~eligible[r]) != 0) continue;\n                if ((mask & (mask << 1)) != 0) continue;\n                if ((mask & prev) != 0) continue;\n\n                int val = dp[prev] + pop[mask];\n                if (val > ndp[mask]) ndp[mask] = val;\n            }\n        }\n\n        for (int m = 0; m < totalMasks; m++) dp[m] = ndp[m];\n    }\n\n    int ans = 0;\n    for (int m = 0; m < totalMasks; m++) {\n        if (dp[m] > ans) ans = dp[m];\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\nint main() {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int P;\n    scanf(\"%d\", &P);\n\n    int black[6][6] = {0};\n    for (int i = 0; i < P; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        black[x - 1][y - 1] = 1;\n    }\n\n    int eligible[6] = {0};\n    for (int r = 0; r < L; r++) {\n        for (int c = 0; c < C; c++) {\n            if (black[r][c]) continue;\n\n            int adj = 0;\n            if (r > 0 && black[r - 1][c]) adj = 1;\n            if (r + 1 < L && black[r + 1][c]) adj = 1;\n            if (c > 0 && black[r][c - 1]) adj = 1;\n            if (c + 1 < C && black[r][c + 1]) adj = 1;\n\n            if (adj) eligible[r] |= (1 << c);\n        }\n    }\n\n    int totalMasks = 1 << C;\n    int pop[64];\n    for (int m = 0; m < totalMasks; m++) {\n        int cnt = 0;\n        for (int i = 0; i < C; i++) {\n            if (m & (1 << i)) cnt++;\n        }\n        pop[m] = cnt;\n    }\n\n    int dp[64], ndp[64];\n    for (int m = 0; m < totalMasks; m++) dp[m] = -1;\n    dp[0] = 0;\n\n    for (int r = 0; r < L; r++) {\n        for (int m = 0; m < totalMasks; m++) ndp[m] = -1;\n\n        for (int prev = 0; prev < totalMasks; prev++) {\n            if (dp[prev] < 0) continue;\n\n            for (int mask = 0; mask < totalMasks; mask++) {\n                if ((mask & ~eligible[r]) != 0) continue;\n                if ((mask & (mask << 1)) != 0) continue;\n                if ((mask & prev) != 0) continue;\n\n                int val = dp[prev] + pop[mask];\n                if (val > ndp[mask]) ndp[mask] = val;\n            }\n        }\n\n        for (int m = 0; m < totalMasks; m++) dp[m] = ndp[m];\n    }\n\n    int ans = 0;\n    for (int m = 0; m < totalMasks; m++) {\n        if (dp[m] > ans) ans = dp[m];\n    }\n\n    printf(\"%d\\n\", ans);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1513443999865558,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

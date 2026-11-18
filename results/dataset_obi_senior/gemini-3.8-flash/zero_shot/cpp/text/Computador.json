@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T03:25:53.015345+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Computador\n\n## Enunciado\nUma grande empresa está construindo uma nova arquitetura de computadores que permita a execução eficiente de duas instruções especiais de soma. O computador possui N posições de memória, endereçadas de 1 a N, e cada posição pode guardar um inteiro maior ou igual a zero. Inicialmente, todas as posições contêm o valor zero. As instruções especiais de soma são:\n\n• FRENTE i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i + 1, V − 2 em i + 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for menor ou igual a N;\n\n• TRÁS i V : Dado o endereço i, 1 ≤ i ≤ N, e um valor positivo V, o computador deve somar V na posição i, V − 1 em i − 1, V − 2 em i − 2, etc, enquanto o valor a ser somando for maior do que zero e a posição for maior ou igual a 1.\n\nPor exemplo, para N = 16, uma possível sequência de instruções é dada abaixo:\n[1.png]\nAlém disso, o computador possui a instrução IMPRIME i, que deve imprimir na saída o valor atual armazenado na posição i da memória.\n\nDados N e uma sequência de M instruções, seu programa deve imprimir, para cada instrução do tipo IMPRIME i, uma linha contendo o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e M, representando o número de posições de memória e o número de instruções, respectivamente. As M linhas seguintes contêm, cada uma, a descrição de uma instrução em uma de três formas possíveis: 1 I V, representando FRENTE I V; 2 I V, representando TRAS I V; e 3 I, representando IMPRIME I.\n\n## Formato de Saída\nPara cada instrução do tipo IMPRIME i, seu programa deve imprimir uma linha contendo um inteiro representando o valor armazenado na posição de memória i no instante da execução da instrução.\n\n## Restrições\n1 ≤ N ≤ 200000\n1 ≤ M ≤ 200000\n1 ≤ I ≤ N\n1 ≤ V ≤ 200000\nAo menos uma instrução será do tipo 3\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n16 7\n1 4 8\n2 16 3\n3 14\n2 2 12\n1 8 7\n3 10\n3 14\n```\nSaída:\n```\n1\n7\n2\n```\n\nExemplo 2:\nEntrada:\n```\n200000 2\n1 2345 193290\n3 112230\n```\nSaída:\n```\n83405\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 808,
+            "output_tokens": 653,
+            "total_tokens": 2671
+        },
+        "cost_usd": {
+            "input_cost": 0.000606,
+            "output_cost": 0.002449,
+            "total_cost": 0.003055
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> tree;\n\n    Fenwick(int n) : n(n), tree(n + 2, 0) {}\n\n    void add(int i, long long delta) {\n        for (; i <= n; i += i & -i)\n            tree[i] += delta;\n    }\n\n    void range_add(int l, int r, long long delta) {\n        if (l > r) return;\n        add(l, delta);\n        add(r + 1, -delta);\n    }\n\n    long long query(int i) {\n        long long sum = 0;\n        for (; i > 0; i -= i & -i)\n            sum += tree[i];\n        return sum;\n    }\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    Fenwick bit_m(n);\n    Fenwick bit_c(n);\n\n    for (int k = 0; k < m; ++k) {\n        int op;\n        cin >> op;\n        if (op == 1) {\n            long long i, v;\n            cin >> i >> v;\n            long long l = i;\n            long long r = min((long long)n, i + v - 1);\n            if (l <= r) {\n                // valor adicionado em x: (v + i) - x = -1 * x + (v + i)\n                bit_m.range_add(l, r, -1);\n                bit_c.range_add(l, r, v + i);\n            }\n        } else if (op == 2) {\n            long long i, v;\n            cin >> i >> v;\n            long long l = max(1LL, i - v + 1);\n            long long r = i;\n            if (l <= r) {\n                // valor adicionado em x: (v - i) + x = 1 * x + (v - i)\n                bit_m.range_add(l, r, 1);\n                bit_c.range_add(l, r, v - i);\n            }\n        } else if (op == 3) {\n            int i;\n            cin >> i;\n            long long slope = bit_m.query(i);\n            long long constant = bit_c.query(i);\n            long long ans = slope * i + constant;\n            cout << ans << \"\\n\";\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Fenwick {\n    int n;\n    vector<long long> tree;\n\n    Fenwick(int n) : n(n), tree(n + 2, 0) {}\n\n    void add(int i, long long delta) {\n        for (; i <= n; i += i & -i)\n            tree[i] += delta;\n    }\n\n    void range_add(int l, int r, long long delta) {\n        if (l > r) return;\n        add(l, delta);\n        add(r + 1, -delta);\n    }\n\n    long long query(int i) {\n        long long sum = 0;\n        for (; i > 0; i -= i & -i)\n            sum += tree[i];\n        return sum;\n    }\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    Fenwick bit_m(n);\n    Fenwick bit_c(n);\n\n    for (int k = 0; k < m; ++k) {\n        int op;\n        cin >> op;\n        if (op == 1) {\n            long long i, v;\n            cin >> i >> v;\n            long long l = i;\n            long long r = min((long long)n, i + v - 1);\n            if (l <= r) {\n                // valor adicionado em x: (v + i) - x = -1 * x + (v + i)\n                bit_m.range_add(l, r, -1);\n                bit_c.range_add(l, r, v + i);\n            }\n        } else if (op == 2) {\n            long long i, v;\n            cin >> i >> v;\n            long long l = max(1LL, i - v + 1);\n            long long r = i;\n            if (l <= r) {\n                // valor adicionado em x: (v - i) + x = 1 * x + (v - i)\n                bit_m.range_add(l, r, 1);\n                bit_c.range_add(l, r, v - i);\n            }\n        } else if (op == 3) {\n            int i;\n            cin >> i;\n            long long slope = bit_m.query(i);\n            long long constant = bit_c.query(i);\n            long long ans = slope * i + constant;\n            cout << ans << \"\\n\";\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.178439299999809,
+            "counts": {
+                "AC": 42,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 42
+        }
+    }
+]

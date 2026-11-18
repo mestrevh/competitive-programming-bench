@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:01:49.862959+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Cortando o Papel\n\n## Enunciado\nUma folha de papel é composta de uma sequência de retângulos com diferentes alturas mas com larguras fixas, tal que as bases dos retângulos estão assentadas em uma linha horizontal. A figura ilustra uma folha exemplo com 33 retângulos. Nós gostaríamos de fazer um único corte horizontal, com a ajuda de um estilete e uma régua, que maximize o número resultante de pedaços separados pelo corte. A figura mostra quatro diferentes cortes que resultariam, respectivamente, em 4, 11, 10 e 3 pedaços.\n[1.png]\n\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de retângulos na folha de papel.\nA segunda linha contém N inteiros Ai, 1 ≤ i ≤ N, representando a sequência de alturas dos retângulos.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo um inteiro representando o número máximo de pedaços possível, com um único corte horizontal.\n\n## Restrições\n1 ≤ N ≤ 10^5\n1 ≤ Ai ≤ 10^9, para 1 ≤ i ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 1000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n10\n20 5 10 5 15 15 15 5 6 22\n```\nSaída:\n```\n5\n```\n\nExemplo 2:\nEntrada:\n```\n5\n10 20 30 40 50\n```\nSaída:\n```\n2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 3.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 518,
+            "output_tokens": 444,
+            "total_tokens": 2607
+        },
+        "cost_usd": {
+            "input_cost": 0.000389,
+            "output_cost": 0.001665,
+            "total_cost": 0.002054
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    raw_a = [int(x) for x in data[1 : n + 1]]\n\n    # Comprime elementos consecutivos iguais\n    a = [0]\n    for x in raw_a:\n        if x != a[-1]:\n            a.append(x)\n    a.append(0)\n\n    # Mapeia cada altura para seus índices na lista comprimida\n    from collections import defaultdict\n\n    height_indices = defaultdict(list)\n    for i in range(1, len(a) - 1):\n        height_indices[a[i]].append(i)\n\n    # Processa alturas em ordem crescente\n    sorted_heights = sorted(height_indices.keys())\n    # O corte deve ser menor que a altura máxima\n    max_h = sorted_heights[-1]\n\n    # Inicialmente, para corte logo acima de 0, há 1 componente acima da linha de corte\n    current_components = 1\n    max_pieces = 1 + current_components\n\n    for h in sorted_heights:\n        if h == max_h:\n            break\n\n        delta = 0\n        for i in height_indices[h]:\n            left = a[i - 1]\n            right = a[i + 1]\n\n            if left > h and right > h:\n                # Vale local: a componente se divide em duas\n                delta += 1\n            elif left < h and right < h:\n                # Pico local: uma componente desaparece\n                delta -= 1\n\n        current_components += delta\n        pieces = 1 + current_components\n        if pieces > max_pieces:\n            max_pieces = pieces\n\n    print(max_pieces)\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\n\ndef main():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    raw_a = [int(x) for x in data[1 : n + 1]]\n\n    # Comprime elementos consecutivos iguais\n    a = [0]\n    for x in raw_a:\n        if x != a[-1]:\n            a.append(x)\n    a.append(0)\n\n    # Mapeia cada altura para seus índices na lista comprimida\n    from collections import defaultdict\n\n    height_indices = defaultdict(list)\n    for i in range(1, len(a) - 1):\n        height_indices[a[i]].append(i)\n\n    # Processa alturas em ordem crescente\n    sorted_heights = sorted(height_indices.keys())\n    # O corte deve ser menor que a altura máxima\n    max_h = sorted_heights[-1]\n\n    # Inicialmente, para corte logo acima de 0, há 1 componente acima da linha de corte\n    current_components = 1\n    max_pieces = 1 + current_components\n\n    for h in sorted_heights:\n        if h == max_h:\n            break\n\n        delta = 0\n        for i in height_indices[h]:\n            left = a[i - 1]\n            right = a[i + 1]\n\n            if left > h and right > h:\n                # Vale local: a componente se divide em duas\n                delta += 1\n            elif left < h and right < h:\n                # Pico local: uma componente desaparece\n                delta -= 1\n\n        current_components += delta\n        pieces = 1 + current_components\n        if pieces > max_pieces:\n            max_pieces = pieces\n\n    print(max_pieces)\n\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.25124890000006417,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

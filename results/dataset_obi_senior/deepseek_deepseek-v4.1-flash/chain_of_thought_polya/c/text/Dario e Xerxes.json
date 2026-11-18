@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T02:53:11.237575+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Dario e Xerxes\n\n## Enunciado\nA brincadeira da Pedra, Papel e Tesoura, muita gente conhece. Mas dá para fazer uma mais legal com cinco opções e não só três! Dois jogadores, dario e xerxes, jogam uma partida com N rodadas. Em cada rodada os jogadores escolhem uma “mão” entre cinco opções, que vamos representar aqui com os números 0, 1, 2, 3 e 4. A figura define exatamente quem ganha a rodada. Por exemplo, se dario escolheu 0 e xerxes escolheu 3, então xerxes ganha a rodada, pois existe uma seta na figura indo de 3 para 0.\n[1.png]\nDepois de N rodadas, o vencedor da partida é o jogador que ganhou mais rodadas. O número N será sempre ímpar, para não haver empate na partida. Vamos também considerar que os jogadores nunca escolhem a mesma mão numa rodada, para não haver empate na rodada. Você deve escrever um programa que determine quem venceu a partida, se foi dario ou xerxes.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, o número de rodadas na partida. Cada uma das N linhas seguintes contém dois inteiros D e X, representando a mão que os jogadores dario e xerxes, respectivamente, jogaram em uma rodada.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo o nome do jogador que venceu a partida: dario ou xerxes. Todas as letras devem ser minúsculas, sem nenhum acento!\n\n## Restrições\n1 ≤ N ≤ 999, N é ímpar\n0 ≤ D, X ≤ 4 e D ≠ X\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3\n1 3\n4 2\n0 2\n```\nSaída:\n```\ndario\n```\n\nExemplo 2:\nEntrada:\n```\n1\n3 1\n```\nSaída:\n```\nxerxes\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1224,
+            "output_tokens": 4190,
+            "total_tokens": 5414
+        },
+        "cost_usd": {
+            "input_cost": 4e-06,
+            "output_cost": 0.010056,
+            "total_cost": 0.01006
+        },
+        "raw_response": "## 1. COMPREENSÃO DO PROBLEMA\n\n- **Objetivo central:** determinar quem venceu a partida, contando quantas rodadas `dario` e `xerxes` ganharam.\n- **Entrada:**\n  - Primeira linha: `N`, número ímpar de rodadas, com `1 ≤ N ≤ 999`.\n  - Próximas `N` linhas: dois inteiros `D` e `X`, com `0 ≤ D, X ≤ 4` e `D ≠ X`.\n- **Saída:** imprimir exatamente `dario` ou `xerxes`, em minúsculas.\n- **Restrições:** `N` é pequeno, então uma simulação direta é suficiente.\n- **Casos de borda:**\n  - `N = 1`: basta verificar quem venceu a única rodada.\n  - `D` e `X` sempre diferentes, então não há empate na rodada.\n  - `N` ímpar garante que não há empate na partida.\n- **Relação de vitória:** pela figura do problema, a mão `i` vence as mãos `(i + 1) % 5` e `(i + 2) % 5`.\n\n## 2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n\n- **Técnica:** simulação simples com contadores.\n- **Estratégia:**\n  1. Ler `N`.\n  2. Para cada rodada, ler `D` e `X`.\n  3. Se `X == (D + 1) % 5` ou `X == (D + 2) % 5`, então `dario` venceu a rodada.\n  4. Caso contrário, `xerxes` venceu a rodada.\n  5. Ao final, comparar os contadores e imprimir o vencedor.\n- **Complexidade:**\n  - Tempo: `O(N)`.\n  - Espaço: `O(1)`.\n- **Estruturas de dados:** apenas variáveis inteiras simples.\n\n## 3. CODIFICAÇÃO EM C\n\n```c\n#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int dario = 0, xerxes = 0;\n\n    for (int i = 0; i < n; i++) {\n        int d, x;\n        scanf(\"%d %d\", &d, &x);\n\n        if (x == (d + 1) % 5 || x == (d + 2) % 5) {\n            dario++;\n        } else {\n            xerxes++;\n        }\n    }\n\n    if (dario > xerxes) {\n        printf(\"dario\\n\");\n    } else {\n        printf(\"xerxes\\n\");\n    }\n\n    return 0;\n}\n```\n\n## 4. RETROSPECTO E VERIFICAÇÃO\n\n- **Exemplo 1:**\n  - `1 3`: `1` vence `3`, pois `(1 + 2) % 5 = 3` → dario.\n  - `4 2`: `4` não vence `2`, então xerxes vence.\n  - `0 2`: `0` vence `2`, pois `(0 + 2) % 5 = 2` → dario.\n  - Resultado: `dario`. Correto.\n\n- **Exemplo 2:**\n  - `3 1`: `3` não vence `1`, então xerxes vence.\n  - Resultado: `xerxes`. Correto.\n\n- **Casos de borda:** `N = 1` é tratado naturalmente pelo loop. Não há overflow, pois os valores são pequenos. A complexidade `O(N)` é mais que suficiente para `N ≤ 999`.",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int dario = 0, xerxes = 0;\n\n    for (int i = 0; i < n; i++) {\n        int d, x;\n        scanf(\"%d %d\", &d, &x);\n\n        if (x == (d + 1) % 5 || x == (d + 2) % 5) {\n            dario++;\n        } else {\n            xerxes++;\n        }\n    }\n\n    if (dario > xerxes) {\n        printf(\"dario\\n\");\n    } else {\n        printf(\"xerxes\\n\");\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.12604499999724794,
+            "counts": {
+                "AC": 22,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 22
+        }
+    }
+]

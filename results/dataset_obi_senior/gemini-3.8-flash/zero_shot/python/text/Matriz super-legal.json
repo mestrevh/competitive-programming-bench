@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:24:40.008786+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Matriz super-legal\n\n## Enunciado\nDenotando por A_{i,j} o elemento na i-ésima linha e j-ésima coluna da matriz A, dizemos que uma matriz é \"legal\" se a condição\n\nA_{1,1} + A_{lin,col} ≤ A_{1,col} + A_{lin,1}\n\né verdadeira para todo lin > 1 e col > 1.\n\nAdicionalmente, dizemos que a matriz é \"super-legal\" se cada uma de suas submatrizes com pelo menos duas linhas e duas colunas é legal. Lembre que uma submatriz S de uma matriz M_{L×C} é uma matriz que inclui todos os elementos M_{i,j} tais que l1 ≤ i ≤ l2 e c1 ≤ j ≤ c2, para 1 ≤ l1 ≤ l2 ≤ L e 1 ≤ c1 ≤ c2 ≤ C.\n\nA sua tarefa é, dada uma matriz A, determinar a maior quantidade de elementos de uma submatriz super-legal da matriz A.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C indicando respectivamente o número de linhas e o número de colunas da matriz. Cada uma das L linhas seguintes contém C inteiros Xi representando os elementos da matriz.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, com apenas um número inteiro, a maior quantidade de elementos de uma submatriz super-legal da matriz da entrada, ou zero no caso de não existir uma submatriz super-legal.\n\n## Restrições\n2 ≤ L, C ≤ 1000\n-10^6 ≤ Xi ≤ 10^6\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n1 4 10\n5 2 6\n11 1 3\n```\nSaída:\n```\n9\n```\n\nExemplo 2:\nEntrada:\n```\n3 3\n1 3 1\n2 1 2\n1 1 1\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n5 6\n1 1 4 0 3 3\n4 4 9 7 11 13\n-3 -1 4 2 8 11\n1 5 9 5 9 10\n4 8 10 5 8 8\n```\nSaída:\n```\n15\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 685,
+            "output_tokens": 578,
+            "total_tokens": 2702
+        },
+        "cost_usd": {
+            "input_cost": 0.000514,
+            "output_cost": 0.002167,
+            "total_cost": 0.002681
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n\n    # Se a matriz tiver menos de 2 linhas ou 2 colunas, não pode haver submatriz >= 2x2\n    if L < 2 or C < 2:\n        print(0)\n        return\n\n    # Lendo a matriz A\n    idx = 2\n    A = []\n    for _ in range(L):\n        A.append([int(x) for x in input_data[idx : idx + C]])\n        idx += C\n\n    # Construindo a matriz B de dimensões (L-1) x (C-1)\n    # B[i][j] = 1 se A[i][j] + A[i+1][j+1] <= A[i][j+1] + A[i+1][j], senão 0\n    R = L - 1\n    K = C - 1\n\n    heights = [0] * K\n    max_area = 0\n\n    for i in range(R):\n        row_A_i = A[i]\n        row_A_ip1 = A[i + 1]\n\n        for j in range(K):\n            if row_A_i[j] + row_A_ip1[j + 1] <= row_A_i[j + 1] + row_A_ip1[j]:\n                heights[j] += 1\n            else:\n                heights[j] = 0\n\n        # Monotonic stack para encontrar o maior retângulo maximal sob o histograma\n        # Queremos maximizar (H + 1) * (W + 1)\n        stack = []\n        for j in range(K + 1):\n            cur_h = heights[j] if j < K else 0\n            while stack and heights[stack[-1]] >= cur_h:\n                h = heights[stack.pop()]\n                if h == 0:\n                    continue\n                w = j if not stack else j - stack[-1] - 1\n                area = (h + 1) * (w + 1)\n                if area > max_area:\n                    max_area = area\n            stack.append(j)\n\n    print(max_area)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n\n    L = int(input_data[0])\n    C = int(input_data[1])\n\n    # Se a matriz tiver menos de 2 linhas ou 2 colunas, não pode haver submatriz >= 2x2\n    if L < 2 or C < 2:\n        print(0)\n        return\n\n    # Lendo a matriz A\n    idx = 2\n    A = []\n    for _ in range(L):\n        A.append([int(x) for x in input_data[idx : idx + C]])\n        idx += C\n\n    # Construindo a matriz B de dimensões (L-1) x (C-1)\n    # B[i][j] = 1 se A[i][j] + A[i+1][j+1] <= A[i][j+1] + A[i+1][j], senão 0\n    R = L - 1\n    K = C - 1\n\n    heights = [0] * K\n    max_area = 0\n\n    for i in range(R):\n        row_A_i = A[i]\n        row_A_ip1 = A[i + 1]\n\n        for j in range(K):\n            if row_A_i[j] + row_A_ip1[j + 1] <= row_A_i[j + 1] + row_A_ip1[j]:\n                heights[j] += 1\n            else:\n                heights[j] = 0\n\n        # Monotonic stack para encontrar o maior retângulo maximal sob o histograma\n        # Queremos maximizar (H + 1) * (W + 1)\n        stack = []\n        for j in range(K + 1):\n            cur_h = heights[j] if j < K else 0\n            while stack and heights[stack[-1]] >= cur_h:\n                h = heights[stack.pop()]\n                if h == 0:\n                    continue\n                w = j if not stack else j - stack[-1] - 1\n                area = (h + 1) * (w + 1)\n                if area > max_area:\n                    max_area = area\n            stack.append(j)\n\n    print(max_area)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.4275720999994519,
+            "counts": {
+                "AC": 22,
+                "WA": 3,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]

@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:52:19.012867+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dígitos\n\n## Enunciado\nJoãozinho te propôs o seguinte desafio: ele escolheu dois inteiros A e B, com 1 ≤ A ≤ B ≤ 10^1000, e escreveu na lousa todos os inteiros entre A e B, em sequência, porém colocando um espaço após cada dígito, de forma a não ser possível ver quando um número termina ou começa. Por exemplo, se Joãozinho escolher A = 98 e B = 102, ele escreveu a sequência \"9 8 9 9 1 0 0 1 0 1 1 0 2\".\n\nSeu desafio é: dada a lista de dígitos escritos na lousa, encontrar os valores de A e B. Caso exista mais de uma possibilidade para os valores que gerariam a lista, você deve encontrar uma em que o valor de A é o menor possível.\n\nÉ garantido que a lista de dígitos da lousa tem no máximo tamanho 1000.\n\n## Formato de Entrada\nA primeira linha da entrada contém um único inteiro N, indicando o número de dígitos. A segunda linha contém N inteiros di, indicando os dígitos escritos.\n\n## Formato de Saída\nImprima o menor valor possível de A.\n\n## Restrições\n1 ≤ N ≤ 1000\n0 ≤ di ≤ 9\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 21 pontos, 1000 ≤ A ≤ B ≤ 9999.\n- Para outro conjunto de casos de testes valendo 23 pontos, B = A + 1.\n- Para outro conjunto de casos de testes valendo 40 pontos, A, B < 10^6.\n- Para outro conjunto de casos de testes valendo 16 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n6\n1 2 3 1 2 4\n```\nSaída:\n```\n123\n```\n\nExemplo 2:\nEntrada:\n```\n6\n8 9 1 0 1 1\n```\nSaída:\n```\n8\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 610,
+            "output_tokens": 509,
+            "total_tokens": 3089
+        },
+        "cost_usd": {
+            "input_cost": 0.000458,
+            "output_cost": 0.001909,
+            "total_cost": 0.002366
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAXN 1005\n\nint N;\nchar target[MAXN];\n\nvoid add_one(char *num, int *len) {\n    int carry = 1;\n    for (int i = *len - 1; i >= 0 && carry; i--) {\n        int sum = (num[i] - '0') + carry;\n        num[i] = (sum % 10) + '0';\n        carry = sum / 10;\n    }\n    if (carry) {\n        memmove(num + 1, num, *len + 1);\n        num[0] = '1';\n        (*len)++;\n    }\n}\n\nbool check(int L) {\n    char current[MAXN];\n    memcpy(current, target, L);\n    current[L] = '\\0';\n    int cur_len = L;\n\n    int idx = L;\n    while (idx < N) {\n        add_one(current, &cur_len);\n        if (idx + cur_len > N) {\n            return false;\n        }\n        for (int i = 0; i < cur_len; i++) {\n            if (current[i] != target[idx + i]) {\n                return false;\n            }\n        }\n        idx += cur_len;\n    }\n\n    return idx == N;\n}\n\nint main() {\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    for (int i = 0; i < N; i++) {\n        int d;\n        scanf(\"%d\", &d);\n        target[i] = d + '0';\n    }\n    target[N] = '\\0';\n\n    for (int L = 1; L <= N; L++) {\n        if (check(L)) {\n            for (int i = 0; i < L; i++) {\n                putchar(target[i]);\n            }\n            putchar('\\n');\n            break;\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAXN 1005\n\nint N;\nchar target[MAXN];\n\nvoid add_one(char *num, int *len) {\n    int carry = 1;\n    for (int i = *len - 1; i >= 0 && carry; i--) {\n        int sum = (num[i] - '0') + carry;\n        num[i] = (sum % 10) + '0';\n        carry = sum / 10;\n    }\n    if (carry) {\n        memmove(num + 1, num, *len + 1);\n        num[0] = '1';\n        (*len)++;\n    }\n}\n\nbool check(int L) {\n    char current[MAXN];\n    memcpy(current, target, L);\n    current[L] = '\\0';\n    int cur_len = L;\n\n    int idx = L;\n    while (idx < N) {\n        add_one(current, &cur_len);\n        if (idx + cur_len > N) {\n            return false;\n        }\n        for (int i = 0; i < cur_len; i++) {\n            if (current[i] != target[idx + i]) {\n                return false;\n            }\n        }\n        idx += cur_len;\n    }\n\n    return idx == N;\n}\n\nint main() {\n    if (scanf(\"%d\", &N) != 1) return 0;\n\n    for (int i = 0; i < N; i++) {\n        int d;\n        scanf(\"%d\", &d);\n        target[i] = d + '0';\n    }\n    target[N] = '\\0';\n\n    for (int L = 1; L <= N; L++) {\n        if (check(L)) {\n            for (int i = 0; i < L; i++) {\n                putchar(target[i]);\n            }\n            putchar('\\n');\n            break;\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11088410000047588,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:36:46.680825+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dígitos\n\n## Enunciado\nJoãozinho te propôs o seguinte desafio: ele escolheu dois inteiros A e B, com 1 ≤ A ≤ B ≤ 10^1000, e escreveu na lousa todos os inteiros entre A e B, em sequência, porém colocando um espaço após cada dígito, de forma a não ser possível ver quando um número termina ou começa. Por exemplo, se Joãozinho escolher A = 98 e B = 102, ele escreveu a sequência \"9 8 9 9 1 0 0 1 0 1 1 0 2\".\n\nSeu desafio é: dada a lista de dígitos escritos na lousa, encontrar os valores de A e B. Caso exista mais de uma possibilidade para os valores que gerariam a lista, você deve encontrar uma em que o valor de A é o menor possível.\n\nÉ garantido que a lista de dígitos da lousa tem no máximo tamanho 1000.\n\n## Formato de Entrada\nA primeira linha da entrada contém um único inteiro N, indicando o número de dígitos. A segunda linha contém N inteiros di, indicando os dígitos escritos.\n\n## Formato de Saída\nImprima o menor valor possível de A.\n\n## Restrições\n1 ≤ N ≤ 1000\n0 ≤ di ≤ 9\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 21 pontos, 1000 ≤ A ≤ B ≤ 9999.\n- Para outro conjunto de casos de testes valendo 23 pontos, B = A + 1.\n- Para outro conjunto de casos de testes valendo 40 pontos, A, B < 10^6.\n- Para outro conjunto de casos de testes valendo 16 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n6\n1 2 3 1 2 4\n```\nSaída:\n```\n123\n```\n\nExemplo 2:\nEntrada:\n```\n6\n8 9 1 0 1 1\n```\nSaída:\n```\n8\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 644,
+            "output_tokens": 552,
+            "total_tokens": 2834
+        },
+        "cost_usd": {
+            "input_cost": 0.000483,
+            "output_cost": 0.00207,
+            "total_cost": 0.002553
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAXN 1005\n\nchar digits[MAXN];\nchar cur[MAXN];\n\nvoid increment(char *s, int *len) {\n    int i = *len - 1;\n    while (i >= 0 && s[i] == '9') {\n        s[i] = '0';\n        i--;\n    }\n    if (i >= 0) {\n        s[i]++;\n    } else {\n        for (int j = *len; j > 0; j--) {\n            s[j] = s[j - 1];\n        }\n        s[0] = '1';\n        (*len)++;\n        s[*len] = '\\0';\n    }\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        int d;\n        scanf(\"%d\", &d);\n        digits[i] = (char)('0' + d);\n    }\n    digits[n] = '\\0';\n\n    for (int L = 1; L <= n; L++) {\n        int cur_len = L;\n        for (int i = 0; i < L; i++) {\n            cur[i] = digits[i];\n        }\n        cur[cur_len] = '\\0';\n\n        int idx = L;\n        bool ok = true;\n\n        while (idx < n) {\n            increment(cur, &cur_len);\n            if (idx + cur_len > n) {\n                ok = false;\n                break;\n            }\n            for (int j = 0; j < cur_len; j++) {\n                if (digits[idx + j] != cur[j]) {\n                    ok = false;\n                    break;\n                }\n            }\n            if (!ok) break;\n            idx += cur_len;\n        }\n\n        if (ok && idx == n) {\n            for (int i = 0; i < L; i++) {\n                putchar(digits[i]);\n            }\n            putchar('\\n');\n            return 0;\n        }\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAXN 1005\n\nchar digits[MAXN];\nchar cur[MAXN];\n\nvoid increment(char *s, int *len) {\n    int i = *len - 1;\n    while (i >= 0 && s[i] == '9') {\n        s[i] = '0';\n        i--;\n    }\n    if (i >= 0) {\n        s[i]++;\n    } else {\n        for (int j = *len; j > 0; j--) {\n            s[j] = s[j - 1];\n        }\n        s[0] = '1';\n        (*len)++;\n        s[*len] = '\\0';\n    }\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    for (int i = 0; i < n; i++) {\n        int d;\n        scanf(\"%d\", &d);\n        digits[i] = (char)('0' + d);\n    }\n    digits[n] = '\\0';\n\n    for (int L = 1; L <= n; L++) {\n        int cur_len = L;\n        for (int i = 0; i < L; i++) {\n            cur[i] = digits[i];\n        }\n        cur[cur_len] = '\\0';\n\n        int idx = L;\n        bool ok = true;\n\n        while (idx < n) {\n            increment(cur, &cur_len);\n            if (idx + cur_len > n) {\n                ok = false;\n                break;\n            }\n            for (int j = 0; j < cur_len; j++) {\n                if (digits[idx + j] != cur[j]) {\n                    ok = false;\n                    break;\n                }\n            }\n            if (!ok) break;\n            idx += cur_len;\n        }\n\n        if (ok && idx == n) {\n            for (int i = 0; i < L; i++) {\n                putchar(digits[i]);\n            }\n            putchar('\\n');\n            return 0;\n        }\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.1627067000081297,
+            "counts": {
+                "AC": 33,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 33
+        }
+    }
+]

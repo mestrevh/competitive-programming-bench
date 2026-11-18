@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:45:06.743253+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Chuva\n\n## Enunciado\nEstá chovendo tanto na Obilândia que começaram a aparecer goteiras dentro da casa do prefeito. Uma dessas goteiras está fazendo escorrer água verticalmente, a partir de um ponto no teto, numa parede onde há várias prateleiras horizontais. Quando a água bate em uma prateleira, ela começa a escorrer horizontalmente para os dois lados, direita e esquerda, até as extremidades da prateleira, quando volta a escorrer verticalmente.\nVamos representar a parede por uma matriz de N linhas e M colunas de caracteres, como mostrado ao lado. As prateleiras serão representadas por \"#\" e a parede por \".\". Só existem prateleiras nas linhas pares e elas nunca encostam na borda da parede. Há apenas um ponto de vazamento representado pelo caractere \"o\" na primeira linha.\nPara deixar mais rigorosa a forma como a água vai escorrer, seja c(i, j) o caractere na linha i coluna j. Se c(i, j)= \".\", então ele deve virar \"o\" sempre que:\n• c(i − 1, j)= \"o\"; ou\n• c(i, j − 1)= \"o\" e c(i + 1, j − 1)= \"#\"; ou\n• c(i, j + 1)= \"o\" e c(i + 1, j + 1)= \"#\".\n[1.png]\nNeste problema, dada a matriz representando a parede no início do vazamento, seu programa deve imprimir na saída uma matriz representando a parede usando o caractere \"o\" exatamente nas posições que serão molhadas pelo vazamento, como ilustrado acima.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e M, respectivamente o número de linhas e colunas da matriz. As N linhas seguintes da entrada contêm, cada uma, uma sequência de M caracteres entre três possíveis: \".\", \"#\" ou \"o\".\n\n## Formato de Saída\nSeu programa deve imprimir N linhas, cada uma contendo uma sequência de M caracteres, representando a matriz da entrada usando o caractere \"o\" exatamente nas posições que serão molhadas pelo vazamento.\n\n## Restrições\n3 ≤ N ≤ 500 e 3 ≤ M ≤ 500;\nO número de linhas N é ímpar;\nHá exatamente um caractere \"o\" na primeira linha;\nAs linhas ímpares, a primeira coluna e a última coluna não possuem o caractere \"#\".\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n9 14\n...o...\n.###...####.#\n...\n.######...\n...\n.#.####...##\n...\n...####...\n...\n```\nSaída:\n```\n...oooooo...\n.###...o####o#\n.oooooooo...o\n.o######o...o\nooo...o.oooo\no#o####.o.o##o\no.o.oooooo...o\no.o.o####oo...o\no.o.o...oo...o\n```\n\nExemplo 2:\nEntrada:\n```\n7 5\n.o...\n.#...\n...\n...\n...\n.#...\n...\n```\nSaída:\n```\nooo...\no#o...\no.o...\no.o...\noooo.\noo#o.\noo.o.\n```\n\nExemplo 3:\nEntrada:\n```\n3 3\n..o\n.#.\n...\n```\nSaída:\n```\n..o\n.#o\n.o.\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 926,
+            "output_tokens": 497,
+            "total_tokens": 2713
+        },
+        "cost_usd": {
+            "input_cost": 0.000695,
+            "output_cost": 0.001864,
+            "total_cost": 0.002558
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAX 505\n\ntypedef struct {\n    int r, c;\n} Point;\n\nchar grid[MAX][MAX];\nPoint queue[MAX * MAX];\n\nint main() {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    int head = 0, tail = 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", grid[i]);\n        for (int j = 0; j < m; j++) {\n            if (grid[i][j] == 'o') {\n                queue[tail++] = (Point){i, j};\n            }\n        }\n    }\n\n    while (head < tail) {\n        Point p = queue[head++];\n        int r = p.r;\n        int c = p.c;\n\n        // A água cai para baixo se a posição abaixo for '.'\n        if (r + 1 < n && grid[r + 1][c] == '.') {\n            grid[r + 1][c] = 'o';\n            queue[tail++] = (Point){r + 1, c};\n        }\n\n        // Se abaixo houver uma prateleira '#', a água escorre para a esquerda e para a direita\n        if (r + 1 < n && grid[r + 1][c] == '#') {\n            if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                grid[r][c - 1] = 'o';\n                queue[tail++] = (Point){r, c - 1};\n            }\n            if (c + 1 < m && grid[r][c + 1] == '.') {\n                grid[r][c + 1] = 'o';\n                queue[tail++] = (Point){r, c + 1};\n            }\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        puts(grid[i]);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAX 505\n\ntypedef struct {\n    int r, c;\n} Point;\n\nchar grid[MAX][MAX];\nPoint queue[MAX * MAX];\n\nint main() {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    int head = 0, tail = 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", grid[i]);\n        for (int j = 0; j < m; j++) {\n            if (grid[i][j] == 'o') {\n                queue[tail++] = (Point){i, j};\n            }\n        }\n    }\n\n    while (head < tail) {\n        Point p = queue[head++];\n        int r = p.r;\n        int c = p.c;\n\n        // A água cai para baixo se a posição abaixo for '.'\n        if (r + 1 < n && grid[r + 1][c] == '.') {\n            grid[r + 1][c] = 'o';\n            queue[tail++] = (Point){r + 1, c};\n        }\n\n        // Se abaixo houver uma prateleira '#', a água escorre para a esquerda e para a direita\n        if (r + 1 < n && grid[r + 1][c] == '#') {\n            if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                grid[r][c - 1] = 'o';\n                queue[tail++] = (Point){r, c - 1};\n            }\n            if (c + 1 < m && grid[r][c + 1] == '.') {\n                grid[r][c + 1] = 'o';\n                queue[tail++] = (Point){r, c + 1};\n            }\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        puts(grid[i]);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11776540000028035,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:31:15.255655+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Chuva\n\n## Enunciado\nEstá chovendo tanto na Obilândia que começaram a aparecer goteiras dentro da casa do prefeito. Uma dessas goteiras está fazendo escorrer água verticalmente, a partir de um ponto no teto, numa parede onde há várias prateleiras horizontais. Quando a água bate em uma prateleira, ela começa a escorrer horizontalmente para os dois lados, direita e esquerda, até as extremidades da prateleira, quando volta a escorrer verticalmente.\nVamos representar a parede por uma matriz de N linhas e M colunas de caracteres, como mostrado ao lado. As prateleiras serão representadas por \"#\" e a parede por \".\". Só existem prateleiras nas linhas pares e elas nunca encostam na borda da parede. Há apenas um ponto de vazamento representado pelo caractere \"o\" na primeira linha.\nPara deixar mais rigorosa a forma como a água vai escorrer, seja c(i, j) o caractere na linha i coluna j. Se c(i, j)= \".\", então ele deve virar \"o\" sempre que:\n• c(i − 1, j)= \"o\"; ou\n• c(i, j − 1)= \"o\" e c(i + 1, j − 1)= \"#\"; ou\n• c(i, j + 1)= \"o\" e c(i + 1, j + 1)= \"#\".\n[1.png]\nNeste problema, dada a matriz representando a parede no início do vazamento, seu programa deve imprimir na saída uma matriz representando a parede usando o caractere \"o\" exatamente nas posições que serão molhadas pelo vazamento, como ilustrado acima.\n\n## Formato de Entrada\nA primeira linha da entrada contém dois inteiros N e M, respectivamente o número de linhas e colunas da matriz. As N linhas seguintes da entrada contêm, cada uma, uma sequência de M caracteres entre três possíveis: \".\", \"#\" ou \"o\".\n\n## Formato de Saída\nSeu programa deve imprimir N linhas, cada uma contendo uma sequência de M caracteres, representando a matriz da entrada usando o caractere \"o\" exatamente nas posições que serão molhadas pelo vazamento.\n\n## Restrições\n3 ≤ N ≤ 500 e 3 ≤ M ≤ 500;\nO número de linhas N é ímpar;\nHá exatamente um caractere \"o\" na primeira linha;\nAs linhas ímpares, a primeira coluna e a última coluna não possuem o caractere \"#\".\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n9 14\n...o...\n.###...####.#\n...\n.######...\n...\n.#.####...##\n...\n...####...\n...\n```\nSaída:\n```\n...oooooo...\n.###...o####o#\n.oooooooo...o\n.o######o...o\nooo...o.oooo\no#o####.o.o##o\no.o.oooooo...o\no.o.o####oo...o\no.o.o...oo...o\n```\n\nExemplo 2:\nEntrada:\n```\n7 5\n.o...\n.#...\n...\n...\n...\n.#...\n...\n```\nSaída:\n```\nooo...\no#o...\no.o...\no.o...\noooo.\noo#o.\noo.o.\n```\n\nExemplo 3:\nEntrada:\n```\n3 3\n..o\n.#.\n...\n```\nSaída:\n```\n..o\n.#o\n.o.\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 960,
+            "output_tokens": 572,
+            "total_tokens": 2590
+        },
+        "cost_usd": {
+            "input_cost": 0.00072,
+            "output_cost": 0.002145,
+            "total_cost": 0.002865
+        },
+        "raw_response": "```c\n#include <stdio.h>\n\n#define MAXN 505\n\nchar grid[MAXN][MAXN];\nint q_r[MAXN * MAXN];\nint q_c[MAXN * MAXN];\n\nint main(void) {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    int head = 0, tail = 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", grid[i]);\n        for (int j = 0; j < m; j++) {\n            if (grid[i][j] == 'o') {\n                q_r[tail] = i;\n                q_c[tail] = j;\n                tail++;\n            }\n        }\n    }\n\n    while (head < tail) {\n        int r = q_r[head];\n        int c = q_c[head];\n        head++;\n\n        // 1. Escorre para baixo se a célula abaixo for '.'\n        if (r + 1 < n && grid[r + 1][c] == '.') {\n            grid[r + 1][c] = 'o';\n            q_r[tail] = r + 1;\n            q_c[tail] = c;\n            tail++;\n        }\n\n        // 2 e 3. Se a célula abaixo for uma prateleira '#', a água escorre para as laterais\n        if (r + 1 < n && grid[r + 1][c] == '#') {\n            // Para a esquerda\n            if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                grid[r][c - 1] = 'o';\n                q_r[tail] = r;\n                q_c[tail] = c - 1;\n                tail++;\n            }\n            // Para a direita\n            if (c + 1 < m && grid[r][c + 1] == '.') {\n                grid[r][c + 1] = 'o';\n                q_r[tail] = r;\n                q_c[tail] = c + 1;\n                tail++;\n            }\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n\n#define MAXN 505\n\nchar grid[MAXN][MAXN];\nint q_r[MAXN * MAXN];\nint q_c[MAXN * MAXN];\n\nint main(void) {\n    int n, m;\n    if (scanf(\"%d %d\", &n, &m) != 2) return 0;\n\n    int head = 0, tail = 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", grid[i]);\n        for (int j = 0; j < m; j++) {\n            if (grid[i][j] == 'o') {\n                q_r[tail] = i;\n                q_c[tail] = j;\n                tail++;\n            }\n        }\n    }\n\n    while (head < tail) {\n        int r = q_r[head];\n        int c = q_c[head];\n        head++;\n\n        // 1. Escorre para baixo se a célula abaixo for '.'\n        if (r + 1 < n && grid[r + 1][c] == '.') {\n            grid[r + 1][c] = 'o';\n            q_r[tail] = r + 1;\n            q_c[tail] = c;\n            tail++;\n        }\n\n        // 2 e 3. Se a célula abaixo for uma prateleira '#', a água escorre para as laterais\n        if (r + 1 < n && grid[r + 1][c] == '#') {\n            // Para a esquerda\n            if (c - 1 >= 0 && grid[r][c - 1] == '.') {\n                grid[r][c - 1] = 'o';\n                q_r[tail] = r;\n                q_c[tail] = c - 1;\n                tail++;\n            }\n            // Para a direita\n            if (c + 1 < m && grid[r][c + 1] == '.') {\n                grid[r][c + 1] = 'o';\n                q_r[tail] = r;\n                q_c[tail] = c + 1;\n                tail++;\n            }\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11083160000271164,
+            "counts": {
+                "AC": 35,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 35
+        }
+    }
+]

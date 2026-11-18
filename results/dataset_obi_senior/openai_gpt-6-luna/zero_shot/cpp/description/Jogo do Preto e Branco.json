@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T19:19:20.098398+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Jogo do Preto e Branco\n\n## Enunciado\nVocê gosta de quebra-cabeças? O jogo do Preto e Branco é um quebra-cabeças que usa um tabuleiro retangular com L linhas e C colunas, formando L×C casas. No tabuleiro são posicionadas algumas peças pretas, cada peça em uma casa diferente.\n\nO objetivo do jogo é colocar o maior número possível de peças brancas no tabuleiro, obedecendo às seguintes restrições:\n\n• cada casa do tabuleiro pode conter no máximo uma peça;\n• uma peça branca deve ter ao menos uma peça preta como vizinha, à direita, à esquerda, acima ou abaixo;\n• uma peça branca não pode ter outra peça branca como vizinha, à direita, à esquerda, acima ou abaixo;\n\nA figura abaixo mostra dois exemplos de jogos, com as respectivas soluções, um com um tabuleiro 3 × 3 e outro com um tabuleiro 3 × 5.\n[Descrição da imagem: Dois tabuleiros com peças pretas (círculos preenchidos) e brancas (círculos vazados): (a) Tabuleiro 3x3 com peças pretas em (1,1) e (1,3); ao lado, configuração ótima com 3 peças brancas adicionadas em (1,2), (2,1) e (2,3); (b) Tabuleiro 3x5 com peças pretas em (2,2), (2,3) e (3,5); ao lado, configuração com peças brancas adicionadas ao redor sem que peças brancas fiquem adjacentes entre si.]\nSua tarefa é escrever um programa que, dadas as descrições do tabuleiro e das peças pretas posicionadas, determine o maior número de peças brancas que podem ser colocadas.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C, o número de linhas e o número de colunas do tabuleiro. As linhas são numeradas de 1 a L e as colunas são numeradas de 1 a C. A segunda linha contém um inteiro P, o número de peças pretas colocadas no tabuleiro. Cada uma das P linhas seguintes descreve a posição de uma peça preta e contém dois inteiros X_i e Y_i, indicando a linha e a coluna em que a peça foi colocada.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, o maior número de peças brancas que podem ser colocadas no tabuleiro.\n\n## Restrições\n1 ≤ L ≤ 6\n1 ≤ C ≤ 6\n1 ≤ P ≤ 10\n1 ≤ X_i ≤ L, para 1 ≤ i ≤ P\n1 ≤ Y_i ≤ C, para 1 ≤ i ≤ P\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 20 pontos, L = 1.\n- Para um conjunto adicional de casos de testes valendo 80 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n3\n1 1\n1 3\n3 2\n```\nSaída:\n```\n3\n```\n\nExemplo 2:\nEntrada:\n```\n1 6\n2\n1 2\n1 5\n```\nSaída:\n```\n3\n```\n\nExemplo 3:\nEntrada:\n```\n3 5\n3\n2 2\n2 3\n3 5\n```\nSaída:\n```\n5\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 858,
+            "output_tokens": 802,
+            "total_tokens": 1660
+        },
+        "cost_usd": {
+            "input_cost": 8.6e-05,
+            "output_cost": 0.000401,
+            "total_cost": 0.000487
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    bool black[6][6] = {};\n    int P;\n    cin >> P;\n\n    while (P--) {\n        int x, y;\n        cin >> x >> y;\n        black[x - 1][y - 1] = true;\n    }\n\n    bool eligible[6][6] = {};\n    int total = 0;\n    const int dr[] = {-1, 1, 0, 0};\n    const int dc[] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; ++r) {\n        for (int c = 0; c < C; ++c) {\n            if (black[r][c]) continue;\n\n            for (int d = 0; d < 4; ++d) {\n                int nr = r + dr[d], nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    eligible[r][c] = true;\n                    ++total;\n                    break;\n                }\n            }\n        }\n    }\n\n    int match[6][6];\n    memset(match, -1, sizeof(match));\n\n    function<bool(int, int, bool[6][6])> augment = [&](int r, int c, bool seen[6][6]) {\n        for (int d = 0; d < 4; ++d) {\n            int nr = r + dr[d], nc = c + dc[d];\n            if (nr < 0 || nr >= L || nc < 0 || nc >= C ||\n                !eligible[nr][nc] || seen[nr][nc]) continue;\n\n            seen[nr][nc] = true;\n            if (match[nr][nc] == -1 || augment(match[nr][nc] / C, match[nr][nc] % C, seen)) {\n                match[nr][nc] = r * C + c;\n                return true;\n            }\n        }\n        return false;\n    };\n\n    int matching = 0;\n    for (int r = 0; r < L; ++r) {\n        for (int c = 0; c < C; ++c) {\n            if (!eligible[r][c] || (r + c) % 2 != 0) continue;\n            bool seen[6][6] = {};\n            if (augment(r, c, seen)) ++matching;\n        }\n    }\n\n    cout << total - matching << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int L, C;\n    cin >> L >> C;\n\n    bool black[6][6] = {};\n    int P;\n    cin >> P;\n\n    while (P--) {\n        int x, y;\n        cin >> x >> y;\n        black[x - 1][y - 1] = true;\n    }\n\n    bool eligible[6][6] = {};\n    int total = 0;\n    const int dr[] = {-1, 1, 0, 0};\n    const int dc[] = {0, 0, -1, 1};\n\n    for (int r = 0; r < L; ++r) {\n        for (int c = 0; c < C; ++c) {\n            if (black[r][c]) continue;\n\n            for (int d = 0; d < 4; ++d) {\n                int nr = r + dr[d], nc = c + dc[d];\n                if (nr >= 0 && nr < L && nc >= 0 && nc < C && black[nr][nc]) {\n                    eligible[r][c] = true;\n                    ++total;\n                    break;\n                }\n            }\n        }\n    }\n\n    int match[6][6];\n    memset(match, -1, sizeof(match));\n\n    function<bool(int, int, bool[6][6])> augment = [&](int r, int c, bool seen[6][6]) {\n        for (int d = 0; d < 4; ++d) {\n            int nr = r + dr[d], nc = c + dc[d];\n            if (nr < 0 || nr >= L || nc < 0 || nc >= C ||\n                !eligible[nr][nc] || seen[nr][nc]) continue;\n\n            seen[nr][nc] = true;\n            if (match[nr][nc] == -1 || augment(match[nr][nc] / C, match[nr][nc] % C, seen)) {\n                match[nr][nc] = r * C + c;\n                return true;\n            }\n        }\n        return false;\n    };\n\n    int matching = 0;\n    for (int r = 0; r < L; ++r) {\n        for (int c = 0; c < C; ++c) {\n            if (!eligible[r][c] || (r + c) % 2 != 0) continue;\n            bool seen[6][6] = {};\n            if (augment(r, c, seen)) ++matching;\n        }\n    }\n\n    cout << total - matching << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18061530000704806,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

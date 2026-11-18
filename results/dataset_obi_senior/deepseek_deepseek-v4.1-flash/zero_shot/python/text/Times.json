@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T06:51:18.276797+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Times\n\n## Enunciado\nChegou a hora da caça ao tesouro na gincana escolar! Para jogar, sua turma de N pessoas deve se dividir em dois times. A divisão será feita com base no número de chamada de cada aluno, um número entre 1 e N. Só que mais importante que fazer uma divisão balanceada é evitar que pessoas que não se gostam fiquem no mesmo time. Você receberá o número N de alunos e, para cada pessoa, você receberá a lista de pessoas que ela não gosta. Se a pessoa A não gosta da pessoa B então a pessoa B também não gosta da pessoa A. O aluno de número 1 sempre ficará no primeiro time. Você deve dividir os outros alunos entre os dois times de forma que dentro de cada time não haja duas pessoas que não se gostam.\n\n## Formato de Entrada\nA primeira linha contém um inteiro N, representando o número de alunos na turma. As N linhas seguintes, para 1 ≤ i ≤ N, contêm um inteiro M_i, indicando de quantas pessoas o aluno i não gosta, e em seguida M_i inteiros X_j, indicando que a pessoa i não gosta da pessoa X_j.\n\n## Formato de Saída\nSeu programa deve produzir duas linhas, a primeira contendo os números dos integrantes do primeiro time e a segunda contendo os números dos integrantes do segundo time, ambas em ordem crescente. Lembre-se que o aluno 1 sempre estará no primeiro time. Sempre há uma única solução.\n\n## Restrições\n2 ≤ N ≤ 10^5.\n1 ≤ M_i ≤ N - 1.\n1 ≤ X_j ≤ N.\n1 ≤ Σ_{i=1}^{N} M_i ≤ 6 × 10^5.\nOu seja, a soma de todos os M_i descritos na entrada é no máximo 6 × 10^5.\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste equivalente a 40 pontos, N ≤ 15.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n13\n2 12 9\n1 10\n3 8 12 13\n5 8 10 13 6 5\n2 11 4\n1 4\n1 8\n3 4 3 7\n1 1\n2 2 4\n1 5\n2 3 1\n2 4 3\n```\nSaída:\n```\n1 2 3 4 7 11\n5 6 8 9 10 12 13\n```\n\nExemplo 2:\nEntrada:\n```\n15\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n1 13\n14 11 7 1 10 8 6 14 12 3 2 15 5 4 9\n1 13\n1 13\n```\nSaída:\n```\n1 2 3 4 5 6 7 8 9 10 11 12 14 15\n13\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 868,
+            "output_tokens": 7112,
+            "total_tokens": 7980
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.017069,
+            "total_cost": 0.017071
+        },
+        "raw_response": "```python\nimport sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    n = int(next(it))\n\n    adj = [[] for _ in range(n + 1)]\n\n    for i in range(1, n + 1):\n        m = int(next(it))\n        for _ in range(m):\n            x = int(next(it))\n            adj[i].append(x)\n\n    color = [-1] * (n + 1)\n    color[1] = 0\n\n    q = deque([1])\n    while q:\n        u = q.popleft()\n        cu = color[u]\n        for v in adj[u]:\n            if color[v] == -1:\n                color[v] = cu ^ 1\n                q.append(v)\n\n    for i in range(1, n + 1):\n        if color[i] == -1:\n            color[i] = 0\n            q = deque([i])\n            while q:\n                u = q.popleft()\n                cu = color[u]\n                for v in adj[u]:\n                    if color[v] == -1:\n                        color[v] = cu ^ 1\n                        q.append(v)\n\n    team1 = []\n    team2 = []\n\n    for i in range(1, n + 1):\n        if color[i] == 0:\n            team1.append(str(i))\n        else:\n            team2.append(str(i))\n\n    sys.stdout.write(\" \".join(team1) + \"\\n\")\n    sys.stdout.write(\" \".join(team2) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\nfrom collections import deque\n\ndef main():\n    data = sys.stdin.buffer.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    n = int(next(it))\n\n    adj = [[] for _ in range(n + 1)]\n\n    for i in range(1, n + 1):\n        m = int(next(it))\n        for _ in range(m):\n            x = int(next(it))\n            adj[i].append(x)\n\n    color = [-1] * (n + 1)\n    color[1] = 0\n\n    q = deque([1])\n    while q:\n        u = q.popleft()\n        cu = color[u]\n        for v in adj[u]:\n            if color[v] == -1:\n                color[v] = cu ^ 1\n                q.append(v)\n\n    for i in range(1, n + 1):\n        if color[i] == -1:\n            color[i] = 0\n            q = deque([i])\n            while q:\n                u = q.popleft()\n                cu = color[u]\n                for v in adj[u]:\n                    if color[v] == -1:\n                        color[v] = cu ^ 1\n                        q.append(v)\n\n    team1 = []\n    team2 = []\n\n    for i in range(1, n + 1):\n        if color[i] == 0:\n            team1.append(str(i))\n        else:\n            team2.append(str(i))\n\n    sys.stdout.write(\" \".join(team1) + \"\\n\")\n    sys.stdout.write(\" \".join(team2) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.19303160000345088,
+            "counts": {
+                "AC": 32,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 32
+        }
+    }
+]

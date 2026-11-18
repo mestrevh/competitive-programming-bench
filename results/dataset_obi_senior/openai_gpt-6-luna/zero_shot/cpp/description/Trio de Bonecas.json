@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T19:22:33.079771+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Trio de Bonecas\n\n## Enunciado\nAlice é a gerente de produção de uma fábrica de bonecas chinesas. Nessa fábrica, todas as bonecas possuem o mesmo formato, variando apenas de tamanho. As bonecas são vendidas sempre em trios.\n[Descrição da imagem: Ilustração de três bonecas de pano chinesas idênticas em estilo (vestido vermelho, laço vermelho e cabelo azul em marias-chiquinhas), mas com três estaturas distintas: uma de tamanho intermediário A, uma de tamanho pequeno B e uma de tamanho grande C, com A <= B <= C.]\nPara um trio formado por bonecas de tamanhos A, B e C, com A ≤ B ≤ C, o balanceamento do trio é definido como (A − B)^2. De acordo com o controle de qualidade da fábrica, idealmente cada trio deveria ter balanceamento 0, ou seja, conter duas bonecas de mesmo tamanho e uma terceira boneca de tamanho maior ou igual a essas duas; porém, isso nem sempre é possível devido a limitações de estoque.\n\nAlice acabou de receber um pedido urgente: o consulado Chinês fará um grande evento no qual pretende distribuir K trios de bonecas, e precisa que Alice envie imediatamente todos os trios. Existem na fábrica N bonecas de diversos tamanhos, ainda não separadas em trios, e Alice não sabe se conseguirá formar K trios ideais.\n\nDevido à urgência do evento, Alice e o consulado fizeram um acordo: o consulado aceitará trios que não sejam ideais; porém, para garantir um bom evento, Alice deve enviar uma caixa com K trios de bonecas cuja soma dos balanceamentos seja a menor possível.\n\nPor exemplo, suponha que Alice possua 7 bonecas com tamanhos 11, 1, 7, 5, 16, 8 e 15, e que o consulado tenha solicitado 2 trios de bonecas. Algumas configurações possíveis para envio são:\n• Configuração 1: trios (7, 8, 15) e (1, 5, 16).\n– O primeiro trio possui balanceamento (8 − 7)^2 = 1.\n– O segundo trio possui balanceamento (5 − 1)^2 = 16.\n– O balanceamento total dessa configuração é 1 + 16 = 17.\n\n• Configuração 2: trios (5, 7, 16) e (8, 11, 15).\n– O primeiro trio possui balanceamento (7 − 5)^2 = 4.\n– O segundo trio possui balanceamento (11 − 8)^2 = 9.\n– O balanceamento total dessa configuração é 4 + 9 = 13.\n\nExistem outras configurações possíveis, mas a menor soma de balanceamentos possível é 13 (correspondente à configuração 2).\n\nAjude Alice a calcular a soma de balanceamentos minima em um conjunto com K trios de bonecas.\n\n## Formato de Entrada\nA primeira linha de entrada contém dois inteiros N e K, representando, respectivamente, o número de bonecas e a quantidade de trios solicitados pelo consulado Chinês.\nA segunda linha contém N números inteiros. O i-ésimo desses números será Ti, representando o tamanho da i-ésima boneca.\n\n## Formato de Saída\nSeu programa deverá imprimir uma única linha contendo um único inteiro, a menor soma de balanceamentos possível em uma caixa com K trios de bonecas.\n\n## Restrições\n3 ≤ N ≤ 10000\n1 ≤ K ≤ 3000\n3K ≤ N\n1 ≤ Ti ≤ 100000 para todo 1 ≤ i ≤ N\n\nSubtarefa 1 (13 pontos): 1 ≤ Ti ≤ 2 para todo 1 ≤ i ≤ N.\nSubtarefa 2 (28 pontos): N ≤ 30.\nSubtarefa 3 (33 pontos): N ≤ 1000 e K ≤ 100.\nSubtarefa 4 (26 pontos): Nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n7 2\n11 1 7 5 16 8 15\n```\nSaída:\n```\n13\n```\n\nExemplo 2:\nEntrada:\n```\n8 2\n2 1 2 2 2 1 2 2\n```\nSaída:\n```\n0\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "description",
+        "include_limits": false,
+        "time_limit": 2.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 1055,
+            "output_tokens": 4441,
+            "total_tokens": 5496
+        },
+        "cost_usd": {
+            "input_cost": 0.000106,
+            "output_cost": 0.00222,
+            "total_cost": 0.002326
+        },
+        "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    cin >> N >> K;\n\n    vector<long long> T(N);\n    for (auto &x : T) cin >> x;\n    sort(T.begin(), T.end());\n\n    int M = N - K;\n    const long long INF = (1LL << 62);\n\n    vector<long long> prev(M + 1, 0), cur(M + 1, INF);\n\n    for (int j = 1; j <= K; ++j) {\n        fill(cur.begin(), cur.end(), INF);\n\n        for (int i = 0; i <= M; ++i) {\n            if (i > 0) cur[i] = cur[i - 1];\n\n            if (i >= 2 && prev[i - 2] != INF) {\n                long long d = T[i - 1] - T[i - 2];\n                cur[i] = min(cur[i], prev[i - 2] + d * d);\n            }\n        }\n\n        swap(prev, cur);\n    }\n\n    cout << prev[M] << '\\n';\n    return 0;\n}\n```",
+        "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, K;\n    cin >> N >> K;\n\n    vector<long long> T(N);\n    for (auto &x : T) cin >> x;\n    sort(T.begin(), T.end());\n\n    int M = N - K;\n    const long long INF = (1LL << 62);\n\n    vector<long long> prev(M + 1, 0), cur(M + 1, INF);\n\n    for (int j = 1; j <= K; ++j) {\n        fill(cur.begin(), cur.end(), INF);\n\n        for (int i = 0; i <= M; ++i) {\n            if (i > 0) cur[i] = cur[i - 1];\n\n            if (i >= 2 && prev[i - 2] != INF) {\n                long long d = T[i - 1] - T[i - 2];\n                cur[i] = min(cur[i], prev[i - 2] + d * d);\n            }\n        }\n\n        swap(prev, cur);\n    }\n\n    cout << prev[M] << '\\n';\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "WA",
+            "execution_time": 0.1841699999931734,
+            "counts": {
+                "AC": 54,
+                "WA": 22,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 76
+        }
+    }
+]

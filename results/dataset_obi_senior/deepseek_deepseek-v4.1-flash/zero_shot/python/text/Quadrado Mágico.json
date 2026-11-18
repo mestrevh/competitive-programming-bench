@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T06:44:06.716209+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Quadrado Mágico\n\n## Enunciado\nEm um Quadrado Mágico, a soma de qualquer coluna, linha ou diagonal tem sempre o mesmo valor, e nenhum número aparece mais do que uma vez.\n[1.png]\nA dimensão de um quadrado mágico é o número de colunas (ou de linhas, já que o número de colunas é igual ao número de linhas).\n\nRita encontrou um caderno antigo de sua avó, repleto de quadrados mágicos de todas as dimensões. Infelizmente alguns dos números estão ilegíveis. Você pode ajudá-la?\n\nDado um quadrado mágico com exatamente um número ilegível, determine o valor e a posição desse número.\n\n## Formato de Entrada\nA primeira linha da entrada contém um número inteiro N, a dimensão do quadrado mágico. Cada uma das N linhas seguintes contém N inteiros Xi. Exatamente um dos números do quadrado da entrada é igual a zero, indicando o número ilegível.\n\n## Formato de Saída\nSeu programa deve produzir três linhas, cada uma contendo um único número inteiro. A primeira linha deve conter o valor do número ilegível. A segunda linha deve conter a linha do número ilegível no quadrado (as linhas do quadrado variam de 1 a N). A terceira linha deve conter a coluna do número ilegível no quadrado (as colunas do quadrado variam de 1 a N).\n\n## Restrições\n3 ≤ N ≤ 10\n0 ≤ Xi ≤ 100, para 1 ≤ i ≤ N\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3\n2 9 4\n7 0 3\n6 1 8\n```\nSaída:\n```\n5\n2\n2\n```\n\nExemplo 2:\nEntrada:\n```\n4\n11 8 5 0\n14 1 4 15\n2 13 16 3\n7 12 9 6\n```\nSaída:\n```\n10\n1\n4\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 629,
+            "output_tokens": 906,
+            "total_tokens": 1535
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.002174,
+            "total_cost": 0.002176
+        },
+        "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    nums = list(map(int, data[1:]))\n    grid = [nums[i * n:(i + 1) * n] for i in range(n)]\n\n    zero_r = zero_c = -1\n    for i in range(n):\n        for j in range(n):\n            if grid[i][j] == 0:\n                zero_r, zero_c = i, j\n                break\n        if zero_r != -1:\n            break\n\n    magic_sum = None\n    for i in range(n):\n        if i != zero_r:\n            magic_sum = sum(grid[i])\n            break\n\n    missing = magic_sum - sum(grid[zero_r])\n\n    print(missing)\n    print(zero_r + 1)\n    print(zero_c + 1)\n\nif __name__ == \"__main__\":\n    main()\n```",
+        "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    n = int(data[0])\n    nums = list(map(int, data[1:]))\n    grid = [nums[i * n:(i + 1) * n] for i in range(n)]\n\n    zero_r = zero_c = -1\n    for i in range(n):\n        for j in range(n):\n            if grid[i][j] == 0:\n                zero_r, zero_c = i, j\n                break\n        if zero_r != -1:\n            break\n\n    magic_sum = None\n    for i in range(n):\n        if i != zero_r:\n            magic_sum = sum(grid[i])\n            break\n\n    missing = magic_sum - sum(grid[zero_r])\n\n    print(missing)\n    print(zero_r + 1)\n    print(zero_c + 1)\n\nif __name__ == \"__main__\":\n    main()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.06280250000054366,
+            "counts": {
+                "AC": 20,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 20
+        }
+    }
+]

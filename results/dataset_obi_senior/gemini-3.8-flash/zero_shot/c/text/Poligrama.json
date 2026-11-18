@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T03:11:12.366362+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Poligrama\n\n## Enunciado\nDuas palavras A e B são anagramas entre si se podemos transformar a palavra A na palavra B apenas trocando de posição as letras da palavra A. Por exemplo, \"duetos\" e \"estudo\" são anagramas entre si. Um outro exemplo é \"bba\" e \"bab\".\n\nVamos chamar de poligrama uma palavra que consiste na concatenação de duas ou mais palavras que são anagramas entre si. A primeira dessas palavras é chamada de raiz do poligrama. Por exemplo, a palavra \"bbabab\" é um poligrama com raiz \"bba\", pois ela é a concatenação dos anagramas \"bba\" e \"bab\".\n\nDada uma palavra, escreva um programa que determine se ela é um poligrama e encontre a sua raiz.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, indicando o número de letras da palavra. A segunda linha contém a palavra P.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha. Se a palavra dada é um poligrama, a linha deve conter a raiz do poligrama. Caso contrário, a linha deve conter o caractere asterisco ('*'). Se houver mais de uma raiz possível, seu programa deve imprimir a de menor comprimento.\n\n## Restrições\n1 ≤ N ≤ 100000\nO número de caracteres de P é igual a N.\nOs únicos caracteres em P são letras minúsculas não acentuadas.\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 40 pontos, N ≤ 1000.\n- Para um conjunto de casos de testes valendo outros 70 pontos, nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5\nxxxxx\n```\nSaída:\n```\nx\n```\n\nExemplo 2:\nEntrada:\n```\n2\nxy\n```\nSaída:\n```\n*\n```\n\nExemplo 3:\nEntrada:\n```\n6\nbbabab\n```\nSaída:\n```\nbba\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 584,
+            "output_tokens": 599,
+            "total_tokens": 2123
+        },
+        "cost_usd": {
+            "input_cost": 0.000438,
+            "output_cost": 0.002246,
+            "total_cost": 0.002684
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAXN 100005\n\nchar P[MAXN];\nint divisors[MAXN];\n\nint cmp(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main() {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n    if (scanf(\"%s\", P) != 1) return 0;\n\n    int num_divisors = 0;\n    for (int i = 1; i * i <= N; ++i) {\n        if (N % i == 0) {\n            if (i < N) {\n                divisors[num_divisors++] = i;\n            }\n            int other = N / i;\n            if (other != i && other < N) {\n                divisors[num_divisors++] = other;\n            }\n        }\n    }\n\n    qsort(divisors, num_divisors, sizeof(int), cmp);\n\n    int count_base[26];\n    int count_curr[26];\n\n    for (int d = 0; d < num_divisors; ++d) {\n        int L = divisors[d];\n        int K = N / L;\n\n        memset(count_base, 0, sizeof(count_base));\n        for (int j = 0; j < L; ++j) {\n            count_base[P[j] - 'a']++;\n        }\n\n        bool ok = true;\n        for (int i = 1; i < K; ++i) {\n            memset(count_curr, 0, sizeof(count_curr));\n            int offset = i * L;\n            for (int j = 0; j < L; ++j) {\n                count_curr[P[offset + j] - 'a']++;\n            }\n            for (int c = 0; c < 26; ++c) {\n                if (count_curr[c] != count_base[c]) {\n                    ok = false;\n                    break;\n                }\n            }\n            if (!ok) {\n                break;\n            }\n        }\n\n        if (ok) {\n            P[L] = '\\0';\n            printf(\"%s\\n\", P);\n            return 0;\n        }\n    }\n\n    printf(\"*\\n\");\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAXN 100005\n\nchar P[MAXN];\nint divisors[MAXN];\n\nint cmp(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main() {\n    int N;\n    if (scanf(\"%d\", &N) != 1) return 0;\n    if (scanf(\"%s\", P) != 1) return 0;\n\n    int num_divisors = 0;\n    for (int i = 1; i * i <= N; ++i) {\n        if (N % i == 0) {\n            if (i < N) {\n                divisors[num_divisors++] = i;\n            }\n            int other = N / i;\n            if (other != i && other < N) {\n                divisors[num_divisors++] = other;\n            }\n        }\n    }\n\n    qsort(divisors, num_divisors, sizeof(int), cmp);\n\n    int count_base[26];\n    int count_curr[26];\n\n    for (int d = 0; d < num_divisors; ++d) {\n        int L = divisors[d];\n        int K = N / L;\n\n        memset(count_base, 0, sizeof(count_base));\n        for (int j = 0; j < L; ++j) {\n            count_base[P[j] - 'a']++;\n        }\n\n        bool ok = true;\n        for (int i = 1; i < K; ++i) {\n            memset(count_curr, 0, sizeof(count_curr));\n            int offset = i * L;\n            for (int j = 0; j < L; ++j) {\n                count_curr[P[offset + j] - 'a']++;\n            }\n            for (int c = 0; c < 26; ++c) {\n                if (count_curr[c] != count_base[c]) {\n                    ok = false;\n                    break;\n                }\n            }\n            if (!ok) {\n                break;\n            }\n        }\n\n        if (ok) {\n            P[L] = '\\0';\n            printf(\"%s\\n\", P);\n            return 0;\n        }\n    }\n\n    printf(\"*\\n\");\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11193120000007184,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T19:54:16.542581+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Poligrama\n\n## Enunciado\nDuas palavras A e B são anagramas entre si se podemos transformar a palavra A na palavra B apenas trocando de posição as letras da palavra A. Por exemplo, \"duetos\" e \"estudo\" são anagramas entre si. Um outro exemplo é \"bba\" e \"bab\".\n\nVamos chamar de poligrama uma palavra que consiste na concatenação de duas ou mais palavras que são anagramas entre si. A primeira dessas palavras é chamada de raiz do poligrama. Por exemplo, a palavra \"bbabab\" é um poligrama com raiz \"bba\", pois ela é a concatenação dos anagramas \"bba\" e \"bab\".\n\nDada uma palavra, escreva um programa que determine se ela é um poligrama e encontre a sua raiz.\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, indicando o número de letras da palavra. A segunda linha contém a palavra P.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha. Se a palavra dada é um poligrama, a linha deve conter a raiz do poligrama. Caso contrário, a linha deve conter o caractere asterisco ('*'). Se houver mais de uma raiz possível, seu programa deve imprimir a de menor comprimento.\n\n## Restrições\n1 ≤ N ≤ 100000\nO número de caracteres de P é igual a N.\nOs únicos caracteres em P são letras minúsculas não acentuadas.\n\nInformações sobre a pontuação:\n- Para um conjunto de casos de testes valendo 40 pontos, N ≤ 1000.\n- Para um conjunto de casos de testes valendo outros 70 pontos, nenhuma restrição adicional.\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n5\nxxxxx\n```\nSaída:\n```\nx\n```\n\nExemplo 2:\nEntrada:\n```\n2\nxy\n```\nSaída:\n```\n*\n```\n\nExemplo 3:\nEntrada:\n```\n6\nbbabab\n```\nSaída:\n```\nbba\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 618,
+            "output_tokens": 589,
+            "total_tokens": 1862
+        },
+        "cost_usd": {
+            "input_cost": 0.000463,
+            "output_cost": 0.002209,
+            "total_cost": 0.002672
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint cmp_int(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    char *p = (char *)malloc(n + 2);\n    if (scanf(\"%s\", p) != 1) {\n        free(p);\n        return 0;\n    }\n\n    // Encontrar divisores proprios de N\n    int divisors[200];\n    int num_div = 0;\n\n    for (int i = 1; i * i <= n; i++) {\n        if (n % i == 0) {\n            divisors[num_div++] = i;\n            if (i * i != n && i != 1) {\n                divisors[num_div++] = n / i;\n            }\n        }\n    }\n\n    qsort(divisors, num_div, sizeof(int), cmp_int);\n\n    int count_root[26];\n    int count_curr[26];\n\n    for (int d = 0; d < num_div; d++) {\n        int L = divisors[d];\n        if (L >= n) continue;\n\n        memset(count_root, 0, sizeof(count_root));\n        for (int i = 0; i < L; i++) {\n            count_root[p[i] - 'a']++;\n        }\n\n        int possible = 1;\n        for (int i = L; i < n; i += L) {\n            memset(count_curr, 0, sizeof(count_curr));\n            for (int j = 0; j < L; j++) {\n                count_curr[p[i + j] - 'a']++;\n            }\n            if (memcmp(count_root, count_curr, sizeof(count_root)) != 0) {\n                possible = 0;\n                break;\n            }\n        }\n\n        if (possible) {\n            p[L] = '\\0';\n            printf(\"%s\\n\", p);\n            free(p);\n            return 0;\n        }\n    }\n\n    printf(\"*\\n\");\n    free(p);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint cmp_int(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main() {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    char *p = (char *)malloc(n + 2);\n    if (scanf(\"%s\", p) != 1) {\n        free(p);\n        return 0;\n    }\n\n    // Encontrar divisores proprios de N\n    int divisors[200];\n    int num_div = 0;\n\n    for (int i = 1; i * i <= n; i++) {\n        if (n % i == 0) {\n            divisors[num_div++] = i;\n            if (i * i != n && i != 1) {\n                divisors[num_div++] = n / i;\n            }\n        }\n    }\n\n    qsort(divisors, num_div, sizeof(int), cmp_int);\n\n    int count_root[26];\n    int count_curr[26];\n\n    for (int d = 0; d < num_div; d++) {\n        int L = divisors[d];\n        if (L >= n) continue;\n\n        memset(count_root, 0, sizeof(count_root));\n        for (int i = 0; i < L; i++) {\n            count_root[p[i] - 'a']++;\n        }\n\n        int possible = 1;\n        for (int i = L; i < n; i += L) {\n            memset(count_curr, 0, sizeof(count_curr));\n            for (int j = 0; j < L; j++) {\n                count_curr[p[i + j] - 'a']++;\n            }\n            if (memcmp(count_root, count_curr, sizeof(count_root)) != 0) {\n                possible = 0;\n                break;\n            }\n        }\n\n        if (possible) {\n            p[L] = '\\0';\n            printf(\"%s\\n\", p);\n            free(p);\n            return 0;\n        }\n    }\n\n    printf(\"*\\n\");\n    free(p);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.11187519998929929,
+            "counts": {
+                "AC": 10,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 10
+        }
+    }
+]

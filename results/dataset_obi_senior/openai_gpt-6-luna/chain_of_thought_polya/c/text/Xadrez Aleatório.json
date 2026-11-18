@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T05:09:19.544732+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Xadrez Aleatório\n\n## Enunciado\nXadrez Aleatório de Fischer, ou Xadrez 960, é uma variante do jogo de Xadrez que usa exatamente as mesmas regras com uma única exceção, a posição inicial das peças é sorteada antes do jogo. As peças da primeira linha do tabuleiro podem estar em qualquer posição desde que respeitem duas restrições: o rei deve estar entre as duas torres; e os dois bispos devem estar em casas de cores opostas. Como você já deve ter desconfiado, o número de posições iniciais válidas nessa variante do Xadrez é 960.\n\nNeste problema queremos contar o número de posições iniciais válidas numa outra variante, bem mais simples. A dimensão do tabuleiro não é mais fixa. Para qualquer dimensão, a primeira linha do tabuleiro vai conter apenas três tipos de peças: rei, torre e peão. Haverá sempre exatamente um rei e no máximo duas torres. O número de peões será a dimensão menos a soma do número das demais peças. Se o número de torres for dois, então o rei deve estar entre as duas torres. A figura abaixo mostra uma posição inicial válida para N = 8.\n[1.png]\n\n\n## Formato de Entrada\nA entrada consiste de apenas uma LINHA contendo dois inteiros, N e T, representando, respectivamente, a dimensão do tabuleiro e o número de torres.\n\n## Formato de Saída\nSeu programa deve imprimir uma LINHA contendo um inteiro indicando o número de posições iniciais válidas.\n\n## Restrições\n2 ≤ N ≤ 1000\n0 ≤ T ≤ 2\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n2 0\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n8 1\n```\nSaída:\n```\n56\n```\n\nExemplo 3:\nEntrada:\n```\n213 2\n```\nSaída:\n```\n1587986\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1063,
+            "output_tokens": 1009,
+            "total_tokens": 2072
+        },
+        "cost_usd": {
+            "input_cost": 0.000106,
+            "output_cost": 0.000504,
+            "total_cost": 0.000611
+        },
+        "raw_response": "## 1. COMPREENSÃO DO PROBLEMA\n\nDevemos contar as disposições da primeira linha do tabuleiro, que tem `N` casas, com exatamente um rei, `T` torres e peões nas casas restantes. Os peões são indistinguíveis. Quando `T = 2`, o rei deve ficar entre as duas torres.\n\nA entrada contém uma única linha com `N` e `T`, com `2 ≤ N ≤ 1000` e `0 ≤ T ≤ 2`. A saída deve ser um único inteiro: o número de disposições válidas.\n\nCasos importantes:\n- `T = 0`: basta escolher a casa do rei.\n- `T = 1`: escolhemos casas distintas para o rei e a torre.\n- `T = 2`: as três peças ocupam casas distintas, e o rei deve estar na casa intermediária. Para `N = 2`, não há disposição válida.\n\n## 2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n\nA contagem pode ser feita diretamente:\n\n- **`T = 0`**: existem `N` escolhas para o rei.\n- **`T = 1`**: existem `N` escolhas para o rei e, em seguida, `N - 1` para a torre. Total: `N × (N - 1)`.\n- **`T = 2`**: escolhemos quaisquer três casas. A casa do meio recebe o rei e as duas extremas recebem as torres. Total: `C(N, 3) = N × (N - 1) × (N - 2) / 6`.\n\nO algoritmo usa tempo **O(1)** e espaço **O(1)**. Embora os valores do problema caibam em um `int`, usaremos `long long` nos cálculos.\n\n## 3. CODIFICAÇÃO EM C\n\n```c\n#include <stdio.h>\n\nint main(void) {\n    int N, T;\n    long long resposta;\n\n    if (scanf(\"%d %d\", &N, &T) != 2) {\n        return 0;\n    }\n\n    if (T == 0) {\n        resposta = N;\n    } else if (T == 1) {\n        resposta = (long long)N * (N - 1);\n    } else {\n        resposta = (long long)N * (N - 1) * (N - 2) / 6;\n    }\n\n    printf(\"%lld\\n\", resposta);\n    return 0;\n}\n```\n\n## 4. RETROSPECTO E VERIFICAÇÃO\n\n- Para `2 0`, a fórmula dá `2`.\n- Para `8 1`, dá `8 × 7 = 56`.\n- Para `213 2`, dá `213 × 212 × 211 / 6 = 1587986`.\n- Para `N = 2` e `T = 2`, a fórmula resulta em zero, como esperado.\n\nA implementação realiza apenas uma leitura, um cálculo constante e uma impressão, atendendo aos limites do problema.",
+        "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, T;\n    long long resposta;\n\n    if (scanf(\"%d %d\", &N, &T) != 2) {\n        return 0;\n    }\n\n    if (T == 0) {\n        resposta = N;\n    } else if (T == 1) {\n        resposta = (long long)N * (N - 1);\n    } else {\n        resposta = (long long)N * (N - 1) * (N - 2) / 6;\n    }\n\n    printf(\"%lld\\n\", resposta);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.16118259998620488,
+            "counts": {
+                "AC": 57,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 57
+        }
+    }
+]

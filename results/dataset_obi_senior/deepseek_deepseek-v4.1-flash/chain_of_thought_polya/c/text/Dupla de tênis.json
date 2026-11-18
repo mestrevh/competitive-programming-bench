@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-18T02:58:07.016681+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "chain_of_thought_polya",
+        "prompt": "Você é um programador competitivo experiente em C. Resolva o seguinte problema de programação competitiva de forma correta, ótima e eficiente.\n\n--- DESCRIÇÃO DO PROBLEMA ---\n# Dupla de tênis\n\n## Enunciado\nQuatro amigos combinaram de jogar tênis em duplas. Cada um dos amigos tem um nível de jogo, que é representado por um número inteiro: quando maior o número, melhor o nível do jogador.\n\nOs quatro amigos querem formar as duplas para iniciar o jogo. De forma a tornar o jogo mais interessante, eles querem que os níveis dos dois times formados sejam o mais próximo possível. O nível de um time é a soma dos níveis dos jogadores do time.\n\nEmbora eles sejam muito bons jogadores de tênis, os quatro amigos não são muito bons em algumas outras coisas, como lógica ou matemática. Você pode ajudá-los e encontrar a menor diferença possível entre os níveis dos times que podem ser formados?\n\n## Formato de Entrada\nA entrada contém quatro linhas, cada linha contendo um inteiro A, B, C e D, indicando o nível de jogo dos quatro amigos.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, contendo um único inteiro, a menor diferença entre os níveis dos dois times formados.\n\n## Restrições\n0 ≤ A ≤ B ≤ C ≤ D ≤ 10^4\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n7\n10\n20\n```\nSaída:\n```\n7\n```\n\nExemplo 2:\nEntrada:\n```\n0\n0\n1\n1000\n```\nSaída:\n```\n999\n```\n\nExemplo 3:\nEntrada:\n```\n1\n2\n3\n4\n```\nSaída:\n```\n0\n```\n\n--- METODOLOGIA DE RESOLUÇÃO (MÉTODO DE PÓLYA) ---\nPara resolver este problema com máximo rigor, estruture sua resposta nas 4 etapas heurísticas da Metodologia de George Pólya:\n\n1. COMPREENSÃO DO PROBLEMA\n- Qual é o objetivo central do problema?\n- Qual é o formato da entrada (número de casos, limites, tipos de dados)?\n- Qual é o formato exato da saída requerida?\n- Quais são as restrições e limites de tempo e memória?\n- Identifique casos de borda e potenciais armadilhas (N = 0 ou 1, valores negativos, overflow numérico acima de 2 × 10^9, grafos desconexos, etc.).\n\n2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n- Qual técnica algorítmica é ideal para o problema (ex: Guloso, Programação Dinâmica, Grafos/BFS/DFS/Dijkstra, Dois Ponteiros, Busca Binária)?\n- Qual a complexidade de tempo assintótica O(...) e espaço O(...) esperada? Ela cabe com folga dentro do tempo limite?\n- Quais estruturas de dados em C serão utilizadas (ex: arrays estáticos/dinâmicos, `qsort`, ponteiros, structs)?\n- Descreva o passo a passo da estratégia lógica antes de iniciar a codificação.\n\n3. CODIFICAÇÃO EM C\n- Implemente a solução completa, robusta e otimizada em C.\n- A solução deve estar delimitada obrigatoriamente por um bloco de código markdown único (```c ... ```).\n- Regras mandatórias para execução no Judge:\n  * Inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, `#include <string.h>`, etc.) e use `int main(void)` retornando `0`.\n  * Leia da entrada padrão (`stdin`) e escreva na saída padrão (`stdout`) exatamente como especificado.\n  * NUNCA imprima mensagens interativas ou textos extras fora da resposta (\"Digite N:\", \"Saída:\").\n  * Use tipos de 64 bits (`long long`) sempre que somas, multiplicações ou contagens acumuladas puderem ultrapassar 2 × 10^9, prevenindo Wrong Answer (WA).\n  * Em problemas com indexação 1-based, aloque arrays com tamanho N + 1 para evitar acesso fora dos limites / Runtime Error (RE).\n\n4. RETROSPECTO E VERIFICAÇÃO\n- Realize uma validação mental da solução em relação aos exemplos fornecidos.\n- Confirme se os casos de borda identificados na etapa 1 são cobertos pela implementação.\n- Assegure que a complexidade implementada garante a execução sem Time Limit Exceeded (TLE) ou Memory Limit Exceeded (MLE).\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 1.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 1092,
+            "output_tokens": 1694,
+            "total_tokens": 2786
+        },
+        "cost_usd": {
+            "input_cost": 3e-06,
+            "output_cost": 0.004066,
+            "total_cost": 0.004069
+        },
+        "raw_response": "## 1. COMPREENSÃO DO PROBLEMA\n\nO objetivo é dividir quatro jogadores em duas duplas de dois jogadores cada, de modo que a diferença entre a soma dos níveis das duas duplas seja a menor possível.\n\nA entrada contém quatro inteiros `A, B, C, D`, já garantidos em ordem não decrescente:\n\n`0 ≤ A ≤ B ≤ C ≤ D ≤ 10^4`\n\nA saída deve conter apenas um inteiro: a menor diferença possível entre os níveis das duas duplas.\n\nComo são apenas 4 jogadores, existem exatamente 3 formas possíveis de formar duas duplas:\n\n1. `(A + B)` contra `(C + D)`\n2. `(A + C)` contra `(B + D)`\n3. `(A + D)` contra `(B + C)`\n\nCasos de borda:\n- Todos os níveis iguais: diferença `0`.\n- Valores extremos como `0, 0, 1, 1000`: diferença `999`.\n- Não há risco de overflow, pois a soma máxima é `4 * 10^4 = 40000`, mas usaremos `long long` por segurança.\n\n## 2. PLANEJAMENTO E DESIGN ALGORÍTMICO\n\nComo o número de jogadores é fixo e pequeno, basta testar todas as 3 partições possíveis.\n\nTécnica utilizada: força bruta / enumeração completa.\n\nComplexidade:\n- Tempo: `O(1)`\n- Espaço: `O(1)`\n\nEstruturas de dados:\n- Apenas variáveis simples.\n- Nenhum array ou ordenação é necessário, pois a entrada já vem ordenada e o número de combinações é constante.\n\nPasso a passo:\n1. Ler os quatro inteiros.\n2. Calcular as somas das três possíveis divisões em duplas.\n3. Calcular a diferença absoluta entre as somas de cada divisão.\n4. Escolher a menor diferença.\n5. Imprimir o resultado.\n\n## 3. CODIFICAÇÃO EM C\n\n```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    long long a, b, c, d;\n\n    if (scanf(\"%lld %lld %lld %lld\", &a, &b, &c, &d) != 4) {\n        return 0;\n    }\n\n    long long diff1 = llabs((a + b) - (c + d));\n    long long diff2 = llabs((a + c) - (b + d));\n    long long diff3 = llabs((a + d) - (b + c));\n\n    long long ans = diff1;\n    if (diff2 < ans) ans = diff2;\n    if (diff3 < ans) ans = diff3;\n\n    printf(\"%lld\\n\", ans);\n\n    return 0;\n}\n```\n\n## 4. RETROSPECTO E VERIFICAÇÃO\n\nVerificando os exemplos:\n\n- Exemplo 1: `4, 7, 10, 20`\n  - `(4+7)` vs `(10+20)` → `11` vs `30` → `19`\n  - `(4+10)` vs `(7+20)` → `14` vs `27` → `13`\n  - `(4+20)` vs `(7+10)` → `24` vs `17` → `7`\n  - Menor diferença: `7`\n\n- Exemplo 2: `0, 0, 1, 1000`\n  - Menor diferença: `999`\n\n- Exemplo 3: `1, 2, 3, 4`\n  - `(1+4)` vs `(2+3)` → `5` vs `5` → `0`\n\nA solução cobre todos os casos possíveis, não depende de ordenação adicional e executa em tempo constante.",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    long long a, b, c, d;\n\n    if (scanf(\"%lld %lld %lld %lld\", &a, &b, &c, &d) != 4) {\n        return 0;\n    }\n\n    long long diff1 = llabs((a + b) - (c + d));\n    long long diff2 = llabs((a + c) - (b + d));\n    long long diff3 = llabs((a + d) - (b + c));\n\n    long long ans = diff1;\n    if (diff2 < ans) ans = diff2;\n    if (diff3 < ans) ans = diff3;\n\n    printf(\"%lld\\n\", ans);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.10435380000853911,
+            "counts": {
+                "AC": 40,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 40
+        }
+    }
+]

@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T14:28:28.365380+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dividindo o império\n\n## Enunciado\nUm grande Império é composto por N cidades, numeradas de 1 até N. Alguns pares de cidades estão ligados diretamente por estradas bidirecionais e, por uma antiga tradição, esses pares são escolhidos de maneira que sempre é possível ir de qualquer cidade para qualquer outra cidade por exatamente um caminho (um caminho é uma sequência de estradas).\nO imperador quer dividir seu império em dois para deixar de herança para seus dois filhos. Ele percebeu que basta destruir exatamente uma estrada, qualquer estrada, para dividir seu império em dois menores que, separadamente, preservam a antiga tradição. Ele agora precisa da sua ajuda para computar a menor diferença possível no número de cidades entre os dois impérios resultantes.\n[1.png]\nPor exemplo, na figura, se o imperador destruir a estrada entre as cidades 3 e 12, os impérios resultantes terão 5 e 11 cidades, uma diferença de 6 cidades. Porém, se ele destruir a estrada entre as cidades 3 e 5, a diferença será de apenas 4 cidades. Você consegue ver que essa é a menor diferença possível para esse exemplo da figura?\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de cidades no império. As N - 1 linhas seguintes contêm, cada uma, dois inteiros A e B, indicando que existe uma estrada bidirecional ligando diretamente as cidades A e B.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um inteiro representando a menor diferença possível no número de cidades entre os dois impérios resultantes.\n\n## Restrições\n2 ≤ N ≤ 10^5\n1 ≤ A ≤ N\n1 ≤ B ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 10000\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n1 2\n2 3\n3 4\n```\nSaída:\n```\n0\n```\n\nExemplo 2:\nEntrada:\n```\n16\n3 5\n12 3\n5 1\n2 1\n4 1\n6 1\n7 1\n12 8\n12 9\n12 10\n12 11\n3 13\n13 14\n15 13\n15 16\n```\nSaída:\n```\n4\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 639,
+            "output_tokens": 594,
+            "total_tokens": 1233
+        },
+        "cost_usd": {
+            "input_cost": 6.4e-05,
+            "output_cost": 0.000297,
+            "total_cost": 0.000361
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int edge_count = 2 * (n - 1);\n    int *head = malloc((n + 1) * sizeof(int));\n    int *to = malloc(edge_count * sizeof(int));\n    int *next = malloc(edge_count * sizeof(int));\n    int *parent = calloc(n + 1, sizeof(int));\n    int *order = malloc(n * sizeof(int));\n    int *stack = malloc(n * sizeof(int));\n    int *size = malloc((n + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int idx = 0;\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[idx] = b;\n        next[idx] = head[a];\n        head[a] = idx++;\n\n        to[idx] = a;\n        next[idx] = head[b];\n        head[b] = idx++;\n    }\n\n    int top = 0, count = 0;\n    stack[top++] = 1;\n    parent[1] = -1;\n\n    while (top > 0) {\n        int u = stack[--top];\n        order[count++] = u;\n\n        for (int e = head[u]; e != -1; e = next[e]) {\n            int v = to[e];\n            if (v == parent[u]) continue;\n            parent[v] = u;\n            stack[top++] = v;\n        }\n    }\n\n    for (int i = 1; i <= n; i++) size[i] = 1;\n\n    int answer = n;\n    for (int i = count - 1; i > 0; i--) {\n        int u = order[i];\n        int difference = abs(n - 2 * size[u]);\n        if (difference < answer) answer = difference;\n        size[parent[u]] += size[u];\n    }\n\n    printf(\"%d\\n\", answer);\n\n    free(head);\n    free(to);\n    free(next);\n    free(parent);\n    free(order);\n    free(stack);\n    free(size);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int edge_count = 2 * (n - 1);\n    int *head = malloc((n + 1) * sizeof(int));\n    int *to = malloc(edge_count * sizeof(int));\n    int *next = malloc(edge_count * sizeof(int));\n    int *parent = calloc(n + 1, sizeof(int));\n    int *order = malloc(n * sizeof(int));\n    int *stack = malloc(n * sizeof(int));\n    int *size = malloc((n + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int idx = 0;\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[idx] = b;\n        next[idx] = head[a];\n        head[a] = idx++;\n\n        to[idx] = a;\n        next[idx] = head[b];\n        head[b] = idx++;\n    }\n\n    int top = 0, count = 0;\n    stack[top++] = 1;\n    parent[1] = -1;\n\n    while (top > 0) {\n        int u = stack[--top];\n        order[count++] = u;\n\n        for (int e = head[u]; e != -1; e = next[e]) {\n            int v = to[e];\n            if (v == parent[u]) continue;\n            parent[v] = u;\n            stack[top++] = v;\n        }\n    }\n\n    for (int i = 1; i <= n; i++) size[i] = 1;\n\n    int answer = n;\n    for (int i = count - 1; i > 0; i--) {\n        int u = order[i];\n        int difference = abs(n - 2 * size[u]);\n        if (difference < answer) answer = difference;\n        size[parent[u]] += size[u];\n    }\n\n    printf(\"%d\\n\", answer);\n\n    free(head);\n    free(to);\n    free(next);\n    free(parent);\n    free(order);\n    free(stack);\n    free(size);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.13571430000592954,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T22:00:19.600616+00:00",
+        "model": "openai/gpt-6-luna",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Dividindo o império\n\n## Enunciado\nUm grande Império é composto por N cidades, numeradas de 1 até N. Alguns pares de cidades estão ligados diretamente por estradas bidirecionais e, por uma antiga tradição, esses pares são escolhidos de maneira que sempre é possível ir de qualquer cidade para qualquer outra cidade por exatamente um caminho (um caminho é uma sequência de estradas).\nO imperador quer dividir seu império em dois para deixar de herança para seus dois filhos. Ele percebeu que basta destruir exatamente uma estrada, qualquer estrada, para dividir seu império em dois menores que, separadamente, preservam a antiga tradição. Ele agora precisa da sua ajuda para computar a menor diferença possível no número de cidades entre os dois impérios resultantes.\n[1.png]\nPor exemplo, na figura, se o imperador destruir a estrada entre as cidades 3 e 12, os impérios resultantes terão 5 e 11 cidades, uma diferença de 6 cidades. Porém, se ele destruir a estrada entre as cidades 3 e 5, a diferença será de apenas 4 cidades. Você consegue ver que essa é a menor diferença possível para esse exemplo da figura?\n\n## Formato de Entrada\nA primeira linha da entrada contém um inteiro N, representando o número de cidades no império. As N - 1 linhas seguintes contêm, cada uma, dois inteiros A e B, indicando que existe uma estrada bidirecional ligando diretamente as cidades A e B.\n\n## Formato de Saída\nSeu programa deve imprimir uma linha contendo um inteiro representando a menor diferença possível no número de cidades entre os dois impérios resultantes.\n\n## Restrições\n2 ≤ N ≤ 10^5\n1 ≤ A ≤ N\n1 ≤ B ≤ N\n\nInformações sobre a pontuação:\n- Em um conjunto de casos de teste somando 40 pontos, N ≤ 10000\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 256 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4\n1 2\n2 3\n3 4\n```\nSaída:\n```\n0\n```\n\nExemplo 2:\nEntrada:\n```\n16\n3 5\n12 3\n5 1\n2 1\n4 1\n6 1\n7 1\n12 8\n12 9\n12 10\n12 11\n3 13\n13 14\n15 13\n15 16\n```\nSaída:\n```\n4\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 256,
+        "tokens": {
+            "input_tokens": 669,
+            "output_tokens": 590,
+            "total_tokens": 1259
+        },
+        "cost_usd": {
+            "input_cost": 6.7e-05,
+            "output_cost": 0.000295,
+            "total_cost": 0.000362
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int *head = malloc((n + 1) * sizeof(int));\n    int *to = malloc(2 * (n - 1) * sizeof(int));\n    int *next = malloc(2 * (n - 1) * sizeof(int));\n    int *parent = calloc(n + 1, sizeof(int));\n    int *order = malloc(n * sizeof(int));\n    int *size = malloc((n + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int edge_count = 0;\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[edge_count] = b;\n        next[edge_count] = head[a];\n        head[a] = edge_count++;\n\n        to[edge_count] = a;\n        next[edge_count] = head[b];\n        head[b] = edge_count++;\n    }\n\n    int count = 0;\n    order[count++] = 1;\n    parent[1] = -1;\n\n    for (int i = 0; i < count; i++) {\n        int u = order[i];\n        for (int e = head[u]; e != -1; e = next[e]) {\n            int v = to[e];\n            if (v == parent[u]) continue;\n            parent[v] = u;\n            order[count++] = v;\n        }\n    }\n\n    for (int i = 1; i <= n; i++) size[i] = 1;\n\n    int answer = n;\n    for (int i = n - 1; i > 0; i--) {\n        int u = order[i];\n        int difference = abs(n - 2 * size[u]);\n        if (difference < answer) answer = difference;\n        size[parent[u]] += size[u];\n    }\n\n    printf(\"%d\\n\", answer);\n\n    free(head);\n    free(to);\n    free(next);\n    free(parent);\n    free(order);\n    free(size);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    int *head = malloc((n + 1) * sizeof(int));\n    int *to = malloc(2 * (n - 1) * sizeof(int));\n    int *next = malloc(2 * (n - 1) * sizeof(int));\n    int *parent = calloc(n + 1, sizeof(int));\n    int *order = malloc(n * sizeof(int));\n    int *size = malloc((n + 1) * sizeof(int));\n\n    for (int i = 1; i <= n; i++) head[i] = -1;\n\n    int edge_count = 0;\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        to[edge_count] = b;\n        next[edge_count] = head[a];\n        head[a] = edge_count++;\n\n        to[edge_count] = a;\n        next[edge_count] = head[b];\n        head[b] = edge_count++;\n    }\n\n    int count = 0;\n    order[count++] = 1;\n    parent[1] = -1;\n\n    for (int i = 0; i < count; i++) {\n        int u = order[i];\n        for (int e = head[u]; e != -1; e = next[e]) {\n            int v = to[e];\n            if (v == parent[u]) continue;\n            parent[v] = u;\n            order[count++] = v;\n        }\n    }\n\n    for (int i = 1; i <= n; i++) size[i] = 1;\n\n    int answer = n;\n    for (int i = n - 1; i > 0; i--) {\n        int u = order[i];\n        int difference = abs(n - 2 * size[u]);\n        if (difference < answer) answer = difference;\n        size[parent[u]] += size[u];\n    }\n\n    printf(\"%d\\n\", answer);\n\n    free(head);\n    free(to);\n    free(next);\n    free(parent);\n    free(order);\n    free(size);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18937199999345466,
+            "counts": {
+                "AC": 18,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 18
+        }
+    }
+]

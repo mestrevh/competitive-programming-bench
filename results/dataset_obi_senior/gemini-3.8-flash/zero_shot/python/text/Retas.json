@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T02:29:36.126219+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em python. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Retas\n\n## Enunciado\nJuan é um artista talentoso que ama criar obras com padrões geométricos, e sua última criação envolve desenhar várias linhas retas em uma imensa tela infinita. Cada linha que ele desenha é representada por uma equação da forma y = A · x + B, onde:\n• A é a inclinação da linha, indicando o quanto ela sobe ou desce.\n• B é o ponto em que a linha cruza o eixo y (a interseção com o eixo vertical).\n\nPor exemplo, a figura a seguir mostra a linha y = −2 · x + 9.\n[1.png]\nDepois de desenhar N dessas linhas, Juan começou a observar que algumas delas se cruzavam, criando pontos de interseção. Fascinado por esses cruzamentos, ele decidiu focar em uma região específica da sua tela, delimitada entre dois valores no eixo x: X1 e X2. Ele quer saber quantas interseções ocorrem dentro desse intervalo de x.\n\nPor exemplo, se Juan desenhou as seguintes N = 4 linhas:\n• y = −2 · x + 9\n• y = 1 · x − 3\n• y = 1 · x + 2\n• y = 0 · x + 5\n\nE deseja saber quantas interseções existem na região entre X1 = 3 e X2 = 7, podemos visualizar na figura a seguir que a resposta é 2:\n[2.png]\nPerceba que os pontos de interseção A e D estão na região de interesse de Juan, já os pontos C, B e E estão fora dessa região.\n\nSua tarefa é ajudar Juan a descobrir o número de interseções entre as N linhas que possuem o valor da coordenada x entre X1 e X2 (incluindo X1 e X2).\n\n## Formato de Entrada\nA primeira linha contém três inteiros N, X1, X2, onde N é o número de linhas desenhadas por Juan, X1 é o limite inferior da coordenada x da região de interesse de Juan, enquanto X2 é o limite superior dessa região.\n\nAs próximas N linhas descrevem as equações das linhas, cada uma contendo dois inteiros Ai e Bi, onde Ai é a inclinação da i-ésima linha, e Bi é o ponto em que a linha cruza o eixo y.\n\n## Formato de Saída\nA saída deve conter um único número inteiro, a quantidade de interseções entre as N linhas que possuem o valor da coordenada x entre X1 e X2 (incluindo X1 e X2).\n\n## Restrições\n1 ≤ N ≤ 10^5\n-10^9 ≤ X1 ≤ X2 ≤ 10^9\n-10^9 ≤ Ai, Bi ≤ 10^9\nAi ≠ Aj ou Bi ≠ Bj para todo 1 ≤ i < j ≤ N. Ou seja, não existem duas linhas iguais.\n\nSubtarefas:\n- Subtarefa 1 (0 pontos): exemplos.\n- Subtarefa 2 (16 pontos): N = 2.\n- Subtarefa 3 (12 pontos): N ≤ 1000.\n- Subtarefa 4 (11 pontos): Ai = Aj para todo 1 ≤ i, j ≤ N - 1, ou seja, todas as N - 1 primeiras retas possuem a mesma inclinação.\n- Subtarefa 5 (15 pontos): X1 = X2.\n- Subtarefa 6 (18 pontos): X2 = X1 + 1 e Ai ≤ 30 para 1 ≤ i ≤ N.\n- Subtarefa 7 (28 pontos): Nenhuma restrição adicional.\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n4 3 7\n-2 9\n1 -3\n1 2\n0 5\n```\nSaída:\n```\n2\n```\n\nExemplo 2:\nEntrada:\n```\n2 2 3\n-2 9\n1 2\n```\nSaída:\n```\n1\n```\n\nExemplo 3:\nEntrada:\n```\n5 100 200\n2 213\n2 209\n2 210\n2 410\n4 10\n```\nSaída:\n```\n3\n```\n\nExemplo 4:\nEntrada:\n```\n4 1 1\n15 -5\n0 10\n-5 15\n-20 30\n```\nSaída:\n```\n6\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```python ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "python",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 1129,
+            "output_tokens": 460,
+            "total_tokens": 4952
+        },
+        "cost_usd": {
+            "input_cost": 0.000847,
+            "output_cost": 0.001725,
+            "total_cost": 0.002572
+        },
+        "raw_response": "```python\nimport sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    points = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        u = A * X1 + B\n        v = A * X2 + B\n        points.append((u, v))\n\n    # Compressão de coordenadas para v\n    unique_v = sorted(list(set(v for _, v in points)))\n    v_to_rank = {val: i + 1 for i, val in enumerate(unique_v)}\n    M = len(unique_v)\n\n    # Ordenar por u crescente, e para empates, v decrescente\n    points.sort(key=lambda p: (p[0], -p[1]))\n\n    # BIT (Fenwick Tree)\n    bit = [0] * (M + 1)\n\n    def add(idx, val):\n        while idx <= M:\n            bit[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    no_cross = 0\n    for u, v in points:\n        rank = v_to_rank[v]\n        # Conta quantos elementos anteriores têm v estritamente menor\n        no_cross += query(rank - 1)\n        add(rank, 1)\n\n    total_pairs = N * (N - 1) // 2\n    ans = total_pairs - no_cross\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()\n```",
+        "extracted_code": "import sys\n\n\ndef solve():\n    input = sys.stdin.read\n    data = input().split()\n    if not data:\n        return\n\n    N = int(data[0])\n    X1 = int(data[1])\n    X2 = int(data[2])\n\n    points = []\n    idx = 3\n    for _ in range(N):\n        A = int(data[idx])\n        B = int(data[idx + 1])\n        idx += 2\n        u = A * X1 + B\n        v = A * X2 + B\n        points.append((u, v))\n\n    # Compressão de coordenadas para v\n    unique_v = sorted(list(set(v for _, v in points)))\n    v_to_rank = {val: i + 1 for i, val in enumerate(unique_v)}\n    M = len(unique_v)\n\n    # Ordenar por u crescente, e para empates, v decrescente\n    points.sort(key=lambda p: (p[0], -p[1]))\n\n    # BIT (Fenwick Tree)\n    bit = [0] * (M + 1)\n\n    def add(idx, val):\n        while idx <= M:\n            bit[idx] += val\n            idx += idx & (-idx)\n\n    def query(idx):\n        s = 0\n        while idx > 0:\n            s += bit[idx]\n            idx -= idx & (-idx)\n        return s\n\n    no_cross = 0\n    for u, v in points:\n        rank = v_to_rank[v]\n        # Conta quantos elementos anteriores têm v estritamente menor\n        no_cross += query(rank - 1)\n        add(rank, 1)\n\n    total_pairs = N * (N - 1) // 2\n    ans = total_pairs - no_cross\n    print(ans)\n\n\nif __name__ == \"__main__\":\n    solve()",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.3642365999994581,
+            "counts": {
+                "AC": 43,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 43
+        }
+    }
+]

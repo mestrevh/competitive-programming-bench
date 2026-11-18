@@ -1,0 +1,39 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T03:45:05.093442+00:00",
+        "model": "gemini-3.8-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em cpp. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Metrô da Nlogônia\n\n## Enunciado\nHá dois sistemas de metrô na capital da Nlogônia, operados por duas empresas diferentes. O dois sistemas, denominados Círculo e Quadrado, são independentes e não conectados entre si, ou seja, não há nenhuma estação em comum e nenhum trilho em comum. Em cada sistema há exatamente um caminho possível entre duas estações quaisquer, possivelmente passando por outras estações do sistema. A figura abaixo mostra uma representação de dois sistemas de metrô independentes, similares ao metrô da capital da Nlogônia. Apropriadamente, no sistema Círculo as estações são representadas por círculos, e no sistema Quadrado as estações são representadas por quadrados.\n[1.png]\nVamos chamar de diâmetro do sistema de metrô o maior número de estações no trajeto entre qualquer par de estações do sistema. Assim, o diâmetro do sistema Círculo na figura acima é cinco (trajeto 2-3-4-5-7 por exemplo) e o diâmetro do sistema Quadrado é quatro (trajeto 4-3-5-6 por exemplo).\n\nO rei da Nlogônia decidiu que os dois sistemas existentes devem ser integrados, para facilitar a vida dos usuários. A integração vai ser implementada através da construção de um único novo trecho de metrô ligando exatamente um par de estações existentes (uma estação do sistema Círculo e uma estação do sistema Quadrado). O rei determinou ainda que o diâmetro do sistema integrado seja o menor possível.\n\nVocê pode ajudar a planejar a integração dos sistemas? Dadas as descrições dos dois sistemas, sua tarefa é determinar qual par de estações deve ser ligado para realizar a integração como desejada pelo rei.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros N e M, indicando respectivamente o número de estações do sistema Círculo e do sistema Quadrado. No sistema Círculo as estações são identificadas por números de 1 a N e no sistema Quadrado as estações são identificadas por números de 1 a M. Cada uma das N-1 linhas seguintes descreve as ligações entre estações do sistema Círculo e contém dois inteiros A e B indicando que existe uma ligação entre as estações A e B. Cada uma das M-1 linhas seguintes descreve as ligações entre estações do sistema Quadrado e contém dois inteiros X e Y indicando que existe uma ligação entre as estações X e Y.\n\n## Formato de Saída\nSeu programa deve produzir dois inteiros, o primeiro representando uma estação do sistema Círculo e o segundo representando uma estação do sistema Quadrado. Se houver mais de um par possível, indique qualquer um entre os possíveis.\n\n## Restrições\n2 ≤ N, M ≤ 10^5\n1 ≤ A, B ≤ N\n1 ≤ X, Y ≤ M\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n7 6\n1 3\n3 2\n3 4\n4 5\n5 7\n6 5\n1 3\n2 3\n3 4\n3 5\n5 6\n```\nSaída:\n```\n4 3\n```\n\nExemplo 2:\nEntrada:\n```\n3 4\n1 2\n2 3\n1 2\n2 3\n3 4\n```\nSaída:\n```\n2 2\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```cpp ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "cpp",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 1024,
+        "tokens": {
+            "input_tokens": 877,
+            "output_tokens": 609,
+            "total_tokens": 2918
+        },
+        "cost_usd": {
+            "input_cost": 0.000658,
+            "output_cost": 0.002284,
+            "total_cost": 0.002941
+        },
+        "raw_response": "```cpp\n#include <iostream>\n#include <vector>\n#include <queue>\n#include <algorithm>\n\nusing namespace std;\n\nint find_center(int n, const vector<vector<int>>& adj) {\n    auto bfs = [&](int start) {\n        vector<int> dist(n + 1, -1);\n        vector<int> parent(n + 1, -1);\n        queue<int> q;\n\n        dist[start] = 0;\n        q.push(start);\n        int farthest = start;\n\n        while (!q.empty()) {\n            int u = q.front();\n            q.pop();\n\n            if (dist[u] > dist[farthest]) {\n                farthest = u;\n            }\n\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    parent[v] = u;\n                    q.push(v);\n                }\n            }\n        }\n        return make_pair(farthest, parent);\n    };\n\n    int u = bfs(1).first;\n    auto [v, parent] = bfs(u);\n\n    vector<int> path;\n    int curr = v;\n    while (curr != -1) {\n        path.push_back(curr);\n        curr = parent[curr];\n    }\n\n    return path[path.size() / 2];\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> adj1(n + 1);\n    for (int i = 0; i < n - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj1[u].push_back(v);\n        adj1[v].push_back(u);\n    }\n\n    vector<vector<int>> adj2(m + 1);\n    for (int i = 0; i < m - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj2[u].push_back(v);\n        adj2[v].push_back(u);\n    }\n\n    int c1 = find_center(n, adj1);\n    int c2 = find_center(m, adj2);\n\n    cout << c1 << \" \" << c2 << \"\\n\";\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <algorithm>\n\nusing namespace std;\n\nint find_center(int n, const vector<vector<int>>& adj) {\n    auto bfs = [&](int start) {\n        vector<int> dist(n + 1, -1);\n        vector<int> parent(n + 1, -1);\n        queue<int> q;\n\n        dist[start] = 0;\n        q.push(start);\n        int farthest = start;\n\n        while (!q.empty()) {\n            int u = q.front();\n            q.pop();\n\n            if (dist[u] > dist[farthest]) {\n                farthest = u;\n            }\n\n            for (int v : adj[u]) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    parent[v] = u;\n                    q.push(v);\n                }\n            }\n        }\n        return make_pair(farthest, parent);\n    };\n\n    int u = bfs(1).first;\n    auto [v, parent] = bfs(u);\n\n    vector<int> path;\n    int curr = v;\n    while (curr != -1) {\n        path.push_back(curr);\n        curr = parent[curr];\n    }\n\n    return path[path.size() / 2];\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n, m;\n    if (!(cin >> n >> m)) return 0;\n\n    vector<vector<int>> adj1(n + 1);\n    for (int i = 0; i < n - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj1[u].push_back(v);\n        adj1[v].push_back(u);\n    }\n\n    vector<vector<int>> adj2(m + 1);\n    for (int i = 0; i < m - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj2[u].push_back(v);\n        adj2[v].push_back(u);\n    }\n\n    int c1 = find_center(n, adj1);\n    int c2 = find_center(m, adj2);\n\n    cout << c1 << \" \" << c2 << \"\\n\";\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.18251950000012584,
+            "counts": {
+                "AC": 38,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 38
+        }
+    }
+]

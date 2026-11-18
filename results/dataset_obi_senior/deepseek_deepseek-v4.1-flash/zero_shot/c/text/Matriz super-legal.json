@@ -1,0 +1,76 @@
+[
+    {
+        "attempt": 1,
+        "timestamp": "2026-11-17T08:09:12.686406+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Matriz super-legal\n\n## Enunciado\nDenotando por A_{i,j} o elemento na i-ésima linha e j-ésima coluna da matriz A, dizemos que uma matriz é \"legal\" se a condição\n\nA_{1,1} + A_{lin,col} ≤ A_{1,col} + A_{lin,1}\n\né verdadeira para todo lin > 1 e col > 1.\n\nAdicionalmente, dizemos que a matriz é \"super-legal\" se cada uma de suas submatrizes com pelo menos duas linhas e duas colunas é legal. Lembre que uma submatriz S de uma matriz M_{L×C} é uma matriz que inclui todos os elementos M_{i,j} tais que l1 ≤ i ≤ l2 e c1 ≤ j ≤ c2, para 1 ≤ l1 ≤ l2 ≤ L e 1 ≤ c1 ≤ c2 ≤ C.\n\nA sua tarefa é, dada uma matriz A, determinar a maior quantidade de elementos de uma submatriz super-legal da matriz A.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C indicando respectivamente o número de linhas e o número de colunas da matriz. Cada uma das L linhas seguintes contém C inteiros Xi representando os elementos da matriz.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, com apenas um número inteiro, a maior quantidade de elementos de uma submatriz super-legal da matriz da entrada, ou zero no caso de não existir uma submatriz super-legal.\n\n## Restrições\n2 ≤ L, C ≤ 1000\n-10^6 ≤ Xi ≤ 10^6\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n1 4 10\n5 2 6\n11 1 3\n```\nSaída:\n```\n9\n```\n\nExemplo 2:\nEntrada:\n```\n3 3\n1 3 1\n2 1 2\n1 1 1\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n5 6\n1 1 4 0 3 3\n4 4 9 7 11 13\n-3 -1 4 2 8 11\n1 5 9 5 9 10\n4 8 10 5 8 8\n```\nSaída:\n```\n15\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": false,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 705,
+            "output_tokens": 14144,
+            "total_tokens": 14849
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.033946,
+            "total_cost": 0.033948
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int L, C;\n    scanf(\"%d %d\", &L, &C);\n\n    int *prev = (int*)malloc(C * sizeof(int));\n    int *curr = (int*)malloc(C * sizeof(int));\n    int m = C - 1;\n\n    int *heights = (int*)calloc(m, sizeof(int));\n    int *stack = (int*)malloc((m + 1) * sizeof(int));\n\n    int ans = (L > C) ? L : C;\n\n    for (int j = 0; j < C; j++) {\n        scanf(\"%d\", &prev[j]);\n    }\n\n    for (int i = 1; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            scanf(\"%d\", &curr[j]);\n        }\n\n        for (int j = 0; j < m; j++) {\n            if (prev[j] + curr[j + 1] <= prev[j + 1] + curr[j]) {\n                heights[j]++;\n            } else {\n                heights[j] = 0;\n            }\n        }\n\n        int top = 0;\n        for (int j = 0; j <= m; j++) {\n            int h = (j < m) ? heights[j] : 0;\n            while (top > 0 && heights[stack[top - 1]] > h) {\n                int height = heights[stack[--top]];\n                int left = (top > 0) ? stack[top - 1] : -1;\n                int right = j;\n                int width = right - left - 1;\n                int area = (height + 1) * (width + 1);\n                if (area > ans) ans = area;\n            }\n            if (j < m) {\n                stack[top++] = j;\n            }\n        }\n\n        int *tmp = prev;\n        prev = curr;\n        curr = tmp;\n    }\n\n    printf(\"%d\\n\", ans);\n\n    free(prev);\n    free(curr);\n    free(heights);\n    free(stack);\n\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int L, C;\n    scanf(\"%d %d\", &L, &C);\n\n    int *prev = (int*)malloc(C * sizeof(int));\n    int *curr = (int*)malloc(C * sizeof(int));\n    int m = C - 1;\n\n    int *heights = (int*)calloc(m, sizeof(int));\n    int *stack = (int*)malloc((m + 1) * sizeof(int));\n\n    int ans = (L > C) ? L : C;\n\n    for (int j = 0; j < C; j++) {\n        scanf(\"%d\", &prev[j]);\n    }\n\n    for (int i = 1; i < L; i++) {\n        for (int j = 0; j < C; j++) {\n            scanf(\"%d\", &curr[j]);\n        }\n\n        for (int j = 0; j < m; j++) {\n            if (prev[j] + curr[j + 1] <= prev[j + 1] + curr[j]) {\n                heights[j]++;\n            } else {\n                heights[j] = 0;\n            }\n        }\n\n        int top = 0;\n        for (int j = 0; j <= m; j++) {\n            int h = (j < m) ? heights[j] : 0;\n            while (top > 0 && heights[stack[top - 1]] > h) {\n                int height = heights[stack[--top]];\n                int left = (top > 0) ? stack[top - 1] : -1;\n                int right = j;\n                int width = right - left - 1;\n                int area = (height + 1) * (width + 1);\n                if (area > ans) ans = area;\n            }\n            if (j < m) {\n                stack[top++] = j;\n            }\n        }\n\n        int *tmp = prev;\n        prev = curr;\n        curr = tmp;\n    }\n\n    printf(\"%d\\n\", ans);\n\n    free(prev);\n    free(curr);\n    free(heights);\n    free(stack);\n\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.17269510000187438,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    },
+    {
+        "attempt": 2,
+        "timestamp": "2026-11-17T21:15:34.789301+00:00",
+        "model": "deepseek/deepseek-v4.1-flash",
+        "prompt_name": "zero_shot",
+        "prompt": "Você é um programador competitivo experiente em c. Resolva o seguinte problema de programação competitiva de forma correta e eficiente.\n\n# Matriz super-legal\n\n## Enunciado\nDenotando por A_{i,j} o elemento na i-ésima linha e j-ésima coluna da matriz A, dizemos que uma matriz é \"legal\" se a condição\n\nA_{1,1} + A_{lin,col} ≤ A_{1,col} + A_{lin,1}\n\né verdadeira para todo lin > 1 e col > 1.\n\nAdicionalmente, dizemos que a matriz é \"super-legal\" se cada uma de suas submatrizes com pelo menos duas linhas e duas colunas é legal. Lembre que uma submatriz S de uma matriz M_{L×C} é uma matriz que inclui todos os elementos M_{i,j} tais que l1 ≤ i ≤ l2 e c1 ≤ j ≤ c2, para 1 ≤ l1 ≤ l2 ≤ L e 1 ≤ c1 ≤ c2 ≤ C.\n\nA sua tarefa é, dada uma matriz A, determinar a maior quantidade de elementos de uma submatriz super-legal da matriz A.\n\n## Formato de Entrada\nA primeira linha contém dois inteiros L e C indicando respectivamente o número de linhas e o número de colunas da matriz. Cada uma das L linhas seguintes contém C inteiros Xi representando os elementos da matriz.\n\n## Formato de Saída\nSeu programa deve produzir uma única linha, com apenas um número inteiro, a maior quantidade de elementos de uma submatriz super-legal da matriz da entrada, ou zero no caso de não existir uma submatriz super-legal.\n\n## Restrições\n2 ≤ L, C ≤ 1000\n-10^6 ≤ Xi ≤ 10^6\n\n## Limites de Execução\n- Tempo Limite: 5.0 segundo(s)\n- Limite de Memória: 512 MB\n\n## Exemplos de Teste:\n\nExemplo 1:\nEntrada:\n```\n3 3\n1 4 10\n5 2 6\n11 1 3\n```\nSaída:\n```\n9\n```\n\nExemplo 2:\nEntrada:\n```\n3 3\n1 3 1\n2 1 2\n1 1 1\n```\nSaída:\n```\n4\n```\n\nExemplo 3:\nEntrada:\n```\n5 6\n1 1 4 0 3 3\n4 4 9 7 11 13\n-3 -1 4 2 8 11\n1 5 9 5 9 10\n4 8 10 5 8 8\n```\nSaída:\n```\n15\n```\n\nIMPORTANTE:\n- Escreva a solução completa e otimizada na linguagem solicitada.\n- Garanta que seu código leia da entrada padrão (stdin) e escreva na saída padrão (stdout) exatamente como especificado.\n- Retorne apenas o código da solução, delimitado por blocos de código markdown (por exemplo, ```c ... ```). Não inclua explicações ou comentários desnecessários fora do código.\n",
+        "language": "c",
+        "modality": "text",
+        "include_limits": true,
+        "time_limit": 5.0,
+        "memory_limit": 512,
+        "tokens": {
+            "input_tokens": 736,
+            "output_tokens": 24790,
+            "total_tokens": 25526
+        },
+        "cost_usd": {
+            "input_cost": 2e-06,
+            "output_cost": 0.059496,
+            "total_cost": 0.059498
+        },
+        "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int *A = (int*)malloc((size_t)L * C * sizeof(int));\n    for (int i = 0; i < L; ++i) {\n        for (int j = 0; j < C; ++j) {\n            scanf(\"%d\", &A[i * C + j]);\n        }\n    }\n\n    int M = C - 1;\n    int *height = (int*)calloc(M, sizeof(int));\n    int *stH = (int*)malloc((M + 1) * sizeof(int));\n    int *stStart = (int*)malloc((M + 1) * sizeof(int));\n\n    long long ans = (L > C) ? L : C;\n\n    for (int i = 0; i < L - 1; ++i) {\n        int *row0 = A + (size_t)i * C;\n        int *row1 = A + (size_t)(i + 1) * C;\n\n        for (int j = 0; j < M; ++j) {\n            long long lhs = (long long)row0[j] + row1[j + 1];\n            long long rhs = (long long)row0[j + 1] + row1[j];\n            if (lhs <= rhs) {\n                ++height[j];\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        int top = -1;\n        for (int j = 0; j <= M; ++j) {\n            int cur = (j < M) ? height[j] : 0;\n            int start = j;\n\n            while (top >= 0 && stH[top] > cur) {\n                int h = stH[top];\n                int s = stStart[top--];\n                int w = j - s;\n\n                if (h > 0) {\n                    long long val = (long long)(h + 1) * (w + 1);\n                    if (val > ans) ans = val;\n                }\n                start = s;\n            }\n\n            if (top < 0 || stH[top] < cur) {\n                stH[++top] = cur;\n                stStart[top] = start;\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n\n    free(A);\n    free(height);\n    free(stH);\n    free(stStart);\n    return 0;\n}\n```",
+        "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int L, C;\n    if (scanf(\"%d %d\", &L, &C) != 2) return 0;\n\n    int *A = (int*)malloc((size_t)L * C * sizeof(int));\n    for (int i = 0; i < L; ++i) {\n        for (int j = 0; j < C; ++j) {\n            scanf(\"%d\", &A[i * C + j]);\n        }\n    }\n\n    int M = C - 1;\n    int *height = (int*)calloc(M, sizeof(int));\n    int *stH = (int*)malloc((M + 1) * sizeof(int));\n    int *stStart = (int*)malloc((M + 1) * sizeof(int));\n\n    long long ans = (L > C) ? L : C;\n\n    for (int i = 0; i < L - 1; ++i) {\n        int *row0 = A + (size_t)i * C;\n        int *row1 = A + (size_t)(i + 1) * C;\n\n        for (int j = 0; j < M; ++j) {\n            long long lhs = (long long)row0[j] + row1[j + 1];\n            long long rhs = (long long)row0[j + 1] + row1[j];\n            if (lhs <= rhs) {\n                ++height[j];\n            } else {\n                height[j] = 0;\n            }\n        }\n\n        int top = -1;\n        for (int j = 0; j <= M; ++j) {\n            int cur = (j < M) ? height[j] : 0;\n            int start = j;\n\n            while (top >= 0 && stH[top] > cur) {\n                int h = stH[top];\n                int s = stStart[top--];\n                int w = j - s;\n\n                if (h > 0) {\n                    long long val = (long long)(h + 1) * (w + 1);\n                    if (val > ans) ans = val;\n                }\n                start = s;\n            }\n\n            if (top < 0 || stH[top] < cur) {\n                stH[++top] = cur;\n                stStart[top] = start;\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", ans);\n\n    free(A);\n    free(height);\n    free(stH);\n    free(stStart);\n    return 0;\n}",
+        "judge_result": {
+            "judge_predict": "AC",
+            "execution_time": 0.15604929999972228,
+            "counts": {
+                "AC": 25,
+                "WA": 0,
+                "RE": 0,
+                "TLE": 0,
+                "MLE": 0,
+                "CE": 0
+            },
+            "total_test_cases": 25
+        }
+    }
+]
