@@ -1,0 +1,140 @@
+Você é um programador competitivo experiente em C. Resolva o problema de programação competitiva a seguir de forma correta, ótima e eficiente.
+
+### DIRETRIZES TÉCNICAS ESSENCIAIS:
+1. **Corretude e Casos de Borda:** Trate rigorosamente valores limites (N = 0, N = 1, valores negativos, limites máximos do enunciado).
+2. **Prevenção de Overflow:** Use tipos inteiros de 64 bits (`long long`) sempre que operações de soma, multiplicação ou contagem acumulada puderem exceder 2 × 10^9.
+3. **Complexidade de Tempo e Memória:** O algoritmo deve respeitar os limites de execução do problema, evitando complexidades assintóticas inadequadas (como O(N^2) quando N >= 10^5).
+4. **Entrada e Saída Estritas (stdin/stdout):**
+   - Leia da entrada padrão e escreva na saída padrão exatamente no formato especificado.
+   - NUNCA imprima mensagens auxiliares, avisos ou cabeçalhos interativos ("Digite N:", "Resultado:").
+   - Atente para separadores de espaço e quebras de linha (evite espaços extras no final da linha se o problema proibir).
+5. **Estrutura Executável Limpa:**
+   - O código deve ser autocontido, completo e pronto para compilação/execução.
+   - Em C: inclua todos os headers necessários (`#include <stdio.h>`, `#include <stdlib.h>`, etc.) e use `int main(void)` retornando `0`.
+6. **Formato de Resposta:** Retorne APENAS o código da solução delimitado por um bloco markdown (```c ... ```). Não inclua explicações ou texto antes ou depois do bloco.
+
+### EXEMPLOS DE REFERÊNCIA:
+Abaixo estão exemplos canônicos de problemas e soluções estruturadas para servir de modelo de raciocínio, prevenção de bugs e formatação de I/O:
+
+#### Exemplo 1: I/O Básico e Prevenção de Overflow
+**Problema:** Leia dois inteiros e imprima a soma deles.
+**Entrada:**
+```
+1000000000 2000000000
+```
+**Saída:**
+```
+3000000000
+```
+**Solução esperada:**
+```c
+#include <stdio.h>
+
+int main(void) {
+    long long a, b;
+    if (scanf("%lld %lld", &a, &b) == 2) {
+        printf("%lld\n", a + b);
+    }
+    return 0;
+}
+```
+
+#### Exemplo 2: Matriz, Strings e Contagem
+**Problema:** Dada uma grade de N linhas e M colunas de caracteres, conte quantos caracteres '1' existem.
+**Entrada:**
+```
+2 3
+101
+010
+```
+**Saída:**
+```
+3
+```
+**Solução esperada:**
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+    int n, m;
+    if (scanf("%d %d", &n, &m) != 2) return 0;
+
+    char *row = (char *)malloc((m + 5) * sizeof(char));
+    long long count = 0;
+    for (int i = 0; i < n; i++) {
+        scanf("%s", row);
+        for (int j = 0; j < m; j++) {
+            if (row[j] == '1') {
+                count++;
+            }
+        }
+    }
+    free(row);
+
+    printf("%lld\n", count);
+    return 0;
+}
+```
+
+#### Exemplo 3: Grafos, Indexação 1-Based, Ordenação e Formatação de Saída
+**Problema:** Dado um grafo não-direcionado com N vértices (indexados de 1 a N) e M arestas, liste os vizinhos do vértice 1 em ordem crescente, separados por espaço.
+**Entrada:**
+```
+4 3
+1 3
+1 2
+3 4
+```
+**Saída:**
+```
+2 3
+```
+**Solução esperada:**
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int cmp_int(const void *a, const void *b) {
+    int va = *(const int *)a;
+    int vb = *(const int *)b;
+    return (va > vb) - (va < vb);
+}
+
+int main(void) {
+    int n, m;
+    if (scanf("%d %d", &n, &m) != 2) return 0;
+
+    int *neighbors = (int *)malloc((m + 1) * sizeof(int));
+    int deg = 0;
+
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        scanf("%d %d", &u, &v);
+        if (u == 1) {
+            neighbors[deg++] = v;
+        } else if (v == 1) {
+            neighbors[deg++] = u;
+        }
+    }
+
+    qsort(neighbors, deg, sizeof(int), cmp_int);
+
+    for (int i = 0; i < deg; i++) {
+        if (i > 0) printf(" ");
+        printf("%d", neighbors[i]);
+    }
+    printf("\n");
+
+    free(neighbors);
+    return 0;
+}
+```
+
+---
+
+### PROBLEMA A SER RESOLVIDO:
+{problem}
+
+---
+IMPORTANTE: Agora, resolva o problema acima na linguagem C. Retorne exclusivamente o bloco de código markdown (```c ... ```) com a solução completa e eficiente.

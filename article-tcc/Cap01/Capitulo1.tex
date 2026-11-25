@@ -1,0 +1,54 @@
+\chapter{Introdução}\label{cap:introducao}
+
+O maior desafio da Inteligência Artificial é automatizar tarefas, principalmente no contexto computacional. A cada dia que passa, novas ferramentas que utilizam os Modelos de Linguagem de Grande Porte (LLMs, do inglês \textit{Large Language Models}) estão sendo inseridas no ciclo de desenvolvimento de \textit{software}. Entretanto, será que esses modelos conseguem resolver problemas de programação competitiva? No mundo da programação competitiva, o participante precisa de determinadas habilidades, tais como: interpretar enunciados frequentemente extensos ou ambíguos; projetar algoritmos em relação ao tempo de execução e consumo de memória; extrair requisitos implícitos; e analisar elementos visuais ou padrões da questão.
+
+Essas habilidades exigem atividades cognitivas sofisticadas do competidor, contudo, diante desse cenário, a capacidade dos LLMs na resolução dos problemas da Olimpíada Brasileira de Informática (OBI) pouco foi explorada. Além de ser uma das principais provas aplicadas durante anos no cenário educacional brasileiro para a computação, a OBI destaca-se por desafiar estudantes de diferentes níveis de complexidade. Em paralelo, houve avanços expressivos na geração automática de código executável~\citep{chen2021evaluating, Mendoza2024Comparative} por meio de Processamento de Linguagem Natural, devido às leis de escala~\citep{kaplan2020scaling}. Outro ponto importante é que modelos multimodais com técnicas de processamento de texto e imagens, como o \textit{Visual Instruction Tuning}~\citep{Liu2023VisualIT}, ganharam notoriedade em \textit{benchmarks}~\citep{Fu2023MMEAC,Lu2023MathVistaEM}. Porém, essa abordagem foi pouco explorada em \textit{benchmarks} de programação competitiva.
+
+Embora estudos internacionais e nacionais investiguem o desempenho de LLMs na resolução de problemas algorítmicos e exames educacionais~\citep{chen2021evaluating,zheng2025livecodebench,li2024evaluating,mendonca2024evaluating,viegas2025assessing,almeida2023bluex}, ainda há carência de evidências experimentais sistemáticas sobre o comportamento desses modelos em problemas brasileiros da OBI no \textbf{Nível Sênior} da Modalidade Programação. Esse nível, considerado o mais difícil da competição, combina validação objetiva por juízes automatizados com casos de teste oficiais e ampla variedade algorítmica, configurando um ambiente metodologicamente robusto para analisar como LLMs lidam com múltiplas linguagens de programação, enunciados com imagens, explicitação de limites de recursos e estratégias estruturadas de engenharia de \textit{prompt}.
+
+Em estudo preliminar junto ao grupo de pesquisa \textit{GEMA-LAB} com foco em todos os níveis da Modalidade Programação da OBI em Python e C++~\citep{angelo2026ise}, com disponibilização pública dos artefatos~\citep{obibenchmarking2026,problems2026}, observou-se que a qualidade da geração varia sensivelmente conforme a dificuldade do problema, a presença de contexto visual e o formato de instruções fornecido ao modelo. O presente Trabalho de Conclusão de Curso (TCC) aprofunda e estende essa linha de investigação especificamente para o \textbf{Nível Sênior da OBI}, introduzindo uma avaliação experimental controlada sobre \textbf{cinco linguagens de programação}, \textbf{três modalidades de representação visual} (texto puro, imagem em Base64 e descrição textual estruturada), \textbf{injeção explícita de limites computacionais}, \textbf{técnicas de \textit{prompting}} e uma \textbf{comparação geracional sob paridade de juiz} entre modelos atuais e da geração anterior.
+
+\section{Perguntas de Pesquisa}\label{sec:intro-rqs}
+
+Para investigar de forma sistemática a capacidade de LLMs na resolução de problemas de Nível Sênior da OBI, este trabalho é guiado por cinco perguntas de pesquisa (PP):
+
+\begin{enumerate}
+    \item \textbf{PP1 (Desempenho Geral e Variação entre Linguagens):} Qual é a taxa de acerto (\passat{1}, sob decodificação determinística $T = 0$) dos LLMs na resolução textual dos problemas da OBI (Nível Sênior) e como esse desempenho varia entre as cinco linguagens de programação avaliadas (\linguagem{Python}, \linguagem{C}, \linguagem{C++}, \linguagem{Java} e \linguagem{JavaScript})?
+    \item \textbf{PP2 (Impacto da Multimodalidade):} Como a presença de imagens nos enunciados influencia o desempenho dos modelos e qual o impacto de diferentes modalidades de representação visual (\modalidade{text}, \modalidade{img} em Base64 e \modalidade{description} textual enriquecida) sobre a taxa de acerto, o perfil de falhas e o consumo de \textit{tokens}?
+    \item \textbf{PP3 (Explicitação de Restrições Computacionais):} Qual é o impacto do fornecimento explícito das restrições de tempo (\texttt{time\_limit}) e memória (\texttt{memory\_limit}) no \textit{prompt} sobre o percentual de submissões aceitas e sobre a qualidade algorítmica das soluções geradas na linguagem mais sensível do \textit{baseline}?
+    \item \textbf{PP4 (Estratégias de Engenharia de \textit{Prompt}):} Como diferentes estratégias de \textit{prompting} (\textit{Zero-Shot}, \textit{Few-Shot} e \textit{Chain-of-Thought} guiado pela Metodologia de Pólya) impactam a taxa de acerto, a taxonomia de erros e a eficiência econômica (custo por solução aceita) na linguagem mais desafiadora?
+    \item \textbf{PP5 (Evolução Geracional sob Paridade de Juiz):} Como os LLMs da geração atual (\textit{Gemini 3.8 Flash} e \textit{GPT-6 Luna}) se comparam aos modelos da geração anterior (\textit{Gemini 3.1 Pro} e \textit{GPT-5.4}) sob protocolo idêntico em \linguagem{Python} \textit{Zero-Shot}?
+\end{enumerate}
+
+\section{Objetivo Geral}\label{sec:intro-objetivo}
+
+Avaliar experimentalmente a capacidade de Modelos de Linguagem de Grande Porte na resolução automatizada de problemas de Nível Sênior da Olimpíada Brasileira de Informática (Modalidade Programação), mensurando a influência da linguagem de programação, da informação visual, da explicitação de restrições de execução e de estratégias de engenharia de \textit{prompt} sobre a corretude funcional, a eficiência computacional e econômica, além da evolução entre gerações de modelos sob o mesmo protocolo de julgamento.
+
+\subsection{Objetivos Específicos}\label{sec:intro-objetivos-esp}
+
+Para alcançar o objetivo geral e responder às perguntas de pesquisa, definem-se os seguintes objetivos específicos:
+
+\begin{enumerate}
+    \item Estruturar e validar, por meio de execução oráculo das soluções de referência, uma base padronizada de 125 problemas do Nível Sênior da OBI (2016--2025) contendo enunciados, metadados, imagens e 4.681 casos de teste oficiais;
+    \item Evoluir o \textit{pipeline} automatizado e reprodutível de \textit{benchmarking} e julgamento local multilinguagem capaz de submeter problemas via API, extrair o código gerado e mensurar vereditos, tempo de CPU, uso de memória, \textit{tokens} e custo financeiro;
+    \item Avaliar e comparar o desempenho (\passat{1}) e a taxonomia de falhas de múltiplos LLMs (\textbf{DeepSeek v4.1 Flash}, \textbf{Gemini 3.8 Flash} e \textbf{GPT-6 Luna}) nas linguagens \linguagem{Python}, \linguagem{C}, \linguagem{C++}, \linguagem{Java} e \linguagem{JavaScript};
+    \item Investigar o efeito da presença de figuras nos enunciados e comparar as modalidades \modalidade{text}, \modalidade{img} (Base64) e \modalidade{description} nas 46 questões com imagens;
+    \item Mensurar o impacto da inclusão explícita dos limites de tempo e memória no \textit{prompt} sobre a linguagem com menor desempenho no \textit{baseline};
+    \item Comparar estratégias de engenharia de \textit{prompt} (\textit{Zero-Shot}, \textit{Few-Shot} e \textit{Chain-of-Thought} baseado na heurística de Pólya);
+    \item Comparar o avanço entre gerações nas famílias Google (\textbf{Gemini 3.1 Pro} versus \textbf{Gemini 3.8 Flash}) e OpenAI (\textbf{GPT-5.4} versus \textbf{GPT-6 Luna}) sob protocolo idêntico em \linguagem{Python} \textit{Zero-Shot}, reavaliando as soluções anteriores no mesmo juiz local adotado neste trabalho.
+\end{enumerate}
+
+\section{Relevância do Trabalho}\label{sec:intro-relevancia}
+
+A relevância deste trabalho manifesta-se em três dimensões complementares. No plano \textbf{científico}, o estudo fornece evidência empírica controlada em língua portuguesa sobre capacidades e limites de LLMs em raciocínio algorítmico de nível sênior, superando o viés de avaliações restritas a conjuntos em inglês ou a uma única linguagem de programação. No plano \textbf{metodológico e de Engenharia de \textit{Software}}, o paralelo entre programação competitiva e desenvolvimento de sistemas, no qual a interpretação de enunciados e figuras reflete a modelagem de requisitos e a validação contra casos extremos equivale a testes unitários rigorosos, é operacionalizado por um arcabouço reproduzível com juiz local multilinguagem e telemetria detalhada de custo e verbosidade. Por fim, no plano \textbf{educacional e prático}, compreender onde e por que modelos falham (como erros de E/S, sobre-engenharia ou alucinações lógicas) oferece subsídios concretos para professores, estudantes e projetistas de tutores inteligentes que buscam integrar LLMs como mediadores pedagógicos sem substituir o raciocínio humano na preparação para a Olimpíada Brasileira de Informática~\citep{priyanka2025development,peng2025enhancing}.
+
+\section{Organização do Trabalho}\label{sec:intro-organizacao}
+
+O restante deste trabalho está estruturado da seguinte maneira:
+\begin{itemize}
+    \item O \textbf{Capítulo~\ref{cap:relacionados}} revisa os trabalhos relacionados sobre avaliação de LLMs em programação competitiva, multimodalidade, engenharia de \textit{prompt} e exames brasileiros;
+    \item O \textbf{Capítulo~\ref{cap:fundamentacao}} apresenta a fundamentação teórica acerca de LLMs, decodificação, técnicas de \textit{prompting}, estrutura da OBI e métricas de avaliação;
+    \item O \textbf{Capítulo~\ref{cap:metodologia}} detalha a construção e validação da base de dados, a arquitetura do \textit{benchmark} desenvolvido e o desenho experimental para cada pergunta de pesquisa;
+    \item O \textbf{Capítulo~\ref{cap:resultados}} apresenta e discute os resultados experimentais obtidos para PP1 a PP5, bem como as ameaças à validade;
+    \item O \textbf{Capítulo~\ref{cap:conclusao}} sintetiza as conclusões, contribuições e direções para trabalhos futuros.
+\end{itemize}

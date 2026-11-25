@@ -1,0 +1,474 @@
+\chapter{Resultados Complementares}\label{ap:resultados-complementares}
+
+Este apêndice reúne as tabelas e figuras que aprofundam as análises do Capítulo~\ref{cap:resultados}, concentrando-se nos desdobramentos que não foram detalhados no corpo principal do texto: cobertura complementar entre linguagens, distribuição de vereditos por modelo, telemetria de tamanho de código e custo, mapeamento nominal das questões com transição de veredito e auditoria dos erros de extração.
+
+\section{Detalhamento Complementar da PP1: Desempenho por Linguagem}\label{ap:pp1-detalhes}
+
+\subsection{Taxa de Acerto (\texorpdfstring{\passat{1}}{Pass@1}) e Cobertura Complementar}\label{sec:res-rq1-pass1}
+
+A Tabela~\ref{tab:res-pp1-pass1} apresenta os números absolutos e percentuais de aprovação (\veredito{AC} de 125) de cada modelo nas cinco linguagens avaliadas, servindo de referência numérica para a Figura~\ref{fig:res-pp1-ac-linguagem} discutida na Seção~\ref{sec:res-rq1}.
+
+\begin{table}[!htbp]
+\centering
+\caption[Taxa de acerto Pass@1 por modelo e linguagem na PP1]{Quantidade absoluta de aprovações (\veredito{AC} de 125) e taxa $\passat{1}$ (\%) por modelo e linguagem de programação ($T = 0{,}0$).}
+\label{tab:res-pp1-pass1}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccccc}
+\toprule
+Modelo & Python & C & C++ & Java & JavaScript & Média ($\passat{1}$) & Total AC (625) \\
+\midrule
+DeepSeek v4.1 Flash & \tsecond{118} (94,40\%) & \tfirst{118} (94,40\%) & \tfirst{121} (96,80\%) & \tsecond{117} (93,60\%) & \tsecond{115} (92,00\%) & \tsecond{117,8} (94,24\%) & \tsecond{589} \\
+Gemini 3.8 Flash    & \tfirst{121} (96,80\%)  & \tsecond{117} (93,60\%) & \tsecond{119} (95,20\%) & 114 (91,20\%) & \tfirst{119} (95,20\%)  & \tfirst{118,0} (94,40\%)  & \tfirst{590}  \\
+GPT-6 Luna          & 109 (87,20\%)           & 110 (88,00\%)           & 113 (90,40\%)           & \tfirst{119} (95,20\%)  & \tsecond{115} (92,00\%) & 113,2 (90,56\%)           & 566           \\
+\midrule
+\rowcolor{linhaDestaque}\textbf{Agregado (de 375)} & 348 (92,80\%) & 345 (92,00\%) & \tfirst{353} (94,13\%) & \tsecond{350} (93,33\%) & 349 (93,07\%) & -- & 1.745 (93,07\%) \\
+\bottomrule
+\end{tabular}%
+}
+\par\smallskip{\footnotesize \tfirst{Vermelho} e \tsecond{azul}: melhor e segundo melhor valor por coluna.}
+\end{table}
+
+Além das medidas de dispersão apresentadas na Tabela~\ref{tab:res-pp1-estabilidade} do Capítulo~\ref{cap:resultados}, um aspecto relevante é verificar se os modelos erram sempre as mesmas questões ou se as falhas mudam conforme a linguagem escolhida. A Tabela~\ref{tab:ap-pp1-estabilidade} mostra a cobertura complementar de cada LLM sobre o conjunto de 125 problemas. Embora o número de questões resolvidas de forma unânime nas cinco linguagens (5/5) varie entre 92 (no \textbf{GPT-6 Luna}) e 105 (no \textbf{DeepSeek v4.1 Flash} e no \textbf{Gemini 3.8 Flash}), todos os modelos conseguem resolver entre 123 e 124 questões ($98{,}4\%$ a $99{,}2\%$) quando se considera o acerto em ao menos uma linguagem ($\ge 1$). Esse comportamento reforça que a grande maioria dos erros pontuais na PP1 não decorre da falta de capacidade lógica para resolver o problema, mas de tropeços específicos na sintaxe ou nas particularidades de implementação de cada linguagem.
+
+\begin{table}[!htbp]
+\centering
+\caption[Cobertura complementar entre linguagens na PP1]{Cobertura complementar de resolução de cada modelo ao longo das cinco linguagens sobre as 125 questões da OBI Sênior.}
+\label{tab:ap-pp1-estabilidade}
+\small
+\begin{tabular}{lccc}
+\toprule
+Modelo & Acertos nas 5 Linguagens (5/5) & Acerto em ao menos 1 ($\ge 1$) & Erro nas 5 Linguagens (0/5) \\
+\midrule
+DeepSeek v4.1 Flash & \tfirst{105/125} (84,00\%) & 123/125 (98,40\%)          & 2/125 (1,60\%) \\
+Gemini 3.8 Flash    & \tfirst{105/125} (84,00\%) & \tfirst{124/125} (99,20\%) & \tfirst{1/125} (0,80\%) \\
+GPT-6 Luna          & 92/125 (73,60\%)           & \tfirst{124/125} (99,20\%) & \tfirst{1/125} (0,80\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Distribuição de Vereditos por Modelo e Linguagem}\label{sec:res-rq1-falhas}
+
+Enquanto o Capítulo~\ref{cap:resultados} (Tabela~\ref{tab:res-pp1-erros-lang}) sintetizou os erros por linguagem de programação, a Tabela~\ref{tab:res-pp1-vereditos-llm} e a Figura~\ref{fig:res-pp1-erros-linguagem} mostram como esses vereditos se dividem entre os três LLMs nas 625 submissões de cada modelo.
+
+\begin{table}[!htbp]
+\centering
+\caption[Distribuição geral dos vereditos por LLM na PP1]{Distribuição geral dos vereditos do \textit{JudgeService} por LLM nas 625 execuções da PP1 ($T = 0{,}0$).}
+\label{tab:res-pp1-vereditos-llm}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccccc}
+\toprule
+Modelo & \chip{corAC}\veredito{AC} & \chip{corWA}\veredito{WA} & \chip{corRE}\veredito{RE} & \chip{corTLE}\veredito{TLE} & \chip{corMLE}\veredito{MLE} & \chip{corCE}\veredito{CE} & Total \\
+\midrule
+DeepSeek v4.1 Flash & 589 (94,2\%) & 23 (3,7\%) & 1 (0,2\%) & 1 (0,2\%) & 0 (0,0\%) & 11 (1,8\%) & 625 \\
+Gemini 3.8 Flash    & 590 (94,4\%) & 24 (3,8\%) & 4 (0,6\%) & 0 (0,0\%) & 2 (0,3\%) & 5 (0,8\%)  & 625 \\
+GPT-6 Luna          & 566 (90,6\%) & 47 (7,5\%) & 2 (0,3\%) & 3 (0,5\%) & 1 (0,2\%) & 6 (1,0\%)  & 625 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp1_erros_linguagem.tex}
+\caption[Distribuição agregada de erros por linguagem na PP1]{Distribuição agregada dos erros (não-\veredito{AC}) por linguagem de programação nas 375 execuções de cada linguagem.}
+\label{fig:res-pp1-erros-linguagem}
+\end{figure}
+\FloatBarrier
+
+Cruzando os vereditos por modelo e linguagem, notam-se comportamentos bem característicos. A linguagem \linguagem{C} concentrou 13 dos 22 erros de compilação (\veredito{CE}) de toda a bateria --- incluindo todos os 5 \veredito{CE}s registrados pelo \textbf{Gemini 3.8 Flash} ---, devido à exigência de inclusão explícita de cabeçalhos e manipulação manual de memória. Já no \textbf{DeepSeek v4.1 Flash}, a inspeção dos arquivos de saída revelou que os seus 11 \veredito{CE}s (\linguagem{Python}: 2; \linguagem{C}: 4; \linguagem{C++}: 1; \linguagem{Java}: 2; \linguagem{JavaScript}: 2) ocorreram porque o modelo atingiu o teto de $131.072$ \textit{tokens} ainda durante o raciocínio interno, encerrando a resposta antes de emitir o bloco de código. Por fim, \linguagem{Python} concentrou 3 dos 4 casos de \veredito{TLE} por conta do custo de interpretação em laços extensos, ao passo que \linguagem{Java} reuniu 4 dos 7 erros em tempo de execução (\veredito{RE}), geralmente ligados à leitura de entrada ou estouro de limites de vetores e pilha.
+
+\subsection{Extensão do Código, Consumo de \textit{Tokens}, Custo e Tempo de CPU}\label{sec:res-rq1-eficiencia}
+
+A Tabela~\ref{tab:res-pp1-eficiencia} detalha as médias de linhas de código (LOC), número de caracteres, \textit{tokens} de saída, custo acumulado em dólares e tempo médio de CPU das soluções aprovadas para cada par modelo--linguagem (dados que originaram a Figura~\ref{fig:res-pp1-loc-tempo} do Capítulo~\ref{cap:resultados}).
+
+\begin{table}[!htbp]
+\centering
+\caption[Métricas de código, tokens, custo e tempo de CPU na PP1]{Extensão média do código (LOC e caracteres), \textit{tokens} médios de saída, custo total (USD) e tempo médio de CPU nas soluções \veredito{AC} por modelo e linguagem.}
+\label{tab:res-pp1-eficiencia}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrr}
+\toprule
+Modelo & Linguagem & LOC Médio & Caracteres Médio & \textit{Tokens} Saída Médio & Custo Total (USD) & Tempo Médio \veredito{AC} (s) \\
+\midrule
+DeepSeek v4.1 Flash & Python     & 42,6 & 911,2   & 8.688,1  & \$0,6519 & 0,2776 \\
+DeepSeek v4.1 Flash & C          & 58,7 & 1.259,8 & 11.387,3 & \$0,8544 & 0,1569 \\
+DeepSeek v4.1 Flash & C++        & 49,9 & 1.073,1 & 7.541,5  & \$0,5659 & 0,1856 \\
+DeepSeek v4.1 Flash & Java       & 60,8 & 1.684,8 & 8.939,3  & \$0,6708 & 0,1365 \\
+DeepSeek v4.1 Flash & JavaScript & 46,8 & 1.027,4 & 9.198,4  & \$0,6902 & 0,0929 \\
+\midrule
+Gemini 3.8 Flash    & Python     & 47,6 & 1.151,9 & 435,6    & \$0,2828 & 0,2973 \\
+Gemini 3.8 Flash    & C          & 60,9 & 1.334,5 & 531,8    & \$0,3280 & 0,1360 \\
+Gemini 3.8 Flash    & C++        & 53,9 & 1.172,7 & 486,1    & \$0,3065 & 0,1811 \\
+Gemini 3.8 Flash    & Java       & 77,7 & 2.209,4 & 668,0    & \$0,3918 & 0,1213 \\
+Gemini 3.8 Flash    & JavaScript & 67,9 & 1.658,8 & 565,2    & \$0,3436 & 0,0742 \\
+\midrule
+GPT-6 Luna          & Python     & 34,2 & 778,5   & 1.361,0  & \$0,0948 & 0,3595 \\
+GPT-6 Luna          & C          & 56,4 & 1.316,7 & 1.527,8  & \$0,1053 & 0,1734 \\
+GPT-6 Luna          & C++        & 47,3 & 1.071,9 & 1.242,5  & \$0,0874 & 0,2048 \\
+GPT-6 Luna          & Java       & 72,3 & 2.066,4 & 1.597,5  & \$0,1096 & 0,1517 \\
+GPT-6 Luna          & JavaScript & 46,4 & 1.040,8 & 1.414,2  & \$0,0982 & 0,1326 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Os números da Tabela~\ref{tab:res-pp1-eficiencia} mostram como o esforço de geração difere entre os modelos. No \textbf{DeepSeek v4.1 Flash}, a necessidade de construir estruturas de dados manualmente em \linguagem{C} fez a média de saída subir para $11.387{,}3$ \textit{tokens} por questão (contra $7.541{,}5$ em \linguagem{C++}, onde a STL já oferece essas estruturas prontas), resultando em um gasto de US\$\,0,8544 apenas nessa linguagem e US\$\,3,4333 no somatório das cinco baterias. Já o \textbf{Gemini 3.8 Flash} emitiu respostas diretas com média global de $537{,}4$ \textit{tokens} de saída (custo total de US\$\,1,6527), enquanto o \textbf{GPT-6 Luna} apresentou a operação mais econômica da PP1, somando US\$\,0,4953 para avaliar todas as 625 submissões.
+\FloatBarrier
+
+\section{Detalhamento Complementar da PP2: Impacto Visual e Modalidades}\label{ap:pp2-detalhes}
+
+\subsection{Contraste entre Questões com e sem Imagens no \textit{Baseline}}\label{sec:res-rq2-baseline}
+
+Para verificar em que medida a presença de figuras no enunciado original afeta os modelos quando submetidos apenas ao texto puro (\modalidade{text}, $T = 0$), a Tabela~\ref{tab:res-pp2-baseline} e a Figura~\ref{fig:res-pp2-img-noimg} comparam o desempenho entre as 46 questões que possuem imagens e as 79 questões puramente textuais. O comparativo é apresentado sob dois recortes: na melhor linguagem individual de cada LLM na PP1 (\linguagem{C++} para o DeepSeek, \linguagem{Python} para o Gemini e \linguagem{Java} para o GPT-6 Luna) e no somatório das cinco linguagens.
+
+\begin{table}[!htbp]
+\centering
+\caption{Desempenho no \textit{baseline} (\modalidade{text}, $T=0$) entre questões com e sem imagens.}
+\label{tab:res-pp2-baseline}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llccccl@{}}
+\toprule
+\textbf{Recorte} & \textbf{LLM} & \textbf{Ling.} & \textbf{Com Imagens} & \textbf{Sem Imagens} & \textbf{Dif. (p.p.)} & \textbf{Erros (Com Img.)} \\
+\midrule
+Melhor linguagem  & DeepSeek v4.1 Flash & C++    & $44/46$ ($95{,}65\%$)  & $77/79$ ($97{,}47\%$)  & $-1{,}82$ & $1$ \veredito{WA}, $1$ \veredito{CE} \\
+Melhor linguagem  & Gemini 3.8 Flash    & Python & $44/46$ ($95{,}65\%$)  & $77/79$ ($97{,}47\%$)  & $-1{,}82$ & $2$ \veredito{WA} \\
+Melhor linguagem  & GPT-6 Luna          & Java   & $42/46$ ($91{,}30\%$)  & $77/79$ ($97{,}47\%$)  & $-6{,}16$ & $4$ \veredito{WA} \\
+\midrule
+Agregado (5 ling.) & DeepSeek v4.1 Flash & Todas  & $212/230$ ($92{,}17\%$) & $377/395$ ($95{,}44\%$) & $-3{,}27$ & --- \\
+Agregado (5 ling.) & Gemini 3.8 Flash    & Todas  & $213/230$ ($92{,}61\%$) & $377/395$ ($95{,}44\%$) & $-2{,}83$ & --- \\
+Agregado (5 ling.) & GPT-6 Luna          & Todas  & $201/230$ ($87{,}39\%$) & $365/395$ ($92{,}41\%$) & $-5{,}01$ & --- \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp2_img_vs_noimg.tex}
+\caption[Contraste entre questões com e sem imagens na PP2]{Taxa de aprovação (\passat{1}) no \textit{baseline} textual (\modalidade{text}) para questões com e sem imagens (a) na melhor linguagem de cada LLM e (b) no agregado das cinco linguagens.}
+\label{fig:res-pp2-img-noimg}
+\end{figure}
+\FloatBarrier
+
+Nas 79 questões puramente textuais, os três modelos convergiram para exatamente $77/79$ acertos ($97{,}47\%$) em suas melhores linguagens. Quando avaliados nos 46 problemas cujos cadernos originais trazem figuras --- frequentemente usadas para ilustrar malhas, tabuleiros, cortes geométricos ou ligações em grafos ---, a taxa de aprovação recua em todos os cenários ($-1{,}82\text{ p.p.}$ a $-6{,}16\text{ p.p.}$ na melhor linguagem, e $-2{,}83\text{ p.p.}$ a $-5{,}01\text{ p.p.}$ no agregado das cinco linguagens), confirmando que a ausência da referência visual dificulta a interpretação espacial do enunciado.
+
+\subsection{Transições de Veredito e Telemetria de Custos nas Modalidades Visuais}\label{sec:res-rq2-custo}
+
+No experimento controlado em \linguagem{C++} sobre as 46 questões com imagens (Seção~\ref{sec:res-rq2}), o tempo médio de execução das soluções no \textit{JudgeService} manteve-se praticamente inalterado entre as modalidades \modalidade{text}, \modalidade{img} e \modalidade{description} (variando apenas entre $0{,}164\,\mathrm{s}$ e $0{,}187\,\mathrm{s}$). Das 46 questões avaliadas, 31 ($67{,}39\%$) receberam veredito \veredito{AC} unânime nos três modelos e nas três modalidades. As 15 questões que apresentaram variação de veredito ou falha em ao menos uma configuração estão listadas na Tabela~\ref{tab:res-pp2-divergencias}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Mapa de transições de vereditos nas $15$ questões com divergência ou falha em \linguagem{C++} (\modalidade{text} / \modalidade{img} / \modalidade{description}).}
+\label{tab:res-pp2-divergencias}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Problema} & \textbf{DeepSeek v4.1 Flash} & \textbf{Gemini 3.8 Flash} & \textbf{GPT-6 Luna} \\
+\midrule
+Arco e flecha          & \veredito{AC} / \veredito{CE} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} \\
+Brigadeiros            & \veredito{AC} / \veredito{AC} / \veredito{WA} & \veredito{AC} / \veredito{AC} / \veredito{WA} & \veredito{WA} / \veredito{WA} / \veredito{WA} \\
+Burocracia             & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{WA} / \veredito{WA} \\
+Chuva\_2019            & \veredito{CE} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{WA} / \veredito{AC} / \veredito{AC} \\
+Construção de Rodovia  & \veredito{WA} / \veredito{WA} / \veredito{WA} & \veredito{WA} / \veredito{WA} / \veredito{WA} & \veredito{WA} / \veredito{WA} / \veredito{WA} \\
+Cortando o Papel       & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{WA} / \veredito{AC} / \veredito{AC} \\
+Dario e Xerxes         & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{WA} / \veredito{AC} / \veredito{AC} \\
+Fast-Food              & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{WA} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} \\
+Frete                  & \veredito{AC} / \veredito{CE} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} \\
+Metrô da Nlogônia      & \veredito{AC} / \veredito{WA} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{WA} / \veredito{WA} \\
+Nova avenida           & \veredito{AC} / \veredito{AC} / \veredito{WA} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} \\
+Passatempo             & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{CE} / \veredito{WA} / \veredito{AC} \\
+Soma                   & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{WA} / \veredito{WA} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} \\
+Transportes            & \veredito{AC} / \veredito{CE} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{AC} / \veredito{AC} / \veredito{AC} \\
+Trio de Bonecas        & \veredito{AC} / \veredito{AC} / \veredito{WA} & \veredito{AC} / \veredito{AC} / \veredito{AC} & \veredito{WA} / \veredito{WA} / \veredito{WA} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+O mapa individualizado permite enxergar onde o recurso visual realmente ajudou. Questões com forte apelo espacial, como \textit{Chuva\_2019}, \textit{Cortando o Papel}, \textit{Dario e Xerxes} e \textit{Fast-Food}, passaram de erro para aprovação (\veredito{AC}) assim que os modelos receberam a imagem ou sua descrição. Em \textit{Passatempo} (no GPT-6 Luna) e \textit{Soma} (no Gemini 3.8 Flash), apenas a descrição estruturada (\modalidade{description}) foi capaz de conduzir ao acerto. Em contrapartida, no \textbf{DeepSeek v4.1 Flash}, questões que já eram resolvidas apenas com o texto (\textit{Arco e flecha}, \textit{Frete} e \textit{Transportes}) sofreram erro de compilação (\veredito{CE}) quando a imagem foi anexada em Base64, voltando a passar normalmente na modalidade descritiva.
+
+A Tabela~\ref{tab:res-pp2-custos} complementa a Figura~\ref{fig:res-pp2-tokens-custo} do Capítulo~\ref{cap:resultados} com os valores numéricos exatos de \textit{tokens} médios de entrada e saída e o custo total das 46 questões em \linguagem{C++}. Nota-se que substituir a imagem em Base64 pela descrição textual evita o salto de \textit{tokens} de entrada no Gemini ($2.173{,}1 \rightarrow 1.046{,}6$) e o aumento da cadeia de saída no DeepSeek ($12.993{,}4 \rightarrow 5.639{,}5$), reduzindo o custo financeiro sem perda de acurácia.
+
+\begin{table}[!htbp]
+\centering
+\caption{Consumo médio de \textit{tokens} por questão e custo total em dólares nas $46$ questões em \linguagem{C++} (PP2).}
+\label{tab:res-pp2-custos}
+\resizebox{0.92\textwidth}{!}{%
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+\textbf{LLM} & \textbf{Modalidade} & \textbf{Tokens Ent. (média)} & \textbf{Tokens Saída (média)} & \textbf{Custo Total (46 q.)} \\
+\midrule
+DeepSeek v4.1 Flash & \modalidade{text}        & $950{,}8$   & $8.598{,}9$  & \$0,2375 \\
+DeepSeek v4.1 Flash & \modalidade{img}         & $1.181{,}3$ & $12.993{,}4$ & \$0,3588 \\
+DeepSeek v4.1 Flash & \modalidade{description} & $1.110{,}0$ & $5.639{,}5$  & \$0,1558 \\
+\midrule
+Gemini 3.8 Flash    & \modalidade{text}        & $901{,}5$   & $454{,}5$    & \$0,1095 \\
+Gemini 3.8 Flash    & \modalidade{img}         & $2.173{,}1$ & $482{,}4$    & \$0,1582 \\
+Gemini 3.8 Flash    & \modalidade{description} & $1.046{,}6$ & $466{,}5$    & \$0,1166 \\
+\midrule
+GPT-6 Luna          & \modalidade{text}        & $838{,}2$   & $1.257{,}4$  & \$0,0328 \\
+GPT-6 Luna          & \modalidade{img}         & $983{,}0$   & $1.370{,}8$  & \$0,0360 \\
+GPT-6 Luna          & \modalidade{description} & $982{,}6$   & $1.125{,}9$  & \$0,0304 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+\FloatBarrier
+
+\section{Detalhamento Complementar da PP3: Limites de Tempo e Memória em C}\label{ap:pp3-detalhes}
+
+\subsection{Transições de Veredito Questão a Questão}\label{sec:res-rq3-overeng}
+
+A Figura~\ref{fig:res-pp3-erros} ilustra visualmente a migração de falhas entre o \textit{baseline} em \linguagem{C} e a bateria com limites explícitos (PP3). Como programas em \linguagem{C} compilados com \texttt{-O2} já rodam muito abaixo dos tetos da OBI (sem nenhum \veredito{TLE} ou \veredito{MLE}), informar \texttt{time\_limit} e \texttt{memory\_limit} no \textit{prompt} levou os modelos a tentarem otimizações desnecessárias de alocação e leitura, aumentando o total de respostas incorretas (\veredito{WA}).
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp3_erros_transicao.tex}
+\caption[Distribuição de erros em C no Baseline versus PP3]{Decomposição das submissões não aceitas em \linguagem{C} por tipo de veredito (\veredito{WA}, \veredito{CE} e \veredito{RE}) entre o \textit{baseline} e a intervenção PP3 nos três modelos.}
+\label{fig:res-pp3-erros}
+\end{figure}
+\FloatBarrier
+
+Embora o saldo agregado apresentado no Capítulo~\ref{cap:resultados} (Tabela~\ref{tab:res-pp3-comparativo}) indique uma variação líquida de $-6$ aprovações ($345 \rightarrow 339$), a análise individual das submissões mostra uma instabilidade bem maior: exatamente 31 das 125 questões ($24{,}8\%$) mudaram de veredito em pelo menos um LLM, conforme listado na Tabela~\ref{tab:res-pp3-transicoes}. No \textbf{Gemini 3.8 Flash}, por exemplo, o saldo líquido de $-1$ \veredito{AC} esconde 13 trocas de resultado (6 recuperações anuladas por 7 novas falhas), enquanto no \textbf{GPT-6 Luna} ocorreram 21 alterações (8 recuperações contra 13 regressões).
+
+\begin{table}[!htbp]
+\centering
+\caption{Mapeamento completo das $31$ questões com transição de veredito em \linguagem{C} (\textit{Baseline} $\rightarrow$ \texttt{PP3}).}
+\label{tab:res-pp3-transicoes}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+\textbf{Problema} & \textbf{DeepSeek (B $\rightarrow$ P)} & \textbf{Gemini (B $\rightarrow$ P)} & \textbf{GPT-6 Luna (B $\rightarrow$ P)} & \textbf{Tempo Lim.} & \textbf{Mem. Lim.} & \textbf{Ano} \\
+\midrule
+A idade de Dona Mônica & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 5,0\,s  & 512\,MB   & 2019 \\
+Brigadeiros            & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & \veredito{WA} $\rightarrow$ \veredito{WA} & 5,0\,s  & 1.024\,MB & 2024 \\
+Burocracia             & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{WA} $\rightarrow$ \veredito{AC} & \veredito{WA} $\rightarrow$ \veredito{CE} & 5,0\,s  & 1.024\,MB & 2024 \\
+Candidatas             & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{CE} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{CE} & 15,0\,s & 512\,MB   & 2020 \\
+Carrinho               & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 5,0\,s  & 256\,MB   & 2017 \\
+Ciclovias              & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{CE} & \veredito{AC} $\rightarrow$ \veredito{CE} & 5,0\,s  & 512\,MB   & 2016 \\
+Cortando o Papel       & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 3,0\,s  & 256\,MB   & 2017 \\
+Dança de Formatura     & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{CE} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & 3,0\,s  & 512\,MB   & 2024 \\
+Dario e Xerxes         & \veredito{AC} $\rightarrow$ \veredito{WA} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & 2,0\,s  & 256\,MB   & 2017 \\
+Dona Formiga           & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 1,5\,s  & 256\,MB   & 2020 \\
+Energia                & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{CE} & \veredito{WA} $\rightarrow$ \veredito{AC} & 5,0\,s  & 1.024\,MB & 2025 \\
+Escadaria              & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{CE} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & 5,0\,s  & 1.024\,MB & 2025 \\
+Falha de segurança     & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 5,0\,s  & 512\,MB   & 2021 \\
+Feira de Artesanato    & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{CE} & \veredito{AC} $\rightarrow$ \veredito{AC} & 2,0\,s  & 512\,MB   & 2025 \\
+Fotos de Relíquias     & \veredito{WA} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{WA} $\rightarrow$ \veredito{AC} & 5,0\,s  & 1.024\,MB & 2025 \\
+Garamana               & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 1,0\,s  & 256\,MB   & 2020 \\
+Grupos de Trabalho     & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{CE} $\rightarrow$ \veredito{AC} & \veredito{CE} $\rightarrow$ \veredito{AC} & 3,0\,s  & 256\,MB   & 2023 \\
+Jogo de Pratos         & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & \veredito{AC} $\rightarrow$ \veredito{AC} & 5,0\,s  & 1.024\,MB & 2024 \\
+Jogo do Poder          & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 5,0\,s  & 512\,MB   & 2024 \\
+Lista palíndroma       & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{CE} $\rightarrow$ \veredito{AC} & 3,0\,s  & 512\,MB   & 2021 \\
+Mapa                   & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 2,0\,s  & 256\,MB   & 2017 \\
+Metrô da Nlogônia      & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & \veredito{WA} $\rightarrow$ \veredito{WA} & 5,0\,s  & 1.024\,MB & 2019 \\
+Pô, que mão            & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{CE} $\rightarrow$ \veredito{AC} & 5,0\,s  & 512\,MB   & 2016 \\
+Quadrado               & \veredito{WA} $\rightarrow$ \veredito{WA} & \veredito{AC} $\rightarrow$ \veredito{WA} & \veredito{WA} $\rightarrow$ \veredito{WA} & 2,0\,s  & 256\,MB   & 2022 \\
+Ralouim                & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{WA} $\rightarrow$ \veredito{AC} & 10,0\,s & 1.024\,MB & 2020 \\
+Soma                   & \veredito{CE} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{WA} $\rightarrow$ \veredito{AC} & 5,0\,s  & 1.024\,MB & 2019 \\
+Times                  & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{CE} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{CE} & 5,0\,s  & 512\,MB   & 2016 \\
+Torre de dados         & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 5,0\,s  & 256\,MB   & 2020 \\
+Trem da mina           & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{WA} & 15,0\,s & 512\,MB   & 2020 \\
+Trio de Bonecas        & \veredito{CE} $\rightarrow$ \veredito{CE} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{WA} $\rightarrow$ \veredito{AC} & 2,0\,s  & 512\,MB   & 2023 \\
+Viagem                 & \veredito{AC} $\rightarrow$ \veredito{RE} & \veredito{AC} $\rightarrow$ \veredito{AC} & \veredito{AC} $\rightarrow$ \veredito{AC} & 5,0\,s  & 512\,MB   & 2022 \\
+\bottomrule
+\end{tabular}%
+}
+\par\smallskip{\footnotesize Nas demais $94$ questões ($75{,}2\%$), os três modelos mantiveram vereditos idênticos entre o \textit{baseline} e a PP3.}
+\end{table}
+
+\subsection{Distribuição de Tempos de Execução e Custos na PP3}\label{sec:res-rq3-custos}
+
+A Figura~\ref{fig:res-pp3-tempo} mostra por que a média de tempo em CPU subiu ligeiramente na PP3 sem que houvesse mudança real na velocidade típica dos programas: enquanto a média aritmética foi puxada por casos isolados de falha lenta (como o \veredito{RE} de $4{,}454\,\mathrm{s}$ em \textit{Viagem} no DeepSeek e soluções \veredito{WA} próximas de $5{,}0\,\mathrm{s}$ no GPT-6 Luna), a mediana de execução manteve-se praticamente constante nos três modelos (em torno de $0{,}16\,\mathrm{s}$).
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp3_tempo_execucao.tex}
+\caption[Tempos médios e distribuição de execução na PP3]{Análise de tempo no \textit{JudgeService} em \linguagem{C}: (a) tempo médio global (sensível a \textit{outliers}) e (b) distribuição por quartis e mediana sem \textit{outliers}.}
+\label{fig:res-pp3-tempo}
+\end{figure}
+\FloatBarrier
+
+Quanto ao consumo de \textit{tokens} e custo financeiro (Tabela~\ref{tab:res-pp3-custos} e Figura~\ref{fig:res-pp3-tokens-custo}), a inclusão das restrições adicionou cerca de 32 \textit{tokens} ao \textit{prompt} de entrada. No \textbf{DeepSeek v4.1 Flash}, a presença dos limites encurtou o raciocínio de saída em $13{,}3\%$ ($11.387{,}3 \rightarrow 9.870{,}5$ \textit{tokens}), reduzindo o custo por solução aceita de US\$\,0,00724 para US\$\,0,00628. Já no \textbf{GPT-6 Luna}, o código extra gerado para tentar otimizar as soluções elevou os \textit{tokens} de saída em $10{,}0\%$ e, somado à queda de 5 acertos, encareceu o custo por \veredito{AC} em $14{,}6\%$ (US\$\,0,00096 $\rightarrow$ US\$\,0,00110).
+
+\begin{table}[!htbp]
+\centering
+\caption{Consumo médio de \textit{tokens}, custo total e custo por solução aceita em \linguagem{C} (\textit{Baseline} $\rightarrow$ \texttt{PP3}).}
+\label{tab:res-pp3-custos}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{LLM} & \textbf{Tokens Ent. (média)} & \textbf{Tokens Saída (média)} & \textbf{Custo Total (125 q.)} & \textbf{Custo por AC (US\$/AC)} \\
+\midrule
+DeepSeek v4.1 Flash & $891{,}9 \rightarrow 923{,}9$ ($+32{,}0$)  & $11.387{,}3 \rightarrow 9.870{,}5$ ($-1.516{,}8$) & \$0,8544 $\rightarrow$ \$0,7406 & \$0,00724 $\rightarrow$ \$0,00628 \\
+Gemini 3.8 Flash    & $839{,}0 \rightarrow 873{,}2$ ($+34{,}2$)  & $531{,}8 \rightarrow 508{,}1$ ($-23{,}7$)        & \$0,3280 $\rightarrow$ \$0,3200 & \$0,00280 $\rightarrow$ \$0,00276 \\
+GPT-6 Luna          & $781{,}2 \rightarrow 811{,}4$ ($+30{,}1$)  & $1.527{,}8 \rightarrow 1.681{,}0$ ($+153{,}1$)    & \$0,1053 $\rightarrow$ \$0,1152 & \$0,00096 $\rightarrow$ \$0,00110 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp3_tokens_custo.tex}
+\caption[Tokens de saída e custo por AC em C na PP3]{Telemetria em \linguagem{C} entre \textit{Baseline} e PP3: (a) média de \textit{tokens} de saída gerados por problema e (b) custo financeiro médio por solução aprovada (US\$/AC).}
+\label{fig:res-pp3-tokens-custo}
+\end{figure}
+\FloatBarrier
+
+\section{Detalhamento Complementar da PP4: Estratégias de \texorpdfstring{\textit{Prompting}}{Prompting} em C}\label{ap:pp4-detalhes}
+
+\subsection{Decomposição de Erros e Desempenho por Fase da OBI}\label{sec:res-rq4-comp}
+
+A Figura~\ref{fig:res-pp4-erros} ilustra a distribuição dos vereditos de erro (\veredito{WA}, \veredito{CE}, \veredito{RE} e \veredito{TLE}) correspondente à Tabela~\ref{tab:res-pp4-comparativo} discutida na Seção~\ref{sec:res-rq4}, evidenciando como o \promptname{Few-Shot} eliminou os erros de compilação no Gemini e no GPT-6 Luna, enquanto o \promptname{CoT Pólya} reduziu os erros de lógica (\veredito{WA}) nos três modelos.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp4_erros_estrategias.tex}
+\caption[Decomposição de erros em C por estratégia na PP4]{Distribuição das submissões não aceitas em \linguagem{C} por veredito (\veredito{WA}, \veredito{CE}, \veredito{RE} e \veredito{TLE}) nas três estratégias de \textit{prompting}.}
+\label{fig:res-pp4-erros}
+\end{figure}
+\FloatBarrier
+
+Para avaliar em qual nível de dificuldade das provas cada técnica trouxe maior benefício, a Tabela~\ref{tab:res-pp4-fases} estratifica a taxa média de acerto nas edições rotuladas diretamente como \textit{Fase~1} ($n=27$), \textit{Fase~2} ($n=32$) e \textit{Fase~3} ($n=25$), além de contabilizar o balanço de questões recuperadas e degradadas frente ao \textit{Zero-Shot}. Nota-se que o maior salto ocorreu nas questões intermediárias da \textit{Fase~2}, onde tanto o \promptname{Few-Shot} quanto o \promptname{CoT Pólya} elevaram a média de $89{,}58\%$ para $97{,}92\%$ ($+8{,}34\text{ p.p.}$). No balanço individual, o \textbf{Gemini 3.8 Flash} com \promptname{CoT Pólya} recuperou 5 questões sem sofrer nenhuma regressão ($+5/-0$), e o \textbf{GPT-6 Luna} recuperou 12 questões em ambas as técnicas guiadas.
+
+\begin{table}[!htbp]
+\centering
+\caption{Taxa média de aprovação (\passat{1}) por fase da OBI Sênior em \linguagem{C} e balanço de transições frente ao \textit{Zero-Shot}.}
+\label{tab:res-pp4-fases}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccc|lcc@{}}
+\toprule
+\textbf{Fase da OBI} & \textbf{\textit{Zero-Shot}} & \textbf{\textit{Few-Shot}} & \textbf{\textit{CoT Pólya}} & \textbf{LLM (Balanço Rec. / Deg.)} & \textbf{\textit{Few-Shot}} & \textbf{\textit{CoT Pólya}} \\
+\midrule
+Fase 1 ($n=27$) & $100{,}00\%$ & $100{,}00\%$ & $93{,}83\%$ & DeepSeek v4.1 Flash & $+4 / -6$ ($-2$)  & $+4 / -13$ ($-9$) \\
+Fase 2 ($n=32$) & $89{,}58\%$  & \tfirst{97,92\%} & \tfirst{97,92\%} & Gemini 3.8 Flash    & $+4 / -1$ ($+3$)  & \tfirst{$+5 / -0$ ($+5$)} \\
+Fase 3 ($n=25$) & $81{,}33\%$  & $80{,}00\%$  & $74{,}67\%$ & GPT-6 Luna          & \tfirst{$+12 / -4$ ($+8$)} & $+12 / -11$ ($+1$) \\
+\bottomrule
+\end{tabular}%
+}
+\par\smallskip{\footnotesize Colunas à esquerda consideram as edições rotuladas literalmente como \texttt{Fase 1}, \texttt{Fase 2} e \texttt{Fase 3}; à direita, o número de questões recuperadas (Rec.) e degradadas (Deg.) frente ao \textit{Zero-Shot}.}
+\end{table}
+
+\subsection{Auditoria dos Erros de Extração no \textit{CoT Pólya}}\label{sec:res-rq4-parser}
+
+Conforme apontado na Seção~\ref{sec:res-rq4}, o aumento de erros de compilação (\veredito{CE}) no \promptname{CoT Pólya} para o \textbf{DeepSeek v4.1 Flash} (13 casos) e para o \textbf{GPT-6 Luna} (9 casos) motivou uma auditoria direta sobre o campo \texttt{raw\_response} dos arquivos JSON de saída. Como o roteiro de Pólya pede que o modelo escreva quatro seções analíticas, essas respostas frequentemente continham blocos Markdown auxiliares (com rascunhos de entrada/saída ou análise na etapa 4) além do bloco \texttt{\textasciigrave\textasciigrave\textasciigrave c ... \textasciigrave\textasciigrave\textasciigrave}, fazendo o extrator baseado no maior bloco genérico capturar texto explicativo em vez do programa em \linguagem{C}.
+
+A Tabela~\ref{tab:res-pp4-parser} resume o resultado dessa verificação sobre os 22 casos de \veredito{CE}. No \textbf{GPT-6 Luna}, 8 das 9 falhas ($88{,}9\%$) continham um programa \linguagem{C} completo com função \texttt{main()} dentro da resposta bruta; no \textbf{DeepSeek v4.1 Flash}, 6 dos 13 casos ($46{,}2\%$) também traziam código \linguagem{C} completo, enquanto outros 5 retornaram objetos JSON estruturados em texto e 2 estouraram o limite de saída. Se o extrator filtrasse estritamente blocos marcados com a linguagem-alvo (\texttt{\textasciigrave\textasciigrave\textasciigrave c}) contendo \texttt{main()}, o GPT-6 Luna poderia alcançar até $91{,}20\%$ ($114/125$) e o DeepSeek até $92{,}00\%$ ($115/125$).
+
+\begin{table}[!htbp]
+\centering
+\caption{Auditoria dos $22$ casos de \veredito{CE} sob \promptname{CoT Pólya} em \linguagem{C}: códigos válidos ocultos e impacto potencial.}
+\label{tab:res-pp4-parser}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lcccp{5.4cm}cc@{}}
+\toprule
+\textbf{LLM} & \textbf{Total CE} & \textbf{Cód. \texttt{main()}} & \textbf{JSON / Inc.} & \textbf{Questões com Código C Oculto} & \textbf{\passat{1} Bruto} & \textbf{Teto Ajustado*} \\
+\midrule
+DeepSeek v4.1 Flash & $13$ & $6$ ($46{,}2\%$) & $5$ JSON, $2$ vazios & \textit{Botas Trocadas}, \textit{Camisetas da Olimpíada}, \textit{Chuva\_2022}, \textit{Construção de Rodovia}, \textit{Fotos de Relíquias}, \textit{Remove Dígitos} & $87{,}20\%$ ($109$) & até $92{,}00\%$ ($115$) \\
+GPT-6 Luna          & $9$  & $8$ ($88{,}9\%$) & $1$ truncado         & \textit{Fast-Food}, \textit{Festa Junina}, \textit{Festa olímpica}, \textit{Game-10}, \textit{Pirâmide}, \textit{Quadrado}, \textit{Soma}, \textit{Trem da mina} & $84{,}80\%$ ($106$) & até $91{,}20\%$ ($114$) \\
+\bottomrule
+\end{tabular}%
+}
+\par\smallskip{\footnotesize *Teto ajustado calculado somando ao \passat{1} bruto os casos que continham bloco \texttt{\textasciigrave\textasciigrave\textasciigrave c} válido com função \texttt{main()}, caso extraídos corretamente e aprovados pelo juiz.}
+\end{table}
+
+\subsection{Tempos de Execução e Comparativo Visual de Custos na PP4}\label{sec:res-rq4-economia}
+
+As Figuras~\ref{fig:res-pp4-tempo} e~\ref{fig:res-pp4-tokens-custo} complementam a análise de eficiência da Seção~\ref{sec:res-rq4}. Na Figura~\ref{fig:res-pp4-tempo}, observa-se que as medianas de tempo de CPU das soluções aprovadas permaneceram praticamente idênticas nas três estratégias ($\approx 0{,}16\,\mathrm{s}$). Já a Figura~\ref{fig:res-pp4-tokens-custo} permite visualizar o contraste econômico reportado na Tabela~\ref{tab:res-pp4-custos}: o \promptname{Few-Shot} manteve a quantidade de \textit{tokens} de saída contida (chegando a reduzi-la em $18{,}4\%$ no GPT-6 Luna), enquanto o \promptname{CoT Pólya} elevou a geração textual no Gemini e no GPT-6 Luna devido à escrita das quatro etapas de Pólya.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp4_tempo_execucao.tex}
+\caption[Tempos médios e distribuição AC por estratégia na PP4]{Desempenho em CPU no \textit{JudgeService} em \linguagem{C}: (a) tempo médio global por modelo e estratégia e (b) boxplot agregado dos tempos de soluções aprovadas (\veredito{AC}, sem \textit{outliers}).}
+\label{fig:res-pp4-tempo}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp4_tokens_custo.tex}
+\caption[Tokens de saída e custo por AC por estratégia na PP4]{Análise econômica das estratégias de \textit{prompting} em \linguagem{C}: (a) média de \textit{tokens} de saída por resposta e (b) custo financeiro médio por solução aceita (US\$/AC).}
+\label{fig:res-pp4-tokens-custo}
+\end{figure}
+\FloatBarrier
+
+\section{Detalhamento Complementar da PP5: Evolução Geracional sob Paridade de Juiz}\label{ap:pp5-detalhes}
+
+\subsection{Desempenho Detalhado por Modelo e Efeito da Paridade de Juiz}\label{sec:res-rq5-pass1}
+
+A Tabela~\ref{tab:res-pp5-consolidado} e a Figura~\ref{fig:res-pp5-pass1-erros} detalham os indicadores individuais dos quatro modelos comparados nas 46 questões em \linguagem{Python} \textit{Zero-Shot}, complementando a síntese intrafamília apresentada na Tabela~\ref{tab:res-pp5-intrafamilia} do Capítulo~\ref{cap:resultados}.
+
+\begin{table}[!htbp]
+\centering
+\caption[Desempenho consolidado na PP5 sob paridade de juiz]{Desempenho consolidado dos quatro modelos nas $46$ questões em \linguagem{Python} \textit{Zero-Shot} ($T = 0{,}0$) sob o mesmo \texttt{JudgeService}.}
+\label{tab:res-pp5-consolidado}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllcccccccrrr@{}}
+\toprule
+\textbf{Modelo} & \textbf{Família} & \textbf{Geração} & \textbf{AC} & \textbf{\passat{1}} & \textbf{WA} & \textbf{RE} & \textbf{TLE} & \textbf{CE} & \textbf{Tokens Méd.} & \textbf{Custo Total} & \textbf{Custo / AC} \\
+\midrule
+Gemini 3.1 Pro   & Gemini & Anterior & \tfirst{45}  & \tfirst{97,83\%}  & $1$  & $0$ & $0$ & $0$ & $6.025{,}5$ & \$2,8602 & \$0,06356 \\
+Gemini 3.8 Flash & Gemini & Atual    & \tsecond{44} & \tsecond{95,65\%} & $2$  & $0$ & $0$ & $0$ & $2.940{,}4$ & \$0,0994 & \tsecond{\$0,00226} \\
+\midrule
+GPT-5.4          & GPT    & Anterior & $31$         & $67{,}39\%$       & $12$ & $2$ & $1$ & $0$ & \tfirst{$1.206{,}4$} & \$0,3013 & \$0,00972 \\
+GPT-6 Luna       & GPT    & Atual    & $38$         & $82{,}61\%$       & $6$  & $0$ & $2$ & $0$ & \tsecond{$2.044{,}9$} & \tfirst{\$0,0316} & \tfirst{\$0,00083} \\
+\bottomrule
+\end{tabular}%
+}
+\par\smallskip{\footnotesize \tfirst{Vermelho} e \tsecond{azul}: melhor e segundo melhor valor nos indicadores-chave.}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp5_pass1_erros.tex}
+\caption[Pass@1 e taxonomia de falhas na PP5]{Comparação entre gerações nas $46$ questões em \linguagem{Python} \textit{Zero-Shot} ($T=0$): (a) taxa \passat{1} intrafamília com variação em pontos percentuais e (b) composição dos erros sob o mesmo \texttt{JudgeService}.}
+\label{fig:res-pp5-pass1-erros}
+\end{figure}
+\FloatBarrier
+
+A inspeção dos vereditos mostra por que o rejulgamento dos códigos da geração anterior no mesmo \texttt{JudgeService} foi indispensável. Na avaliação original do estudo preliminar, o teto fixo de $3{,}0\,\mathrm{s}$ para \linguagem{Python} havia gerado falsos \veredito{TLE} em problemas cujo limite oficial da OBI é de $5{,}0\,\mathrm{s}$, como \textit{Brigadeiros} (no Gemini 3.1 Pro) e \textit{Transportes} (em ambos os modelos anteriores). De forma semelhante, a comparação de saída sem remoção de espaços ao final de cada linha havia penalizado a questão \textit{Pirâmide} (2022) com falso \veredito{WA}. Com a paridade de juiz, o \textbf{Gemini 3.1 Pro} subiu de 42 para 45 acertos e o \textbf{GPT-5.4} passou de 29 para 31 acertos, garantindo que a evolução reportada para o \textbf{GPT-6 Luna} ($38/46$, com redução de \veredito{WA} de 12 para 6 e zeramento dos \veredito{RE}s) represente um ganho real de geração de código.
+
+Quanto à contabilização financeira na família Google, cabe registrar que o custo retornado pela API para o \textbf{Gemini 3.8 Flash} (US\$\,0,0994 no total, ou US\$\,0,00226 por \veredito{AC}) incide sobre os \textit{tokens} visíveis de entrada e saída, enquanto o total de \textit{tokens} reportado na Tabela~\ref{tab:res-pp5-consolidado} inclui $75.571$ \textit{thinking tokens} internos ao longo das 46 questões. Mesmo que todos esses \textit{tokens} internos fossem tarifados pelo valor cheio de saída (US\$\,3,75 por milhão), o custo subiria para US\$\,0,3828 (US\$\,0,00870 por \veredito{AC}), ainda $7{,}3$ vezes menor que o do \textbf{Gemini 3.1 Pro}.
+
+\subsection{Mapeamento das Questões com Divergência entre Gerações}\label{sec:res-rq5-fases}
+
+Das 46 questões avaliadas na PP5, 30 ($65{,}22\%$) obtiveram aprovação unânime nos quatro modelos. As 16 questões em que ocorreu falha ou mudança de veredito entre gerações são apresentadas na Tabela~\ref{tab:res-pp5-divergentes}.
+
+\begin{table}[!htbp]
+\centering
+\caption[Questões com falha ou divergência entre os quatro modelos na PP5]{Vereditos nas $16$ questões em que ao menos um dos quatro modelos não obteve \veredito{AC} em \linguagem{Python} \textit{Zero-Shot} ($T = 0{,}0$).}
+\label{tab:res-pp5-divergentes}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cllcccc@{}}
+\toprule
+\textbf{Ano} & \textbf{Questão} & \textbf{Etapa} & \textbf{Gemini 3.1 Pro} & \textbf{Gemini 3.8 Flash} & \textbf{GPT-5.4} & \textbf{GPT-6 Luna} \\
+\midrule
+2016 & Arco e flecha         & Fase 2 / Estadual & \veredito{AC} & \veredito{WA} & \veredito{RE}  & \veredito{AC}  \\
+2016 & Nova avenida          & Fase 1 / Local    & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{AC}  \\
+2017 & Cortando o Papel      & Fase 2 / Estadual & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{AC}  \\
+2017 & Dario e Xerxes        & Fase 2 / Estadual & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{WA}  \\
+2019 & Calçada Imperial      & Fase 1 / Local    & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{AC}  \\
+2019 & Chuva\_2019           & Fase 1 / Local    & \veredito{AC} & \veredito{AC} & \veredito{TLE} & \veredito{WA}  \\
+2019 & Metrô da Nlogônia     & Fase 3 / Nacional & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{AC}  \\
+2021 & Dona Minhoca          & Fase 3 / Nacional & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{WA}  \\
+2021 & Retângulo             & Fase 2 / Estadual & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{AC}  \\
+2022 & Construção de Rodovia & Fase 3 / Nacional & \veredito{WA} & \veredito{WA} & \veredito{WA}  & \veredito{WA}  \\
+2023 & Fast-Food             & Fase 3 / Nacional & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{TLE} \\
+2023 & Trio de Bonecas       & Fase 3 / Nacional & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{TLE} \\
+2024 & Brigadeiros           & Fase 3 / Nacional & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{AC}  \\
+2024 & Burocracia            & Fase 3 / Nacional & \veredito{AC} & \veredito{AC} & \veredito{RE}  & \veredito{WA}  \\
+2024 & Jogo da Vida          & Fase 1 / Local    & \veredito{AC} & \veredito{AC} & \veredito{AC}  & \veredito{WA}  \\
+2024 & Retas                 & Fase 3 / Nacional & \veredito{AC} & \veredito{AC} & \veredito{WA}  & \veredito{AC}  \\
+\bottomrule
+\end{tabular}%
+}
+\par\smallskip{\footnotesize Nas demais $30$ questões ($65{,}22\%$), houve \veredito{AC} unânime.}
+\end{table}
+
+A comparação nominal mostra que a família Google manteve estabilidade quase total, registrando apenas uma regressão em \textit{Arco e flecha} (\veredito{AC} $\rightarrow$ \veredito{WA}). Já na família OpenAI, o \textbf{GPT-6 Luna} recuperou 8 problemas que o \textbf{GPT-5.4} havia errado --- com destaque para questões da Fase~2 (\textit{Arco e flecha}, \textit{Cortando o Papel} e \textit{Retângulo}) e da Fase~3 (\textit{Brigadeiros}, \textit{Metrô da Nlogônia} e \textit{Retas}) --- e apresentou apenas uma regressão pontual (\textit{Jogo da Vida}). A única questão sem solução em nenhum dos quatro modelos foi \textit{Construção de Rodovia} (2022), que admite múltiplos pares de saída válidos sem verificador customizado (\textit{special judge}) na base oficial.
+\FloatBarrier

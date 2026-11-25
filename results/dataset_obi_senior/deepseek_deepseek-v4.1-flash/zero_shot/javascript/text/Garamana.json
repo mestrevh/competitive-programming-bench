@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.006204,
-            "total_cost": 0.006206
+            "output_cost": 0.001551,
+            "total_cost": 0.001553
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nlet P = input[0];\nlet A = input[1];\n\nfunction normalize(s) {\n  return s.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');\n}\n\nP = normalize(P);\nA = normalize(A);\n\nconst count = {};\nfor (const ch of P) {\n  count[ch] = (count[ch] || 0) + 1;\n}\n\nfor (const ch of A) {\n  if (ch === '*') continue;\n  if (!count[ch]) {\n    console.log('N');\n    process.exit(0);\n  }\n  count[ch]--;\n}\n\nconsole.log('S');\n```",
         "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim().split(/\\r?\\n/);\nlet P = input[0];\nlet A = input[1];\n\nfunction normalize(s) {\n  return s.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');\n}\n\nP = normalize(P);\nA = normalize(A);\n\nconst count = {};\nfor (const ch of P) {\n  count[ch] = (count[ch] || 0) + 1;\n}\n\nfor (const ch of A) {\n  if (ch === '*') continue;\n  if (!count[ch]) {\n    console.log('N');\n    process.exit(0);\n  }\n  count[ch]--;\n}\n\nconsole.log('S');",

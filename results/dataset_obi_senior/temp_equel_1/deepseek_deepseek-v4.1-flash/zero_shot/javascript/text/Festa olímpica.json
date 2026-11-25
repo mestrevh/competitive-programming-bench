@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.02441,
-            "total_cost": 0.024413
+            "output_cost": 0.006103,
+            "total_cost": 0.006105
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\nconst M = data[1];\n\nconst den = new Int32Array(M);\nfor (let i = 0; i < M; i++) {\n  den[i] = data[2 + i] - 1;\n}\n\nconst out = [];\n\nfor (let k = 1; k <= 10000; k++) {\n  let r = k;\n\n  for (let i = M - 1; i >= 0; i--) {\n    r += ((r - 1) / den[i]) | 0;\n    if (r > N) break;\n  }\n\n  if (r <= N) {\n    out.push(r);\n  } else {\n    break;\n  }\n}\n\nprocess.stdout.write(out.join('\\n'));\n```",
         "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\nconst M = data[1];\n\nconst den = new Int32Array(M);\nfor (let i = 0; i < M; i++) {\n  den[i] = data[2 + i] - 1;\n}\n\nconst out = [];\n\nfor (let k = 1; k <= 10000; k++) {\n  let r = k;\n\n  for (let i = M - 1; i >= 0; i--) {\n    r += ((r - 1) / den[i]) | 0;\n    if (r > N) break;\n  }\n\n  if (r <= N) {\n    out.push(r);\n  } else {\n    break;\n  }\n}\n\nprocess.stdout.write(out.join('\\n'));",

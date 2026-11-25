@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.003506,
-            "total_cost": 0.003509
+            "output_cost": 0.000877,
+            "total_cost": 0.000879
         },
         "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    int adj[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        x--;\n        y--;\n        adj[x] |= (1 << y);\n        adj[y] |= (1 << x);\n    }\n\n    int total = 1 << N;\n    int answer = 0;\n\n    for (int mask = 1; mask < total; mask++) {\n        int ok = 1;\n        int m = mask;\n\n        while (m) {\n            int v = __builtin_ctz(m);\n            if (adj[v] & mask) {\n                ok = 0;\n                break;\n            }\n            m &= m - 1;\n        }\n\n        if (ok) answer++;\n    }\n\n    printf(\"%d\\n\", answer);\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    int adj[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        x--;\n        y--;\n        adj[x] |= (1 << y);\n        adj[y] |= (1 << x);\n    }\n\n    int total = 1 << N;\n    int answer = 0;\n\n    for (int mask = 1; mask < total; mask++) {\n        int ok = 1;\n        int m = mask;\n\n        while (m) {\n            int v = __builtin_ctz(m);\n            if (adj[v] & mask) {\n                ok = 0;\n                break;\n            }\n            m &= m - 1;\n        }\n\n        if (ok) answer++;\n    }\n\n    printf(\"%d\\n\", answer);\n    return 0;\n}",
@@ -54,8 +54,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.00239,
-            "total_cost": 0.002393
+            "output_cost": 0.000598,
+            "total_cost": 0.0006
         },
         "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    int adj[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        x--;\n        y--;\n        adj[x] |= (1 << y);\n        adj[y] |= (1 << x);\n    }\n\n    int total = 1 << N;\n    long long ans = 0;\n\n    for (int mask = 1; mask < total; mask++) {\n        int ok = 1;\n\n        for (int i = 0; i < N; i++) {\n            if (mask & (1 << i)) {\n                if (adj[i] & mask) {\n                    ok = 0;\n                    break;\n                }\n            }\n        }\n\n        if (ok) ans++;\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N, M;\n    if (scanf(\"%d %d\", &N, &M) != 2) return 0;\n\n    int adj[20] = {0};\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        x--;\n        y--;\n        adj[x] |= (1 << y);\n        adj[y] |= (1 << x);\n    }\n\n    int total = 1 << N;\n    long long ans = 0;\n\n    for (int mask = 1; mask < total; mask++) {\n        int ok = 1;\n\n        for (int i = 0; i < N; i++) {\n            if (mask & (1 << i)) {\n                if (adj[i] & mask) {\n                    ok = 0;\n                    break;\n                }\n            }\n        }\n\n        if (ok) ans++;\n    }\n\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",

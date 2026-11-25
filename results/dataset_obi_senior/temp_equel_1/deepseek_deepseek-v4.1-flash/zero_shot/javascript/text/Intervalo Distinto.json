@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.001442,
-            "total_cost": 0.001444
+            "output_cost": 0.000361,
+            "total_cost": 0.000362
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = Number(data[0]);\nconst freq = new Uint32Array(100001);\n\nlet left = 0;\nlet maxLen = 0;\n\nfor (let right = 0; right < n; right++) {\n  const value = Number(data[right + 1]);\n  freq[value]++;\n\n  while (freq[value] > 1) {\n    const leftValue = Number(data[left + 1]);\n    freq[leftValue]--;\n    left++;\n  }\n\n  const len = right - left + 1;\n  if (len > maxLen) maxLen = len;\n}\n\nconsole.log(maxLen);\n```",
         "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = Number(data[0]);\nconst freq = new Uint32Array(100001);\n\nlet left = 0;\nlet maxLen = 0;\n\nfor (let right = 0; right < n; right++) {\n  const value = Number(data[right + 1]);\n  freq[value]++;\n\n  while (freq[value] > 1) {\n    const leftValue = Number(data[left + 1]);\n    freq[leftValue]--;\n    left++;\n  }\n\n  const len = right - left + 1;\n  if (len > maxLen) maxLen = len;\n}\n\nconsole.log(maxLen);",

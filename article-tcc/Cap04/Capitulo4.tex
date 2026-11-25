@@ -1,0 +1,175 @@
+\chapter{Metodologia}\label{cap:metodologia}
+
+Este capítulo descreve o ambiente experimental automatizado e o protocolo metodológico desenvolvidos para avaliar a capacidade de LLMs na resolução de problemas do Nível Sênior da OBI, garantindo reprodutibilidade, comparabilidade entre modelos e rigor na verificação das soluções.
+
+\section{Arquitetura Experimental}
+
+A arquitetura experimental foi projetada em estudo anterior~\citep{angelo2026ise} e aprimorada no presente trabalho para automatizar integralmente o ciclo de avaliação em seis blocos funcionais interconectados (\textbf{ENTRY}, \textbf{DATA}, \textbf{ORCHESTRATION}, \textbf{SERVICES}, \textbf{EXTERNAL} e \textbf{OUTPUT}), conforme representado na Figura~\ref{fig:met-arquitetura}. O fluxo inicia-se no ponto de entrada \texttt{main.py} (\textbf{ENTRY}), onde são parametrizados o conjunto de dados em \texttt{database/} (\textbf{DATA}), o modo de execução (oráculo ou geração via LLM), a linguagem de programação (\linguagem{Python}, \linguagem{C}, \linguagem{C++}, \linguagem{Java} ou \linguagem{JavaScript}), o provedor de LLM, o escopo de questões, a modalidade de representação visual (\modalidade{text}, \modalidade{img} ou \modalidade{description}), o modelo de \textit{prompt} e a inclusão opcional dos limites de tempo e memória.
+
+\begin{figure}[!htbp]
+\centering
+\resizebox{\textwidth}{!}{\input{Cap04/figuras/arquitetura_sistema.tex}}
+\caption[Arquitetura do sistema de benchmarking experimental]{Arquitetura do sistema de \textit{benchmarking} experimental, organizada nos módulos de entrada (\textit{Entry}), dados (\textit{Data}), núcleo orquestrador (\textit{Orchestration}), camada de serviços (\textit{Services}), integrações externas (\textit{External}) e persistência de resultados (\textit{Output}).}
+\label{fig:met-arquitetura}
+\end{figure}
+
+Para cada questão carregada da base de dados, o núcleo orquestrador (\textbf{ORCHESTRATION}) lê as configurações do experimento e monta o \textit{prompt} correspondente. Em seguida, aciona a camada de serviços (\textbf{SERVICES}), que envia a requisição à API do provedor externo (\textbf{EXTERNAL}) e coleta o texto gerado, a contagem de \textit{tokens} e o custo em USD. Após a extração limpa do código-fonte, o serviço de julgamento local compila e executa a solução contra todos os casos de teste oficiais. Por fim, o gerenciador de arquivos persiste tanto o histórico detalhado em formato JSON quanto os sumários de avaliação em CSV no diretório \texttt{results/} (\textbf{OUTPUT}).
+
+\section{Base de Dados e Validação Oráculo}\label{sec:met-base}
+
+\subsection{Construção e Composição da Base OBI Nível Sênior}\label{sec:met-base-composicao}
+
+A coleta e estruturação inicial dos problemas da OBI seguiu o protocolo automatizado em cinco etapas desenvolvido pelo grupo de pesquisa a partir do portal oficial da olimpíada~\citep{obi_passadas,problems2026}:
+\begin{enumerate}
+    \item \textbf{Coleta de dados (\textit{Web Scraping}):} obtenção dos cadernos de provas em PDF disponíveis no portal oficial da OBI por meio das bibliotecas \texttt{requests} e \texttt{BeautifulSoup};
+    \item \textbf{Estruturação via LLM:} extração dos enunciados para o formato JSON (título, enunciado, entrada, saída, restrições, exemplos, ano, nível, fase e tópicos sugeridos) padronizado através do modelo \texttt{glm-5.3-flash};
+    \item \textbf{Obtenção de casos de teste:} descarga dos pacotes oficiais de gabaritos (\texttt{.zip}) contendo os arquivos de entrada (\texttt{.in}) e saída esperada (\texttt{.out}) de cada questão;
+    \item \textbf{Mapeamento de diretórios:} associação dos casos de teste, soluções de referência e imagens extraídas ao diretório correspondente de cada problema no ambiente do juiz;
+    \item \textbf{Limpeza e validação:} remoção de arquivos residuais, exclusão de problemas sem correspondência exata entre entradas e saídas, além de revisão manual pela equipe \textit{GEMA-LAB}, inserindo imagens e campos de descrição da imagem através do modelo \texttt{glm-5.3-flash} e verificando alucinações dos LLMs.
+\end{enumerate}
+
+Para o recorte experimental deste TCC, utilizou-se a base \texttt{database/dataset\_obi\_senior}~\citep{problems2026}, composta exclusivamente por \textbf{125 problemas oficiais do Nível Sênior} da Modalidade Programação referentes às edições de \textbf{2016 a 2025}, abrangendo a \textit{Fase Local/Fase 1} (43), a \textit{Fase Estadual/Fase 2} (42) e a \textit{Fase Nacional/Fase 3} (40). Ao todo, o conjunto reúne \textbf{4.681 casos de teste oficiais} (média aproximada de $37{,}4$ casos por questão), sendo \textbf{46 questões com imagens} associadas e \textbf{79 puramente textuais}. Cada questão segue um esquema padronizado em \texttt{problem.json} (detalhado no Apêndice~\ref{ap:esquema-dados}), acompanhado dos diretórios \texttt{imgs/}, \texttt{solutions/} e \texttt{test\_cases/\{inputs,outputs\}/}.
+
+\subsection{Validação Oráculo das Soluções de Referência}\label{sec:met-oraculo}
+
+Antes de submeter qualquer modelo de linguagem ao \textit{benchmark}, executou-se o modo oráculo (\texttt{oracle=True}) sobre todas as 125 questões. Nessa etapa, o sistema seleciona automaticamente as soluções humanas de referência disponíveis no diretório \texttt{solutions/}, priorizando implementações em \linguagem{C++}, \linguagem{C}, \linguagem{Python}, \linguagem{Java} e \linguagem{JavaScript}, e despriorizando soluções marcadas como ingênuas ou lentas (\texttt{brute}, \texttt{naive}, \texttt{slow}) ou incompatíveis com Python 3, e as submete ao juiz local contra os respectivos casos de teste. Os resultados consolidados em \href{https://github.com/mestrevh/competitive-programming-bench/blob/main/results/dataset_obi_senior/oracle.csv}{\texttt{oracle.csv}}\footnote{Disponível em: \url{https://github.com/mestrevh/competitive-programming-bench/blob/main/results/dataset_obi_senior/oracle.csv}.} asseguram a integridade dos gabaritos, a adequação dos limites de tempo e memória e a confiabilidade do comparador de saídas.
+
+\section{Arquitetura do Sistema de \textit{Benchmarking}}\label{sec:met-arquitetura}
+
+A arquitetura do ambiente experimental, concebida preliminarmente em estudo anterior~\citep{angelo2026ise} e estendida neste TCC~\citep{obibenchmarking2026}, foi implementada em Python e organiza-se em três camadas principais descritas a seguir.
+
+\subsection{Orquestrador, Configuração e Persistência}\label{sec:met-orchestrator}
+
+O módulo \texttt{Orchestrator} (\texttt{src/core/orchestrator.py}) coordena a iteração sobre as questões da base, gerencia a comunicação com os provedores de LLM configurados em \texttt{src/core/config.py} via variáveis de ambiente (contendo chave de acesso, endereço da API, identificador do modelo e tarifas por milhão de \textit{tokens} de entrada e saída) e instancia o serviço \texttt{LLM} (\texttt{src/services/llm\_services.py}) compatível com a interface OpenAI.
+
+Para cada problema executado, a classe \texttt{LLM} calcula automaticamente o consumo de \textit{tokens} e o custo estimado em dólares americanos (USD) com base nos preços por milhão de \textit{tokens}. O orquestrador persiste o histórico completo de cada tentativa em arquivos JSON acumulativos (incluindo \textit{timestamp}, \textit{prompt} enviado, resposta bruta, código extraído, contagem de \textit{tokens}, custos e resultado por veredito do juiz), além de consolidar sumários lineares em arquivos CSV para análise dos resultados.
+
+\subsection{Construção de \textit{Prompts} e Extração de Código}\label{sec:met-prompt-builder}
+
+O módulo \texttt{prompt\_builder.py} constrói o \textit{payload} de entrada combinando o modelo de \textit{prompt} selecionado com a representação formatada do problema (\texttt{title}, \texttt{statement}, \texttt{input}, \texttt{output}, \texttt{constraints} e \texttt{examples}). Quando a opção \texttt{include\_limits} está ativa, injeta-se explicitamente a seção de limites de execução contendo \texttt{time\_limit} e \texttt{memory\_limit}. Para questões com figuras, o construtor suporta três modalidades:
+\begin{itemize}
+    \item \modalidade{text}: envia apenas o enunciado textual, mantendo as referências originais sem anexar imagens;
+    \item \modalidade{img}: codifica cada arquivo de imagem do diretório \texttt{imgs/} em formato Base64 e o anexa ao conteúdo multimodal da requisição (\texttt{image\_url});
+    \item \modalidade{description}: substitui cada marcador de figura (\texttt{[nome\_img]}) por uma descrição textual detalhada e estruturada previamente armazenada em \texttt{imgs\_description}.
+\end{itemize}
+
+Após receber a resposta do LLM, a função \texttt{extract\_code} extrai o código executável por meio de expressões regulares, selecionando o maior bloco delimitado por crases Markdown (\texttt{```linguagem ... ```} ou bloco genérico \texttt{``` ... ```}). Na ausência de delimitadores, utiliza-se o texto limpo da resposta.
+
+\subsection{Serviço de Julgamento Automatizado (\texttt{JudgeService})}\label{sec:met-judge}
+
+O módulo \texttt{JudgeService} (\texttt{src/services/judge\_service.py}) executa o código extraído contra todos os casos de teste em diretório temporário isolado, suportando cinco linguagens:
+\begin{itemize}
+    \item \linguagem{Python}: execução direta via interpretador Python do ambiente;
+    \item \linguagem{C}: compilação com \texttt{gcc -DNDEBUG -O2 -lm};
+    \item \linguagem{C++}: compilação com \texttt{g++ -O2 -DNDEBUG} e inclusão automática dos cabeçalhos padrão \texttt{cassert}, \texttt{cstdint}, \texttt{cstring} e \texttt{algorithm};
+    \item \linguagem{Java}: compilação com \texttt{javac -encoding UTF-8} e execução via máquina virtual \texttt{java};
+    \item \linguagem{JavaScript}: validação sintática com \texttt{node --check} e execução em Node.js, com injeção de um \textit{shim} de \texttt{scanf}/\texttt{printf} para compatibilidade com soluções competitivas que empregam esse padrão da OBI.
+\end{itemize}
+
+Durante a execução de cada caso de teste, o tempo de parede é aferido com \texttt{time.perf\_counter()} e o consumo de memória pico do processo e de eventuais subprocessos é monitorado continuamente em \textit{thread} paralela via biblioteca \texttt{psutil}. A comparação entre a saída produzida e o gabarito esperado realiza-se linha a linha com remoção de espaços em branco à direita. Caso todos os casos obtenham sucesso dentro dos limites, atribui-se o veredito \veredito{AC}; caso contrário, registra-se \veredito{CE} na falha de compilação/ausência de código ou o primeiro veredito de erro ocorrido nos testes (\veredito{WA}, \veredito{RE}, \veredito{TLE} ou \veredito{MLE}).
+
+Para assegurar a reprodutibilidade das medições de tempo e memória, todos os experimentos foram executados localmente em um computador equipado com processador Intel Core i7-1360P de 13ª geração (2,20~GHz, 12 núcleos e 16 \textit{threads}), 16~GB de memória RAM (4800~MT/s) e acelerador gráfico integrado Intel Iris Xe, operando sob o sistema Microsoft Windows 11 Home Single Language (64~bits). No ambiente de \textit{software} do juiz local, utilizaram-se as seguintes versões de compiladores e interpretadores: \textbf{Python~3.14.3} (ambiente virtual do projeto), \textbf{GCC} e \textbf{G++~16.2.0} (distribuição MinGW-W64 \texttt{x86\_64-ucrt-posix-seh}), \textbf{OpenJDK~17.0.20.1} (\texttt{javac} e \texttt{java}) e \textbf{Node.js~v24.18.1}.
+
+\subsection{Visão Geral do Pipeline}\label{sec:met-visao-geral}
+
+Para automatizar a bateria de testes e padronizar a execução individual de cada questão da base, o \textit{pipeline} experimental opera em cinco etapas sequenciais, conforme ilustrado na Figura~\ref{fig:met-pipeline}: (i) escolha e carregamento do problema da OBI (\texttt{problem.json} e eventuais figuras associadas); (ii) formatação e inserção do enunciado no \textit{template} de \textit{prompt} selecionado (\textit{Zero-Shot}, \textit{Few-Shot} ou \textit{Chain-of-Thought} de Pólya), de acordo com a modalidade configurada; (iii) chamada à API do agente codificador (LLM); (iv) identificação e extração limpa do código-fonte produzido na resposta bruta do modelo; e (v) compilação e validação automatizada da solução pelo avaliador (\textit{Judge}) frente aos casos de teste unitários oficiais (\texttt{.in} e \texttt{.out}), consolidando o veredito final e as métricas de execução.
+
+\begin{figure}[!htbp]
+\centering
+\resizebox{\textwidth}{!}{\input{Cap04/figuras/pipeline_questao.tex}}
+\caption[Pipeline de execução automatizada para cada questão]{\textit{Pipeline} de execução automatizada para cada questão da base da OBI.}
+\label{fig:met-pipeline}
+\end{figure}
+\FloatBarrier
+
+\section{Modelos Avaliados e Parametrização}\label{sec:met-modelos}
+
+No protocolo experimental principal, avaliaram-se três Modelos de Linguagem de Grande Porte de diferentes famílias sob decodificação gulosa determinística (\textbf{temperatura $T = 0{,}0$}, \textit{top\_p} e \textit{max\_tokens} padrão, avaliados em regime $\passat{1}$): \textbf{DeepSeek v4.1 Flash}, \textbf{Gemini 3.8 Flash} e \textbf{GPT-6 Luna} (Tabela~\ref{tab:met-modelos}). Adicionalmente, para a análise de evolução geracional conduzida na PP5, foram incorporadas as soluções em \linguagem{Python} \textit{Zero-Shot} geradas no estudo preliminar~\citep{angelo2026ise} pelos modelos da geração anterior \textbf{Gemini 3.1 Pro} e \textbf{GPT-5.4}, submetidas ao mesmo juiz local adotado neste trabalho.
+
+\begin{table}[!htbp]
+\centering
+\caption[Modelos de LLMs avaliados no benchmark]{Modelos de LLMs avaliados no protocolo experimental ($T = 0{,}0$).}
+\label{tab:met-modelos}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccc}
+\toprule
+Modelo & Identificador na API & Multimodal & Preço Entrada (USD/1M) & Preço Saída (USD/1M) \\
+\midrule
+DeepSeek v4.1 Flash & \texttt{deepseek/deepseek-v4.1-flash} & \tcok & 0,003 & 0,60  \\
+Gemini 3.8 Flash    & \texttt{gemini-3.8-flash}             & \tcok & 0,75  & 3,75  \\
+GPT-6 Luna          & \texttt{openai/gpt-6-luna}            & \tcok & 0,10  & 0,50  \\
+\midrule
+Gemini 3.1 Pro      & \texttt{gemini-3.1-pro}               & \tcok & 2,00  & 12,00 \\
+GPT-5.4             & \texttt{openai/gpt-5.4}               & \tcok & 2,50  & 15,00 \\
+\bottomrule
+\end{tabular}%
+}
+\par\smallskip{\footnotesize Custos verificados no dia 18 de novembro de 2026, sujeitos a modificações.}
+\end{table}
+
+\section{Experimentos por Pergunta de Pesquisa}\label{sec:met-desenho}
+
+A Tabela~\ref{tab:met-desenho} resume o desenho experimental estruturado para responder às cinco perguntas de pesquisa propostas no Capítulo~\ref{cap:introducao}.
+
+\begin{table}[!htbp]
+\centering
+\caption[Visão geral do desenho experimental para PP1 a PP5]{Configuração dos experimentos conduzidos para responder às perguntas de pesquisa PP1 a PP5.}
+\label{tab:met-desenho}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcccl}
+\toprule
+PP & Escopo de Problemas & Linguagens & Modalidades & \textit{Prompt} / Limites & Execuções/Modelo \\
+\midrule
+PP1 & 125 (base completa) & Python, C, C++, Java, JS & \modalidade{text} & \promptname{zero\_shot} / Não & $125 \times 5 = 625$ \\
+PP2 & 46 (com imagem)     & C++ (controle)             & \modalidade{text}, \modalidade{img}, \modalidade{description} & \promptname{zero\_shot} / Não & $46 \times 3 = 138$ \\
+PP3 & 125 (base completa) & C (pior na PP1)            & \modalidade{text} & \promptname{zero\_shot} / Sim & $125 \times 1 = 125$ \\
+PP4 & 125 (base completa) & C (pior na PP1)            & \modalidade{text} & ZS, FS, CoT-Pólya / Não & $125 \times 3 = 375$ \\
+PP5 & 46 (interseção Sênior) & Python (paridade)       & \modalidade{text} & \promptname{zero\_shot} / Não & $46 \times 1 = 46$ (4 LLMs) \\
+\bottomrule
+\end{tabular}%
+}
+\par\smallskip{\footnotesize ZS: \textit{Zero-Shot}; FS: \textit{Few-Shot}; CoT-Pólya: \textit{Chain-of-Thought} guiado pela metodologia de Pólya. Na PP5, comparam-se dois pares geracionais completos (Gemini 3.1 Pro vs. 3.8 Flash e GPT-5.4 vs. GPT-6 Luna) sob o mesmo \texttt{JudgeService}.}
+\end{table}
+
+\subsection{PP1: Desempenho Geral e Variação por Linguagem}\label{sec:met-rq1}
+
+Avalia-se a linha de base textual (\modalidade{text}, \promptname{zero\_shot.txt}, sem injeção explícita de limites no cabeçalho do \textit{prompt}) sobre todos os 125 problemas nas cinco linguagens na ordem \linguagem{Python}, \linguagem{C}, \linguagem{C++}, \linguagem{Java} e \linguagem{JavaScript}, totalizando $625$ execuções por modelo ($1.875$ execuções no total).
+
+Do ponto de vista metodológico, como o conjunto de questões é o mesmo em todas as baterias, exige-se a mesma lógica de resolução independentemente da linguagem. Dessa forma, é possível avaliar como cada modelo lida com a sintaxe e a semântica próprias de cada linguagem de programação e quais são os impactos dessas diferenças sobre a taxa de acerto.
+
+\subsection{PP2: Impacto Visual e Modalidades Multimodais}\label{sec:met-rq2}
+
+Em uma primeira etapa, contrasta-se o desempenho obtido na PP1 entre as 46 questões que possuem imagens e as 79 questões puramente textuais. Em seguida, para isolar o efeito da representação visual sob controle sintático uniforme, adota-se \linguagem{C++} para avaliar as 46 questões com imagens sob três modalidades: \modalidade{text} (referência textual), \modalidade{img} (imagens anexadas em Base64) e \modalidade{description} (descrição textual estruturada das figuras).
+
+Para isso, no formato estruturado do \textit{prompt}, o local original da figura no caderno de prova é demarcado pela referência textual do arquivo (como \texttt{[1.png]}), conforme ilustrado na Figura~\ref{fig:met-enunciado-prompt} para o problema \textit{Acelerador de partículas}. Na modalidade \modalidade{text}, o modelo recebe apenas o texto com o marcador \texttt{[1.png]}; na modalidade \modalidade{img}, além do marcador no texto, a respectiva imagem é codificada em Base64 e anexada ao final da requisição multimodal; já na modalidade \modalidade{description}, o marcador \texttt{[1.png]} é substituído diretamente no corpo do enunciado pela descrição textual estruturada da figura.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{Cap04/figuras/enunciado-prompt-horizontal.png}
+\caption[Representação de um enunciado com imagem no prompt]{Comparação entre o enunciado original da prova da OBI com figura (à esquerda) e a sua representação estruturada no \textit{prompt} com o marcador \texttt{[1.png]} associado à imagem codificada em Base64 (à direita).}
+\label{fig:met-enunciado-prompt}
+\end{figure}
+
+\subsection{PP3: Explicitação de Limites de Tempo e Memória}\label{sec:met-rq3}
+
+Para isolar o impacto da explicitação das restrições computacionais (\texttt{include\_limits=True}), seleciona-se a linguagem que apresentou a menor taxa agregada de aprovação na PP1 (\linguagem{C}), submetendo novamente todos os 125 problemas com os valores exatos de \texttt{time\_limit} e \texttt{memory\_limit} informados no \textit{prompt} (\promptname{zero\_shot.txt}).
+
+\subsection{PP4: Estratégias de Engenharia de \texorpdfstring{\textit{Prompt}}{Prompt}}\label{sec:met-rq4}
+
+Mantendo \linguagem{C} como linguagem-alvo de maior desafio no \textit{baseline}, comparam-se três estratégias de \textit{prompting} sobre os 125 problemas ($1.125$ execuções ao todo, cujos textos integrais constam do Apêndice~\ref{ap:prompts}): (i) \textit{Zero-Shot} (\promptname{zero\_shot.txt}); (ii) \textit{Few-Shot} (\promptname{few\_shot\_c.txt}), contendo três problemas canônicos em C voltados à prevenção de \textit{overflow}, E/S estrita e indexação 1-based; e (iii) \textit{Chain-of-Thought}~\citep{wei2022chain} guiado pela Metodologia de Pólya~\citep{polya1945} (\promptname{chain\_of\_thought\_polya.txt}), estruturado em Compreensão, Planejamento, Codificação (Execução) e Teste. Adicionalmente, conduz-se uma auditoria manual e programática (\textit{sanity check}) sobre os casos classificados como \veredito{CE} no \textit{CoT Pólya} para verificar se contêm código C compilável suprimido por artefatos de extração de múltiplos blocos Markdown (\textit{parser artifact}).
+
+\subsection{PP5: Evolução Geracional sob Paridade de Juiz}\label{sec:met-rq5}
+
+Para avaliar o progresso entre gerações consecutivas de LLMs sem introduzir distorções de protocolo, identificou-se a interseção exata entre a base Sênior deste TCC e o estudo preliminar do grupo~\citep{angelo2026ise,obibenchmarking2026}. Esse recorte corresponde à totalidade das \textbf{46 questões com figuras} do Nível Sênior da OBI (2016--2025), único subconjunto compartilhado que dispõe de execuções sob configuração idêntica em ambos os trabalhos: linguagem \linguagem{Python}, estratégia \textit{Zero-Shot}, modo texto puro (\modalidade{text}) e decodificação determinística ($T = 0{,}0$).
+
+Uma etapa metodológica decisiva consistiu em \textbf{rejulgar localmente os códigos \texttt{.py} salvos da geração anterior} (\textbf{Gemini 3.1 Pro} e \textbf{GPT-5.4}) utilizando exatamente o mesmo \texttt{JudgeService} empregado para \textbf{Gemini 3.8 Flash} e \textbf{GPT-6 Luna}. No repositório anterior, o avaliador aplicava tempo limite fixo de $3{,}0\,\mathrm{s}$ para \linguagem{Python} (independentemente do limite oficial de $5{,}0\,\mathrm{s}$ previsto em diversas questões da OBI) e comparava saídas com remoção de espaços apenas nas extremidades da \textit{string} completa, em vez de linha a linha. Sem o rejulgamento no ambiente unificado (Python~3.14.3, limites oficiais por questão e monitoramento de memória via \texttt{psutil}), diferenças de infraestrutura seriam confundidas com ganhos ou perdas reais dos modelos.
+
+Os resultados consolidados desse protocolo foram organizados no arquivo \href{https://github.com/mestrevh/competitive-programming-bench/blob/main/results/dataset_obi_senior/llms_compare.csv}{\texttt{results/dataset\_obi\_senior/llms\_compare.csv}}\footnote{Disponível em: \url{https://github.com/mestrevh/competitive-programming-bench/blob/main/results/dataset_obi_senior/llms_compare.csv}.}. Para preservar a simetria da análise pareada entre gerações, a avaliação na PP5 restringe-se às famílias com cobertura completa nos dois ciclos --- \textbf{Google} (\textit{Gemini 3.1 Pro} $\rightarrow$ \textit{Gemini 3.8 Flash}) e \textbf{OpenAI} (\textit{GPT-5.4} $\rightarrow$ \textit{GPT-6 Luna}). A família DeepSeek não entra nas tabelas e nos gráficos comparativos dessa seção porque o antecessor \textit{DeepSeek-V3.2} não possui execuções \linguagem{Python} \textit{Zero-Shot} no Nível Sênior, permanecendo registrado como \texttt{N/A} na base consolidada.
+
+\section{Limitações}\label{sec:conc-limitacoes}
+
+Embora o protocolo experimental tenha sido estruturado para garantir controle e reprodutibilidade, algumas limitações metodológicas devem ser consideradas. Primeiramente, a avaliação concentra-se na geração determinística ($T = 0{,}0$) com a métrica $\passat{1}$ (uma única submissão por problema e condição), diferindo de estudos que variam o parâmetro $k$ com temperaturas mais altas para explorar a diversidade amostral dos modelos.
+
+Além disso, o escopo empírico principal restringe-se a três modelos atuais e às questões do Nível Sênior da OBI, enquanto a comparação geracional (PP5) limita-se à interseção de 46 questões com figuras em \linguagem{Python} \textit{Zero-Shot} e aos dois pares com cobertura completa (Google e OpenAI). Como os problemas correspondem a edições públicas aplicadas entre 2016 e 2025, não é possível descartar a hipótese de exposição prévia de parte dos enunciados ou soluções nos conjuntos de treinamento dos modelos. Por fim, o extrator automático de código apresenta sensibilidade a respostas que dividem a solução em múltiplos blocos Markdown, aspecto que motivou a auditoria específica de artefatos de extração na PP4.

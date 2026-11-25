@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.017172,
-            "total_cost": 0.017175
+            "output_cost": 0.004293,
+            "total_cost": 0.004296
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst N = data[idx++];\nconst adj = Array.from({ length: N + 1 }, () => []);\nfor (let i = 1; i <= N; i++) {\n  const M = data[idx++];\n  for (let j = 0; j < M; j++) {\n    const x = data[idx++];\n    adj[i].push(x);\n  }\n}\nconst color = new Int8Array(N + 1).fill(-1);\ncolor[1] = 0;\nconst queue = [1];\nlet head = 0;\nwhile (head < queue.length) {\n  const u = queue[head++];\n  const cu = color[u];\n  const neighbors = adj[u];\n  for (let k = 0; k < neighbors.length; k++) {\n    const v = neighbors[k];\n    if (color[v] === -1) {\n      color[v] = cu ^ 1;\n      queue.push(v);\n    }\n  }\n}\nconst team1 = [];\nconst team2 = [];\nfor (let i = 1; i <= N; i++) {\n  if (color[i] === 0) team1.push(i);\n  else team2.push(i);\n}\nconsole.log(team1.join(' '));\nconsole.log(team2.join(' '));\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst N = data[idx++];\nconst adj = Array.from({ length: N + 1 }, () => []);\nfor (let i = 1; i <= N; i++) {\n  const M = data[idx++];\n  for (let j = 0; j < M; j++) {\n    const x = data[idx++];\n    adj[i].push(x);\n  }\n}\nconst color = new Int8Array(N + 1).fill(-1);\ncolor[1] = 0;\nconst queue = [1];\nlet head = 0;\nwhile (head < queue.length) {\n  const u = queue[head++];\n  const cu = color[u];\n  const neighbors = adj[u];\n  for (let k = 0; k < neighbors.length; k++) {\n    const v = neighbors[k];\n    if (color[v] === -1) {\n      color[v] = cu ^ 1;\n      queue.push(v);\n    }\n  }\n}\nconst team1 = [];\nconst team2 = [];\nfor (let i = 1; i <= N; i++) {\n  if (color[i] === 0) team1.push(i);\n  else team2.push(i);\n}\nconsole.log(team1.join(' '));\nconsole.log(team2.join(' '));",

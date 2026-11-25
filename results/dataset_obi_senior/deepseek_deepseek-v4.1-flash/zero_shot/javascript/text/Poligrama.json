@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.01146,
-            "total_cost": 0.011462
+            "output_cost": 0.002865,
+            "total_cost": 0.002867
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0], 10);\nconst p = data[1];\n\nconst pref = new Int32Array((n + 1) * 26);\n\nfor (let i = 0; i < n; i++) {\n  const prev = i * 26;\n  const cur = (i + 1) * 26;\n  for (let c = 0; c < 26; c++) {\n    pref[cur + c] = pref[prev + c];\n  }\n  pref[cur + (p.charCodeAt(i) - 97)]++;\n}\n\nfunction check(L) {\n  const targetBase = L * 26;\n  for (let s = L; s < n; s += L) {\n    const startBase = s * 26;\n    const endBase = (s + L) * 26;\n    for (let c = 0; c < 26; c++) {\n      if (pref[endBase + c] - pref[startBase + c] !== pref[targetBase + c]) {\n        return false;\n      }\n    }\n  }\n  return true;\n}\n\nlet ans = null;\n\nfor (let L = 1; L * 2 <= n; L++) {\n  if (n % L === 0 && check(L)) {\n    ans = p.slice(0, L);\n    break;\n  }\n}\n\nconsole.log(ans === null ? '*' : ans);\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0], 10);\nconst p = data[1];\n\nconst pref = new Int32Array((n + 1) * 26);\n\nfor (let i = 0; i < n; i++) {\n  const prev = i * 26;\n  const cur = (i + 1) * 26;\n  for (let c = 0; c < 26; c++) {\n    pref[cur + c] = pref[prev + c];\n  }\n  pref[cur + (p.charCodeAt(i) - 97)]++;\n}\n\nfunction check(L) {\n  const targetBase = L * 26;\n  for (let s = L; s < n; s += L) {\n    const startBase = s * 26;\n    const endBase = (s + L) * 26;\n    for (let c = 0; c < 26; c++) {\n      if (pref[endBase + c] - pref[startBase + c] !== pref[targetBase + c]) {\n        return false;\n      }\n    }\n  }\n  return true;\n}\n\nlet ans = null;\n\nfor (let L = 1; L * 2 <= n; L++) {\n  if (n % L === 0 && check(L)) {\n    ans = p.slice(0, L);\n    break;\n  }\n}\n\nconsole.log(ans === null ? '*' : ans);",

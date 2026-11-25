@@ -1,0 +1,70 @@
+% Gráficos lado a lado: LOC médio e Tempo Médio de CPU em soluções AC (Cap. 5, Seção 5.2.3)
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={
+    group size=2 by 1,
+    horizontal sep=1.4cm
+  },
+  width=0.47\textwidth,
+  height=5.6cm,
+  symbolic x coords={Python,C,C++,Java,JavaScript},
+  xtick=data,
+  enlarge x limits=0.16,
+  ymajorgrids=true,
+  grid style={black!12},
+  axis lines*=left,
+  tick label style={font=\scriptsize},
+  x tick label style={rotate=20, anchor=east},
+  label style={font=\footnotesize},
+  title style={font=\footnotesize\bfseries, yshift=-2pt}
+]
+% Painel (a): LOC médio
+\nextgroupplot[
+  ybar=1.5pt,
+  bar width=6.5pt,
+  title={(a) Extensão média do código (LOC)},
+  ymin=0, ymax=92,
+  ylabel={Linhas de código médias (LOC)},
+  legend to name=legpp1loctempo,
+  legend style={
+    legend columns=3,
+    draw=black!30,
+    rounded corners=2pt,
+    font=\footnotesize,
+    /tikz/every even column/.append style={column sep=10pt}
+  }
+]
+\addplot[fill=vAzul, draw=vAzul!70!black, line width=0.4pt] coordinates {
+  (Python,42.6) (C,58.7) (C++,49.9) (Java,60.8) (JavaScript,46.8)
+};
+\addplot[fill=vLaranja, draw=vLaranja!70!black, line width=0.4pt] coordinates {
+  (Python,47.6) (C,60.9) (C++,53.9) (Java,77.7) (JavaScript,67.9)
+};
+\addplot[fill=vRoxo, draw=vRoxo!70!black, line width=0.4pt] coordinates {
+  (Python,34.2) (C,56.4) (C++,47.3) (Java,72.3) (JavaScript,46.4)
+};
+\legend{DeepSeek v4.1 Flash, Gemini 3.8 Flash, GPT-6 Luna}
+
+% Painel (b): Tempo médio de CPU (AC)
+\nextgroupplot[
+  ybar=1.5pt,
+  bar width=6.5pt,
+  title={(b) Tempo médio de CPU das soluções \veredito{AC}},
+  ymin=0, ymax=0.42,
+  ylabel={Tempo médio no Judge (s)}
+]
+\addplot[fill=vAzul, draw=vAzul!70!black, line width=0.4pt] coordinates {
+  (Python,0.2776) (C,0.1569) (C++,0.1856) (Java,0.1365) (JavaScript,0.0929)
+};
+\addplot[fill=vLaranja, draw=vLaranja!70!black, line width=0.4pt] coordinates {
+  (Python,0.2973) (C,0.1360) (C++,0.1811) (Java,0.1213) (JavaScript,0.0742)
+};
+\addplot[fill=vRoxo, draw=vRoxo!70!black, line width=0.4pt] coordinates {
+  (Python,0.3595) (C,0.1734) (C++,0.2048) (Java,0.1517) (JavaScript,0.1326)
+};
+\end{groupplot}
+
+% Legenda compartilhada acima dos dois gráficos
+\node[anchor=south] at ($(group c1r1.north)!0.5!(group c2r1.north) + (0,0.65cm)$)
+  {\pgfplotslegendfromname{legpp1loctempo}};
+\end{tikzpicture}

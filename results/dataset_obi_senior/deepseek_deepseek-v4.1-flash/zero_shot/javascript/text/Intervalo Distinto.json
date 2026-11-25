@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.001267,
-            "total_cost": 0.001269
+            "output_cost": 0.000317,
+            "total_cost": 0.000319
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst arr = data.slice(1, 1 + n);\n\nconst seen = new Int32Array(100001);\nlet left = 0;\nlet maxLen = 0;\n\nfor (let right = 0; right < n; right++) {\n    const value = arr[right];\n\n    while (seen[value]) {\n        seen[arr[left]] = 0;\n        left++;\n    }\n\n    seen[value] = 1;\n    const currentLen = right - left + 1;\n\n    if (currentLen > maxLen) {\n        maxLen = currentLen;\n    }\n}\n\nconsole.log(maxLen);\n```",
         "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst arr = data.slice(1, 1 + n);\n\nconst seen = new Int32Array(100001);\nlet left = 0;\nlet maxLen = 0;\n\nfor (let right = 0; right < n; right++) {\n    const value = arr[right];\n\n    while (seen[value]) {\n        seen[arr[left]] = 0;\n        left++;\n    }\n\n    seen[value] = 1;\n    const currentLen = right - left + 1;\n\n    if (currentLen > maxLen) {\n        maxLen = currentLen;\n    }\n}\n\nconsole.log(maxLen);",

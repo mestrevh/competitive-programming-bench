@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.014114,
-            "total_cost": 0.014118
+            "output_cost": 0.003529,
+            "total_cost": 0.003532
         },
         "raw_response": "```python\nimport sys\nfrom bisect import bisect_left\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    F = next(it)\n\n    monsters = [next(it) for _ in range(N)]\n    powers = [next(it) for _ in range(F)]\n    bonuses = [next(it) for _ in range(F)]\n\n    fairies = sorted(zip(powers, bonuses), reverse=True)\n    monsters.sort()\n\n    defeated = 0\n\n    for power, bonus in fairies:\n        idx = bisect_left(monsters, power)\n        take = min(bonus, idx)\n        if take > 0:\n            del monsters[idx - take:idx]\n            defeated += take\n\n    print(defeated)\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\nfrom bisect import bisect_left\n\ndef main():\n    data = list(map(int, sys.stdin.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    F = next(it)\n\n    monsters = [next(it) for _ in range(N)]\n    powers = [next(it) for _ in range(F)]\n    bonuses = [next(it) for _ in range(F)]\n\n    fairies = sorted(zip(powers, bonuses), reverse=True)\n    monsters.sort()\n\n    defeated = 0\n\n    for power, bonus in fairies:\n        idx = bisect_left(monsters, power)\n        take = min(bonus, idx)\n        if take > 0:\n            del monsters[idx - take:idx]\n            defeated += take\n\n    print(defeated)\n\nif __name__ == \"__main__\":\n    main()",

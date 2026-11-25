@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.004356,
-            "total_cost": 0.004358
+            "output_cost": 0.001089,
+            "total_cost": 0.001091
         },
         "raw_response": "```python\nimport sys\nimport unicodedata\nfrom collections import Counter\n\ndef normalize(s):\n    return ''.join(\n        c for c in unicodedata.normalize('NFD', s)\n        if unicodedata.category(c) != 'Mn'\n    )\n\ndef main():\n    data = sys.stdin.read().splitlines()\n    if len(data) < 2:\n        return\n\n    P = normalize(data[0].strip())\n    A = normalize(data[1].strip())\n\n    count = Counter(P)\n\n    for ch in A:\n        if ch == '*':\n            continue\n        if count[ch] == 0:\n            print('N')\n            return\n        count[ch] -= 1\n\n    print('S')\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\nimport unicodedata\nfrom collections import Counter\n\ndef normalize(s):\n    return ''.join(\n        c for c in unicodedata.normalize('NFD', s)\n        if unicodedata.category(c) != 'Mn'\n    )\n\ndef main():\n    data = sys.stdin.read().splitlines()\n    if len(data) < 2:\n        return\n\n    P = normalize(data[0].strip())\n    A = normalize(data[1].strip())\n\n    count = Counter(P)\n\n    for ch in A:\n        if ch == '*':\n            continue\n        if count[ch] == 0:\n            print('N')\n            return\n        count[ch] -= 1\n\n    print('S')\n\nif __name__ == \"__main__\":\n    main()",

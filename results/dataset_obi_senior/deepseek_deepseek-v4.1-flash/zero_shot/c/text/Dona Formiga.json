@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.002726,
-            "total_cost": 0.002729
+            "output_cost": 0.000682,
+            "total_cost": 0.000684
         },
         "raw_response": "```c\n#include <stdio.h>\n\n#define MAXS 205\n#define MAXT 20000\n\nint S, T, P;\nint altura[MAXS];\nint adj[MAXS][MAXS];\nint grau[MAXS];\nint memo[MAXS];\n\nint dfs(int v) {\n    if (memo[v] != -1) return memo[v];\n\n    int melhor = 0;\n    for (int i = 0; i < grau[v]; i++) {\n        int u = adj[v][i];\n        int val = 1 + dfs(u);\n        if (val > melhor) melhor = val;\n    }\n\n    return memo[v] = melhor;\n}\n\nint main() {\n    scanf(\"%d %d %d\", &S, &T, &P);\n\n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &altura[i]);\n        memo[i] = -1;\n        grau[i] = 0;\n    }\n\n    for (int k = 0; k < T; k++) {\n        int i, j;\n        scanf(\"%d %d\", &i, &j);\n\n        if (altura[i] > altura[j]) {\n            adj[i][grau[i]++] = j;\n        } else if (altura[j] > altura[i]) {\n            adj[j][grau[j]++] = i;\n        }\n    }\n\n    printf(\"%d\\n\", dfs(P));\n\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n\n#define MAXS 205\n#define MAXT 20000\n\nint S, T, P;\nint altura[MAXS];\nint adj[MAXS][MAXS];\nint grau[MAXS];\nint memo[MAXS];\n\nint dfs(int v) {\n    if (memo[v] != -1) return memo[v];\n\n    int melhor = 0;\n    for (int i = 0; i < grau[v]; i++) {\n        int u = adj[v][i];\n        int val = 1 + dfs(u);\n        if (val > melhor) melhor = val;\n    }\n\n    return memo[v] = melhor;\n}\n\nint main() {\n    scanf(\"%d %d %d\", &S, &T, &P);\n\n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &altura[i]);\n        memo[i] = -1;\n        grau[i] = 0;\n    }\n\n    for (int k = 0; k < T; k++) {\n        int i, j;\n        scanf(\"%d %d\", &i, &j);\n\n        if (altura[i] > altura[j]) {\n            adj[i][grau[i]++] = j;\n        } else if (altura[j] > altura[i]) {\n            adj[j][grau[j]++] = i;\n        }\n    }\n\n    printf(\"%d\\n\", dfs(P));\n\n    return 0;\n}",
@@ -54,8 +54,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.003444,
-            "total_cost": 0.003447
+            "output_cost": 0.000861,
+            "total_cost": 0.000864
         },
         "raw_response": "```c\n#include <stdio.h>\n\n#define MAXS 205\n\nint S, T, P;\nint h[MAXS];\nint adj[MAXS][MAXS];\nint memo[MAXS];\n\nint dfs(int u) {\n    if (memo[u] != -1) return memo[u];\n\n    int best = 0;\n    for (int v = 1; v <= S; v++) {\n        if (adj[u][v]) {\n            int val = 1 + dfs(v);\n            if (val > best) best = val;\n        }\n    }\n\n    memo[u] = best;\n    return best;\n}\n\nint main() {\n    scanf(\"%d %d %d\", &S, &T, &P);\n\n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &h[i]);\n    }\n\n    for (int i = 0; i < T; i++) {\n        int I, J;\n        scanf(\"%d %d\", &I, &J);\n\n        if (h[I] > h[J]) {\n            adj[I][J] = 1;\n        } else if (h[J] > h[I]) {\n            adj[J][I] = 1;\n        }\n    }\n\n    for (int i = 1; i <= S; i++) {\n        memo[i] = -1;\n    }\n\n    printf(\"%d\\n\", dfs(P));\n\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n\n#define MAXS 205\n\nint S, T, P;\nint h[MAXS];\nint adj[MAXS][MAXS];\nint memo[MAXS];\n\nint dfs(int u) {\n    if (memo[u] != -1) return memo[u];\n\n    int best = 0;\n    for (int v = 1; v <= S; v++) {\n        if (adj[u][v]) {\n            int val = 1 + dfs(v);\n            if (val > best) best = val;\n        }\n    }\n\n    memo[u] = best;\n    return best;\n}\n\nint main() {\n    scanf(\"%d %d %d\", &S, &T, &P);\n\n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &h[i]);\n    }\n\n    for (int i = 0; i < T; i++) {\n        int I, J;\n        scanf(\"%d %d\", &I, &J);\n\n        if (h[I] > h[J]) {\n            adj[I][J] = 1;\n        } else if (h[J] > h[I]) {\n            adj[J][I] = 1;\n        }\n    }\n\n    for (int i = 1; i <= S; i++) {\n        memo[i] = -1;\n    }\n\n    printf(\"%d\\n\", dfs(P));\n\n    return 0;\n}",

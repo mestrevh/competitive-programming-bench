@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.00767,
-            "total_cost": 0.007674
+            "output_cost": 0.001918,
+            "total_cost": 0.001921
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M, K = data[0], data[1], data[2]\n    P = data[3:3 + N]\n\n    def possible(x):\n        wins = 0\n        groups = 0\n        for p in P:\n            if p < x:\n                wins += 1\n                if wins == M:\n                    groups += 1\n                    wins = 0\n                    if groups >= K:\n                        return True\n        return False\n\n    if not possible(100001):\n        print(-1)\n        return\n\n    lo, hi = 1, 100001\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if possible(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    print(lo)\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    N, M, K = data[0], data[1], data[2]\n    P = data[3:3 + N]\n\n    def possible(x):\n        wins = 0\n        groups = 0\n        for p in P:\n            if p < x:\n                wins += 1\n                if wins == M:\n                    groups += 1\n                    wins = 0\n                    if groups >= K:\n                        return True\n        return False\n\n    if not possible(100001):\n        print(-1)\n        return\n\n    lo, hi = 1, 100001\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if possible(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n\n    print(lo)\n\nif __name__ == \"__main__\":\n    main()",

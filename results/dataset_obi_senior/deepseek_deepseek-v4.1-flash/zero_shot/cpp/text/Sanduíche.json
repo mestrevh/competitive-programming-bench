@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.002338,
-            "total_cost": 0.00234
+            "output_cost": 0.000584,
+            "total_cost": 0.000587
         },
         "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<int> adj(N, 0);\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        cin >> x >> y;\n        --x;\n        --y;\n        adj[x] |= (1 << y);\n        adj[y] |= (1 << x);\n    }\n\n    long long ans = 0;\n    int total = 1 << N;\n\n    for (int mask = 1; mask < total; mask++) {\n        bool ok = true;\n        int m = mask;\n\n        while (m) {\n            int v = __builtin_ctz(m);\n            if (adj[v] & mask) {\n                ok = false;\n                break;\n            }\n            m &= m - 1;\n        }\n\n        if (ok) ans++;\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}\n```",
         "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<int> adj(N, 0);\n\n    for (int i = 0; i < M; i++) {\n        int x, y;\n        cin >> x >> y;\n        --x;\n        --y;\n        adj[x] |= (1 << y);\n        adj[y] |= (1 << x);\n    }\n\n    long long ans = 0;\n    int total = 1 << N;\n\n    for (int mask = 1; mask < total; mask++) {\n        bool ok = true;\n        int m = mask;\n\n        while (m) {\n            int v = __builtin_ctz(m);\n            if (adj[v] & mask) {\n                ok = false;\n                break;\n            }\n            m &= m - 1;\n        }\n\n        if (ok) ans++;\n    }\n\n    cout << ans << '\\n';\n    return 0;\n}",

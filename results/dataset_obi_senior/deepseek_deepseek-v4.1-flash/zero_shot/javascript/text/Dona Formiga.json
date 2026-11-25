@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.002314,
-            "total_cost": 0.002316
+            "output_cost": 0.000578,
+            "total_cost": 0.000581
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst S = data[idx++];\nconst T = data[idx++];\nconst P = data[idx++];\n\nconst height = new Array(S + 1);\nfor (let i = 1; i <= S; i++) {\n  height[i] = data[idx++];\n}\n\nconst adj = Array.from({ length: S + 1 }, () => []);\nfor (let i = 0; i < T; i++) {\n  const u = data[idx++];\n  const v = data[idx++];\n  adj[u].push(v);\n  adj[v].push(u);\n}\n\nconst order = Array.from({ length: S }, (_, i) => i + 1);\norder.sort((a, b) => height[b] - height[a]);\n\nconst dp = new Array(S + 1).fill(0);\n\nfor (const u of order) {\n  let best = 0;\n  for (const v of adj[u]) {\n    if (height[u] > height[v]) {\n      best = Math.max(best, 1 + dp[v]);\n    }\n  }\n  dp[u] = best;\n}\n\nconsole.log(dp[P]);\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst S = data[idx++];\nconst T = data[idx++];\nconst P = data[idx++];\n\nconst height = new Array(S + 1);\nfor (let i = 1; i <= S; i++) {\n  height[i] = data[idx++];\n}\n\nconst adj = Array.from({ length: S + 1 }, () => []);\nfor (let i = 0; i < T; i++) {\n  const u = data[idx++];\n  const v = data[idx++];\n  adj[u].push(v);\n  adj[v].push(u);\n}\n\nconst order = Array.from({ length: S }, (_, i) => i + 1);\norder.sort((a, b) => height[b] - height[a]);\n\nconst dp = new Array(S + 1).fill(0);\n\nfor (const u of order) {\n  let best = 0;\n  for (const v of adj[u]) {\n    if (height[u] > height[v]) {\n      best = Math.max(best, 1 + dp[v]);\n    }\n  }\n  dp[u] = best;\n}\n\nconsole.log(dp[P]);",

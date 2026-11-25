@@ -1,0 +1,85 @@
+% Pipeline de execução para cada questão da OBI (Cap. 4, Seção 4.2)
+\begin{tikzpicture}[
+  x=1cm, y=1cm,
+  font=\sffamily\footnotesize,
+  card/.style={draw=black!75, line width=0.85pt, rounded corners=6pt, align=center, inner sep=5pt},
+  probBox/.style={card, fill=white, draw=black!80, minimum width=2.3cm, minimum height=2.2cm},
+  grayBox/.style={card, fill=vCinza!22, draw=black!65, minimum width=2.3cm, minimum height=1.55cm},
+  codeBox/.style={card, fill=vCinza!22, draw=black!65, minimum width=1.95cm, minimum height=1.25cm},
+  llmBox/.style={card, fill=vAzul!18, draw=vAzul!80!black, minimum width=2.85cm, minimum height=2.65cm},
+  judgeBox/.style={card, fill=vVerde!20, draw=vVerde!80!black, minimum width=2.85cm, minimum height=2.65cm},
+  testBox/.style={card, fill=vAmbar!24, draw=vAmbar!85!black, minimum width=2.55cm, minimum height=1.30cm},
+  resBox/.style={card, fill=vAmbar!24, draw=vAmbar!85!black, minimum width=2.95cm, minimum height=3.15cm},
+  arr/.style={-{Latex[length=2.6mm, width=1.9mm]}, line width=1.1pt, draw=black!85},
+  arrlbl/.style={font=\sffamily\scriptsize\bfseries, text=black!80, align=center}
+]
+
+% 1. PROBLEMA OBI
+\node[probBox] (prob) at (0, 0) {
+  {\huge\faLaptopCode}\\[4pt]
+  {\bfseries PROBLEMA OBI}\\[1pt]
+  {\tiny\ttfamily problem.json + imgs/}
+};
+
+% 2. TEMPLATE DO PROMPT
+\node[grayBox] (tmpl) at (3.45, 0) {
+  {\large\faFileCode}\\[3pt]
+  {\bfseries TEMPLATE}\\
+  {\bfseries DO PROMPT}\\[1pt]
+  {\tiny (\texttt{PromptBuilder})}
+};
+
+% 3. AGENTE CODIFICADOR (LLM)
+\node[llmBox] (llm) at (7.15, 0) {
+  {\huge\color{vAzul!85!black}\faBrain}\hspace{3pt}{\large\color{vAzul!85!black}\faCode}\\[5pt]
+  {\bfseries AGENTE}\\
+  {\bfseries CODIFICADOR}\\
+  {\bfseries (LLM)}\\[2pt]
+  {\tiny\ttfamily LLM.generate()}
+};
+
+% 4. CÓDIGO EXTRAÍDO
+\node[codeBox] (code) at (11.10, 0) {
+  {\large\faCode}\\[2pt]
+  {\bfseries CÓDIGO}\\[1pt]
+  {\tiny\ttfamily extract\_code()}
+};
+
+% 5. AVALIADOR (JUDGE)
+\node[judgeBox] (judge) at (14.65, 0) {
+  {\huge\color{vVerde!75!black}\faGavel}\\[5pt]
+  {\bfseries AVALIADOR}\\
+  {\bfseries (JUDGE)}\\[2pt]
+  {\tiny\ttfamily JudgeService.execute()}
+};
+
+% 6. CASOS DE TESTE (abaixo, alimentando o Judge)
+\node[testBox] (tests) at (11.65, -2.55) {
+  {\normalsize\color{vAmbar!85!black}\faFolderOpen}\\[2pt]
+  {\bfseries CASOS DE TESTE}\\
+  {\tiny\ttfamily inputs (.in) / outputs (.out)}
+};
+
+% 7. RESULTADO DA AVALIAÇÃO
+\node[resBox] (res) at (18.65, 0) {
+  {\normalsize \tcok~\texttt{===}~\tcno}\\
+  {\normalsize \tcok~\texttt{===}~\tcno}\\
+  {\normalsize \tcok~\texttt{===}~\tcno}\\[4pt]
+  {\bfseries RESULTADO DA}\\
+  {\bfseries AVALIAÇÃO}\\[2pt]
+  {\tiny Veredito (\texttt{AC}, \texttt{WA}, \texttt{RE},}\\
+  {\tiny \texttt{TLE}, \texttt{MLE}, \texttt{CE}),}\\
+  {\tiny tempo}
+};
+
+% Setas principais
+\draw[arr] (prob.east) -- (tmpl.west);
+\draw[arr] (tmpl.east) -- (llm.west);
+\draw[arr] (llm.east) -- (code.west);
+\draw[arr] (code.east) -- (judge.west);
+\draw[arr] (judge.east) -- (res.west);
+
+% Seta ortogonal Casos de Teste -> Judge
+\draw[arr] (tests.east) -| (judge.south);
+
+\end{tikzpicture}

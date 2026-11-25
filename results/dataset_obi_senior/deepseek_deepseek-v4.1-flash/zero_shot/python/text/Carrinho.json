@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.005354,
-            "total_cost": 0.005357
+            "output_cost": 0.001339,
+            "total_cost": 0.001341
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    it = iter(data)\n    n = int(next(it))\n    D = float(next(it))\n\n    P = [0.0] * n\n    C = [0.0] * n\n\n    for i in range(n):\n        P[i] = float(next(it))\n        C[i] = float(next(it))\n\n    dp = [0.0] * n\n\n    for j in range(1, n):\n        best = float(\"inf\")\n        pj = P[j]\n        for i in range(j):\n            dist = pj - P[i]\n            cost = dp[i] + (dist * dist) / C[i]\n            if cost < best:\n                best = cost\n        dp[j] = best\n\n    ans = float(\"inf\")\n    for i in range(n):\n        dist = D - P[i]\n        cost = dp[i] + (dist * dist) / C[i]\n        if cost < ans:\n            ans = cost\n\n    print(f\"{ans:.3f}\")\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n\n    it = iter(data)\n    n = int(next(it))\n    D = float(next(it))\n\n    P = [0.0] * n\n    C = [0.0] * n\n\n    for i in range(n):\n        P[i] = float(next(it))\n        C[i] = float(next(it))\n\n    dp = [0.0] * n\n\n    for j in range(1, n):\n        best = float(\"inf\")\n        pj = P[j]\n        for i in range(j):\n            dist = pj - P[i]\n            cost = dp[i] + (dist * dist) / C[i]\n            if cost < best:\n                best = cost\n        dp[j] = best\n\n    ans = float(\"inf\")\n    for i in range(n):\n        dist = D - P[i]\n        cost = dp[i] + (dist * dist) / C[i]\n        if cost < ans:\n            ans = cost\n\n    print(f\"{ans:.3f}\")\n\nif __name__ == \"__main__\":\n    main()",

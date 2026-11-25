@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 4e-06,
-            "output_cost": 0.012418,
-            "total_cost": 0.012422
+            "output_cost": 0.003104,
+            "total_cost": 0.003109
         },
         "raw_response": "```python\nimport sys\nimport io\nfrom array import array\n\ndef main():\n    input = sys.stdin.buffer.readline\n    N, M, P = map(int, input().split())\n\n    row_id = array('I', range(1, N + 1))\n    col_id = array('I', range(1, M + 1))\n\n    for _ in range(P):\n        op, a, b = input().split()\n        a = int(a) - 1\n        b = int(b) - 1\n        if op == b'L':\n            row_id[a], row_id[b] = row_id[b], row_id[a]\n        else:\n            col_id[a], col_id[b] = col_id[b], col_id[a]\n\n    out = io.StringIO()\n    write = out.write\n\n    for i in range(N):\n        base = (row_id[i] - 1) * M\n        write(str(base + col_id[0]))\n        for j in range(1, M):\n            write(' ')\n            write(str(base + col_id[j]))\n        write('\\n')\n\n    sys.stdout.write(out.getvalue())\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\nimport io\nfrom array import array\n\ndef main():\n    input = sys.stdin.buffer.readline\n    N, M, P = map(int, input().split())\n\n    row_id = array('I', range(1, N + 1))\n    col_id = array('I', range(1, M + 1))\n\n    for _ in range(P):\n        op, a, b = input().split()\n        a = int(a) - 1\n        b = int(b) - 1\n        if op == b'L':\n            row_id[a], row_id[b] = row_id[b], row_id[a]\n        else:\n            col_id[a], col_id[b] = col_id[b], col_id[a]\n\n    out = io.StringIO()\n    write = out.write\n\n    for i in range(N):\n        base = (row_id[i] - 1) * M\n        write(str(base + col_id[0]))\n        for j in range(1, M):\n            write(' ')\n            write(str(base + col_id[j]))\n        write('\\n')\n\n    sys.stdout.write(out.getvalue())\n\nif __name__ == \"__main__\":\n    main()",

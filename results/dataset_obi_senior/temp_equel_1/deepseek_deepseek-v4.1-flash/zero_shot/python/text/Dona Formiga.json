@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.003058,
-            "total_cost": 0.00306
+            "output_cost": 0.000764,
+            "total_cost": 0.000767
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    S = next(it)\n    T = next(it)\n    P = next(it)\n\n    height = [0] * (S + 1)\n    for i in range(1, S + 1):\n        height[i] = next(it)\n\n    adj = [[] for _ in range(S + 1)]\n    for _ in range(T):\n        i = next(it)\n        j = next(it)\n        adj[i].append(j)\n        adj[j].append(i)\n\n    memo = [-1] * (S + 1)\n\n    def dfs(u):\n        if memo[u] != -1:\n            return memo[u]\n\n        best = 0\n        for v in adj[u]:\n            if height[u] > height[v]:\n                best = max(best, 1 + dfs(v))\n\n        memo[u] = best\n        return best\n\n    print(dfs(P))\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    S = next(it)\n    T = next(it)\n    P = next(it)\n\n    height = [0] * (S + 1)\n    for i in range(1, S + 1):\n        height[i] = next(it)\n\n    adj = [[] for _ in range(S + 1)]\n    for _ in range(T):\n        i = next(it)\n        j = next(it)\n        adj[i].append(j)\n        adj[j].append(i)\n\n    memo = [-1] * (S + 1)\n\n    def dfs(u):\n        if memo[u] != -1:\n            return memo[u]\n\n        best = 0\n        for v in adj[u]:\n            if height[u] > height[v]:\n                best = max(best, 1 + dfs(v))\n\n        memo[u] = best\n        return best\n\n    print(dfs(P))\n\nif __name__ == \"__main__\":\n    main()",

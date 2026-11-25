@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.045878,
-            "total_cost": 0.04588
+            "output_cost": 0.01147,
+            "total_cost": 0.011472
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst buf = fs.readFileSync(0);\nlet idx = 0;\n\nfunction nextInt() {\n  while (idx < buf.length && buf[idx] <= 32) idx++;\n  let num = 0;\n  while (idx < buf.length && buf[idx] > 32) {\n    num = num * 10 + (buf[idx] - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst arr = new Int32Array(N);\n\nfor (let i = 0; i < N; i++) {\n  arr[i] = nextInt();\n}\n\nlet ans = 0;\nlet left = 0;\nlet sum = 0;\nlet nz = 0;\n\nfor (let right = 0; right < N; right++) {\n  sum += arr[right];\n\n  while (sum > K) {\n    sum -= arr[left];\n    left++;\n    if (nz < left) nz = left;\n  }\n\n  if (sum === K) {\n    if (K === 0) {\n      ans += right - left + 1;\n    } else {\n      while (nz <= right && arr[nz] === 0) {\n        nz++;\n      }\n      ans += nz - left + 1;\n    }\n  }\n}\n\nconsole.log(ans);\n```",
         "extracted_code": "const fs = require('fs');\nconst buf = fs.readFileSync(0);\nlet idx = 0;\n\nfunction nextInt() {\n  while (idx < buf.length && buf[idx] <= 32) idx++;\n  let num = 0;\n  while (idx < buf.length && buf[idx] > 32) {\n    num = num * 10 + (buf[idx] - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst K = nextInt();\nconst arr = new Int32Array(N);\n\nfor (let i = 0; i < N; i++) {\n  arr[i] = nextInt();\n}\n\nlet ans = 0;\nlet left = 0;\nlet sum = 0;\nlet nz = 0;\n\nfor (let right = 0; right < N; right++) {\n  sum += arr[right];\n\n  while (sum > K) {\n    sum -= arr[left];\n    left++;\n    if (nz < left) nz = left;\n  }\n\n  if (sum === K) {\n    if (K === 0) {\n      ans += right - left + 1;\n    } else {\n      while (nz <= right && arr[nz] === 0) {\n        nz++;\n      }\n      ans += nz - left + 1;\n    }\n  }\n}\n\nconsole.log(ans);",

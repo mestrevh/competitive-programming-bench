@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.003492,
-            "total_cost": 0.003495
+            "output_cost": 0.000873,
+            "total_cost": 0.000876
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim();\n\nconst suits = ['C', 'E', 'U', 'P'];\nconst seen = {\n  C: Array(14).fill(false),\n  E: Array(14).fill(false),\n  U: Array(14).fill(false),\n  P: Array(14).fill(false)\n};\nconst duplicate = {\n  C: false,\n  E: false,\n  U: false,\n  P: false\n};\n\nfor (let i = 0; i < input.length; i += 3) {\n  const value = parseInt(input.slice(i, i + 2), 10);\n  const suit = input[i + 2];\n\n  if (seen[suit][value]) {\n    duplicate[suit] = true;\n  } else {\n    seen[suit][value] = true;\n  }\n}\n\nconst output = [];\n\nfor (const suit of suits) {\n  if (duplicate[suit]) {\n    output.push('erro');\n  } else {\n    let count = 0;\n    for (let value = 1; value <= 13; value++) {\n      if (seen[suit][value]) count++;\n    }\n    output.push(String(13 - count));\n  }\n}\n\nconsole.log(output.join('\\n'));\n```",
         "extracted_code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf8').trim();\n\nconst suits = ['C', 'E', 'U', 'P'];\nconst seen = {\n  C: Array(14).fill(false),\n  E: Array(14).fill(false),\n  U: Array(14).fill(false),\n  P: Array(14).fill(false)\n};\nconst duplicate = {\n  C: false,\n  E: false,\n  U: false,\n  P: false\n};\n\nfor (let i = 0; i < input.length; i += 3) {\n  const value = parseInt(input.slice(i, i + 2), 10);\n  const suit = input[i + 2];\n\n  if (seen[suit][value]) {\n    duplicate[suit] = true;\n  } else {\n    seen[suit][value] = true;\n  }\n}\n\nconst output = [];\n\nfor (const suit of suits) {\n  if (duplicate[suit]) {\n    output.push('erro');\n  } else {\n    let count = 0;\n    for (let value = 1; value <= 13; value++) {\n      if (seen[suit][value]) count++;\n    }\n    output.push(String(13 - count));\n  }\n}\n\nconsole.log(output.join('\\n'));",

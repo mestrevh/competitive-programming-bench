@@ -1,0 +1,103 @@
+% Gráficos lado a lado: Tempo médio de execução e Boxplot (sem outliers) em C (Cap. 5, Seção 5.4.2)
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={
+    group size=2 by 1,
+    horizontal sep=1.35cm
+  },
+  width=0.47\textwidth,
+  height=6.2cm,
+  ymajorgrids=true,
+  grid style={black!12},
+  axis lines*=left,
+  tick label style={font=\scriptsize},
+  label style={font=\footnotesize},
+  title style={font=\footnotesize\bfseries, yshift=3pt}
+]
+% Painel (a): Tempo médio no Judge
+\nextgroupplot[
+  ybar=3pt,
+  bar width=14pt,
+  symbolic x coords={DeepSeek,Gemini,GPT6},
+  xtick={DeepSeek,Gemini,GPT6},
+  xticklabels={DeepSeek\\v4.1 Flash,Gemini\\3.8 Flash,GPT-6\\Luna},
+  x tick label style={align=center},
+  enlarge x limits=0.24,
+  ymin=0, ymax=0.33,
+  ylabel={Tempo médio no Judge (s)},
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/fixed zerofill, /pgf/number format/precision=2, /pgf/number format/use comma},
+  title={(a) Tempo médio (inclui \textit{outliers})},
+  legend to name=legpp3tempo,
+  legend style={
+    legend columns=2,
+    draw=black!30,
+    rounded corners=2pt,
+    font=\footnotesize,
+    /tikz/every even column/.append style={column sep=14pt}
+  },
+  nodes near coords,
+  nodes near coords style={
+    font=\tiny\bfseries,
+    black,
+    rotate=90,
+    anchor=west,
+    /pgf/number format/fixed,
+    /pgf/number format/fixed zerofill,
+    /pgf/number format/precision=3,
+    /pgf/number format/use comma
+  }
+]
+\addplot[fill=vAzul, draw=vAzul!70!black, line width=0.5pt] coordinates {
+  (DeepSeek,0.1515) (Gemini,0.1307) (GPT6,0.2531)
+};
+\addplot[fill=vLaranja, draw=vLaranja!70!black, line width=0.5pt] coordinates {
+  (DeepSeek,0.1960) (Gemini,0.1489) (GPT6,0.2375)
+};
+\legend{Baseline (Sem Limites), PP3 (Com Limites)}
+
+% Painel (b): Boxplot sem outliers (IQR + mediana)
+\nextgroupplot[
+  boxplot/draw direction=y,
+  boxplot/box extend=0.48,
+  xmin=0.3, xmax=6.7,
+  ymin=0.04, ymax=0.27,
+  xtick={1,2,3,4,5,6},
+  xticklabels={DS\\Base,DS\\PP3,Gem\\Base,Gem\\PP3,GPT\\Base,GPT\\PP3},
+  x tick label style={align=center, font=\tiny},
+  ylabel={Distribuição sem \textit{outliers} (s)},
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/fixed zerofill, /pgf/number format/precision=2, /pgf/number format/use comma},
+  title={(b) Dispersão típica (s/ \textit{outliers})}
+]
+% DeepSeek Base & PP3
+\addplot+[boxplot prepared={
+  draw position=1,
+  lower whisker=0.0740, lower quartile=0.1263, median=0.1620, upper quartile=0.1701, upper whisker=0.2319
+}, fill=vAzul, draw=black!80, line width=0.6pt, solid] coordinates {};
+\addplot+[boxplot prepared={
+  draw position=2,
+  lower whisker=0.0767, lower quartile=0.1275, median=0.1659, upper quartile=0.1777, upper whisker=0.2163
+}, fill=vLaranja, draw=black!80, line width=0.6pt, solid] coordinates {};
+% Gemini Base & PP3
+\addplot+[boxplot prepared={
+  draw position=3,
+  lower whisker=0.0522, lower quartile=0.1100, median=0.1190, upper quartile=0.1627, upper whisker=0.2285
+}, fill=vAzul, draw=black!80, line width=0.6pt, solid] coordinates {};
+\addplot+[boxplot prepared={
+  draw position=4,
+  lower whisker=0.0709, lower quartile=0.1197, median=0.1587, upper quartile=0.1740, upper whisker=0.2151
+}, fill=vLaranja, draw=black!80, line width=0.6pt, solid] coordinates {};
+% GPT-6 Luna Base & PP3
+\addplot+[boxplot prepared={
+  draw position=5,
+  lower whisker=0.1023, lower quartile=0.1358, median=0.1633, upper quartile=0.1740, upper whisker=0.2166
+}, fill=vAzul, draw=black!80, line width=0.6pt, solid] coordinates {};
+\addplot+[boxplot prepared={
+  draw position=6,
+  lower whisker=0.0928, lower quartile=0.1267, median=0.1687, upper quartile=0.1789, upper whisker=0.2433
+}, fill=vLaranja, draw=black!80, line width=0.6pt, solid] coordinates {};
+\end{groupplot}
+
+% Legenda compartilhada acima dos dois painéis
+\node[anchor=south] at ($(group c1r1.north)!0.5!(group c2r1.north) + (0,0.75cm)$)
+  {\pgfplotslegendfromname{legpp3tempo}};
+\end{tikzpicture}

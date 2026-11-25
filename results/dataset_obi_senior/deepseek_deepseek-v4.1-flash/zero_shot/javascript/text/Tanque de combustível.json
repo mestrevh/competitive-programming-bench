@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.058582,
-            "total_cost": 0.058584
+            "output_cost": 0.014645,
+            "total_cost": 0.014648
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim();\nif (!data) process.exit(0);\n\nconst [C, D, T] = data.split(/\\s+/).map(Number);\n\nconst N = D - T * C;\n\nif (N <= 0) {\n    console.log(\"0.0\");\n} else {\n    let x = D / C - T;\n    let rounded = x.toFixed(1);\n    \n    // Corrige arredondamento para casos exatos de .25, igual ao printf do C (half-even)\n    if ((4 * N) % C === 0) {\n        const q = (4 * N) / C;\n        if (q % 4 === 1) {\n            const tenths = Math.floor((N * 10) / C);\n            rounded = (tenths / 10).toFixed(1);\n        }\n    }\n    \n    console.log(rounded);\n}\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim();\nif (!data) process.exit(0);\n\nconst [C, D, T] = data.split(/\\s+/).map(Number);\n\nconst N = D - T * C;\n\nif (N <= 0) {\n    console.log(\"0.0\");\n} else {\n    let x = D / C - T;\n    let rounded = x.toFixed(1);\n    \n    // Corrige arredondamento para casos exatos de .25, igual ao printf do C (half-even)\n    if ((4 * N) % C === 0) {\n        const q = (4 * N) / C;\n        if (q % 4 === 1) {\n            const tenths = Math.floor((N * 10) / C);\n            rounded = (tenths / 10).toFixed(1);\n        }\n    }\n    \n    console.log(rounded);\n}",

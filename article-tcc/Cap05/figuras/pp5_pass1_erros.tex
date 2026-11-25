@@ -1,0 +1,109 @@
+% Gráfico em 2 painéis: Pass@1 (%) e Taxonomia de Falhas (Não-AC) na PP5 (Cap. 5, Seção 5.6.1)
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={
+    group size=2 by 1,
+    horizontal sep=1.55cm
+  },
+  width=0.455\textwidth,
+  height=6.2cm,
+  ymajorgrids=true,
+  grid style={black!12},
+  axis lines*=left,
+  tick label style={font=\scriptsize},
+  label style={font=\footnotesize},
+  title style={font=\footnotesize\bfseries, yshift=3pt}
+]
+% Painel (a): Taxa Pass@1 (%) comparando geração anterior vs. geração atual por família
+\nextgroupplot[
+  ybar=4pt,
+  bar width=18pt,
+  clip=false,
+  title={(a) Taxa \passat{1} em \linguagem{Python} ($n=46$)},
+  symbolic x coords={Gemini,GPT},
+  xtick={Gemini,GPT},
+  xticklabels={Família Gemini\\{\tiny (3.1 Pro $\rightarrow$ 3.8 Flash)},Família GPT\\{\tiny (5.4 $\rightarrow$ 6 Luna)}},
+  x tick label style={align=center},
+  enlarge x limits=0.44,
+  ymin=55, ymax=112,
+  ytick={60,70,80,90,100},
+  ylabel={Taxa \passat{1} (\%)},
+  legend to name=legpp5pass1,
+  legend style={
+    legend columns=2,
+    draw=black!30,
+    rounded corners=2pt,
+    font=\scriptsize,
+    /tikz/every even column/.append style={column sep=10pt}
+  },
+  nodes near coords,
+  nodes near coords style={
+    font=\scriptsize\bfseries,
+    black,
+    yshift=1pt,
+    /pgf/number format/fixed,
+    /pgf/number format/fixed zerofill,
+    /pgf/number format/precision=2,
+    /pgf/number format/use comma
+  }
+]
+\addplot[fill=vCinza, draw=vCinza!75!black, line width=0.5pt] coordinates {
+  (Gemini,97.83) (GPT,67.39)
+};
+\addplot[fill=vTeal, draw=vTeal!75!black, line width=0.5pt] coordinates {
+  (Gemini,95.65) (GPT,82.61)
+};
+\legend{Geração anterior, Geração atual}
+
+% Pílulas com a variação (Delta) acima de cada par
+\node[font=\tiny\bfseries, fill=vCinza!14, draw=vCinza!75!black, rounded corners=2pt, inner sep=2.2pt]
+  at (axis cs:Gemini,107.0) {$\Delta$: $-2{,}18$ p.p.};
+\node[font=\tiny\bfseries, fill=vVerde!14, draw=vVerde!75!black, rounded corners=2pt, inner sep=2.2pt]
+  at (axis cs:GPT,93.5) {$\Delta$: $+15{,}22$ p.p.};
+
+% Painel (b): Taxonomia de erros (Não-AC) sob o mesmo JudgeService
+\nextgroupplot[
+  ybar stacked,
+  bar width=18pt,
+  title={(b) Taxonomia de falhas (mesmo juiz)},
+  symbolic x coords={G31,G38,GPT54,GPT6},
+  xtick={G31,G38,GPT54,GPT6},
+  xticklabels={Gemini\\3.1 Pro,Gemini\\3.8 Flash,GPT-5.4,GPT-6\\Luna},
+  x tick label style={align=center},
+  enlarge x limits=0.22,
+  ymin=0, ymax=19,
+  ytick={0,3,6,9,12,15,18},
+  ylabel={Erros (de 46 questões)},
+  legend to name=legpp5erros,
+  legend style={
+    legend columns=3,
+    draw=black!30,
+    rounded corners=2pt,
+    font=\scriptsize,
+    /tikz/every even column/.append style={column sep=10pt}
+  }
+]
+\addplot[fill=corWA, draw=corWA!75!black, line width=0.4pt] coordinates {
+  (G31,1) (G38,2) (GPT54,12) (GPT6,6)
+};
+\addplot[fill=corRE, draw=corRE!75!black, line width=0.4pt] coordinates {
+  (G31,0) (G38,0) (GPT54,2) (GPT6,0)
+};
+\addplot[fill=corTLE, draw=corTLE!75!black, line width=0.4pt] coordinates {
+  (G31,0) (G38,0) (GPT54,1) (GPT6,2)
+};
+\legend{\veredito{WA}, \veredito{RE}, \veredito{TLE}}
+
+% Totais acima de cada barra empilhada
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:G31,1) {1};
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:G38,2) {2};
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:GPT54,15) {15};
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:GPT6,8) {8};
+\end{groupplot}
+
+% Legendas individuais acima de cada painel
+\node[anchor=south] at ($(group c1r1.north) + (0,0.78cm)$)
+  {\pgfplotslegendfromname{legpp5pass1}};
+\node[anchor=south] at ($(group c2r1.north) + (0,0.78cm)$)
+  {\pgfplotslegendfromname{legpp5erros}};
+\end{tikzpicture}

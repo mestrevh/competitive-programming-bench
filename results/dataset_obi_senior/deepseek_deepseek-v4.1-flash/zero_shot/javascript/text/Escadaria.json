@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.009562,
-            "total_cost": 0.009565
+            "output_cost": 0.00239,
+            "total_cost": 0.002394
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = data[0];\nconst a = data.slice(1, 1 + n);\nconst ans = new Array(n).fill(Infinity);\n\nlet minLeft = Infinity;\nfor (let i = 0; i < n; i++) {\n  if (a[i] !== -1) {\n    minLeft = Math.min(minLeft, a[i] - i);\n  }\n  if (minLeft !== Infinity) {\n    ans[i] = i + minLeft;\n  }\n}\n\nlet minRight = Infinity;\nfor (let i = n - 1; i >= 0; i--) {\n  if (a[i] !== -1) {\n    minRight = Math.min(minRight, a[i] + i);\n  }\n  if (minRight !== Infinity) {\n    ans[i] = Math.min(ans[i], -i + minRight);\n  }\n}\n\nconsole.log(ans.join(' '));\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst n = data[0];\nconst a = data.slice(1, 1 + n);\nconst ans = new Array(n).fill(Infinity);\n\nlet minLeft = Infinity;\nfor (let i = 0; i < n; i++) {\n  if (a[i] !== -1) {\n    minLeft = Math.min(minLeft, a[i] - i);\n  }\n  if (minLeft !== Infinity) {\n    ans[i] = i + minLeft;\n  }\n}\n\nlet minRight = Infinity;\nfor (let i = n - 1; i >= 0; i--) {\n  if (a[i] !== -1) {\n    minRight = Math.min(minRight, a[i] + i);\n  }\n  if (minRight !== Infinity) {\n    ans[i] = Math.min(ans[i], -i + minRight);\n  }\n}\n\nconsole.log(ans.join(' '));",

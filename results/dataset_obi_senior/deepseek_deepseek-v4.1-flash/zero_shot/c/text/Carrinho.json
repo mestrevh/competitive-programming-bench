@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.008794,
-            "total_cost": 0.008796
+            "output_cost": 0.002198,
+            "total_cost": 0.002201
         },
         "raw_response": "```c\n#include <stdio.h>\n\nint main(void) {\n    int N;\n    double D;\n    scanf(\"%d %lf\", &N, &D);\n\n    double P[1005], C[1005];\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%lf %lf\", &P[i], &C[i]);\n    }\n\n    double dp[1005];\n    dp[0] = 0.0;\n\n    for (int i = 1; i < N; ++i) {\n        double best = 1e100;\n        for (int j = 0; j < i; ++j) {\n            double dist = P[i] - P[j];\n            double cost = dp[j] + (dist * dist) / C[j];\n            if (cost < best) best = cost;\n        }\n        dp[i] = best;\n    }\n\n    double ans = 1e100;\n    for (int i = 0; i < N; ++i) {\n        double dist = D - P[i];\n        double cost = dp[i] + (dist * dist) / C[i];\n        if (cost < ans) ans = cost;\n    }\n\n    printf(\"%.3f\\n\", ans);\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n\nint main(void) {\n    int N;\n    double D;\n    scanf(\"%d %lf\", &N, &D);\n\n    double P[1005], C[1005];\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%lf %lf\", &P[i], &C[i]);\n    }\n\n    double dp[1005];\n    dp[0] = 0.0;\n\n    for (int i = 1; i < N; ++i) {\n        double best = 1e100;\n        for (int j = 0; j < i; ++j) {\n            double dist = P[i] - P[j];\n            double cost = dp[j] + (dist * dist) / C[j];\n            if (cost < best) best = cost;\n        }\n        dp[i] = best;\n    }\n\n    double ans = 1e100;\n    for (int i = 0; i < N; ++i) {\n        double dist = D - P[i];\n        double cost = dp[i] + (dist * dist) / C[i];\n        if (cost < ans) ans = cost;\n    }\n\n    printf(\"%.3f\\n\", ans);\n    return 0;\n}",
@@ -54,8 +54,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.006067,
-            "total_cost": 0.00607
+            "output_cost": 0.001517,
+            "total_cost": 0.001519
         },
         "raw_response": "```c\n#include <stdio.h>\n\nint main() {\n    int N;\n    double D;\n    scanf(\"%d %lf\", &N, &D);\n\n    double p[1005], c[1005], dp[1005];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lf %lf\", &p[i], &c[i]);\n    }\n\n    for (int i = 0; i < N; i++) {\n        dp[i] = 1e100;\n    }\n    dp[0] = 0.0;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            double dist = p[j] - p[i];\n            double cost = dist * dist / c[i];\n            if (dp[i] + cost < dp[j]) {\n                dp[j] = dp[i] + cost;\n            }\n        }\n    }\n\n    double ans = 1e100;\n    for (int i = 0; i < N; i++) {\n        double dist = D - p[i];\n        double cost = dist * dist / c[i];\n        if (dp[i] + cost < ans) {\n            ans = dp[i] + cost;\n        }\n    }\n\n    printf(\"%.3f\\n\", ans);\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n\nint main() {\n    int N;\n    double D;\n    scanf(\"%d %lf\", &N, &D);\n\n    double p[1005], c[1005], dp[1005];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lf %lf\", &p[i], &c[i]);\n    }\n\n    for (int i = 0; i < N; i++) {\n        dp[i] = 1e100;\n    }\n    dp[0] = 0.0;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            double dist = p[j] - p[i];\n            double cost = dist * dist / c[i];\n            if (dp[i] + cost < dp[j]) {\n                dp[j] = dp[i] + cost;\n            }\n        }\n    }\n\n    double ans = 1e100;\n    for (int i = 0; i < N; i++) {\n        double dist = D - p[i];\n        double cost = dist * dist / c[i];\n        if (dp[i] + cost < ans) {\n            ans = dp[i] + cost;\n        }\n    }\n\n    printf(\"%.3f\\n\", ans);\n    return 0;\n}",

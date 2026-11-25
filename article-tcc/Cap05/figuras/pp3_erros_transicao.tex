@@ -1,0 +1,74 @@
+% Gráfico em 3 painéis empilhados: distribuição de erros (Não-AC) Baseline vs PP3 em C (Cap. 5, Seção 5.4.1)
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={
+    group size=3 by 1,
+    horizontal sep=1.1cm,
+    yticklabels at=edge left
+  },
+  width=0.295\textwidth,
+  height=5.8cm,
+  symbolic x coords={Baseline,PP3},
+  xtick={Baseline,PP3},
+  xticklabels={Base\\(Sem Lim.),PP3\\(Limites)},
+  x tick label style={align=center},
+  enlarge x limits=0.45,
+  ymajorgrids=true,
+  grid style={black!12},
+  axis lines*=left,
+  tick label style={font=\scriptsize},
+  label style={font=\footnotesize},
+  title style={font=\footnotesize\bfseries, yshift=2pt},
+  ymin=0, ymax=24
+]
+% Painel (a): DeepSeek v4.1 Flash
+\nextgroupplot[
+  ybar stacked,
+  bar width=22pt,
+  title={(a) DeepSeek v4.1 Flash},
+  ylabel={Erros (de 125 questões)},
+  legend to name=legpp3erros,
+  legend style={
+    legend columns=3,
+    draw=black!30,
+    rounded corners=2pt,
+    font=\footnotesize,
+    /tikz/every even column/.append style={column sep=12pt}
+  }
+]
+\addplot[fill=corWA, draw=corWA!75!black, line width=0.4pt] coordinates {(Baseline,3) (PP3,3)};
+\addplot[fill=corCE, draw=corCE!75!black, line width=0.4pt] coordinates {(Baseline,4) (PP3,3)};
+\addplot[fill=corRE, draw=corRE!75!black, line width=0.4pt] coordinates {(Baseline,0) (PP3,1)};
+\legend{\veredito{WA}, \veredito{CE}, \veredito{RE}}
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:Baseline,7) {7};
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:PP3,7) {7};
+
+% Painel (b): Gemini 3.8 Flash
+\nextgroupplot[
+  ybar stacked,
+  bar width=22pt,
+  title={(b) Gemini 3.8 Flash}
+]
+\addplot[fill=corWA, draw=corWA!75!black, line width=0.4pt] coordinates {(Baseline,3) (PP3,6)};
+\addplot[fill=corCE, draw=corCE!75!black, line width=0.4pt] coordinates {(Baseline,5) (PP3,3)};
+\addplot[fill=corRE, draw=corRE!75!black, line width=0.4pt] coordinates {(Baseline,0) (PP3,0)};
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:Baseline,8) {8};
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:PP3,9) {9};
+
+% Painel (c): GPT-6 Luna
+\nextgroupplot[
+  ybar stacked,
+  bar width=22pt,
+  title={(c) GPT-6 Luna}
+]
+\addplot[fill=corWA, draw=corWA!75!black, line width=0.4pt] coordinates {(Baseline,11) (PP3,15)};
+\addplot[fill=corCE, draw=corCE!75!black, line width=0.4pt] coordinates {(Baseline,4) (PP3,5)};
+\addplot[fill=corRE, draw=corRE!75!black, line width=0.4pt] coordinates {(Baseline,0) (PP3,0)};
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:Baseline,15) {15};
+\node[font=\scriptsize\bfseries, anchor=south] at (axis cs:PP3,20) {20};
+\end{groupplot}
+
+% Legenda compartilhada acima dos três painéis
+\node[anchor=south] at ($(group c1r1.north)!0.5!(group c3r1.north) + (0,0.65cm)$)
+  {\pgfplotslegendfromname{legpp3erros}};
+\end{tikzpicture}

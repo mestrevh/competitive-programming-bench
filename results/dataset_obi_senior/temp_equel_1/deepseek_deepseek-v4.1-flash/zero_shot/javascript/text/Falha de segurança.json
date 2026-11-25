@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.010925,
-            "total_cost": 0.010927
+            "output_cost": 0.002731,
+            "total_cost": 0.002733
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nfunction solve() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  if (data.length === 0) return;\n\n  const n = parseInt(data[0], 10);\n  const arr = data.slice(1, 1 + n);\n\n  const freq = new Map();\n  for (const s of arr) {\n    freq.set(s, (freq.get(s) || 0) + 1);\n  }\n\n  let ans = 0;\n\n  for (const s of arr) {\n    const substrings = new Set();\n    const len = s.length;\n\n    for (let i = 0; i < len; i++) {\n      for (let j = i + 1; j <= len; j++) {\n        substrings.add(s.slice(i, j));\n      }\n    }\n\n    let total = 0;\n    for (const sub of substrings) {\n      total += freq.get(sub) || 0;\n    }\n\n    ans += total - 1;\n  }\n\n  console.log(ans);\n}\n\nsolve();\n```",
         "extracted_code": "const fs = require('fs');\n\nfunction solve() {\n  const data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n  if (data.length === 0) return;\n\n  const n = parseInt(data[0], 10);\n  const arr = data.slice(1, 1 + n);\n\n  const freq = new Map();\n  for (const s of arr) {\n    freq.set(s, (freq.get(s) || 0) + 1);\n  }\n\n  let ans = 0;\n\n  for (const s of arr) {\n    const substrings = new Set();\n    const len = s.length;\n\n    for (let i = 0; i < len; i++) {\n      for (let j = i + 1; j <= len; j++) {\n        substrings.add(s.slice(i, j));\n      }\n    }\n\n    let total = 0;\n    for (const sub of substrings) {\n      total += freq.get(sub) || 0;\n    }\n\n    ans += total - 1;\n  }\n\n  console.log(ans);\n}\n\nsolve();",

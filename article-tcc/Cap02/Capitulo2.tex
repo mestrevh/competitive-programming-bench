@@ -1,0 +1,69 @@
+\chapter{Trabalhos Relacionados}\label{cap:relacionados}
+
+Para verificar como a área de estudo tem sido explorada, foi conduzida uma revisão sistemática da literatura com o objetivo de identificar artigos da comunidade científica. O protocolo de busca foi estruturado com base no \textit{Population}, \textit{Intervention}, \textit{Comparison}, \textit{Outcome}, \textit{Context} (PICOC), resultando na seguinte \textit{string} de busca:
+
+\begin{quote}
+\small\ttfamily
+("competitive programming" OR "competition-level" OR "programming contest*" OR "programming competition*" OR "informatics olympiad" OR "algorithmic problem solving" OR "programming exercises")
+AND
+("large language model*" OR "language model*" OR "LLM" OR "LLMs" OR "MLLM" OR "MLLMs" OR "multimodal")
+AND
+("benchmark*" OR "evaluat*" OR "assess*" OR "online judge*" OR "codeforces" OR "correctness")
+\end{quote}
+
+Por meio dessa consulta, foram encontrados 664 artigos nas plataformas OpenAlex e arXiv. Desses trabalhos, após a triagem e aplicação dos critérios de seleção, apenas 5 foram selecionados por meio da leitura do título e do resumo, cujo objetivo principal era avaliar \textit{benchmarks}. Por fim, foram realizadas pesquisas manuais complementares sobre os temas de dimensões linguísticas e multimodais, engenharia de \textit{prompt} e avaliações no contexto brasileiro e da OBI, totalizando 21 artigos que ajudam a posicionar este trabalho frente aos estudos existentes.
+
+\section{LLMs na Resolução de Problemas de Programação Competitiva}\label{sec:rel-comp-prog}
+
+Como os LLMs são não determinísticos, os estudos trazem a métrica $\passat{k}$ sobre o contexto do modelo Codex em HumanEval~\citep{chen2021evaluating}. Essa é a consolidação da avaliação funcional de código gerado por LLMs mediante execução contra casos de teste unitários. Em seguida, o AlphaCode~\citep{li2022competition} trouxe a visão de geração de soluções competitivas em plataformas de alto rigor algorítmico como Codeforces, aplicando os estudos dessa categoria na programação competitiva, exigindo amostragem em larga escala e filtragem por casos de teste. 
+
+Mais recentemente, pesquisas têm explorado problemas de olimpíadas e competições como avaliadores exigentes da capacidade de raciocínio de modelos de fronteira~\citep{huang2024competition,li2024evaluating,zheng2025livecodebench}. \citet{li2024evaluating} têm como objetivo analisar, em perspectiva multiano e multinível, o desempenho de LLMs em programação competitiva, evidenciando que, à medida que o grau de dificuldade aumenta, as soluções geradas não conseguem acompanhar, mostrando que ainda existem lacunas a serem exploradas. Na mesma direção, o \textit{LiveCodeBench Pro}~\citep{zheng2025livecodebench} mostra como medalhistas de olimpíadas analisam falhas sutis em soluções geradas por LLMs, mostrando que modelos têm alta taxa de acerto em questões rotineiras, mas falham em questões sofisticadas. Apesar da relevância desses estudos, sua ênfase está em enunciados da língua inglesa e em um conjunto restrito de linguagens (Python ou C++).
+
+\section{Multimodalidade, Restrições e Impacto da Linguagem de Programação}\label{sec:rel-dimensoes}
+
+Com a técnica \textit{Visual Instruction Tuning}~\citep{Liu2023VisualIT} em evidência, passou a ganhar destaque uma área de pesquisa que busca utilizar a multimodalidade dos modelos para interpretação conjunta de texto e elementos visuais~\citep{Fu2023MMEAC}. Em contextos diferentes da programação competitiva, \textit{benchmarks} como MathVista~\citep{Lu2023MathVistaEM} e MMMU~\citep{Yue2023MMMUAM} demonstraram que figuras e diagramas adicionam camadas relevantes de interpretação espacial e simbólica.
+
+Na Engenharia de \textit{Software}, a avaliação de LLMs tem avançado para especificação de requisitos e automação de testes~\citep{Mendoza2024Comparative,Silva2025LLMs}, bem como para a resolução de problemas visuais em repositórios reais, como no \textit{SWE-bench Multimodal}~\citep{Yang2024SWEbenchMD}. Nesse sentido, na programação competitiva a criação desses tipos de testes é interessante para avaliar o impacto da linguagem de programação em relação à sintaxe e à semântica. Entretanto, poucos estudos isolam o impacto de representações visuais em problemas competitivos multilinguagem, tampouco investigam como a explicitação de limites de tempo e memória altera o comportamento algorítmico em linguagens compiladas de baixo nível como \linguagem{C}.
+
+\section{Engenharia de \texorpdfstring{\textit{Prompt}}{Prompt} e Raciocínio Heurístico em Código}\label{sec:rel-prompt}
+
+Como já foi mencionado, as leis de escala para modelos neurais de linguagem~\citep{kaplan2020scaling} em conjunto com as arquiteturas abertas otimizadas em grandes volumes de dados~\citep{touvron2023llama} viabilizaram capacidades emergentes de aprendizado em contexto. Em \citet{wei2021finetuned} foi evidenciada a capacidade de modelos ajustados por instruções operarem em regime \textit{Zero-Shot}, enquanto \citet{brown2020language} demonstraram que exemplos fornecidos diretamente no \textit{prompt} (\textit{Few-Shot}) conseguem ter impacto direto no formato e no raciocínio do modelo sem atualização de pesos.
+
+Em busca de conhecer melhor a engenharia de \textit{prompt}, foi encontrado um guia sistemático de engenharia de \textit{prompt}~\citep{dair2025prompt} que consolidou estratégias como \textit{Few-Shot} e cadeia de pensamento (\textit{Chain-of-Thought} - CoT)~\citep{wei2022chain} para decompor problemas complexos em etapas intermediárias explícitas antes da emissão da resposta final. Para este estudo, na geração de código para juízes automáticos, a ancoragem em exemplos \textit{Few-Shot} tem se mostrado relevante para prevenir falhas de formatação de entrada e saída padrão, enquanto estratégias CoT estruturadas visam reduzir erros lógicos de modelagem.
+
+\section{Avaliação de LLMs em Português, Educação e na OBI}\label{sec:rel-obi}
+
+No contexto brasileiro, diversos estudos têm avaliado LLMs em exames vestibulares e acadêmicos de computação, incluindo o ENEM e provas universitárias no \textit{BLUEX}~\citep{nunes2023evaluating,almeida2023bluex}, o exame nacional de graduação em Computação (ENADE)~\citep{mendonca2024evaluating} e o exame de pós-graduação POSCOMP~\citep{viegas2025assessing}. Do ponto de vista educacional, compreender as dificuldades de resolução algorítmica é fundamental para construir sistemas de tutoria inteligente que apoiem estudantes em relação às lacunas de aprendizagem~\citep{priyanka2025development,peng2025enhancing}. Porém, ainda é um desafio fazer com que os LLMs não entreguem as respostas prontas, para que os estudantes desenvolvam o próprio raciocínio.
+
+Em contrapartida, no contexto da OBI, \citet{alcantara2025assessing} avaliaram o modelo Llama 3 na geração automática de soluções em C++ para exercícios de programação da OBI, reportando taxa de acerto global de 30,4\% e destacando dificuldades dos modelos com limites estritos de tempo e memória, bem como degradação de desempenho quando o contexto visual dos enunciados é omitido. Em trabalho anterior a este TCC, conduzido em conjunto com o grupo de pesquisa \textit{GEMA-LAB}~\citep{angelo2026ise}, estruturou-se um repositório de questões extraídas da OBI~\citep{problems2026} e propôs-se uma versão inicial da arquitetura experimental automatizada~\citep{obibenchmarking2026}. Nesse estudo preliminar, foram avaliados cinco MLLMs proprietários em Python (\textit{zero-shot}) sobre 181 problemas da OBI com imagens em Base64 versus enunciados puramente textuais, observando ganhos do contexto visual em questões fáceis e em casos de borda nas questões avançadas (grafos e programação dinâmica) na maioria dos modelos, embora ainda insuficientes para superar barreiras de raciocínio algorítmico complexo.
+
+O TCC expande substancialmente essa linha de pesquisa ao concentrar-se no \textbf{Nível Sênior da OBI} (125 problemas de 2016 a 2025, com 4.681 casos de teste validados por oráculo) e investigar dimensões ainda não avaliadas em conjunto: (i) comparação cruzada em \textbf{cinco linguagens} (Python, C, C++, Java e JavaScript); (ii) contraste controlado em C++ entre \textbf{texto puro}, \textbf{imagem em Base64} e \textbf{descrição textual estruturada}; (iii) análise do efeito da \textbf{explicitação de limites de tempo e memória} na linguagem mais sensível (\linguagem{C}); (iv) comparação de \textbf{Zero-Shot}, \textbf{Few-Shot} e \textbf{Chain-of-Thought guiado pela Metodologia de Pólya}, incluindo análise de custos e diagnóstico de artefatos de extração; e (v) \textbf{comparação geracional sob paridade de juiz} entre modelos da geração atual (\textit{Gemini 3.8 Flash} e \textit{GPT-6 Luna}) e seus antecessores avaliados no estudo preliminar (\textit{Gemini 3.1 Pro} e \textit{GPT-5.4}) em \linguagem{Python} \textit{Zero-Shot}.
+
+\section{Síntese Comparativa}\label{sec:rel-sintese}
+
+A Tabela~\ref{tab:rel-comparativo} apresenta as principais características dos estudos relacionados frente à abordagem proposta neste trabalho.
+
+\begin{table}[!htbp]
+\centering
+\caption[Síntese comparativa dos trabalhos relacionados]{Síntese comparativa entre trabalhos relacionados e o presente estudo.}
+\label{tab:rel-comparativo}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+Trabalho & Base / Idioma & Linguagens & Multimodal & Limites & Estratégias de \textit{Prompt} & Custo \\
+\midrule
+\citet{chen2021evaluating}     & HumanEval / EN       & 1 (Python)     & \nomark & \nomark & Zero-Shot              & \nomark \\
+\citet{li2022competition}      & CodeContests / EN    & C++, Python    & \nomark & \cmark  & Amostragem massiva     & \nomark \\
+\citet{zheng2025livecodebench} & Competições / EN     & C++, Python    & \nomark & \cmark  & Padrão                 & \nomark \\
+\citet{mendonca2024evaluating} & ENADE / PT-BR        & -- (Q\&A)      & \cmark  & \nomark & Zero-Shot              & \nomark \\
+\citet{viegas2025assessing}    & POSCOMP / PT-BR      & -- (Q\&A)      & \nomark & \nomark & Zero-Shot              & \nomark \\
+\citet{alcantara2025assessing} & OBI / PT-BR          & 1 (C++)        & \nomark & \cmark  & Zero-Shot              & \nomark \\
+\citet{angelo2026ise}          & OBI / PT-BR          & 1 (Python)     & \cmark  & \nomark & Zero-Shot              & \cmark \\
+\midrule
+\rowcolor{linhaDestaque}\textbf{Este trabalho} & \textbf{OBI Sênior / PT-BR} & \textbf{5} & \tcok & \tcok & \textbf{ZS / FS / CoT-Pólya} & \tcok \\
+\bottomrule
+\end{tabular}%
+}
+\par\smallskip{\footnotesize \tcok: contemplado integralmente (incluindo modalidade descritiva); \cmark: contemplado parcialmente; \nomark: não contemplado.}
+\end{table}

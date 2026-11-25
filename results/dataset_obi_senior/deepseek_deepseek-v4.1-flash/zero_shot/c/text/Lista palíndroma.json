@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.023904,
-            "total_cost": 0.023906
+            "output_cost": 0.005976,
+            "total_cost": 0.005978
         },
         "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *a = (long long *)malloc(sizeof(long long) * n);\n    if (a == NULL) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &a[i]);\n    }\n\n    int i = 0, j = n - 1;\n    long long ops = 0;\n\n    while (i < j) {\n        if (a[i] == a[j]) {\n            i++;\n            j--;\n        } else if (a[i] < a[j]) {\n            a[i + 1] += a[i];\n            i++;\n            ops++;\n        } else {\n            a[j - 1] += a[j];\n            j--;\n            ops++;\n        }\n    }\n\n    printf(\"%lld\\n\", ops);\n    free(a);\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 0;\n\n    long long *a = (long long *)malloc(sizeof(long long) * n);\n    if (a == NULL) return 0;\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld\", &a[i]);\n    }\n\n    int i = 0, j = n - 1;\n    long long ops = 0;\n\n    while (i < j) {\n        if (a[i] == a[j]) {\n            i++;\n            j--;\n        } else if (a[i] < a[j]) {\n            a[i + 1] += a[i];\n            i++;\n            ops++;\n        } else {\n            a[j - 1] += a[j];\n            j--;\n            ops++;\n        }\n    }\n\n    printf(\"%lld\\n\", ops);\n    free(a);\n    return 0;\n}",
@@ -54,8 +54,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.025879,
-            "total_cost": 0.025881
+            "output_cost": 0.00647,
+            "total_cost": 0.006472
         },
         "raw_response": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nstatic char buf[1 << 20];\nstatic int buf_idx = 0, buf_len = 0;\n\nstatic inline int read_char() {\n    if (buf_idx >= buf_len) {\n        buf_len = fread(buf, 1, sizeof(buf), stdin);\n        buf_idx = 0;\n        if (buf_len == 0) return EOF;\n    }\n    return buf[buf_idx++];\n}\n\nstatic inline long long read_ll() {\n    int c = read_char();\n    while (c <= ' ' && c != EOF) c = read_char();\n    long long x = 0;\n    while (c > ' ') {\n        x = x * 10 + (c - '0');\n        c = read_char();\n    }\n    return x;\n}\n\nint main() {\n    int n = (int)read_ll();\n    long long *a = (long long*)malloc(n * sizeof(long long));\n    for (int i = 0; i < n; ++i) {\n        a[i] = read_ll();\n    }\n\n    int i = 0, j = n - 1;\n    int ops = 0;\n\n    while (i < j) {\n        if (a[i] == a[j]) {\n            ++i;\n            --j;\n        } else if (a[i] < a[j]) {\n            a[i + 1] += a[i];\n            ++i;\n            ++ops;\n        } else {\n            a[j - 1] += a[j];\n            --j;\n            ++ops;\n        }\n    }\n\n    printf(\"%d\\n\", ops);\n    free(a);\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n#include <stdlib.h>\n\nstatic char buf[1 << 20];\nstatic int buf_idx = 0, buf_len = 0;\n\nstatic inline int read_char() {\n    if (buf_idx >= buf_len) {\n        buf_len = fread(buf, 1, sizeof(buf), stdin);\n        buf_idx = 0;\n        if (buf_len == 0) return EOF;\n    }\n    return buf[buf_idx++];\n}\n\nstatic inline long long read_ll() {\n    int c = read_char();\n    while (c <= ' ' && c != EOF) c = read_char();\n    long long x = 0;\n    while (c > ' ') {\n        x = x * 10 + (c - '0');\n        c = read_char();\n    }\n    return x;\n}\n\nint main() {\n    int n = (int)read_ll();\n    long long *a = (long long*)malloc(n * sizeof(long long));\n    for (int i = 0; i < n; ++i) {\n        a[i] = read_ll();\n    }\n\n    int i = 0, j = n - 1;\n    int ops = 0;\n\n    while (i < j) {\n        if (a[i] == a[j]) {\n            ++i;\n            --j;\n        } else if (a[i] < a[j]) {\n            a[i + 1] += a[i];\n            ++i;\n            ++ops;\n        } else {\n            a[j - 1] += a[j];\n            --j;\n            ++ops;\n        }\n    }\n\n    printf(\"%d\\n\", ops);\n    free(a);\n    return 0;\n}",

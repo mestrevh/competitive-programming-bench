@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.006324,
-            "total_cost": 0.006326
+            "output_cost": 0.001581,
+            "total_cost": 0.001583
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    lengths = data[1:1 + n]\n\n    total = sum(lengths)\n\n    if total % 2 != 0:\n        print(\"N\")\n        return\n\n    half = total // 2\n\n    positions = [0] * n\n    current = 0\n    for i in range(n - 1):\n        current += lengths[i]\n        positions[i + 1] = current\n\n    position_set = set(positions)\n\n    count = 0\n    for p in positions:\n        q = p + half\n        if q >= total:\n            q -= total\n        if q in position_set:\n            count += 1\n\n    if count // 2 >= 2:\n        print(\"S\")\n    else:\n        print(\"N\")\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    lengths = data[1:1 + n]\n\n    total = sum(lengths)\n\n    if total % 2 != 0:\n        print(\"N\")\n        return\n\n    half = total // 2\n\n    positions = [0] * n\n    current = 0\n    for i in range(n - 1):\n        current += lengths[i]\n        positions[i + 1] = current\n\n    position_set = set(positions)\n\n    count = 0\n    for p in positions:\n        q = p + half\n        if q >= total:\n            q -= total\n        if q in position_set:\n            count += 1\n\n    if count // 2 >= 2:\n        print(\"S\")\n    else:\n        print(\"N\")\n\nif __name__ == \"__main__\":\n    main()",

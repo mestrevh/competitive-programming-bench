@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.010495,
-            "total_cost": 0.010498
+            "output_cost": 0.002624,
+            "total_cost": 0.002626
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (data.length === 0) process.exit(0);\n\nlet idx = 0;\nconst N = data[idx++];\nconst M = data[idx++];\nconst C = data[idx++];\n\nconst next = new Int32Array(M + 1);\nconst hasHater = new Uint8Array(M + 1);\n\nfor (let i = 1; i <= N; i++) {\n  const A = data[idx++];\n  const D = data[idx++];\n\n  if (hasHater[D] === 0) {\n    hasHater[D] = 1;\n    next[D] = A;\n  }\n}\n\nconst seen = new Uint8Array(M + 1);\nlet cur = C;\nlet swaps = 0;\n\nwhile (true) {\n  if (next[cur] === 0) {\n    process.stdout.write(String(swaps) + '\\n');\n    break;\n  }\n\n  if (seen[cur] === 1) {\n    process.stdout.write('-1\\n');\n    break;\n  }\n\n  seen[cur] = 1;\n  cur = next[cur];\n  swaps++;\n}\n```",
         "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nif (data.length === 0) process.exit(0);\n\nlet idx = 0;\nconst N = data[idx++];\nconst M = data[idx++];\nconst C = data[idx++];\n\nconst next = new Int32Array(M + 1);\nconst hasHater = new Uint8Array(M + 1);\n\nfor (let i = 1; i <= N; i++) {\n  const A = data[idx++];\n  const D = data[idx++];\n\n  if (hasHater[D] === 0) {\n    hasHater[D] = 1;\n    next[D] = A;\n  }\n}\n\nconst seen = new Uint8Array(M + 1);\nlet cur = C;\nlet swaps = 0;\n\nwhile (true) {\n  if (next[cur] === 0) {\n    process.stdout.write(String(swaps) + '\\n');\n    break;\n  }\n\n  if (seen[cur] === 1) {\n    process.stdout.write('-1\\n');\n    break;\n  }\n\n  seen[cur] = 1;\n  cur = next[cur];\n  swaps++;\n}",

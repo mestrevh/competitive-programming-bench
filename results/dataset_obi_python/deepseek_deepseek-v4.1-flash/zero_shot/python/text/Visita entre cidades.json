@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.004402,
-            "total_cost": 0.004404
+            "output_cost": 0.0011,
+            "total_cost": 0.001103
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, a, b = data[0], data[1], data[2]\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 3\n    for _ in range(n - 1):\n        p, q, d = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n        adj[p].append((q, d))\n        adj[q].append((p, d))\n\n    stack = [(a, 0, 0)]\n    while stack:\n        v, parent, dist = stack.pop()\n        if v == b:\n            print(dist)\n            return\n        for to, w in adj[v]:\n            if to != parent:\n                stack.append((to, v, dist + w))\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, a, b = data[0], data[1], data[2]\n    adj = [[] for _ in range(n + 1)]\n\n    idx = 3\n    for _ in range(n - 1):\n        p, q, d = data[idx], data[idx + 1], data[idx + 2]\n        idx += 3\n        adj[p].append((q, d))\n        adj[q].append((p, d))\n\n    stack = [(a, 0, 0)]\n    while stack:\n        v, parent, dist = stack.pop()\n        if v == b:\n            print(dist)\n            return\n        for to, w in adj[v]:\n            if to != parent:\n                stack.append((to, v, dist + w))\n\nif __name__ == \"__main__\":\n    main()",

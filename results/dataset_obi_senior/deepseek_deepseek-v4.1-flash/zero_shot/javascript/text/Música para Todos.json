@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.008854,
-            "total_cost": 0.008856
+            "output_cost": 0.002213,
+            "total_cost": 0.002216
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = tokens[0];\nconst M = tokens[1];\nconst C = tokens[2];\n\nconst next = new Int32Array(M + 1);\n\nlet p = 3;\nfor (let i = 1; i <= N; i++) {\n    const A = tokens[p++];\n    const D = tokens[p++];\n    if (next[D] === 0) {\n        next[D] = A;\n    }\n}\n\nconst seen = new Uint8Array(M + 1);\nlet cur = C;\nlet ans = 0;\n\nwhile (next[cur] !== 0) {\n    if (seen[cur]) {\n        console.log(-1);\n        process.exit(0);\n    }\n    seen[cur] = 1;\n    cur = next[cur];\n    ans++;\n}\n\nconsole.log(ans);\n```",
         "extracted_code": "const fs = require('fs');\nconst tokens = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = tokens[0];\nconst M = tokens[1];\nconst C = tokens[2];\n\nconst next = new Int32Array(M + 1);\n\nlet p = 3;\nfor (let i = 1; i <= N; i++) {\n    const A = tokens[p++];\n    const D = tokens[p++];\n    if (next[D] === 0) {\n        next[D] = A;\n    }\n}\n\nconst seen = new Uint8Array(M + 1);\nlet cur = C;\nlet ans = 0;\n\nwhile (next[cur] !== 0) {\n    if (seen[cur]) {\n        console.log(-1);\n        process.exit(0);\n    }\n    seen[cur] = 1;\n    cur = next[cur];\n    ans++;\n}\n\nconsole.log(ans);",

@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.020837,
-            "total_cost": 0.020839
+            "output_cost": 0.005209,
+            "total_cost": 0.005211
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\nconst L = data.slice(1, 1 + N);\n\nlet C = 0;\nconst P = new Array(N + 1);\nP[0] = 0;\nfor (let i = 0; i < N; i++) {\n    C += L[i];\n    P[i + 1] = C;\n}\n\nif (C % 2 !== 0) {\n    console.log('N');\n    process.exit(0);\n}\n\nconst half = C / 2;\nconst P2 = new Array(2 * N + 1);\nfor (let i = 0; i <= N; i++) {\n    P2[i] = P[i];\n}\nfor (let i = 1; i <= N; i++) {\n    P2[N + i] = P[i] + C;\n}\n\nlet count = 0;\nlet j = 1;\nfor (let i = 0; i < N; i++) {\n    if (j <= i) j = i + 1;\n    while (j <= i + N && P2[j] - P2[i] < half) {\n        j++;\n    }\n    if (j <= i + N && P2[j] - P2[i] === half) {\n        count++;\n    }\n}\n\nconsole.log(count >= 4 ? 'S' : 'N');\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst N = data[0];\nconst L = data.slice(1, 1 + N);\n\nlet C = 0;\nconst P = new Array(N + 1);\nP[0] = 0;\nfor (let i = 0; i < N; i++) {\n    C += L[i];\n    P[i + 1] = C;\n}\n\nif (C % 2 !== 0) {\n    console.log('N');\n    process.exit(0);\n}\n\nconst half = C / 2;\nconst P2 = new Array(2 * N + 1);\nfor (let i = 0; i <= N; i++) {\n    P2[i] = P[i];\n}\nfor (let i = 1; i <= N; i++) {\n    P2[N + i] = P[i] + C;\n}\n\nlet count = 0;\nlet j = 1;\nfor (let i = 0; i < N; i++) {\n    if (j <= i) j = i + 1;\n    while (j <= i + N && P2[j] - P2[i] < half) {\n        j++;\n    }\n    if (j <= i + N && P2[j] - P2[i] === half) {\n        count++;\n    }\n}\n\nconsole.log(count >= 4 ? 'S' : 'N');",

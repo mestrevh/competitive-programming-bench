@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.002189,
-            "total_cost": 0.002191
+            "output_cost": 0.000547,
+            "total_cost": 0.00055
         },
         "raw_response": "```cpp\n#include <bits/stdc++.h>\nusing namespace std;\n\nint S, T, P;\nvector<int> altura;\nvector<vector<int>> adj;\nvector<int> memo;\n\nint dfs(int u) {\n    if (memo[u] != -1) return memo[u];\n\n    int best = 0;\n    for (int v : adj[u]) {\n        if (altura[u] > altura[v]) {\n            best = max(best, 1 + dfs(v));\n        }\n    }\n\n    return memo[u] = best;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    cin >> S >> T >> P;\n\n    altura.assign(S + 1, 0);\n    for (int i = 1; i <= S; i++) {\n        cin >> altura[i];\n    }\n\n    adj.assign(S + 1, {});\n    for (int i = 0; i < T; i++) {\n        int I, J;\n        cin >> I >> J;\n        adj[I].push_back(J);\n        adj[J].push_back(I);\n    }\n\n    memo.assign(S + 1, -1);\n\n    cout << dfs(P) << '\\n';\n\n    return 0;\n}\n```",
         "extracted_code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint S, T, P;\nvector<int> altura;\nvector<vector<int>> adj;\nvector<int> memo;\n\nint dfs(int u) {\n    if (memo[u] != -1) return memo[u];\n\n    int best = 0;\n    for (int v : adj[u]) {\n        if (altura[u] > altura[v]) {\n            best = max(best, 1 + dfs(v));\n        }\n    }\n\n    return memo[u] = best;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    cin >> S >> T >> P;\n\n    altura.assign(S + 1, 0);\n    for (int i = 1; i <= S; i++) {\n        cin >> altura[i];\n    }\n\n    adj.assign(S + 1, {});\n    for (int i = 0; i < T; i++) {\n        int I, J;\n        cin >> I >> J;\n        adj[I].push_back(J);\n        adj[J].push_back(I);\n    }\n\n    memo.assign(S + 1, -1);\n\n    cout << dfs(P) << '\\n';\n\n    return 0;\n}",

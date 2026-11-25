@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.014741,
-            "total_cost": 0.014743
+            "output_cost": 0.003685,
+            "total_cost": 0.003687
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = data[0];\nconst K = data[1];\nconst C = data[2];\n\nconst A = data.slice(3, 3 + N);\n\nconst P = new Float64Array(N + 1);\nlet total = 0;\n\nfor (let i = 1; i <= N; i++) {\n    total += A[i - 1];\n    P[i] = P[i - 1] + A[i - 1];\n}\n\nconst INF = 1e15;\n\nlet prev = new Float64Array(N + 1);\nlet cur = new Float64Array(N + 1);\n\nfor (let j = 1; j <= K; j++) {\n    const minPos = j * C;\n    cur[minPos - 1] = INF;\n\n    for (let i = minPos; i <= N; i++) {\n        let best = cur[i - 1];\n        const val = prev[i - C] + P[i] - P[i - C];\n\n        if (val < best) best = val;\n        cur[i] = best;\n    }\n\n    const tmp = prev;\n    prev = cur;\n    cur = tmp;\n}\n\nconsole.log(total - prev[N]);\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst N = data[0];\nconst K = data[1];\nconst C = data[2];\n\nconst A = data.slice(3, 3 + N);\n\nconst P = new Float64Array(N + 1);\nlet total = 0;\n\nfor (let i = 1; i <= N; i++) {\n    total += A[i - 1];\n    P[i] = P[i - 1] + A[i - 1];\n}\n\nconst INF = 1e15;\n\nlet prev = new Float64Array(N + 1);\nlet cur = new Float64Array(N + 1);\n\nfor (let j = 1; j <= K; j++) {\n    const minPos = j * C;\n    cur[minPos - 1] = INF;\n\n    for (let i = minPos; i <= N; i++) {\n        let best = cur[i - 1];\n        const val = prev[i - C] + P[i] - P[i - C];\n\n        if (val < best) best = val;\n        cur[i] = best;\n    }\n\n    const tmp = prev;\n    prev = cur;\n    cur = tmp;\n}\n\nconsole.log(total - prev[N]);",

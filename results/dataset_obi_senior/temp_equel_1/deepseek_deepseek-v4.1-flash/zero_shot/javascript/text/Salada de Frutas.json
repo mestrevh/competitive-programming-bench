@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.001954,
-            "total_cost": 0.001957
+            "output_cost": 0.000488,
+            "total_cost": 0.000491
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst R = data[idx++];\nconst N = data[idx++];\n\nconst minPrice = new Map();\n\nfor (let i = 0; i < N; i++) {\n  const type = data[idx++];\n  const price = data[idx++];\n\n  if (!minPrice.has(type) || price < minPrice.get(type)) {\n    minPrice.set(type, price);\n  }\n}\n\nconst prices = Array.from(minPrice.values()).sort((a, b) => a - b);\n\nlet total = 0;\nlet count = 0;\n\nfor (const price of prices) {\n  if (total + price <= R) {\n    total += price;\n    count++;\n  } else {\n    break;\n  }\n}\n\nconsole.log(count);\n```",
         "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst R = data[idx++];\nconst N = data[idx++];\n\nconst minPrice = new Map();\n\nfor (let i = 0; i < N; i++) {\n  const type = data[idx++];\n  const price = data[idx++];\n\n  if (!minPrice.has(type) || price < minPrice.get(type)) {\n    minPrice.set(type, price);\n  }\n}\n\nconst prices = Array.from(minPrice.values()).sort((a, b) => a - b);\n\nlet total = 0;\nlet count = 0;\n\nfor (const price of prices) {\n  if (total + price <= R) {\n    total += price;\n    count++;\n  } else {\n    break;\n  }\n}\n\nconsole.log(count);",

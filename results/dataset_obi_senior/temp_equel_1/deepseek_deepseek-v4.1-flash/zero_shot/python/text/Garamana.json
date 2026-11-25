@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.005537,
-            "total_cost": 0.005539
+            "output_cost": 0.001384,
+            "total_cost": 0.001386
         },
         "raw_response": "```python\nimport sys\nimport unicodedata\nfrom collections import Counter\n\ndef normalize(s):\n    return ''.join(\n        c for c in unicodedata.normalize('NFD', s)\n        if unicodedata.category(c) != 'Mn'\n    )\n\ndef main():\n    lines = sys.stdin.read().splitlines()\n    if len(lines) < 2:\n        return\n\n    p = normalize(lines[0].strip())\n    a = normalize(lines[1].strip())\n\n    count_p = Counter(p)\n    count_a = Counter(c for c in a if c != '*')\n\n    for c, cnt in count_a.items():\n        if count_p.get(c, 0) < cnt:\n            print('N')\n            return\n\n    print('S')\n\nif __name__ == '__main__':\n    main()\n```",
         "extracted_code": "import sys\nimport unicodedata\nfrom collections import Counter\n\ndef normalize(s):\n    return ''.join(\n        c for c in unicodedata.normalize('NFD', s)\n        if unicodedata.category(c) != 'Mn'\n    )\n\ndef main():\n    lines = sys.stdin.read().splitlines()\n    if len(lines) < 2:\n        return\n\n    p = normalize(lines[0].strip())\n    a = normalize(lines[1].strip())\n\n    count_p = Counter(p)\n    count_a = Counter(c for c in a if c != '*')\n\n    for c, cnt in count_a.items():\n        if count_p.get(c, 0) < cnt:\n            print('N')\n            return\n\n    print('S')\n\nif __name__ == '__main__':\n    main()",

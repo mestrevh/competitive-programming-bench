@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.003072,
-            "total_cost": 0.003075
+            "output_cost": 0.000768,
+            "total_cost": 0.000771
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst S = data[idx++];\nconst T = data[idx++];\nconst P = data[idx++];\n\nconst altura = new Array(S + 1);\nfor (let i = 1; i <= S; i++) {\n  altura[i] = data[idx++];\n}\n\nconst adj = Array.from({ length: S + 1 }, () => []);\n\nfor (let e = 0; e < T; e++) {\n  const i = data[idx++];\n  const j = data[idx++];\n\n  if (altura[i] > altura[j]) {\n    adj[i].push(j);\n  } else if (altura[j] > altura[i]) {\n    adj[j].push(i);\n  }\n}\n\nconst dp = new Array(S + 1).fill(-1);\n\nfunction dfs(u) {\n  if (dp[u] !== -1) return dp[u];\n\n  let best = 1;\n  for (const v of adj[u]) {\n    best = Math.max(best, 1 + dfs(v));\n  }\n\n  dp[u] = best;\n  return best;\n}\n\nconsole.log(dfs(P) - 1);\n```",
         "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst S = data[idx++];\nconst T = data[idx++];\nconst P = data[idx++];\n\nconst altura = new Array(S + 1);\nfor (let i = 1; i <= S; i++) {\n  altura[i] = data[idx++];\n}\n\nconst adj = Array.from({ length: S + 1 }, () => []);\n\nfor (let e = 0; e < T; e++) {\n  const i = data[idx++];\n  const j = data[idx++];\n\n  if (altura[i] > altura[j]) {\n    adj[i].push(j);\n  } else if (altura[j] > altura[i]) {\n    adj[j].push(i);\n  }\n}\n\nconst dp = new Array(S + 1).fill(-1);\n\nfunction dfs(u) {\n  if (dp[u] !== -1) return dp[u];\n\n  let best = 1;\n  for (const v of adj[u]) {\n    best = Math.max(best, 1 + dfs(v));\n  }\n\n  dp[u] = best;\n  return best;\n}\n\nconsole.log(dfs(P) - 1);",

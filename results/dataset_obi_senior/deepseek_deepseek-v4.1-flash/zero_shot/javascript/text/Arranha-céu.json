@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.001848,
-            "total_cost": 0.00185
+            "output_cost": 0.000462,
+            "total_cost": 0.000464
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet idx = 0;\n\nconst N = Number(data[idx++]);\nconst Q = Number(data[idx++]);\n\nconst arr = new Int32Array(N + 1);\nconst bit = new Int32Array(N + 1);\n\nfunction add(i, delta) {\n  while (i <= N) {\n    bit[i] += delta;\n    i += i & -i;\n  }\n}\n\nfunction sum(i) {\n  let s = 0;\n  while (i > 0) {\n    s += bit[i];\n    i -= i & -i;\n  }\n  return s;\n}\n\nfor (let i = 1; i <= N; i++) {\n  arr[i] = Number(data[idx++]);\n  add(i, arr[i]);\n}\n\nconst out = [];\n\nfor (let q = 0; q < Q; q++) {\n  const type = Number(data[idx++]);\n\n  if (type === 0) {\n    const k = Number(data[idx++]);\n    const p = Number(data[idx++]);\n    const delta = p - arr[k];\n    arr[k] = p;\n    add(k, delta);\n  } else {\n    const k = Number(data[idx++]);\n    out.push(sum(k));\n  }\n}\n\nconsole.log(out.join('\\n'));\n```",
         "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nlet idx = 0;\n\nconst N = Number(data[idx++]);\nconst Q = Number(data[idx++]);\n\nconst arr = new Int32Array(N + 1);\nconst bit = new Int32Array(N + 1);\n\nfunction add(i, delta) {\n  while (i <= N) {\n    bit[i] += delta;\n    i += i & -i;\n  }\n}\n\nfunction sum(i) {\n  let s = 0;\n  while (i > 0) {\n    s += bit[i];\n    i -= i & -i;\n  }\n  return s;\n}\n\nfor (let i = 1; i <= N; i++) {\n  arr[i] = Number(data[idx++]);\n  add(i, arr[i]);\n}\n\nconst out = [];\n\nfor (let q = 0; q < Q; q++) {\n  const type = Number(data[idx++]);\n\n  if (type === 0) {\n    const k = Number(data[idx++]);\n    const p = Number(data[idx++]);\n    const delta = p - arr[k];\n    arr[k] = p;\n    add(k, delta);\n  } else {\n    const k = Number(data[idx++]);\n    out.push(sum(k));\n  }\n}\n\nconsole.log(out.join('\\n'));",

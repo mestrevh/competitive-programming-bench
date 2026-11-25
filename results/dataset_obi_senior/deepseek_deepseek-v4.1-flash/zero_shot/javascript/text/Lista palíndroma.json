@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.024202,
-            "total_cost": 0.024204
+            "output_cost": 0.00605,
+            "total_cost": 0.006053
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\n\nfunction nextInt() {\n  while (idx < data.length && data.charCodeAt(idx) <= 32) idx++;\n  let num = 0;\n  while (idx < data.length && data.charCodeAt(idx) > 32) {\n    num = num * 10 + (data.charCodeAt(idx) - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst L = new Int32Array(N);\nfor (let i = 0; i < N; i++) {\n  L[i] = nextInt();\n}\n\nlet i = 0, j = N - 1;\nlet leftSum = L[i], rightSum = L[j];\nlet ops = 0;\n\nwhile (i < j) {\n  if (leftSum === rightSum) {\n    i++;\n    j--;\n    if (i <= j) {\n      leftSum = L[i];\n      rightSum = L[j];\n    }\n  } else if (leftSum < rightSum) {\n    i++;\n    leftSum += L[i];\n    ops++;\n  } else {\n    j--;\n    rightSum += L[j];\n    ops++;\n  }\n}\n\nconsole.log(ops);\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8');\nlet idx = 0;\n\nfunction nextInt() {\n  while (idx < data.length && data.charCodeAt(idx) <= 32) idx++;\n  let num = 0;\n  while (idx < data.length && data.charCodeAt(idx) > 32) {\n    num = num * 10 + (data.charCodeAt(idx) - 48);\n    idx++;\n  }\n  return num;\n}\n\nconst N = nextInt();\nconst L = new Int32Array(N);\nfor (let i = 0; i < N; i++) {\n  L[i] = nextInt();\n}\n\nlet i = 0, j = N - 1;\nlet leftSum = L[i], rightSum = L[j];\nlet ops = 0;\n\nwhile (i < j) {\n  if (leftSum === rightSum) {\n    i++;\n    j--;\n    if (i <= j) {\n      leftSum = L[i];\n      rightSum = L[j];\n    }\n  } else if (leftSum < rightSum) {\n    i++;\n    leftSum += L[i];\n    ops++;\n  } else {\n    j--;\n    rightSum += L[j];\n    ops++;\n  }\n}\n\nconsole.log(ops);",

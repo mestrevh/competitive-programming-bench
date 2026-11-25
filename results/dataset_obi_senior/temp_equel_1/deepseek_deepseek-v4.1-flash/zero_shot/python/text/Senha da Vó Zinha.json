@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 4e-06,
-            "output_cost": 0.016752,
-            "total_cost": 0.016756
+            "output_cost": 0.004188,
+            "total_cost": 0.004192
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    pattern = next(it)\n\n    words = []\n    for _ in range(M):\n        s = next(it)\n        words.append(''.join(sorted(s)))\n\n    P = int(next(it))\n\n    positions = [i for i, ch in enumerate(pattern) if ch == '#']\n    ans = list(pattern)\n\n    powers = [1] * (M + 1)\n    for i in range(1, M + 1):\n        powers[i] = powers[i - 1] * K\n\n    for idx, pos in enumerate(positions):\n        remaining = M - idx - 1\n        block = powers[remaining]\n        choice = (P - 1) // block\n        ans[pos] = words[idx][choice]\n        P -= choice * block\n\n    sys.stdout.write(''.join(ans))\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n\n    it = iter(data)\n    N = int(next(it))\n    M = int(next(it))\n    K = int(next(it))\n\n    pattern = next(it)\n\n    words = []\n    for _ in range(M):\n        s = next(it)\n        words.append(''.join(sorted(s)))\n\n    P = int(next(it))\n\n    positions = [i for i, ch in enumerate(pattern) if ch == '#']\n    ans = list(pattern)\n\n    powers = [1] * (M + 1)\n    for i in range(1, M + 1):\n        powers[i] = powers[i - 1] * K\n\n    for idx, pos in enumerate(positions):\n        remaining = M - idx - 1\n        block = powers[remaining]\n        choice = (P - 1) // block\n        ans[pos] = words[idx][choice]\n        P -= choice * block\n\n    sys.stdout.write(''.join(ans))\n\nif __name__ == \"__main__\":\n    main()",

@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.04613,
-            "total_cost": 0.046132
+            "output_cost": 0.011533,
+            "total_cost": 0.011534
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst a = data.slice(1, 1 + n);\n\nconst idx = Array.from({ length: n }, (_, i) => i);\nidx.sort((i, j) => a[j] - a[i]);\n\nconst active = new Uint8Array(n + 2);\nlet k = 0;\nlet maxK = 0;\nlet i = 0;\n\nwhile (i < n) {\n    const h = a[idx[i]];\n    let j = i;\n\n    while (j < n && a[idx[j]] === h) {\n        const p = idx[j] + 1;\n        active[p] = 1;\n\n        const left = active[p - 1];\n        const right = active[p + 1];\n\n        if (left && right) {\n            k--;\n        } else if (!left && !right) {\n            k++;\n        }\n\n        j++;\n    }\n\n    if (k > maxK) maxK = k;\n    i = j;\n}\n\nconsole.log(maxK + 1);\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst a = data.slice(1, 1 + n);\n\nconst idx = Array.from({ length: n }, (_, i) => i);\nidx.sort((i, j) => a[j] - a[i]);\n\nconst active = new Uint8Array(n + 2);\nlet k = 0;\nlet maxK = 0;\nlet i = 0;\n\nwhile (i < n) {\n    const h = a[idx[i]];\n    let j = i;\n\n    while (j < n && a[idx[j]] === h) {\n        const p = idx[j] + 1;\n        active[p] = 1;\n\n        const left = active[p - 1];\n        const right = active[p + 1];\n\n        if (left && right) {\n            k--;\n        } else if (!left && !right) {\n            k++;\n        }\n\n        j++;\n    }\n\n    if (k > maxK) maxK = k;\n    i = j;\n}\n\nconsole.log(maxK + 1);",

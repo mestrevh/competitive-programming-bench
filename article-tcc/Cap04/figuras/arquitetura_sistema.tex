@@ -1,0 +1,195 @@
+% Diagrama de arquitetura do sistema de benchmarking (Cap. 4, Seção 4.1)
+% Baseado na arquitetura de referência e nos módulos reais em src/
+\begin{tikzpicture}[
+  x=1cm, y=1cm,
+  font=\sffamily\footnotesize,
+  panel/.style={draw=black!45, line width=0.8pt, fill=gray!4, rounded corners=2pt},
+  panelhdr/.style={draw=black!45, line width=0.8pt, fill=black!75, text=white, font=\sffamily\bfseries\footnotesize, align=center},
+  hdrData/.style={panelhdr, fill=vLaranja!85!black},
+  hdrEntry/.style={panelhdr, fill=black!75},
+  hdrOrch/.style={panelhdr, fill=vAzul!80!black},
+  hdrOut/.style={panelhdr, fill=vVerde!80!black},
+  hdrSrv/.style={panelhdr, fill=vAzul!85!black},
+  hdrExt/.style={panelhdr, fill=black!70},
+  boxNode/.style={draw=vAzul!80!black, line width=0.9pt, fill=vAzul!12, rounded corners=5pt, align=center, inner sep=5pt},
+  entryNode/.style={draw=black!65, line width=0.9pt, fill=black!10, rounded corners=5pt, align=center, inner sep=5pt},
+  extNode/.style={draw=black!65, line width=0.9pt, fill=black!12, rounded corners=5pt, align=center, inner sep=5pt},
+  iconData/.style={draw=vLaranja!85!black, fill=vLaranja!20, rounded corners=3pt, minimum size=8.5mm, inner sep=2pt, font=\large, text=vLaranja!90!black},
+  iconOut/.style={draw=vVerde!80!black, fill=vVerde!18, rounded corners=3pt, minimum size=8.0mm, inner sep=2pt, font=\large, text=vVerde!85!black},
+  iconSub/.style={draw=vAzul!75!black, fill=white, rounded corners=3pt, minimum size=7.5mm, inner sep=2pt, font=\normalsize, text=vAzul!85!black},
+  arr/.style={-{Latex[length=2.2mm, width=1.6mm]}, line width=0.75pt, draw=black!75},
+  arrlbl/.style={font=\sffamily\scriptsize, fill=white, inner sep=1.5pt, text=black!85}
+]
+
+% =====================================================================
+% 1. PAINEL DATA (Superior Esquerdo: x=0..5.4, y=5.2..11.5)
+% =====================================================================
+\draw[panel, fill=vLaranja!4] (0, 5.2) rectangle (5.4, 11.5);
+\draw[hdrData] (0, 10.85) rectangle (5.4, 11.5) node[pos=0.5] {DATA};
+
+\node[iconData] (db_icon) at (0.75, 9.75) {\faDatabase};
+\node[anchor=west, align=left, font=\ttfamily\scriptsize] at (1.30, 9.75) {
+  \textbf{database/\{dataset\}/}\\
+  |-- test\_cases/ (.in/.out)\\
+  |-- solutions/\\
+  |-- imgs/\\
+  |-- problem.json
+};
+
+\node[iconData] (load_icon) at (0.75, 7.85) {\faCogs};
+\node[anchor=west, align=left, font=\sffamily\scriptsize] at (1.30, 7.85) {
+  \textbf{Load Problem}\\
+  {\ttfamily models/problem.py}\\
+  {\ttfamily models/example.py}
+};
+
+\node[iconData] (list_icon) at (0.75, 6.10) {\faList};
+\node[anchor=west, align=left, font=\sffamily\scriptsize] at (1.30, 6.10) {
+  \textbf{Instância Carregada}\\
+  {\ttfamily Problem + test\_cases}
+};
+
+\draw[arr] (db_icon.south) -- (load_icon.north);
+\draw[arr] (load_icon.south) -- (list_icon.north);
+
+% =====================================================================
+% 2. PAINEL OUTPUT (Inferior Esquerdo: x=0..5.4, y=0..4.4)
+% =====================================================================
+\draw[panel, fill=vVerde!4] (0, 0.0) rectangle (5.4, 4.4);
+\draw[hdrOut] (0, 3.75) rectangle (5.4, 4.4) node[pos=0.5] {OUTPUT};
+
+\node[iconOut] (csv_icon) at (0.68, 2.75) {\faFileCsv};
+\node[anchor=west, align=left, font=\ttfamily\scriptsize] at (1.20, 2.75) {
+  \textbf{results/\{dataset\}/}\\
+  |-- oracle.csv\\
+  |-- judge/\{model\}.csv\\
+  {\rmfamily\tiny (models/evaluation\_oracle.py)}
+};
+
+\node[iconOut] (json_icon) at (0.68, 1.05) {\faFileCode};
+\node[anchor=west, align=left, font=\ttfamily\scriptsize] at (1.20, 1.05) {
+  \textbf{results/\{dataset\}/\{model\}/}\\
+  |-- \{prompt\}/\{lang\}/\{mod\}/\\
+  |---- \{questao\}.json\\
+  {\rmfamily\tiny (core/file\_manager.py)}
+};
+
+% =====================================================================
+% 3. PAINEL ENTRY (Superior Central: x=6.1..13.3, y=8.45..11.5)
+% =====================================================================
+\draw[panel] (6.1, 8.45) rectangle (13.3, 11.5);
+\draw[hdrEntry] (6.1, 10.85) rectangle (13.3, 11.5) node[pos=0.5] {ENTRY};
+
+\node[entryNode, text width=6.2cm, minimum height=1.55cm] (entry_box) at (9.7, 9.65) {
+  {\ttfamily\bfseries main.py (entry)}\\[2pt]
+  {\scriptsize Seleção de \textit{dataset}, modo oráculo, linguagem,}\\
+  {\scriptsize provedor LLM, \mbox{escopo/modalidade}, \textit{prompt} e limites}
+};
+
+% Seta ENTRY -> DATA
+\draw[arr] (entry_box.west) -- (5.4, 9.65);
+
+% =====================================================================
+% 4. PAINEL ORCHESTRATION (Central / Inferior Central: x=6.1..13.3, y=0..7.85)
+% =====================================================================
+\draw[panel, fill=vAzul!4] (6.1, 0.0) rectangle (13.3, 7.85);
+\draw[hdrOrch] (6.1, 7.20) rectangle (13.3, 7.85) node[pos=0.5] {ORCHESTRATION};
+
+\node[boxNode, text width=5.4cm, minimum height=1.70cm] (orch_box) at (9.7, 5.75) {
+  {\bfseries NÚCLEO ORQUESTRADOR}\\[2pt]
+  {\ttfamily src/core/orchestrator.py}\\[1pt]
+  {\scriptsize (\texttt{Orchestrator.execute()})}
+};
+
+% Submódulos auxiliares abaixo do Orquestrador
+\node[iconSub] (pr_icon) at (7.25, 3.05) {\faFile};
+\node[anchor=north, align=left, font=\ttfamily\tiny] at (7.25, 2.58) {
+  \textbf{prompts/}\\
+  |- zero\_shot.txt\\
+  |- few\_shot\_c.txt\\
+  |- cot\_polya.txt
+};
+
+\node[iconSub] (cfg_icon) at (9.70, 2.15) {\faCog};
+\node[anchor=north, align=center, font=\sffamily\tiny] at (9.70, 1.68) {
+  {\ttfamily\bfseries core/config.py}\\
+  \texttt{ProviderConfig} (\texttt{.env}:\\
+  \texttt{api\_key}, \texttt{model},\\
+  \texttt{base\_url}, \texttt{prices})
+};
+
+\node[iconSub] (pb_icon) at (11.85, 3.05) {\faImage};
+\node[anchor=north, align=center, font=\sffamily\tiny] at (11.85, 2.58) {
+  {\ttfamily\bfseries core/prompt\_builder.py}\\
+  \texttt{build\_prompt\_payload()}\\
+  \texttt{extract\_code()}\\
+  (\texttt{text} | \texttt{img} | \texttt{description})
+};
+
+\draw[arr] (orch_box.south) -- (9.70, 3.85) -| (pr_icon.north);
+\draw[arr] (orch_box.south) -- (cfg_icon.north);
+\draw[arr] (orch_box.south) -- (9.70, 3.85) -| (pb_icon.north);
+
+% Seta DATA -> ORCHESTRATION
+\draw[arr] (4.35, 6.10) -- node[arrlbl, above=2pt, pos=0.58] {\texttt{problem\_path}} (orch_box.west |- 0, 6.10);
+
+% Setas ORCHESTRATION -> OUTPUT
+\draw[arr] (orch_box.west |- 0, 5.30) -- (5.72, 5.30) node[arrlbl, above left=0pt and -2pt] {\texttt{create file}} |- (5.4, 2.75);
+\draw[arr] (5.72, 2.75) |- (5.4, 1.05);
+
+% =====================================================================
+% 5. PAINEL SERVICES (Superior Direito: x=14.5..23.7, y=7.65..11.5)
+% =====================================================================
+\draw[panel, fill=vAzul!3] (14.5, 7.65) rectangle (23.7, 11.5);
+\draw[hdrSrv] (14.5, 10.85) rectangle (23.7, 11.5) node[pos=0.5] {SERVICES};
+
+\node[boxNode, text width=3.65cm, minimum height=1.70cm] (llm_box) at (16.75, 9.20) {
+  {\bfseries LLM Service}\\[2pt]
+  {\ttfamily\scriptsize services/llm\_services.py}\\
+  {\ttfamily\scriptsize LLM.generate()}
+};
+
+\node[boxNode, text width=3.65cm, minimum height=1.70cm] (judge_box) at (21.45, 9.20) {
+  {\bfseries Judge Service}\\[2pt]
+  {\ttfamily\scriptsize services/judge\_service.py}\\
+  {\ttfamily\scriptsize JudgeService.execute()}
+};
+
+% =====================================================================
+% 6. PAINEL EXTERNAL (Inferior Direito: x=14.5..23.7, y=0..3.85)
+% =====================================================================
+\draw[panel, fill=black!3] (14.5, 0.0) rectangle (23.7, 3.85);
+\draw[hdrExt] (14.5, 3.20) rectangle (23.7, 3.85) node[pos=0.5] {EXTERNAL};
+
+\node[extNode, text width=3.65cm, minimum height=1.95cm] (ext_api) at (16.75, 1.60) {
+  {\bfseries REQUEST API LLM}\\[2pt]
+  {\scriptsize Provedores via OpenAI SDK}\\
+  {\tiny (DeepSeek, Gemini, GPT)}
+};
+
+\node[extNode, text width=3.75cm, minimum height=1.95cm] (ext_env) at (21.45, 1.60) {
+  {\scriptsize\bfseries TEST IN ENVIRONMENT}\\[2pt]
+  {\scriptsize \mbox{Compiladores / Runtimes} + \texttt{psutil}}\\
+  {\tiny (\texttt{python}, \texttt{gcc}, \texttt{g++}, \texttt{javac}, \texttt{node})}
+};
+
+% =====================================================================
+% 7. FLUXOS ENTRE ORCHESTRATION, SERVICES E EXTERNAL
+% =====================================================================
+% LLM Service <-> REQUEST API LLM (colunas verticais x=15.90 e x=17.55, rótulos na faixa y=6.85)
+\draw[arr] (15.90, 8.35) -- node[arrlbl, left=1pt, pos=0.26] {\texttt{send\_prompt}} (15.90, 2.58);
+\draw[arr] (17.55, 2.58) -- node[arrlbl, right=1pt, pos=0.74] {\texttt{content, tokens}} (17.55, 8.35);
+
+% Judge Service <-> TEST IN ENVIRONMENT (colunas verticais à direita x=21.85 e x=22.95, sem cruzar as linhas do Orquestrador!)
+\draw[arr] (21.85, 8.35) -- node[arrlbl, left=1pt, pos=0.72] {\texttt{run\_single\_test}} (21.85, 2.58);
+\draw[arr] (22.95, 2.58) -- node[arrlbl, right=1pt, pos=0.55] {\texttt{stdout, time}} (22.95, 8.35);
+
+% ORCHESTRATION <-> LLM Service (pelo corredor x=13.65..14.05)
+\draw[arr] (orch_box.east |- 0, 6.25) -- (13.68, 6.25) |- node[arrlbl, pos=0.25, left=1pt] {\texttt{prompt}} (llm_box.west |- 0, 9.55);
+\draw[arr] (llm_box.west |- 0, 8.85) -- (14.08, 8.85) |- node[arrlbl, pos=0.23, right=1pt] {\texttt{code, cost\_usd}} (orch_box.east |- 0, 5.85);
+
+% ORCHESTRATION <-> Judge Service (entra pela metade esquerda do Judge Service x=19.95 e x=20.45, sem cruzar x=21.70!)
+\draw[arr] (orch_box.east |- 0, 5.35) -- node[arrlbl, above=1pt, pos=0.20] {\texttt{code, test\_cases}} (19.95, 5.35) -- (19.95, 8.35);
+\draw[arr] (20.45, 8.35) -- (20.45, 4.75) -- node[arrlbl, below=1pt, pos=0.76] {\texttt{status (AC..CE), counts, max\_time}} (orch_box.east |- 0, 4.75);
+
+\end{tikzpicture}

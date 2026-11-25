@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.019277,
-            "total_cost": 0.019279
+            "output_cost": 0.004819,
+            "total_cost": 0.004821
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst N = parseInt(data[0], 10);\nconst S = data.slice(1, 1 + N).join('');\n\nfunction increment(s) {\n  let arr = s.split('');\n  let i = arr.length - 1;\n  while (i >= 0 && arr[i] === '9') {\n    arr[i] = '0';\n    i--;\n  }\n  if (i < 0) {\n    return '1' + arr.join('');\n  } else {\n    arr[i] = String.fromCharCode(arr[i].charCodeAt(0) + 1);\n    return arr.join('');\n  }\n}\n\nfunction isValid(L) {\n  let pos = 0;\n  let cur = S.slice(0, L);\n  while (pos < N) {\n    if (pos + cur.length > N) return false;\n    for (let i = 0; i < cur.length; i++) {\n      if (S[pos + i] !== cur[i]) return false;\n    }\n    pos += cur.length;\n    if (pos === N) return true;\n    cur = increment(cur);\n  }\n  return true;\n}\n\nfor (let L = 1; L <= N; L++) {\n  if (isValid(L)) {\n    console.log(S.slice(0, L));\n    break;\n  }\n}\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst N = parseInt(data[0], 10);\nconst S = data.slice(1, 1 + N).join('');\n\nfunction increment(s) {\n  let arr = s.split('');\n  let i = arr.length - 1;\n  while (i >= 0 && arr[i] === '9') {\n    arr[i] = '0';\n    i--;\n  }\n  if (i < 0) {\n    return '1' + arr.join('');\n  } else {\n    arr[i] = String.fromCharCode(arr[i].charCodeAt(0) + 1);\n    return arr.join('');\n  }\n}\n\nfunction isValid(L) {\n  let pos = 0;\n  let cur = S.slice(0, L);\n  while (pos < N) {\n    if (pos + cur.length > N) return false;\n    for (let i = 0; i < cur.length; i++) {\n      if (S[pos + i] !== cur[i]) return false;\n    }\n    pos += cur.length;\n    if (pos === N) return true;\n    cur = increment(cur);\n  }\n  return true;\n}\n\nfor (let L = 1; L <= N; L++) {\n  if (isValid(L)) {\n    console.log(S.slice(0, L));\n    break;\n  }\n}",

@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.018761,
-            "total_cost": 0.018762
+            "output_cost": 0.00469,
+            "total_cost": 0.004692
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst a = data.slice(1, 1 + n);\n\nconst indices = Array.from({ length: n }, (_, i) => i);\nindices.sort((i, j) => a[j] - a[i]);\n\nconst active = new Uint8Array(n + 2);\nlet seg = 0;\nlet maxSeg = 0;\nlet i = 0;\n\nwhile (i < n) {\n  const h = a[indices[i]];\n  let j = i;\n  while (j < n && a[indices[j]] === h) j++;\n\n  for (let k = i; k < j; k++) {\n    const pos = indices[k] + 1;\n    active[pos] = 1;\n    const left = active[pos - 1];\n    const right = active[pos + 1];\n    if (left && right) {\n      seg--;\n    } else if (!left && !right) {\n      seg++;\n    }\n  }\n\n  if (seg > maxSeg) maxSeg = seg;\n  i = j;\n}\n\nconsole.log(maxSeg + 1);\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst a = data.slice(1, 1 + n);\n\nconst indices = Array.from({ length: n }, (_, i) => i);\nindices.sort((i, j) => a[j] - a[i]);\n\nconst active = new Uint8Array(n + 2);\nlet seg = 0;\nlet maxSeg = 0;\nlet i = 0;\n\nwhile (i < n) {\n  const h = a[indices[i]];\n  let j = i;\n  while (j < n && a[indices[j]] === h) j++;\n\n  for (let k = i; k < j; k++) {\n    const pos = indices[k] + 1;\n    active[pos] = 1;\n    const left = active[pos - 1];\n    const right = active[pos + 1];\n    if (left && right) {\n      seg--;\n    } else if (!left && !right) {\n      seg++;\n    }\n  }\n\n  if (seg > maxSeg) maxSeg = seg;\n  i = j;\n}\n\nconsole.log(maxSeg + 1);",

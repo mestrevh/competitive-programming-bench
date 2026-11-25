@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.018036,
-            "total_cost": 0.018038
+            "output_cost": 0.004509,
+            "total_cost": 0.004511
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0]);\nlet bestNum = Infinity;\nlet bestDen = 1;\nlet idx = 1;\n\nfor (let i = 0; i < n; i++) {\n  const pStr = data[idx++];\n  const g = parseInt(data[idx++]);\n\n  const parts = pStr.split('.');\n  const intPart = parts[0];\n  let decPart = parts[1] || '';\n  decPart = (decPart + '00').slice(0, 2);\n  const pCents = parseInt(intPart) * 100 + parseInt(decPart);\n\n  const num = pCents * 1000;\n  const den = g;\n\n  if (num * bestDen < bestNum * den) {\n    bestNum = num;\n    bestDen = den;\n  }\n}\n\nlet q = Math.floor(bestNum / bestDen);\nconst r = bestNum % bestDen;\nif (2 * r >= bestDen) q++;\n\nconst intPart = Math.floor(q / 100);\nconst fracPart = q % 100;\nconsole.log(`${intPart}.${fracPart.toString().padStart(2, '0')}`);\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\nconst n = parseInt(data[0]);\nlet bestNum = Infinity;\nlet bestDen = 1;\nlet idx = 1;\n\nfor (let i = 0; i < n; i++) {\n  const pStr = data[idx++];\n  const g = parseInt(data[idx++]);\n\n  const parts = pStr.split('.');\n  const intPart = parts[0];\n  let decPart = parts[1] || '';\n  decPart = (decPart + '00').slice(0, 2);\n  const pCents = parseInt(intPart) * 100 + parseInt(decPart);\n\n  const num = pCents * 1000;\n  const den = g;\n\n  if (num * bestDen < bestNum * den) {\n    bestNum = num;\n    bestDen = den;\n  }\n}\n\nlet q = Math.floor(bestNum / bestDen);\nconst r = bestNum % bestDen;\nif (2 * r >= bestDen) q++;\n\nconst intPart = Math.floor(q / 100);\nconst fracPart = q % 100;\nconsole.log(`${intPart}.${fracPart.toString().padStart(2, '0')}`);",

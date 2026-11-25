@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 4e-06,
-            "output_cost": 0.017357,
-            "total_cost": 0.01736
+            "output_cost": 0.004339,
+            "total_cost": 0.004343
         },
         "raw_response": "```python\nimport sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n    T = data[3]\n    words = data[4:4 + M]\n    P = int(data[4 + M])\n\n    unique = []\n    for w in words:\n        unique.append(sorted(set(w)))\n\n    cap = 10**9 + 1\n    suffix = [1] * (M + 1)\n    for i in range(M - 1, -1, -1):\n        suffix[i] = min(cap, suffix[i + 1] * len(unique[i]))\n\n    res = []\n    j = 0\n    for ch in T:\n        if ch != '#':\n            res.append(ch)\n        else:\n            for c in unique[j]:\n                cnt = suffix[j + 1]\n                if P > cnt:\n                    P -= cnt\n                else:\n                    res.append(c)\n                    break\n            j += 1\n\n    sys.stdout.write(''.join(res))\n\nif __name__ == \"__main__\":\n    solve()\n```",
         "extracted_code": "import sys\n\ndef solve():\n    data = sys.stdin.read().split()\n    if not data:\n        return\n    N = int(data[0])\n    M = int(data[1])\n    K = int(data[2])\n    T = data[3]\n    words = data[4:4 + M]\n    P = int(data[4 + M])\n\n    unique = []\n    for w in words:\n        unique.append(sorted(set(w)))\n\n    cap = 10**9 + 1\n    suffix = [1] * (M + 1)\n    for i in range(M - 1, -1, -1):\n        suffix[i] = min(cap, suffix[i + 1] * len(unique[i]))\n\n    res = []\n    j = 0\n    for ch in T:\n        if ch != '#':\n            res.append(ch)\n        else:\n            for c in unique[j]:\n                cnt = suffix[j + 1]\n                if P > cnt:\n                    P -= cnt\n                else:\n                    res.append(c)\n                    break\n            j += 1\n\n    sys.stdout.write(''.join(res))\n\nif __name__ == \"__main__\":\n    solve()",

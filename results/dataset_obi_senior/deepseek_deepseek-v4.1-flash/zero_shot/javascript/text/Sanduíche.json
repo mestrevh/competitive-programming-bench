@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.004169,
-            "total_cost": 0.004171
+            "output_cost": 0.001042,
+            "total_cost": 0.001045
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nif (data.length > 0) {\n  const N = data[0];\n  const M = data[1];\n  const adj = new Array(N).fill(0);\n\n  let idx = 2;\n  for (let i = 0; i < M; i++) {\n    const x = data[idx++] - 1;\n    const y = data[idx++] - 1;\n    adj[x] |= 1 << y;\n    adj[y] |= 1 << x;\n  }\n\n  const total = 1 << N;\n  const independent = new Uint8Array(total);\n  independent[0] = 1;\n\n  let ans = 0;\n\n  for (let mask = 1; mask < total; mask++) {\n    const lsb = mask & -mask;\n    const v = 31 - Math.clz32(lsb);\n    const rest = mask ^ lsb;\n\n    if (independent[rest] && (adj[v] & rest) === 0) {\n      independent[mask] = 1;\n      ans++;\n    }\n  }\n\n  console.log(ans);\n}\n```",
         "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nif (data.length > 0) {\n  const N = data[0];\n  const M = data[1];\n  const adj = new Array(N).fill(0);\n\n  let idx = 2;\n  for (let i = 0; i < M; i++) {\n    const x = data[idx++] - 1;\n    const y = data[idx++] - 1;\n    adj[x] |= 1 << y;\n    adj[y] |= 1 << x;\n  }\n\n  const total = 1 << N;\n  const independent = new Uint8Array(total);\n  independent[0] = 1;\n\n  let ans = 0;\n\n  for (let mask = 1; mask < total; mask++) {\n    const lsb = mask & -mask;\n    const v = 31 - Math.clz32(lsb);\n    const rest = mask ^ lsb;\n\n    if (independent[rest] && (adj[v] & rest) === 0) {\n      independent[mask] = 1;\n      ans++;\n    }\n  }\n\n  console.log(ans);\n}",

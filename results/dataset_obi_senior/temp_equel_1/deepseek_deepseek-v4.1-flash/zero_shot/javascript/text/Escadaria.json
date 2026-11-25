@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 4e-06,
-            "output_cost": 0.009444,
-            "total_cost": 0.009448
+            "output_cost": 0.002361,
+            "total_cost": 0.002365
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst A = data.slice(1, 1 + n);\n\nconst ans = new Array(n);\nconst left = new Array(n);\n\nlet best = Infinity;\nfor (let i = 0; i < n; i++) {\n    if (A[i] !== -1) {\n        const v = A[i] - (i + 1);\n        if (v < best) best = v;\n    }\n    left[i] = (i + 1) + best;\n}\n\nbest = Infinity;\nfor (let i = n - 1; i >= 0; i--) {\n    if (A[i] !== -1) {\n        const v = A[i] + (i + 1);\n        if (v < best) best = v;\n    }\n    const right = -(i + 1) + best;\n    ans[i] = Math.min(left[i], right);\n}\n\nconsole.log(ans.join(' '));\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nconst n = data[0];\nconst A = data.slice(1, 1 + n);\n\nconst ans = new Array(n);\nconst left = new Array(n);\n\nlet best = Infinity;\nfor (let i = 0; i < n; i++) {\n    if (A[i] !== -1) {\n        const v = A[i] - (i + 1);\n        if (v < best) best = v;\n    }\n    left[i] = (i + 1) + best;\n}\n\nbest = Infinity;\nfor (let i = n - 1; i >= 0; i--) {\n    if (A[i] !== -1) {\n        const v = A[i] + (i + 1);\n        if (v < best) best = v;\n    }\n    const right = -(i + 1) + best;\n    ans[i] = Math.min(left[i], right);\n}\n\nconsole.log(ans.join(' '));",

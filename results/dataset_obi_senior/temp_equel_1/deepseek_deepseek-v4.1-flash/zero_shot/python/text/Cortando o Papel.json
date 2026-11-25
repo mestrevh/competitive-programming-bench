@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.043171,
-            "total_cost": 0.043173
+            "output_cost": 0.010793,
+            "total_cost": 0.010794
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    pairs = [(a[i], i) for i in range(n)]\n    pairs.sort(reverse=True)\n\n    active = [False] * n\n    comp = 0\n    ans = 1\n\n    i = 0\n    while i < n:\n        h = pairs[i][0]\n\n        if comp + 1 > ans:\n            ans = comp + 1\n\n        j = i\n        while j < n and pairs[j][0] == h:\n            idx = pairs[j][1]\n            active[idx] = True\n            comp += 1\n\n            if idx > 0 and active[idx - 1]:\n                comp -= 1\n            if idx + 1 < n and active[idx + 1]:\n                comp -= 1\n\n            j += 1\n\n        if comp + 1 > ans:\n            ans = comp + 1\n\n        i = j\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n = data[0]\n    a = data[1:1 + n]\n\n    pairs = [(a[i], i) for i in range(n)]\n    pairs.sort(reverse=True)\n\n    active = [False] * n\n    comp = 0\n    ans = 1\n\n    i = 0\n    while i < n:\n        h = pairs[i][0]\n\n        if comp + 1 > ans:\n            ans = comp + 1\n\n        j = i\n        while j < n and pairs[j][0] == h:\n            idx = pairs[j][1]\n            active[idx] = True\n            comp += 1\n\n            if idx > 0 and active[idx - 1]:\n                comp -= 1\n            if idx + 1 < n and active[idx + 1]:\n                comp -= 1\n\n            j += 1\n\n        if comp + 1 > ans:\n            ans = comp + 1\n\n        i = j\n\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",

@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.023371,
-            "total_cost": 0.023373
+            "output_cost": 0.005843,
+            "total_cost": 0.005845
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    n = int(data[0])\n    arr = list(map(int, data[1:1+n]))\n    unique = list(set(arr))\n    \n    if len(unique) <= 1:\n        print(1)\n        return\n    \n    size = n + 1\n    last = [[0] * size for _ in range(size)]\n    cnt = [[0] * size for _ in range(size)]\n    \n    for v in arr:\n        for u in unique:\n            if u == v:\n                continue\n            if last[v][u] != v:\n                cnt[v][u] += 1\n                cnt[u][v] += 1\n                last[v][u] = v\n                last[u][v] = v\n    \n    ans = 1\n    for row in cnt:\n        m = max(row)\n        if m > ans:\n            ans = m\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = sys.stdin.read().strip().split()\n    if not data:\n        return\n    n = int(data[0])\n    arr = list(map(int, data[1:1+n]))\n    unique = list(set(arr))\n    \n    if len(unique) <= 1:\n        print(1)\n        return\n    \n    size = n + 1\n    last = [[0] * size for _ in range(size)]\n    cnt = [[0] * size for _ in range(size)]\n    \n    for v in arr:\n        for u in unique:\n            if u == v:\n                continue\n            if last[v][u] != v:\n                cnt[v][u] += 1\n                cnt[u][v] += 1\n                last[v][u] = v\n                last[u][v] = v\n    \n    ans = 1\n    for row in cnt:\n        m = max(row)\n        if m > ans:\n            ans = m\n    print(ans)\n\nif __name__ == \"__main__\":\n    main()",

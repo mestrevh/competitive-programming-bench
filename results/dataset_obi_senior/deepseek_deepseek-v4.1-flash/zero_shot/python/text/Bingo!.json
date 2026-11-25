@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.001824,
-            "total_cost": 0.001827
+            "output_cost": 0.000456,
+            "total_cost": 0.000459
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    K = next(it)\n    U = next(it)\n\n    cards = []\n    for _ in range(N):\n        card = [next(it) for _ in range(K)]\n        cards.append(card)\n\n    sequence = [next(it) for _ in range(U)]\n\n    pos = [0] * (U + 1)\n    for i, num in enumerate(sequence, 1):\n        pos[num] = i\n\n    best = U + 1\n    winners = []\n\n    for idx, card in enumerate(cards, 1):\n        finish_time = 0\n        for num in card:\n            if pos[num] > finish_time:\n                finish_time = pos[num]\n\n        if finish_time < best:\n            best = finish_time\n            winners = [idx]\n        elif finish_time == best:\n            winners.append(idx)\n\n    print(\" \".join(map(str, winners)))\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    it = iter(data)\n    N = next(it)\n    K = next(it)\n    U = next(it)\n\n    cards = []\n    for _ in range(N):\n        card = [next(it) for _ in range(K)]\n        cards.append(card)\n\n    sequence = [next(it) for _ in range(U)]\n\n    pos = [0] * (U + 1)\n    for i, num in enumerate(sequence, 1):\n        pos[num] = i\n\n    best = U + 1\n    winners = []\n\n    for idx, card in enumerate(cards, 1):\n        finish_time = 0\n        for num in card:\n            if pos[num] > finish_time:\n                finish_time = pos[num]\n\n        if finish_time < best:\n            best = finish_time\n            winners = [idx]\n        elif finish_time == best:\n            winners.append(idx)\n\n    print(\" \".join(map(str, winners)))\n\nif __name__ == \"__main__\":\n    main()",

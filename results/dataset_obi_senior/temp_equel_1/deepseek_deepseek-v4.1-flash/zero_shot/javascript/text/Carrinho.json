@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.006382,
-            "total_cost": 0.006384
+            "output_cost": 0.001595,
+            "total_cost": 0.001598
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet idx = 0;\nconst N = parseInt(data[idx++], 10);\nconst D = parseFloat(data[idx++]);\n\nconst P = new Array(N);\nconst C = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n    P[i] = parseFloat(data[idx++]);\n    C[i] = parseFloat(data[idx++]);\n}\n\nconst dp = new Array(N).fill(Infinity);\ndp[0] = 0;\n\nfor (let j = 1; j < N; j++) {\n    for (let i = 0; i < j; i++) {\n        const dist = P[j] - P[i];\n        const time = dp[i] + (dist * dist) / C[i];\n        if (time < dp[j]) dp[j] = time;\n    }\n}\n\nlet ans = Infinity;\nfor (let i = 0; i < N; i++) {\n    const dist = D - P[i];\n    const time = dp[i] + (dist * dist) / C[i];\n    if (time < ans) ans = time;\n}\n\nconsole.log(ans.toFixed(3));\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/);\n\nlet idx = 0;\nconst N = parseInt(data[idx++], 10);\nconst D = parseFloat(data[idx++]);\n\nconst P = new Array(N);\nconst C = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n    P[i] = parseFloat(data[idx++]);\n    C[i] = parseFloat(data[idx++]);\n}\n\nconst dp = new Array(N).fill(Infinity);\ndp[0] = 0;\n\nfor (let j = 1; j < N; j++) {\n    for (let i = 0; i < j; i++) {\n        const dist = P[j] - P[i];\n        const time = dp[i] + (dist * dist) / C[i];\n        if (time < dp[j]) dp[j] = time;\n    }\n}\n\nlet ans = Infinity;\nfor (let i = 0; i < N; i++) {\n    const dist = D - P[i];\n    const time = dp[i] + (dist * dist) / C[i];\n    if (time < ans) ans = time;\n}\n\nconsole.log(ans.toFixed(3));",

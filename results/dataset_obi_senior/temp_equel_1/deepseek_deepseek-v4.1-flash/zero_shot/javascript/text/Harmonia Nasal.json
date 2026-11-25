@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 4e-06,
-            "output_cost": 0.044508,
-            "total_cost": 0.044512
+            "output_cost": 0.011127,
+            "total_cost": 0.011131
         },
         "raw_response": "```javascript\nconst fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\n\nconst N = data[idx++];\nconst K = data[idx++];\n\nconst a = new Array(N);\nfor (let i = 0; i < N; i++) a[i] = data[idx++];\n\nconst b = new Array(N);\nfor (let i = 0; i < N; i++) b[i] = data[idx++];\n\nlet base = 0;\nconst g = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n    if (a[i] > b[i]) {\n        base += a[i] - b[i];\n    }\n    g[i] = Math.min(a[i], b[i]);\n}\n\ng.sort((x, y) => y - x);\n\nconst take = Math.min(K + 1, N);\nlet extra = 0;\n\nfor (let i = 0; i < take; i++) {\n    extra += g[i];\n}\n\nconsole.log(base + extra);\n```",
         "extracted_code": "const fs = require('fs');\n\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\n\nconst N = data[idx++];\nconst K = data[idx++];\n\nconst a = new Array(N);\nfor (let i = 0; i < N; i++) a[i] = data[idx++];\n\nconst b = new Array(N);\nfor (let i = 0; i < N; i++) b[i] = data[idx++];\n\nlet base = 0;\nconst g = new Array(N);\n\nfor (let i = 0; i < N; i++) {\n    if (a[i] > b[i]) {\n        base += a[i] - b[i];\n    }\n    g[i] = Math.min(a[i], b[i]);\n}\n\ng.sort((x, y) => y - x);\n\nconst take = Math.min(K + 1, N);\nlet extra = 0;\n\nfor (let i = 0; i < take; i++) {\n    extra += g[i];\n}\n\nconsole.log(base + extra);",

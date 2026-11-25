@@ -1,0 +1,90 @@
+\chapter{Fundamentação Teórica}\label{cap:fundamentacao}
+
+Este capítulo tem como objetivo apresentar os conceitos teóricos e técnicos que sustentam o desenho experimental deste trabalho, abrangendo a arquitetura e a decodificação de Modelos de Linguagem de Grande Porte, técnicas de engenharia de \textit{prompt}, a estrutura da Olimpíada Brasileira de Informática e os critérios de avaliação adotados por juízes automatizados.
+
+\section{Modelos de Linguagem de Grande Porte}\label{sec:fund-llms}
+
+\subsection{Arquitetura \textit{Transformer} e Pré-treinamento}\label{sec:fund-transformer}
+
+Os Modelos de Linguagem de Grande Porte (LLMs) modernos baseiam-se na arquitetura \textit{Transformer}, proposta por \citet{vaswani2017}, cujo mecanismo de autoatenção permite relacionar diferentes partes do texto (divididas em \textit{tokens}) em paralelo, capturando dependências de longo alcance sem necessidade de recorrência sequencial. Com o avanço das leis de escala que relacionam quantidade de parâmetros, volume de dados e poder computacional~\citep{kaplan2020scaling}, aliado ao pré-treinamento em grandes bases de texto e código-fonte e ao posterior ajuste por instruções e alinhamento humano~\citep{ouyang2022,wei2021finetuned,touvron2023llama}, esses modelos passaram a gerar código-fonte funcional diretamente a partir de enunciados em linguagem natural.
+
+No entanto, por operarem de forma autorregressiva, prevendo a resposta \textit{token} a \textit{token}, da esquerda para a direita, os LLMs apresentam limitações intrínsecas: quando uma decisão estrutural ou modelagem de estado incorreta é assumida no início da geração do código, o modelo tende a propagá-la até o fim da mesma iteração. Além disso, o texto de entrada e saída é limitado pela janela de contexto, e o consumo de \textit{tokens} impacta diretamente a latência e o custo financeiro das requisições via API. Outro ponto relevante refere-se aos modelos do tipo \textit{thinking}, que atenuam parte desse problema ao raciocinar e revisar o código antes da resposta final, embora ao custo de um maior consumo de \textit{tokens}.
+
+\subsection{Parâmetros de Decodificação e Determinismo}\label{sec:fund-decodificacao}
+
+No intuito de manter a fidelidade do estudo, foi necessário controlar a geração autorregressiva de \textit{tokens}, que é regulada por hiperparâmetros de decodificação, destacando-se a temperatura $T \ge 0$, responsável por reescalar os \textit{logits} antes da função \textit{softmax}. Quando $T > 0$ (como $T = 1{,}0$), a amostragem introduz aleatoriedade, permitindo explorar múltiplas soluções candidatas para um mesmo problema. Por outro lado, o ajuste $T = 0$ corresponde à decodificação gulosa (\textit{greedy decoding}), na qual o modelo escolhe de forma determinística o \textit{token} de maior probabilidade a cada passo.
+
+Neste trabalho, adota-se $T = 0{,}0$ com parâmetros de amostragem padrão para estabelecer uma linha de base estável e reprodutível. Isso permite comparar o efeito de cada variável do estudo (linguagem de programação, modalidade visual, limites de recursos e estratégia de \textit{prompt}) e aproxima o experimento de uma competição real, na qual o participante submete uma única solução final ao avaliador automático.
+
+\subsection{Modelos Multimodais de Visão e Linguagem}\label{sec:fund-multimodal}
+
+Com a introdução do \textit{Visual Instruction Tuning}~\citep{Liu2023VisualIT}, arquiteturas de linguagem foram acopladas a codificadores visuais, dando origem aos Modelos Multimodais de Visão e Linguagem (VLMs/MLLMs). Esses modelos recebem entradas híbridas compostas por texto e imagens, tipicamente codificadas em Base64 ou URLs de dados em chamadas de API, permitindo interpretar diagramas, matrizes visuais, grafos ilustrados e esquemas geométricos~\citep{Fu2023MMEAC,Lu2023MathVistaEM}.
+
+Contudo, o processamento direto de imagens eleva substancialmente a contagem de \textit{tokens} de entrada e pode introduzir ruído na etapa de extração de código. Uma alternativa intermediária consiste em substituir as referências visuais por descrições textuais estruturadas e detalhadas das figuras (\modalidade{description}), preservando a informação espacial em forma puramente textual para reduzir sobrecarga de contexto e ampliar a compatibilidade com modelos focados em texto.
+
+\section{Engenharia de \texorpdfstring{\textit{Prompt}}{Prompt}}\label{sec:fund-prompt}
+
+\subsection{Aprendizado \textit{Zero-Shot} e \textit{Few-Shot} em Contexto}\label{sec:fund-fewshot}
+
+A engenharia de \textit{prompt} estuda a formulação sistemática de instruções para orientar o comportamento de LLMs sem alteração de seus pesos~\citep{dair2025prompt}. Na estratégia \textbf{\textit{Zero-Shot}}~\citep{wei2021finetuned}, o modelo recebe apenas a definição do papel (\textit{persona}), o enunciado do problema e as restrições de formatação da resposta, dependendo apenas do conhecimento adquirido durante o seu pré-treinamento, sem exemplos prévios de resolução.
+
+Já a estratégia \textbf{\textit{Few-Shot}}, consolidada por \citet{brown2020language}, fornece ao modelo exemplos de entrada e saída esperada dentro do próprio contexto do \textit{prompt}. Em programação competitiva, esses exemplos ajudam o modelo a seguir o padrão correto de sintaxe e de E/S padrão (\texttt{stdin}/\texttt{stdout}), orientando convenções como tipos inteiros de 64 bits (\texttt{long long}) para prevenção de \textit{overflow}, leitura eficiente e indexação segura em vetores e grafos.
+
+\subsection{\textit{Chain-of-Thought} e a Metodologia Heurística de Pólya}\label{sec:fund-polya}
+
+A técnica de cadeia de pensamento (\textbf{\textit{Chain-of-Thought} -- CoT})~\citep{wei2022chain} induz o modelo a explicitar etapas intermediárias de raciocínio antes de emitir a solução final. Para estruturar esse processo em problemas algorítmicos, este trabalho integra o CoT ao método heurístico clássico de George Pólya~\citep{polya1945}, organizado em quatro fases encadeadas:
+
+\begin{enumerate}
+    \item \textbf{Compreensão:} identificação do objetivo central, formato exato de entrada e saída, limites numéricos e casos de borda ($N = 0, 1$, valores negativos, risco de \textit{overflow} acima de $2 \times 10^9$);
+    \item \textbf{Planejamento:} seleção da técnica algorítmica adequada (algoritmo guloso, programação dinâmica, grafos, busca binária, dois ponteiros), escolha de estruturas de dados e análise assintótica $\bigo{\cdot}$ compatível com os limites;
+    \item \textbf{Codificação (Execução):} implementação completa e autocontida do programa dentro de um bloco Markdown delimitado;
+    \item \textbf{Teste:} validação ``mental'' passo a passo frente aos exemplos do enunciado e aos casos de borda levantados na primeira etapa.
+\end{enumerate}
+
+\section{Programação Competitiva e a Olimpíada Brasileira de Informática}\label{sec:fund-obi}
+
+\subsection{Estrutura da OBI e o Nível Sênior}\label{sec:fund-obi-senior}
+
+A OBI, organizada pela Sociedade Brasileira de Computação (SBC) em parceria com a Unicamp, é a principal competição brasileira voltada ao estímulo do pensamento computacional e da resolução de problemas algorítmicos~\citep{obi2026}. A competição divide-se nas modalidades Iniciação e Programação, abrangendo, na modalidade Programação, os níveis Júnior, 1, 2 e \textbf{Sênior}, sendo este último destinado a estudantes ingressantes no ensino superior.
+
+Os problemas do Nível Sênior distribuem-se por fases seletivas progressivas (Fase Local/Fase 1, Fase Estadual/Fase 2 e Fase Nacional/Fase 3) e contemplam tópicos avançados da ementa oficial da OBI~\citep{obi_ementa2026}, incluindo estruturas de dados, busca binária, algoritmos gulosos, grafos, programação dinâmica, matemática e geometria, entre outros. Cada questão apresenta um enunciado narrativo em português brasileiro, especificações formais de entrada e saída, restrições numéricas, exemplos de execução e, em muitos casos, diagramas ou figuras explicativas.
+
+\subsection{Juízes e Taxonomia de Vereditos}\label{sec:fund-judge}
+
+Na programação competitiva, a corretude e a eficiência de uma submissão são aferidas automaticamente por um juiz (\textit{judge}) mediante avaliação caixa-preta sobre um conjunto oculto de casos de teste oficiais. Cada execução é classificada segundo seis vereditos padronizados, resumidos na Tabela~\ref{tab:fund-vereditos}. Para obter aprovação (\veredito{AC}), o código submetido deve compilar sem erros e produzir saída idêntica à esperada em todos os casos de teste (semelhante a testes unitários) dentro dos limites de tempo e memória estabelecidos.
+
+\begin{table}[!htbp]
+\centering
+\caption[Taxonomia de vereditos de um juiz automatizado]{Taxonomia de vereditos utilizados na avaliação automatizada de soluções.}
+\label{tab:fund-vereditos}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lll}
+\toprule
+Sigla & Significado & Causa principal \\
+\midrule
+\chip{corAC}\veredito{AC}  & \textit{Accepted} & Saída correta dentro dos limites em todos os casos de teste \\
+\chip{corWA}\veredito{WA}  & \textit{Wrong Answer} & Saída divergente da esperada em ao menos um caso de teste \\
+\chip{corRE}\veredito{RE}  & \textit{Runtime Error} & Falha em tempo de execução (código de retorno $\neq 0$, acesso inválido/pilha) \\
+\chip{corTLE}\veredito{TLE} & \textit{Time Limit Exceeded} & Execução excede o tempo limite configurado para o problema \\
+\chip{corMLE}\veredito{MLE} & \textit{Memory Limit Exceeded} & Consumo de memória excede o limite especificado \\
+\chip{corCE}\veredito{CE}  & \textit{Compilation Error} & Erro de compilação, sintaxe inválida ou ausência de código extraível \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\section{Métricas de Avaliação e Eficiência}\label{sec:fund-metricas}
+
+Para medir a taxa de acerto das soluções geradas, adota-se a métrica $\passat{k}$ introduzida por \citet{chen2021evaluating}, definida como a probabilidade de que ao menos uma dentre $k$ soluções geradas para um problema seja aprovada em todos os casos de teste. Sob decodificação determinística ($T = 0$) com uma única amostra por problema ($k = 1$), $\passat{1}$ reduz-se diretamente à taxa percentual de problemas com veredito final \veredito{AC}:
+\begin{equation}
+    \passat{1} = \frac{1}{N}\sum_{i=1}^{N} \mathbf{1}\!\left[\text{veredito}(i) = \veredito{AC}\right],
+    \label{eq:pass1}
+\end{equation}
+em que $N$ representa o total de problemas avaliados no subconjunto experimental e $\mathbf{1}[\cdot]$ é a função indicadora.
+
+Além da taxa de acerto, o estudo analisa outras métricas para compreender a estabilidade, o desempenho computacional e o custo financeiro dos modelos: (i) o desvio padrão ($\sigma$) de $\passat{1}$ entre linguagens; (ii) o perfil de falhas (\veredito{WA}, \veredito{CE}, \veredito{RE}, \veredito{TLE}, \veredito{MLE}); (iii) a extensão do código gerado, medida em linhas de código (LOC), e o tempo máximo de CPU observado nos casos \veredito{AC}; (iv) o volume médio de \textit{tokens} de entrada e saída; e (v) o \textbf{Custo por Solução Aceita ($\mathrm{USD}/\mathrm{AC}$)}, definido pela razão entre o gasto financeiro total da bateria experimental e o número absoluto de submissões aprovadas:
+\begin{equation}
+    \text{Custo por AC} = \frac{\text{Custo Total da Bateria (USD)}}{\text{Total de Problemas Aceitos (AC)}}.
+    \label{eq:custo-ac}
+\end{equation}

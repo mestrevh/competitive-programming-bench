@@ -1,0 +1,316 @@
+\chapter{Resultados e Discussão}\label{cap:resultados}
+
+Este capítulo apresenta e discute os resultados empíricos obtidos na avaliação experimental do \textit{benchmark} da OBI Nível Sênior, organizados segundo a caracterização da base e as cinco perguntas de pesquisa definidas no Capítulo~\ref{cap:introducao}.
+
+\section{Caracterização da Base e Validação Oráculo}\label{sec:res-base}
+
+A base experimental consolidada (\texttt{dataset\_obi\_senior}) reúne \textbf{125 problemas} do Nível Sênior da OBI (2016 a 2025) e um total de \textbf{4.681 casos de teste} oficiais (média de $37{,}4$ casos por problema). Os limites computacionais definidos nos enunciados variam entre $1{,}0\,\mathrm{s}$ e $15{,}0\,\mathrm{s}$ para tempo de execução (com predomínio de $5{,}0\,\mathrm{s}$ em 59 questões e $1{,}0\,\mathrm{s}$ ou $2{,}0\,\mathrm{s}$ em 23 questões cada) e entre $256\,\mathrm{MB}$ (63 questões), $512\,\mathrm{MB}$ (44 questões) e $1.024\,\mathrm{MB}$ (18 questões) para memória.
+
+A distribuição temporal das questões é apresentada na Figura~\ref{fig:res-base-ano}, destacando o pico de 20 problemas em 2020 e cobertura regular entre 10 e 17 questões nos demais anos analisados (exceto 2018, não incluído no recorte). Conforme mostra a Figura~\ref{fig:res-base-periodo}, a base apresenta equilíbrio entre as três etapas seletivas da competição: 43 questões na Fase~1 (incluindo Fase Local), 42 na Fase~2 (incluindo Fase Estadual e Turno~B) e 40 na Fase~3 (incluindo Fase Nacional). Quanto à composição visual (Figura~\ref{fig:res-base-imagens}), 79 enunciados ($63{,}2\%$) são puramente textuais e 46 ($36{,}8\%$) contêm ao menos uma imagem associada.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/questoes_por_ano.tex}
+\caption[Distribuição das questões da OBI Sênior por ano]{Distribuição das 125 questões do Nível Sênior da OBI por ano de edição (2016--2025).}
+\label{fig:res-base-ano}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/questoes_por_periodo.tex}
+\caption[Distribuição das questões da OBI Sênior por período]{Distribuição das 125 questões do Nível Sênior da OBI por etapa da competição (Fases 1, 2 e 3).}
+\label{fig:res-base-periodo}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/presenca_imagens.tex}
+\caption[Distribuição das questões quanto à presença de imagens]{Proporção de questões com enunciado puramente textual versus questões com imagens associadas.}
+\label{fig:res-base-imagens}
+\end{figure}
+\FloatBarrier
+
+Na validação pelo modo oráculo, todas as \textbf{125 soluções de referência} obtiveram veredito \veredito{AC} ($100{,}0\%$ de aprovação), passando nos \textbf{4.681 casos de teste} oficiais sem nenhuma ocorrência de \veredito{WA}, \veredito{RE}, \veredito{TLE}, \veredito{MLE} ou \veredito{CE}. O tempo de execução observado nas soluções oráculo apresentou média de $0{,}254\,\mathrm{s}$, mediana de $0{,}180\,\mathrm{s}$ e máximo de $2{,}134\,\mathrm{s}$, confirmando a integridade do \textit{JudgeService} e dos gabaritos utilizados antes da avaliação dos LLMs. Os registros completos da execução oráculo encontram-se disponíveis em \href{https://github.com/mestrevh/competitive-programming-bench/blob/main/results/dataset_obi_senior/oracle.csv}{\texttt{oracle.csv}}\footnote{Disponível em: \url{https://github.com/mestrevh/competitive-programming-bench/blob/main/results/dataset_obi_senior/oracle.csv}.}.
+
+
+\section{PP1: Desempenho Geral e Variação entre Linguagens}\label{sec:res-rq1}
+
+Para manter um \textit{baseline} nas próximas perguntas, a primeira pergunta é importante para entender qual é o impacto dos diferentes tipos de linguagens, buscando realizar de forma simples a criação das soluções dos problemas em relação às linguagens. Nas cinco baterias de testes, utiliza-se apenas texto com a técnica \promptname{zero\_shot.txt} (Apêndice~\ref{ap:prompts}) para as 125 questões do Nível Sênior da OBI, Modalidade Programação, e os modelos utilizados foram: \textbf{DeepSeek v4.1 Flash}, \textbf{Gemini 3.8 Flash} e \textbf{GPT-6 Luna}.
+
+Observando as linguagens, quando se verifica a característica de serem fracamente tipadas, como \linguagem{Python} e \linguagem{JavaScript}, os modelos não precisam se preocupar com a tipagem para as variáveis do problema; porém, isso é ruim para a programação competitiva devido à abordagem desse tipo de prova em relação aos limites de variáveis, trazendo mais decisões para a produção de uma solução \veredito{AC}. Por isso, a linguagem \linguagem{Python} teve destaque apenas no modelo \textbf{Gemini 3.8 Flash}, com 121 acertos (no agregado, 92,80\%), como mostra a Figura~\ref{fig:res-pp1-ac-linguagem}.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp1_ac_linguagem.tex}
+\caption[Quantidade de submissões aceitas por LLM, linguagem e total agregado na PP1]{Quantidade de submissões aprovadas (\veredito{AC} de 125) por modelo e linguagem de programação na linha de base ($T = 0{,}0$), acompanhada do total agregado (de 375 execuções por linguagem).}
+\label{fig:res-pp1-ac-linguagem}
+\end{figure}
+\FloatBarrier
+
+Em contrapartida, as linguagens fortemente tipadas \linguagem{C}, \linguagem{C++} e \linguagem{Java} tiveram desempenhos distintos. Para o modelo \textbf{GPT-6 Luna}, a linguagem que performou melhor foi \linguagem{Java}, com 119 acertos (no agregado, 93,33\%), já para o \textbf{DeepSeek v4.1 Flash} a melhor linguagem foi \linguagem{C++}. Na comunidade de programação competitiva, geralmente a linguagem utilizada é \linguagem{C++}, o que se destaca pelo fato de ela ter obtido o melhor desempenho no agregado, com 94,13\%. Por isso, \linguagem{C++} pode ser a linguagem com uma exposição maior aos dados durante o treinamento dos modelos.
+
+\begin{table}[!htbp]
+\centering
+\caption[Estabilidade entre linguagens na PP1]{Média de acerto ($\passat{1}$), desvio padrão ($\sigma$) e amplitude entre as cinco linguagens avaliadas sobre as 125 questões da OBI Sênior.}
+\label{tab:res-pp1-estabilidade}
+\small
+\begin{tabular}{lccc}
+\toprule
+Modelo & Média $\passat{1}$ & Desvio Padrão ($\sigma$) & Amplitude (Máx--Mín) \\
+\midrule
+DeepSeek v4.1 Flash & 94,24\% & \tfirst{1,55 p.p.}  & \tfirst{4,80 p.p.} \\
+Gemini 3.8 Flash    & \tfirst{94,40\%} & \tsecond{1,89 p.p.} & \tsecond{5,60 p.p.} \\
+GPT-6 Luna          & 90,56\% & 2,88 p.p.           & 8,00 p.p. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ao verificar a distribuição em relação a todas as linguagens (Tabela~\ref{tab:res-pp1-estabilidade}), observa-se uma taxa média de acerto ($\passat{1}$) elevada nos três modelos --- com 94,40\% no \textbf{Gemini 3.8 Flash}, 94,24\% no \textbf{DeepSeek v4.1 Flash} e 90,56\% no \textbf{GPT-6 Luna} ---, sendo que o \textbf{DeepSeek v4.1 Flash} foi o que teve o melhor desempenho de estabilidade, com o menor desvio e, consequentemente, com a menor amplitude. Por isso, quando se busca \textit{performance}, é recomendável utilizar esse modelo para a configuração com temperatura zero, buscando menor variação em soluções com linguagens diferentes.
+
+Entretanto, observando as tomadas de decisões para a criação da solução, o modelo \textbf{GPT-6 Luna} foi o que teve menor desempenho, demonstrando que o modelo é sensível aos diferentes tipos de linguagens. Isso é importante em relação às tomadas de decisões durante a construção da solução \textit{token} a \textit{token}. Pois, durante a criação da solução, é necessário tomar decisões sintáticas e semânticas para cada linguagem e, mesmo com modelos mais sofisticados, mostra-se que nem sempre o domínio do problema é garantia para a construção de uma solução executável.
+
+\begin{table}[!htbp]
+\centering
+\caption[Resumo agregado de vereditos por linguagem na PP1]{Distribuição agregada de falhas e aprovações por linguagem (375 execuções por linguagem).}
+\label{tab:res-pp1-erros-lang}
+\small
+\begin{tabular}{lccccccc}
+\toprule
+Linguagem & \veredito{WA} & \veredito{CE} & \veredito{RE} & \veredito{TLE} & \veredito{MLE} & Total Erros & \veredito{AC} ($\passat{1}$) \\
+\midrule
+Python     & 21 & 2  & 1 & 3 & 0 & 27 & 348 (92,80\%) \\
+C          & 17 & 13 & 0 & 0 & 0 & 30 & 345 (92,00\%) \\
+C++        & 19 & 2  & 0 & 1 & 0 & 22 & 353 (94,13\%) \\
+Java       & 17 & 3  & 4 & 0 & 1 & 25 & 350 (93,33\%) \\
+JavaScript & 20 & 2  & 2 & 0 & 2 & 26 & 349 (93,07\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ao observar a Tabela~\ref{tab:res-pp1-erros-lang}, o destaque está na linguagem \linguagem{C}: por ser bastante manual a criação da solução, os modelos precisam tomar bastantes decisões, pois devem criar as estruturas de dados, preocupar-se com a tipagem das variáveis, pilha de execução, etc. Por isso, quanto maior o código final, maior é a probabilidade de existirem ruídos que causam tanto erro de compilação (\veredito{CE}) quanto resposta errada (\veredito{WA}).
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp1_loc_tempo.tex}
+\caption[Extensão média do código e tempo médio de CPU na PP1]{Comparativo por modelo e linguagem quanto (a) ao número médio de linhas de código (LOC) e (b) ao tempo médio de execução em CPU das soluções aprovadas (\veredito{AC}).}
+\label{fig:res-pp1-loc-tempo}
+\end{figure}
+\FloatBarrier
+
+Entretanto, ao verificar a produção média de linhas por código na Figura~\ref{fig:res-pp1-loc-tempo}, que está estritamente ligada à predição dos \textit{tokens} e à construção da solução executável, nota-se que \linguagem{C} não é a linguagem com o maior número de linhas (e nem de \textit{tokens}). Por consequência, esses erros estão concentrados principalmente na semântica ou na sintaxe da projeção da resolução do problema. Em \linguagem{Java} e \linguagem{C++} existem bibliotecas com estruturas de dados e funções, entre outros recursos, que ajudam na construção do raciocínio do problema.
+
+Em paralelo, verificando o desempenho em relação ao tempo de execução de CPU, a linguagem \linguagem{Python} teve o pior desempenho nos três modelos. Pensando em \textit{performance}, é recomendável utilizar o \textbf{Gemini 3.8 Flash}, pois teve o melhor desempenho em relação aos outros LLMs. Para mais informações sobre gasto de \textit{tokens}, custo, etc., verifique o Apêndice~\ref{ap:resultados-complementares} (Seção~\ref{ap:pp1-detalhes}).
+
+Por fim, como \textit{baseline} para as próximas perguntas, a linguagem \linguagem{C++} será utilizada no teste com imagens por ter o melhor desempenho geral (94,13\% no agregado), e a linguagem \linguagem{C}, por ter registrado a menor taxa de acerto (92,00\% no agregado), será principalmente utilizada nos testes em que o \textit{prompt} informa o tempo de execução e a memória do problema, bem como no teste com técnicas de \textit{prompt}.
+
+
+\section{PP2: Impacto das Imagens e Modalidades Multimodais}\label{sec:res-rq2}
+
+A base de dados utilizada para este estudo possui 46 questões com imagens. Ao construir o \textit{baseline} com a estratégia \promptname{zero\_shot} e sabendo que a linguagem \linguagem{C++} foi a que melhor performou, verificou-se, nesse subconjunto de questões, que a presença de figuras reduz a taxa de acerto de todos os modelos quando avaliados apenas por texto em comparação às 79 questões sem imagens (Tabela~\ref{tab:res-pp2-baseline} do Apêndice~\ref{ap:resultados-complementares}), mostrando que as imagens impactam diretamente na solução proposta pelos modelos e, consequentemente, no veredito do \textit{Judge}. Por isso, as novas baterias de testes foram feitas com as imagens no formato Base64 (\modalidade{img}), sendo referenciadas no enunciado conforme mencionado na Metodologia (Figura~\ref{fig:met-enunciado-prompt}). Além disso, existe um campo no JSON do problema que contém a descrição textual de cada figura (\modalidade{description}), o qual é colocado diretamente no lugar da imagem.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp2_modalidades_pass1.tex}
+\caption[Pass@1 em C++ nas três modalidades da PP2]{Comparação da taxa \passat{1} em \linguagem{C++} sobre as $46$ questões com figuras nas modalidades \modalidade{text}, \modalidade{img} (Base64) e \modalidade{description}.}
+\label{fig:res-pp2-modalidades}
+\end{figure}
+\FloatBarrier
+
+Ao analisar a Figura~\ref{fig:res-pp2-modalidades}, por meio da taxa $\passat{1}$ na linguagem \linguagem{C++}, vê-se que no modelo \textbf{DeepSeek v4.1 Flash} houve uma degradação acentuada ao utilizar imagens ou ao aumentar a base de informações dentro do \textit{prompt}. Isso mostra que esse modelo ainda não responde bem à construção de \textit{prompts} multimodais, diferentemente dos outros dois modelos. Porém, o que mais se destaca é que, utilizando o texto que descreve as imagens (\modalidade{description}), os modelos tiveram uma melhora significativa em relação à utilização direta da imagem (\modalidade{img}). Devido a isso, a construção da solução por meio de \textit{prompt} textual continua sendo a melhor forma de performar nesse \textit{dataset} de questões do Nível Sênior da OBI.
+
+\begin{table}[!htbp]
+\centering
+\caption[Comparativo controlado em C++ nas 46 questões com imagens por modalidade]{Comparativo controlado em \linguagem{C++} nas $46$ questões com imagens por modalidade (PP2).}
+\label{tab:res-pp2-modalidades}
+\small
+\begin{tabular}{@{}llccccccc@{}}
+\toprule
+\textbf{LLM} & \textbf{Modalidade} & \textbf{AC} & \textbf{Taxa \passat{1}} & \textbf{WA} & \textbf{RE} & \textbf{TLE} & \textbf{MLE} & \textbf{CE} \\
+\midrule
+DeepSeek v4.1 Flash & \modalidade{text}        & \tfirst{44}  & \tfirst{95,65\%}  & $1$ & $0$ & $0$ & $0$ & $1$ \\
+DeepSeek v4.1 Flash & \modalidade{img}         & $41$         & $89{,}13\%$       & $2$ & $0$ & $0$ & $0$ & $3$ \\
+DeepSeek v4.1 Flash & \modalidade{description} & \tsecond{42} & \tsecond{91,30\%} & $4$ & $0$ & $0$ & $0$ & $0$ \\
+\midrule
+Gemini 3.8 Flash    & \modalidade{text}        & $43$         & $93{,}48\%$       & $3$ & $0$ & $0$ & $0$ & $0$ \\
+Gemini 3.8 Flash    & \modalidade{img}         & \tfirst{44}  & \tfirst{95,65\%}  & $2$ & $0$ & $0$ & $0$ & $0$ \\
+Gemini 3.8 Flash    & \modalidade{description} & \tfirst{44}  & \tfirst{95,65\%}  & $2$ & $0$ & $0$ & $0$ & $0$ \\
+\midrule
+GPT-6 Luna          & \modalidade{text}        & $39$         & $84{,}78\%$       & $6$ & $0$ & $0$ & $0$ & $1$ \\
+GPT-6 Luna          & \modalidade{img}         & \tsecond{40} & \tsecond{86,96\%} & $6$ & $0$ & $0$ & $0$ & $0$ \\
+GPT-6 Luna          & \modalidade{description} & \tfirst{41}  & \tfirst{89,13\%}  & $5$ & $0$ & $0$ & $0$ & $0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Como é visível na Tabela~\ref{tab:res-pp2-modalidades}, o teste com a descrição da imagem (\modalidade{description}) foi o único que não produziu códigos com erro de compilação (\veredito{CE}). Então, a predição para a criação de um código executável para esses modelos deve seguir o padrão textual, visto que o cálculo vetorial para o LLM conseguir processar imagem e texto impacta diretamente no cálculo da predição e, consequentemente, no código produzido como resposta.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp2_tokens_custo.tex}
+\caption[Tokens de entrada e custo total por modalidade na PP2]{Telemetria das $46$ questões em \linguagem{C++} por modalidade: (a) média de \textit{tokens} de entrada por problema e (b) custo financeiro total em dólares.}
+\label{fig:res-pp2-tokens-custo}
+\end{figure}
+\FloatBarrier
+
+Esse cálculo é refletido nos \textit{tokens} de entrada (\textit{prompt}): vê-se que todos os testes que utilizam imagem têm um valor alto, destacando-se o \textbf{Gemini 3.8 Flash}; em sequência, isso se refletiu no custo total, sendo que a bateria de testes com imagens (\modalidade{img}) foi a que teve o maior custo entre todas, como mostra a Figura~\ref{fig:res-pp2-tokens-custo}.
+
+Contudo, houve uma questão na qual, mesmo com todos os testes realizados até agora, os modelos não obtiveram sucesso: o problema \textit{Construção de Rodovia} mostra que a validação literal que o \textit{Judge} possui faz com que a ordem importe durante a construção da solução. Essa é uma das habilidades que um competidor precisa possuir para reconhecer quando esse tipo de entrada e saída deve ser tratado. Assim, no Apêndice~\ref{ap:resultados-complementares} (Seção~\ref{ap:pp2-detalhes}) encontram-se a Tabela~\ref{tab:res-pp2-divergencias}, com as 15 questões em que houve divergências durante essas baterias de testes da PP2, e as demais análises complementares.
+
+\section{PP3: Impacto das Restrições de Tempo e Memória em C}\label{sec:res-rq3}
+
+Com base no \textit{baseline} estabelecido na PP1, a linguagem que registrou a menor taxa de aprovação no $\passat{1}$ foi a linguagem \linguagem{C}, com 92,00\% de acerto. Conforme discutido na Seção~\ref{sec:res-rq1}, para criar uma solução nessa linguagem é necessário realizar a construção manual de estruturas de dados e a manipulação de ponteiros, entre outros aspectos. Assim, esta etapa (PP3) busca verificar se o direcionamento explícito informando a quantidade limite de memória (\texttt{memory\_limit}) e de tempo (\texttt{time\_limit}) consegue proporcionar um direcionamento melhor sobre a construção do código executável. Além disso, o teste foi submetido conforme o protocolo da PP1 (temperatura $T = 0{,}0$ e técnica de \textit{prompt} \promptname{zero\_shot.txt}) para a linguagem \linguagem{C}.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp3_baseline_vs_limites.tex}
+\caption[Pass@1 em C no Baseline versus PP3]{Impacto da explicitação de \texttt{time\_limit} e \texttt{memory\_limit} na taxa \passat{1} em \linguagem{C} ($T=0$), individualmente e no total agregado de $375$ submissões.}
+\label{fig:res-pp3-pass1}
+\end{figure}
+\FloatBarrier
+
+Na Figura~\ref{fig:res-pp3-pass1}, vê-se que apenas o \textbf{DeepSeek v4.1 Flash} continuou com o mesmo percentual para o $\passat{1}$ (94,40\%) e que, no resultado global, houve um impacto negativo de $-1{,}60\text{ p.p.}$ ($345 \rightarrow 339$ aprovações), puxado principalmente pelo modelo \textbf{GPT-6 Luna} ($-4{,}00\text{ p.p.}$). Isso mostra que colocar esse tipo de informação acabou trazendo ruídos para a criação da solução, não tendo impacto benéfico para a solução final.
+
+\begin{table}[!htbp]
+\centering
+\caption[Comparativo consolidado em C: Baseline versus PP3 com limites explícitos]{Comparativo consolidado em \linguagem{C} nos $125$ problemas: \textit{Baseline} versus \texttt{PP3} com limites explícitos.}
+\label{tab:res-pp3-comparativo}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lcccccccr@{}}
+\toprule
+\textbf{Modelo} & \textbf{AC Base} & \textbf{AC PP3} & \textbf{$\Delta$ AC} & \textbf{WA (B $\rightarrow$ P)} & \textbf{CE (B $\rightarrow$ P)} & \textbf{RE (B $\rightarrow$ P)} & \textbf{TLE / MLE} & \textbf{Tempo Médio} \\
+\midrule
+DeepSeek v4.1 Flash & \tfirst{118} ($94{,}40\%$) & \tfirst{118} ($94{,}40\%$) & $0$ ($0{,}00\text{ p.p.}$)   & $3 \rightarrow 3$  & $4 \rightarrow 3$  & $0 \rightarrow 1$ & $0 \rightarrow 0$ & $0{,}151 \rightarrow 0{,}196\,\mathrm{s}$ ($+29{,}4\%$) \\
+Gemini 3.8 Flash    & \tsecond{117} ($93{,}60\%$) & \tsecond{116} ($92{,}80\%$) & $-1$ ($-0{,}80\text{ p.p.}$) & $3 \rightarrow 6$  & $5 \rightarrow 3$  & $0 \rightarrow 0$ & $0 \rightarrow 0$ & $0{,}131 \rightarrow 0{,}149\,\mathrm{s}$ ($+14{,}0\%$) \\
+GPT-6 Luna          & $110$ ($88{,}00\%$)         & $105$ ($84{,}00\%$)         & $-5$ ($-4{,}00\text{ p.p.}$) & $11 \rightarrow 15$& $4 \rightarrow 5$  & $0 \rightarrow 0$ & $0 \rightarrow 0$ & $0{,}253 \rightarrow 0{,}238\,\mathrm{s}$ ($-6{,}2\%$)  \\
+\midrule
+\textbf{Agregado (375)} & \textbf{345} ($92{,}00\%$) & \textbf{339} ($90{,}40\%$) & \textbf{$-6$} ($-1{,}60\text{ p.p.}$) & \textbf{$17 \rightarrow 24$} & \textbf{$13 \rightarrow 11$} & \textbf{$0 \rightarrow 1$} & \textbf{$0 \rightarrow 0$} & \textbf{$0{,}178 \rightarrow 0{,}194\,\mathrm{s}$} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Outro ponto importante que a Tabela~\ref{tab:res-pp3-comparativo} mostra é que, em relação ao tempo médio no \textit{Judge}, não houve ganhos de \textit{performance}; isso evidencia que houve um aumento na complexidade das soluções criadas pelos LLMs ao tentarem seguir os limites informados no \textit{prompt} \promptname{zero\_shot.txt}, elevando as respostas erradas (\veredito{WA} subiu de 17 para 24 no agregado). Observando que nenhuma questão no teste teve \veredito{TLE} ou \veredito{MLE}, esse tipo de informação tornou-se ruído na construção de uma solução viável, principalmente para o \textbf{GPT-6 Luna}, que apresentou a maior degradação na taxa $\passat{1}$. Para mais detalhes sobre as transições de veredito, distribuição de tempos e custos desta etapa, verifique o Apêndice~\ref{ap:resultados-complementares} (Seção~\ref{ap:pp3-detalhes}).
+
+\section{PP4: Impacto das Estratégias de \texorpdfstring{\textit{Prompting}}{Prompting} em C}\label{sec:res-rq4}
+
+Como foi verificado na PP3, mantendo os critérios da PP1 e utilizando a linguagem \linguagem{C}, esta seção mostra que algumas técnicas têm efeito direto na construção das soluções. Como o desempenho dessa linguagem é desafiador no \textit{Zero-Shot}, conforme já discutido nas Seções~\ref{sec:res-rq1} e~\ref{sec:res-rq3}, isso reforça a necessidade de um direcionamento para que os modelos busquem criar uma solução executável para os problemas, sendo uma alternativa para guiá-los e melhorar o seu desempenho.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp4_estrategias_pass1.tex}
+\caption[Pass@1 em C por estratégia de prompting na PP4]{Comparação da taxa \passat{1} em \linguagem{C} ($T=0$) entre \textit{Zero-Shot}, \textit{Few-Shot} e \textit{CoT Pólya}, individualmente e no agregado das $375$ execuções.}
+\label{fig:res-pp4-pass1}
+\end{figure}
+\FloatBarrier
+
+Ao verificar a taxa $\passat{1}$ na Figura~\ref{fig:res-pp4-pass1}, observa-se que no agregado da estratégia \textit{Few-Shot} (\promptname{few\_shot\_c.txt}, Apêndice~\ref{ap:prompts}) em relação ao \textit{baseline} houve uma melhora de $+2{,}40\text{ p.p.}$ ($90{,}40\% \rightarrow 92{,}80\%$), mostrando que a técnica que possui exemplos de códigos em \linguagem{C} apoia na construção de novas soluções. Em contrapartida, na técnica de cadeia de pensamento (\promptname{chain\_of\_thought\_polya.txt}, Apêndice~\ref{ap:prompts}), no agregado não houve melhora na taxa bruta ($89{,}60\%$), mesmo com o objetivo de fazer os modelos realizarem essa busca pelo conhecimento do problema. Apoiada pela metodologia de Pólya para resolver problemas matemáticos, essa abordagem foi adaptada para este estudo em computação em quatro etapas: Compreensão, Planejamento, Codificação (Execução) e Teste.
+
+\begin{table}[!htbp]
+\centering
+\caption[Comparativo em C entre Zero-Shot, Few-Shot e CoT Pólya]{Comparativo em \linguagem{C} ($T = 0$) entre \textit{Zero-Shot}, \textit{Few-Shot} e \textit{CoT Pólya}.}
+\label{tab:res-pp4-comparativo}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llcccccccc@{}}
+\toprule
+\textbf{Estratégia} & \textbf{Modelo} & \textbf{AC} & \textbf{Taxa \passat{1}} & \textbf{$\Delta$ AC} & \textbf{WA} & \textbf{RE} & \textbf{TLE} & \textbf{MLE} & \textbf{CE} \\
+\midrule
+\promptname{Zero-Shot} & DeepSeek v4.1 Flash & $118$ & $94{,}40\%$ & Ref. & $3$  & $1$ & $0$ & $0$ & $3$  \\
+\promptname{Zero-Shot} & Gemini 3.8 Flash    & $116$ & $92{,}80\%$ & Ref. & $6$  & $0$ & $0$ & $0$ & $3$  \\
+\promptname{Zero-Shot} & GPT-6 Luna          & $105$ & $84{,}00\%$ & Ref. & $15$ & $0$ & $0$ & $0$ & $5$  \\
+\textbf{Zero-Shot}     & \textbf{Agregado (375)} & \textbf{339} & \textbf{90,40\%} & \textbf{Ref.} & \textbf{24} & \textbf{1} & \textbf{0} & \textbf{0} & \textbf{11} \\
+\midrule
+\promptname{Few-Shot}  & DeepSeek v4.1 Flash & $116$ & $92{,}80\%$ & $-2$ & $5$  & $0$ & $0$ & $0$ & $4$  \\
+\promptname{Few-Shot}  & Gemini 3.8 Flash    & \tsecond{119} & \tsecond{95,20\%} & $+3$ & $6$  & $0$ & $0$ & $0$ & $0$  \\
+\promptname{Few-Shot}  & GPT-6 Luna          & \tsecond{113} & \tsecond{90,40\%} & \textbf{$+8$} & $10$ & $1$ & $1$ & $0$ & $0$  \\
+\textbf{Few-Shot}      & \textbf{Agregado (375)} & \tfirst{348} & \tfirst{92,80\%} & \tfirst{+9} & \textbf{21} & \textbf{1} & \textbf{1} & \textbf{0} & \tfirst{4} \\
+\midrule
+\promptname{CoT Pólya} & DeepSeek v4.1 Flash & $109$ & $87{,}20\%$ & $-9$ & $3$  & $0$ & $0$ & $0$ & $13$ \\
+\promptname{CoT Pólya} & Gemini 3.8 Flash    & \tfirst{121} & \tfirst{96,80\%} & \tfirst{+5} & $4$  & $0$ & $0$ & $0$ & $0$  \\
+\promptname{CoT Pólya} & GPT-6 Luna          & $106$ & $84{,}80\%$ & $+1$ & $10$ & $0$ & $0$ & $0$ & $9$  \\
+\textbf{CoT Pólya}     & \textbf{Agregado (375)} & \textbf{336} & \textbf{89,60\%} & \textbf{$-3$} & \tfirst{17} & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{22} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Ao observar as classificações não-\veredito{AC} na Tabela~\ref{tab:res-pp4-comparativo}, notou-se que, embora o \textit{CoT Pólya} tenha reduzido as falhas lógicas (\veredito{WA} caiu de 24 para 17 no agregado), ele teve um impacto direto no \textbf{DeepSeek v4.1 Flash}, além do \textbf{GPT-6 Luna}, principalmente em erros de compilação (\veredito{CE}). Ao verificar as respostas produzidas pelos dois modelos, constatou-se que elas estavam com mais de um bloco Markdown, o que contaminava a extração na hora de o sistema verificar o código. Mesmo deixando explícito na etapa de Codificação (Execução) que deveria haver um único bloco Markdown com a resposta em \linguagem{C}, os modelos produziam textos de explicação sobre o problema, ainda que isso guiasse melhor o raciocínio ao resolver as questões. Para mitigar isso, seria necessária uma mesclagem de \textit{prompts} mostrando no final exemplos do formato de saída esperado. Contudo, o \textbf{Gemini 3.8 Flash} conseguiu atingir \veredito{AC} em 121 questões (96,80\%), mostrando que alguns modelos conseguem seguir rigorosamente a instrução da etapa de codificação.
+
+\begin{table}[!htbp]
+\centering
+\caption[Telemetria média de tokens, custo total e custo por AC na PP4]{Telemetria média de \textit{tokens}, custo total nas $125$ questões e custo por \veredito{AC} na PP4 (\linguagem{C}, $T = 0$).}
+\label{tab:res-pp4-custos}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+\textbf{Estratégia} & \textbf{LLM} & \textbf{Tokens Ent. (média)} & \textbf{Tokens Saída (média)} & \textbf{Custo Total (USD)} & \textbf{Custo / AC (USD/AC)} \\
+\midrule
+\promptname{Zero-Shot} & DeepSeek v4.1 Flash & $923{,}9$   & $9.870{,}5$ & \$0,7406 & \$0,00628 \\
+\promptname{Zero-Shot} & Gemini 3.8 Flash    & $873{,}2$   & $508{,}1$   & \$0,3200 & \$0,00276 \\
+\promptname{Zero-Shot} & GPT-6 Luna          & $811{,}4$   & $1.681{,}0$ & \$0,1152 & \$0,00110 \\
+\midrule
+\promptname{Few-Shot}  & DeepSeek v4.1 Flash & $2.040{,}3$ & $9.964{,}2$ & \$0,7481 & \$0,00645 \\
+\promptname{Few-Shot}  & Gemini 3.8 Flash    & $2.064{,}0$ & $537{,}9$   & \$0,4456 & \$0,00374 \\
+\promptname{Few-Shot}  & GPT-6 Luna          & $1.877{,}2$ & $1.371{,}6$ & \$0,1092 & \$0,00097 \\
+\midrule
+\promptname{CoT Pólya} & DeepSeek v4.1 Flash & $1.460{,}6$ & $9.872{,}7$ & \$0,7410 & \$0,00680 \\
+\promptname{CoT Pólya} & Gemini 3.8 Flash    & $1.380{,}0$ & $1.726{,}8$ & \$0,9388 & \$0,00776 \\
+\promptname{CoT Pólya} & GPT-6 Luna          & $1.303{,}2$ & $2.450{,}7$ & \$0,1695 & \$0,00160 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Na Tabela~\ref{tab:res-pp4-custos}, é observável que a melhor técnica em custo-benefício foi a \textit{Few-Shot}, enquanto no \textit{CoT Pólya} houve um acréscimo tanto na quantidade de \textit{tokens} quanto, consequentemente, no custo por solução aceita (\veredito{AC}). Então, se existe uma busca em maximizar a corretude dos problemas, é recomendável utilizar o \textbf{Gemini 3.8 Flash}, lembrando que a temperatura é igual a zero ($T = 0{,}0$) para esses experimentos. Mais informações sobre o desempenho por fase da OBI, a auditoria dos erros de extração e os tempos de CPU desta etapa encontram-se no Apêndice~\ref{ap:resultados-complementares} (Seção~\ref{ap:pp4-detalhes}).
+
+Por isso, nas linguagens que são mais desafiadoras para os modelos, torna-se mais interessante utilizar técnicas de \textit{prompt} para guiar a geração do código. No contexto da base de dados utilizada para este estudo, o \textbf{Gemini 3.8 Flash} atingiu o teto de 121 questões acertadas (96,80\%), a primeira vez na PP1 com a linguagem \linguagem{Python} e agora na PP4 com a linguagem \linguagem{C}.
+
+\section{PP5: Evolução Geracional sob Paridade de Juiz}\label{sec:res-rq5}
+
+Encerrando as análises experimentais, a partir do estudo preliminar~\citep{angelo2026ise} desenvolvido em conjunto com a equipe \textit{GEMA-LAB}, no qual a geração de código utilizou a mesma configuração deste TCC, porém com modelos de gerações anteriores (\textbf{Gemini 3.1 Pro} e \textbf{GPT-5.4}), identificaram-se as 46 questões do Nível Sênior da OBI (2016--2025) submetidas em \linguagem{Python} \textit{Zero-Shot} para consolidar a evolução dos modelos das famílias Google e OpenAI.
+
+Para eliminar qualquer viés de avaliação, os códigos do estudo anterior foram rejulgados no mesmo \textit{Judge} utilizado neste trabalho, conforme detalhado na Seção~\ref{sec:met-rq5}, obtendo-se os vereditos comparativos sob as mesmas condições experimentais. Além disso, como a família DeepSeek não possui esse recorte em~\citet{angelo2026ise}, ela não participa desta comparação.
+
+\begin{table}[!htbp]
+\centering
+\caption[Evolução intrafamília direta na PP5]{Comparação intrafamília direta entre geração anterior e geração atual ($n = 46$, \linguagem{Python} \textit{Zero-Shot}).}
+\label{tab:res-pp5-intrafamilia}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+\textbf{Família} & \textbf{Evolução (Anterior $\rightarrow$ Atual)} & \textbf{AC (de 46)} & \textbf{$\Delta$ \passat{1}} & \textbf{$\Delta$ Tokens} & \textbf{Custo / AC (US\$)} \\
+\midrule
+Gemini & Gemini 3.1 Pro $\rightarrow$ Gemini 3.8 Flash & $45 \rightarrow 44$ ($-1$) & $-2{,}18\text{ p.p.}$  & $-51{,}2\%$ & $\$0{,}06356 \rightarrow \$0{,}00226$ \\
+GPT    & GPT-5.4 $\rightarrow$ GPT-6 Luna              & $31 \rightarrow 38$ ($+7$) & $+15{,}22\text{ p.p.}$ & $+69{,}5\%$ & $\$0{,}00972 \rightarrow \$0{,}00083$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Nota-se que a Tabela~\ref{tab:res-pp5-intrafamilia} traz um recorte interessante sobre os quatro modelos: enquanto nos modelos da OpenAI houve um desempenho melhor ($31 \rightarrow 38$ acertos, $+15{,}22\text{ p.p.}$), nos modelos do Google o resultado manteve-se estável ($45 \rightarrow 44$ acertos). Além disso, as duas gerações de modelos foram lançadas no ano de 2026, mostrando que em pouco tempo os modelos estão melhorando sua capacidade na geração de código.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp5_fases_obi.tex}
+\caption[Desempenho por etapa oficial da OBI Sênior na PP5]{Taxa \passat{1} (\%) em \linguagem{Python} \textit{Zero-Shot} estratificada pelas três etapas oficiais da OBI Nível Sênior ($n = 46$).}
+\label{fig:res-pp5-fases}
+\end{figure}
+\FloatBarrier
+
+Ao verificar o desempenho em relação às fases da OBI, como mostra a Figura~\ref{fig:res-pp5-fases}, existe uma melhora significativa para os modelos da OpenAI. Sendo que as questões da Fase Estadual (Fase~2) e da Fase Nacional (Fase~3) são consideradas as que têm maior dificuldade, foi justamente nelas que houve um aumento expressivo no $\passat{1}$.
+
+\begin{figure}[!htbp]
+\centering
+\input{Cap05/figuras/pp5_pareto_tokens.tex}
+\caption[Fronteira de Pareto e consumo médio de tokens na PP5]{Eficiência econômica e verbosidade nas $46$ questões em \linguagem{Python} \textit{Zero-Shot}: (a) deslocamento intrafamília na fronteira de Pareto (custo por \veredito{AC} em escala logarítmica versus \passat{1}) e (b) consumo médio de \textit{tokens} totais por problema.}
+\label{fig:res-pp5-pareto-tokens}
+\end{figure}
+\FloatBarrier
+
+Como se pode perceber na Tabela~\ref{tab:res-pp5-intrafamilia}, o modelo \textbf{Gemini 3.8 Flash} é cerca de 28 vezes mais barato por solução aceita que o modelo \textbf{Gemini 3.1 Pro}; além disso, o modelo \textbf{GPT-6 Luna} é cerca de 11 vezes mais barato que o modelo \textbf{GPT-5.4}. A Figura~\ref{fig:res-pp5-pareto-tokens} evidencia que os modelos atuais possuem eficiência econômica, mesmo produzindo mais \textit{tokens}, como no caso do \textbf{GPT-6 Luna}, mostrando que os modelos atuais estão tendo um custo-benefício melhor na geração de código. O detalhamento completo dos vereditos, da paridade de julgamento e das 16 questões com divergência na PP5 encontra-se no Apêndice~\ref{ap:resultados-complementares} (Seção~\ref{ap:pp5-detalhes}).
+
+\section{Ameaças à Validade e Principais Contribuições}\label{sec:res-sintese}
+
+Os resultados do \textit{benchmark} realizado nos cenários em relação aos cinco modelos analisados possuem um prazo de validade, pois em algum momento esses modelos poderão ser descontinuados. Outro ponto importante é que, para reproduzir os resultados deste estudo, a máquina deve possuir a mesma configuração descrita na Seção~\ref{sec:met-judge} para garantir a fidelidade da avaliação.
+
+Por outro lado, as principais contribuições estão na proposta de uma arquitetura para avaliação de LLMs por meio de requisições de API, na qual podem ser utilizados vários tipos de \textit{datasets} de programação competitiva para avaliar os modelos. No contexto de construir sistemas que façam requisições aos LLMs, a ferramenta \texttt{competitive-programming-bench}~\citep{compbench2026} possui um grande valor para um sistema tutor inteligente voltado à programação competitiva, mostrando questões que podem representar uma barreira na geração de código para os LLMs, como a questão \textit{Construção de Rodovia} do \textit{dataset} deste estudo. Assim, a ferramenta consegue realizar uma execução local para avaliação da geração de código, armazenando \textit{prompts}, quantidades de \textit{tokens}, código produzido, entre outros fatores.

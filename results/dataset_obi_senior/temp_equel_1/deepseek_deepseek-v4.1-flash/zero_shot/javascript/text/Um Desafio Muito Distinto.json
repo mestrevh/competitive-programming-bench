@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 4e-06,
-            "output_cost": 0.022598,
-            "total_cost": 0.022602
+            "output_cost": 0.00565,
+            "total_cost": 0.005653
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst P = data[0];\nconst out = [];\nlet idx = 1;\n\nfor (let i = 0; i < P; i++) {\n    const L = data[idx++];\n    const A = data[idx++];\n    const B = data[idx++];\n\n    const N = B - A + 1;\n\n    let high = N - 1;\n    const byA = Math.floor(L / A);\n    if (byA < high) high = byA;\n\n    const byRoot = Math.floor(Math.sqrt(2 * L)) + 2;\n    if (byRoot < high) high = byRoot;\n\n    let lo = 0;\n    let hi = high;\n    let ans = 0;\n\n    while (lo <= hi) {\n        const mid = Math.floor((lo + hi) / 2);\n        const sum = mid * A + (mid * (mid - 1)) / 2;\n\n        if (sum < L) {\n            ans = mid;\n            lo = mid + 1;\n        } else {\n            hi = mid - 1;\n        }\n    }\n\n    out.push(ans + 1);\n}\n\nfs.writeFileSync(1, out.join('\\n'));\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nconst P = data[0];\nconst out = [];\nlet idx = 1;\n\nfor (let i = 0; i < P; i++) {\n    const L = data[idx++];\n    const A = data[idx++];\n    const B = data[idx++];\n\n    const N = B - A + 1;\n\n    let high = N - 1;\n    const byA = Math.floor(L / A);\n    if (byA < high) high = byA;\n\n    const byRoot = Math.floor(Math.sqrt(2 * L)) + 2;\n    if (byRoot < high) high = byRoot;\n\n    let lo = 0;\n    let hi = high;\n    let ans = 0;\n\n    while (lo <= hi) {\n        const mid = Math.floor((lo + hi) / 2);\n        const sum = mid * A + (mid * (mid - 1)) / 2;\n\n        if (sum < L) {\n            ans = mid;\n            lo = mid + 1;\n        } else {\n            hi = mid - 1;\n        }\n    }\n\n    out.push(ans + 1);\n}\n\nfs.writeFileSync(1, out.join('\\n'));",

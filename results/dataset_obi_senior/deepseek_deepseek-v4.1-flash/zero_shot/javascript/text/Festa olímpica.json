@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.024799,
-            "total_cost": 0.024802
+            "output_cost": 0.0062,
+            "total_cost": 0.006203
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst N = data[idx++];\nconst M = data[idx++];\nconst T = data.slice(idx, idx + M);\nconst T1 = T.map(t => t - 1);\n\nlet S = N;\nfor (let i = 0; i < M; i++) {\n    S -= Math.floor(S / T[i]);\n}\n\nconst K = Math.min(S, 10000);\nconst out = [];\nfor (let p = 1; p <= K; p++) {\n    let x = p;\n    for (let i = M - 1; i >= 0; i--) {\n        x += ((x - 1) / T1[i]) | 0;\n    }\n    out.push(x);\n}\nconsole.log(out.join('\\n'));\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\nlet idx = 0;\nconst N = data[idx++];\nconst M = data[idx++];\nconst T = data.slice(idx, idx + M);\nconst T1 = T.map(t => t - 1);\n\nlet S = N;\nfor (let i = 0; i < M; i++) {\n    S -= Math.floor(S / T[i]);\n}\n\nconst K = Math.min(S, 10000);\nconst out = [];\nfor (let p = 1; p <= K; p++) {\n    let x = p;\n    for (let i = M - 1; i >= 0; i--) {\n        x += ((x - 1) / T1[i]) | 0;\n    }\n    out.push(x);\n}\nconsole.log(out.join('\\n'));",

@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.004262,
-            "total_cost": 0.004265
+            "output_cost": 0.001066,
+            "total_cost": 0.001068
         },
         "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\n#define MAXS 205\n\nint S, T, P;\nint h[MAXS];\nint adj[MAXS][MAXS];\nint deg[MAXS];\nint memo[MAXS];\n\nint dfs(int v) {\n    if (memo[v] != -1) return memo[v];\n\n    int best = 0;\n    for (int i = 0; i < deg[v]; i++) {\n        int u = adj[v][i];\n        if (h[v] > h[u]) {\n            int cur = 1 + dfs(u);\n            if (cur > best) best = cur;\n        }\n    }\n\n    memo[v] = best;\n    return best;\n}\n\nint main() {\n    if (scanf(\"%d %d %d\", &S, &T, &P) != 3) return 0;\n\n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &h[i]);\n    }\n\n    for (int i = 0; i < T; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        adj[a][deg[a]++] = b;\n        adj[b][deg[b]++] = a;\n    }\n\n    memset(memo, -1, sizeof(memo));\n    printf(\"%d\\n\", dfs(P));\n\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n#include <string.h>\n\n#define MAXS 205\n\nint S, T, P;\nint h[MAXS];\nint adj[MAXS][MAXS];\nint deg[MAXS];\nint memo[MAXS];\n\nint dfs(int v) {\n    if (memo[v] != -1) return memo[v];\n\n    int best = 0;\n    for (int i = 0; i < deg[v]; i++) {\n        int u = adj[v][i];\n        if (h[v] > h[u]) {\n            int cur = 1 + dfs(u);\n            if (cur > best) best = cur;\n        }\n    }\n\n    memo[v] = best;\n    return best;\n}\n\nint main() {\n    if (scanf(\"%d %d %d\", &S, &T, &P) != 3) return 0;\n\n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &h[i]);\n    }\n\n    for (int i = 0; i < T; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        adj[a][deg[a]++] = b;\n        adj[b][deg[b]++] = a;\n    }\n\n    memset(memo, -1, sizeof(memo));\n    printf(\"%d\\n\", dfs(P));\n\n    return 0;\n}",

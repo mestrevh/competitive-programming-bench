@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.003965,
-            "total_cost": 0.003967
+            "output_cost": 0.000991,
+            "total_cost": 0.000993
         },
         "raw_response": "```javascript\nconst fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst A = data[idx++];\nconst L = data[idx++];\nconst N = data[idx++];\n\nconst photoMin = Math.min(A, L);\nconst photoMax = Math.max(A, L);\nconst photoArea = A * L;\n\nlet bestId = -1;\nlet bestUnused = Infinity;\n\nfor (let i = 1; i <= N; i++) {\n    const X = data[idx++];\n    const Y = data[idx++];\n\n    const frameMin = Math.min(X, Y);\n    const frameMax = Math.max(X, Y);\n\n    if (frameMin >= photoMin && frameMax >= photoMax) {\n        const unused = X * Y - photoArea;\n        if (unused < bestUnused) {\n            bestUnused = unused;\n            bestId = i;\n        }\n    }\n}\n\nconsole.log(bestId);\n```",
         "extracted_code": "const fs = require('fs');\nconst data = fs.readFileSync(0, 'utf8').trim().split(/\\s+/).map(Number);\n\nlet idx = 0;\nconst A = data[idx++];\nconst L = data[idx++];\nconst N = data[idx++];\n\nconst photoMin = Math.min(A, L);\nconst photoMax = Math.max(A, L);\nconst photoArea = A * L;\n\nlet bestId = -1;\nlet bestUnused = Infinity;\n\nfor (let i = 1; i <= N; i++) {\n    const X = data[idx++];\n    const Y = data[idx++];\n\n    const frameMin = Math.min(X, Y);\n    const frameMax = Math.max(X, Y);\n\n    if (frameMin >= photoMin && frameMax >= photoMax) {\n        const unused = X * Y - photoArea;\n        if (unused < bestUnused) {\n            bestUnused = unused;\n            bestId = i;\n        }\n    }\n}\n\nconsole.log(bestId);",

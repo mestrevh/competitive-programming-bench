@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 3e-06,
-            "output_cost": 0.061392,
-            "total_cost": 0.061395
+            "output_cost": 0.015348,
+            "total_cost": 0.015351
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    N = data[0]\n    M = data[1]\n    T = data[2:2 + M]\n\n    L = N\n    for t in T:\n        L -= L // t\n\n    K = L if L < 10000 else 10000\n    if K <= 0:\n        return\n\n    rev_d = [t - 1 for t in reversed(T)]\n\n    x_max = K - 1\n    eff = []\n    for d in rev_d:\n        if d <= x_max:\n            x_max += x_max // d\n            eff.append(d)\n\n    out = [\"1\"]\n    for p in range(2, K + 1):\n        x = p - 1\n        for d in eff:\n            if d <= x:\n                x += x // d\n        out.append(str(x + 1))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n    N = data[0]\n    M = data[1]\n    T = data[2:2 + M]\n\n    L = N\n    for t in T:\n        L -= L // t\n\n    K = L if L < 10000 else 10000\n    if K <= 0:\n        return\n\n    rev_d = [t - 1 for t in reversed(T)]\n\n    x_max = K - 1\n    eff = []\n    for d in rev_d:\n        if d <= x_max:\n            x_max += x_max // d\n            eff.append(d)\n\n    out = [\"1\"]\n    for p in range(2, K + 1):\n        x = p - 1\n        for d in eff:\n            if d <= x:\n                x += x // d\n        out.append(str(x + 1))\n\n    sys.stdout.write(\"\\n\".join(out) + \"\\n\")\n\nif __name__ == \"__main__\":\n    main()",

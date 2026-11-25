@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 6e-06,
-            "output_cost": 0.003943,
-            "total_cost": 0.003949
+            "output_cost": 0.000986,
+            "total_cost": 0.000992
         },
         "raw_response": "```c\n#include <stdio.h>\n#include <string.h>\n\nint S, T, P;\nint h[205];\nint adj[205][205];\nint memo[205];\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint dp(int u) {\n    if (memo[u] != -1) return memo[u];\n\n    int best = 0;\n    for (int v = 1; v <= S; v++) {\n        if (adj[u][v] && h[u] > h[v]) {\n            best = max(best, 1 + dp(v));\n        }\n    }\n\n    return memo[u] = best;\n}\n\nint main(void) {\n    if (scanf(\"%d %d %d\", &S, &T, &P) != 3) return 0;\n\n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &h[i]);\n    }\n\n    memset(adj, 0, sizeof(adj));\n\n    for (int i = 0; i < T; i++) {\n        int I, J;\n        scanf(\"%d %d\", &I, &J);\n        adj[I][J] = adj[J][I] = 1;\n    }\n\n    memset(memo, -1, sizeof(memo));\n\n    printf(\"%d\\n\", dp(P));\n\n    return 0;\n}\n```",
         "extracted_code": "#include <stdio.h>\n#include <string.h>\n\nint S, T, P;\nint h[205];\nint adj[205][205];\nint memo[205];\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint dp(int u) {\n    if (memo[u] != -1) return memo[u];\n\n    int best = 0;\n    for (int v = 1; v <= S; v++) {\n        if (adj[u][v] && h[u] > h[v]) {\n            best = max(best, 1 + dp(v));\n        }\n    }\n\n    return memo[u] = best;\n}\n\nint main(void) {\n    if (scanf(\"%d %d %d\", &S, &T, &P) != 3) return 0;\n\n    for (int i = 1; i <= S; i++) {\n        scanf(\"%d\", &h[i]);\n    }\n\n    memset(adj, 0, sizeof(adj));\n\n    for (int i = 0; i < T; i++) {\n        int I, J;\n        scanf(\"%d %d\", &I, &J);\n        adj[I][J] = adj[J][I] = 1;\n    }\n\n    memset(memo, -1, sizeof(memo));\n\n    printf(\"%d\\n\", dp(P));\n\n    return 0;\n}",

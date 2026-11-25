@@ -17,8 +17,8 @@
         },
         "cost_usd": {
             "input_cost": 2e-06,
-            "output_cost": 0.005609,
-            "total_cost": 0.005611
+            "output_cost": 0.001402,
+            "total_cost": 0.001405
         },
         "raw_response": "```python\nimport sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n\n    total = n * (n + 1) // 2\n    max_distinct = k - 1\n\n    freq = [0] * (n + 1)\n    left = 0\n    distinct = 0\n    bad = 0\n\n    for right, x in enumerate(a):\n        if freq[x] == 0:\n            distinct += 1\n        freq[x] += 1\n\n        while distinct > max_distinct:\n            y = a[left]\n            freq[y] -= 1\n            if freq[y] == 0:\n                distinct -= 1\n            left += 1\n\n        bad += right - left + 1\n\n    print(total - bad)\n\nif __name__ == \"__main__\":\n    main()\n```",
         "extracted_code": "import sys\n\ndef main():\n    data = list(map(int, sys.stdin.buffer.read().split()))\n    if not data:\n        return\n\n    n, k = data[0], data[1]\n    a = data[2:2 + n]\n\n    total = n * (n + 1) // 2\n    max_distinct = k - 1\n\n    freq = [0] * (n + 1)\n    left = 0\n    distinct = 0\n    bad = 0\n\n    for right, x in enumerate(a):\n        if freq[x] == 0:\n            distinct += 1\n        freq[x] += 1\n\n        while distinct > max_distinct:\n            y = a[left]\n            freq[y] -= 1\n            if freq[y] == 0:\n                distinct -= 1\n            left += 1\n\n        bad += right - left + 1\n\n    print(total - bad)\n\nif __name__ == \"__main__\":\n    main()",

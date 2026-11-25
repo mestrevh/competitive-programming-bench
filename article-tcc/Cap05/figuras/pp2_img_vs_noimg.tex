@@ -1,0 +1,88 @@
+% Gráfico comparativo: Com Imagens (46) vs Sem Imagens (79) no baseline textual (Cap. 5, Seção 5.3.1)
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={
+    group size=2 by 1,
+    horizontal sep=1.3cm
+  },
+  width=0.47\textwidth,
+  height=6.1cm,
+  symbolic x coords={DeepSeek,Gemini,GPT6},
+  xtick={DeepSeek,Gemini,GPT6},
+  enlarge x limits=0.25,
+  ymajorgrids=true,
+  grid style={black!12},
+  axis lines*=left,
+  tick label style={font=\scriptsize},
+  x tick label style={align=center},
+  label style={font=\footnotesize},
+  title style={font=\footnotesize\bfseries, yshift=3pt},
+  ymin=82, ymax=104.5,
+  ytick={85,90,95,100}
+]
+% Painel (a): Melhor linguagem individual
+\nextgroupplot[
+  ybar=3pt,
+  bar width=14pt,
+  title={(a) Melhor linguagem por modelo},
+  ylabel={Taxa \passat{1} (\%)},
+  xticklabels={DeepSeek\\(C++),Gemini\\(Python),GPT-6\\(Java)},
+  legend to name=legpp2imgnoimg,
+  legend style={
+    legend columns=2,
+    draw=black!30,
+    rounded corners=2pt,
+    font=\footnotesize,
+    /tikz/every even column/.append style={column sep=14pt}
+  },
+  nodes near coords,
+  nodes near coords style={
+    font=\tiny\bfseries,
+    black,
+    rotate=90,
+    anchor=west,
+    /pgf/number format/fixed,
+    /pgf/number format/fixed zerofill,
+    /pgf/number format/precision=2,
+    /pgf/number format/use comma
+  }
+]
+\addplot[fill=vVerde, draw=vVerde!70!black, line width=0.5pt] coordinates {
+  (DeepSeek,97.47) (Gemini,97.47) (GPT6,97.47)
+};
+\addplot[fill=vVermelho, draw=vVermelho!70!black, line width=0.5pt] coordinates {
+  (DeepSeek,95.65) (Gemini,95.65) (GPT6,91.30)
+};
+\legend{Sem Imagens ($n=79$), Com Imagens ($n=46$)}
+
+% Painel (b): Agregado nas 5 linguagens
+\nextgroupplot[
+  ybar=3pt,
+  bar width=14pt,
+  title={(b) Agregado nas 5 linguagens},
+  ylabel={Taxa média de \veredito{AC} (\%)},
+  xticklabels={DeepSeek\\(5 ling.),Gemini\\(5 ling.),GPT-6\\(5 ling.)},
+  nodes near coords,
+  nodes near coords style={
+    font=\tiny\bfseries,
+    black,
+    rotate=90,
+    anchor=west,
+    /pgf/number format/fixed,
+    /pgf/number format/fixed zerofill,
+    /pgf/number format/precision=2,
+    /pgf/number format/use comma
+  }
+]
+\addplot[fill=vVerde, draw=vVerde!70!black, line width=0.5pt] coordinates {
+  (DeepSeek,95.44) (Gemini,95.44) (GPT6,92.41)
+};
+\addplot[fill=vVermelho, draw=vVermelho!70!black, line width=0.5pt] coordinates {
+  (DeepSeek,92.17) (Gemini,92.61) (GPT6,87.39)
+};
+\end{groupplot}
+
+% Legenda compartilhada acima dos dois gráficos
+\node[anchor=south] at ($(group c1r1.north)!0.5!(group c2r1.north) + (0,0.75cm)$)
+  {\pgfplotslegendfromname{legpp2imgnoimg}};
+\end{tikzpicture}
